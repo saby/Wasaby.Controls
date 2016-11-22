@@ -112,6 +112,15 @@
       border-color: @controls-FieldLink-border-color-focus-hover;
    }
 
+   &:not(.controls-FieldLink__multiselect) {
+      .controls-FieldLink__linksWrapper {
+         max-width: 100%;
+      }
+      .controls-FieldLink__item {
+         max-width: ~'calc(100% - 24px)';
+      }
+   }
+
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
    }
@@ -128,7 +137,7 @@
 
    .controls-TextBox__beforeFieldWrapper {
       order: 0;
-      max-width: calc(100% ~'-' 20px);
+      max-width: ~'calc(100% - 20px)';
       overflow: hidden;
 
       .controls-FieldLink__showAllLinks {

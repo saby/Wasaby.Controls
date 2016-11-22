@@ -71,6 +71,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var INPUT_WRAPPER_PADDING = 8;
        var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
+       var MULTISELECT_CLASS = 'controls-FieldLink__multiselect';
 
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
@@ -531,6 +532,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
+          setMultiSelect: function(multiselect) {
+             FieldLink.superclass.setMultiSelect.apply(this, arguments);
+             this.getContainer().toggleClass(MULTISELECT_CLASS, !!multiselect)
+          },
+
           _getAdditionalChooserConfig: function () {
              var oldRecArray = [],
                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
@@ -559,11 +565,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _modifyOptions: function() {
-             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments);
+             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
+                 classes = ['controls-FieldLink'];
+
+             if(cfg.multiselect) {
+                classes.push(MULTISELECT_CLASS);
+             }
 
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
-             cfg.className += ' controls-FieldLink';
+             cfg.className += ' ' + classes.join(' ');
              cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
              return cfg;
           },
@@ -584,7 +595,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  availableWidth, items, additionalWidth, itemWidth, itemsCount, $item;
 
              if(!linkCollection.isPickerVisible()) {
-                if (!this._isEmptySelection()) {
+                /* Если у нас единичный выбор - то считать ничего не надо,
+                   обрезание троеточием сделано на CSS */
+                if (!this._isEmptySelection() && (this._isInputVisible() || this._options.alwaysShowTextBox)) {
                    items = linkCollection.getContainer().find('.controls-FieldLink__item');
                    additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
                    itemsCount = items.length;
