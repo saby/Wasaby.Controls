@@ -531,9 +531,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _setKeyByText: function () {
          /*устанавливаем ключ, когда текст изменен извне*/
          var
-            selKey,
-            oldKey = this._options.selectedKey,
-            oldText = this.getText(),
+
             self = this,
             filterFieldObj = {};
 
@@ -541,27 +539,38 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             filterFieldObj[this._options.displayField] = self._options.text;
 
             self._callQuery(filterFieldObj).addCallback(function (DataSet) {
-               var noItems = true;
-               DataSet.each(function (item) {
-                  noItems = false;
-                  selKey = item.getId();
-                  self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
-                  //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-                  if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
-                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
-                  }
-               });
-
-               if (noItems && oldKey !== null) {
-                  ComboBox.superclass.setSelectedKey.call(self, null);
-                  self._drawText(oldText);
-               }
+               self._findItemByKey(DataSet);
             });
+         }
+         else if (this.getItems()) {
+            this._findItemByKey(this.getItems());
          }
          else {
             this._delayedSettingTextByKey = true;
+         }
+      },
+
+      _findItemByKey: function(items) {
+         var noItems = true,
+            selKey,
+            oldKey = this._options.selectedKey,
+            oldText = this.getText(),
+            self = this;
+         items.each(function (item) {
+            noItems = false;
+            selKey = item.getId();
+            self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+            self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+            //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+            if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+               self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+               self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+            }
+         });
+
+         if (noItems && oldKey !== null) {
+            ComboBox.superclass.setSelectedKey.call(self, null);
+            self._drawText(oldText);
          }
       },
 
