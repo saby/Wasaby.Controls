@@ -3224,7 +3224,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
                      this._getMover().move(models, target.getModel(), position);
-                  } else {
+                  } else if (dragObject.getTargetsControl()) {
                      this._getMover().moveFromOutside(dragObject);
                   }
                }
