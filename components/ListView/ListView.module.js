@@ -3249,7 +3249,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      movedItems[i] = items.getRecordById(item);
                   }
                }, this);
-               action.execute({movedItems: movedItems});
+
+               var  filter = this._notify('onPrepareFilterOnMove', {});
+               action.execute({
+                  movedItems: movedItems,
+                  componentOptions: {
+                     filter: filter
+                  }
+               });
             }.bind(this));
          },
 
