@@ -142,17 +142,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 * @see messageMaxLength
                 */
                detailsMaxLength: 160,
-<<<<<<< HEAD
                /**
                 * cfg {Boolean} Устанавливает тип диалога: модальный или немодальный.
                 */
-               isModal: true
-=======
-
                isModal: true,
 
                additionalClass: 'controls-SubmitPopup_popup'
->>>>>>> b0780b1... Доработки
             },
 
             _buttons: []
