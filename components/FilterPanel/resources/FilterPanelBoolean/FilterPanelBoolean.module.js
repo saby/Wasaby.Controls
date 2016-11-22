@@ -36,6 +36,7 @@ var
             this._options.value = !!value;
             this._notifyOnPropertyChanged('value');
             this._notify('onValueChange', this._options.value);
+            this._checkBox.setChecked(this._options.value);
          }
       },
 

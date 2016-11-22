@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
+        * @ignoreEvents onListItemSelect
         *
         * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
@@ -309,8 +310,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Проиницализируем переменные */
              this._setVariables();
-             this._inputField.attr('placeholder', '');
-
              /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
                 а базовую линию меток будем выставлять через line-height */
              this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
@@ -376,6 +375,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }.bind(this));
              }
 
+             if(this._options.multiselect) {
+                /* Открывать выпадашку со всеми выбранными записями надо по событию mousedown, т.к. это единственное событие
+                   которое стреляет раньше фокуса. В противном случае автодополнение будет мограть, если включена опиция autoShow,
+                   потому что оно показывается по фокусу. */
+                this.getChildControlByName('showAllButton').getContainer().on('mousedown', function () {
+                      this._showAllItems();
+                   }.bind(this)
+                );
+             }
+
              this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
@@ -389,7 +398,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
            },
 
           _useNativePlaceHolder: function() {
-             return false;
+             /* Если в placeholder положили компонент-ссылку, открывающую справочник,
+                то будем использовать не нативный placeholder */
+             return this.getProperty('placeholder').indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           },
 
           _setPlaceholder: function() {
