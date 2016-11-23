@@ -71,6 +71,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var INPUT_WRAPPER_PADDING = 8;
        var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
+       var MULTISELECT_CLASS = 'controls-FieldLink__multiselect';
 
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
@@ -165,8 +166,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
            */
           $protected: {
-             _inputWrapper: null,     /* Обертка инпута */
-             _linksWrapper: null,     /* Контейнер для контрола выбранных элементов */
              _linkCollection: null,   /* Контрол отображающий выбранные элементы */
              _selectorAction: null,   /* Action выбора */
              _isDynamicInputWidth: false,
@@ -308,7 +307,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._publish('onItemActivate');
 
              /* Проиницализируем переменные */
-             this._setVariables();
+             this._afterFieldWrapper = this._container.find('.controls-TextBox__afterFieldWrapper');
+             this._beforeFieldWrapper = this._container.find('.controls-TextBox__beforeFieldWrapper');
              /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
                 а базовую линию меток будем выставлять через line-height */
              this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
@@ -530,6 +530,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
+          setMultiselect: function(multiselect) {
+             FieldLink.superclass.setMultiselect.apply(this, arguments);
+             this.getContainer().toggleClass(MULTISELECT_CLASS, !!multiselect)
+          },
+
           _getAdditionalChooserConfig: function () {
              var oldRecArray = [],
                 selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
@@ -558,11 +563,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _modifyOptions: function() {
-             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments);
+             var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
+                 classes = ['controls-FieldLink'];
+
+             if(cfg.multiselect) {
+                classes.push(MULTISELECT_CLASS);
+             }
 
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
-             cfg.className += ' controls-FieldLink';
+             cfg.className += ' ' + classes.join(' ');
              cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
              return cfg;
           },
@@ -580,10 +590,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  itemsWidth = 0,
                  toAdd = [],
                  isEnabled = this.isEnabled(),
+                 needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
                  availableWidth, items, additionalWidth, itemWidth, itemsCount, $item;
 
              if(!linkCollection.isPickerVisible()) {
-                if (!this._isEmptySelection()) {
+                /* Если у нас единичный выбор - то считать ничего не надо,
+                   обрезание троеточием сделано на CSS */
+                if (!this._isEmptySelection() && needResizeInput) {
                    items = linkCollection.getContainer().find('.controls-FieldLink__item');
                    additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
                    itemsCount = items.length;
@@ -627,7 +640,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(!this._isDynamicInputWidth) {
                 this._inputField[0].style.width = 0;
-                this._updateInputWidth();
+
+                if(needResizeInput) {
+                   this._updateInputWidth();
+                }
              }
           },
           _onCrossClickItemsCollection: function(key) {
@@ -719,18 +735,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
               }
 
               return displayFields.join(', ');
-          },
-
-          /**
-           * Устанавливает переменные, для дальнейшей работы с ними
-           * @private
-           */
-          _setVariables: function() {
-             this._linksWrapper = this._container.find('.controls-FieldLink__linksWrapper');
-             this._inputWrapper = this._container.find('.controls-TextBox__fieldWrapper');
-
-             this._afterFieldWrapper = this._container.find('.controls-TextBox__afterFieldWrapper');
-             this._beforeFieldWrapper = this._container.find('.controls-TextBox__beforeFieldWrapper');
           },
 
           _onResizeHandler: function() {
@@ -829,10 +833,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(!this._options.alwaysShowTextBox) {
 
-                if(!this._options.multiselect) {
+                if(!this.getMultiselect()) {
                    /* Поле ввода нельзя вырывать из потока (display: none),
                       иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
-                   this._inputWrapper.toggleClass('ws-invisible', Boolean(keysArrLen));
+                   this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass('ws-invisible', Boolean(keysArrLen));
                 }
              }
 
@@ -1086,8 +1090,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
           destroy: function() {
-             this._linksWrapper = undefined;
-             this._inputWrapper = undefined;
              this._afterFieldWrapper = undefined;
              this._beforeFieldWrapper = undefined;
 
