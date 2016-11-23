@@ -288,6 +288,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       },
 
       _setNewDialogConfig: function(config){
+         //Актуальные опции для FC содержатся в config.componentOptions, то что уже содержится в this._dialog._options нам не нужно
+         this._dialog._options.componentOptions = {};
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
