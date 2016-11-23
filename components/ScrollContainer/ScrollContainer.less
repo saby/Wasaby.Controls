@@ -44,3 +44,12 @@
    right: 0;
    top: 0;
 }
+/*TODO временный фикс для выпуска*/
+.controls-ScrollContainer{
+   &.controls-ScrollContainer__withHead {
+      .controls-ScrollContainer__scrollbar {
+         top: 24px;
+         height: calc(~"100% - 32px");
+      }
+   }
+}
