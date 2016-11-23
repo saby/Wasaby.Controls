@@ -781,6 +781,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            this._initLoadMoreButton();
          },
 
          _bindEventHandlers: function(container) {
@@ -2165,11 +2166,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createScrollWatcher();
 
                if (this._options.infiniteScroll == 'demand'){
-                  this._loadMoreButton = this.getChildControlByName('loadMoreButton');
-                  if (this.getItems()){
-                     this._setLoadMoreCaption(this.getItems());
-                  }
-                  this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
                   this._setInfiniteScrollState('down');
                   return;
                }
@@ -3535,6 +3531,16 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             });
             self.removeItemsSelection(keysForRemove);
+         },
+
+         _initLoadMoreButton: function() {
+            if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+            }
          }
       });
 
