@@ -39,8 +39,8 @@ define('js!SBIS3.CONTROLS.MenuButton', [
     *
     * @control
     * @public
-    * @initial
     * @category Buttons
+    * @initial
     * <component data-component='SBIS3.CONTROLS.MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
