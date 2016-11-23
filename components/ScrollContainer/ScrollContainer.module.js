@@ -65,7 +65,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
 
-         $constructor: function() {},
+         $constructor: function() {
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась, 
+            // сделаем свой контекст прозрачным
+            this._context = this._context.getPrevious();
+         },
 
          init: function() {
             ScrollContainer.superclass.init.call(this);
