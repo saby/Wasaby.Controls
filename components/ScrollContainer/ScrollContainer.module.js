@@ -64,7 +64,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
 
-         $constructor: function() {},
+         $constructor: function() {
+            this._context = this._context.getPrevious();
+         },
 
          init: function() {
             ScrollContainer.superclass.init.call(this);
