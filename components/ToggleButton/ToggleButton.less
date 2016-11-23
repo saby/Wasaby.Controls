@@ -114,7 +114,7 @@
 }
 // хак для мозиллы, выравнивающий иконки в залипшей кнопке
 @-moz-document url-prefix() {
-   .controls-Checked__checked {
+   .controls-Checked__checked:not(.controls-Button__big) {
       .controls-Button__icon {
          &.icon-24 {
             top: @button-icon-big-top-offset - @button-border-width - 2 !important;
