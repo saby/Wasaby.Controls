@@ -83,6 +83,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          def = (def instanceof Deferred) ? def : new Deferred().callback();
          var position = this.getItems().getIndex(target.getModel()),
             items = this.getItems();
+         position = target.getPosition() != 'after' ? position : position +1;
          def.addCallback(function() {
             dragSource.each(function(movedItem) {
                var model = movedItem.getModel();

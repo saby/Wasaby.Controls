@@ -221,6 +221,40 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             assert.equal(treeItems.getIndex(treeItems.getRecordById(model.getId())), 1);
          });
 
+         it('should move the source row with operation is move before target', function(){
+            targetRow.setPosition('before');
+            listAction.setOperation('move');
+            treeMover.moveFromOutside(listAction, targetRow, outsideRs, true);
+            var model = listAction.at(0).getModel();
+            assert.equal(outsideRs.getIndex(model), -1);
+            assert.equal(treeItems.getIndex(treeItems.getRecordById(model.getId())), 0);
+         });
+
+         it('should move the source row with operation is move before last item', function(){
+            listAction.setOperation('move');
+
+            var model = listAction.at(0).getModel(),
+               targetRow = new DragRow({
+                  model: treeItems.at(treeItems.getCount()-1),
+                  position: 'before'
+               });
+            treeMover.moveFromOutside(listAction, targetRow, outsideRs, true);
+            assert.equal(outsideRs.getIndex(model), -1);
+            assert.equal(treeItems.getIndex(treeItems.getRecordById(model.getId())), treeItems.getCount()-2);
+         });
+
+         it('should move the source row with operation is move to last item', function(){
+            listAction.setOperation('move');
+
+            var model = listAction.at(0).getModel(),
+               targetRow = new DragRow({
+                  model: treeItems.at(treeItems.getCount()-1),
+                  position: 'after'
+               });
+            treeMover.moveFromOutside(listAction, targetRow, outsideRs, true);
+            assert.equal(outsideRs.getIndex(model), -1);
+            assert.equal(treeItems.getIndex(treeItems.getRecordById(model.getId())), treeItems.getCount()-1);
+         });
       });
    });
 });
