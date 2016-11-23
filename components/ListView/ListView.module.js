@@ -737,6 +737,13 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+            }
          },
 
          _bindEventHandlers: function(container) {
@@ -2116,11 +2123,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createScrollWatcher();
 
                if (this._options.infiniteScroll == 'demand'){
-                  this._loadMoreButton = this.getChildControlByName('loadMoreButton');
-                  if (this.getItems()){
-                     this._setLoadMoreCaption(this.getItems());
-                  }
-                  this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
                   this._setInfiniteScrollState('down');
                   return;
                }
