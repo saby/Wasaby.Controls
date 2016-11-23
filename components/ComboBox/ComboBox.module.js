@@ -20,24 +20,41 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 ], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
-    * Выпадающий список с выбором значений из набора.
-    * Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.
-    * Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем
-    * отображать данные в выпадающий блок - {@link displayField}.
-    * При отсутствии данных на бизнес-логике будет выведен текст опции {@link emptyHTML}.
-    * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
+    * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
+    * <br/>
+    * Особенности работы с контролом:
+    * <ul>
+    *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
+    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+    *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
+    *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
+    * </ul>
+    * <br/>
+    * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+    * <pre>
+    *    <component data-component="SBIS3.CONTROLS.ComboBox">
+    *       <options name="items" type="array" bind="record/MyEnumField"></options>
+    *       <option name="keyField">@Идентификатор</option>
+    *       <option name="displayField">Описание</option>
+    *    </component>
+    * </pre>
+    *
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
+    *
     * @author Крайнов Дмитрий Олегович
-    * @demo SBIS3.CONTROLS.Demo.MyComboBox
-    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Выпадающий список с dataSource
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
+    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
+    *
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    * @mixes SBIS3.CONTROLS.DataBindMixin
+    * @mixes SBIS3.CONTROLS.SearchMixin
     *
     * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
+    * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
     *
     * @public
     * @control
