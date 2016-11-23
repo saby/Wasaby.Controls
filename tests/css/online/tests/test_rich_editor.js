@@ -801,8 +801,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
         test.setUrl('/IntRichFieldEditor44.html').setCaptureElements('html')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="RichEditorRoundToolbar]', 40000);
-				actions.waitForElementToShow('[sbisname="RichTextArea]', 5000);
+                actions.waitForElementToShow('[sbisname="RichEditorRoundToolbar"]', 40000);
+				actions.waitForElementToShow('[sbisname="RichTextArea"]', 5000);
 				this.toggle = '[sbisname="toggle"]';
 				this.input = '.controls-RichEditor__editorFrame';
 				this.link = '[sbisname="link"]';
@@ -813,8 +813,12 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			.capture('plain', function (actions) {
 				actions.click(this.toggle);
 				actions.waitForElementToShow(this.link, 5000);
+				actions.wait(100);				
 				actions.click(this.link);
 				actions.waitForElementToShow(this.link_input, 5000);
+				actions.sendKeys(this.link_input, 'tensor');
+				actions.sendKeys(this.link_input, gemini.ARROW_RIGHT);
+				actions.sendKeys(this.link_input, gemini.SHIFT+gemini.HOME);
 			})	
     });
 });
