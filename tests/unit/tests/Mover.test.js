@@ -13,8 +13,10 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
    'Core/Abstract',
    'Core/Deferred',
    'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Display/Display'
-], function (Mover, IMoveStrategy, Abstract, Deferred, RecordSet, Display) {
+   'js!WS.Data/Display/Display',
+   'js!SBIS3.CONTROLS.DragEntity.List',
+   'js!SBIS3.CONTROLS.DragEntity.Row'
+], function (Mover, IMoveStrategy, Abstract, Deferred, RecordSet, Display, DragList, DragRow) {
 
    'use strict';
    var mover,
@@ -101,7 +103,7 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
          });
       });
 
-      describe('.move', function (){
+      describe('.move', function () {
          it('should move a record after another record', function(){
             mover.move([items.at(0)], items.at(2), 'after');
             var arg = MoveStrategy.lastCall.arguments;
@@ -140,6 +142,85 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
                done();
             });
          });
+      });
+      describe('.moveFromOutside', function(){
+         var targetRow ,
+            sourceRow,
+            list,
+            outsideRs,
+            sourceRowAction,
+            listAction;
+         beforeEach(function(){
+            outsideRs = new RecordSet({
+               rawData: [
+                  {'id': 25, title: 'Один', parent: null, 'parent@': true},
+                  {'id': 26, title: 'Один', parent: null, 'parent@': true}
+               ],
+               idProperty: 'id'
+            });
+            targetRow = new DragRow({
+               model: treeItems.at(0)
+            });
+            sourceRow = new DragRow({
+               model: outsideRs.at(0)
+            });
+            list = new DragList({
+               items: [sourceRow]
+            });
+            sourceRowAction = new DragRow({
+               model: outsideRs.at(0)
+            });
+            listAction = new DragList({
+               items: [sourceRowAction],
+               action: function(){}
+            })
+         });
+         it('should move the source row after target', function(){
+            targetRow.setPosition('after');
+            treeMover.moveFromOutside(list, targetRow, outsideRs, true);
+            var arg = MoveStrategy.lastCall.arguments;
+            assert.deepEqual(arg[0], [list.at(0).getModel()]);
+            assert.equal(arg[1], targetRow.getModel());
+            assert.isTrue(arg[2]);
+         });
+
+         it('should move the source row before target', function(){
+            targetRow.setPosition('after');
+            treeMover.moveFromOutside(list, targetRow, outsideRs, true);
+            var arg = MoveStrategy.lastCall.arguments;
+            assert.deepEqual(arg[0], [list.at(0).getModel()]);
+            assert.equal(arg[1], targetRow.getModel());
+            assert.isTrue(arg[2]);
+         });
+
+         it('should move the source row on target', function(){
+            targetRow.setPosition('on');
+            treeMover.moveFromOutside(list, targetRow, outsideRs, true);
+            var arg = MoveStrategy.lastCall.arguments;
+            assert.deepEqual(arg[0], [list.at(0).getModel()]);
+            assert.equal(arg[1], targetRow.getModel());
+            assert.isTrue(MoveStrategy.lastCall.hierarсhy);
+         });
+
+         it('should trigger action on source row', function(done){
+            listAction = new DragList({
+               items: [sourceRowAction],
+               action: function(){
+                  done();
+               }
+            });
+            treeMover.moveFromOutside(listAction, targetRow, outsideRs, true);
+         });
+
+         it('should move the source row with operation is move after target', function(){
+            targetRow.setPosition('after');
+            listAction.setOperation('move');
+            treeMover.moveFromOutside(listAction, targetRow, outsideRs, true);
+            var model = listAction.at(0).getModel();
+            assert.equal(outsideRs.getIndex(model), -1);
+            assert.equal(treeItems.getIndex(treeItems.getRecordById(model.getId())), 1);
+         });
+
       });
    });
 });

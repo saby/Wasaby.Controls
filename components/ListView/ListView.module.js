@@ -3202,7 +3202,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                if (target) {
                   var  targetsModel = target.getModel();
-                  dragObject.getSource().each(function(item){
+                  dragObject.getSource().each(function(item) {
                      var model = item.getModel();
                      models.push(model);
                      if (targetsModel == model) {
@@ -3219,7 +3219,16 @@ define('js!SBIS3.CONTROLS.ListView',
                      var position = target.getPosition();
                      this._getMover().move(models, target.getModel(), position);
                   } else {
-                     this._getMover().moveFromOutside(dragObject);
+                     var currentDataSource = this.getDataSource(),
+                        targetsControl = dragObject.getTargetsControl(),
+                        targetsDataSource = targetsControl && targetsControl.getDataSource(),
+                        dataSource;
+                     if (currentDataSource && targetsDataSource &&
+                        currentDataSource.getEndpoint().contract == targetsDataSource.getEndpoint().contract
+                     ) {
+                        dataSource = currentDataSource;
+                     }
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dataSource);
                   }
                }
             }
