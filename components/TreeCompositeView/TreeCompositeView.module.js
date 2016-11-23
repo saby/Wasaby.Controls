@@ -15,11 +15,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    /**
     * Контрол, отображающий набор данных с иерархической структурой в виде таблицы, плитки или списка.
     * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
-    *
     * @class SBIS3.CONTROLS.TreeCompositeView
     * @extends SBIS3.CONTROLS.TreeDataGridView
+    *
     * @mixes SBIS3.CONTROLS.CompositeViewMixin
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
     *
     * @public
