@@ -772,7 +772,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._isConfirmDialogShowed = true;
             fcHelpers.question(rk('Сохранить изменения?'), questionConfig, this).addCallback(function(result){
                self._isConfirmDialogShowed = false;
-               if (typeof result === 'string'){
+               if (typeof result === 'undefined'){
                   self._saving = false;
                   return;
                }
