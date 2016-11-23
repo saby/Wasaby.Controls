@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function(){
-            this._viewportRatio = this._containerHeight / this.getContentHeight();
+            this._viewportRatio = this.getContainer().outerHeight(true) / this.getContentHeight();
          },
 
          _beginDragHandler: function(dragObject, e) {
