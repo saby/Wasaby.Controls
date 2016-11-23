@@ -43,6 +43,16 @@ define('js!SBIS3.CONTROLS.SliderInput',
                this._endTextBox.setText(value);
             },
 
+            setMaxValue: function(value) {
+               SliderInput.superclass.setMaxValue.apply(this, [value]);
+               this._endTextBox.setPlaceholder(value);
+            },
+
+            setMinValue: function(value) {
+               SliderInput.superclass.setMinValue.apply(this, [value]);
+               this._startTextBox.setPlaceholder(value);
+            },
+
             _textBoxStartChange: function () {
                if (this._startTextBox._textChanged) {
                   this._setPreparedStartVale(this._startTextBox.getNumericValue());
