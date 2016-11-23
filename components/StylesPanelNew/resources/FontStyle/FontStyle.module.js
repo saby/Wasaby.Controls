@@ -8,15 +8,16 @@ define('js!SBIS3.CONTROLS.FontStyle', [
 
    'use strict';
 
-   var FontStyle = CompoundControl.extend(/** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
-      _dotTplFn : dotTplFn,
+   var FontStyle = CompoundControl.extend( /** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            style: undefined
+            style: undefined,
+            fontSizes: [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72]
          }
       },
 
-      init: function () {
+      init: function() {
          FontStyle.superclass.init.call(this);
       }
    });
