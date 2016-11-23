@@ -312,19 +312,30 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
 
          if (styles.hasOwnProperty('font-weight') && styles['font-weight'] === 'bold') {
             this._bold.setChecked(true);
+         } else {
+            this._bold.setChecked(false);
          }
 
          if (styles.hasOwnProperty('font-style') && styles['font-style'] === 'italic') {
             this._italic.setChecked(true);
+         } else {
+            this._italic.setChecked(false);
          }
 
          if (styles.hasOwnProperty('text-decoration')) {
             if (styles['text-decoration'].indexOf('underline') >= 0) {
                this._underline.setChecked(true);
+            } else {
+               this._underline.setChecked(false);
             }
             if (styles['text-decoration'].indexOf('line-through') >= 0) {
                this._strikethrought.setChecked(true);
+            } else {
+               this._strikethrought.setChecked(false);
             }
+         } else {
+            this._underline.setChecked(false);
+            this._strikethrought.setChecked(false);
          }
 
          this.saveHandler();
