@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DecorableMixin",
-   "js!SBIS3.CONTROLS.DragNDropMixinNew",
+   "js!SBIS3.CONTROLS.DragNDropMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
+       * @mixes SBIS3.CONTROLS.DragNDropMixin
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
        * @cssModifier controls-ListView__showCheckBoxes Устанавливает постоянное отображение чекбоксов для записей списка. Модификатор применяется для режима множественного выбора записей (см. {@link multiselect}).

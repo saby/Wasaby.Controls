@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Slider',
    [
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.Slider',
-      'js!SBIS3.CONTROLS.DragNDropMixinNew',
+      'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.RangeMixin'
    ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin) {
       'use strict';

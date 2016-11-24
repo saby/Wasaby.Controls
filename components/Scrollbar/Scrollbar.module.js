@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.Scrollbar', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'tmpl!SBIS3.CONTROLS.Scrollbar',
-      'js!SBIS3.CONTROLS.DragNDropMixinNew'
+      'js!SBIS3.CONTROLS.DragNDropMixin'
    ],
    function(CompoundControl, dotTplFn, DragNDropMixinNew) {
 
