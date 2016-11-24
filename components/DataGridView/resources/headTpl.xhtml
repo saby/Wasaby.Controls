@@ -6,7 +6,7 @@
     {{?it.multiselect}}
     <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
     </th>{{?}} {{~it.content[i] :column:index}}
-    <th class="controls-DataGridView__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
+    <th class="{{?index === 0}}controls-DataGridView__firstContentCell{{?}} controls-DataGridView__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
         {{?i == 1}}controls-DataGridView__th__topRow{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}" {{?column.colspan}}colspan="{{=column.colspan}}"{{?}}>
     {{=column.value}}
     </th>

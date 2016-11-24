@@ -266,7 +266,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.displayType = cfg.displayType;
       tplOptions.hierField = cfg.hierField;
       tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
-      tplOptions.originallPadding = cfg._originallPadding;
+      tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hierarchy = new HierarchyRelation({
          idProperty: cfg.keyField,
