@@ -531,7 +531,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _setKeyByText: function () {
          /*устанавливаем ключ, когда текст изменен извне*/
          var
-
+            noItems = true,
+            oldKey = this._options.selectedKey,
+            oldText = this.getText(),
             self = this,
             filterFieldObj = {};
 
@@ -539,39 +541,47 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             filterFieldObj[this._options.displayField] = self._options.text;
 
             self._callQuery(filterFieldObj).addCallback(function (DataSet) {
-               self._findItemByKey(DataSet);
+
+               DataSet.each(function (item) {
+                  var noItems = false;
+                  self._processFindItem(item, oldKey);
+               });
+
+               if (noItems && oldKey !== null) {
+                  self._chooseEmptyItem(oldText);
+               }
             });
          }
          else if (this.getItems()) {
-            this._findItemByKey(this.getItems());
+            this.getItems().each(function(item){
+               noItems = false;
+               if (self._propertyValueGetter(item, self._options.displayField) == self._options.text) {
+                  self._processFindItem(item, oldKey)
+               }
+            });
+            if (noItems && oldKey !== null) {
+               self._chooseEmptyItem(oldText);
+            }
          }
          else {
             this._delayedSettingTextByKey = true;
          }
       },
 
-      _findItemByKey: function(items) {
-         var noItems = true,
-            selKey,
-            oldKey = this._options.selectedKey,
-            oldText = this.getText(),
-            self = this;
-         items.each(function (item) {
-            noItems = false;
-            selKey = item.getId();
-            self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-            self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
-            //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-            if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-               self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
-               self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
-            }
-         });
-
-         if (noItems && oldKey !== null) {
-            ComboBox.superclass.setSelectedKey.call(self, null);
-            self._drawText(oldText);
+      _processFindItem: function(item, oldKey) {
+         var selKey = item.getId();
+         this._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+         this._options.selectedIndex = this._getItemIndexByKey(this._options.selectedKey);
+         //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+         if (oldKey !== this._options.selectedKey) { // при повторном индексе null не стреляет событием
+            this._notifySelectedItem(this._options.selectedKey, this._options.selectedIndex);
+            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
          }
+      },
+
+      _chooseEmptyItem: function(oldText) {
+         ComboBox.superclass.setSelectedKey.call(this, null);
+         this._drawText(oldText);
       },
 
       _dataLoadedCallback: function() {
