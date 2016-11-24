@@ -56,8 +56,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
                   if(diff.added.length) {
                      collectionHelpers.forEach(diff.added, function(addedKey) {
-                        /* Записи с выделенным ключём может не быть в recordSet'e,
-                           надо на это проверить */
+                        /* Записи с выделенным ключём может не быть в recordSet'e
+                           (например это запись внутри папки или на другой странице) */
                         index = selectedItems.getIndexByValue(keyField, addedKey);
 
                         if(index !== -1) {
@@ -120,7 +120,6 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          items.each(function(rec) {
             if(self._options.selectedFilter(rec)) {
-               /* У записи берём не getId(), а keyField указанный для связного списка */
                keys.push(rec.get(keyField));
             }
          });
