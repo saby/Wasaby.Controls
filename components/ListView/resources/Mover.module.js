@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             action = dragSource.getAction(),
             def;
          if (typeof action === 'function') {
-           def =  action.call(this);
+           def =  action.call(dragSource);
          } else  if (move && (operation === 'add' || operation === 'move')) {
             var movedItems = [];
             dragSource.each(function (movedItem) {
