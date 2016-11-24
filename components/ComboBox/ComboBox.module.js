@@ -552,7 +552,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _findItemByKey: function(items) {
          //Алгоритм ищет нужный рекорд по текстовому полю. Это нужно в случае, если в комбобокс
-         //пердают текст, и надо оперделить ключ записи
+         //передают текст, и надо оперделить ключ записи
          var noItems = true,
             selKey,
             oldKey = this._options.selectedKey,
