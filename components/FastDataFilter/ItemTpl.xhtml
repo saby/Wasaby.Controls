@@ -8,7 +8,7 @@
     <option name="className" value="{{=('controls-ListView__item ' + it.item.get('className'))}}"></option>
     <option name="pickerClassName" value="{{=(it.item.get('pickerClassName') + ' controls-DropdownList__picker')}}"></option>
     <option name="dataSource" value="{{=it.item.get('dataSource')}}"></option>
-    <option name="filter" value="{{=it.item.get('filter')}}"></option>
+    <options name="filter" value="{{=it.item.get('filter')}}"></options>
     <option name="allowDblClick" value="{{=it.item.get('allowDblClick')}}"></option>
     <option name="name" value="{{=it.item.get('name')}}"></option>
     <option name="type" value="fastDataFilter"></option>
@@ -22,6 +22,6 @@
     <option name="itemTemplate" value="{{=it.item.get('itemTemplate')}}"></option>
     {{?}}
     {{?it.item.has('includedTemplates')}}
-    <option name="includedTemplates" value="{{=it.item.get('includedTemplates')}}"></option>
+    <options name="includedTemplates" value="{{=it.item.get('includedTemplates')}}"></options>
     {{?}}
 </component>

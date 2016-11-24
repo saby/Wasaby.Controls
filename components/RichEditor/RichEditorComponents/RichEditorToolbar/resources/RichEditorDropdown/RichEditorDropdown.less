@@ -25,7 +25,7 @@
       }
       .controls-RichEditorDropdown__headIcon {
          &:hover {
-            color: #313E78 !important;
+            color: @DropdownList-linkStyleHoverColor !important;
          }
       }
    }
@@ -41,6 +41,13 @@
          .controls-DropdownList__item.controls-DropdownList__item__selected {
             display: block;
          }
+      }
+   }
+}
+.controls-DropdownList.ws-disabled {
+   .controls-RichEditorDropdown__head {
+      .controls-RichEditorDropdown__headIcon {
+         color: @icon-color-disabled !important; //important тк в icon-primary везде important
       }
    }
 }

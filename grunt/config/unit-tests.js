@@ -1,4 +1,4 @@
-unit-tests.js/* global module */
+/* global module */
 module.exports = function () {
    'use strict';
 

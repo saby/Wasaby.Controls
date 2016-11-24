@@ -58,13 +58,18 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * </pre>
                 * @see getContent
                 */
-               content: ''
+               content: '',
+               activableByClick: false
             },
             _content: null
          },
 
 
-         $constructor: function() {},
+         $constructor: function() {
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась, 
+            // сделаем свой контекст прозрачным
+            this._context = this._context.getPrevious();
+         },
 
          init: function() {
             ScrollContainer.superclass.init.call(this);
@@ -89,10 +94,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideScrollbar: function(){
-            var style = {
-                  marginRight: -this._getBrowserScrollbarWidth()
-               }
-            this._content.css(style);
+            if (!cDetection.safari && !cDetection.chrome){
+               var style = {
+                     marginRight: -this._getBrowserScrollbarWidth()
+                  }
+               this._content.css(style);
+            }
+            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _getBrowserScrollbarWidth: function() {

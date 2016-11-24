@@ -14,7 +14,7 @@
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
-      width: calc(50% ~'-' 2px);
+      width: ~'calc(50% - 2px)';
       display: inline-flex;
       align-items: center;
       margin: 0;
@@ -112,6 +112,22 @@
       border-color: @controls-FieldLink-border-color-focus-hover;
    }
 
+   &:not(.controls-FieldLink__multiselect) {
+      .controls-FieldLink__linksWrapper {
+         max-width: 100%;
+      }
+      .controls-FieldLink__item {
+         /* Учитываем отступ под крестик удаления */
+         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+      }
+
+      &.ws-disabled {
+         .controls-FieldLink__item {
+            max-width: 100%;
+         }
+      }
+   }
+
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
    }
@@ -128,7 +144,8 @@
 
    .controls-TextBox__beforeFieldWrapper {
       order: 0;
-      max-width: calc(100% ~'-' 20px);
+      /* Учитываем ширину "гамбургера" в поле связи */
+      max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
 
       .controls-FieldLink__showAllLinks {

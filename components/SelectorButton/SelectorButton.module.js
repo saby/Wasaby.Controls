@@ -44,10 +44,16 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     }
 
    /**
-    * Контрол, отображающий выбранные записи в виде текстовых значений через запятую.
+    * Класса контрола "Кнопка выбора", который отображает выбранные записи в виде текстовых значений через запятую.
+    * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
+    *
+    * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
+    *
     * @class SBIS3.CONTROLS.SelectorButton
     * @extends SBIS3.CONTROLS.ButtonBase
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.MultiSelectable
@@ -57,7 +63,14 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.SyncSelectionMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
     * @mixes SBIS3.CONTROLS.DSMixin
+    *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
+    * @cssModifier controls-SelectorButton__withoutCross Скрывает крестик справа от текста.
+    *
+    * @demo SBIS3.DOCS.SelectorButtonLink Пример 1. Кнопка выбора в виде иконки, поле ввода отсутствует. Вызов справочника производится кликом по кнопке с иконкой. Все выбранные значения будут отображаться справа от кнопки.
+    * В режиме множественного выбора сброс выбранных значений производится массово кликом по серому крестику.
+    * @demo SBIS3.DOCS.SelectorButtonSingle Пример 2. Кнопка выбора в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
+    * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
     *
     * @category Buttons
     * @control
@@ -70,24 +83,34 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          _options: {
             _preRender: itemTemplateRender,
             /**
-             * @cfg {String}  Текст на кнопке по-умолчанию, проставляется если нет выбранных элементов
+             * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
              * @example
              * <pre class="brush:xml">
-             *     <option name="defaultCaption">Сохранить</option>
+             *     <option name="defaultCaption">Сотрудники</option>
              * </pre>
              */
             defaultCaption: '',
             /**
              * @typedef {Array} dictionaries
-             * @property {String} caption Текст в меню.
-             * @property {String} template Шаблон, который отобразится в диалоге выбора.
-             * @property {Object} componentsOptions Опции, которые прокинутся в компонент на диалоге выбора.
+             * @property {String} caption Название, которое будет использовано в меню выбора справочника. Опция неактуальна, когда установлен только один справочник.
+             * @property {String} template Шаблон справочника. В качестве значения передают имя компонента.
+             * @property {Object} componentsOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
              * @translatable caption
              */
             /**
-             * @cfg {dictionaries[]} Набор диалогов выбора для поля связи
+             * @cfg {dictionaries[]} Устанавливает набор справочников для кнопки выбора.
              * @remark
-             * Если передать всего один элемент, то дилог выбора откроется при клике на иконку меню.
+             * Когда установлено несколько справочник, при клике по кнопке открывается меню выбора справочника.
+             * Когда установлен один справочник, то он будет открыт сразу при клике по кнопке.
+             * @example
+             * <pre>
+             *    <options name="dictionaries" type="array">
+             *       <options>
+             *          <option name="caption">Сотрудники</option>
+             *          <option name="template">js!SBIS3.MyArea.DictEmployees</option>
+             *       </options>
+             *    <options>
+             * </pre>
              */
             dictionaries: []
          },
