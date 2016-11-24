@@ -9,12 +9,16 @@ ref = '~ref'
 
 if __name__ == '__main__':
 
-    archive = ZipFile('report.zip', 'w', ZIP_DEFLATED)
+    report_zip = 'report.zip'
     src = join(getcwd(), 'gemini-report', 'images')
     dst = src.replace('images', 'images-copy')
+    zip_src = join(getcwd(), report_zip)
+    if exists(zip_src):
+        remove(report_zip)
     if exists(dst):
         rmtree(dst)
     copytree(src, dst)
+    archive = ZipFile(report_zip, 'w', ZIP_DEFLATED)
     for root, dirs, files in walk(dst):
         has_diff = True if len(list(filter(lambda image: diff in image, files))) else False
         if not has_diff:
