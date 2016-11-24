@@ -496,7 +496,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
              trs = [],
              cells = [],
-             index, hoveredColumn, cell;
+             index, hoveredColumn, cell, resultTr;
 
          if(td.length) {
             index = td.index();
@@ -512,7 +512,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if(this._checkResults()) {
-                  trs.push(this._getResultsContainer().find('.controls-DataGridView__results')[0]);
+                  /* Т.к. в момент синхронизации состояния и реального дома (а эта фаза может быть асинхронной),
+                     может сработать обработчик ховера, надо дополнительно проверить наличие элемента в доме.
+                     В vDom мы будем манипулировать состоянием, которое уже будет проецироваться на дом, так
+                     что там такой проблемы не будет. */
+                  resultTr = this._getResultsContainer().find('.controls-DataGridView__results')[0];
+
+                  if(resultTr) {
+                     trs.push(resultTr);
+                  }
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {

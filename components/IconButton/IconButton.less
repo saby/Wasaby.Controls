@@ -36,6 +36,28 @@
 .controls-IconButton {
   cursor: pointer;
   vertical-align: middle;
+
+  &.controls-Click__active {
+    &.icon-primary {
+      color: @blue-dark-color !important;
+
+      &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
+        border-color: @default-color;
+        color: @default-color !important;
+
+
+      }
+    }
+     &.controls-IconButton__errorBorder {
+        border-color: @button-icon-error-color;
+        color: @button-icon-error-color !important;
+     }
+     &.controls-IconButton__doneBorder {
+        border-color: @button-icon-done-color;
+        color: @button-icon-done-color !important;
+     }
+  }
+
    &.controls-Button {
       padding: 0;
       cursor: pointer;
@@ -113,7 +135,7 @@
    }
 }
 .ws-is-desktop-platform {
-  .controls-IconButton:not(.ws-disabled) {
+  .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
     &:hover {
       &.icon-primary {
         color: @blue-dark-color !important;

@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
          }
 
          view.subscribe('onSetRoot', function(event, id, hier){
+            //Этот массив могут использовать другие подписанты, а мы его модифицируем
+            var hierClone = $ws.core.clone(hier);
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){
@@ -73,17 +75,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                 что в папку не провалились, а попали через перенос.
                 От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
                 */
-               if (self._currentRoot && hier.length && hier[hier.length - 1].parent != self._currentRoot.id){
-                  self._currentRoot = hier[0];
-                  self._path = hier.reverse();
+               if (self._currentRoot && hierClone.length && hierClone[hierClone.length - 1].parent != self._currentRoot.id){
+                  self._currentRoot = hierClone[0];
+                  self._path = hierClone.reverse();
                } else {
                   /* Если root не установлен, и переданный id === null, то считаем, что мы в корне */
                   if ( (id === view._options.root) || (!view._options.root && id === null) ){
                      self._currentRoot = null;
                      self._path = [];
                   }
-                  for (i = hier.length - 1; i >= 0; i--) {
-                     var rec = hier[i];
+                  for (i = hierClone.length - 1; i >= 0; i--) {
+                     var rec = hierClone[i];
                      if (rec){
                         var c = createBreadCrumb(rec);
                         if (self._currentRoot && !Object.isEmpty(self._currentRoot)) {

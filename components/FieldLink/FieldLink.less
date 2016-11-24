@@ -14,7 +14,7 @@
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
-      width: calc(50% ~'-' 2px);
+      width: ~'calc(50% - 2px)';
       display: inline-flex;
       align-items: center;
       margin: 0;
@@ -105,11 +105,27 @@
    position: relative;
    white-space: nowrap;
 
-   &.controls-Picker__show,
-   &.ws-has-focus,
-   &:hover {
+   &.controls-Picker__show:not(.ws-disabled),
+   &.ws-has-focus:not(.ws-disabled),
+   &:hover:not(.ws-disabled) {
       border: @controls-FieldLink-border;
       border-color: @controls-FieldLink-border-color-focus-hover;
+   }
+
+   &:not(.controls-FieldLink__multiselect) {
+      .controls-FieldLink__linksWrapper {
+         max-width: 100%;
+      }
+      .controls-FieldLink__item {
+         /* Учитываем отступ под крестик удаления */
+         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+      }
+
+      &.ws-disabled {
+         .controls-FieldLink__item {
+            max-width: 100%;
+         }
+      }
    }
 
    &.controls-Picker__show {
@@ -128,7 +144,8 @@
 
    .controls-TextBox__beforeFieldWrapper {
       order: 0;
-      max-width: calc(100% ~'-' 20px);
+      /* Учитываем ширину "гамбургера" в поле связи */
+      max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
 
       .controls-FieldLink__showAllLinks {
@@ -186,10 +203,6 @@
    }
 
    &.ws-disabled {
-
-      &.controls-TextBox {
-         border-color: @text-box-border-color;
-      }
 
       .controls-TextBox__afterFieldWrapper {
          display: none;

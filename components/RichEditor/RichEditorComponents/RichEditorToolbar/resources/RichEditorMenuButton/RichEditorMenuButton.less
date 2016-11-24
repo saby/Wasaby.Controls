@@ -1,6 +1,6 @@
 .controls-MenuButton__Menu {
    &.controls-RichEditorToolbar__menuButtonPicker {
-      padding: 0px !important;
+      padding: 0px;
       .controls-ListView__item {
          padding: 0 6px;
       }
@@ -39,6 +39,14 @@
          vertical-align: top;
          margin-top: 6px;
          height: 4px;
+      }
+   }
+   //необходимо сдвигать picker на 2px тк в тулбаре нестандартная menuButton
+   &.controls-MenuButton__header-revert-vertical {
+      margin-top: 2px;
+      .controls-MenuButton__headerCenter {
+         margin-top: 0;
+         height: 8px;
       }
    }
 }

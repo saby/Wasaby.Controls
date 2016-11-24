@@ -51,9 +51,11 @@
 }
 .controls-DataGridView {
    .controls-DataGridView__table {
-      .controls-DataGridView__td {
-         &.controls-TreeDataGridView__firstContentCell {
-            padding-left: @tree-view-first-td-padding-left;
+      .controls-DataGridView__tbody {
+         .controls-DataGridView__td {
+            &.controls-TreeDataGridView__firstContentCell {
+               padding-left: @tree-view-first-td-padding-left;
+            }
          }
       }
    }
@@ -176,6 +178,7 @@
 }
 .controls-TreeView__searchBreadCrumbs {
    width: 100%;
+   line-height: normal;
 }
 
 .controls-ListView__hideCheckBoxes-leaf {

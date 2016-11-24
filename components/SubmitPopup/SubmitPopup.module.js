@@ -7,12 +7,13 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 ],
 
    /**
-    * Контрол "Информационное окно". В зависимости от состояния, может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
+    * Класс контрола "Окно подтверждения". В зависимости от состояния (см. {@link status}), может быть диалогом подтверждения, с кнопками "Да", "Нет" и "Отмена" (опционально), или диалогом с кнопкой "Ок".
+    * Для вызова контрола рекомендуется использовать {@link SBIS3.CONTROLS.Utils.InformationPopupManager}.
     * @class SBIS3.CONTROLS.SubmitPopup
     * @extends SBIS3.CONTROLS.InformationPopup
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     */
    function( constants,InformationPopup, template){
       'use strict';
@@ -144,7 +145,9 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                /**
                 * cfg {Boolean} Устанавливает тип диалога: модальный или немодальный.
                 */
-               isModal: true
+               isModal: true,
+
+               additionalClass: 'controls-SubmitPopup_popup'
             },
 
             _buttons: []

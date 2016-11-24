@@ -28,82 +28,85 @@ define('js!SBIS3.CONTROLS.Image',
          MIN_TOOLBAR_WIDTH = 125, //минимальный размер тулбара для которого убирается  напись "загрузить" и кнопка "удалить"
          MIN_TOOLBAR_WIDTH_WITH_EDIT = 155,// минимальный размер тулбара для которого убирается  напись "загрузить" и все оставльные кнопки
          /**
-          * Контрол "Изображение". Позволяет отображать и редактировать изображение
+          * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
+          * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS.Image
           * @extends $ws.proto.CompoundControl
           * @author Крайнов Дмитрий Олегович
+          *
+          * @ignoreOptions validators
+          *
           * @public
           * @control
           * @category Decorate
-          * @ignoreOptions validators
           * @initial
           * <component data-component='SBIS3.CONTROLS.Image' style='width: 100px; height: 100px'>
           * </component>
           */
          Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.prototype */{
             /**
-             * @event onBeginLoad Возникает перед началом загрузки изображения
-             * <wiTag group="Загрузка изображения">
-             * — Обработка результата:
-             * False – отмена загрузки файла.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @event onBeginLoad Происходит перед началом загрузки изображения в компоненте.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @returns {Boolean} В случае если из обработчика события возвращается результат false, то загрузка изображения отменяется.
              * @example
              * <pre>
-             *    Image.subscribe('onBeginLoad', function(event){
+             *    Image.subscribe('onBeginLoad', function(eventObject){
              *       event.setResult(false); // Отменим загрузку изображения
              *    });
              * </pre>
              */
             /**
-             * @event onEndLoad Возникает по завершению загружки изображения
-             * <wiTag group="Загрузка изображения">
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @event onEndLoad Происходит после загрузки изображения в компоненте.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Object} response Ответ бизнес-логики.
              * @example
              * <pre>
-             *    Image.subscribe('onEndLoad', function(event) {
+             *    Image.subscribe('onEndLoad', function(eventObject, response) {
              *       $ws.helpers.alert('Изображение загружено.');
              *    });
              * </pre>
              */
             /**
-             * @event onErrorLoad Возникает при ошибке загрузки изображения
-             * <wiTag group="Загрузка изображения">
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @event onErrorLoad Происходит в случае ошибки при загрузке изображения.
+             * @remark
+             * Ошибка может происходит, если сервер не отвечает либо переданы неверные параметры при вызове метода бизнес-логики.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Object} error Описание ошибки, которое получено от бизнес-логики.
              * @example
              * <pre>
-             *    Image.subscribe('onErrorLoad', function(event) {
+             *    Image.subscribe('onErrorLoad', function(eventObject, error) {
              *       $ws.helpers.alert('Произошла ошибка при загрузке изображения.');
              *    });
              * </pre>
              */
             /**
-             * @event onChangeImage Возникает при смене изображения
-             * <wiTag group="Загрузка изображения">
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
-             * @param {String} image Выбранное изображение
+             * @event onChangeImage Происходит при смене изображения.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {String} image Адрес изображения.
              * @example
              * <pre>
-             *    Image.subscribe('onChangeImage', function(event, image) {
+             *    Image.subscribe('onChangeImage', function(eventObject, image) {
              *       $ws.helpers.alert('Изображение обновлено на ' + image);
              *    });
              * </pre>
              */
              /**
-             * @event onDataLoaded Возникает при загрузке изображения в компонент
-             * <wiTag group="Загрузка изображения">
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
-             * @param {String} imageUrl адрес изображения
-             * @param {bool} firstload первый ли раз прошла загрузка (false- первый, true- не первый)
+             * @event onDataLoaded Происходит при загрузке изображения в компонент.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {String} imageUrl Адрес изображения.
+             * @param {Boolean} firstload Первый ли раз прошла загрузка: false - первый, true- не первый.
              * @example
              * <pre>
-             *    Image.subscribe('onDataLoaded', function(event, image) {
+             *    Image.subscribe('onDataLoaded', function(eventObject, image) {
              *       $ws.helpers.alert('Изображение обновлено на ' + image);
              *    });
              * </pre>
              */
              /**
-             * @event onResetImage Возникает при сбросе изображения
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @event onResetImage Происходит при сбросе изображения.
+             * @remark
+             * Происходит при вызове команды {@link resetImage}.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
              * @example
              * <pre>
              *    Image.subscribe('onResetImage', function(event) {
@@ -120,16 +123,19 @@ define('js!SBIS3.CONTROLS.Image',
              *       event.setResult(deferred);
              *    });
              * </pre>
+             * @see resetImage
              */
             /**
-             * @event onShowEdit Возникает при отображении диалога редактирования изображения
-             * <wiTag group="Обрезка изображения">
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @event onShowEdit Происходит при отображении диалога редактирования изображения.
+             * @remark
+             * Происходит при вызове команды {@link editImage}.
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {String} imageType Тип изображения: 'current' - текущее, 'new' - новое.
+             * @see editImage
              */
             /**
              * @event onBeginSave Возникает при сохранении изображения
              * Позволяет динамически формировать параметры обрезки изображения
-             * <wiTag group="Обрезка изображения">
              * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
              * @param {Object} sendObject Параметры обрезки изображения
              * @example
@@ -143,14 +149,13 @@ define('js!SBIS3.CONTROLS.Image',
              */
             /**
              * @event onEndSave Возникает после обрезки изображения
-             * <wiTag group="Обрезка изображения">
              * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
              */
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
                   /**
-                   * @cfg {Boolean} Использовать панель работы с изображением
+                   * @cfg {Boolean} Устанавливает использование панели для работы с изображением: кнопки загрузить, редактировать и удалить.
                    * @example
                    * <pre>
                    *     <option name="imageBar">true</option>
@@ -158,46 +163,62 @@ define('js!SBIS3.CONTROLS.Image',
                    */
                   imageBar: true,
                   /**
-                   * @cfg {Boolean} Включить режим обрезки изображения.
-                   * Диалог обрезки изображения отображается при загрузке нового изображения и при нажатии на кнопку редактирования изображения
+                   * @cfg {Boolean} Включает диалог редактирования изображения.
+                   * @remark
+                   * Диалог отображается при загрузке нового изображения и при нажатии на кнопку "Редактировать".
                    * @example
                    * <pre>
                    *    <option name="enabled">true</option>
                    * </pre>
+                   * @see editConfig
+                   * @see cropAspectRatio
                    */
                   edit: false,
                   /**
-                   * @cfg {Object} Параметры диалога редактирования изображения
+                   * @cfg {Object} Устанавливает параметры диалога редактирования изображения.
                    * @example
                    * <pre>
                    *    <option name="editConfig">
                    *       <option name="title">Редактирование фото</option>
                    *    </option>
                    * </pre>
+                   * @see edit
+                   * @see cropAspectRatio
+                   * @see cropAutoSelectionMode
+                   * @see cropSelection
                    * @translatable title
                    */
                   editConfig: {
                      title: rk('Редактирование изображения')
                   },
                   /**
-                   * @cfg {Number} Соотношение сторон в выделяемой области
+                   * @cfg {Number} Устанавливает соотношение сторон в выделяемой области.
+                   * @remark
+                   * Применяется для диалога редактирования изображения.
                    * @example
                    * <pre>
                    *    <option name="cropAspectRatio">0.75</option>
                    * </pre>
+                   * @see edit
+                   * @see editConfig
+                   * @see cropAutoSelectionMode
+                   * @see cropSelection
                    */
                   cropAspectRatio: undefined,
                   /**
-                   * @cfg {Boolean} Режим автоматического маскимального расширения и центрирования области выделения
-                   * Если установлено в false - выделение будет установлено в соотстветствии с параметром cropSelection
+                   * @cfg {Boolean} Устанавливает режим автоматического маскимального расширения и центрирования области выделения.
+                   * @remark
+                   * false - выделение будет установлено в соотстветствии с параметром {@link cropSelection}.
                    * @example
                    * <pre>
                    *     <option name="cropAutoSelectionMode">true</option>
                    * </pre>
+                   * @see cropAspectRatio
+                   * @see cropSelection
                    */
                   cropAutoSelectionMode: true,
                   /**
-                   * @cfg {Array} Координаты начального выделения
+                   * @cfg {Array} Устанавливает координаты начального выделения при редактировании изображения.
                    * @example
                    * <pre>
                    *     <options name="cropSelection" type="array">
@@ -207,20 +228,24 @@ define('js!SBIS3.CONTROLS.Image',
                    *        <option>200</option>
                    *     </options>
                    * </pre>
+                   * @see cropAspectRatio
+                   * @see cropAutoSelectionMode
                    */
                   cropSelection: undefined,
                   /**
-                   * @cfg {String} Указывает способ отображения изображения в контейнере.
+                   * @cfg {String} Устанавливает способ отображения изображения в контейнере.
                    * @variant normal Изображение размещается в верхнем левом углу. Изображение располагается в центре, если размер контейнера больше, чем размер изображения.
                    * @variant stretch Изображение вытягивается или сужается, чтобы в точности соответствовать размеру контейнера.
                    * @example
                    * <pre>
                    *     <option name="stretch">true</option>
                    * </pre>
+                   * @see setSizeMode
+                   * @see getSizeMode
                    */
                   sizeMode: 'normal',
                   /**
-                   * @cfg {String} Изображение, используемое по умолчанию
+                   * @cfg {String} Устанавливает изображение, используемое по умолчанию.
                    * @example
                    * <pre>
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
@@ -228,11 +253,56 @@ define('js!SBIS3.CONTROLS.Image',
                    */
                   defaultImage: cHelpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
                   /**
-                   * @cfg {Object} Связанный источник данных
+                   * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
+                   * @remark
+                   * Обязательная для конфигурации опция. Если опция не установлена, то контрол не будет отображён.
+                   * Для работы с изображениями (чтение и запись в БД) применются <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/'>методы БЛ для работы с файлами</a>.
+                   * @example
+                   * Конфигурация источника через JS-код:
+                   * <pre>
+                   *     var mySource = new SbisService({
+                   *        endpoint: 'Goods',
+                   *        binding: {
+                   *           read: 'ReadImage'
+                   *        }
+                   *     });
+                   *     image.SetDataSource(mySource);
+                   * </pre>
+                   * Конфигурация источника данных контрола "Изображение" через вёрстку:
+                   * <pre>
+                   *     <options name="dataSource">
+                   *        <option name="module" value="js!WS.Data/Source/SbisService"></option>
+                   *        <options name="options">
+                   *            <options name="endpoint">
+                   *                <option name="contract" value="Контрагент"></option>
+                   *            </options>
+                   *            <options name="binding">
+                   *                <option name="read">ПрочитатьИзображение</option>
+                   *            </options>
+                   *        </options>
+                   *     </options>
+                   * </pre>
+                   * @see setDataSource
+                   * @see getDataSource
                    */
                   dataSource: undefined,
                   /**
-                   * @cfg {Object} Фильтр данных
+                   * @cfg {Object} Устанавливает фильтр данных.
+                   * @remark
+                   * Как правило, опция применяется, чтобы установить значение параметров для методов источника данных (см. {@link dataSource}).
+                   * Например, метод чтения файла принимает аргумент: либо идентификатор записи, либо идентификатор файла, которые используются для получения файла изображения (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/read/'>Прочитать. Read file method</a>.)
+                   * @example
+                   * Для изображение установлено, что из контекста из поля"record/@Товар" будет получено значение параметра Идо, который используется для метода получения избражения.
+                   * <pre>
+                   *    <component data-component="SBIS3.CONTROLS.Image">
+                   *       ...
+                   *       <options name="filter">
+                   *          <option name="ИдО" bind="record/@Товар" value=""/>
+                   *       </options>
+                   *    </component>
+                   * </pre>
+                   * @see setFilter
+                   * @see getFilter
                    */
                   filter: {},
                   /**
@@ -306,8 +376,15 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             /**
-             * Установить способ отображения изображения в контейнере
-             * @param {String} Способ отображения
+             * Устанавливает способ отображения изображения в контейнере.
+             * @param {String} sizeMode Способ отображения. Варианты значений:
+             * <ul>
+             *    <li> normal Изображение размещается в верхнем левом углу. Изображение располагается в центре, если размер контейнера больше, чем размер изображения.</li>
+             *    <li> stretch Изображение вытягивается или сужается, чтобы в точности соответствовать размеру контейнера.</li>
+             * </ul>
+             * @param {Boolean} noReload true - не производить перезагрузку данных.
+             * @see sizeMode
+             * @see getSizeMode
              */
             setSizeMode: function(sizeMode, noReload) {
                this._options.sizeMode = sizeMode;
@@ -316,8 +393,14 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             /**
-             * Получить текущий способ отображения изображения в контейнере
-             * @returns {String}
+             * Возвращает текущий способ отображения изображения в контейнере.
+             * @returns {String} Варианты значений:
+             * <ul>
+             *    <li> normal Изображение размещается в верхнем левом углу. Изображение располагается в центре, если размер контейнера больше, чем размер изображения.</li>
+             *    <li> stretch Изображение вытягивается или сужается, чтобы в точности соответствовать размеру контейнера.</li>
+             * </ul>
+             * @see sizeMode
+             * @see setSizeMode
              */
             getSizeMode: function() {
                return this._options.sizeMode;
@@ -523,15 +606,43 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок обработчиков команд
                ------------------------------------------------------------ */
+             /**
+              * Иниицирует вызов диалога для выбора загружаемого изображения.
+              * @remark
+              * Для контрола должен быть установлен {@link dataSource источник данных}.
+              * @param {*} [originalEvent] Тип события, которое инициирует вызов диалога.
+              * @command uploadImage
+              * @see editImage
+              * @see resetImage
+              */
             _uploadImage: function(originalEvent) {
                if (this.getDataSource()) {
                   this._getFileLoader().selectFile(originalEvent, false);
                }
             },
+             /**
+              * Инициирует вызов диалога редактирования изображения.
+              * @remark
+              * При открытии диалога происходит событие {@link onShowEdit}.
+              * @command editImage
+              * @see onShowEdit
+              * @see uploadImage
+              * @see resetImage
+              */
             _editImage: function() {
                fcHelpers.toggleLocalIndicator(this.getContainer(), true);
                this._showEditDialog('current');
             },
+             /**
+              * Инициирует сбор изображения.
+              * @remark
+              * При сбросе изображения происходит вызов метода удаления из опции destroy (см. {@link dataSource}), а в контрол будет установлено изображение по умолчанию {@link defaultImage}.
+              * Если опция не установлена, что производится перезагрузка {@link reload}.
+              * При вызове команды происходит событие {@link onResetImage}.
+              * @command resetImage
+              * @see uploadImage
+              * @see editImage
+              */
             _resetImage: function() {
                var
                   self = this,
@@ -574,9 +685,11 @@ define('js!SBIS3.CONTROLS.Image',
                https://inside.tensor.ru/opendoc.html?guid=427908a9-1e9e-4e7f-92f0-db5b27c1a631
                ------------------------------------------------------------------------------------------------------------------------------------ */
             /**
-             * Установить источник данных
-             * @param {Object} dataSource
-             * @param {Boolean} noReload установить фильтр без перезагрузки данных
+             * Устанавливает источник данных.
+             * @param {WS.Data/Source/SbisService} dataSource Экземпляр класса с конфигурацией источника.
+             * @param {Boolean} noReload true - не перезагружать изображение после установки источника данных.
+             * @see dataSource
+             * @see getDataSource
              */
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
@@ -589,16 +702,20 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             /**
-             * Получить текущий источник данных
-             * @returns {Object}
+             * Возвращает текущий источник данных.
+             * @returns {WS.Data/Source/SbisService} Экземпляр класса с конфигурацией источника.
+             * @see dataSource
+             * @see setDataSource
              */
             getDataSource: function() {
                return this._options.dataSource;
             },
             /**
-             * Установить фильтр
-             * @param {Object} filter
-             * @param {Boolean} noReload установить фильтр без перезагрузки данных
+             * Устанавливает фильтр.
+             * @param {Object} filter Фильтр контрола.
+             * @param {Boolean} noReload true - не перезагружать изображение после установки фильтра.
+             * @see filter
+             * @see getFilter
              */
             setFilter: function(filter, noReload) {
                this._options.filter = filter;
@@ -607,8 +724,10 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             /**
-             * Получить текущий фильтр
-             * @returns {Object}
+             * Возвращает установленный фильтр.
+             * @returns {Object} Фильтр контрола.
+             * @see filter
+             * @see setFilter
              */
             getFilter: function() {
                return this._options.filter;

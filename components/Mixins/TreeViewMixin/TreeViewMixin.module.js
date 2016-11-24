@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
     * @mixin SBIS3.CONTROLS.TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    *
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
-    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрыть чекбоксы у листьев.
-    * @cssModifier controls-ListView__hideCheckBoxes-node Скрыть чекбоксы у папок.
+    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
+    * @cssModifier controls-ListView__hideCheckBoxes-node Скрывает чекбоксы у папок (узлов и скрытых узлов). Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
@@ -58,9 +59,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @returns {Boolean} Возвращает признак является ли кнопкой по умолчанию.*/
       getActiveNodeKey: function() {
          var
-            result,
+            result, selProjItem;
+         if (this._options.selectedIndex !== null && this._options.selectedIndex !== undefined && this._options.selectedIndex >= 0) {
             selProjItem = this._getItemsProjection().at(this._options.selectedIndex);
-         if (this._options.selectedIndex >= 0) {
             if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
                result = selProjItem.getContents().getId();
             }
@@ -173,6 +174,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
          }
       },
+
+      _loadFullData: function(deepReload) {
+         return this.reload(this.getFilter(), this.getSorting(), 0, 1000, deepReload);
+      },
       //********************************//
       //       FolderFooter_Start       //
       //********************************//
@@ -226,10 +231,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            if (item.isNode() && item.isExpanded()) {
+            if (this._needCreateFolderFooter(item)) {
                this._createFolderFooter(item.getContents().getId());
             }
          }.bind(this));
+      },
+
+      _needCreateFolderFooter: function(item) {
+         var
+             model = item.getContents(),
+             id = model && model.get(this._options.keyField);
+         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //

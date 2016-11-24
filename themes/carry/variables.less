@@ -14,6 +14,7 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 8px;
+@data-grid-first-content-cell-padding-left:     8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
 @data-grid-header-cell-padding:                 @data-grid-cell-padding;
@@ -44,10 +45,10 @@
 // --------- //
 // Combo box //
 // --------- //
-
-@combo-box-arrow-width:                         32px;
-@combo-box-arrow-height:                        32px;
-@combo-box-arrow-margin:                        -8px -8px 0 0;
+@combo-box-right-padding:                       0;
+@combo-box-arrow-width:                         24px;
+@combo-box-arrow-height:                        24px;
+@combo-box-arrow-margin:                        -8px 0 0 0;
 @combo-box-arrow-right-offset:                  8px;
 @compo-box-fieldWrapper-margin-right:           40px;
 @combo-box-after-width:                         40px;
@@ -96,6 +97,7 @@
 @date-range-choose-current-value-bg-hover-color:   @date-range-choose-current-value-bg-color;
 @date-range-choose-current-value-border-bottom: none;
 @date-range-choose-current-value-margin-bottom: 0;
+@date-range-choose-current-value-padding-left-right: 0;
 
 @date-range-choose-year-font-size:              @globalDefaultFontSize;
 @date-range-choose-year-height:                 40px;
@@ -232,6 +234,7 @@
 @button-primary-hover-bg:                       #FDECD9;
 @button-primary-active-bg:                      #FE9442;
 @button-primary-border:                         @button-border;
+@button-padding:                                0 16px;
 
 // Normal disabled button
 @button-disabled-text-color:                    #CCCCCC;
@@ -359,19 +362,26 @@
 // DropdownList//
 // --------------- //
 
+
 @DropdownList-height:                           40px;
 @DropdownList-picker-menu-font-size:            @font-basic-size;
+@DropdownList-picker-offset:                    8px 0 0 2px;
+@DropdownList-picker-fastdatafilter-offset:     0 0 0 2px;
 @DropdownList-picker-margin-top:                0;
 @DropdownList-picker-padding:                   0;
 @DropdownList-picker-max-height:                400px;
 @DropdownList-picker-head-border-radius:        0;
-@DropdownList-picker-head-margin:               2px 0 0 2px;
+@DropdownList-picker-head-margin:               2px 0 0 0;
+@DropdownList-picker-head-padding:              0 8px;
+@DropdownList-picker-head-duplicate-type-top-padding: 0;
 @DropdownList-picker-hor-revert-head-margin:    2px 2px 0 0;
 @DropdownList-picker-border:                    0;
 @DropdownList-picker-list-right-border-radius:  @DropdownList-picker-head-border-radius;
 @DropdownList-picker-list-border-radius:        @DropdownList-picker-head-border-radius;
 @DropdownList-border-color:                     transparent;
 @DropdownList-picker-menu-item-color:           #E1ECF6;
+@DropdownList-picker-menu-item-height:          30px;
+@DropdownList-picker-menu-item-padding:         5px 8px 4px 8px;
 @DropdownList-picker-bg:                        transparent;
 @DropdownList-header-bg:                        #C1D7F0;
 @DropdownList-linkStyleHoverColor:              @blue-dark-color;
@@ -557,6 +567,7 @@
 @controls-editInPlace-editor-margin-top:        2px;
 @controls-editInPlace-editor-margin-bottom:     2px;
 @controls-editInPlace-editor-padding:           2px;
+@controls-editInPlace-first-editor-padding-left:2px;
 
 //FieldLink
 
@@ -574,14 +585,27 @@
 @controls-FieldLink-afterField-background:      transparent;
 
 //SubmitPopup
+@controls-SubmitPopup-size-standart-width:      660px;
+@controls-SubmitPopup-size-big-width:           800px;
 @controls-SubmitPopup-button-height:            40px;
-@controls-SubmitPopup-border-top:               @controls-InformationPopup-border;
+@controls-SubmitPopup-border-top:               @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-bottom:            none;
+@controls-SubmitPopup-message-font-size:        32px;
+@controls-SubmitPopup-message-font-weight:      bold;
+@controls-SubmitPopup-details-font-size:        24px;
+@controls-SubmitPopup-button-width:             204px;
+@controls-SubmitPopup-button-mini-width:        204px;
+@controls-SubmitPopup-button-height:            60px;
+@controls-SubmitPopup-footer-bg:                inherit;
+@controls-SubmitPopup-footer-border-top:        none;
 
 //InformationPopup
-@controls-InformationPopup-border:              1px solid #E4E4E4;
 @controls-InformationPopup-border-bottom:       3px solid;
-@controls-InformationPopup-border-top:          @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-top:          none;
+
+//NotificationPopup
+@controls-NotificationPopup-border-top:         @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-bottom:      none;
 
 //Scrollbar
 @controls-Scrollbar-width:                         4px;

@@ -9,11 +9,11 @@
    <div class="controls-SubmitPopup__footer">
       <div class="controls-SubmitPopup__buttonContainer">
          {{? it.status === 'confirm'}}
-         <component data-component="{{? it.positiveButton.isLink}}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.Button{{?}}" name="positiveButton" class="controls-SubmitPopup__button controls-SubmitPopup__button-mini">
+         <component data-component="{{? it.positiveButton.isLink}}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.Button{{?}}" name="positiveButton" class="controls-SubmitPopup__button {{? it.hasCancelButton}}controls-SubmitPopup__button-mini{{?}}">
             <option name="caption">{{=it.positiveButton.caption}}</option>
             <option name="primary">true</option>
          </component>
-         <component data-component="{{? it.negativeButton.isLink}}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.Button{{?}}" name="negativeButton" class="controls-SubmitPopup__button controls-SubmitPopup__button-mini">
+         <component data-component="{{? it.negativeButton.isLink}}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.Button{{?}}" name="negativeButton" class="controls-SubmitPopup__button {{? it.hasCancelButton}}controls-SubmitPopup__button-mini{{?}}">
             <option name="caption">{{=it.negativeButton.caption}}</option>
          </component>
          {{? it.hasCancelButton}}

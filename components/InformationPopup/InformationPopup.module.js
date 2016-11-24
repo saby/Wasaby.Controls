@@ -7,12 +7,18 @@ define('js!SBIS3.CONTROLS.InformationPopup',
    ],
 
    /**
-    * Всплывающий контрол с линией в шапке, зависящей от состояния, и содержимым.
+    * Класс контрола "Всплывающее информационное окно". Содержимое окна строится по шаблону, установленному в опции {@link template}. Цвет линии в шапке окна зависит от установленного состояния {@link status}.
+    *
     * @class SBIS3.CONTROLS.InformationPopup
     * @extends SBIS3.CORE.CompoundControl
+    *
+    * @mixes SBIS3.CONTROLS.PopupMixin
+    * @mixes SBIS3.CORE.LikeWindowMixin
+    *
+    *
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     */
    function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
       'use strict';
@@ -28,7 +34,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
             _options: {
 
                /**
-                * @cfg {InformationPopupStatus} Устанавливает состояние диалога. От состояния заивисит цвет линии в шапке и иконка по умолчани.
+                * @cfg {InformationPopupStatus} Устанавливает состояние окна. От состояния зависит цвет линии в шапке и иконка.
                 */
                status: 'default',
                /**
@@ -45,8 +51,8 @@ define('js!SBIS3.CONTROLS.InformationPopup',
          },
 
          /**
-          * Установить новое состояние
-          * @param {InformationPopupStatus} status
+          * Устанавливает новое состояние окна.
+          * @param {InformationPopupStatus} status Состояние.
           */
          setStatus: function(status){
             this.getContainer().removeClass('controls-InformationPopup__status-' + this._options.status).addClass('controls-InformationPopup__status-' + status);

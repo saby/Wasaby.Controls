@@ -5,8 +5,6 @@
 @gray-color:                              #aaa;
 @gray-light-color:                        #eee;
 
-
-@default-color:                           #f2f2f2;
 @primary-color:                           #ffcc99;
 @secondary-color:                         #4e5762;
 
@@ -245,6 +243,8 @@
 @check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
 @check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
 
+
+
 // -------- //
 // Switcher //
 // -------- //
@@ -436,7 +436,6 @@
 
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
-@text-box-field-after-margin:             0 21px 0 0;
 
 @text-box-field-text-color:               #666666;
 @text-box-field-focus-text-color:         @white-color;
@@ -549,7 +548,7 @@
 @combo-box-disabled-color:                      #38495B;
 
 @combo-box-picker-border:                       1px solid @gray-dark-color;
-@combo-box-picker-item-padding:                 11px 5px;
+@combo-box-picker-item-padding:                 12px 5px 11px 5px;
 
 @combo-box-picker-item-bg:                      @text-box-focus-bg;
 
@@ -838,12 +837,13 @@
 
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
+@data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-td-checkbox-width:                   16px;
 @data-grid-td-visible-checkbox-width:           24px;
-@data-grid-checkbox-margin:                     0;
+@data-grid-checkbox-margin:                     6px 0 0 -6px;
 @data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
@@ -879,6 +879,7 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
+@controls-editInPlace-first-editor-padding-left:    1px;
 
 // --------------- //
 // OperationsMark //
@@ -890,8 +891,9 @@
 //    MultiView    //
 // --------------- //
 @listView-check-box-top:                            5px;
-@listView-check-box-width:                          16px;
-@listView-check-box-height:                         16px;
+@listView-check-box-border:                         1px solid;
+@listView-check-box-width:                          18px;
+@listView-check-box-height:                         18px;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-image-margin:                  10px 40px;
@@ -952,10 +954,12 @@
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
+@controls-FieldLink-showAllLinks-width:            20px;
 
 @controls-FieldLink-linkItem-margin:               2px 0;
 @controls-FieldLink-linkItem-padding:              0 17px 0 4px;
 @controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-width:          20px;
 @controls-FieldLink-linkItem-cross-right:          -4px;
 @controls-FieldLink-linkItem-cross-top:            -3px;
 
