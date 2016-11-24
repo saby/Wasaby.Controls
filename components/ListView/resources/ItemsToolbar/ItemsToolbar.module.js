@@ -354,7 +354,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 /* При зафиксированном тулбаре может пропасть отслеживаемый элемент (например при перерисовке/удалении),
                    если он пропал, то при вызове show, не смотрим на флаг lockingToolbar,
                    ведь больше нет элемента у которого был зафиксирован тулбар, фиксируемся у нового переданного target'a */
-                if (dcHelpers.contains(this.getParent().getContainer(), this._currentTarget.container)) {
+                if (!this._currentTarget || dcHelpers.contains(this.getParent().getContainer(), this._currentTarget.container)) {
                    return;
                 }
              }
