@@ -3220,17 +3220,17 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
                      this._getMover().move(models, target.getModel(), position);
-                  } else if (dragObject.getTargetsControl()) {
+                  } else {
                      var currentDataSource = this.getDataSource(),
-                        targetsControl = dragObject.getTargetsControl(),
-                        targetsDataSource = targetsControl && targetsControl.getDataSource(),
+                        dragOwner = dragObject.getOwner(),
+                        ownersDataSource = dragOwner.getDataSource(),
                         useDefaultMove = false;
-                     if (currentDataSource && targetsDataSource &&
-                        currentDataSource.getEndpoint().contract == targetsDataSource.getEndpoint().contract
+                     if (currentDataSource && dragOwner &&
+                        currentDataSource.getEndpoint().contract == ownersDataSource.getEndpoint().contract
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), targetsControl.getItems(), useDefaultMove);
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
             }
