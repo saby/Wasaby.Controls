@@ -51,11 +51,18 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
                function onSelectionChanged() {
                   var selectedItems = childControl.getSelectedItems(),
-                      keyField = childControl.getProperty('keyField');
+                      keyField = childControl.getProperty('keyField'),
+                      index;
 
                   if(diff.added.length) {
                      collectionHelpers.forEach(diff.added, function(addedKey) {
-                        result.added.push(selectedItems.at(selectedItems.getIndexByValue(keyField, addedKey)));
+                        /* Записи с выделенным ключём может не быть в recordSet'e
+                           (например это запись внутри папки или на другой странице) */
+                        index = selectedItems.getIndexByValue(keyField, addedKey);
+
+                        if(index !== -1) {
+                           result.added.push(selectedItems.at(index));
+                        }
                      });
                   }
 
@@ -107,16 +114,18 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
       setSelectedItems: function(items) {
          var self = this,
-             keys = [];
+             keys = [],
+             linkedObject = this._getLinkedObject(),
+             keyField = linkedObject.getProperty('keyField');
 
          items.each(function(rec) {
             if(self._options.selectedFilter(rec)) {
-               keys.push(rec.getId());
+               keys.push(rec.get(keyField));
             }
          });
 
          if(keys.length) {
-            this._getLinkedObject().setSelectedKeys(keys);
+            linkedObject.setSelectedKeys(keys);
          }
       },
 

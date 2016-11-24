@@ -14,6 +14,7 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 8px;
+@data-grid-first-content-cell-padding-left:     8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
 @data-grid-header-cell-padding:                 @data-grid-cell-padding;
@@ -566,6 +567,7 @@
 @controls-editInPlace-editor-margin-top:        2px;
 @controls-editInPlace-editor-margin-bottom:     2px;
 @controls-editInPlace-editor-padding:           2px;
+@controls-editInPlace-first-editor-padding-left:2px;
 
 //FieldLink
 
@@ -583,14 +585,27 @@
 @controls-FieldLink-afterField-background:      transparent;
 
 //SubmitPopup
+@controls-SubmitPopup-size-standart-width:      660px;
+@controls-SubmitPopup-size-big-width:           800px;
 @controls-SubmitPopup-button-height:            40px;
-@controls-SubmitPopup-border-top:               @controls-InformationPopup-border;
+@controls-SubmitPopup-border-top:               @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-bottom:            none;
+@controls-SubmitPopup-message-font-size:        32px;
+@controls-SubmitPopup-message-font-weight:      bold;
+@controls-SubmitPopup-details-font-size:        24px;
+@controls-SubmitPopup-button-width:             204px;
+@controls-SubmitPopup-button-mini-width:        204px;
+@controls-SubmitPopup-button-height:            60px;
+@controls-SubmitPopup-footer-bg:                inherit;
+@controls-SubmitPopup-footer-border-top:        none;
 
 //InformationPopup
-@controls-InformationPopup-border:              1px solid #E4E4E4;
 @controls-InformationPopup-border-bottom:       3px solid;
-@controls-InformationPopup-border-top:          @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-top:          none;
+
+//NotificationPopup
+@controls-NotificationPopup-border-top:         @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-bottom:      none;
 
 //Scrollbar
 @controls-Scrollbar-width:                         4px;

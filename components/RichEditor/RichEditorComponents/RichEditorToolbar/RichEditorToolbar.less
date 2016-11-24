@@ -153,7 +153,6 @@
 .fre-smiles {
    &.controls-MenuButton__Menu {
       width: 165px;
-      padding: 1px 0;
       .controls-ListView__item {
          display: inline-block;
          height: 32px;
@@ -173,6 +172,10 @@
       .ws-fre__smile {
          height: 24px;
       }
+   }
+   //необходимо сдвигать picker на 2px тк в тулбаре нестандартная menuButton
+   &.controls-popup-revert-vertical {
+      margin-top: 2px !important; //important тк margin 0 прописывается inline стилем при расчете picker`a
    }
 }
 /*Блок вставки удаления списка*/
