@@ -3224,13 +3224,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      var currentDataSource = this.getDataSource(),
                         targetsControl = dragObject.getTargetsControl(),
                         targetsDataSource = targetsControl && targetsControl.getDataSource(),
-                        dataSource;
+                        useDefaultMove = false;
                      if (currentDataSource && targetsDataSource &&
                         currentDataSource.getEndpoint().contract == targetsDataSource.getEndpoint().contract
-                     ) {
-                        dataSource = currentDataSource;
+                     ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
+                        useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dataSource);
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), targetsControl.getItems(), useDefaultMove);
                   }
                }
             }
