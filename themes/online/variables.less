@@ -1760,6 +1760,7 @@
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
+@data-grid-first-content-cell-padding-left:     8px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -1903,6 +1904,7 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
+@controls-editInPlace-first-editor-padding-left:    3px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -2122,6 +2124,7 @@
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
 @controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
+@controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkContainer-padding:         4px;
 
 @controls-FieldLink-picker-max-height:             500px;
@@ -2134,6 +2137,7 @@
 @controls-FieldLink-linkItem-position:             relative;
 @controls-FieldLink-linkItem-padding:              0 17px 0 4px;
 @controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-width:          21px;
 @controls-FieldLink-linkItem-cross-right:          -4px;
 @controls-FieldLink-linkItem-cross-top:            -2px;
 @controls-FieldLink-linkItem-cross-padding:        3px 5px 3px 0;
@@ -2157,7 +2161,7 @@
 @back-button-font-size:                            18px;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
-@back-button-arrow-height:                         17px;
+@back-button-arrow-height:                         24px;
 @icon-size:                                        16px;
 @icon-width:                                       16px;
 @icon-height:                                      16px;
@@ -2193,14 +2197,16 @@
 @controls-InformationPopup-success-status-border-color:       #72BE44;
 @controls-InformationPopup-error-status-border-color:         #EF463A;
 @controls-InformationPopup-warning-status-border-color:       #FEC63F;
-@controls-InformationPopup-border:                            1px solid #E4E4E4;
 @controls-InformationPopup-border-top:                        3px solid;
-@controls-InformationPopup-border-left:                       @controls-InformationPopup-border !important;
-@controls-InformationPopup-border-right:                      @controls-InformationPopup-border !important;
-@controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-bottom:                     none;
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
+@controls-NotificationPopup-border:                                          1px solid #E4E4E4;
+@controls-NotificationPopup-border-top:                                      none;
+@controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
 @controls-NotificationPopup-header-height:                                   40px;
 @controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
 @controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
@@ -2215,17 +2221,20 @@
 @controls-SubmitPopup-size-big-width:              440px;
 @controls-SubmitPopup-body-padding:                32px;
 @controls-SubmitPopup-message-font-size:           18px;
+@controls-SubmitPopup-message-font-weight:         normal;
 @controls-SubmitPopup-message-margin-bottom:       8px;
+@controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
 @controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
+@controls-SubmitPopup-border:                      2px solid #E4E4E4;
 @controls-SubmitPopup-border-top:                  none;
-@controls-SubmitPopup-border-left:                 @controls-InformationPopup-border;
-@controls-SubmitPopup-border-right:                @controls-InformationPopup-border;
-@controls-SubmitPopup-border-bottom:               @controls-InformationPopup-border;
+@controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
+@controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;
+@controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);

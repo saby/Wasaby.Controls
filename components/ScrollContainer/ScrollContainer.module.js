@@ -58,13 +58,18 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * </pre>
                 * @see getContent
                 */
-               content: ''
+               content: '',
+               activableByClick: false
             },
             _content: null
          },
 
 
-         $constructor: function() {},
+         $constructor: function() {
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась, 
+            // сделаем свой контекст прозрачным
+            this._context = this._context.getPrevious();
+         },
 
          init: function() {
             ScrollContainer.superclass.init.call(this);
@@ -75,7 +80,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
-
+            // Что бы до инициализации не было видно никаких скроллов
+            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _subscribeOnScroll: function(){
@@ -89,10 +95,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideScrollbar: function(){
-            var style = {
-                  marginRight: -this._getBrowserScrollbarWidth()
-               }
-            this._content.css(style);
+            if (!cDetection.safari && !cDetection.chrome){
+               var style = {
+                     marginRight: -this._getBrowserScrollbarWidth()
+                  }
+               this._content.css(style);
+            }
          },
 
          _getBrowserScrollbarWidth: function() {
@@ -117,6 +125,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
+            ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
