@@ -216,6 +216,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @variant simple В выпадающем списке отображаются только элементы коллекции.
                 * @variant duplicateHeader В выпадающем списке выбранное значение дублируется в шапке.
                 * @variant titleHeader В шапке отображается текст, установленный в опции {@link title}.
+                * @variant filter Для выпадающих списков, располагающихся на панели фильтрации.
                 */
                type: 'simple',
                /**
@@ -570,8 +571,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerResetButton.bind('click', this._resetButtonClickHandler.bind(this));
          },
          _resetButtonClickHandler: function(){
-            this.removeItemsSelectionAll();
-            this.hidePicker();
+            if (this._options.type == 'filter'){
+               this._hideAllowed = true;
+               this._options.selectedKeys = [null];
+               this._notifyOnPropertyChanged('selectedKeys');
+               this.hide();
+            }
+            else{
+               this.removeItemsSelectionAll();
+               this.hidePicker();
+            }
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
