@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/"> Добавление по месту в иерархическом списке</a>.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -146,14 +146,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * @see $ws.proto.Control#sendCommand
              * @see SBIS3.CONTROLS.ListView#onItemActivate
              * @see SBIS3.CONTROLS.ListView#activateItem
+             * @see editArrow
              */
             arrowActivatedHandler: undefined,
             /**
-             * @cfg {String} Отображать кнопку редактирования папки или нет ( >> рядом с названием папки ).
+             * @cfg {String} Устанавливает отображение кнопки (>>) справа от названия узла (папки) или скрытого узла.
              * @example
              * <pre>
-             *     <option name="editArrow" type="boolean">false</option>
+             *     <option name="editArrow" type="boolean">true</option>
              * </pre>
+             * @see arrowActivatedHandler
              */
             editArrow: false,
             /**

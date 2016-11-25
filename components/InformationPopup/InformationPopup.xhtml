@@ -1,3 +1,3 @@
-<div class="controls-InformationPopup controls-FloatArea controls-InformationPopup__status-{{=it.status}}">
+<div class="controls-InformationPopup controls-FloatArea controls-InformationPopup__status-{{=it.status}} {{=it.additionalClass || ''}}">
    {{? it.template}}{{=it.template.apply(this, [it])}}{{?}}
 </div>

@@ -154,6 +154,9 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 * cfg {Boolean} Включить автоширину. В таком случае фиксация ширина окна ложитсья на сторону пользователя.
                 */
                autoWidth: false
+               isModal: true,
+
+               additionalClass: 'controls-SubmitPopup_popup'
             },
 
             _buttons: []
