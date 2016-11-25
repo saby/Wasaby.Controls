@@ -145,7 +145,15 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                /**
                 * cfg {Boolean} Устанавливает тип диалога: модальный или немодальный.
                 */
-               isModal: true
+               isModal: true,
+               /**
+                * cfg {Boolean} Использовать ли кнопки подтверждения. Применяется для диалогов со статусом default, success  и error.
+                */
+               useConfirmButtons: false,
+               /**
+                * cfg {Boolean} Включить автоширину. В таком случае фиксация ширина окна ложитсья на сторону пользователя.
+                */
+               autoWidth: false
             },
 
             _buttons: []
@@ -159,7 +167,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
 
             var self = this;
 
-            if(this._options.status === 'confirm'){
+            if(this._options.status === 'confirm' || this._options.useConfirmButtons){
                this._registerButton(this.getChildControlByName('positiveButton'), true);
                this._registerButton(this.getChildControlByName('negativeButton'), false);
 
