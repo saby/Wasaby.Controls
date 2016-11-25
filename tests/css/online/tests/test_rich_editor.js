@@ -122,6 +122,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				this.addLink = find('[sbisname="FieldRichEditor 1"] [sbisname="link"]')
 				this.linkInput = find('input[name="fre_link_href"]')
 				this.ok = find('.ws-window-titlebar [type="button"] .controls-Button__text')
+				this.wrap = find('[sbisname="Button 1"]');
 				actions.wait(500);				
             })
 
@@ -293,7 +294,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentCenter', 2000);
 				actions.click('.icon-AlignmentCenter');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('right', function (actions) {
@@ -303,7 +305,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentRight', 2000);
 				actions.click('.icon-AlignmentRight');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('justify', function (actions) {
@@ -313,7 +316,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentWidth', 2000);
 				actions.click('.icon-AlignmentWidth');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
     });
 
