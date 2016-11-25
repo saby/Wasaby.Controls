@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
       
       _notifyOnEndValueChanged: function () {
          this._notifyOnPropertyChanged('endValue');
-         this._notify('onEndValueChange', this._options.startEnd);
+         this._notify('onEndValueChange', this._options.endValue);
       },
 
       _notifyOnRangeChanged: function () {
