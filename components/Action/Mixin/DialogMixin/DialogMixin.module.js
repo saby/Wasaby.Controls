@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "js!SBIS3.CORE.FloatArea",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
-   "Core/helpers/collection-helpers"
-], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers){
+   "Core/helpers/collection-helpers",
+   "Core/IoC"
+], function( cMerge, Deferred, Dialog, FloatArea, Model, Utils, colHelpers, IoC){
    'use strict';
 
    /**
@@ -45,7 +46,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             mode: 'dialog'
 
          },
-         _dialog: undefined
+         _dialog: undefined,
+         _executedDeferred: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -60,7 +62,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       $constructor: function() {
 
          if ( this._options.dialogComponent && !this._options.template) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.4.100', 1);
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.5', 1);
             this._options.template = this._options.dialogComponent;
          }
          this._publish('onAfterShow', 'onBeforeShow');
@@ -82,7 +84,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        *
       */
       _doExecute: function(meta) {
-         return this._openComponent(meta, this._options.template);
+         this._executedDeferred = new Deferred();
+         this._setConfig();
+         this._openComponent(meta, this._options.template);
+         return this._closeDeferred;
       },
 
       _openDialog: function(meta, template) {
@@ -94,38 +99,16 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _openComponent: function(meta, template, mode) {
-
-         this._setConfig();
-
-
-         this._showDialog(config, meta, mode);
-
-         return executeDeferred;
-      },
-
-      _showDialog: function(config, meta, mode) {
-         var floatAreaCfg,
-             Component;
+         var
+            config = this._getDialogConfig(meta, template, mode);
          mode = mode || this._options.mode;
-         if (mode == 'floatArea') {
-            Component = FloatArea;
-            floatAreaCfg = this._getFloatAreaConfig(meta);
-            cMerge(config, floatAreaCfg);
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-         }
-
          if (this._dialog && !this._dialog.isAutoHide()){
             cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
-         else{
-            this._dialog = new Component(config);
+         else {
+            this._createComponent(config, meta, mode);
          }
-      },
-
-      showDialog: function(config, meta, mode) {
-         this._createDialog(config, meta, mode);
       },
 
       _buildComponentConfig: function(meta) {
@@ -136,9 +119,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
          this._dialog = new Component(config);
       },
-
-      _getComponentConfig: function(meta) {
-         var defaultConfig = {
+      /**
+       * Возвращает конфигурацию диалога по умолчанию.
+       * @param mode
+       * @returns {*}
+       * @private
+       */
+      _getDeafuiltDialogConfig: function(mode) {
+         if (mode == 'floatArea') {
+            return {
                isStack: true,
                autoHide: true,
                buildMarkupWithContext: true,
@@ -151,36 +140,44 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                animation: 'slide'
                /* временнное решение проблемы описанной в надзадаче */
                , block_by_task_1173286428: false
-            },
-            config = {};
-         meta.componentOptions = meta.componentOptions ||  {};
-         colHelpers.forEach(defaultConfig, function(defaultValue, key){
+            };
+         } else {
+            return {};
+         }
+      },
+      /**
+       * Возвращает конфигурацию диалога - всплывающей панели или окна.
+       * @param {Object} meta
+       * @param {String} mode
+       * @returns {Object}
+       * @private
+       */
+      _getDialogConfig: function(meta, template, mode) {
+         var config = this._getDeafuiltDialogConfig(mode),
+            self = this,
+            compOptions = this._buildComponentConfig(meta);
+
+         mode = mode || this._options.mode;
+         meta.componentOptions = meta.componentOptions  || meta.dialogOptions ||  {};
+         colHelpers.forEach(config, function(defaultValue, key){
             if (meta.hasOwnProperty(key)){
-               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.dialogOptions');
+               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.componentOptions');
                config[key] = meta[key];
             }
             else {
                config[key] = (meta.componentOptions[key] !== undefined) ? meta.componentOptions[key] : defaultValue;
             }
          });
-         return config;
-      },
-
-      _setComponentConfig: function(meta, dialogComponent, mode) {
-         var config = this._getComponentConfig(meta),
-            self = this,
-            executeDeferred = new Deferred(),
-            compOptions = this._buildComponentConfig(meta);
-
-         mode = mode || this._options.mode;
 
          cMerge(config, {
             opener: this,
-            template: dialogComponent,
+            template: template,
             componentOptions: compOptions,
             handlers: {
                onAfterClose: function(e, meta){
-                  executeDeferred.callback(meta, this._record);
+                  if (self._executedDeferred) {
+                     self.callback(meta);
+                  }
                   self._dialog = undefined;
                },
                onBeforeShow: function(){
@@ -192,7 +189,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             }
          });
 
+         return config;
       },
+
       /**
        * Установить режим открытия диалога редактирования компонента.
        * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.

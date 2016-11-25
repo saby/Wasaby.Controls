@@ -122,17 +122,27 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _openComponent:function(meta, dialogComponent, mode) {
+         var def;
          if (this._isNeedToRedrawDialog()){
-            this._saveRecord(meta, dialogComponent, mode)
+            def = this._saveRecord(meta, dialogComponent, mode)
          }
-         else{
-            this._setConfig(meta, dialogComponent, mode);
+         if (def instanceof Deferred) {
+            def.addCallback(function(){
+               OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
+            });
+         } else {
+            OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
          }
+
       },
+      /**
+      @deprecated
+      **/
       _opendEditComponent: function(meta, dialogComponent, mode){
-         IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.')
+         IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenDialogAction', 'method _opendEditComponent was deprecated please use _openComponent instead.');
          this._openComponent.call(this, meta, dialogComponent, mode);
       },
+
       _saveRecord: function(meta, dialogComponent, mode){
          var args = arguments,
             self = this,
@@ -142,22 +152,15 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
          if (currentRecord && currentRecord.isChanged()){
-            fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
+            return fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
                if (result === true){
-                  templateComponent.update({hideQuestion: true}).addCallback(function(){
-                     self._setConfig.apply(self, args);
-                  });
-               }
-               else {
-                  self._setConfig.apply(self, args);
+                  return templateComponent.update({hideQuestion: true});
                }
             });
          }
-         else{
-            self._setConfig.apply(self, args);
-         }
       },
-      _setConfig: function(meta, dialogComponent, mode){
+
+      _setModelId: function(meta){
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан
          if (meta.hasOwnProperty('id')) {
@@ -165,14 +168,12 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             //вычитанной по этому ключу
             meta.id = this._getEditKey(meta.item) || meta.id;
          }
-         OpenEditDialog.superclass._setConfig.call(this, meta, dialogComponent, mode);
 
       },
 
-      _showDialog: function(config, meta, mode){
+      _createComponent: function(config, meta, mode){
          var initializingWay = config.componentOptions.initializingWay,
             dialogComponent = config.template;
-
          //TODO Выпилить в 200+
          if (meta.controllerSource){
             initializingWay = OpenEditDialog.INITIALIZING_WAY_REMOTE;
@@ -188,11 +189,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             require([dialogComponent], this._getRecordDeferred.bind(this, config, meta, mode));
          }
          else {
-            this._createDialog(config, meta, mode);
+            this._initEditComponent(config, meta, mode);
          }
       },
 
-      _createDialog: function(config, meta, mode){
+      _initEditComponent: function(config, meta, mode){
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
 
          if (this._isNeedToRedrawDialog()){
@@ -209,11 +210,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          this._hideLoadingIndicator();
          //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
          if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
-            this._createDialog(config, meta, mode);
+            this._initEditComponent(config, meta, mode);
             return;
          }
          config.componentOptions._receiptRecordDeferred = def;
-         this._createDialog(config, meta, mode);
+         this._initEditComponent(config, meta, mode);
       },
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
@@ -227,7 +228,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
             if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
                self._hideLoadingIndicator();
-               self._createDialog(config, meta, mode);
+               self._initEditComponent(config, meta, mode);
                return;
             }
 
@@ -237,7 +238,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                if (isNewRecord){
                   config.componentOptions.key = record.getId();
                }
-               self._createDialog(config, meta, mode);
+               self._initEditComponent(config, meta, mode);
             }).addErrback(function(error){
                InformationPopupManager.showMessageDialog({
                   message: error.message,
@@ -248,7 +249,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             });
          }
          else{
-            self._createDialog(config, meta, mode);
+            self._initEditComponent(config, meta, mode);
          }
       },
 
@@ -276,6 +277,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _buildComponentConfig: function (meta) {
+         this._setModelId(meta);
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
             result = {
