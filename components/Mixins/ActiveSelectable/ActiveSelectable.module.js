@@ -79,7 +79,12 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
          this._options.selectedItem = isModel ? item : null;
 
-         key = isModel ? item.getId() : null;
+         key = isModel ? item.get(this._options.keyField) : null;
+
+         if(key === undefined) {
+            throw new Error(this._moduleName + ': record key is undefined.');
+         }
+
          this._options.selectedKey = key;
 
          this._notifyOnPropertyChanged('selectedItem');
