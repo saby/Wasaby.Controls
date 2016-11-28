@@ -613,46 +613,52 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  availableWidth, items, additionalWidth, itemWidth, itemsCount, $item;
 
              if(!linkCollection.isPickerVisible()) {
-                /* Если у нас единичный выбор - то считать ничего не надо,
-                   обрезание троеточием сделано на CSS */
-                if (!this._isEmptySelection() && needResizeInput) {
+                if (!this._isEmptySelection()) {
                    items = linkCollection.getContainer().find('.controls-FieldLink__item');
-                   additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
                    itemsCount = items.length;
 
-                   /* Для multiselect'a и включённой опции alwaysShowTextBox
-                      добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
-                   if (this._options.multiselect || this._options.alwaysShowTextBox) {
-                      /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
-                      additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
-                   }
+                   /* Не надо вызывать пересчёт элементов в случаях:
+                      1) Единичный выбор - расчёт ширины сделан на css
+                      2) Множественный выбор в задизейбленом состоянии с количеством элементов > 1,
+                         сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
+                         поэтому считать надо. */
+                   if (needResizeInput || (isEnabled && this._options.multiselect && itemsCount === 1)) {
+                      additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
 
-                   /* Высчитываем ширину, доступную для элементов */
-                   availableWidth = this._container[0].clientWidth - additionalWidth;
-
-                   /* Считаем, сколько элементов может отобразиться */
-                   for (var i = itemsCount - 1; i >= 0; i--) {
-                      $item = items.eq(i);
-                      itemWidth = $item.outerWidth();
-
-                      if ((itemsWidth + itemWidth) > availableWidth) {
-                         this._toggleShowAll(itemsCount > 1);
-                         /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
-                         if(!itemsWidth) {
-                            $item.outerWidth(availableWidth);
-                            toAdd.push($item[0]);
-                         }
-                         break;
+                      /* Для multiselect'a и включённой опции alwaysShowTextBox
+                       добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
+                      if (this._options.multiselect || this._options.alwaysShowTextBox) {
+                         /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
+                         additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
                       }
-                      toAdd.unshift($item[0]);
-                      itemsWidth += itemWidth;
-                   }
 
-                   if(toAdd.length < itemsCount) {
-                      linkCollection._getItemsContainer().html(toAdd);
-                      this._toggleShowAll(true);
-                   } else {
-                      this._toggleShowAll(false);
+                      /* Высчитываем ширину, доступную для элементов */
+                      availableWidth = this._container[0].clientWidth - additionalWidth;
+
+                      /* Считаем, сколько элементов может отобразиться */
+                      for (var i = itemsCount - 1; i >= 0; i--) {
+                         $item = items.eq(i);
+                         itemWidth = $item.outerWidth();
+
+                         if ((itemsWidth + itemWidth) > availableWidth) {
+                            this._toggleShowAll(itemsCount > 1);
+                            /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
+                            if (!itemsWidth) {
+                               $item.outerWidth(availableWidth);
+                               toAdd.push($item[0]);
+                            }
+                            break;
+                         }
+                         toAdd.unshift($item[0]);
+                         itemsWidth += itemWidth;
+                      }
+
+                      if (toAdd.length < itemsCount) {
+                         linkCollection._getItemsContainer().html(toAdd);
+                         this._toggleShowAll(true);
+                      } else {
+                         this._toggleShowAll(false);
+                      }
                    }
                 }
              }
@@ -691,7 +697,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _isInputVisible: function() {
-             return !(!this._isEmptySelection() && !this._options.multiselect);
+             return !(!this._isEmptySelection() && !this._options.multiselect) && this.isEnabled();
           },
 
           _getElementToFocus: function() {
