@@ -1538,7 +1538,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
+@listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
+@listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
+@listView-check-box-icon-checked-bg:            url(@listView-check-box-icon-spritesheet) 0 72px;
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1761,6 +1764,7 @@
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
 @data-grid-first-content-cell-padding-left:     8px;
+@data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -1779,7 +1783,7 @@
 
 @data-grid-td-checkbox-width:                   24px;
 @data-grid-td-visible-checkbox-width:           24px;
-@data-grid-td-hidden-checkbox-width:            4px;
+@data-grid-td-hidden-checkbox-width:            8px;
 @data-grid-td-checkbox-width-without-marker:    20px;
 //Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
 @data-grid-checkbox-margin:                     2px 0 -2px 0;
@@ -1905,6 +1909,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    3px;
+@controls-editInPlace-editor-without-offset-margin: -6px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1912,10 +1917,10 @@
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                           3px;
-@listView-check-box-top:                            5px;
-@listView-check-box-width:                          16px;
-@listView-check-box-height:                         16px;
+@listView-check-box-left:                           0px;
+@listView-check-box-top:                            0px;
+@listView-check-box-width:                          24px;
+@listView-check-box-height:                         24px;
 @listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
