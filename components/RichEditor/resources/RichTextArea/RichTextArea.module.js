@@ -173,7 +173,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
             _clipboardText: undefined,
-            _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
+            _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
+            _lastReviewText: undefined
          },
 
          _modifyOptions: function(options) {
@@ -1541,7 +1542,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled()) {
+            if (this._dataReview && !this.isEnabled() && this._lastReviewText != text) {
                //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
                if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                   var
@@ -1552,6 +1553,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                } else {
                   this._dataReview.html(this._prepareReviewContent(text));
                }
+               this._lastReviewText = text;
             }
          },
 
