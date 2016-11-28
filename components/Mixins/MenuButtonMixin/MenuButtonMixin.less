@@ -46,16 +46,16 @@
 .ws-is-mobile-platform, .ws-is-firefox  {
 // в заголовке меню на айпаде/ff текст и иконка съезжают на пиксель вниз
    .controls-Menu {
-      .controls-Menu__header {
-         .controls-Menu__header-icon{
-            top: -1px;
-            position: relative;
+      &:not(.controls-Menu__big-header) {
+         .controls-Menu__header {
+            .icon-16 + .controls-Menu__header-caption {
+               top: -2px;
+            }
          }
-         .icon-16 + .controls-Menu__header-caption {
-            top: -3px;
-         }
+      }
+      &.controls-Menu__big-header {
          .icon-24 + .controls-Menu__header-caption {
-            top: 2px;
+            top: 3px;
          }
       }
    }
