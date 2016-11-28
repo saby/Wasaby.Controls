@@ -778,7 +778,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -2591,6 +2590,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
