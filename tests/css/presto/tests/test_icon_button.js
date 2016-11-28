@@ -29,7 +29,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
                 actions.mouseUp(this.icon_button);
             })
     });
-
+	/*
     gemini.suite('strange', function (test) {
 
         test.setUrl('/regression_icon_button_online_2.html').setCaptureElements('.capture')
@@ -73,7 +73,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
             })
 
             .capture('plain');
-    });
+    });*/
 
     gemini.suite('round_border', function (test) {
 
@@ -172,7 +172,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
                 actions.mouseMove(this.icon_button);
             })
     });
-
+	/*
     gemini.suite('strange_with_icon24', function (test) {
 
         test.setUrl('/regression_icon_button_online_5.html').setCaptureElements('.capture')
@@ -216,7 +216,7 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
             })
 
             .capture('plain');
-    });
+    });*/
 
     gemini.suite('round_border_with_icon24', function (test) {
 
