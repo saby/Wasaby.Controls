@@ -179,6 +179,17 @@
          background-color: @white-color;
          color: @link-text-color;
          padding: @controls-FieldLink-showAllLinks-padding;
+
+         &:after {
+            content: '';
+            position: absolute;
+            right: -@controls-FieldLink-showAll-shadow-width;
+            width: @controls-FieldLink-showAll-shadow-width;
+            top: 0;
+            bottom: 0;
+            .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
+            background-color: transparent;
+         }
       }
    }
 
