@@ -335,6 +335,50 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 				actions.mouseMove(this.delete_icon);
             })
     });
+
+    gemini.suite('DataGridView WithPosition', function (test) {
+
+        test.setUrl('/regression_items_action_online_7.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+                actions.waitForElementToShow('[data-id="3"]', 5000);
+				this.item_3 = find('[data-id="3"]')
+				this.item_7 = find('[data-id="7"]')
+				actions.mouseMove(this.item_3);
+				actions.waitForElementToShow('.controls-ItemActions [data-id="delete"]', 5000);
+				actions.waitForElementToShow('.controls-ItemActions .controls-ItemActions__menu-button', 5000);
+            })
+
+			.capture('top_right', function (actions) {
+
+				actions.executeJS(function (window) {
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({top: 0});
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({bottom: 'auto'});
+                });
+                actions.mouseMove(this.item_7);
+            })
+
+			.capture('top_left', function (actions) {
+				actions.executeJS(function (window) {
+                    window.$('.controls-ListView .controls-ItemsToolbar').attr('style', '');
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({top: 0});
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({bottom: 'auto'});
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({left: 0});
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({right: 'auto'});
+                });
+                actions.mouseMove(this.item_3);
+            })
+
+			.capture('bottom_left', function (actions) {
+				actions.executeJS(function (window) {
+				    window.$('.controls-ListView .controls-ItemsToolbar').attr('style', '');
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({left: 0});
+                    window.$('.controls-ListView .controls-ItemsToolbar').css({right: 'auto'});
+                });
+                actions.mouseMove(this.item_7);
+            })
+    });
 	
 	gemini.suite('DataGridView Hierarchy', function (test) {
 
