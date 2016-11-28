@@ -30,6 +30,11 @@ define('js!SBIS3.CONTROLS.HistoryController', [
       var serializedValue = serializer(true, value);
 
       if(constants.userConfigSupport) {
+         /* Запись в пользовательские параметры не производит записи SessionStorage,
+            поэтому в рамках одной сессии может возникать разница в значениях,
+            которые хранятся в параметрах пользователя / SessionStorage. Для этого,
+            при записи в пользовательские параметры, запишем значение и в SessionStorage. */
+         cSessionStorage.set(key, serializedValue);
          return UserConfig.setParam(key, serializedValue, true);
       } else {
          fHelpers.setLocalStorageValue(key, serializedValue);
