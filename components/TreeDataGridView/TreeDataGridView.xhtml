@@ -1,159 +1,49 @@
-<div class="wh-docs-header">
-   <table>
-      <tr>
-         <td class="wh-docs-header-left">
-            <table class="wh-docs-header-left-table">
-               <tr>
-                  <td class="wh-docs-header-left-first">
-                     <table>
-                        <tr>
-                           <td class="wh-docs-header-party">
-                              {{? it.retail}}
-                              <component data-component="SBIS3.CONTROLS.Link" class="wh-contractor-label">
-                                 <opt name="caption">{{=it.face1.title}}</opt>
-                                 <opt name="command">chooseContractor</opt>
-                                 <opt name="visible" type="boolean" bind="record/isNotRetail"/>
-                              </component>
-                              {{?}}
-                           </td>
-                           <td class="wh-docs-header-linked">
-                              {{? it.linkedDocs.enabled}}
-                              <component data-component="SBIS3.Warehouse.Docs.LinkedDocs">
-                                 <opt name="document" bind="record" oneWay="true"></opt>
-                                 <opt name="linked" bind="record/РП.Документ/СвязанныеДокументы" oneWay="true"></opt>
-                                 <opt name="showInvoice">false</opt>
-                              </component>
-                              {{?}}
-                           </td>
-                        </tr>
-                     </table>
-                  </td>
-               </tr>
-               <tr>
-                  <td class="wh-docs-header-left-second">
-                     <div data-bind="visible: record/isNotRetail" style="padding-bottom:8px">
-                        {{? it.retail}}
-                        <component data-component="SBIS3.AddresseeChoice.FieldLink" name="contractor">
-                           <opt name="className">controls-FieldLink__itemsEdited controls-FieldLink__itemsBold wh-contractor-choice</opt>
-                           <opt name="placeholder">Укажите контрагента</opt>
-                           <opt name="allowRepresentativesChoice" type="boolean">false</opt>
-                           <opt name="employee" type="boolean">false</opt>
-                           <opt name="contacts" type="boolean">false</opt>
-                           <opt name="allowContragentChoice" type="boolean">true</opt>
-                           <opts name="selectedItem" nonExistentValue="{}">
-                              <opt name="Название" bind="record/{{?it.face1.complex}}contractorName{{??}}Лицо1.Название{{?}}"></opt>
-                              <opt name="@Лицо" bind="record/{{?it.face1.complex}}contractorId{{??}}Лицо1{{?}}"></opt>
-                           </opts>
-                           <opts name="validators" type="array">
-                              <opts>
-                                 <opt name="validator" type="function">js!SBIS3.CONTROLS.ControlsValidators:required</opt>
-                                 <opt name="option">selectedKey</opt>
-                              </opts>
-                           </opts>
-                           <opt name="visible" type="boolean" bind="record/isNotRetail"/>
-                        </component>
-                        {{?}}
-                        {{? it.consignee.enabled }}
-                        <div class="wh-consignee-toggler">
-                           <span class="wh-consignee-toggler-label">грузополучатель он же</span>
-                           <span class="wh-consignee-toggler-image"></span>
-                        </div>
-                        <div class="wh-consignee" style="display: none">
-                           <component data-component="SBIS3.EDO.AddresseeChoiceNew" class="wh-consignee-face">
-                              <opt name="label">Грузополучатель</opt>
-                              <opt name="labelPosition">left</opt>
-                              <opt name="showEmployees" type="boolean">false</opt>
-                              <opt name="valueBind">record/Лицо2</opt>
-                              <opt name="displayField">record/Лицо2.Название</opt>
-                              <opt name="withoutOfficialFaces" type="boolean">true</opt>
-                              <opt name="visible" type="boolean">false</opt>
-                           </component>
-                        </div>
-                        {{?}}
-                        {{? it.deliveryDate.enabled }}
-                        <div class="wh-due-date" data-bind="{css: {'wh-overdue': record/isOverdue}, visible: record/deliveryVisible}">
-                           <div class="wh-label">Срок поставки</div>
-                           <component data-component="SBIS3.CONTROLS.DatePicker" class="wh-delivery-date">
-                              <opt name="date" bind="record/deliveryTime"></opt>
-                              <opt name="mask">DD.MM.YY HH:II</opt>
-                              {{? it.deliveryDate.alwaysDisabled }}
-                              <opt name="enabled" value="false" type="boolean"></opt>
-                              <opt name="allowChangeEnable" value="false" type="boolean"></opt>
-                              {{?}}
-                           </component>
-                           <span>через</span>
-                           <component data-component="SBIS3.CONTROLS.NumberTextBox" class='wh-count-days'>
-                              <opt name="numericValue" bind="record/deliveryDays"/>
-                              <opt name="maxLength">3</opt>
-                              {{? it.deliveryDate.alwaysDisabled }}
-                              <opt name="enabled" value="false" type="boolean"></opt>
-                              <opt name="allowChangeEnable" value="false" type="boolean"></opt>
-                              {{?}}
-                           </component>
-                           <span>дн.</span>
-                        </div>
-                        {{?}}
-                     </div>
-                     <component data-component="SBIS3.CONTROLS.TextBox" style="width:100%;margin-bottom:8px" name="comment">
-                        <opt name="text" bind="record/ДокументРасширение.Название"/>
-                        <opt name="placeholder">Комментарий</opt>
-                     </component>
-                  </td>
-               </tr>
-            </table>
-         </td>
-         <td class="wh-docs-header-sticker-place">
-            <component data-component="SBIS3.Warehouse.EnableWrapper">
-               <option name="content">
-                  <component data-component="SBIS3.EDO2.Sticker">
-                     {{?it.sticker.showContractorInfo}}
-                     <opt name="showContractorInfo" type="boolean">true</opt>
-                     {{?}}
-                     {{?it.sticker.enabledField}}
-                     <opt name="enabled" bind="{{=it.sticker.enabledField}}" oneWay="true"/>
-                     {{?}}
-                  </component>
-               </option>
-               {{?!it.sticker.allowChangeEnable}}
-               <option name="allowChangeEnable" type="boolean">false</option>
-               {{?}}
-            </component>
-            {{? it.vatSelector.enabled }}
-            {{? it.vatSelector.isNew }}
-            <component data-component="SBIS3.Warehouse.Docs.VatSelectorNew" style="float:right;padding-right:16px">
-               <opt name="withVat" bind="record/WithVAT"/>
-               <opt name="sumVat" bind="record/sumNds" oneWay="true"/>
-               {{? it.mayEgais }}
-               <opt name="visible" bind="record/isNotEgais"/>
-               {{?}}
-            </component>
-            {{??}}
-            <component data-component="SBIS3.Warehouse.Docs.VatSelector">
-               <opt name="withVat" bind="record/WithVAT"/>
-               <opt name="sumNds" bind="record/sumNds" oneWay="true"/>
-               {{? it.vatSelector.readOnly }}
-               <opt name="readOnly" type="boolean">true</opt>
-               {{?}}
-               {{? it.mayEgais }}
-               <opt name="visible" bind="record/isNotEgais"/>
-               {{?}}
-            </component>
-            {{?}}
-            {{?}}
-            {{? it.linkedDocs.enabled && it.linkedDocs.showInvoice}}
-            <component data-component="SBIS3.Warehouse.Docs.LinkedDocs">
-               <opt name="document" bind="record" oneWay="true"></opt>
-               <opt name="linked" bind="record/РП.Документ/СвязанныеДокументы" oneWay="true"></opt>
-               <opt name="showInvoice">true</opt>
-            </component>
-            {{?}}
-            {{? it.alcLinked.enabled}}
-            <component data-component="SBIS3.Warehouse.Docs.LinkedAlcDocs">
-               <opt name="document" bind="record" oneWay="true"></opt>
-               <opt name="linked" bind="record/РП.Документ/СвязанныеДокументы" oneWay="true"></opt>
-            </component>
-            {{?}}
-         </td>
-      </tr>
+<div class="controls-TreeDataGridView controls-DataGridView controls-ListView
+            {{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}
+            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}}">
+   <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
+   <div class="controls-AjaxLoader ws-hidden">
+      <div class="controls-AjaxLoader__outer">
+         <div class="controls-AjaxLoader__block">
+            <div class="controls-AjaxLoader__LoadingIndicator"></div>
+         </div>
+      </div>
+   </div>
+   <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
+      {{=it._colGroupTpl(it._colgroupData)}}
+      {{?it.showHead}}
+         {{=it._headTpl(it._headData)}}
+      {{?}}
+      <tbody class="controls-DataGridView__tbody">
+      {{?it._serverRender}}
+         {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+      {{?}}
+      </tbody>
+      <tfoot class="controls-DataGridView__tfoot">
+      </tfoot>
    </table>
+   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
+   {{? it.showPaging}}
+      <div class="controls-TreePager-container"></div>
+   {{?}}
+   {{?it.footerTpl}}
+      <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
+   {{?}}
+   {{? it.showPaging}}
+      <div class="controls-Pager-container"></div>
+   {{?}}
+   <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
+   {{? it.editArrow || it.arrowActivatedHandler}}
+      <div class="controls-TreeView__editArrow-container ws-hidden"></div>
+   {{?}}
+   {{?it.infiniteScroll == 'demand'}}
+      <div class="controls-ListView__serviceFooter">
+         <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
+            <option name="caption">Еще...</option>
+            <option name="visible" type="boolean">false</option>
+         </component>
+      </div>
+   {{?}}
+   <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
+   <div class="controls-ListView__scrollPager{{?!it.infiniteScroll}} ws-hidden{{?}}"></div>
 </div>
