@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Slider',
 
             setMinValue: function(minValue){
                if (minValue >= this._options.maxValue) {
-                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'попытка установить некорректное минимальное значение');
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное минимальное значение');
                } else {
                   this._options.minValue = minValue;
                   this._drawStartValue(this._startValue);
@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.Slider',
 
             setMaxValue: function(maxValue) {
                if (maxValue <= this._options.minValue) {
-                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'попытка установить некорректное максимальное значение');
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное максимальное значение');
                } else {
                   this._options.maxValue = maxValue;
                   this._drawStartValue(this._startValue);
