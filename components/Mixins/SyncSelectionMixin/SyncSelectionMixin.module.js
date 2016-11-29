@@ -132,7 +132,6 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                 такое может произойти, когда запись сбрасывается через контекст */
             if (hasRequiredFields ||
                 item === null ||
-                //FIXME опция для выпуска 211, выпилено в .220
                 (isEmpty(item.get(keyField)) && !this._isEmptySelection() && isModel)) {
                parentFunc.call(this, item);
             }
