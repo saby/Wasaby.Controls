@@ -1736,6 +1736,18 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
+            this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+         },
+
+         _editInPlaceMouseDownHandler: function(event) {
+            // При редактировании по месту нужно делать preventDefault на mousedown, в таком случае фокусы отработают в нужном порядке.
+            // Нативно событийный порядок следующий: mousedown, focus, mouseup, click.
+            // Нам необходимо чтобы mousedown не приводил к focus, иначе ломается поведенчиская логика и при клике на другую запись
+            // редактирование по месту закрывается из-за потери фокуса, а не из-за клика.
+            // Из-за этого возникает следующая ошибка: mousedown был над одним элементом, а по потере фокуса этот элемент сместился и
+            // mousedown уже случился для другого элемента. В итоге click не случается и редактирование другой записи вообще не запускается.
+            // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
+            event.preventDefault();
          },
 
          //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
@@ -1749,6 +1761,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
+               this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
