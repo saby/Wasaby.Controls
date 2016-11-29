@@ -136,10 +136,6 @@
       margin-right: @controls-FieldLink-fieldWrapper-margin;
       display: inline-block;
       order: 1;
-
-      .controls-TextBox__field {
-         width: 0;
-      }
    }
 
    .controls-TextBox__beforeFieldWrapper {
@@ -259,6 +255,13 @@
          color: #0055bb;
          text-decoration: underline;
       }
+   }
+}
+
+/* Для того, чтобы при инициализации не прыгал placeholder */
+.controls-FieldLink__selected {
+   .controls-TextBox__field {
+      width: 0;
    }
 }
 
