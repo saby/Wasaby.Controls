@@ -676,14 +676,25 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                 actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.add_top = '[sbisname="Добавить сверху"]';
+				this.add_bot = '[sbisname="Добавить снизу"]';
+				this.eip_input = '[sbisname="Номер_bind"]';
+				this.eip_input2 = '[sbisname="Цена_bind"]';
             })
 
             .capture('add_top', function (actions) {
-                actions.mouseMove(this.input);
+                actions.click(this.add_top);
+				actions.waitForElementToShow(this.eip_input);
+				actions.waitForElementToShow(this.eip_input2);
             })
 
 			.capture('add_bottom', function (actions) {
-                actions.mouseMove(this.input);
+				actions.sendKeys(this.eip_input, gemini.ESC);
+				actions.executeJS(function (window) {
+                    window.$('[sbisname="DataGridView 1"]').wsControl()._options.resultsPosition = "bottom";
+					window.$('[sbisname="DataGridView 1"]').wsControl().reload();
+                });
+                actions.click(this.add_bot);
             })
     });*/
 });
