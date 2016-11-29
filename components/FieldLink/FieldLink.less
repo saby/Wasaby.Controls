@@ -250,14 +250,15 @@
          color: @controls-FieldLink-link-color-hover;
       }
    }
-
-   &.controls-FieldLink-Link__filterButton {
-      color: #0055bb;
-      text-decoration: none;
-
-      &:hover {
+   &:not(.ws-disabled) {
+      &.controls-FieldLink-Link__filterButton {
          color: #0055bb;
-         text-decoration: underline;
+         text-decoration: none;
+
+         &:hover {
+            color: #0055bb;
+            text-decoration: underline;
+         }
       }
    }
 }
