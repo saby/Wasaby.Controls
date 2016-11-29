@@ -667,4 +667,23 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
+	/*
+    gemini.suite('result_position', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_76.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+            })
+
+            .capture('add_top', function (actions) {
+                actions.mouseMove(this.input);
+            })
+
+			.capture('add_bottom', function (actions) {
+                actions.mouseMove(this.input);
+            })
+    });*/
 });

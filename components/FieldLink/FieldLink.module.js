@@ -931,6 +931,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 return;
              }
              FieldLink.superclass.showPicker.apply(this, arguments);
+             /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
+                при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
+                поэтому при перевороте проскролим вниз автодополнение */
+             this._processSuggestPicker();
           },
 
           setEnabled: function() {
@@ -975,8 +979,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                             this._reverseList();
                          }
                       }
-
-                      this._processSuggestPicker();
                    }.bind(this)
                 }
              };
@@ -1035,19 +1037,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _keyDownBind: function(e) {
              FieldLink.superclass._keyDownBind.apply(this, arguments);
-             switch (e.which) {
-                case constants.key.del:
-                   if(!this.getText()) {
-                      this.removeItemsSelectionAll();
-                   }
-                   break;
-                /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
-                case constants.key.backspace:
-                   if(!this.getText() && !this._isEmptySelection()) {
-                      var selectedKeys = this.getSelectedKeys();
-                      this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
-                   }
-                   break;
+             if(this.isEnabled()) {
+                switch (e.which) {
+                   case constants.key.del:
+                      if (!this.getText()) {
+                         this.removeItemsSelectionAll();
+                      }
+                      break;
+                   /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
+                   case constants.key.backspace:
+                      if (!this.getText() && !this._isEmptySelection()) {
+                         var selectedKeys = this.getSelectedKeys();
+                         this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
+                      }
+                      break;
+                }
              }
           },
 

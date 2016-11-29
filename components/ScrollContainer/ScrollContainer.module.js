@@ -80,7 +80,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
-
+            // Что бы до инициализации не было видно никаких скроллов
+            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _subscribeOnScroll: function(){
@@ -100,7 +101,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   }
                this._content.css(style);
             }
-            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _getBrowserScrollbarWidth: function() {
@@ -125,6 +125,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
+            ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -149,7 +150,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
-            return this._content[0].scrollHeight;
+            return this._content.find('>*').height();
          },
 
          destroy: function(){

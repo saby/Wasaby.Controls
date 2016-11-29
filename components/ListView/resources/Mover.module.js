@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
             if (isNodeTo && !isChangeOrder) {
-               result = this.getMoveStrategy().hierarсhyMove(movedItems, target);
+               result = this.getMoveStrategy().hierarchyMove(movedItems, target);
             } else if(isChangeOrder)  {
                result = this.getMoveStrategy().move(movedItems, target, position == 'after');
             }

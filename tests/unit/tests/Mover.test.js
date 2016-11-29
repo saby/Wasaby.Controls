@@ -25,7 +25,7 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             MoveStrategy.lastCall = {arguments: arguments, order: true};
             return new Deferred().callback(true);
          },
-         hierarсhyMove: function(){
+         hierarchyMove: function(){
             MoveStrategy.lastCall = {arguments: arguments, hierarсhy: true};
             return new Deferred().callback(true);
          }
