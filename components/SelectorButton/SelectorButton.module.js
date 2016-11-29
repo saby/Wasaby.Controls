@@ -116,6 +116,23 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          },
          _text: null
       },
+      $constructor: function() {
+         var self = this;
+
+         this.subscribe('onSelectedItemsChange', function(event, result, changed) {
+            /* При добавлении элементов надо запустить валидацию,
+                в противном случае при выборе записи валидация не спадёт с компонента */
+            if(changed.added.length && !self._isEmptySelection()) {
+               /* Надо дожидаться загрузки выбранных записей,
+                  т.к. часто валидируют именно по ним,
+                  или же по значениям в контексте */
+               self.getSelectedItems(true).addCallback(function(list) {
+                  self.validate();
+                  return list
+               })
+            }
+         })
+      },
       _drawSelectedItems: function(keysArr) {
          var self = this,
              isSelected = !this._isEmptySelection();
