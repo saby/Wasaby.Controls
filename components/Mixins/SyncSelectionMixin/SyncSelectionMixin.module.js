@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
             if (hasRequiredFields ||
                 item === null ||
                 //FIXME опция для выпуска 211, выпилено в .220
-                ((this._options.checkKey1173336393 ?  isEmpty(item.get(keyField)) : !hasRequiredFields ) && !this._isEmptySelection() && isModel)) {
+                (isEmpty(item.get(keyField)) && !this._isEmptySelection() && isModel)) {
                parentFunc.call(this, item);
             }
          }
