@@ -667,8 +667,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
-	/*
-    gemini.suite('result_position', function (test) {
+
+    gemini.suite('result_position_top', function (test) {
 
         test.setUrl('/regression_data_grid_view_edit_at_place_online_76.html').setCaptureElements('.capture')
 
@@ -682,19 +682,31 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				this.eip_input2 = '[sbisname="Цена_bind"]';
             })
 
-            .capture('add_top', function (actions) {
+            .capture('plain', function (actions) {
                 actions.click(this.add_top);
 				actions.waitForElementToShow(this.eip_input);
 				actions.waitForElementToShow(this.eip_input2);
             })
+    });
 
-			.capture('add_bottom', function (actions) {
-				actions.sendKeys(this.eip_input, gemini.ESC);
-				actions.executeJS(function (window) {
-                    window.$('[sbisname="DataGridView 1"]').wsControl()._options.resultsPosition = "bottom";
-					window.$('[sbisname="DataGridView 1"]').wsControl().reload();
-                });
-                actions.click(this.add_bot);
+    gemini.suite('result_position_bottom', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_77.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.add_top = '[sbisname="Добавить сверху"]';
+				this.add_bot = '[sbisname="Добавить снизу"]';
+				this.eip_input = '[sbisname="Номер_bind"]';
+				this.eip_input2 = '[sbisname="Цена_bind"]';
             })
-    });*/
+
+			.capture('plain', function (actions) {
+                actions.click(this.add_bot);
+                actions.waitForElementToShow(this.eip_input);
+				actions.waitForElementToShow(this.eip_input2);
+            })
+    });
 });
