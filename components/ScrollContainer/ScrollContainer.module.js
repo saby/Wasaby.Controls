@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (!cDetection.safari && !cDetection.chrome){
                var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
-                  }
+                  };
                this._content.css(style);
             }
          },
@@ -150,7 +150,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
-            return this._content.find('>*').height();
+            var height = 0;
+
+            this._content.find('>*').each(function() {
+               height += this.offsetHeight;
+            });
+            return height;
          },
 
          destroy: function(){
