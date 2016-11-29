@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.Slider',
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.Slider',
       'js!SBIS3.CONTROLS.DragNDropMixinNew',
-      'js!SBIS3.CONTROLS.RangeMixin'
-   ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin) {
+      'js!SBIS3.CONTROLS.RangeMixin',
+      'Core/IoC'
+   ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin, IoC) {
       'use strict';
       //TODO: documentation
       ///controls-Slider__withBorder
@@ -86,9 +87,13 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             setMinValue: function(minValue){
-               this._options.minValue = minValue;
-               this._drawStartValue(this._startValue);
-               this._drawEndValue(this._endValue);
+               if (minValue >= this._options.maxValue) {
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'попытка установить некорректное минимальное значение');
+               } else {
+                  this._options.minValue = minValue;
+                  this._drawStartValue(this._startValue);
+                  this._drawEndValue(this._endValue);
+               }
             },
 
             getMinValue: function(){
@@ -96,9 +101,13 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             setMaxValue: function(maxValue) {
-               this._options.maxValue = maxValue;
-               this._drawStartValue(this._startValue);
-               this._drawEndValue(this._endValue);
+               if (maxValue <= this._options.minValue) {
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'попытка установить некорректное максимальное значение');
+               } else {
+                  this._options.maxValue = maxValue;
+                  this._drawStartValue(this._startValue);
+                  this._drawEndValue(this._endValue);
+               }
             },
 
             getMaxValue: function(){
