@@ -231,6 +231,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                filterChanged: changed,
                filterStructure: this._filterStructure
             });
+            this._setSelectionToItemsInstances();
          },
          _setSelectionToItemsInstances : function(){
             var instances = this.getItemsInstances();
