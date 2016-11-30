@@ -399,8 +399,18 @@
 }
 
 .ws-is-firefox {
-   .controls-DropdownList__picker .controls-DropdownList__header .controls-DropdownList{
-     line-height: 25px;
+   .controls-DropdownList__picker {
+      .controls-DropdownList__header .controls-DropdownList {
+         line-height: 25px;
+      }
+      .controls-DropdownList__body .controls-DropdownList__item .controls-DropdownList__itemTextWrapper {
+         .controls-DropdownList__item-text {
+            float: none;
+         }
+         .controls-DropdownList__item-text-shadow {
+            top: -@DropdownList-picker-menu-item-height - 5px;
+         }
+      }
    }
    .controls-DropdownList__afterCaptionWrapper {
       top: 3px;
