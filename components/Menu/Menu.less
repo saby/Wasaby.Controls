@@ -61,9 +61,11 @@
    }
    &.controls-popup-revert-vertical {
       .transform(rotate(@suggest-picker-invertVal));
+      direction: rtl;
 
       .controls-Menu__header, .controls-Menu__itemsContainer, .controls-Menu__submenu {
          .transform(rotate(@suggest-picker-invertVal));
+         direction: ltr;
       }
       .controls-Menu__header + .controls-Menu__itemsContainer {
          padding: @menu-link-menu-padding;
