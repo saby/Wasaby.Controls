@@ -82,15 +82,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
-
-            /**
-             * У ScrollContainer может быть указан только max-height, и тогда у контента не будет высоты,
-             * и он не будет скроллится. Поэтому мы прокидываем max-height с container на content.
-             */
-            var maxHeight = this._container.css('max-height');
-            if (maxHeight !== 'none') {
-               this._content.css('max-height', maxHeight);
-            }
          },
 
          _subscribeOnScroll: function(){
