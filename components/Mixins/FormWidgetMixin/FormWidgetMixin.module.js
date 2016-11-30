@@ -1,10 +1,11 @@
 define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    "Core/constants",
    "Core/IoC",
+   "Core/core-functions",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.Infobox",
    "Core/helpers/string-helpers"
-], function ( constants, IoC, ConsoleLogger,Infobox, strHelpers) {
+], function ( constants, IoC, cFunctions, ConsoleLogger,Infobox, strHelpers) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/index/">Валидация вводимых данных</a>.
@@ -138,7 +139,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             var
                currValidator = this._options.validators[i],
                validatorValue = this._options[currValidator.option],
-               validatorParams = currValidator.params || [],
+               validatorParams = cFunctions.clone(currValidator.params || []),
                failOnError = !(currValidator.noFailOnError || false),
                res = false;
 
