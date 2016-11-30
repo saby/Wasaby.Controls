@@ -457,7 +457,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             //todo разобраться с опцией выключения dragndrop
             //https://inside.tensor.ru/opendoc.html?guid=55df5f10-14b3-465d-b53e-3783fc9085a0&description=
             //Задача в разработку 22.03.2016 /** * @cfg {String} Разрешено или нет перемещение элементов 'Drag-and-Drop' ...
-            if (this._options.itemsDragNDrop !== false) {
+            //itemsDragNDrop сейчас не обязательно false
+            if (this._options.itemsDragNDrop) {
                this._preparePageXY(e);
                DragObject.onDragHandler(e);
                var target = DragObject.getTargetsControl();
@@ -474,7 +475,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @param {Event} e Браузерное событие.
           */
          _onMousemove: function (buse, e) {
-            if (this._options.itemsDragNDrop !== false) {
+            if (this._options.itemsDragNDrop) {
                if (!DragObject.isDragging()) {
                   return;
                }
