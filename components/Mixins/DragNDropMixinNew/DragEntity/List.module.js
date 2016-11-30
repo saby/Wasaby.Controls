@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.DragEntity.List', [
        * @variant undefined ничего не делать
        */
       /**
-       * @cfg {SBIS3.CONTROLS.Action.Action} Экшен, который обработает перемещение
+       * @cfg {function} Метод который будет вызван вместо стандарного, для перемещения записей в источниках данных
        * @see getAction
        * @see setAction
        */
