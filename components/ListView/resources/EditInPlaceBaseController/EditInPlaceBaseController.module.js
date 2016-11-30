@@ -440,10 +440,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
+               var isAdd = this._isAdd;
                //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
                //Иначе если сначала скрыть редакторы, курсор мыши может оказаться над фейковой строкой и произойдёт
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
-               if (this._isAdd) {
+               if (isAdd) {
                   this._isAdd = false;
                   this._addTarget.remove();
                   this._addTarget = undefined;
@@ -452,6 +453,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
+               }
+               if(isAdd) {
+                  /* Почему делаеться destroy:
+                   Добавление по месту как и редактирование, не пересоздаёт компоненты при повторном добавлении/редактировании,
+                   поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
+                   валидация ). В редактировании по месту это сейчас не внедрить, т.к. там есть режим по ховеру. */
+                  this._destroyEip();
                }
             },
             add: function(options) {
