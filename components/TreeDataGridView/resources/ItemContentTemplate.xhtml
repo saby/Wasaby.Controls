@@ -7,7 +7,6 @@
    } else {
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding;
    }
-   debugger;
    it.isNode = it.projItem.getContents().get(it.hierField + '@');
    it.hasChilds = hierField$ !== false; }}
 {{~it.columns :column:index}}{{it.cellData['isNode'] = it.isNode;it.cellData['item'] = it.item;it.cellData['Sanitize']=it.Sanitize;it.cellData['projItem'] = it.projItem;it.cellData['field']=column.field;it.cellData['column']=column;it.cellData['included']=column.included;it.cellData['templateBinding']=column.templateBinding;it.cellData['decorators']=it.decorators;}}{{?(!it.foldersColspan || !it.isNode || (it.isNode && index < 1))}}<td {{?it.foldersColspan && it.isNode}} colspan="{{=it.columns.length}}"{{?}} class="controls-DataGridView__td
