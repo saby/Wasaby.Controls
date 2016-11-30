@@ -204,13 +204,22 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       //последнего элемента, иначе будет выполнена штатная логика.
       _getInsertMarkupConfig: function(newItemsIndex, newItems) {
          var
-             lastItem,
+             lastItem, lastItemContainer,
              cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments);
 
          if (cfg.inside && !cfg.prepend) {
             lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
-            cfg.inside = false;
-            cfg.container = this._getDomElementByItem(lastItem);
+            lastItemContainer = this._getDomElementByItem(lastItem);
+            // Переопределяем контейнер для вставки контента, только если элемент действительно найден.
+            // Подробное объяснение:
+            // В режиме поиска последним элементом запросто может выступать хлебная крошка и вставлять нужно просто в конец itemsContainer'a.
+            // Можно было вызывать перерисовку, если запущен режим поиска и последним элементом на текущей загруженной странице является папка.
+            // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
+            // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
+            if (lastItemContainer && lastItemContainer.length) {
+               cfg.inside = false;
+               cfg.container = lastItemContainer;
+            }
          }
          return cfg;
       },
