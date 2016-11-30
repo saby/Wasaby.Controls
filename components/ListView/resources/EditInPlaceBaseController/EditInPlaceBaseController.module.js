@@ -451,15 +451,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
-               if (!this._savingDeferred.isReady()) {
-                  this._savingDeferred.callback();
-               }
+
                if(isAdd) {
                   /* Почему делаеться destroy:
                    Добавление по месту как и редактирование, не пересоздаёт компоненты при повторном добавлении/редактировании,
                    поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
                    валидация ). В редактировании по месту это сейчас не внедрить, т.к. там есть режим по ховеру. */
                   this._destroyEip();
+               }
+               if (!this._savingDeferred.isReady()) {
+                  this._savingDeferred.callback();
                }
             },
             add: function(options) {
