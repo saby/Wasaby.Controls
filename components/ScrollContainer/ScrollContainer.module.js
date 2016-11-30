@@ -82,6 +82,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
+            var maxHeight = this._container.css('max-height');
+            this._content.css('max-height', maxHeight);
          },
 
          _subscribeOnScroll: function(){
