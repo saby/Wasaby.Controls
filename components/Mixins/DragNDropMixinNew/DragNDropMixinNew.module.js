@@ -89,7 +89,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                /**
                 * @cfg {String|Function(): WS.Data/Collection/List}  Конструктор списка перемещаемых сущностей по умолчанию {@link WS.Data/Collection/List}
                 */
-               dragEntityList: 'collection.list'
+               dragEntityList: 'collection.list',
+               /**
+               * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
+               */
+               itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -123,9 +127,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          setDragEntity: function(dragEntityFactory) {
             this._options.dragEntity = dragEntityFactory;
          },
-
+         /**
+          * Возвращает признак возможно ли перемещение элементов с помощью DragNDrop.
+          * @returns {Boolean}
+          */
          getItemsDragNDrop: function(){
-            return true;
+            return this._options.itemsDragNDrop;
+         },
+         /**
+          * Установить возможность перемещения элементов с помощью DragNDrop.
+          * @param {Boolean} itemsDragNDrop
+          */
+         setItemsDragNDrop: function(itemsDragNDrop){
+            this._options.itemsDragNDrop = itemsDragNDrop;
          },
 
          //endregion public
