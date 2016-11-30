@@ -47,32 +47,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             init: function() {
                this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
                EditInPlace.superclass.init.apply(this, arguments);
-               this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
-               this._bindEvents();
-               this._setEditors();
-            },
-
-            _setEditors: function() {
-               this._editors = this.getContainer().find('.controls-editInPlace__editor');
-            },
-
-            _unbindEvents: function() {
-               this._container.unbind('keypress keydown keyup');
-            },
-
-            _bindEvents: function() {
                this._container.bind('keypress keydown', this._onKeyDown)
                               .bind('keyup', this._onKeyUp.bind(this));
-            },
-
-            rebuildMarkup: function() {
-               this._unbindEvents();
-               EditInPlace.superclass.rebuildMarkup.apply(this, arguments);
-               /* Т.к. контейнер компонента пересоздаётся,
-                  то надо заного навесить обработчики на события и найти нужные элементы */
-               this._bindEvents();
-               this._setEditors();
-               this.updatePosition();
+               this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
+               this._editors = this.getContainer().find('.controls-editInPlace__editor');
             },
 
             _onChildControlFocusOut: function() {
@@ -273,7 +251,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             destroy: function() {
-               this._unbindEvents();
+               this._container.unbind('keypress keydown keyup');
                EditInPlace.superclass.destroy.call(this);
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
