@@ -72,6 +72,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
        var MULTISELECT_CLASS = 'controls-FieldLink__multiselect';
+       var SELECTED_CLASS = 'controls-FieldLink__selected';
 
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
@@ -584,6 +585,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 classes.push(MULTISELECT_CLASS);
              }
 
+             if(cfg.selectedKeys.length || cfg.selectedKey !== null) {
+                classes.push(SELECTED_CLASS);
+             }
+
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
              cfg.className += ' ' + classes.join(' ');
@@ -839,13 +844,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _drawSelectedItems: function(keysArr) {
-             var keysArrLen = this._isEmptySelection() ? 0 : keysArr.length;
+             var keysArrLen = this._isEmptySelection() ? 0 : keysArr.length,
+                 hasSelectedKeys = keysArrLen > 0;
 
              /* Если удалили в пикере все записи, и он был открыт, то скроем его */
-             if (!keysArrLen) {
+             if (!hasSelectedKeys) {
                 this._toggleShowAll(false);
              }
+
              this._toggleDropAll(keysArrLen > 1);
+             this.getContainer().toggleClass(SELECTED_CLASS, hasSelectedKeys);
 
              if(!this._options.alwaysShowTextBox) {
 
