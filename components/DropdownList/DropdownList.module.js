@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/Deferred",
    "Core/EventBus",
    "Core/IoC",
+   "Core/core-merge",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -33,7 +34,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, EventBus, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -290,15 +291,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _buildTplArgs: function(item) {
-            return {
+            var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
+            return cMerge(defaultArgs, {
                item: item,
-               itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
-               defaultItemTpl: dotTplFnForItem,
                defaultId: this._defaultId,
-               displayField: this._options.displayField,
                hierField: this._options.hierField,
                multiselect: this._options.multiselect
-            };
+            });
          },
          setItems: function () {
             /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
@@ -321,6 +320,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      break;
                   }
                }
+            }
+            if (this._isEnumTypeData()) {
+               this.getItems().set(idArray[0]);
             }
             DropdownList.superclass.setSelectedKeys.call(this, idArray);
             this._updateCurrentSelection();
@@ -414,10 +416,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _getIdByRow: function(row){
-            if (!row.length || !row.data('hash')){
+            var itemProjection;
+            if (!row.length || !row.data('hash')) {
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
+            if (this._isEnumTypeData()) {
+               return this._getItemsProjection().getIndexByHash(row.data('hash'));
+            }
+            itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
             return itemProjection ? itemProjection.getContents().getId() : null;
          },
@@ -509,7 +515,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            var item =  this.getItems().at(0);
+            if (this._isEnumTypeData()){
+               if (this._options.multiselect){
+                  throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
+               }
+               return;
+            }
+            var item = this.getItems().at(0);
             if (item) {
                if (!this._options.emptyValue){
                   this._defaultId = item.getId();
@@ -517,9 +529,37 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
             }
          },
+         _setSelectedItems: function(){
+            //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
+            if (!this._isEnumTypeData()) {
+              DropdownList.superclass._setSelectedItems.apply(this, arguments);
+           }
+         },
+
+         _isEnumTypeData: function(){
+            //TODO избавиться от этого по задаче https://inside.tensor.ru/opendoc.html?guid=711857a8-d8f0-4b34-aa31-e2f1a0d4b07b&des=
+            //Сейчас multiselectable не умеет работать с enum => приходится поддерживать эту логику на уровне выпадающего списка.
+            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Enum');
+         },
+         _setFirstItemAsSelected : function() {
+            //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
+            var items = this.getItems(),
+                id;
+
+            if (this._isEnumTypeData()){
+               id = items.get();
+            }
+            else{
+               id = items && items.at(0) && items.at(0).getId();
+            }
+
+            if (id !== undefined) {
+               this._options.selectedKeys = [id];
+            }
+         },
          _setHasMoreButtonVisibility: function(){
             if (this.getItems()) {
-               var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
+               var needShowHasMoreButton = this.getItems().getMetaData && this._hasNextPage(this.getItems().getMetaData().more, 0);
                if (!this._options.multiselect){
                   this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
                }
@@ -591,9 +631,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                item, pickerContainer, def;
-
-            if(len) {
+                item, def;
+            if (this._isEnumTypeData()){
+               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
+            }
+            else if(len) {
                def = new Deferred();
 
                if(!this._picker) {
