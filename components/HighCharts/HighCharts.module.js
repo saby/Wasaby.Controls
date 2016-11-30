@@ -205,165 +205,183 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
              */
             filterFields : [],
             /**
-             * @cfg {Object} Опции для highChart
+             * @cfg {Object} Устанавливает конфигурацию отображения диаграммы.
              */
             highChartOptions : {
                /**
-                * @cfg {Object} тут описание
+                * @cfg {Object} Устанавливает конфигурацию области построения диаграммы.
                 * @group
                 */
                chart : {
                   /**
-                   * @typedef {Object} typeDiagr
-                   * @variant line Линейная
-                   * @variant spline Линейная сглаженная
-                   * @variant pie Круговая
-                   * @variant column Столбчатая
-                   * @variant bar Столбчатая горизонтальная
-                   * @variant area График с областью под ним
+                   * @typedef {String} typeDiagr
+                   * @variant line Линейная диаграмма.
+                   * @variant spline Линейная сглаженная диаграмма.
+                   * @variant pie Круговая диаграмма.
+                   * @variant column Столбчатая диаграмма.
+                   * @variant bar Столбчатая горизонтальная диаграмма.
+                   * @variant area График с областью под ним.
                    * @variant areaspline Сглаженный график с областью под ним
-                   * @variant scatter Точки
-                   * @variant arearange Область - интервал значений
-                   * @variant areasplinerange Сглаженная область - интервал значений
+                   * @variant scatter Точки.
+                   * @variant arearange Область - интервал значений.
+                   * @variant areasplinerange Сглаженная область - интервал значений.
                    */
                   /**
-                   * @cfg {typeDiagr} Тип диаграммы для всех графиков сразу
+                   * @cfg {typeDiagr} Устанавливает тип диаграммы для всех графиков.
                    */
                   type : 'line',
                   /**
-                   * @cfg {Number} Верхний внутренний отступ
+                   * @cfg {Number} Устанавливает верхний внутренний отступ диаграммы. Значение в px.
                    */
                   marginTop : null,
                   /**
-                   * @cfg {Number} Правый внутренний отступ
+                   * @cfg {Number} Устанавливает правый внутренний отступ диаграммы. Значение в px.
                    */
                   marginRight : null,
                   /**
-                   * @cfg {Number} Нижний внутренний отступ
+                   * @cfg {Number} Устанавливает нижний внутренний отступ диаграммы. Значение в px.
                    */
                   marginBottom : null,
                   /**
-                   * @cfg {Number} Левый внутренний отступ
+                   * @cfg {Number} Устанавливает левый внутренний отступ диаграммы. Значение в px.
                    */
                   marginLeft : null,
                   /**
-                   * @cfg {Number} Верхний внешний отступ
+                   * @cfg {Number} Устанавливает верхний внешний отступ диаграммы. Значение в px.
                    */
                   spacingTop : null,
                   /**
-                   * @cfg {Number} Правый внешний отступ
+                   * @cfg {Number} Устанавливает правый внешний отступ диаграммы. Значение в px.
                    */
                   spacingRight : null,
                   /**
-                   * @cfg {Number} Нижний внешний отступ
+                   * @cfg {Number} Устанавливает нижний внешний отступ диаграммы. Значение в px.
                    */
                   spacingBottom : null,
                   /**
-                   * @cfg {Number} Левый внешний отступ
+                   * @cfg {Number} Устанавливает левый внешний отступ диаграммы. Значение в px.
                    */
                   spacingLeft : null,
                   /**
-                   * @cfg {String} Цвет фона диаграммы
+                   * @cfg {String} Устанавливает цвет фона диаграммы.
                    */
                   backgroundColor: "#FFFFFF"
                },
                /**
-                * @cfg {string[]} Набор цветов
+                * @cfg {string[]} Устанавливает набор цветов, которыми будут раскрышены графики на диаграмме.
                 */
                colors: ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#8085e8', '#8d4653', '#91e8e1'],
                /**
-                * @cfg {Object} тут описание
+                * @cfg {Object} Устанавливает конфигурацию метки "Highcharts.com" в правом нижнем углу.
                 * @editor PropertyEditorStandardPopupObject
                 */
                credits : {
+                  /**
+                   * @cfg {Boolean} Устанавливает отображение метки.
+                   */
                   enabled : false
                },
                /**
-                * @cfg {Object} тут описание
+                * @cfg {Object} Устанавливает конфигурацию легенды диаграммы.
                 * @group
                 */
                legend : {
                   /**
-                   * @cfg {Boolean} Легенда отображается
+                   * @cfg {Boolean} Устанавливает отображение легенды.
                    */
                   enabled: true,
                   /**
                    * Стиль элемента легенды по hover
-                   * @cfg {Object.<string, number|string>} CSS стили
+                   * @cfg {Object.<String, Number|String>} CSS стили
                    */
                   itemHoverStyle: {"color": "#000"},
                   /**
-                   * @typedef {Object} align
-                   * @variant center По центру
-                   * @variant left Слева
-                   * @variant right Справа
-                   */
-                  /**
-                   * @cfg {Number} Ширина легенды
+                   * @cfg {Number} Устанавливает ширину легенды. Значение в px.
                    */
                   width: undefined,
                   /**
-                   * @cfg {Number} Высота легенды
+                   * @cfg {Number} Устанавливает высоту легенды. Значение в px.
                    */
                   height: undefined,
                   /**
-                   * @cfg {Number} Смещение по горизонтали
+                   * @cfg {Number} Устанавливает горизонтальное смещение легенды. Значение в px.
                    */
                   x: 0,
                   /**
-                   * @cfg {Number} Смещение по вертикали
+                   * @cfg {Number} Устанавливает вертикальное смещение легенды. Значение в px.
                    */
                   y: 0,
                   /**
-                   * @cfg {Function} Функция рендеринга подписи легенды
+                   * @cfg {Function} Устанавливает функцию рендеринга подписи легенды (см. <a href='http://api.highcharts.com/highcharts/legend.labelFormatter'>labelFormatter</a>.).
                    */
                   labelFormatter: undefined,
                   /**
-                   * @cfg {align} Горизонтальное расположение
+                   * @cfg {String} Устанавливает горизонтальное выравнивание html-контейнера легенды.
+                   * @remark
+                   * Возможные значения:
+                   * <ul>
+                   *     <li>center - выравнивание по центру;</li>
+                   *     <li>left - выравнивание слева;</li>
+                   *     <li>right - выравнивание справа;</li>
+                   * </ul>
                    */
                   align: 'center',
                   /**
-                   * @typedef {Object} vAlign
-                   * @variant bottom Снизу
-                   * @variant top Сверху
-                   * @variant middle По центру
-                   */
-                  /**
-                   * @cfg {vAlign} Вертикальное расположение
+                   * @cfg {String} Устанавливает вертикальное выравнивание html-контейнера легенды.
+                   * @remark
+                   * Возможные значения:
+                   * <ul>
+                   *     <li>bottom - выравнивание снизу;</li>
+                   *     <li>top - выравнивание сверху;</li>
+                   *     <li>middle - выравнивание по центру;</li>
+                   * </ul>
                    */
                   verticalAlign : 'bottom',
                   /**
-                   * @typedef {Object} layout
-                   * @variant horizontal Горизонтальное
-                   * @variant vertical Вертикальное
-                   */
-                  /**
-                   * @cfg {layout} Расположение элементов в легенде
+                   * @cfg {String} Устанавливает выравнивание элементов внутри html-контейнера легенды.
+                   * @remark
+                   * Возможные значения:
+                   * <ul>
+                   *     <li>horizontal - горизонтальное выравнивание;</li>
+                   *     <li>vertical - вертикальное выравнивание;</li>
+                   * </ul>
                    */
                   layout : 'horizontal',
                   /**
-                   * @cfg {boolean} Располагать легенду поверх графика
+                   * @cfg {Boolean} Устанавливает расположение легенды поверх графика.
                    */
                   floating : false,
                   /**
-                   * @cfg {Number} Отступ между графиком и легендой (только для отключенного floating)
+                   * @cfg {Number} Устанавливает отступ между графиком и легендой.
+                   * @remark
+                   * Значение устанавливается в px.
+                   * Опция актуальна, когда {@link floating}=false.
                    */
                   margin : 15,
                   /**
-                   * @cfg {Number} Внутренний отступ
+                   * @cfg {Number} Устанавливает внутренний отступ легенды.
+                   * @remark
+                   * Значение устанавливается в px.
                    */
                   padding : 8,
                   /**
-                   * @cfg {Number} Ширина границы
+                   * @cfg {Number} Устанавливает ширину границы легенды.
+                   * @remark
+                   * Значение устанавливается в px.
                    */
                   borderWidth : 0,
                   /**
-                   * @cfg {Object.<string, number|string>} CSS стили
+                   * @cfg {Object.<string, number|string>} Устанавливает CSS-стили для каждого элемента легенды.
                    */
-                  itemStyle : {"color": "#333333", "cursor": "pointer", "fontSize": "12px", "fontWeight": "bold"}
+                  itemStyle : {
+                      "color": "#333333",
+                      "cursor": "pointer",
+                      "fontSize": "12px",
+                      "fontWeight": "bold"
+                  }
                },
                /**
-                * @cfg {Object} тут описание
+                * @cfg {Object} Устанавливает конфигурацию построения графика.
                 */
                plotOptions : {
                   /**
@@ -539,7 +557,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                      showInLegend : false
                   },
                   /**
-                   * @cfg {Object} тут описание
+                   * @cfg {Object} Устанавливает конфигурацию линии графика диаграммы.
                    * @group plotOptions.series
                    */
                   series : {
@@ -548,7 +566,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                       */
                      animation : true,
                      /**
-                      * @cfg {String} Курсор
+                      * @cfg {String} Устанавливает тип курсора.
                       */
                      cursor : 'default',
                      /**
@@ -574,13 +592,13 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                         formatter : undefined
                      },
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию для точек графика.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      point : {
                         events : {
                            /**
-                            * @cfg {Function} При клике на точку графика
+                            * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на точку графика.
                             */
                            click : undefined
                         }
@@ -588,50 +606,66 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                   }
                },
                /**
-                * @cfg {Object} тут описание
+                * @cfg {Object} Устанавливает конфигурацию заголовка диаграммы.
                 * @group
                 */
                title : {
                   /**
-                   * @cfg {align} Горизонтальное расположение
+                   * @cfg {String} Устанавливает горизонтальное выравнивание заголовка.
                    */
                   align: 'center',
                   /**
-                   * @cfg {boolean} Располагать заголовок поверх графика
+                   * @cfg {Boolean} Устанавливает расположение заголовка поверх графика.
                    */
                   floating : false,
                   /**
-                   * @cfg {Number} Отступы заголовка
+                   * @cfg {Number} Устанавливает отступ заголовка от области построения диаграммы.
+                   * @remark
+                   * Значение устанавливается в px.
                    */
                   margin : 15,
                   /**
-                   * @cfg {String} Текст заголовка диаграммы
+                   * @cfg {String} Устанавливает текст заголовка диаграммы.
                    * @translatable
                    */
                   text : '',
                   /**
-                   * @cfg {Object.<string, number|string>} CSS стили
+                   * @cfg {Object.<String, Number|String>} Устанавливает пользовательские CSS-стили отображения заголовка.
                    */
-                  style : {"color": "#333333", "fontSize": "18px"}
+                  style : {
+                      /**
+                       * @cfg {String} Устанавливает цвет заголовка.
+                       */
+                      "color": "#333333",
+                      /**
+                       * @cfg {String} Устанавливает размер шрифта заголовка.
+                       */
+                      "fontSize": "18px"
+                  }
                },
+               /**
+                * @cfg {Object} Устанавливает конфигурацию всплывающих подсказок, которые появляются при наведении на график или точку.
+                */
                tooltip : {
                   /**
-                   * @cfg {Boolean} Всплывающие подсказки отображаются
+                   * @cfg {Boolean} Устанавливает отображение всплывающей подсказки.
                    * @group tooltip
                    */
                   enabled : true,
                   /**
-                   * @cfg {Boolean} Общий тултип. (Все точки с одним значением X выделяются вместе)
+                   * @cfg {Boolean} Устанавливает отображение общего тултипа.
+                   * @remark
+                   * Все точки с одним значением X выделяются вместе.
                    * @group tooltip
                    */
                   shared : false,
                   /**
-                   * @cfg {function} Функция рендеринга
+                   * @cfg {function} Устанавливает функцию рендеринга (см. <a href='http://api.highcharts.com/highcharts/tooltip.formatter'>tooltip.formatter</a>).
                    * @group tooltip
                    */
                   formatter : undefined,
                   /**
-                   * @cfg {Boolean} Использовать HTML
+                   * @cfg {Boolean} Устанавливает использование HTML (см. <a href='http://api.highcharts.com/highcharts/tooltip.useHTML'>tooltip.useHTML</a>).
                    * @group tooltip
                    */
                   useHTML : true
