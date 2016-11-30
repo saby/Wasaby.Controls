@@ -481,8 +481,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
                            валидация ). В редактировании по месту это сейчас не внедрить, т.к. там есть режим по ховеру. */
                         eip.rebuildMarkup();
-                        eip.setActive(true);
-
                         editingRecord = eip.getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
                         if (!self._pendingOperation) {
