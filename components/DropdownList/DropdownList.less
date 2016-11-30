@@ -14,7 +14,6 @@
       .controls-DropdownList__textWrapper{
         flex-shrink: 1;
         overflow: hidden;
-        text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
         &:hover{
@@ -110,6 +109,14 @@
      &.controls-FloatArea {
        margin: @DropdownList-picker-fastdatafilter-offset;
      }
+      &.controls-DropdownList__type-fastDataFilter-shadow{
+         .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper:after{
+            display: block;
+         }
+      }
+      .controls-DropdownList{
+         width: 100%;
+      }
      .controls-DropdownList__body {
         max-width: 400px;
         border-radius: @DropdownList-picker-list-right-border-radius;
@@ -119,6 +126,17 @@
          color: #313E78;
          font-weight: bold;
          text-decoration: none;
+         position: relative;
+         &:after{
+            content: '';
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 24px;
+            background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
+         }
        }
        .controls-DropdownList__arrowIcon {
          color: @DropdownList-linkStyleHoverColor!important;
