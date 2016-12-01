@@ -150,12 +150,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
-            var height = 0;
-
-            this._content.find('>*').each(function() {
-               height += this.offsetHeight;
-            });
-            return height;
+            return this._content.scrollHeight;
          },
 
          destroy: function(){
