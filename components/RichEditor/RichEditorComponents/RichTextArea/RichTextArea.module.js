@@ -1554,7 +1554,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   var
                      self = this;
                   Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
-                     self._dataReview.html(strHelpers.wrapFiles(text));
+                     //при открытии задачи в новой вкладке после поступления данных у areaAbstract зовут rebuildMarkup
+                     //необходимо проверять жив ли компонент  когда приходит ответ с сервера
+                     //TODO: переписать на parallelDeferred.kill
+                     if (!self.isDestroyed()) {
+                        self._dataReview.html(strHelpers.wrapFiles(text));
+                     }
                   });
                } else {
                   this._dataReview.html(this._prepareReviewContent(text));
