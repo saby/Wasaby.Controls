@@ -1037,19 +1037,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _keyDownBind: function(e) {
              FieldLink.superclass._keyDownBind.apply(this, arguments);
-             switch (e.which) {
-                case constants.key.del:
-                   if(!this.getText()) {
-                      this.removeItemsSelectionAll();
-                   }
-                   break;
-                /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
-                case constants.key.backspace:
-                   if(!this.getText() && !this._isEmptySelection()) {
-                      var selectedKeys = this.getSelectedKeys();
-                      this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
-                   }
-                   break;
+             if(this.isEnabled()) {
+                switch (e.which) {
+                   case constants.key.del:
+                      if (!this.getText()) {
+                         this.removeItemsSelectionAll();
+                      }
+                      break;
+                   /* Нажатие на backspace должно удалять последние значение, если нет набранного текста */
+                   case constants.key.backspace:
+                      if (!this.getText() && !this._isEmptySelection()) {
+                         var selectedKeys = this.getSelectedKeys();
+                         this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
+                      }
+                      break;
+                }
              }
           },
 

@@ -667,4 +667,69 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
     });
+
+    gemini.suite('result_position_top', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_76.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.add_top = '[sbisname="Добавить сверху"]';
+				this.add_bot = '[sbisname="Добавить снизу"]';
+				this.eip_input = '[sbisname="Номер_bind"]';
+				this.eip_input2 = '[sbisname="Цена_bind"]';
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.add_top);
+				actions.waitForElementToShow(this.eip_input);
+				actions.waitForElementToShow(this.eip_input2);
+            })
+    });
+
+    gemini.suite('result_position_bottom', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_77.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.add_top = '[sbisname="Добавить сверху"]';
+				this.add_bot = '[sbisname="Добавить снизу"]';
+				this.eip_input = '[sbisname="Номер_bind"]';
+				this.eip_input2 = '[sbisname="Цена_bind"]';
+            })
+
+			.capture('plain', function (actions) {
+                actions.click(this.add_bot);
+                actions.waitForElementToShow(this.eip_input);
+				actions.waitForElementToShow(this.eip_input2);
+            })
+    });
+	
+	gemini.suite('op_panel_and_edit', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_78.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = find('[name="TextBox 1"] .controls-TextBox__field');
+				this.open_panel = '[sbisname="OperationsPanelButton 1"]';
+				this.data3 = '[data-id="3"]';
+				this.fl = '[sbisname="FieldLinkMultiSelect"]';
+				this.delete = '[data-id="delete"]';
+            })
+
+			.capture('plain', function (actions) {
+                actions.click(this.data3);
+                actions.waitForElementToShow(this.fl);
+				actions.click(this.open_panel);
+				actions.wait(1000);
+				actions.waitForElementToShow(this.delete);
+            })
+    });
 });

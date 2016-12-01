@@ -778,7 +778,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -2591,6 +2590,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
@@ -3204,7 +3204,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                if (target) {
                   var  targetsModel = target.getModel();
-                  dragObject.getSource().each(function(item){
+                  dragObject.getSource().each(function(item) {
                      var model = item.getModel();
                      models.push(model);
                      if (targetsModel == model) {
@@ -3220,8 +3220,17 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
                      this._getMover().move(models, target.getModel(), position);
-                  } else if (dragObject.getTargetsControl()) {
-                     this._getMover().moveFromOutside(dragObject);
+                  } else {
+                     var currentDataSource = this.getDataSource(),
+                        dragOwner = dragObject.getOwner(),
+                        ownersDataSource = dragOwner.getDataSource(),
+                        useDefaultMove = false;
+                     if (currentDataSource && dragOwner &&
+                        currentDataSource.getEndpoint().contract == ownersDataSource.getEndpoint().contract
+                     ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
+                        useDefaultMove = true;
+                     }
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
             }

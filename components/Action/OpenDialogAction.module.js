@@ -97,7 +97,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
              * @variant remote
              * @variant delayedRemote
              */
-            initializingWay: 'remote'
+            initializingWay: 'remote',
+            /**
+             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             */
+            urlProperty: ''
          },
          /**
           * Ключ модели из связного списка
@@ -105,7 +109,12 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         _showedLoading: false
+         _showedLoading: false,
+         _openInNewTab: false
+      },
+      init: function(){
+         OpenDialogAction.superclass.init.apply(this, arguments);
+         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -120,8 +129,18 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
        */
       _getEditKey: function(item){
       },
+      _setOpeningMode: function(event){
+         this._openInNewTab = event.ctrlKey;
+      },
+      _needOpenInNewTab: function(){
+        return this._openInNewTab;
+      },
       _opendEditComponent: function(meta, dialogComponent, mode){
-         if (this._isNeedToRedrawDialog()){
+         var openUrl = meta.item && meta.item.get(this._options.urlProperty);
+         if (this._needOpenInNewTab() && openUrl){
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()){
             this._saveRecord(meta, dialogComponent, mode)
          }
          else{

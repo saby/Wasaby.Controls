@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Demo.SumAction',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'html!SBIS3.CONTROLS.DOCS.SumAction',
+      'html!SBIS3.CONTROLS.Demo.SumAction',
       'js!SBIS3.CONTROLS.Data.Source.SbisService',
       'js!SBIS3.CONTROLS.ComponentBinder',
       'js!SBIS3.CONTROLS.TreeDataGridView',
