@@ -38,6 +38,13 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                internalValueField: "FilterDatePeriod",
                resetValue: "Все",
                value: "Сегодня"
+            },
+            {
+               caption: "Завтра",
+               internalCaptionField: "FilterDatePeriodTextTomorrow",
+               internalValueField: "FilterDatePeriodTomorrow",
+               resetValue: "Все",
+               value: "Сегодня"
             }
          ];
       });
@@ -58,6 +65,34 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
             assert.deepEqual(
                 structure,
                 FilterHistoryControllerUntil.prepareStructureToApply(structure, secondStructure)
+            );
+         })
+      });
+
+      describe('.prepareNewStructure', function() {
+         it('should prepare structure', function() {
+
+            var resultStructure = [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня"
+               }
+            ];
+
+            FilterHistoryControllerUntil.prepareNewStructure(structure, secondStructure);
+
+            assert.deepEqual(
+                resultStructure,
+                secondStructure
             );
          })
       });
