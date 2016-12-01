@@ -21,7 +21,7 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                internalCaptionField: "FilterDatePeriodText",
                internalValueField: "FilterDatePeriod",
                resetValue: "Все",
-               value: "Все"
+               value: new Date(2016, 11, 11)
             }
          ];
 
@@ -54,17 +54,56 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
          secondStructure = undefined;
       });
 
-      describe('.prepareStructureToApply', function() {
-         it('should merge structures', function() {
+      describe('.prepareStructureToSave', function() {
+         it('should prepare structures', function() {
+
+            var resultStructure =  [
+               {
+                  caption: "Тест",
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: "Тест_Value"
+               },
+               {
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "2016-12-11"
+               }
+            ];
 
             assert.deepEqual(
-                secondStructure,
-                FilterHistoryControllerUntil.prepareStructureToApply(secondStructure, structure)
+                resultStructure,
+                FilterHistoryControllerUntil.prepareStructureToSave(structure)
             );
+         })
+      });
+
+      describe('.prepareStructureToApply', function() {
+         it('should prepare structure', function() {
+
+            var resultStructure = [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня"
+               }
+            ];
+
+            FilterHistoryControllerUntil.prepareNewStructure(structure, secondStructure);
 
             assert.deepEqual(
-                structure,
-                FilterHistoryControllerUntil.prepareStructureToApply(structure, secondStructure)
+                resultStructure,
+                secondStructure
             );
          })
       });
