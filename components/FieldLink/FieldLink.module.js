@@ -23,7 +23,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!WS.Data/Di",
        "Core/core-functions",
-       "js!SBIS3.CONTROLS.MenuIcon",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -390,8 +389,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }.bind(this)
                 );
              }
-
-             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
           _getSelectorAction: function() {
@@ -457,7 +454,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -526,6 +522,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(config) {
                 this.showSelector(config.template, config.componentOptions);
+                /* Чтобы остановить всплытие комманды */
+                return true;
              }
           },
 
