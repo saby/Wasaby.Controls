@@ -107,6 +107,15 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          $('.controls-PhoneTextBox__link', this._container.get(0))
             .text(this.getText())
             .attr('href', 'tel:' + this._options.srcText);
+      },
+
+      getSrcText: function() {
+         return this._options.srcText;
+      },
+
+      setSrcText: function(srcText) {
+         this._options.srcText = srcText;
+         this.setText(getFullText(srcText, this._getFormatModel().model));
       }
    });
 
