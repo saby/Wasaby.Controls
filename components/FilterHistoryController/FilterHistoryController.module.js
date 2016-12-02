@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Применим фильтр из истории*/
              fb.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
-             fb.getChildControlByName('filterLine').getContext().setValue('linkText', filter.linkText);
+             fb.getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 
              /* Если этот фильтр не активный, сделаем его активным и сохраним */
@@ -251,7 +251,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
           prepareViewFilter: function(filter) {
              var view = this._options.view,
-                 viewFilter = cFunctions.clone(filter || view.getFilter());
+                /* View может не быть, если кнопку фильтров используют отдельно (например в торгах,
+                   там по кнопке фильтров фильтруется набор из несколькх view */
+                 viewFilter = cFunctions.clone(filter || (view ? view.getFilter() : {}));
 
              colHelpers.forEach(this._options.noSaveFilters, function(filter) {
                 if(viewFilter[filter]) {
