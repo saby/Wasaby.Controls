@@ -2102,13 +2102,24 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItems: function(item, groupId){
-            this._checkDeletedItems(item);
-            ListView.superclass._removeItems.call(this, item, groupId);
+         _removeItems: function(items, groupId){
+            this._checkDeletedItems(items);
+            ListView.superclass._removeItems.call(this, items, groupId);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom -= items.length();
+            }
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
          },
+         
+         _addItems: function(newItems, newItemsIndex, groupId){
+            ListView.superclass._addItems.apply(this, arguments);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._offset += newItems.length();
+            }
+         },
+
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
             if (this.isInfiniteScroll()){
@@ -2806,8 +2817,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _updateOffset: function () {
-            var more = this.getItems().getMetaData().more,
-               nextPage = this._hasNextPage(more);
+            var more = this.getItems().getMetaData().more;
             if (this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }

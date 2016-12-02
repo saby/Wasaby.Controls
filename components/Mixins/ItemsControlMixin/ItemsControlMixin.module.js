@@ -927,11 +927,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                   }
                }
-
                removedElements.push(targetElement.get(0));
             }
          }
          removedElements.remove();
+         if (this._getSourceNavigationType() == 'Offset'){
+            this._offset -= items.length();
+         }
+      },
+
+      _getSourceNavigationType: function(){
+         if (this.getDataSet() && this.getDataSet()._options.options){
+            return this.getDataSet()._options.options.navigationType;
+         }
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {
@@ -993,6 +1001,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._reviveItems();
                }
             }
+         }
+         if (this._getSourceNavigationType() == 'Offset'){
+            this._offset += newItems.length();
          }
       },
 

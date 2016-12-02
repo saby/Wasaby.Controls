@@ -925,6 +925,28 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          });
       },
 
+      _getNumberOfRootItems: function(items){
+         for (i = 0; i < items.length; i++){
+            if (items[i].getContents().get(this._options.hierField) == this.getCurrentRoot()){
+               toCurrentRootItems++;
+            }
+         }
+      },
+
+      after: {
+         _addItems: function(newItems, newItemsIndex, groupId){
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._offset += this._getNumberOfRootItems(newItems);
+            }
+         },
+
+         _removeItems: function(items, groupId){
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._offset += this._getNumberOfRootItems(items);
+            }
+         }
+      },
+
       before: {
          reload : function() {
             this._folderOffsets['null'] = 0;
