@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          $protected: {
             _options: {
                position: 0,
-               contentHeight: 1
+               contentHeight: 1,
+               tabindex: 0
             },
             _thumb: undefined,
             _beginClient: undefined,
