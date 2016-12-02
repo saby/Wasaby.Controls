@@ -28,7 +28,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     var FilterPanelChooserFavorites = FilterPanelChooserDictionary.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FavoritesList.prototype */ {
         $protected: {
             _options: {
-                className: 'controls-FilterPanelChooser__favorites',
                 beforeChooserWrapper: headerTpl,
                 /**
                 * @cfg {WS.Data/Collection/RecordSet} Набор избранных записей.
