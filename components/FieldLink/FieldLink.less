@@ -136,10 +136,6 @@
       margin-right: @controls-FieldLink-fieldWrapper-margin;
       display: inline-block;
       order: 1;
-
-      .controls-TextBox__field {
-         width: 0;
-      }
    }
 
    .controls-TextBox__beforeFieldWrapper {
@@ -233,6 +229,10 @@
       .controls-FieldLink__item {
          padding: @controls-FieldLink-disabled-item-padding;
       }
+
+      .controls-FieldLink__showAllLinks:not(.controls-FieldLink__copyShowAll) {
+         display: none;
+      }
    }
 
    &.controls-FieldLink__dynamicInputWidth {
@@ -271,6 +271,14 @@
             text-decoration: underline;
          }
       }
+   }
+}
+
+/* Для того, чтобы при инициализации не прыгал placeholder +
+   в дальнейшем можно будет вообще не считать размеры поля, просто использовать этот класс*/
+.controls-FieldLink__selected {
+   .controls-TextBox__field {
+      width: 0;
    }
 }
 

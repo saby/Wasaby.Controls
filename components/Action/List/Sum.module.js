@@ -19,6 +19,8 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
          * @extends SBIS3.CONTROLS.Action.Action
          * @author Крайнов Дмитрий Олегович
          *
+         * @demo SBIS3.CONTROLS.Demo.SumAction
+         *
          * @ignoreOptions validators independentContext contextRestriction extendedTooltip
          *
          * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
