@@ -97,7 +97,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
              * @variant remote
              * @variant delayedRemote
              */
-            initializingWay: 'remote'
+            initializingWay: 'remote',
+            /**
+             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             */
+            urlProperty: ''
          },
          /**
           * Ключ модели из связного списка
@@ -105,7 +109,12 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         _showedLoading: false
+         _showedLoading: false,
+         _openInNewTab: false
+      },
+      init: function(){
+         OpenDialogAction.superclass.init.apply(this, arguments);
+         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -120,8 +129,18 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
        */
       _getEditKey: function(item){
       },
+      _setOpeningMode: function(event){
+         this._openInNewTab = event.ctrlKey;
+      },
+      _needOpenInNewTab: function(){
+        return this._openInNewTab;
+      },
       _opendEditComponent: function(meta, dialogComponent, mode){
-         if (this._isNeedToRedrawDialog()){
+         var openUrl = meta.item && meta.item.get(this._options.urlProperty);
+         if (this._needOpenInNewTab() && openUrl){
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()){
             this._saveRecord(meta, dialogComponent, mode)
          }
          else{
@@ -249,16 +268,38 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
+         this._toggleOverlay(true);
          window.setTimeout(function(){
             if (this._showedLoading){
                cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
             }
-         }.bind(this), 750);
+         }.bind(this), 2000);
       },
 
       _hideLoadingIndicator: function(){
          this._showedLoading = false;
+         this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _toggleOverlay: function(show){
+         //При вызове execute, во время начала асинхронных операций при выставленной опции initializingWay = 'remote' || 'delayedRemote',
+         //закрываем оверлеем весь боди, чтобы пользователь не мог взаимодействовать с интерфейсом, пока не загрузится диалог редактирования,
+         //иначе пока не загрузилась одна панель, мы можем позвать открытие другой, что приведет к ошибкам.
+         if (!this._overlay) {
+            this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
+            this._overlay.css({
+               position: 'absolute',
+               top: 0,
+               left: 0,
+               right: 0,
+               bottom: 0,
+               'z-index': 9999,
+               opacity: 0
+            });
+            this._overlay.appendTo('body');
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _isNeedToRedrawDialog: function(){
@@ -266,6 +307,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       },
 
       _setNewDialogConfig: function(config){
+         //Актуальные опции для FC содержатся в config.componentOptions, то что уже содержится в this._dialog._options нам не нужно
+         this._dialog._options.componentOptions = {};
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },

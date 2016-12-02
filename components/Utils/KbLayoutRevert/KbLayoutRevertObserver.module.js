@@ -89,8 +89,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                view.setFilter(viewFilter, true);
                this._textBeforeTranslate = null;
             } else {
-               // ищем разницу между старым и текущим значением поискового запроса
-               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, this._oldSearchValue);
+               /* Если количество символов в поисковом значении уменьшилось,
+                  значит поисковое значение либо полностью изменилось, либо удалили часть символов,
+                  в таком случае не надо искать/менять добавленную часть символов */
+               if(searchValue.length > this._oldSearchValue) {
+                  // ищем разницу между старым и текущим значением поискового запроса
+                  symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, this._oldSearchValue);
+               }
 
                /* 1) Между запросами есть разница, тогда
                      а) Если есть общая часть, то значит пользователь
@@ -107,7 +112,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                      // если совпадений нет, то значит нужно транслитизировать новое значение
                      revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
                   }
-               }else {
+               } else {
                   // если новый запрос такой же как и старый, то транслитизируем и попытаемся найти данные
                   revertedSearchValue = KbLayoutRevertUtil.process(searchValue);
                }

@@ -231,8 +231,8 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>true - редактирование завершается сохранением изменений;</li>
           *    <li>false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.</li>
           * </ul>
-          * @returns {EndEditResult} Из события можно вернуть одну из констант, список которых приведён по ссылке.
-          * Если из события вернуть любое другое значение, то оно будет проигнорировано, и произойдёт сохранение изменений редактирования/добавления по месту.
+          * @returns {EndEditResult} Когда из обработчика события возвращается константа, список которых приведён выше, происходит соответствующее действие.
+          * Когда возвращается любое другое значение, оно будет проигнорировано, и произойдёт сохранение изменений редактирования/добавления по месту.
           */
          /**
           * @event onAfterEndEdit Происходит после окончания редактирования по месту.
@@ -432,7 +432,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>id - идентификатор записи.</li>
                 *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
                 * </ul>
-                * @property {Boolean} allowChangeEnable Признак, по которому устанавливается возможность использования операций в случае, если взаимодействие с контролом запрещено (см. опцию {@link $ws.proto.Control#enabled}).
+                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link $ws.proto.Control#enabled}).
+                * <ul>
+                *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
+                *     <li>false. Действия доступны всегда.</li>
+                * </ul>
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
@@ -578,20 +582,22 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Boolean} Устанавливает режим постраничной навигации.
                 * @remark
-                * Постраничная навигация списка может работать в двух состояниях:
+                * Постраничная навигация списка может быть двух типов:
                 * <ol>
                 *    <li>Полная. Пользователь видит номера первых страниц, затем многоточие и номер последней страницы.</li>
                 *    <li>Частичная. Пользователь видит только номера текущей страницы, следующей и предыдущей. Общее количество страниц неизвестно.</li>
                 * </ol>
-                * Состояние постраничной навигации устанавливается по параметру n из dataSource (набора данных). Параметр по умолчанию поддерживается декларативным методом бизнес-логики.
-                * Если для получения набора данных используется другой списочный метод, то разработчик должен самостоятельно устанавливать параметр n: если Boolean, то значит частичная постраничная навигация.
+                * Чтобы установить тип постраничной навигации, используйте опцию {@link partialPaging}.
+                * <br/>
+                * Тип постраничной навигации устанавливается по параметру "n" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/cooperationservice/json-rpc/#recordset-json-rpc-3'>RecordSet - выборка данных в JSON-RPC для СБиС 3</a>), который возвращается в ответе на запрос к источнику данных (см. {@link dataSource}).
+                * Параметр по умолчанию поддерживается <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/bllist/declr/'>декларативным методом бизнес-логики</a>, его значение будет установлено в соответствии со значением опции <i>partialPaging</i>.
+                * Когда вы применяете другой тип списочного метода, опция <i>partialPaging</i> игнорируется, а значение параметра "n" должно быть установлено внутри метода: true - тип частичной постраничной навигации.
                 * <br/>
                 * Для контролов {@link SBIS3.CONTROLS.CompositeView} и {@link SBIS3.CONTROLS.TreeCompositeView} режим постраничной навигации имеет свои особенности работы:
                 * <ol>
-                *    <li>В режимах отображения "Список" и "Таблица" постраничная навигация не работает, даже если опция showPaging установлена в значение true. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
+                *    <li>В режимах отображения "Список" и "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}) постраничная навигация не работает, даже если опция <i>showPaging=true</i>. В этих режимах отображения автоматически устанавливается режим бесконечной подгрузки по скроллу - {@link infiniteScroll}.</li>
                 *    <li>В режиме отображения "Плитка" постраничная навигация будет работать корректно.</li>
                 * </ol>
-                * Режим отображения устанавливают с помощью опции {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode}.
                 * @example
                 * <pre>
                 *     <option name="showPaging">true</option>
@@ -715,7 +721,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {Boolean} Устанавливает тип постраничной навигации.
                 * @remark
-                * Постраничная навигация списка может работать в двух состояниях:
+                * Постраничная навигация списка может быть двух типов:
                 * <ol>
                 *    <li>Полная. Пользователь видит номера первых страниц, затем многоточие и номер последней страницы.</li>
                 *    <li>Частичная. Пользователь видит только номера текущей страницы, следующей и предыдущей. Общее количество страниц неизвестно.</li>
@@ -772,9 +778,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            this._initLoadMoreButton();
          },
 
          _bindEventHandlers: function(container) {
@@ -2159,11 +2165,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createScrollWatcher();
 
                if (this._options.infiniteScroll == 'demand'){
-                  this._loadMoreButton = this.getChildControlByName('loadMoreButton');
-                  if (this.getItems()){
-                     this._setLoadMoreCaption(this.getItems());
-                  }
-                  this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
                   this._setInfiniteScrollState('down');
                   return;
                }
@@ -2370,6 +2371,14 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
+         },
+
+         _addItems: function(){
+            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
+            // стреляет для каждой группы по отдельности, поэтому будет переставлять флаг о необходимости компенсации
+            // каждый раз при добавлении элементов
+            this._needScrollCompensation = this._infiniteScrollState.mode == 'up';
+            ListView.superclass._addItems.apply(this, arguments);
          },
 
          _updateScrolOffset: function(){
@@ -2589,6 +2598,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
+            this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
          },
@@ -3202,7 +3212,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                if (target) {
                   var  targetsModel = target.getModel();
-                  dragObject.getSource().each(function(item){
+                  dragObject.getSource().each(function(item) {
                      var model = item.getModel();
                      models.push(model);
                      if (targetsModel == model) {
@@ -3219,7 +3229,16 @@ define('js!SBIS3.CONTROLS.ListView',
                      var position = target.getPosition();
                      this._getMover().move(models, target.getModel(), position);
                   } else {
-                     this._getMover().moveFromOutside(dragObject);
+                     var currentDataSource = this.getDataSource(),
+                        dragOwner = dragObject.getOwner(),
+                        ownersDataSource = dragOwner.getDataSource(),
+                        useDefaultMove = false;
+                     if (currentDataSource && dragOwner &&
+                        currentDataSource.getEndpoint().contract == ownersDataSource.getEndpoint().contract
+                     ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
+                        useDefaultMove = true;
+                     }
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
             }
@@ -3249,7 +3268,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      movedItems[i] = items.getRecordById(item);
                   }
                }, this);
-               action.execute({movedItems: movedItems});
+
+               var  filter = this._notify('onPrepareFilterOnMove', {});
+               action.execute({
+                  movedItems: movedItems,
+                  componentOptions: {
+                     filter: filter
+                  }
+               });
             }.bind(this));
          },
 
@@ -3522,6 +3548,16 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             });
             self.removeItemsSelection(keysForRemove);
+         },
+
+         _initLoadMoreButton: function() {
+            if (this._options.infiniteScroll == 'demand'){
+               this._loadMoreButton = this.getChildControlByName('loadMoreButton');
+               if (this.getItems()){
+                  this._setLoadMoreCaption(this.getItems());
+               }
+               this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
+            }
          }
       });
 

@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       });
 
       $(window).blur(function(e) {
-         if(document.activeElement.tagName == "IFRAME"){
+         if(document.activeElement && document.activeElement.tagName == "IFRAME"){
             if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
                eventsChannel.notify('onDocumentClick', e);
             }
@@ -343,8 +343,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   'left': offset.left + 'px'
                });
             } else {
-               var bodyOffset = this._bodyPositioning();
-               this._container.offset(bodyOffset);
+               if (!this._fixed){
+                  var bodyOffset = this._bodyPositioning();
+                  this._container.offset(bodyOffset);
+               }
             }
          }
       },

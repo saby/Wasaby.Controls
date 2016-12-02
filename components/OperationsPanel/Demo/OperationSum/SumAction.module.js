@@ -4,8 +4,8 @@
 define('js!SBIS3.CONTROLS.Demo.SumAction',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'html!SBIS3.CONTROLS.DOCS.SumAction',
-      'js!SBIS3.CONTROLS.Data.Source.SbisService',
+      'html!SBIS3.CONTROLS.Demo.SumAction',
+      'js!WS.Data/Source/SbisService',
       'js!SBIS3.CONTROLS.ComponentBinder',
       'js!SBIS3.CONTROLS.TreeDataGridView',
       'js!SBIS3.CONTROLS.OperationsPanelButton',
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Demo.SumAction',
                 }),
                 sumAction = this.getChildControlByName('SumAction'),
                 dataSource = new SbisService({
-                   service: 'Товар',
+                   endpoint: 'Товар',
                    idProperty: '@Products'
                 });
             componentBinder.bindOperationPanel(true);

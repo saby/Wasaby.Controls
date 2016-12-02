@@ -18,9 +18,9 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
             },
 
             _modifyOptions: function(options) {
-               options = SliderInput.superclass._modifyOptions.apply(this, arguments);
                options.startValue = options.value[0];
                options.endValue = options.value[1];
+               options = SliderInput.superclass._modifyOptions.apply(this, arguments);
                return options;
             },
 

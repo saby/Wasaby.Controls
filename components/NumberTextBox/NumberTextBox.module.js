@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
       var decimals = onlyInteger ? 0 : decimals,
-          isDotLast = value.length ? value.indexOf('.') === value.length - 1 : false;
+          isDotLast = (value && value.length) ? value.indexOf('.') === value.length - 1 : false;
 
       if (value == '-') {
          return value;
@@ -417,14 +417,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             dotPosition = currentVal.indexOf('.'),
             symbol = String.fromCharCode(keyCode),
             spaceCount = currentVal.split(' ').length - 1,
-            checkMaxLength = checkMaxLength(currentVal, this._options.maxLength),
+            checkMaxLengthResult = checkMaxLength(currentVal, this._options.maxLength),
             newCaretPosition = b;
          if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
             newCaretPosition--;
          }
          if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
                if (b == e) {
-                  if (checkMaxLength) {
+                  if (checkMaxLengthResult) {
                      if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)) {
                         return;
                      }
@@ -438,7 +438,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          } else
          if (b > dotPosition && e > dotPosition){ // после точки
                if (b == e) {
-                  if(checkMaxLength || (e <= dotPosition + this._options.decimals)) {
+                  if(checkMaxLengthResult || (e <= dotPosition + this._options.decimals)) {
                      currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals > 0) ? 1 : 0));
                   }
                } else {

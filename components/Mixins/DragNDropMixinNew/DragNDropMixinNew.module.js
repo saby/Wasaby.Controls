@@ -89,7 +89,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                /**
                 * @cfg {String|Function(): WS.Data/Collection/List}  Конструктор списка перемещаемых сущностей по умолчанию {@link WS.Data/Collection/List}
                 */
-               dragEntityList: 'collection.list'
+               dragEntityList: 'collection.list',
+               /**
+               * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
+               */
+               itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -123,9 +127,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          setDragEntity: function(dragEntityFactory) {
             this._options.dragEntity = dragEntityFactory;
          },
-
+         /**
+          * Возвращает признак возможно ли перемещение элементов с помощью DragNDrop.
+          * @returns {Boolean}
+          */
          getItemsDragNDrop: function(){
-            return true;
+            return this._options.itemsDragNDrop;
+         },
+         /**
+          * Установить возможность перемещения элементов с помощью DragNDrop.
+          * @param {Boolean} itemsDragNDrop
+          */
+         setItemsDragNDrop: function(itemsDragNDrop){
+            this._options.itemsDragNDrop = itemsDragNDrop;
          },
 
          //endregion public
@@ -457,7 +471,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             //todo разобраться с опцией выключения dragndrop
             //https://inside.tensor.ru/opendoc.html?guid=55df5f10-14b3-465d-b53e-3783fc9085a0&description=
             //Задача в разработку 22.03.2016 /** * @cfg {String} Разрешено или нет перемещение элементов 'Drag-and-Drop' ...
-            if (this._options.itemsDragNDrop !== false) {
+            //itemsDragNDrop сейчас не обязательно false
+            if (this._options.itemsDragNDrop) {
                this._preparePageXY(e);
                DragObject.onDragHandler(e);
                var target = DragObject.getTargetsControl();
@@ -474,7 +489,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @param {Event} e Браузерное событие.
           */
          _onMousemove: function (buse, e) {
-            if (this._options.itemsDragNDrop !== false) {
+            if (this._options.itemsDragNDrop) {
                if (!DragObject.isDragging()) {
                   return;
                }
