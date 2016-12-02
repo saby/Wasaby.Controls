@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Устанавливаем и�
       'js!SBIS3.CONTROLS.DataGridView', // Подключаем контрол табличного представления данных, используется для построения автодополнения
       'js!WS.Data/Collection/List',
       'js!SBIS3.CONTROLS.FieldLink.Link',
-      'js!SBIS3.CONTROLS.Link'
+      'js!SBIS3.CONTROLS.Link',
+      'js!SBIS3.CONTROLS.SuggestView'
    ],
    function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
       CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js

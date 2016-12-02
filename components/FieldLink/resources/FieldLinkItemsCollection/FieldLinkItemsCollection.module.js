@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _onClickHandler: function(e) {
+            FieldLinkItemsCollection.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 deleteAction = false,
                 self = this,
