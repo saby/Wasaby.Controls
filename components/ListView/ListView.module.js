@@ -710,6 +710,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
             _componentBinder: null,
             _touchSupport: false,
+            _editByTouch: false,
             _dragInitHandler: undefined //метод который инициализирует dragNdrop
          },
 
@@ -741,7 +742,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend taphold', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend taphold touchstart', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -801,6 +802,9 @@ define('js!SBIS3.CONTROLS.ListView',
             switch (e.type) {
                case 'mousemove':
                   this._mouseMoveHandler(e);
+                  break;
+               case 'touchstart':
+                  this._touchstartHandler(e);
                   break;
                case 'swipe':
                   this._swipeHandler(e);
@@ -1015,6 +1019,12 @@ define('js!SBIS3.CONTROLS.ListView',
                if (closestGroup.length) {
                   this._options.groupBy.clickHandler.call(this, $target);
                }
+            }
+         },
+
+         _touchstartHandler: function() {
+            if (this._isHoverEditMode()) {
+               this._editByTouch = true;
             }
          },
          /**
@@ -1419,19 +1429,32 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnSizeChanged(true);
          },
          _isHoverEditMode: function() {
-            return !constants.compatibility.touch && this._options.editMode.indexOf('hover') !== -1;
+            return this._options.editMode.indexOf('hover') !== -1;
          },
          _isClickEditMode: function() {
-            return this._options.editMode.indexOf('click') !== -1 || (constants.compatibility.touch && this._options.editMode.indexOf('hover') !== -1);
+            return this._options.editMode.indexOf('click') !== -1;
          },
          initEditInPlace: function() {
             this._notifyOnItemClick = this.beforeNotifyOnItemClick();
             if (this._isHoverEditMode()) {
-               this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+               this._toggleEipHoveredHandlers(true);
             } else if (this._isClickEditMode()) {
-               this.subscribe('onItemClick', this._startEditOnItemClick);
+               this._toggleEipClickHandlers(true);
             }
          },
+
+         _toggleEipHoveredHandlers: function(toggle) {
+            var methodName = toggle ? 'subscribe' : 'unsubscribe';
+            this[methodName]('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+            if (constants.compatibility.touch) {
+               this[methodName]('onItemClick', this._startEditOnItemClick);
+            }
+         },
+
+         _toggleEipClickHandlers: function(toggle) {
+            this[toggle ? 'subscribe' : 'unsubscribe']('onItemClick', this._startEditOnItemClick);
+         },
+
          _itemsReadyCallback: function() {
             ListView.superclass._itemsReadyCallback.apply(this, arguments);
             if (this._hasEditInPlace()) {
@@ -1461,16 +1484,16 @@ define('js!SBIS3.CONTROLS.ListView',
          setEditMode: function(editMode) {
             if (editMode ==='' || editMode !== this._options.editMode) {
                if (this._isHoverEditMode()) {
-                  this.unsubscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+                  this._toggleEipHoveredHandlers(false);
                } else if (this._isClickEditMode()) {
-                  this.unsubscribe('onItemClick', this._startEditOnItemClick);
+                  this._toggleEipClickHandlers(false);
                }
                this._destroyEditInPlace();
                this._options.editMode = editMode;
                if (this._isHoverEditMode()) {
-                  this.subscribe('onChangeHoveredItem', this._onChangeHoveredItemHandler);
+                  this._toggleEipHoveredHandlers(true);
                } else if (this._isClickEditMode()) {
-                  this.subscribe('onItemClick', this._startEditOnItemClick);
+                  this._toggleEipClickHandlers(true);
                }
             }
          },
@@ -1537,6 +1560,16 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
             var target = hoveredItem.container;
+
+            //Если к компьютеру подключен touch телевизор, то при клике на телевизоре по строке, нам нужно сразу запустить
+            //редактирование этой строки, не выполнив до этого показ строки по ховеру. Переменная _editByTouch выставляется
+            //в true когда произошло событие touchstart, которое может произойти только при нажатие на touch устройстве.
+            //И в случае touch мы не будем показывать строку, и в полседствии обрабочик клика по строке, запустит редактирование.
+            if (this._editByTouch) {
+               this._editByTouch = false;
+               return;
+            }
+
             if (target && !(target.hasClass('controls-editInPlace') || target.hasClass('controls-editInPlace__editing'))) {
                this.showEip(this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
                // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
