@@ -12,7 +12,7 @@
       classNodeType = ' controls-ListView__item-type-' + (hierField == null ? 'leaf' : hierField == true ? 'node' : 'hidden'),
       classNodeState = hierField !== null ? (' controls-TreeView__item-' + (it.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '',
       classPresenceLoadedNodes = loadedWithoutChilds ? ' controls-ListView__item-without-child' : '',
-      isColumnScrolling = it.startScrollColumn !== undefined && it.startScrollColumn === 0,
+      isColumnScrolling = it.startScrollColumn === 0,
       addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item' + (it.className ? ' ' + it.className : '') + (isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + classNodeType + classNodeState + classPresenceLoadedNodes;
    it.isNode = it.projItem.getContents().get(it.hierField + '@'); it.hasChilds = it.projItem.getContents().get(it.hierField + '$') !== false; }}
 <tr class="{{=addClasses}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-parent-hash="{{?it.projItem.getParent()}}{{=it.projItem.getParent().getHash()}}{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"

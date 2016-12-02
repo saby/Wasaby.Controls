@@ -1,11 +1,12 @@
 <tr class="controls-DataGridView__results">
-    {{var isColumnScrolling;}}
+    {{var hasScroll = it.startScrollColumn !== undefined,
+          isColumnScrolling;}}
     {{?it.multiselect}}
         {{isColumnScrolling = it.startScrollColumn === 0;}}
-        <td class="controls-DataGridView__td {{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}" {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}></td>
+        <td class="controls-DataGridView__td {{? hasScroll}}{{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}" {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}></td>
     {{?}}
     {{~it.columns :column:index}}
         {{isColumnScrolling = it.startScrollColumn!== undefined && it.startScrollColumn <= index;}}
-        <td class="controls-DataGridView__td {{=column.className}}{{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}" {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>{{=it.results[index]}}</td>
+        <td class="controls-DataGridView__td {{=column.className}}{{? hasScroll}}{{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}" {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>{{=it.results[index]}}</td>
     {{~}}
 </tr>
