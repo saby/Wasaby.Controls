@@ -2106,7 +2106,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items, groupId);
             if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom -= items.length();
+               this._scrollOffset.bottom -= this._getAdditionalOffset(items);
             }
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
@@ -2116,7 +2116,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _addItems: function(newItems, newItemsIndex, groupId){
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
-               this._offset += newItems.length();
+               this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
             }
          },
 
