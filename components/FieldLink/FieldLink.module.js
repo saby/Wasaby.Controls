@@ -1094,15 +1094,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Обновляет ширину поля ввода
            */
           _updateInputWidth: function() {
-             var inputWidth;
+             var isEmptySelection = this._isEmptySelection(),
+                 inputWidth;
 
-             /* Для поля связи в задизейбленом состоянии считаем, ширина инпута - 0, т.к. он визуально не отображается */
-             if(this.isEnabled()) {
+             /* Для поля связи в задизейбленом состоянии считаем (если есть выбранные элементы (по стандарту) ),
+                ширина инпута - 0, т.к. он визуально не отображается */
+             if(this.isEnabled() || isEmptySelection) {
                 inputWidth = this._getInputWidth();
 
                 /* По неустановленным причинам, после обновления хрома, он для некоторых элементов начинает возвращать нулевую ширину,
                    после чистки кэша или перезагрузки браузера проблема исчезает, но надо от этого защититься (повторялось только в хроме) */
-                if(!inputWidth && this._isEmptySelection()) {
+                if(!inputWidth && isEmptySelection) {
                    inputWidth = 'auto';
                 }
              } else  {
