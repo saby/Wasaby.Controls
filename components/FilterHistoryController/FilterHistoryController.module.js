@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  fb = this._options.filterButton;
 
              /* Применим фильтр из истории*/
-             fb.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
+             fb._setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
              fb.getChildControlByName('filterLine').getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 
