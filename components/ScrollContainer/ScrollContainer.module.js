@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-            
+
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
 
          $constructor: function() {
-            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась, 
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
             this._context = this._context.getPrevious();
          },
@@ -79,6 +79,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
+            // task: 1173330288
+            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+            $ws.single.FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
          },
 
          _subscribeOnScroll: function(){
@@ -154,6 +158,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
             ScrollContainer.superclass.destroy.call(this);
+            // task: 1173330288
+            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+            delete $ws.single.FloatAreaManager._scrollableContainers[ this.getId() ];
          }
       });
 
