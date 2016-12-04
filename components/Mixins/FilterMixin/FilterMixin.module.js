@@ -86,8 +86,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          if (fromContext) {
             this._updateFilterStructure(
                 undefined,
-                context.getValue(contextName + '/caption'),
-                context.getValue(contextName + '/filter')
+                context.getValue(contextName + '/filter'),
+                context.getValue(contextName + '/caption')
             );
          }
       },
