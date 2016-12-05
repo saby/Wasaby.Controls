@@ -97,7 +97,7 @@
 
 .controls-DropdownList__picker {
   .controls-DropdownList__scrollContainer{
-    height: 100%;
+    max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
   }
 
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
@@ -397,7 +397,7 @@
       }
 
       &.controls-DropdownList__buttonsBlock{
-        height: 32px;
+        height: @DropdownList-footer-multisel-buttonsBlock-h;
         .controls-DropdownListFooter_hasMore{
           top: 4px;
         }
