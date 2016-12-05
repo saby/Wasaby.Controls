@@ -391,7 +391,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
 
                if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
-                  this._savingDeferred.errback();
+                  // TODO: errback без обработчика кидает ошибку в консоль https://inside.tensor.ru/opendoc.html?guid=5aba818a-4764-4c2b-b6d0-767abd2add7e&des=
+                  this._savingDeferred.addErrback(function(res) {return res;}).errback();
                   return Deferred.fail();
                } else {
                   if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
