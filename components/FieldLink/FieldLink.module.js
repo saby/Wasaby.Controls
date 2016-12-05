@@ -934,8 +934,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           showPicker: function() {
-             /* Если открыт пикер, который показывает все выбранные записи, то не показываем автодополнение */
-             if(this._getLinkCollection().isPickerVisible()) {
+             /* Не показываем автодополнение если:
+                1) Если открыт пикер, который показывает все выбранные записи
+                2) Input скрыт */
+             if(this._getLinkCollection().isPickerVisible() || !this._isInputVisible()) {
                 return;
              }
              FieldLink.superclass.showPicker.apply(this, arguments);
