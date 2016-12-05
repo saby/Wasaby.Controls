@@ -40,7 +40,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
    }
    /**
     * Диаграмма HighCharts. Демо-примеры диаграмм вы можете найти на сайте <a href='http://www.highcharts.com/demo'>www.highcharts.com</a>.
-    * @class HighCharts
+    * @class SBIS3.CONTROLS.HighCharts
     * @extends $ws.proto.Control
     * @control
     * @public
@@ -53,7 +53,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
     * <component data-component='SBIS3.CONTROLS.HighCharts'>
     * </component>
     */
-   var HighCharts = BaseControl.Control.extend(/** @lends HighCharts.prototype */{
+   var HighCharts = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS.HighCharts.prototype */{
       /**
        * @event onBeforeReload перед перерисовкой диаграммы
        * может использоваться для задания специфических опций при отрисовке диаграммы, например, когда надо сделать подпись в зависимости от условий
