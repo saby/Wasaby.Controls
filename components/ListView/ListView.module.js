@@ -2120,6 +2120,12 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         _getAdditionalOffset: function(items){
+            return items.length;
+         },
+
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
             if (this.isInfiniteScroll()){

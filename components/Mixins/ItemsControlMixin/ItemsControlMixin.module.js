@@ -931,20 +931,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
          }
          removedElements.remove();
-         if (this._getSourceNavigationType() == 'Offset'){
-            this._offset -= this._getAdditionalOffset(items);
-         }
-      },
-
-      // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-      // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
-      _getAdditionalOffset: function(items){
-         return items.length;
       },
 
       _getSourceNavigationType: function(){
          if (this.getDataSource() && this.getDataSource()._options.options){
-            return 'Offset'//this.getDataSource()._options.options.navigationType;
+            return this.getDataSource()._options.options.navigationType;
          }
       },
 
@@ -1007,9 +998,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._reviveItems();
                }
             }
-         }
-         if (this._getSourceNavigationType() == 'Offset'){
-            this._offset += this._getAdditionalOffset(newItems);
          }
       },
 
