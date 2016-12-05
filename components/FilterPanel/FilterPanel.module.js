@@ -30,6 +30,11 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'use strict';
    /**
     * Класс контрола "Панель фильтрации".
+    * <br/>
+    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков. Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
+    * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), кнопку открытию устанавливают классы "controls-IconButton__filter-left" или "controls-IconButton__filter-right".
+    * Чтобы открыть панель фильтрации, используйте метод {@link toggleExpanded}.
+    *
     * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.FilterPanel
     * @public
@@ -46,6 +51,16 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       ITEM_FILTER_RESET_VALUE = 'resetValue',
 
       FilterPanel = CompoundControl.extend([Expandable], /** @lends SBIS3.CONTROLS.FilterPanel.prototype */ {
+      /**
+       * @event onFilterReset Происходит при сбросе фильтра.
+       * @remark
+       * Значения фильтров будут установлены в resetValue.
+       * @param {Object} filter Фильтр.
+       */
+      /**
+       * @event onFilterChange Происходит при изменении фильтра.
+       * @param {Object} filter Фильтр.
+       */
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -63,15 +78,15 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              * Возможные значения:
              * <ol>
              *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelChooser}.</li>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelDataRange}.</li>
+             *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
-             * Также доступно использование в качестве редактора обыкновенный чекбокс, для чего необходимо установить следующее значение template:
-             * <b>js!SBIS3.CONTROLS.FilterPanelBoolean</b><br/>
-             * Внимание! Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.
              * @property {Object} properties Опции, передаваемые в редактор поля фильтрации.
              */
             /**
              * @cfg {Array.<FilterPanelItem>} Устанавливает структуру полей фильтра.
+             * @see setItems
+             * @see getItems
              */
             items: null,
             /**
@@ -81,7 +96,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              */
             filterAlign: 'left',
             /**
-             * @cfg {String} Устанавливает режим формирования результирующего фильтра.
+             * @cfg {String} Устанавливает режим формирования результирующего фильтра (см. {@link filter}).
              * @remark
              * Структура полей фильтрации описывается в опции {@link items}.
              * @variant full Результирующий фильтр формируется из всех полей фильтрации.
@@ -89,13 +104,16 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              */
             filterMode: 'onlyChanges',
             /**
-             * @cfg {Object} Устанавливает фильтр, сформированный по структуре {@link items}.
+             * @cfg {Object} Устанавливает результирующий фильтр, сформированный по структуре {@link items}.
              * @remark
              * Данная опция доступна только на чтение. Фильтр формируется исключительно через {@link items}.
+             * @see getFilter
              */
             filter: {},
             /**
-             * @cfg {String} Устанавливает тестовое описание фильтра.
+             * @cfg {String} Устанавливает текстовое описание фильтра.
+             * @see getTextValue
+             * @see setTextValue
              */
             textValue: ''
          },
@@ -190,18 +208,35 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          }
          return filter;
       },
+      /**
+       * Возвращает значение результирующего фильтра.
+       * @returns {Object}
+       * @see filter
+       */
       getFilter: function() {
          return this._options.filter;
       },
       setFilter: function() {
          throw new Error('Свойство "filter" работает только на чтение. Менять его надо через метод setItems');
       },
+      /**
+       * Устанавливает текстовое описание фильтра.
+       * @param {String} textValue
+       * @see getTextValue
+       * @see textValue
+       */
       setTextValue: function(textValue) {
          if (this._options.textValue !== textValue) {
             this._options.textValue = textValue;
             this._notifyOnPropertyChanged('textValue');
          }
       },
+      /**
+       * Возвращает текстовое описание фильтра.
+       * @return {String} textValue
+       * @see setTextValue
+       * @see textValue
+       */
       getTextValue: function() {
          return this._options.textValue;
       },
@@ -222,9 +257,21 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
             this._initializeContent();
          }
       },
+      /**
+       * Возвращает структуру полей фильтра.
+       * @returns {*}
+       * @see items
+       * @see setItems
+       */
       getItems: function() {
          return this._options.items;
       },
+      /**
+       * Устанавливает структуру полей фильтра.
+       * @param {Array.<FilterPanelItem>} items
+       * @see items
+       * @see getItems
+       */
       setItems: function(items) {
          this._options.items = items;
          this._destroyFilter();

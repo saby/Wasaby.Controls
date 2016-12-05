@@ -6,10 +6,27 @@ define('js!SBIS3.CONTROLS.FilterPanelBoolean', [
    'js!SBIS3.CONTROLS.CheckBox'], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
 
 var
+    /**
+     * Класс контрола "Чекбокс", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel}.
+     * @class SBIS3.CONTROLS.FilterPanelBoolean
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @mixes SBIS3.CONTROLS.IFilterItem
+     *
+     * @author Авраменко Алексей Сергеевич
+     */
    FilterPanelBoolean = CompoundControl.extend([IFilterItem],/**@lends SBIS3.CONTROLS.FilterPanelBoolean.prototype  */{
+        /**
+         * @event onValueChange Происходит при изменении значения контрола.
+         * @remark
+         * Изменение значения можно производить с помощью метода {@link setValue}.
+         */
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+             /**
+              * @cfg {Content} Устанавливает шаблон отображение редактора.
+              */
             checkBoxContentTemplate: ContentTemplate
          },
          _checkClickByTap: false,
