@@ -239,6 +239,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   if (instances.hasOwnProperty(i)){
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
+                     value = this._prepareValue(instances[i], value);
                      if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
                         if(instances[i].getItems()){
                            instances[i].setSelectedKeys(value);
@@ -250,6 +251,16 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      }
                   }
                }
+         },
+
+         _prepareValue: function(instance, newKeys){
+            //В структуре resetValue может содержать ключ, которого нет в выпадающем списке
+            //В этом случае мы должны выставить первую запись, которая содержится в наборе данных
+            var items = instance.getItems();
+            if (items && items.getRecordById(newKeys[0])){
+               return newKeys;
+            }
+            return [instance._defaultId];
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){
