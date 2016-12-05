@@ -1547,6 +1547,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                   var
                      self = this;
+                  //если в момент прихода текста в редакторе ничего не отображается
+                  //то необходимо показать пользователю неотдекорированный текст
+                  // тк декорация может занять много(30с) времени
+                  if (!self._dataReview.html()) {
+                     self._dataReview.html(text)
+                  }
                   Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
                      //при открытии задачи в новой вкладке после поступления данных у areaAbstract зовут rebuildMarkup
                      //необходимо проверять жив ли компонент  когда приходит ответ с сервера
