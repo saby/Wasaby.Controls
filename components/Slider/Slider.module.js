@@ -176,16 +176,18 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _onDragHandler: function(DragObject, event) {
-               var
-                  width = this._container.width(),
-                  instance = DragObject.getOwner(),
-                  rangeLength = instance._options.maxValue - instance._options.minValue,
-                  side = $(DragObject.getTarget()).hasClass('controls-Slider__point__left') ? 'left' : 'right',
-                  percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
-                  value = instance._options.minValue + percent * rangeLength;
-               if (instance._dragInProcess && instance.isEnabled()) {
-                  instance[side === 'left' ? '_drawStartValue' : '_drawEndValue'](value);
-                  this._notify('onDrawValueChange', this._startValue, this._endValue)
+               if (DragObject.getOwner() === this) {
+                  var
+                     width = this._container.width(),
+                     instance = DragObject.getOwner(),
+                     rangeLength = instance._options.maxValue - instance._options.minValue,
+                     side = $(DragObject.getTarget()).hasClass('controls-Slider__point__left') ? 'left' : 'right',
+                     percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
+                     value = instance._options.minValue + percent * rangeLength;
+                  if (instance._dragInProcess && instance.isEnabled()) {
+                     instance[side === 'left' ? '_drawStartValue' : '_drawEndValue'](value);
+                     this._notify('onDrawValueChange', this._startValue, this._endValue)
+                  }
                }
             },
 
