@@ -110,12 +110,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          after: {
             init: function () {
                //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
+               console.log(this.getName());
                $(this.getContainer()).bind('mouseup', this._onMouseupInside.bind(this));
             },
 
             destroy: function() {
-               EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside);
-               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove);
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside, this);
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove, this);
             }
          },
 
@@ -337,14 +338,16 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @param {Event} e Браузерное событие.
           */
          _beginDrag: function(e) {
-            DragObject.reset();
-            DragObject.onDragHandler(e);
-            if (this._beginDragHandler(DragObject, e) !== false) {
-               $('body').addClass('dragdropBody ws-unSelectable');
-               if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                  this._showAvatar(e);
-                  DragObject.setOwner(this);
-                  DragObject.setDragging(true);
+            if (this._options.itemsDragNDrop) {
+               DragObject.reset();
+               DragObject.onDragHandler(e);
+               if (this._beginDragHandler(DragObject, e) !== false) {
+                  $('body').addClass('dragdropBody ws-unSelectable');
+                  if (this._notify('onBeginDrag', DragObject, e) !== false) {
+                     this._showAvatar(e);
+                     DragObject.setOwner(this);
+                     DragObject.setDragging(true);
+                  }
                }
             }
 
