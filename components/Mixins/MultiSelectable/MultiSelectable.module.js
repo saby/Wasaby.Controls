@@ -680,7 +680,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                             return record;
                          },
                          function(err) {
-                            throw new Error(err);
+                            IoC.resolve('ILogger').info('MultiSelectable', 'У контрола ' + self.getName() + ' не удалось вычитать запись по ключу ' + loadKeysArr[j]);
                          }
                      ));
                   }
