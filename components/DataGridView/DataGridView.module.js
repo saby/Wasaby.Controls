@@ -190,8 +190,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.DragAndDropMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
+    *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
