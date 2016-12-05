@@ -39,14 +39,16 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
       }
    }
    /**
-    * Диаграмма HighCharts
+    * Диаграмма HighCharts. Демо-примеры диаграмм вы можете найти на сайте <a href='http://www.highcharts.com/demo'>www.highcharts.com</a>.
     * @class HighCharts
     * @extends $ws.proto.Control
     * @control
     * @public
+    *
     * @author Крайнов Дмитрий Олегович
     * @category Table
     * @designTime actions /design/design
+    *
     * @initial
     * <component data-component='SBIS3.CONTROLS.HighCharts'>
     * </component>
@@ -140,7 +142,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
              */
             wsAxis : [],
             /**
-             * @cfg {Object} тут описание
+             * @cfg {Object} Устанавливает источник данных.
              * @group
              */
             sourceData : {
@@ -205,7 +207,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
              */
             filterFields : [],
             /**
-             * @cfg {Object} Устанавливает конфигурацию отображения диаграммы.
+             * @cfg {Object} Устанавливает конфигурацию диаграммы.
              */
             highChartOptions : {
                /**
@@ -227,7 +229,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                    * @variant areasplinerange Сглаженная область - интервал значений.
                    */
                   /**
-                   * @cfg {typeDiagr} Устанавливает тип диаграммы для всех графиков.
+                   * @cfg {typeDiagr} Устанавливает тип диаграммы.
                    */
                   type : 'line',
                   /**
@@ -291,8 +293,9 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                    */
                   enabled: true,
                   /**
-                   * Стиль элемента легенды по hover
-                   * @cfg {Object.<String, Number|String>} CSS стили
+                   * @cfg {Object.<String, Number|String>} Устанавливает CSS-стиль, который будет применён к элементу легенды при наведении курсора.
+                   * @remark
+                   * Подробнее читайте <a href='http://api.highcharts.com/highcharts/legend.itemHoverStyle'>здесь</a>.
                    */
                   itemHoverStyle: {"color": "#000"},
                   /**
@@ -381,49 +384,49 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                   }
                },
                /**
-                * @cfg {Object} Устанавливает конфигурацию построения графика.
+                * @cfg {Object} Устанавливает конфигурацию для построения диаграмм разного типа. Тип диаграммы устанавливается в опции {@link type}.
                 */
                plotOptions : {
                   /**
-                   * @cfg {Object} тут описание
+                   * @cfg {Object} Устанавливает конфигурацию для столбчатой диаграммы (см. {@link type}).
                    * @group plotOptions.column
                    */
                   column : {
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию для подписей точек диаграммы.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      dataLabels : {
                         /**
-                         * @cfg {Boolean} Подписи значений отображаются
+                         * @cfg {Boolean} Устанавливает отображение подписей для точек диаграммы.
                          */
                         enabled : true,
                         /**
-                         * @cfg {String} цвет подписей
+                         * @cfg {String} Устанавливает цвет подписи значения.
                          */
                         color : null,
                         /**
-                         * @cfg {String} Форматная строка
+                         * @cfg {String} Устанавливает формат подписи (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.format'>format</a>).
                          */
                         format : '',
                         /**
-                         * @cfg {Function} Функция рендеринга
+                         * @cfg {Function} Устанавливает функцию рендеринга (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.formatter'>formatter</a>).
                          */
                         formatter : undefined
                      },
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию для точек диаграммы.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      point : {
                         /**
-                         * @cfg {Object} тут описание
+                         * @cfg {Object} Устанавливает обработчики событий для точек диаграммы.
                          * @editor PropertyEditorStandardPopupObject
                          */
 
                         events : {
                            /**
-                            * @cfg {Function} При клике на столбец графика
+                            * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на точку диаграммы.
                             */
                            click : undefined
                         }
@@ -434,171 +437,175 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                       * @variant normal по значению
                       */
                      /**
-                      * @cfg {typeStacking} Тип диаграммы
+                      * @cfg {typeStacking} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.stacking'>stacking</a>).
                       */
                      stacking : null,
                      /**
-                      * @cfg {Number} Ширина линии
+                      * @cfg {Number} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.borderWidth'>borderWidth</a>).
                       */
                      borderWidth : 0
                   },
                   /**
-                   * @cfg {Object} тут описание
+                   * @cfg {Object} Устанавливает конфигурацию линейной диаграммы (см. {@link type}).
                    * @group plotOptions.line
                    */
                   line : {
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию для подписей точек диаграммы.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      dataLabels : {
                         /**
-                         * @cfg {Boolean} Подписи значений отображаются
+                         * @cfg {Boolean} ПУстанавливает отображение подписей для точек диаграммы.
                          */
                         enabled : true,
                         /**
-                         * @cfg {String} цвет подписей
+                         * @cfg {String} Устанавливает цвет подписи значения.
                          */
                         color : null,
                         /**
-                         * @cfg {String} Форматная строка
+                         * @cfg {String} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.format'>format</a>).
                          */
                         format : '',
                         /**
-                         * @cfg {Function} Функция рендеринга
+                         * @cfg {Function} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.formatter'>formatter</a>).
                          */
                         formatter : undefined
                      },
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.line.marker'>marker</a>).
                       * @editor PropertyEditorStandardPopupObject
                       */
                      marker: {
                         /**
-                         * @cfg {Boolean} Выделения точек отображаются
+                         * @cfg {Boolean} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.line.marker.enabled'>enabled</a>).
                          */
                         enabled: true,
                         /**
-                         * @cfg {Number} Радиус точек
+                         * @cfg {Number} Устанавливает радиус точки диаграммы.
                          */
                         radius : 4
                      },
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию для точек диаграммы.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      point : {
                         /**
-                         * @cfg {Object} тут описание
+                         * @cfg {Object} Устанавливает обработчики событий для точек диаграммы.
                          * @editor PropertyEditorStandardPopupObject
                          */
                         events : {
                            /**
-                            * @cfg {Function} При клике на точку графика
+                            * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на точку диаграммы.
                             */
                            click : undefined
                         }
                      },
                      /**
-                      * @cfg {Number} Интервал x значений (только если значения x не заданы)
+                      * @cfg {Number} Устанавливает интервал значений для оси X. Опция актуальна, когда значения X не заданы.
                       */
                      pointInterval : 1,
                      /**
-                      * @cfg {Boolean} Соединять конец и начало графика (только для полярных диаграмм)
+                      * @cfg {Boolean} Устанавливает соединение конца и начала диаграммы. Опция актуальна только для полярных диаграмм.
                       */
                      connectEnds : true,
                      /**
-                      * @cfg {Boolean} Включать в график точки со значением null
+                      * @cfg {Boolean} Устанавливает отображение на диаграмме точек со значением null.
                       */
                      connectNulls : false
                   },
                   /**
-                   * @cfg {Object} тут описание
+                   * @cfg {Object} Устанавливает конфигурацию круговой диаграммы (см. {@link type}).
                    * @group plotOptions.pie
                    */
                   pie : {
                      /**
-                      * @cfg {String} Цвет границ сектора
+                      * @cfg {String} Устанавливает цвет границ сектора.
                       */
                      borderColor: "#FFFFFF",
                      /**
-                      * @cfg {Boolean} Выделение сектора по клику
+                      * @cfg {Boolean} Устанавливает выделение сектора по клику.
                       */
                      allowPointSelect : false,
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию подписей для каждого сектора.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      dataLabels : {
                         /**
-                         * @cfg {Number} Расстояние от диаграммы до подписей
+                         * @cfg {Number} Устанавливает расстояние от диаграммы до подписей. Значение в px.
                          */
                         distance : 30,
                         /**
-                         * @cfg {Boolean} Подписи значений отображаются
+                         * @cfg {Boolean} Устанавливает отображение подписей.
                          */
                         enabled : true,
                         /**
-                         * @cfg {String} цвет подписей
+                         * @cfg {String} Устанавливает цвет подписей.
                          */
                         color : null,
                         /**
-                         * @cfg {String} Форматная строка
+                         * @cfg {String} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.format'>format</a>).
                          */
                         format : '',
                         /**
-                         * @cfg {Function} Функция рендеринга
+                         * @cfg {Function} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.formatter'>formatter</a>).
                          */
                         formatter : undefined
                      },
                      /**
-                      * @cfg {Boolean} Отображать в легенде
+                      * @cfg {Boolean} Устанавливает отображение легенды.
                       */
                      showInLegend : false
                   },
                   /**
-                   * @cfg {Object} Устанавливает конфигурацию линии графика диаграммы.
+                   * @cfg {Object} Устанавливает общую конфигурацию для всех типов диаграмм.
                    * @group plotOptions.series
                    */
                   series : {
                      /**
-                      * @cfg {Boolean} Анимированный график
+                      * @cfg {Boolean} Устанавливает поведение, при котором график будет появляться с анимацией.
                       */
                      animation : true,
                      /**
-                      * @cfg {String} Устанавливает тип курсора.
+                      * @cfg {String} Устанавливает тип курсора, который будет использован при наведении на диаграмму.
                       */
                      cursor : 'default',
                      /**
-                      * @cfg {Object} тут описание
+                      * @cfg {Object} Устанавливает конфигурацию подписей данных для диаграммы.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      dataLabels : {
                         /**
-                         * @cfg {Boolean} Подписи значений отображаются
+                         * @cfg {Boolean} Устанавливает отображение подписей.
                          */
                         enabled : true,
                         /**
-                         * @cfg {String} цвет подписей
+                         * @cfg {String} Устанавливает цвет подписей.
                          */
                         color : null,
                         /**
-                         * @cfg {String} Форматная строка
+                         * @cfg {String} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.format'>format</a>).
                          */
                         format : '',
                         /**
-                         * @cfg {Function} Функция рендеринга
+                         * @cfg {Function} (см. <a href='http://api.highcharts.com/highcharts/plotOptions.column.dataLabels.formatter'>formatter</a>).
                          */
                         formatter : undefined
                      },
                      /**
-                      * @cfg {Object} Устанавливает конфигурацию для точек графика.
+                      * @cfg {Object} Устанавливает конфигурацию для точек диаграммы.
                       * @editor PropertyEditorStandardPopupObject
                       */
                      point : {
+                         /**
+                          * @cfg {Object} Устанавливает обработчики событий для точек диаграммы.
+                          * @editor PropertyEditorStandardPopupObject
+                          */
                         events : {
                            /**
-                            * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на точку графика.
+                            * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на точку диаграммы.
                             */
                            click : undefined
                         }
@@ -648,24 +655,24 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                 */
                tooltip : {
                   /**
-                   * @cfg {Boolean} Устанавливает отображение всплывающей подсказки.
+                   * @cfg {Boolean} Устанавливает отображение всплывающих подсказок.
                    * @group tooltip
                    */
                   enabled : true,
                   /**
-                   * @cfg {Boolean} Устанавливает отображение общего тултипа.
+                   * @cfg {Boolean} Устанавливает отображение общей подсказки.
                    * @remark
                    * Все точки с одним значением X выделяются вместе.
                    * @group tooltip
                    */
                   shared : false,
                   /**
-                   * @cfg {function} Устанавливает функцию рендеринга (см. <a href='http://api.highcharts.com/highcharts/tooltip.formatter'>tooltip.formatter</a>).
+                   * @cfg {function} (см. <a href='http://api.highcharts.com/highcharts/tooltip.formatter'>tooltip.formatter</a>).
                    * @group tooltip
                    */
                   formatter : undefined,
                   /**
-                   * @cfg {Boolean} Устанавливает использование HTML (см. <a href='http://api.highcharts.com/highcharts/tooltip.useHTML'>tooltip.useHTML</a>).
+                   * @cfg {Boolean} (см. <a href='http://api.highcharts.com/highcharts/tooltip.useHTML'>tooltip.useHTML</a>).
                    * @group tooltip
                    */
                   useHTML : true
