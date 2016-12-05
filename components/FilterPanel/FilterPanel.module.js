@@ -31,6 +31,11 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    /**
     * Класс контрола "Панель фильтрации".
     * <br/>
+    * При создания компонента допускается использование только <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
+    * Т.е. разметка компонента описывается в TMPL-файле.
+    * <br/>
+    * При взаимодействии с контекстом привязка производится односторонняя.
+    * <br/>
     * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков. Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
     * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), кнопку открытию устанавливают классы "controls-IconButton__filter-left" или "controls-IconButton__filter-right".
     * Чтобы открыть панель фильтрации, используйте метод {@link toggleExpanded}.
@@ -84,7 +89,9 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              * @property {Object} properties Опции, передаваемые в редактор поля фильтрации.
              */
             /**
-             * @cfg {Array.<FilterPanelItem>} Устанавливает структуру полей фильтра.
+             * @cfg {WS.Data/Collection/RecordSet|Array.<FilterPanelItem>} Устанавливает структуру полей фильтра.
+             * @remark
+             * Когда значение опции установлено через RecordSet, то при изменении значения в любой из записей изменяется соответствующее значение в контексте панели фильтрации.
              * @see setItems
              * @see getItems
              */

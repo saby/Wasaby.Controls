@@ -46,7 +46,13 @@ var
       _onCheckedChange: function(event, checked) {
          this.setValue(checked);
       },
-
+      /**
+       * Устанавливает значение.
+       * @remark
+       * При использовании метода происходит событие {@link onValueChange}.
+       * @param {Boolean} value
+       * @see getValue
+       */
       setValue: function(value) {
          if (value !== this._options.value) {
             this.setTextValue(this._prepareTextValue(value));
@@ -60,22 +66,33 @@ var
       _prepareTextValue: function(value) {
          return value ? this._options.caption : '';
       },
-
+      /**
+       * Возвращает значение.
+       * @param {Boolean} value
+       * @see setValue
+       */
       getValue: function() {
          return this._options.value;
       },
-
+        /**
+         * Устанавливает текстовое значение.
+         * @param {Boolean} value
+         * @see getTextValue
+         */
       setTextValue: function(textValue) {
          if (textValue !== this._options.textValue) {
             this._options.textValue = textValue;
             this._notifyOnPropertyChanged('textValue');
          }
       },
-
+      /**
+       * Возвращает текстовое значение.
+       * @param {Boolean} value
+       * @see setTextValue
+       */
       getTextValue: function() {
          return this._options.textValue;
       },
-
       destroy: function() {
          this._checkBox.unsubscribe('onCheckedChange');
          FilterPanelBoolean.superclass.destroy.apply(this, arguments);
