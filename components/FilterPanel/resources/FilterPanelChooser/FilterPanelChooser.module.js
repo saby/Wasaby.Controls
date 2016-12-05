@@ -43,12 +43,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
     'use strict';
 
     /**
-     * @author Крайнов Дмитрий Олегович
      * @class SBIS3.CONTROLS.FilterPanelChooser
      * @extends SBIS3.CONTROLS.CompoundControl
+     * @author Сухоручкин Андрей Сергеевич
+     * @mixes SBIS3.CONTROLS.IFilterItem
      */
 
-    var FilterPanelChooser = CompoundControl.extend([IFilterItem], /** @lends SBIS3.CONTROLS.CompoundControl.prototype */ {
+    var FilterPanelChooser = CompoundControl.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelChooser.prototype */ {
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
@@ -64,13 +65,16 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser', [
                 countField: 'count',
                 displayField: 'title',
                 /**
-                 * @typedef {String} selectionTypeDef Режим выбора.
-                 * @variant node выбираются только узлы
-                 * @variant leaf выбираются только листья
-                 * @variant all выбираются все записи
                  * @typedef {Object} dictionaryOptions
                  * @property {String} template Компонент, на основе которого организован справочник.
-                 * @property {selectionTypeDef} selectionType
+                 * @property {String} selectionType Режим выбора типов элементов коллекции.
+                 * О существующих типах элементов коллекции вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+                 * Возможные значения:
+                 * <ul>
+                 *    <li>node - выбираются только узлы.</li>
+                 *    <li>leaf - выбираются только листья.</li>
+                 *    <li>all - выбираются все записи.</li>
+                 * </ul>
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.

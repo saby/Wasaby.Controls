@@ -28,15 +28,17 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
 ], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, RecordSet, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
-
    /**
-    * Контрол, представляющий собой панель фильтрации.
+    * Класс контрола "Панель фильтрации".
     * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.FilterPanel
     * @public
     * @extends SBIS3.CONTROLS.CompoundControl
+    *
+    * @mixes SBIS3.CONTROLS.Expandable
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyFilterPanel
     */
-
    var
       ITEM_FILTER_ID          = 'id',
       ITEM_FILTER_VALUE       = 'value',
@@ -51,57 +53,49 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
             collapsedClassName: 'controls-FilterPanel_collapsed',
             /**
              * @typedef {Object} FilterPanelItem
-             * @property {String|Number} id Идентификатор поля фильтрации
-             * @property {String} caption Описание, используемое в редакторе поля фильтрации
-             * @property {Boolean} expanded Признак: true - редактор поля фильтрации создается в развернутом состоянии, false - в свёрнутом
-             * @property {*} value Текущее значение фильтра, это значение будет записываться в поле фильтрации по идентификатору id
-             * @property {*} resetValue Значение поля фильтрации, устанавливаемое при сбросе
-             * @property {String} textValue Тестовое значение поля фильтра
+             * @property {String|Number} id Идентификатор поля фильтрации.
+             * @property {String} caption Описание, используемое в редакторе поля фильтрации.
+             * @property {Boolean} expanded Признак: true - редактор поля фильтрации создается в развернутом состоянии, false - в свёрнутом.
+             * @property {*} value Текущее значение фильтра. Это значение будет записываться в поле фильтрации по идентификатору id.
+             * @property {*} resetValue Значение сброшенного фильтра.
+             * @property {String} textValue Тестовое значение поля фильтра.
              * @property {String} template Шаблон редактора поля фильтрации.
              * Возможные значения:
              * <ol>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации</li>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelChooser}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона.</li>
              * </ol>
-             * Также доступно использование в качестве редактора обыкновенный CheckBox, для чего необходимо установить следующее значение template:
-             *    <b>js!SBIS3.CONTROLS.FilterPanelBoolean</b><br/>
+             * Также доступно использование в качестве редактора обыкновенный чекбокс, для чего необходимо установить следующее значение template:
+             * <b>js!SBIS3.CONTROLS.FilterPanelBoolean</b><br/>
              * Внимание! Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.
-             * @property {Object} properties Опции, передаваемые в редактор поля фильтрации
+             * @property {Object} properties Опции, передаваемые в редактор поля фильтрации.
              */
             /**
-             * @cfg {Array.<FilterPanelItem>} Структура, по которой строится панель фильтрации
+             * @cfg {Array.<FilterPanelItem>} Устанавливает структуру полей фильтра.
              */
             items: null,
             /**
-             * @cfg {String} Направление открытия панели фильтрации
-             * <wiTag group="Отображение">
-             * Возможные значения:
-             * <ol>
-             *    <li>left - открывается влево;</li>
-             *    <li>right - открывается вправо.</li>
-             * </ol>
-             * @variant 'left'
-             * @variant 'right'
+             * @cfg {String} Устанавливает направление открытия панели фильтрации.
+             * @variant left Панель открывается влево.
+             * @variant right Панель открывается вправо.
              */
             filterAlign: 'left',
             /**
-             * @cfg {String} Режим формирования результирующего фильтра
-             * Возможные значения:
-             * <ol>
-             *    <li>full - результирующий фильтр формируется из всех полей;</li>
-             *    <li>onlyChanges - результирующий фильтр формируется только из полей, отличающихся от изначального значения (resetValue).</li>
-             * </ol>
-             * @variant 'full'
-             * @variant 'onlyChanges'
+             * @cfg {String} Устанавливает режим формирования результирующего фильтра.
+             * @remark
+             * Структура полей фильтрации описывается в опции {@link items}.
+             * @variant full Результирующий фильтр формируется из всех полей фильтрации.
+             * @variant onlyChanges Результирующий фильтр формируется только из полей, для которых текущее значение (value) не равняется значению сброшенного фильтра (resetValue).
              */
             filterMode: 'onlyChanges',
             /**
-             * @cfg {Object} Фильтр, сформированный по структуре, заданной в опции items
-             * Внимание! Данная опция доступна только на чтение. Фильтр формируется исключительно через items.
+             * @cfg {Object} Устанавливает фильтр, сформированный по структуре {@link items}.
+             * @remark
+             * Данная опция доступна только на чтение. Фильтр формируется исключительно через {@link items}.
              */
             filter: {},
             /**
-             * @cfg {String} Тестовое описание фильтра
+             * @cfg {String} Устанавливает тестовое описание фильтра.
              */
             textValue: ''
          },
