@@ -878,6 +878,9 @@ define('js!SBIS3.CONTROLS.ListView',
                parent: this
             });
             if (constants.browser.isMobilePlatform){
+               // скролл может быть у window, но нельзя делать appendTo(window)
+               var scrollContainer = this._scrollWatcher.getScrollContainer();
+               scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
                $('> .controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
             }
             this._setScrollPagerPosition();
