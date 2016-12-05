@@ -8,11 +8,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'Core/helpers/string-helpers'
 ], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers) {
    /**
-    * Контрол рисующий "Хлебные крошки"
-    * Пример использования - иерархические реестры
+    * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends $ws.proto.CompoundControl
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
@@ -28,6 +29,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    var BREAD_CRUMB_MIN_WIDTH = 36;
    //TODO: Переписать все к чертям
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
+       /**
+        * @event onItemClick Происходит при клике по хлебным крошкам (элементу коллекции).
+        * @param {Number|String} keyField Идентификатор элемента коллекции.
+        */
       _dotTplFn: dotTpl,
       $protected: {
          _resizeTimeout: null,
@@ -60,8 +65,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              *                'html!SBIS3.MyArea.MyComponent/resources/item_template'
              *             ],
              *             function(..., myItemTpl) {
-                *             ...
-                *          });
+             *             ...
+             *          });
              *       </pre>
              * 2. Установить шаблон:
              *       <pre>
