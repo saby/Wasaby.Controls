@@ -2384,6 +2384,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._toggleEmptyData();
          },
 
+         _addItems: function(){
+            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
+            // стреляет для каждой группы по отдельности, поэтому будет переставлять флаг о необходимости компенсации
+            // каждый раз при добавлении элементов
+            this._needScrollCompensation = this._infiniteScrollState.mode == 'up';
+            ListView.superclass._addItems.apply(this, arguments);
+         },
+
          _updateScrolOffset: function(){
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
                this._scrollOffset.bottom += this._limit;

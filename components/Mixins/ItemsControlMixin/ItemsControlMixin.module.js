@@ -1798,7 +1798,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
                var hash = childControls[i].getContainer().attr('data-hash');
-               this._itemsInstances[hash] = childControls[i];
+               //Проверяем на то, что найденный элемент принадлежит именно текущему инстансу, а не вложенным.
+               if (this._getItemsProjection().getByHash(hash)) {
+                  this._itemsInstances[hash] = childControls[i];
+               }
             }
          }
 

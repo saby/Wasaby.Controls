@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  fb = this._options.filterButton;
 
              /* Применим фильтр из истории*/
-             fb.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
+             fb._setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, fb.getFilterStructure()));
              fb.getChildControlByName('filterLine').getContext().setValue('linkText', filter.linkText);
              fb.hidePicker();
 
@@ -219,8 +219,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
-                2) Такой фильтр уже есть в истории */
-             if(this.isNowSaving() || equalFilter) {
+                2) Такой фильтр уже есть в истории
+                3) Нет текстового представления фильтра (такое может быть, если какой-то параметр в историю не хотят сохранять,
+                   но фильтровать по нему можно или этот фильтр выставлен "по-умолчанию" ) */
+             if(this.isNowSaving() || equalFilter || !filterObject.linkText) {
                 /* Если такой фильтр есть в истории, то надо его сделать активным */
                 if(equalFilter && !equalFilter.isActiveFilter) {
                    equalFilter.isActiveFilter = true;
