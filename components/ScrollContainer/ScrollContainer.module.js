@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
-      'Core/detection'
+      'Core/detection',
+      'js!SBIS3.CORE.FloatAreaManager'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
 
       'use strict';
 
@@ -82,7 +83,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            $ws.single.FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
+            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
          },
 
          _subscribeOnScroll: function(){
