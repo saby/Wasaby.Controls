@@ -60,8 +60,7 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
                   FilterPanelDataRange.superclass.setStartValue.apply(this, [value]);
                   this._notifyValueChange();
                } else {
-                  this._redraw();
-                  this._startTextBox.setText(value);
+                  this._redrawInput(value, this._startTextBox);
                }
             },
 
@@ -72,8 +71,7 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
                   FilterPanelDataRange.superclass.setEndValue.apply(this, [value]);
                   this._notifyValueChange();
                } else {
-                  this._redraw();
-                  this._endTextBox.setText(value);
+                  this._redrawInput(value, this._endTextBox);
                }
             },
 
@@ -90,6 +88,11 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
                   this._options.textValue = textValue;
                   this._notifyOnPropertyChanged('textValue');
                }
+            },
+
+            _redrawInput: function(value, input) {
+               this._redraw();
+               input.setText(value);
             }
          });
       return FilterPanelDataRange;
