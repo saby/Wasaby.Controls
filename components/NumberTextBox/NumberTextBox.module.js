@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    }
 
    function checkMaxLength(value, maxLength){
-      var length = value ? value.replace(/\s/g,'').length : 0;
+      var length = value ? value.replace(/[\s-]/g,'').length : 0;
       return !(maxLength && length > maxLength);
    }
 
@@ -416,7 +416,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             currentVal = this._inputField.val(),
             dotPosition = currentVal.indexOf('.'),
             symbol = String.fromCharCode(keyCode),
-            spaceCount = currentVal.split(' ').length - 1,
+            integerCount =  this._getIntegersCount(currentVal),
             checkMaxLengthResult = checkMaxLength(currentVal, this._options.maxLength),
             newCaretPosition = b;
          if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
@@ -425,10 +425,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
                if (b == e) {
                   if (checkMaxLengthResult) {
-                     if (dotPosition == this._options.integers + spaceCount || (dotPosition == -1 && currentVal.length - spaceCount == this._options.integers)) {
+                     if (integerCount == this._options.integers) {
                         return;
                      }
-                     (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0 && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
+                     (this._options.delimiters && integerCount % 3 == 0 && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
                      currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
                   }
                } else {
