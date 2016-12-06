@@ -1089,8 +1089,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
               иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
              this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass(classes.INVISIBLE, !show);
 
-             /* Записи в поле связи могу проставляться програмно,
-                надо скрыть автодополнение, если скрывается input */
+             /* Записи в поле связи могут проставлять програмно,
+                поэтому это надо отслеживать и скрыть автодополнение, если скрывается input */
              if(this.isPickerVisible() && !show) {
                 this.hidePicker();
              }
