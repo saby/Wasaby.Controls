@@ -73,7 +73,11 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             когда поиск точно закончен (уже была сменена раскладка, если требуется) */
          function toggleItemsEventRaising(enable) {
             if(viewItems) {
-               viewItems.setEventRaising(enable, true);
+               var isEqual = viewItems.isEventRaising() === enable;
+
+               if(!isEqual) {
+                  viewItems.setEventRaising(enable, true);
+               }
             }
          }
 
