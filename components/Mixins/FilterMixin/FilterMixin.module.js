@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             if(element.hasOwnProperty('resetValue')) {
                /* Надо смотреть только на itemTemplate, но сейчас есть проблема с компонентом dateRange,
                   который делают через две дополнительные структуры и его сбрасывать надо. Как будет сделан компонент,
-                  который может отображать дату по стандарту в фильтра удалить "element.historyItemTemplate !== null" */
+                  который может отображать дату по стандарту в фильтра FIXME удалить "element.historyItemTemplate !== null" */
                if(partial && element.itemTemplate === null && element.historyItemTemplate !== null) {
                   if(element.hasOwnProperty('value')) {
                      result[element.internalValueField] = element['value'];
