@@ -3298,7 +3298,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   action = new InteractiveMove({
                      linkedObject: this,
-                     hierField: this._options.hierField,
+                     parentProperty: this._options.parentProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems();
