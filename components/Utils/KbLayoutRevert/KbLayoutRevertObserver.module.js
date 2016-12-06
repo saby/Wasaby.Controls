@@ -59,12 +59,26 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          var view = this._options.view,
              viewFilter = view.getFilter(),
              searchValue = viewFilter[this.getParam()],
+             viewItems = view.getItems(),
              revertedSearchValue, symbolsDifference;
          /* Не производим смену раскладки если:
             1) Нет поискового значения.
             2) После смены раскладки поисковое значения не меняется. */
          if(!searchValue || searchValue === revertedSearchValue) {
             return;
+         }
+
+         /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
+            чтобы избежать моргания данных, обработка событий включается,
+            когда поиск точно закончен (уже была сменена раскладка, если требуется) */
+         function toggleItemsEventRaising(enable) {
+            if(viewItems) {
+               var isEqual = viewItems.isEventRaising() === enable;
+
+               if(!isEqual) {
+                  viewItems.setEventRaising(enable, true);
+               }
+            }
          }
 
          /* Смену раскладки делаем после проверок,
@@ -76,6 +90,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             if(this._textBeforeTranslate) {
                this._options.textBox.setText(searchValue);
                this._textBeforeTranslate = null;
+               toggleItemsEventRaising(true);
             }
             // если поиск произошел то запоминаем текущее значение
             this._oldSearchValue = searchValue;
@@ -88,6 +103,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                viewFilter[this.getParam()] = this._textBeforeTranslate;
                view.setFilter(viewFilter, true);
                this._textBeforeTranslate = null;
+               toggleItemsEventRaising(true);
             } else {
                /* Если количество символов в поисковом значении уменьшилось,
                   значит поисковое значение либо полностью изменилось, либо удалили часть символов,
@@ -120,6 +136,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
                this._textBeforeTranslate = searchValue;
                viewFilter[this.getParam()] = revertedSearchValue;
+               toggleItemsEventRaising(false);
                view.setFilter(viewFilter);
             }
          }
