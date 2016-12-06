@@ -626,9 +626,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                this._options.openedPath[id] = true;
                this._folderOffsets[id] = 0;
-               return this._loadNode(id).addCallback(function() {
+               return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
                   this._getItemProjectionByItemId(id).setExpanded(true);
-               }.bind(this));
+               }).bind(this));
             }
          } else {
             return Deferred.fail();
@@ -638,14 +638,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
                this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
-            }.bind(this));
+            }).bind(this));
          } else {
             return Deferred.success();
          }
