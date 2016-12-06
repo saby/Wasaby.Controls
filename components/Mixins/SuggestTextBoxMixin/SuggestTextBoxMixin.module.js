@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                   this._selectedFromList = false;
 
                   if(isPickerVisible) {
-                     this.getList().getContainer().trigger(e);
+                     var list = this.getList();
+                     list._keyboardHover(e);
                   }
                   break;
                case constants.key.esc:
