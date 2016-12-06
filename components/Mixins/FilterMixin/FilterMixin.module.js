@@ -12,8 +12,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
       internalValueField: null,
       internalCaptionField: null,
-      internalVisibilityField: null,
-      partialReset: false
+      internalVisibilityField: null
       /* По умолчанию их нет
        value: NonExistentValue,
        resetValue: NonExistentValue,
@@ -285,7 +284,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
       /**
        * Собирает значения для сброса фильтра
-       * @param partial частичный сброс, если у элемента структуры выставлен флаг partialReset, то он не будет сброшен
        * @returns {*}
        * @private
        */
