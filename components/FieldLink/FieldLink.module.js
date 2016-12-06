@@ -71,13 +71,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var INPUT_WRAPPER_PADDING = 8;
        var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
-
-       var classes = {
-          MULTISELECT: 'controls-FieldLink__multiselect',
-          SELECTED: 'controls-FieldLink__selected',
-          INVISIBLE: 'ws-invisible',
-          HIDDEN: 'ws-hidden'
-       };
+       var MULTISELECT_CLASS = 'controls-FieldLink__multiselect';
+       var SELECTED_CLASS = 'controls-FieldLink__selected';
 
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
@@ -552,7 +547,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
-             this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
+             this.getContainer().toggleClass(MULTISELECT_CLASS, !!multiselect)
           },
 
           _getAdditionalChooserConfig: function () {
@@ -587,11 +582,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  classes = ['controls-FieldLink'];
 
              if(cfg.multiselect) {
-                classes.push(classes.MULTISELECT);
+                classes.push(MULTISELECT_CLASS);
              }
 
              if(cfg.selectedKeys.length || cfg.selectedKey !== null) {
-                classes.push(classes.SELECTED);
+                classes.push(SELECTED_CLASS);
              }
 
              /* className вешаем через modifyOptions,
@@ -830,10 +825,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-             linkCollectionContainer.addClass(classes.HIDDEN);
+             linkCollectionContainer.addClass('ws-hidden');
              this.getSelectedItems(true, amount).addCallback(function(list){
                 self._dataLoadedCallback();
-                linkCollectionContainer.removeClass(classes.HIDDEN);
+                linkCollectionContainer.removeClass('ws-hidden');
                 linkCollection.setItems(list);
                 return list;
              });
@@ -858,12 +853,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              this._toggleDropAll(keysArrLen > 1);
-             this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys);
+             this.getContainer().toggleClass(SELECTED_CLASS, hasSelectedKeys);
 
              if(!this._options.alwaysShowTextBox) {
 
                 if(!this.getMultiselect()) {
-                   this._toggleInput(keysArrLen === 0);
+                   /* Поле ввода нельзя вырывать из потока (display: none),
+                      иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
+                   this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass('ws-invisible', Boolean(keysArrLen));
                 }
              }
 
@@ -1071,7 +1068,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass(classes.HIDDEN, !show);
+                this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass('ws-hidden', !show);
              }
           },
 
@@ -1079,19 +1076,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Скрывает/показывает кнопку удаления всех записей
            */
           _toggleDropAll: function(show) {
-             this.getContainer().find('.controls-FieldLink__dropAllLinks').toggleClass(classes.HIDDEN, !show);
-          },
-
-          _toggleInput: function(show) {
-             /* Поле ввода нельзя вырывать из потока (display: none),
-              иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
-             this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass(classes.INVISIBLE, !show);
-
-             /* Записи в поле связи могу проставляться програмно,
-                надо скрыть автодополнение, если скрывается input */
-             if(this.isPickerVisible() && !show) {
-                this.hidePicker();
-             }
+             this.getContainer().find('.controls-FieldLink__dropAllLinks').toggleClass('ws-hidden', !show);
           },
 
           /**
