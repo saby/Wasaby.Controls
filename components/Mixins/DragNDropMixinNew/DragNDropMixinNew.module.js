@@ -110,7 +110,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          after: {
             init: function () {
                //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
-               console.log(this.getName());
                $(this.getContainer()).bind('mouseup', this._onMouseupInside.bind(this));
             },
 
