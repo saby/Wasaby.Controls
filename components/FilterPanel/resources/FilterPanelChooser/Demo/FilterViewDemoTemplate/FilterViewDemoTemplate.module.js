@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
       'js!SBIS3.CONTROLS.Button',
       'css!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
       'js!SBIS3.CONTROLS.TabControl'
+      /*'js!SBIS3.Engine.SelectorBrowser'*/
    ],
    function(CompoundControl, dotTplFn, AdapterSbis, StaticSource, FormChooseController){
       var moduleClass = FormChooseController.extend({
