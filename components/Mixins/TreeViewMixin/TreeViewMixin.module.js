@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
     * @mixin SBIS3.CONTROLS.TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    *
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
-    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрыть чекбоксы у листьев.
-    * @cssModifier controls-ListView__hideCheckBoxes-node Скрыть чекбоксы у папок.
+    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
+    * @cssModifier controls-ListView__hideCheckBoxes-node Скрывает чекбоксы у папок (узлов и скрытых узлов). Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{

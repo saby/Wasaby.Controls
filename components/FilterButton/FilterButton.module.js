@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
    "js!SBIS3.CONTROLS.FilterHistory",
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
-   "i18n!SBIS3.CONTROLS.FilterButton"
+   "i18n!SBIS3.CONTROLS.FilterButton",
+   "js!SBIS3.CONTROLS.ScrollContainer"
 ],
     function(
         mStubs,
@@ -44,17 +45,16 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
        'use strict';
        /**
-        * Кнопка фильтров. Функционал и внешний вид аналогичен $ws.proto.FilterButton, но работа с
-        * фильтрами осуществляется только через контекст.
-        * Если текст рядом с кнопкой фильтов может иметь большую ширину,
-        * то ширину кнопки фильтров надо ограничить, навесив max-width.
+        * Класс контрола "Кнопка фильтров".
+        *
         * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends $ws.proto.CompoundControl
         * @author Крайнов Дмитрий Олегович
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
-        * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров
+        *
+        * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров.
         *
         * @control
         * @public
@@ -74,44 +74,38 @@ define('js!SBIS3.CONTROLS.FilterButton',
           $protected: {
              _options: {
                 /**
-                 * @cfg {String} Направление открытия всплывающей панели кнопки фильтров
-                 * <wiTag group="Отображение">
-                 * Возможные значения:
-                 * <ol>
-                 *    <li>left - открывается влево;</li>
-                 *    <li>right - открывается вправо.</li>
-                 * </ol>
-                 * @variant 'left'
-                 * @variant 'right'
+                 * @cfg {String} Устанавливает направление, в котором будет открываться всплывающая панель кнопки фильтров.
+                 * @variant left Панель открывается влево.
+                 * @variant right Панель открывается вправо.
                  */
                 filterAlign: 'left',
                 /**
-                 * @сfg {String} template Шаблон для фильтров всплывающей панели.
+                 * @сfg {String} Устанавливает шаблон всплывающей панели кнопки фильтров.
+                 * @remark
+                 * При каждом открытии/закрытии панели происходят события {@link SBIS3.CONTROLS.PopupMixin#onShow} и {@link SBIS3.CONTROLS.PopupMixin#onClose}.
+                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
                  *   <option name="template" value="SBIS3.EDO.CtxFilter"/>
                  * </pre>
-                 *
-                 * <wiTag group="Данные">
-                 * В данной опции задаётся шаблон для всплывающей панели, открываемой нажатием на кнопку фильтров.
+                 * @see filterAlign
+                 * @see additionalFilterParamsTemplate
                  */
                 template: '',
                 /**
-                 * @сfg {String} additionalFilterTemplate Шаблон для блока "Можно отобрать" на всплывающей панели.
+                 * @сfg {String} Устанавливает шаблон для блока "Можно отобрать" на всплывающей панели.
                  * @remark
-                 * Для блока дополнительных параметров рекомендуется использовать компоненты:
-                 * {@link SBIS3.CONTROLS.FilterLink} - ссылка, умеющая скрываться при клике.
-                 * {@link SBIS3.CONTROLS.FilterText} - текст с крестиком, скрытвается при клике на крестик.
+                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
                  *   <option name="additionalFilterTemplate" value="SBIS3.EDO.additionalFilters"/>
                  * </pre>
+                 * @see template
+                 * @see filterAlign
                  */
                 additionalFilterParamsTemplate: null,
                 /**
-                 * @cfg {String} Текст, который будет отображаться рядом с иконкой фильтра
-                 * <wiTag group="Управление">
-                 * Опция устанавливает текст, который будет отображаться рядом с иконкой фильтра
+                 * @cfg {String} Устанавливает текст, который будет отображаться рядом с иконкой фильтра.
                  * @translatable
                  */
                 resetLinkText: '',
@@ -119,11 +113,27 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  * @noshow
                  */
                 historyController: undefined,
-
-                // TODO ДОКУМЕНТАЦИЯ
+                 /**
+                  * @cfg {String} Устанавливает компонент, который отображает строку применённых фильтров.
+                  * @remark
+                  * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
+                  * @see filterLineTemplate
+                  */
                 filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
+                 /**
+                  * @cfg {*} Устанавливает шаблон, который отображает строку применённых фильтров.
+                  * @remark
+                  * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
+                  * @see filterLineComponent
+                  */
                 filterLineTemplate: undefined,
+                 /**
+                  * @cfg {Boolean}
+                  */
                 independentContext: true,
+                 /**
+                  * @cfg {String}
+                  */
                 internalContextFilterName : 'sbis3-controls-filter-button'
              },
 

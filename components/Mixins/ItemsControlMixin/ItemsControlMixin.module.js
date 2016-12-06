@@ -266,8 +266,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
+         _groupCollapsing: {},
          _options: {
-
             _canServerRender: false,
             _serverRender: false,
             _defaultItemTemplate: '',
@@ -348,7 +348,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает набор исходных данных, по которому строится отображение.
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных контрола.
              * @remark
              * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
              * @example
@@ -357,8 +357,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
-             *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
-             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *           contract: 'Отчеты' // Устанавливаем объект БЛ
              *        },
              *        binding: {
              *           query: 'Список' // Устанавливаем списочный метод
@@ -377,11 +376,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
              *    <options name="dataSource">
-             *       <option name="module" value="js!WS.Data/Source/SbisService"></options>
+             *       <option name="module" value="js!WS.Data/Source/SbisService"></option>
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
-             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
              *          </options>
              *          <options name="binding">
              *             <option name="query" value="Список"></option>
@@ -740,6 +738,37 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             curField = item.get(field),
             prevField = prevItem.get(field);
          return curField != prevField;
+      },
+
+      _getGroupContainers: function(groupId) {
+         var containers = $([]);
+         if (this._getItemsProjection()) {
+            var items = this._getItemsProjection().getGroupItems(groupId);
+            for (var i = 0; i < items.length; i++) {
+               containers.push(this._getDomElementByItem(items[i]).get(0))
+            }
+         }
+
+         return containers;
+      },
+
+      _toggleGroup: function(groupId, flag) {
+         this._groupCollapsing[groupId] = flag;
+         var containers = this._getGroupContainers(groupId);
+         containers.toggleClass('ws-hidden', flag);
+         $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
+         this._drawItemsCallbackDebounce();
+      },
+
+      expandGroup: function(groupId) {
+         this._toggleGroup(groupId, false);
+      },
+      collapseGroup: function(groupId) {
+         this._toggleGroup(groupId, true);
+      },
+      toggleGroup: function(groupId) {
+         var state = this._groupCollapsing[groupId];
+         this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
       },
 
       _prepareItemsData : function() {
@@ -1752,7 +1781,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
                var hash = childControls[i].getContainer().attr('data-hash');
-               this._itemsInstances[hash] = childControls[i];
+               //Проверяем на то, что найденный элемент принадлежит именно текущему инстансу, а не вложенным.
+               if (this._getItemsProjection().getByHash(hash)) {
+                  this._itemsInstances[hash] = childControls[i];
+               }
             }
          }
 

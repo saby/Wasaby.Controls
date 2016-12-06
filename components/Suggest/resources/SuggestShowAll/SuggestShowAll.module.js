@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'html!SBIS3.CONTROLS.SuggestShowAll',
        'Core/helpers/collection-helpers',
        'js!SBIS3.CONTROLS.DataGridView',
-       'i18n!SBIS3.CONTROLS.SuggestShowAll'
+       'i18n!SBIS3.CONTROLS.SuggestShowAll',
+       'js!SBIS3.CONTROLS.Button'
     ], function (CompoundControl, dotTplFn, colHelpers) {
 
        var optionsToSet = ['columns', 'itemTemplate', 'keyField', 'filter'];
@@ -44,12 +45,21 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
              SuggestShowAllDialog.superclass.init.apply(this, arguments);
 
              var list = this.getParent().getOpener().getList(),
-                 view = this.getChildControlByName('controls-showAllView');
+                 view = this.getChildControlByName('controls-showAllView'),
+                 selectButton = this.getChildControlByName('selectButton');
 
              colHelpers.forEach(optionsToSet, function(opt) {
                 view.setProperty(opt, list.getProperty(opt));
              });
              view.setDataSource(list.getDataSource());
+
+             this.subscribeTo(view, 'onSelectedItemsChange', function () {
+                selectButton.show();
+             }.bind(this));
+
+             selectButton.subscribe('onActivated', function () {
+                this.sendCommand('close', view.getSelectedItems().toArray());
+             });
 
           }
        });

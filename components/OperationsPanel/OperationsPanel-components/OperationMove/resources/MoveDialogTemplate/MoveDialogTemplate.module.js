@@ -24,8 +24,10 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             resizable: false,
             linkedView: undefined,
             records: undefined,
-            cssClassName: 'controls-MoveDialog',
-            dataSource: undefined
+            dataSource: undefined,
+            partialyReload: undefined,
+            displayField: undefined,
+            filter: undefined
          },
          treeView: undefined
       },
@@ -37,10 +39,8 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       },
       _onReady: function() {
          var
-             filter;
+             filter = this._options.filter || {};
          this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView');
-         //TODO: Избавиться от этого события в .100 версии. Придрот для выпуска .20 чтобы подменить фильтр в диалоге перемещения. Необходимо придумать другой механизм.
-         filter = this._notify('onPrepareFilterOnMove', this._options.records) || {};
          if (cInstance.instanceOfModule(this.getDataSource(), 'SBIS3.CONTROLS.SbisServiceSource') || cInstance.instanceOfModule(this.getDataSource(),'WS.Data/Source/SbisService')) {
             filter['ВидДерева'] = "Только узлы";
             //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
@@ -59,16 +59,9 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       },
 
       getDataSource: function() {
-         if (this._options.linkedView) {
-            return this._options.linkedView.getDataSource();
-         }
-
-         if (this._options.dataSource) {
-            return this._options.dataSource;
-         }
-
-         throw Error('data sourse is undefined');
+         return this._options.dataSource;
       }
+
    });
 
    return MoveDialogTemplate;

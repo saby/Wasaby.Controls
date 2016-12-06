@@ -54,7 +54,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _textField: null,
             _okButton: null,
             _oldText: '',
-            _oldEditorText: '',
             _requireDialog: false,
             _isEditInGroup: false, //Находится ли редактирование в группе
             _options: {
@@ -139,15 +138,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             //Начальный текст может быть и не пустой строкой
             this._saveOldText();
 
-            editorComponent.subscribe('onFocusIn', function(){
-               if (!self._isEditInGroup){
-                  self._oldEditorText = this.getText();
-               }
-            });
-
             editorComponent.subscribe('onFocusOut', function(){
                if (!self._isEditInGroup && self.validate()){
-                  if (this.getText() !== self._oldEditorText){
+                  if (this.getText() !== self._oldText){
                      self._editorFocusOutHandler(true);
                   } else {
                      self._editorFocusOutHandler(false);

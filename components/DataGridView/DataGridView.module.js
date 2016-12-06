@@ -190,8 +190,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.DragAndDropMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
+    *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -496,7 +499,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
              trs = [],
              cells = [],
-             index, hoveredColumn, cell;
+             index, hoveredColumn, cell, resultTr;
 
          if(td.length) {
             index = td.index();
@@ -512,7 +515,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if(this._checkResults()) {
-                  trs.push(this._getResultsContainer().find('.controls-DataGridView__results')[0]);
+                  /* Т.к. в момент синхронизации состояния и реального дома (а эта фаза может быть асинхронной),
+                     может сработать обработчик ховера, надо дополнительно проверить наличие элемента в доме.
+                     В vDom мы будем манипулировать состоянием, которое уже будет проецироваться на дом, так
+                     что там такой проблемы не будет. */
+                  resultTr = this._getResultsContainer().find('.controls-DataGridView__results')[0];
+
+                  if(resultTr) {
+                     trs.push(resultTr);
+                  }
                }
 
                for(var i = 0, len = trs.length; i < len; i++) {
@@ -575,6 +586,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
+         args.currentScrollPosition = this._getColumnsScrollPosition();
          buildTplArgsLadder(args.cellData, cfg);
 
          return args;
@@ -598,6 +610,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._bindHead();
          }
          headData = prepareHeadData(this._options);
+         headData.columnsScrollPosition = this._getColumnsScrollPosition();
+         headData.thumbPosition = this._currentScrollPosition;
          headMarkup = MarkupTransformer(this._options._headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
@@ -1011,12 +1025,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
-         var movePosition = -this._currentScrollPosition*this._partScrollRatio;
+         var movePosition = this._getColumnsScrollPosition();
 
          this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.left = movePosition + 'px';
          }
+      },
+
+      _getColumnsScrollPosition: function() {
+         return -this._currentScrollPosition*this._partScrollRatio;
       },
 
       _setThumbPosition: function(cords) {
@@ -1052,13 +1070,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _findMovableCells: function() {
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
-      },
-
-      _appendResultsContainer: function(container, resultRow){
-         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
-         if(this.hasPartScroll()) {
-            this.updateScrollAndColumns();
-         }
       },
 
       _checkThumbPosition: function(cords) {
@@ -1151,6 +1162,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
+          /* При установке колонок, надо сбросить частичный скролл */
+          this._currentScrollPosition = 0;
           checkColumns(this._options);
           this._destroyEditInPlace();
        },
@@ -1207,6 +1220,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          });
          return data;
       },
+
+      _getResultsTplCfg: function() {
+         var cfg = DataGridView.superclass._getResultsTplCfg.apply(this, arguments);
+         cfg.startScrollColumn = this._options.startScrollColumn;
+         cfg.columnsScrollPosition = this._getColumnsScrollPosition();
+         return cfg;
+      },
+
       _getColumnResultTemplate: function (column, index, result, item) {
          var columnTpl = result;
          if (column.resultTemplate) {

@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       });
 
       $(window).blur(function(e) {
-         if(document.activeElement.tagName == "IFRAME"){
+         if(document.activeElement && document.activeElement.tagName == "IFRAME"){
             if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
                eventsChannel.notify('onDocumentClick', e);
             }
@@ -39,15 +39,35 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    }
 
    /**
-    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных
-    * компонентов (диалоговые окна, плавающие панели, подсказки).
+    * Миксин, определяющий поведение контролов, которые отображаются с абсолютным позиционированием поверх всех остальных компонентов (диалоговые окна, плавающие панели, подсказки).
     * При подмешивании этого миксина в контрол он вырезается из своего местоположения и вставляется в Body.
     * @mixin SBIS3.CONTROLS.PopupMixin
     * @author Крайнов Дмитрий Олегович
     * @public
     */
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
-      $protected: {
+       /**
+        * @event onShow Происходит при открытии окна.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
+       /**
+        * @event onClose Происходит при закрытии окна.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        */
+       /**
+        * @event onAlignmentChange Происходит при изменении вертикального {@link verticalAlign} или горизонтального {@link horizontalAlign} выравнивания.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Object} newAlignment Объект с конфигурацией выравнивания.
+        * @param {Object} [newAlignment.verticalAlign] Вертикальное выравнивание.
+        * @param {Object} [newAlignment.horizontalAlign] Горизонтальное выравнивание.
+        * @param {Object} [newAlignment.corner] Точка построения окна.
+        */
+       /**
+        * @event onChangeFixed Происходит при изменении способа позиционирования окна браузера или других объектов на веб-странице.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Boolean} fixed В значении true - CSS-свойство position=fixed, иначе position=absolute.
+        */
+       $protected: {
          _targetSizes: {},
          _containerSizes: {},
          _windowSizes: {},
@@ -323,8 +343,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   'left': offset.left + 'px'
                });
             } else {
-               var bodyOffset = this._bodyPositioning();
-               this._container.offset(bodyOffset);
+               if (!this._fixed){
+                  var bodyOffset = this._bodyPositioning();
+                  this._container.offset(bodyOffset);
+               }
             }
          }
       },
@@ -549,7 +571,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _initWindowSizes: function () {
          this._windowSizes = {
-            height: $(window).height(),
+            height: $(window).height() - TouchKeyboardHelper.getKeyboardHeight(),
             width: $(window).width()
          };
       },
@@ -837,8 +859,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _getSpaces: function (corner) {
          var offset = this._targetSizes.offset,
             width = this._targetSizes.width,
-            height = this._targetSizes.height - TouchKeyboardHelper.getKeyboardHeight(),
-            windowHeight = this._windowSizes.height,
+            height = this._targetSizes.height,
+            //При расчете свободного места, учитываем весь экран
+            //так как на айпаде нужно открывать окна под клавиатуру что бы скролить не выпадашку, а все окно (для красоты)
+            //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет  
+            windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
             windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,

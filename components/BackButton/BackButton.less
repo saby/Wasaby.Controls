@@ -6,6 +6,24 @@
    white-space: nowrap;
    font-weight: 700;
    font-size: @back-button-font-size;
+
+   &.controls-BackButton__orange {
+      .controls-BackButton__caption {
+         color: @header-color;
+      }
+      &:before {
+         color: @blue-dark-color;
+      }
+      &:hover {
+         .controls-BackButton__caption {
+            color: @primary-color;
+         }
+         &:before {
+            color: @primary-color;
+         }
+      }
+   }
+
    .controls-BackButton__caption {
       font-style: normal;
       color: @blue-dark-color;
@@ -42,19 +60,22 @@
       &.controls-BackButton__hover-arrow{
          .controls-BackButton__arrow{
             position: absolute;
-            top: 4px;
+            top: 0;
             right: 0;
             left: auto;
             height: @back-button-arrow-height;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: @white-color;
+            &:before{
+               top: 4px;
+            }
          }
       }
       .controls-BackButton__arrow {
          position: relative;
          top: -3px;
-         left: -5px;
          &:before{
             float: right;
+            position: relative;
          }
       }
    }
@@ -65,6 +86,10 @@
    
    .controls-BackButton__caption.controls-Link{
       &:hover:not(.ws-disabled):not(.controls-Click__active):hover{
+         text-decoration: none;
+         color: @primary-color;
+      }
+      &.controls-Click__active {
          text-decoration: none;
          color: @primary-color;
       }

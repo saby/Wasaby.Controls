@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Image',
          MIN_TOOLBAR_WIDTH = 125, //минимальный размер тулбара для которого убирается  напись "загрузить" и кнопка "удалить"
          MIN_TOOLBAR_WIDTH_WITH_EDIT = 155,// минимальный размер тулбара для которого убирается  напись "загрузить" и все оставльные кнопки
          /**
-          * Контрол, который позволяет отображать и редактировать изображения, полученные из источника данных.
+          * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS.Image
           * @extends $ws.proto.CompoundControl
@@ -256,7 +256,9 @@ define('js!SBIS3.CONTROLS.Image',
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
                    * Обязательная для конфигурации опция. Если опция не установлена, то контрол не будет отображён.
+                   * Для работы с изображениями (чтение и запись в БД) применются <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/logicworkapl/objects/blmethods/blfile/'>методы БЛ для работы с файлами</a>.
                    * @example
+                   * Конфигурация источника через JS-код:
                    * <pre>
                    *     var mySource = new SbisService({
                    *        endpoint: 'Goods',
@@ -265,6 +267,20 @@ define('js!SBIS3.CONTROLS.Image',
                    *        }
                    *     });
                    *     image.SetDataSource(mySource);
+                   * </pre>
+                   * Конфигурация источника данных контрола "Изображение" через вёрстку:
+                   * <pre>
+                   *     <options name="dataSource">
+                   *        <option name="module" value="js!WS.Data/Source/SbisService"></option>
+                   *        <options name="options">
+                   *            <options name="endpoint">
+                   *                <option name="contract" value="Контрагент"></option>
+                   *            </options>
+                   *            <options name="binding">
+                   *                <option name="read">ПрочитатьИзображение</option>
+                   *            </options>
+                   *        </options>
+                   *     </options>
                    * </pre>
                    * @see setDataSource
                    * @see getDataSource

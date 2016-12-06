@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/Deferred",
    "Core/EventBus",
    "Core/IoC",
+   "Core/core-merge",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -33,13 +34,30 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, EventBus, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
-       * Контрол, который отображает в выпадающем списке список однотипных сущностей.
+       * Класс контрола "Выпадающий список".
+       * <br/>
+       * Особенности работы с контролом:
+       * <ul>
+       *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
+       *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+       * </ul>
+       * <br/>
+       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+       * <pre>
+       *    <component data-component="SBIS3.CONTROLS.DropdownList">
+       *       <options name="items" type="array" bind="record/MyEnumField"></options>
+       *       <option name="keyField">@Идентификатор</option>
+       *       <option name="displayField">Описание</option>
+       *    </component>
+       * </pre>
+       *
        * @class SBIS3.CONTROLS.DropdownList
        * @extends $ws.proto.CompoundControl
+       *
        * @author Красильников Андрей Сергеевич
        *
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
@@ -199,6 +217,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @variant simple В выпадающем списке отображаются только элементы коллекции.
                 * @variant duplicateHeader В выпадающем списке выбранное значение дублируется в шапке.
                 * @variant titleHeader В шапке отображается текст, установленный в опции {@link title}.
+                * @variant filter Для выпадающих списков, располагающихся на панели фильтрации.
                 */
                type: 'simple',
                /**
@@ -273,15 +292,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _buildTplArgs: function(item) {
-            return {
+            var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
+            return cMerge(defaultArgs, {
                item: item,
-               itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
-               defaultItemTpl: dotTplFnForItem,
                defaultId: this._defaultId,
-               displayField: this._options.displayField,
                hierField: this._options.hierField,
                multiselect: this._options.multiselect
-            };
+            });
          },
          setItems: function () {
             /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
@@ -304,6 +321,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      break;
                   }
                }
+            }
+            if (this._isEnumTypeData()) {
+               this.getItems().set(idArray[0]);
             }
             DropdownList.superclass.setSelectedKeys.call(this, idArray);
             this._updateCurrentSelection();
@@ -397,10 +417,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _getIdByRow: function(row){
-            if (!row.length || !row.data('hash')){
+            var itemProjection;
+            if (!row.length || !row.data('hash')) {
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
+            if (this._isEnumTypeData()) {
+               return this._getItemsProjection().getIndexByHash(row.data('hash'));
+            }
+            itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
             return itemProjection ? itemProjection.getContents().getId() : null;
          },
@@ -419,8 +443,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          showPicker: function(ev) {
             if (this.isEnabled()) {
-               var pickerBodyWidth,
-                   pickerHeaderWidth;
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
                if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
@@ -435,16 +457,42 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
 
-               this._pickerBodyContainer.css('max-width', '');
-               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
-               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
-               if (pickerHeaderWidth > pickerBodyWidth){
-                  this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
-               }
+               this._calcPickerSize();
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
+            }
+         },
+         _calcPickerSize: function(){
+            var pickerBodyWidth,
+               pickerHeaderWidth,
+               containerWidth,
+               needResizeHead,
+               minResizeWidth = 400; //Минимальная ширина, с которой начнется ресайз шапки.
+
+            //Сбрасываем значения, выставленные при предыдущем вызове метода _calcPickerSize
+            this._pickerBodyContainer.css('max-width', '');
+            this._pickerHeadContainer.css('width', '');
+
+            pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+            pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
+            containerWidth = this.getContainer()[0].clientWidth;
+            needResizeHead = pickerHeaderWidth > minResizeWidth && pickerHeaderWidth > containerWidth;
+
+            //Ширина шапки не больше, чем ширина контейнера
+            if (needResizeHead){
+               this._pickerHeadContainer.width(containerWidth);
+               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth; //изменилась ширина контейрена, нужно взять актуальную
+            }
+
+            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
+            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
+
+            //Контейнер с итемами ресайзится в 2-х случаях
+            //1: Ширина шапки < 400px, ширина контейнера с итемами > 400px => ширина контейнера = 400px, ограничение прописано в less
+            //2: Ширина шапки > 400px => ширина контейнера с итемами = ширине шапки
+            if (pickerHeaderWidth > pickerBodyWidth){
+               this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
             }
          },
          hide: function(){
@@ -492,7 +540,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            var item =  this.getItems().at(0);
+            if (this._isEnumTypeData()){
+               if (this._options.multiselect){
+                  throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
+               }
+               return;
+            }
+            var item = this.getItems().at(0);
             if (item) {
                if (!this._options.emptyValue){
                   this._defaultId = item.getId();
@@ -500,9 +554,37 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
             }
          },
+         _setSelectedItems: function(){
+            //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
+            if (!this._isEnumTypeData()) {
+              DropdownList.superclass._setSelectedItems.apply(this, arguments);
+           }
+         },
+
+         _isEnumTypeData: function(){
+            //TODO избавиться от этого по задаче https://inside.tensor.ru/opendoc.html?guid=711857a8-d8f0-4b34-aa31-e2f1a0d4b07b&des=
+            //Сейчас multiselectable не умеет работать с enum => приходится поддерживать эту логику на уровне выпадающего списка.
+            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Enum');
+         },
+         _setFirstItemAsSelected : function() {
+            //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
+            var items = this.getItems(),
+                id;
+
+            if (this._isEnumTypeData()){
+               id = items.get();
+            }
+            else{
+               id = items && items.at(0) && items.at(0).getId();
+            }
+
+            if (id !== undefined) {
+               this._options.selectedKeys = [id];
+            }
+         },
          _setHasMoreButtonVisibility: function(){
             if (this.getItems()) {
-               var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
+               var needShowHasMoreButton = this.getItems().getMetaData && this._hasNextPage(this.getItems().getMetaData().more, 0);
                if (!this._options.multiselect){
                   this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
                }
@@ -553,8 +635,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerResetButton.bind('click', this._resetButtonClickHandler.bind(this));
          },
          _resetButtonClickHandler: function(){
-            this.removeItemsSelectionAll();
-            this.hidePicker();
+            if (this._options.type == 'filter'){
+               this._hideAllowed = true;
+               this._options.selectedKeys = [null];
+               this._notifyOnPropertyChanged('selectedKeys');
+               this.hide();
+            }
+            else{
+               this.removeItemsSelectionAll();
+               this.hidePicker();
+            }
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
@@ -574,9 +664,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                item, pickerContainer, def;
-
-            if(len) {
+                item, def;
+            if (this._isEnumTypeData()){
+               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
+            }
+            else if(len) {
                def = new Deferred();
 
                if(!this._picker) {

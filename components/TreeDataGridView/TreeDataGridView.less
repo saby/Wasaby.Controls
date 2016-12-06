@@ -49,11 +49,13 @@
       }
    }
 }
-.controls-DataGridView {
+.controls-TreeDataGridView.controls-ListView__multiselect__off {
    .controls-DataGridView__table {
-      .controls-DataGridView__td {
-         &.controls-TreeDataGridView__firstContentCell {
-            padding-left: @tree-view-first-td-padding-left;
+      .controls-DataGridView__tbody {
+         .controls-DataGridView__td {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: @tree-view-first-td-padding-left;
+            }
          }
       }
    }
@@ -61,7 +63,7 @@
 .controls-TreeDataGridView__hideExpandsOnHiddenNodes {
   .controls-ListView__item-type-hidden {
     .controls-TreeView__expand {
-      display: none;
+      visibility: hidden;
     }
   }
 }
@@ -176,6 +178,7 @@
 }
 .controls-TreeView__searchBreadCrumbs {
    width: 100%;
+   line-height: normal;
 }
 
 .controls-ListView__hideCheckBoxes-leaf {

@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          $protected: {
             _options: {
                position: 0,
-               contentHeight: 1
+               contentHeight: 1,
+               tabindex: 0
             },
             _thumb: undefined,
             _beginClient: undefined,
@@ -35,9 +36,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
-            this._containerHeight = this._container.outerHeight(true);
+            this._containerHeight = this._container.height();
             this._setViewportRatio();
-            this._calcThumbHeight();
+            this._setThumbHeight();
          },
 
          getPosition: function() {
@@ -57,10 +58,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setContentHeight: function(contentHeight) {
-            this._containerHeight = this._container.outerHeight(true);
+            this._containerHeight = this._container.height();
             this._options.contentHeight = contentHeight;
             this._setViewportRatio();
-            this._calcThumbHeight();
+            this._setThumbHeight();
          },
 
          /**
@@ -96,25 +97,29 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Сдвигаем ползунок на нужную позицию
          _setThumbPosition: function() {
-            this._thumbPosition = this.getPosition() * this._viewportRatio
+            this._thumbPosition =this._calcProjectionSize(this.getPosition(), this._viewportRatio);
             this._thumb.get(0).style.top = this._thumbPosition + 'px';
          },
 
          //Высчитываем и задаём высоту ползунка
-         _calcThumbHeight: function(){
+         _setThumbHeight: function(){
             this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
-            this._thumbHeight = this._containerHeight * this._viewportRatio;
+            this._thumbHeight = this._calcProjectionSize(this._containerHeight, this._viewportRatio);
             this._thumb.height(this._thumbHeight);
          },
 
+         _calcProjectionSize: function(size, ratio) {
+            return size * ratio;
+         },
+
          _onResizeHandler: function() {
-            this._containerHeight = this._container.outerHeight(true);
-            this._calcThumbHeight();
+            this._containerHeight = this._container.height();
+            this._setThumbHeight();
          },
 
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function(){
-            this._viewportRatio = this._containerHeight / this.getContentHeight();
+            this._viewportRatio = this.getContainer().outerHeight(true) / this.getContentHeight();
          },
 
          _beginDragHandler: function(dragObject, e) {

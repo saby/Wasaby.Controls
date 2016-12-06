@@ -86,8 +86,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          if (fromContext) {
             this._updateFilterStructure(
                 undefined,
-                context.getValue(contextName + '/caption'),
-                context.getValue(contextName + '/filter')
+                context.getValue(contextName + '/filter'),
+                context.getValue(contextName + '/caption')
             );
          }
       },
@@ -97,11 +97,28 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          this._notifyOnPropertyChanged('filterStructure');
       },
 
-      applyFilter: propertyUpdateWrapper(function() {
-         this._syncContext(true);
+      _notifyOnApplyFilter: function() {
          this._notify('onApplyFilter');
          this._notifyFilterUpdate();
+      },
+
+       /**
+        * Применяет фильтр, который формируется из значений на панели фильтров.
+        */
+      applyFilter: propertyUpdateWrapper(function() {
+         this._syncContext(true);
+         this._notifyOnApplyFilter();
       }),
+
+       /**
+        * Устанавливает структуру, стреляет событием об применении фильтров.
+        * @param structure
+        * @private
+        */
+       _setFilterStructure: function(structure) {
+          this._updateFilterStructure(structure);
+          this._notifyOnApplyFilter();
+       },
 
       _updateFilterStructure: function(filterStructure, filter, captions, visibility) {
          var processElementVisibility = function(elem) {
