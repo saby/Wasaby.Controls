@@ -14,15 +14,15 @@
   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
 }
 
-.ws-splitter {
+.ws-separator {
   &.ws-linkHeader {
     padding-right: 0;
   }
   &:before {
   content: '|';
   float: right;
-  margin: @link-header-splitter-margin;
-  color: @link-header-splitter-color;
+  margin: @link-header-separator-margin;
+  color: @link-header-separator-color;
   }
 }
 
@@ -81,7 +81,7 @@
   }
 }
 
-.controls-ToggleHeader__caption, .ws-toggleHeader {
+.controls-ToggleHeader__caption {
   .ws-headerCounter {
     display: inline-block;
     font: @toggle-header-count-font;
