@@ -15,6 +15,23 @@
                 <option name="id">1</option>
                 <option name="title">Поставщики</option>
                 <option name="content" type="string">
+                    <component data-component="SBIS3.Engine.SelectorBrowser">
+                        <option name="content" type="string">
+                            <component data-component="SBIS3.CONTROLS.DataGridView" class="dialog-FieldLink__tableView" config="{{=$ws.helpers.encodeCfgAttr({items: it.items})}}">
+                                <option name="keyField">id</option>
+                                <option name="itemsDragNDrop">false</option>
+                                <options name="columns" type="array">
+                                    <options>
+                                        <option name="title">Название</option>
+                                        <option name="field">title</option>
+                                    </options>
+                                </options>
+                                <options name="itemsActions" type="array"></options>
+                                <option name="multiselect">true</option>
+                                <option name="name">browserView</option>
+                            </component>
+                        </option>
+                    </component>
                 </option>
             </options>
             <options>
