@@ -57,9 +57,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @property {Boolean} resetVisibilityValue Значение поля при сбрасывании фильтра, или при пустом значении в value. Может быть не определено.
              * @property {String} resetCaption Текст по умолчанию. Если задали, то при пустом (или заданном в resetValue) значении будет
              * отображаться заданный здесь текст. Может быть не определено.
-             * @property {Boolean} partialReset Сбрасывать ли данный элемент структуры при нажатии на крестик в панели фильтрации.
-             * Если выставить данный флаг, то получится частичный сбор параметров фильтрации. При клике на кнопку "По-умолчанию" на панели фильтрации сбрасываются все фильтры,
-             * несмотря на этот флаг.
              * @translatable caption resetCaption
              */
             /**
@@ -295,7 +292,10 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       _mapFilterStructureByResetValue: function(partial) {
          return colHelpers.reduce(this.getFilterStructure(), function(result, element) {
             if(element.hasOwnProperty('resetValue')) {
-               if(partial && element.partialReset) {
+               /* Надо смотреть только на itemTemplate, но сейчас есть проблема с компонентом dateRange,
+                  который делают через две дополнительные структуры и его сбрасывать надо. Как будет сделан компонент,
+                  который может отображать дату по стандарту в фильтра удалить "element.historyItemTemplate !== null" */
+               if(partial && element.itemTemplate === null && element.historyItemTemplate !== null) {
                   if(element.hasOwnProperty('value')) {
                      result[element.internalValueField] = element['value'];
                   }
