@@ -881,7 +881,7 @@ define('js!SBIS3.CONTROLS.ListView',
                // скролл может быть у window, но нельзя делать appendTo(window)
                var scrollContainer = this._scrollWatcher.getScrollContainer();
                scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
-               $('> .controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
+               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
