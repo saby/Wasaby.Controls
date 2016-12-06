@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                offset: view._offset
             };
          if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
-            cfg.hierField = view.getHierField();
+            cfg.hierField = view.getParentProperty();
             cfg.openedPath = view.getOpenedPath();
             cfg.root = view.getCurrentRoot();
          }

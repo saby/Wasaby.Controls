@@ -89,6 +89,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   columns : cFunctions.clone(cfg.columns || []),
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
+                  parentProperty: cfg.parentProperty,
+                  nodeProperty: cfg.nodeProperty,
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId
@@ -1716,7 +1718,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                tplOptions = {
                   columns : cFunctions.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
-                  hierField: this._options.hierField + '@'
+                  hierField: this._options.hierField + '@',
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty
                },
                targetContainer,
                itemInstance, groupTemplateFnc;

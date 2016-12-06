@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                return;
             }
             nodeID = $target.closest('.controls-ListView__item').data('id');
-            if (this.getItems().getRecordById(nodeID).get(this._options.hierField + '@')) {
+            if (this.getItems().getRecordById(nodeID).get(this._options.nodeProperty)) {
                this.setCurrentRoot(nodeID);
                this.reload();
             }
@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             switch (this._options.viewMode) {
                case 'table': resultTpl = TreeCompositeView.superclass._getItemTemplate.call(this, itemProj); break;
                case 'list': {
-                  if (item.get(this._options.hierField + '@')) {
+                  if (item.get(this._options.nodeProperty)) {
                      dotTpl = this._options.listFolderTemplate || this._options.folderTemplate || folderTpl;
                   } else {
                      if (this._options.listTemplate) {
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   break;
                }
                case 'tile' : {
-                  if (item.get(this._options.hierField + '@')) {
+                  if (item.get(this._options.nodeProperty)) {
                      dotTpl = this._options.folderTemplate ? this._options.folderTemplate : folderTpl;
                   } else {
                      if (this._options.tileTemplate) {
@@ -137,7 +137,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      else {
                         var src;
                         if (!item.get(this._options.imageField)) {
-                           src = item.get(this._options.hierField + '@') ? constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
+                           src = item.get(this._options.nodeProperty) ? constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultFolder.png' : constants.resourceRoot + 'SBIS3.CONTROLS/themes/online/img/defaultItem.png';
                         } else {
                            src = '{{=it.item.get(it.image)}}';
                         }
@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       },
 
       _getTargetContainer: function (item) {
-         if (this.getViewMode() != 'table' && item.get(this._options.hierField + '@')) {
+         if (this.getViewMode() != 'table' && item.get(this._options.nodeProperty)) {
             return this._getFoldersContainer();
          }
          return this._getItemsContainer();
@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       //перед контейнером для папок, чего быть не должно. Для этого посмотрим, если вставляется лист в 0 позицую, вставим
       //его сразу после контейнера для папок, иначе выполняем штатную логику, которая в остальных случаях отрабатывает верно.
       _insertItemContainer: function(item, itemContainer, target, at, currentItemAt, flagAfter) {
-         if (at === 0 && this.getViewMode() != 'table' && !item.get(this._options.hierField + '@')) {
+         if (at === 0 && this.getViewMode() != 'table' && !item.get(this._options.nodeProperty)) {
             this._previousGroupBy = undefined;
             itemContainer.insertAfter(this._getFoldersContainer());
          } else {
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      })
                      .callback();
                } else {
-                  filter[self._options.hierField] = branchId === 'null' ? null : branchId;
+                  filter[self._options.parentProperty] = branchId === 'null' ? null : branchId;
                   var limit;
                   //проверяем, является ли обновляемый узел корневым, если да, обновляем записи до подгруженной записи (_infiniteScrollOffset)
                   if ( String(curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
