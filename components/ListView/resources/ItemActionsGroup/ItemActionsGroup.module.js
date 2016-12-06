@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Скрывает операции над записью
           */
          hide: function() {
-            if(this._activeItem.container && this._options.touchMode) {
+            if(this._activeItem && this._activeItem.container && this._options.touchMode) {
                this._activeItem.container.removeClass(this._activeCls);
             }
 
