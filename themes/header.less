@@ -100,8 +100,10 @@
         text-decoration: @link-header-text-decoration;
       }
     }
-    &.ws-linkHeader:hover, &.controls-Click__active:active {
-      color: @link-header-hover-color;
+    &.ws-linkHeader {
+      &:hover, &.controls-Click__active:active {
+        color: @link-header-hover-color;
+      }
     }
     &.ws-header,  &.ws-bigSubheader, &.ws-subheader {
       &:hover, &.controls-Click__active:active {
