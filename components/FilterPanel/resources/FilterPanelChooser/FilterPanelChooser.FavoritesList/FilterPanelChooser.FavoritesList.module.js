@@ -20,19 +20,40 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'use strict';
 
     /**
-     * @author Крайнов Дмитрий Олегович
+     * Класс редактора "Список с избранными записями".
+     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
+     * <br/>
+     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника, вызов которого производится по кнопке "Все" под списком или командой {@link showDictionary}.
+     * По умолчанию отображается 3 записи в списке. Чтобы подгрузить все, используйте кнопку "Ещё" под списком или команду {@link showFullList}.
+     * <br/>
+     * Чтобы изменить шаблон отображения кнопок "Все" и "Ещё", измените опцию {@link afterChooserWrapper}.
+     * Если вы используете шаблон по умолчанию, то подпись кнопки "Все" можно изменить через опцию {@link captionFullList}.
+     * <br/>
+     * Также присутствует возможность создавать избранные записи. Выбор таких записей производится из справочника.
+     * Для доступа к избранным записям, над списком отображается кнопка "Избранные". Шаблон кнопку устанавливают в опции {@link beforeChooserWrapper}.
      * @class SBIS3.CONTROLS.FilterPanelChooser.FavoritesList
      * @extends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
+     * @author Сухоручкин Андрей Сергеевич
+     *
+     * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
     var FilterPanelChooserFavorites = FilterPanelChooserDictionary.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FavoritesList.prototype */ {
         $protected: {
             _options: {
+                /**
+                 * @cfg {String} Устанавливает шаблон, отображающий кнопку с числом избранных записей.
+                 * @remark
+                 * Шаблон должен быть реализован только на <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизаторе</a>
+                 */
                 beforeChooserWrapper: headerTpl,
                 /**
-                * @cfg {WS.Data/Collection/RecordSet} Набор избранных записей.
-                **/
+                 * @cfg {WS.Data/Collection/RecordSet} Устанавливает набор избранных записей.
+                 */
                 favorites: undefined,
+                /**
+                 * @cfg {String}
+                 */
                 favoritesCount: undefined
             },
             _favoritesCheckBox: undefined

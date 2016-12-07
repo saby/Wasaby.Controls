@@ -10,12 +10,36 @@ define('js!SBIS3.CONTROLS.SliderInput',
    ], function(Slider, dotTplFn) {
       'use strict';
       var
+         /**
+          * Класс контрола "Слайдер с полям ввода".
+          * @class SBIS3.CONTROLS.SliderInput
+          * @extends SBIS3.CONTROLS.Slider
+          *
+          * @author Борисов Петр Сергеевич
+          *
+          * @demo SBIS3.CONTROLS.Demo.SliderInputDemo
+          */
          SliderInput = Slider.extend(/** @lends SBIS3.CONTROLS.SliderInput.prototype */{
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
+                  /**
+                   * @cfg {String} Устанавливает подпись перед первым полем ввода.
+                   * @see middleLabel
+                   * @see endLabel
+                   */
                   startLabel: '',
+                   /**
+                    * @cfg {String} Устанавливает подпись между первым и вторым полем ввода.
+                    * @see startLabel
+                    * @see endLabel
+                    */
                   middleLabel: '',
+                   /**
+                    * @cfg {String} Устанавливает подпись после второго поля ввода.
+                    * @see startLabel
+                    * @see middleLabel
+                    */
                   endLabel: ''
                },
                _endTextBox: undefined,
