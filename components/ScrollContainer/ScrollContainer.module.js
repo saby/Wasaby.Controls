@@ -16,18 +16,21 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * @extends SBIS3.CONTROLS.CompoundControl
        * @author Крайнов Дмитрий Олегович
        *
-       * @initial
-       * <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
-       *    <option name="content">
-       *       <component data-component="SBIS3.CONTROLS.ListView">
-       *          <option name="displayField">title</option>
-       *          <option name="keyField">id</option>
-       *          <option name="infiniteScroll">down</option>
-       *          <option name="infiniteScrollContainer">.myScrollContainer</option>
-       *          <option name="pageSize">7</option>
-       *       </component>
-       *    </option>
-       * </component>
+       * @example
+       * Использование ScrollContainer с вложенным в него ListView, и настройкой автоподгрузки вниз.
+       * <pre class="brush: html">
+       *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
+       *       <option name="content">
+       *          <component data-component="SBIS3.CONTROLS.ListView">
+       *             <option name="displayField">title</option>
+       *             <option name="keyField">id</option>
+       *             <option name="infiniteScroll">down</option>
+       *             <option name="infiniteScrollContainer">.myScrollContainer</option>
+       *             <option name="pageSize">7</option>
+       *          </component>
+       *       </option>
+       *    </component>
+       * </pre>
        *
        * @control
        * @public
