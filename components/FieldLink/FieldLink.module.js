@@ -582,19 +582,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
-                 classes = ['controls-FieldLink'];
+                 classesToAdd = ['controls-FieldLink'];
 
              if(cfg.multiselect) {
-                classes.push(classes.MULTISELECT);
+                classesToAdd.push(classes.MULTISELECT);
              }
 
              if(cfg.selectedKeys.length || cfg.selectedKey !== null) {
-                classes.push(classes.SELECTED);
+                classesToAdd.push(classes.SELECTED);
              }
 
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
-             cfg.className += ' ' + classes.join(' ');
+             cfg.className += ' ' + classesToAdd.join(' ');
              cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
              return cfg;
           },
