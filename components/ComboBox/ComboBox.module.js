@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /*
-               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке 
+               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
             */
             autocomplete: false
          }
@@ -222,10 +222,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || target.hasClass('controls-TextBox__afterFieldWrapper') || self.isEditable() === false) {
+            if (isArrow || ( target[0] === this._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
-                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку 
+                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку
                   if (isArrow) {
                      e.preventDefault();
                   }
@@ -402,7 +402,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);                              
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
             }
             /*управлять этим классом надо только когда имеем дело с рекордами
              * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
@@ -503,7 +503,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             item = projItem.getContents(),
             title = item.get(this._options.displayField);
-         
+
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
