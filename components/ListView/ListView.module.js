@@ -3397,6 +3397,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} movedItems  Массив перемещаемых записей.
           * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
           * @param {MovePosition} position Как перемещать записи
+          * @return {Core/Deferred}
           * @example
           * <pre>
           *    new ListView({
@@ -3411,7 +3412,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            this._getMover().move(models, target.getModel(), position);
+            return this._getMover().move(models, target.getModel(), position);
          },
          //endregion moveMethods
          /**
