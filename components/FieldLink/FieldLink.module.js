@@ -23,7 +23,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!WS.Data/Di",
        "Core/core-functions",
-       "js!SBIS3.CONTROLS.MenuIcon",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -71,8 +70,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var INPUT_WRAPPER_PADDING = 8;
        var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
-       var MULTISELECT_CLASS = 'controls-FieldLink__multiselect';
-       var SELECTED_CLASS = 'controls-FieldLink__selected';
+
+       var classes = {
+          MULTISELECT: 'controls-FieldLink__multiselect',
+          SELECTED: 'controls-FieldLink__selected',
+          INVISIBLE: 'ws-invisible',
+          HIDDEN: 'ws-hidden'
+       };
 
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
@@ -391,8 +395,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }.bind(this)
                 );
              }
-
-             this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
           },
 
           _getSelectorAction: function() {
@@ -458,7 +460,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
-             this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -527,6 +528,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(config) {
                 this.showSelector(config.template, config.componentOptions);
+                /* Чтобы остановить всплытие комманды */
+                return true;
              }
           },
 
@@ -547,7 +550,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
-             this.getContainer().toggleClass(MULTISELECT_CLASS, !!multiselect)
+             this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
           },
 
           _getAdditionalChooserConfig: function () {
@@ -579,19 +582,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
-                 classes = ['controls-FieldLink'];
+                 classesToAdd = ['controls-FieldLink'];
 
              if(cfg.multiselect) {
-                classes.push(MULTISELECT_CLASS);
+                classesToAdd.push(classes.MULTISELECT);
              }
 
              if(cfg.selectedKeys.length || cfg.selectedKey !== null) {
-                classes.push(SELECTED_CLASS);
+                classesToAdd.push(classes.SELECTED);
              }
 
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
-             cfg.className += ' ' + classes.join(' ');
+             cfg.className += ' ' + classesToAdd.join(' ');
              cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
              return cfg;
           },
@@ -613,46 +616,52 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  availableWidth, items, additionalWidth, itemWidth, itemsCount, $item;
 
              if(!linkCollection.isPickerVisible()) {
-                /* Если у нас единичный выбор - то считать ничего не надо,
-                   обрезание троеточием сделано на CSS */
-                if (!this._isEmptySelection() && needResizeInput) {
+                if (!this._isEmptySelection()) {
                    items = linkCollection.getContainer().find('.controls-FieldLink__item');
-                   additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
                    itemsCount = items.length;
 
-                   /* Для multiselect'a и включённой опции alwaysShowTextBox
-                      добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
-                   if (this._options.multiselect || this._options.alwaysShowTextBox) {
-                      /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
-                      additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
-                   }
+                   /* Не надо вызывать пересчёт элементов в случаях:
+                      1) Единичный выбор - расчёт ширины сделан на css
+                      2) Множественный выбор в задизейбленом состоянии с количеством элементов > 1,
+                         сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
+                         поэтому считать надо. */
+                   if (needResizeInput || (isEnabled && this._options.multiselect && itemsCount === 1)) {
+                      additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
 
-                   /* Высчитываем ширину, доступную для элементов */
-                   availableWidth = this._container[0].clientWidth - additionalWidth;
-
-                   /* Считаем, сколько элементов может отобразиться */
-                   for (var i = itemsCount - 1; i >= 0; i--) {
-                      $item = items.eq(i);
-                      itemWidth = $item.outerWidth();
-
-                      if ((itemsWidth + itemWidth) > availableWidth) {
-                         this._toggleShowAll(itemsCount > 1);
-                         /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
-                         if(!itemsWidth) {
-                            $item.outerWidth(availableWidth);
-                            toAdd.push($item[0]);
-                         }
-                         break;
+                      /* Для multiselect'a и включённой опции alwaysShowTextBox
+                       добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
+                      if (this._options.multiselect || this._options.alwaysShowTextBox) {
+                         /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
+                         additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
                       }
-                      toAdd.unshift($item[0]);
-                      itemsWidth += itemWidth;
-                   }
 
-                   if(toAdd.length < itemsCount) {
-                      linkCollection._getItemsContainer().html(toAdd);
-                      this._toggleShowAll(true);
-                   } else {
-                      this._toggleShowAll(false);
+                      /* Высчитываем ширину, доступную для элементов */
+                      availableWidth = this._container[0].clientWidth - additionalWidth;
+
+                      /* Считаем, сколько элементов может отобразиться */
+                      for (var i = itemsCount - 1; i >= 0; i--) {
+                         $item = items.eq(i);
+                         itemWidth = $item.outerWidth();
+
+                         if ((itemsWidth + itemWidth) > availableWidth) {
+                            this._toggleShowAll(itemsCount > 1);
+                            /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
+                            if (!itemsWidth) {
+                               $item.outerWidth(availableWidth);
+                               toAdd.push($item[0]);
+                            }
+                            break;
+                         }
+                         toAdd.unshift($item[0]);
+                         itemsWidth += itemWidth;
+                      }
+
+                      if (toAdd.length < itemsCount) {
+                         linkCollection._getItemsContainer().html(toAdd);
+                         this._toggleShowAll(true);
+                      } else {
+                         this._toggleShowAll(false);
+                      }
                    }
                 }
              }
@@ -691,7 +700,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _isInputVisible: function() {
-             return !(!this._isEmptySelection() && !this._options.multiselect);
+             return !(!this._isEmptySelection() && !this._options.multiselect) && this.isEnabled();
           },
 
           _getElementToFocus: function() {
@@ -825,10 +834,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
-             linkCollectionContainer.addClass('ws-hidden');
+             linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
                 self._dataLoadedCallback();
-                linkCollectionContainer.removeClass('ws-hidden');
+                linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
              });
@@ -853,14 +862,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              this._toggleDropAll(keysArrLen > 1);
-             this.getContainer().toggleClass(SELECTED_CLASS, hasSelectedKeys);
+             this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys);
 
              if(!this._options.alwaysShowTextBox) {
 
                 if(!this.getMultiselect()) {
-                   /* Поле ввода нельзя вырывать из потока (display: none),
-                      иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
-                   this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass('ws-invisible', Boolean(keysArrLen));
+                   this._toggleInput(keysArrLen === 0);
                 }
              }
 
@@ -1070,7 +1077,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass('ws-hidden', !show);
+                this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass(classes.HIDDEN, !show);
              }
           },
 
@@ -1078,7 +1085,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Скрывает/показывает кнопку удаления всех записей
            */
           _toggleDropAll: function(show) {
-             this.getContainer().find('.controls-FieldLink__dropAllLinks').toggleClass('ws-hidden', !show);
+             this.getContainer().find('.controls-FieldLink__dropAllLinks').toggleClass(classes.HIDDEN, !show);
+          },
+
+          _toggleInput: function(show) {
+             /* Поле ввода нельзя вырывать из потока (display: none),
+              иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
+             this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass(classes.INVISIBLE, !show);
+
+             /* Записи в поле связи могут проставлять програмно,
+                поэтому это надо отслеживать и скрыть автодополнение, если скрывается input */
+             if(this.isPickerVisible() && !show) {
+                this.hidePicker();
+             }
           },
 
           /**

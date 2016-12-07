@@ -10,9 +10,11 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
    /**
     * Интерфейс открывателя диалога/всплывающей панели
-    * @extend SBIS3.CORE.CompoundControl
-    * @public
+    * @class SBIS3.CONTROLS.SelectorWrapper
+    * @extends SBIS3.CORE.CompoundControl
     * @author Крайнов Дмитрий
+    * @public
+    * @control
     */
 
    var SELECTION_TYPE_CLASSES = {
@@ -21,7 +23,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       all: ''
    };
 
-   var SelectorWrapper = CompoundControl.extend([], {
+   var SelectorWrapper = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SelectorWrapper.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options : {

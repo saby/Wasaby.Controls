@@ -49,7 +49,7 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             {'id': 3, title: 'Три', parent: null, 'parent@': true},
             {'id': 4, title: 'Четыре', parent: 1, 'parent@': true},
             {'id': 5, title: 'Четыре', parent: 1, 'parent@': true},
-            {'id': 6, title: 'Четыре', parent: 4, 'parent@': true},
+            {'id': 6, title: 'Четыре', parent: 4, 'parent@': false},
             {'id': 7, title: 'Четыре', parent: 4, 'parent@': true},
             {'id': 8, title: 'Четыре', parent: 7, 'parent@': true}
          ],
@@ -254,6 +254,14 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             treeMover.moveFromOutside(listAction, targetRow, outsideRs, true);
             assert.equal(outsideRs.getIndex(model), -1);
             assert.equal(treeItems.getIndex(treeItems.getRecordById(model.getId())), treeItems.getCount()-1);
+         });
+
+         it('should not move the source row into target if target doesnt node', function(){
+            targetRow.setPosition('on');
+            targetRow.setModel(treeItems.getRecordById(6));
+            var count = treeItems.getCount();
+            treeMover.moveFromOutside(list, targetRow, outsideRs, true);
+            assert.equal(count, treeItems.getCount());
          });
       });
    });

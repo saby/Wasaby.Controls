@@ -149,9 +149,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             isModal: false,
             /**
-             * Разрешить всплывающему окну перекрывать target 
-             * Например нужно для меню, которое может перекрывать target без потери функцианальности, 
-             * но не подходит для поля связи, так как может перекрывать вводимый текст 
+             * Разрешить всплывающему окну перекрывать target
+             * Например нужно для меню, которое может перекрывать target без потери функцианальности,
+             * но не подходит для поля связи, так как может перекрывать вводимый текст
              * @type {Boolean}
              */
             targetOverlay: false,
@@ -862,7 +862,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             height = this._targetSizes.height,
             //При расчете свободного места, учитываем весь экран
             //так как на айпаде нужно открывать окна под клавиатуру что бы скролить не выпадашку, а все окно (для красоты)
-            //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет  
+            //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет
             windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
             windowWidth = this._windowSizes.width,
             spaces = {
@@ -962,16 +962,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
             }
-         },
-
-         _onResizeHandler: function(){
-            this._checkFixed(this._options.target || $('body'));
-            if (this.isVisible() && !this._fixed) {
-               this.recalcPosition(false);
-            } else {
-               this._initSizes();
-            }
-            this._checkTargetPosition();
          }
       },
 
@@ -990,6 +980,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._options.isModal) {
                this._setModal(true);
             }
+         },
+         _onResizeHandler: function(){
+            this._checkFixed(this._options.target || $('body'));
+            if (this.isVisible() && !this._fixed) {
+               this.recalcPosition(false);
+            } else {
+               this._initSizes();
+            }
+            this._checkTargetPosition();
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
@@ -1027,7 +1026,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (detection.isMobileIOS) {
                 if(this.getContainer().find(document.activeElement).length > 0){
                    $(document.activeElement).trigger('blur');
-                };
+                }
             }
 
             var self = this,

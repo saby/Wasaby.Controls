@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             action = dragSource.getAction(),
             def;
          if (typeof action === 'function') {
-           def =  action.call(dragSource);
+            def =  action.call(dragSource);
          } else  if (move && (operation === 'add' || operation === 'move')) {
             var movedItems = [];
             dragSource.each(function (movedItem) {
@@ -80,20 +80,23 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             });
             def = this.move(movedItems, target.getModel(), target.getPosition());
          }
-         def = (def instanceof Deferred) ? def : new Deferred().callback();
+         def = (def instanceof Deferred) ? def : new Deferred().callback(def);
          var position = this.getItems().getIndex(target.getModel()),
             items = this.getItems();
          position = target.getPosition() != 'after' ? position : position +1;
-         def.addCallback(function() {
-            dragSource.each(function(movedItem) {
-               var model = movedItem.getModel();
-               if (operation === 'add' || operation === 'move' && items.getIndex(model) === -1) {
-                  items.add(model.clone(), position);
-               }
-               if (operation === 'delete' || operation === 'move') {
-                  ownerItems.remove(model);
-               }
-            });
+         def.addCallback(function(result) {
+            if (result !== false) {
+               dragSource.each(function(movedItem) {
+                  var model = movedItem.getModel();
+                  if (operation === 'add' || operation === 'move' && items.getIndex(model) === -1) {
+                     items.add(model.clone(), position);
+                  }
+                  if (operation === 'delete' || operation === 'move') {
+                     ownerItems.remove(model);
+                  }
+               });
+            }
+            return result;
          });
       },
       /**

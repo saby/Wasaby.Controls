@@ -48,6 +48,16 @@ define('js!SBIS3.CONTROLS.SearchController',
              view = this._options.view,
              self = this;
 
+         /* Проекции может не быть, если например начали искать до первой загрузки данных,
+            поэтому делаю метод обёртку, который проверяет, есть ли проекция */
+         function callProjectionMethod(method, args) {
+            var projection = view._getItemsProjection();
+
+            if(projection) {
+               projection[method].apply(projection, args);
+            }
+         }
+
          filter[searchParamName] = text;
          view._options.hierarchyViewMode = true;
          view.setHighlightText(text, false);
@@ -86,11 +96,11 @@ define('js!SBIS3.CONTROLS.SearchController',
             if (self._options.searchMode === 'root') {
                root = view._options.root !== undefined ? view._options.root : null;
                //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-               view._options._itemsProjection.setEventRaising(false);
+               callProjectionMethod('setEventRaising',[false]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-               view._options._itemsProjection.setRoot(root);
+               callProjectionMethod('setRoot', [root]);
                view._options._curRoot = root;
-               view._options._itemsProjection.setEventRaising(true);
+               callProjectionMethod('setEventRaising', [true]);
             }
          });
 
