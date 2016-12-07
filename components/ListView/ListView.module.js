@@ -3371,7 +3371,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _makeMoveStrategy: function () {
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),
-               hierField: this._options.hierField,
+               hierField: this._options.parentProperty,
                listView: this
             });
          },
@@ -3396,7 +3396,7 @@ define('js!SBIS3.CONTROLS.ListView',
                moveStrategy: this.getMoveStrategy(),
                items: this.getItems(),
                projection: this._getItemsProjection(),
-               hierField: this._options.hierField
+               hierField: this._options.parentProperty
             }));
          },
          /**
