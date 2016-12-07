@@ -6,13 +6,13 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'js!SBIS3.CORE.CompoundControl',
          'js!SBIS3.CONTROLS.DropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListItem',
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListItem',
          'Core/core-functions',
          'js!WS.Data/Types/Enum',
          'i18n!SBIS3.CONTROLS.Demo.MyDropdownList',
          'css!SBIS3.CONTROLS.Demo.MyDropdownList',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem'
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconHead',
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconItem'
       ],
 
       function(CompoundControl, DropdownList, dotTplFn, itemTpl, cFunctions, Enum) {
