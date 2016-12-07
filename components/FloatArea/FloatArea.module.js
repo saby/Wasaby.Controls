@@ -30,9 +30,9 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
              */
             animation : 'no',
              /**
-              * @cfg {String} Устанавливает имя компонента, который будет открыт на всплывающей панели.
+              * @cfg {String} Устанавливает имя компонента, который будет открыт на всплывающей панели, или вёрстку всего шаблона.
               * @remark
-              * Значение указывают в формате "js!SBIS3.MyArea.MyComponent".
+              * Имя компонента устанавливают в формате "js!SBIS3.MyArea.MyComponent".
               */
             template: null
          }
