@@ -37875,6 +37875,15 @@
 
             // Clean up references for IE
             targetElm = doc = body = null;
+
+            //Проблема:
+            //          Пользователи могут быть очень быстрыми (destroy может сработать сразу после init)
+            //          fire(init) происходит в середине метода initContentBody, после еще происходят обращения к редактору
+            //          Eсли destroy сработает сразу после fire('init') оставшиеся вызовы в функции initContentBody будут падать с ошибками
+            //Решение:
+            //          Стрелять событием initContentBody в конце метода initContentBody,
+            //          чтобы только после выполнения всего метода можно было позвать destroy
+            self.fire('initContentBody');
          },
 
          /**
@@ -47630,6 +47639,13 @@ tinymce.ThemeManager.add('modern', function(editor) {
       }
 
       function render() {
+         //Проблема:
+         //          render может случиться после destroy редактора
+         //Решение:
+         //          Проверять редактор на destroyed
+         if (editor.destroyed) {
+            return;
+         }
          if (panel) {
             if (!panel.visible()) {
                show();
