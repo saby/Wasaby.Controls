@@ -579,19 +579,31 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var noItems = true,
             selKey,
             oldKey = this._options.selectedKey,
+            oldIndex = this._options.selectedIndex,
             oldText = this.getText(),
             self = this;
          items.each(function (item) {
             noItems = false;
             if (self._propertyValueGetter(item, self._options.displayField) == self._options.text) {
-               selKey = item.getId();
-               self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-               self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
-               //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-               if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-                  self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
-                  self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+               //для рекордов и перечисляемого чуть разный механизм
+               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+                  selKey = item.getId();
+                  self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+                  //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+                  if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                  }
                }
+               else {
+                  self._options.selectedIndex = self._getItemsProjection().getIndexBySourceItem(item);
+                  if (oldIndex !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(null, self._options.selectedIndex);
+                     self._drawSelectedItem(null, self._options.selectedIndex);
+                  }
+               }
+
             }
          });
 
