@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          var self = this;
 
          this.getContainer().addClass('controls-SuggestTextBox');
-         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', self.getContainer().get(0));
+         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._getAfterFieldWrapper());
 
 
          this.subscribe('onTextChange', function(e, text) {

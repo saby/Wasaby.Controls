@@ -971,7 +971,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                editor = this._tinyEditor;
 
             //По инициализации tinyMCE
-            editor.on('init', function(){
+            editor.on('initContentBody', function(){
                //По двойному клику на изображение внутри редактора - отображаем диалог редактирования размеров изображения
                this._inputControl.bind('dblclick', function(e) {
                   if (this._inputControl.attr('contenteditable') !== 'false') {
