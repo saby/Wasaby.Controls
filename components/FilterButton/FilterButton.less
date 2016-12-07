@@ -292,6 +292,11 @@
             color: @link-disabled-text-color;
             cursor: default;
 
+            .controls__filterButton__filterLine-arrow {
+               color: @icon-color-disabled !important;
+               cursor: default;
+            }
+
             &:hover {
                color: @link-disabled-text-color;
                .controls__filterButton__filterLine-text {
@@ -347,6 +352,9 @@
 
    .controls__filterButton__filterLine-items:hover {
       color: @hover-color;
+      .controls__filterButton__filterLine-arrow {
+         color: @hover-color !important;
+      }
       .controls__filterButton__filterLine-text {
          text-decoration: underline;
       }
