@@ -2151,13 +2151,30 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItems: function(item, groupId){
-            this._checkDeletedItems(item);
-            ListView.superclass._removeItems.call(this, item, groupId);
+         _removeItems: function(items, groupId){
+            this._checkDeletedItems(items);
+            ListView.superclass._removeItems.call(this, items, groupId);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom -= this._getAdditionalOffset(items);
+            }
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
          },
+         
+         _addItems: function(newItems, newItemsIndex, groupId){
+            ListView.superclass._addItems.apply(this, arguments);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
+            }
+         },
+
+         // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         _getAdditionalOffset: function(items){
+            return items.length;
+         },
+
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
             if (this.isInfiniteScroll()){
@@ -2863,8 +2880,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _updateOffset: function () {
-            var more = this.getItems().getMetaData().more,
-               nextPage = this._hasNextPage(more);
+            var more = this.getItems().getMetaData().more;
             if (this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }
