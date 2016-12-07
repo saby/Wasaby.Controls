@@ -46,6 +46,37 @@
     </div>
 
     <div>
+        <component data-component="SBIS3.CONTROLS.DropdownList" style="width:185px; margin:0 15px; vertical-align:text-top;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key" value="1"/>
+                    <option name="title">Оплаченные</option>
+                </options>
+                <options>
+                    <option name="key" value="2"/>
+                    <option name="title">частично</option>
+                    <option name="hier">1</option>
+                </options>
+                <options>
+                    <option name="key" value="3"/>
+                    <option name="title">Неоплаченные</option>
+                </options>
+            </options>
+            <option name="multiselect">false</option>
+            <option name="keyField">key</option>
+            <option name="displayField">title</option>
+            <option name="hierField">hier</option>
+            <option name="text" bind="filterSelectText"></option>
+            <option name="className" value="blue-color"></option>
+            <option name="type" value="filter"></option>
+            <options name="selectedKeys" type="array">
+                <option bind="filterSelect"></option>
+            </options>
+            <opt name="visible" bind="filterSelectVisibility" oneWay="true" direction="fromContext"></opt>
+        </component>
+    </div>
+
+    <div>
         <component data-component="SBIS3.CONTROLS.ComboBox" style="width:185px; margin:14px 5px 0 12px;">
             <options name="items" type="array">
                 <options>

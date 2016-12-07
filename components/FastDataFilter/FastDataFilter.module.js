@@ -105,13 +105,14 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             FastDataFilter.superclass.init.apply(this, arguments);
             this._container.removeClass('ws-area');
          },
-         _drawItemsCallback: function(){
+         _drawItemsCallbackSync: function(){
             var instances = this.getItemsInstances();
             for (var i in instances) {
                if (instances.hasOwnProperty(i)) {
                   this._subscribeItemToHandlers(instances[i])
                }
             }
+            this._setSelectionToItemsInstances();
             this._recalcDropdownWidth();
          },
          _getCurrentContext : function(){
@@ -230,15 +231,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                filterChanged: changed,
                filterStructure: this._filterStructure
             });
-            //TODO Во-первых этого здесь бюыть не должно, но привязки не завелись из-за того, что dropDown не смог связаться по контексту и выставить свое значение
-            //TODO во-вторых возможнны проблемы с value array||number. Пока обратим внимание на instances.second._options.multiselect
-            var instances = this.getItemsInstances();
-            //Если компоненты еще не построились, подождем когда они будут готовы, чтобы поставить в соответсвие с фильтром
-            if (Object.isEmpty(instances)) {
-               this.once('onDrawItems', this._setSelectionToItemsInstances.bind(this));
-            } else {
-               this._setSelectionToItemsInstances();
-            }
+            this._setSelectionToItemsInstances();
          },
          _setSelectionToItemsInstances : function(){
             var instances = this.getItemsInstances();

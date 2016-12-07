@@ -7,13 +7,13 @@
     <option name="hierField" value="{{=it.item.get('hierField')}}"></option>
     <option name="className" value="{{=('controls-ListView__item ' + it.item.get('className'))}}"></option>
     <option name="pickerClassName" value="{{=(it.item.get('pickerClassName') + ' controls-DropdownList__picker')}}"></option>
-    <option name="dataSource" value="{{=it.item.get('dataSource')}}"></option>
-    <options name="filter" value="{{=it.item.get('filter')}}"></options>
+    <option name="dataSource" value="{{@it.item.get('dataSource')}}" type="ref"></option>
+    <option name="filter" value="{{@it.item.get('filter')}}" type="ref"></option>
     <option name="allowDblClick" value="{{=it.item.get('allowDblClick')}}"></option>
     <option name="name" value="{{=it.item.get('name')}}"></option>
     <option name="type" value="fastDataFilter"></option>
     {{?it.item.has('headTemplate')}}
-       <option name="headTemplate" value="{{=it.item.get('headTemplate')}}"></option>
+    <option name="headTemplate" value="{{=it.item.get('headTemplate')}}"></option>
     {{?}}
     {{?it.item.has('itemTpl')}}
     <option name="itemTpl" value="{{=it.item.get('itemTpl')}}"></option>
@@ -22,6 +22,6 @@
     <option name="itemTemplate" value="{{=it.item.get('itemTemplate')}}"></option>
     {{?}}
     {{?it.item.has('includedTemplates')}}
-    <options name="includedTemplates" value="{{=it.item.get('includedTemplates')}}"></options>
+    <option name="includedTemplates" value="{{@it.item.get('includedTemplates')}}" type="ref"></option>
     {{?}}
 </component>

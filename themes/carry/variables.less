@@ -15,6 +15,7 @@
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 8px;
 @data-grid-first-content-cell-padding-left:     8px;
+@data-grid-ms-first-content-cell-padding-left:  8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
 @data-grid-header-cell-padding:                 @data-grid-cell-padding;
@@ -178,6 +179,10 @@
 // --------- //
 // List view //
 // --------- //
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
 @list-view-actions-menu-close-right:            2px;
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
@@ -186,6 +191,7 @@
 @list-view-items-toolbar-vertical-line-height:  38px;
 @touch-mode-items-toolbar-icon-margin-top:      -38px;
 
+@listView-check-box-left:                       3px;
 @listView-check-box-top:                        7px;
 
 @listView-empty-data-color:                     #999999;
@@ -340,6 +346,7 @@
 @controls-filterButton-button-margin:           14px 8px 8px 8px;
 @controls-filterButton-area-header-padding:     24px 76px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
+@controls-filterButton-area-header-width:       429px;
 @controls-filterButton-area-text-size:          @globalDefaultFontSize;
 @controls-filterButton-area-content-padding:    16px 24px 24px 24px;
 @controls-filterButton-closeButton-top:         24px;
@@ -385,6 +392,9 @@
 @DropdownList-picker-bg:                        transparent;
 @DropdownList-header-bg:                        #C1D7F0;
 @DropdownList-linkStyleHoverColor:              @blue-dark-color;
+@DropdownList-footer-buttonsBlock-height:       @DropdownList-height;
+@DropdownList-footer-multisel-buttonsBlock-h:   32px;
+@DropdownList-footer-hasMore-top:               6px;
 
 // -------- //
 // Text box //
@@ -463,6 +473,10 @@
 @switcher-btn-size:                             22px;
 
 @switcher-btn-color-disabled:                   @switcher-do-disabled-line-color;
+
+@switcher-dot-height:                           8px;
+@switcher-dot-margin:                           5px 0 0 8px;
+@switcher-dot-margin-hover:                     4px 0 0 7px;
 
 @swithcer-do-font-weight:                       bold;
 @switcher-do-vertical-toggle-width:             40px;
@@ -568,6 +582,7 @@
 @controls-editInPlace-editor-margin-bottom:     2px;
 @controls-editInPlace-editor-padding:           2px;
 @controls-editInPlace-first-editor-padding-left:2px;
+@controls-editInPlace-editor-without-offset-margin: 0;
 
 //FieldLink
 

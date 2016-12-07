@@ -112,6 +112,51 @@
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
 
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-count-box-shadow-pos:             -12px 0 5px;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     6px 30px 6px 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    6px;
+@filter-panel-chooser-list-view-check-box-left:                   4px;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding-right:              8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-count-box-shadow:                 @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-count-box-shadow:         @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-count-box-shadow:        @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
+
 // Normal default button
 @button-text-color:                       @gray-color;
 @button-border-width:                     1px;
@@ -1546,7 +1591,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1768,6 +1816,7 @@
 @data-grid-cell-line-height:                    21px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
+@data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -1876,6 +1925,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    1px;
+@controls-editInPlace-editor-without-offset-margin: 0;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1989,8 +2039,10 @@
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
+@DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    4px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
@@ -2158,6 +2210,7 @@
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;

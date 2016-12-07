@@ -60,19 +60,22 @@
       &.controls-BackButton__hover-arrow{
          .controls-BackButton__arrow{
             position: absolute;
-            top: 4px;
+            top: 0;
             right: 0;
             left: auto;
             height: @back-button-arrow-height;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: @white-color;
+            &:before{
+               top: 4px;
+            }
          }
       }
       .controls-BackButton__arrow {
          position: relative;
          top: -3px;
-         left: -5px;
          &:before{
             float: right;
+            position: relative;
          }
       }
    }

@@ -204,13 +204,23 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       //последнего элемента, иначе будет выполнена штатная логика.
       _getInsertMarkupConfig: function(newItemsIndex, newItems) {
          var
-             lastItem,
-             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments);
+            cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
+            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
 
          if (cfg.inside && !cfg.prepend) {
-            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
             cfg.inside = false;
             cfg.container = this._getDomElementByItem(lastItem);
+         }
+
+         // Если в режиме поиска контейнер для вставки так и не был определен и lastItem - хлебная крошка (isNode), то ищем tr-ку в которой она лежит.
+         // Подробное объяснение:
+         // В режиме поиска последним отрисованным элементом запросто может быть хлебная крошка и вставлять нужно после tr-ки в которая она лежит.
+         // Можно было вызывать перерисовку, если запущен режим поиска и последним элементом на текущей загруженной странице является папка.
+         // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
+         // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
+         // p.s. data-id используется потому что у крошек нет data-hash.
+         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode()) {
+            cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
       },
@@ -484,6 +494,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.hierField + '@')) {
+               this._currentScrollPosition = 0;
                this.setCurrentRoot(id);
                this.reload();
             }

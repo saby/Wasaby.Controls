@@ -1,11 +1,19 @@
 .controls-FloatArea {
    &.controls__filterButton__picker {
-      height: @controls-filterButton-picker-height;
+      overflow-y: hidden !important;
       background: @controls-filterButton-picker-bg;
       border-color: @controls-filterButton-picker-border-color;
       border-style: @controls-filterButton-picker-border-style;
       border-width: @controls-filterButton-picker-border-width;
       .border-radius(@controls-filterButton-picker-border-radius);
+
+      .controls__filterButton__area-scrollContainer {
+         height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
+      }
+
+      .controls__filterButton__area {
+         height: 100%;
+      }
 
       .controls__filterButton__area-header {
          padding: @controls-filterButton-area-header-padding;
@@ -214,6 +222,21 @@
             }
          }
       }
+      .controls__filterButton__filterSelect{
+         .controls-FilterSelect__item{
+            display: inline-block;
+            color: #313E78;
+            > div {
+               display: inline-block;
+            }
+         }
+         :last-child {
+            .controls-FilterSelect__item-separator{
+               display: none;
+            }
+         }
+      }
+
    }
 
    .controls__filterButton__area-content {

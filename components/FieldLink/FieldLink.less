@@ -136,10 +136,6 @@
       margin-right: @controls-FieldLink-fieldWrapper-margin;
       display: inline-block;
       order: 1;
-
-      .controls-TextBox__field {
-         width: 0;
-      }
    }
 
    .controls-TextBox__beforeFieldWrapper {
@@ -179,6 +175,17 @@
          background-color: @white-color;
          color: @link-text-color;
          padding: @controls-FieldLink-showAllLinks-padding;
+
+         &:after {
+            content: '';
+            position: absolute;
+            right: -@controls-FieldLink-showAll-shadow-width;
+            width: @controls-FieldLink-showAll-shadow-width;
+            top: 0;
+            bottom: 0;
+            .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
+            background-color: transparent;
+         }
       }
    }
 
@@ -222,6 +229,10 @@
       .controls-FieldLink__item {
          padding: @controls-FieldLink-disabled-item-padding;
       }
+
+      .controls-FieldLink__showAllLinks:not(.controls-FieldLink__copyShowAll) {
+         display: none;
+      }
    }
 
    &.controls-FieldLink__dynamicInputWidth {
@@ -250,15 +261,24 @@
          color: @controls-FieldLink-link-color-hover;
       }
    }
-
-   &.controls-FieldLink-Link__filterButton {
-      color: #0055bb;
-      text-decoration: none;
-
-      &:hover {
+   &:not(.ws-disabled) {
+      &.controls-FieldLink-Link__filterButton {
          color: #0055bb;
-         text-decoration: underline;
+         text-decoration: none;
+
+         &:hover {
+            color: #0055bb;
+            text-decoration: underline;
+         }
       }
+   }
+}
+
+/* Для того, чтобы при инициализации не прыгал placeholder +
+   в дальнейшем можно будет вообще не считать размеры поля, просто использовать этот класс*/
+.controls-FieldLink__selected {
+   .controls-TextBox__field {
+      width: 0;
    }
 }
 

@@ -143,6 +143,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             cMerge(config, floatAreaCfg);
          } else if (mode == 'dialog') {
             Component = Dialog;
+            cMerge(config, meta);
          }
 
          if (this._dialog && !this._dialog.isAutoHide()){
