@@ -168,6 +168,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
+             * @deprecated Используйте опцию {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,

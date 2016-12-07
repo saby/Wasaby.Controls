@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [
                    allowDblClick: true,
                    /**
                     * @cfg {} Шаблон отображения каждого элемента коллекции
+                    * @deprecated Используйте опцию {@link SBIS3.CONTROLS.Dropdownlist#itemTpl}.
                     */
                     itemTemplate: ''
                 }
