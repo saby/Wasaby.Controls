@@ -181,40 +181,34 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
 
          if (initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
+            //todo удалить когда INITIALIZING_WAY_REMOTE окончательно устареет.
             this._showLoadingIndicator();
-            require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
+            require([dialogComponent], this._initTemplateComponentCallback(config, meta, mode).addCallback(function(){
+               this._hideLoadingIndicator();
+               OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
+            }.bind(this)));
          }
          else if (initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE){
             this._showLoadingIndicator();
-            require([dialogComponent], this._getRecordDeferred.bind(this, config, meta, mode));
+            require([dialogComponent], this._getRecordDeferred(config, meta, mode).addCallback(function(){
+               this._hideLoadingIndicator();
+               OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
+            }.bind(this)));
          }
          else {
-            this._initEditComponent(config, meta, mode);
-         }
-      },
-
-      _initEditComponent: function(config, meta, mode){
-         var Component = (mode == 'floatArea') ? FloatArea : Dialog;
-
-         if (this._isNeedToRedrawDialog()){
-            this._setNewDialogConfig(config);
-         }
-         else{
-            this._dialog = new Component(config);
+            OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
          }
       },
 
       _getRecordDeferred: function(config, meta, mode, templateComponent){
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource,
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
-         this._hideLoadingIndicator();
          //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
          if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
-            this._initEditComponent(config, meta, mode);
-            return;
+            return new Deferred().callback();
          }
          config.componentOptions._receiptRecordDeferred = def;
-         this._initEditComponent(config, meta, mode);
+         return def;
       },
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
@@ -222,14 +216,12 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
             def;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
-         if (getRecordProtoMethod){
+         if (getRecordProtoMethod) {
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
 
             //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
             if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
-               self._hideLoadingIndicator();
-               self._initEditComponent(config, meta, mode);
-               return;
+               return new Deferred().callback();
             }
 
             def.addCallback(function (record) {
@@ -244,12 +236,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   message: error.message,
                   status: 'error'
                })
-            }).addBoth(function(){
-               self._hideLoadingIndicator();
             });
+            return def;
          }
-         else{
-            self._initEditComponent(config, meta, mode);
+         else {
+            return new Deferred().callback();
          }
       },
 
