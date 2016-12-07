@@ -526,7 +526,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditInPlaceConfig: function() {
          var config = TreeDataGridView.superclass._getEditInPlaceConfig.apply(this, arguments);
          config.getEditorOffset = this._getEditorOffset.bind(this);
-         config.hierField = this._options.parentProperty;
+         config.parentProperty = this._options.parentProperty;
          return config;
       },
 
