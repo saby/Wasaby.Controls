@@ -547,6 +547,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
+
+            /* task:1173219692
+            im.dubrovin на Chrome on Android при получении offset необходимо учитывать scrollTop , scrollLeft */
+            if(detection.isMobileAndroid){
+               this._targetSizes.offset.top-=$(window).scrollTop();
+               this._targetSizes.offset.left-=$(window).scrollLeft();
+            };
+
             if (this._fixed) this._targetSizes.offset = this._targetSizes.boundingClientRect;
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
