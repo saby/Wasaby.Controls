@@ -687,7 +687,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _prepareUpdatingRecord: function(config){
-         var errorMessage = rk('Некорректно заполнены обязательные поля!'),
+         var error = new Error(rk('Некорректно заполнены обязательные поля!')),
              self = this,
              updateDeferred = new Deferred(),
              onBeforeUpdateData;
@@ -718,11 +718,10 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          //Если валидация не прошла
          if (!config.hideErrorDialog) {
-            var error = new Error(errorMessage);
             this._processError(error);
          }
          this._saving = false;
-         return Deferred.fail(errorMessage);
+         return Deferred.fail(error);
       },
 
       _updateRecord: function(config){
