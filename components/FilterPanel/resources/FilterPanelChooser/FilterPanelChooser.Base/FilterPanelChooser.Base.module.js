@@ -9,9 +9,23 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
     'use strict';
 
     /**
-     * @author Крайнов Дмитрий Олегович
+     * Базовый класс для редакторов, которые применяют для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}). Реализует выборку идентификаторов.
+     * <br/>
+     * От данного класса созданы следующие платформенные редакторы:
+     * <ul>
+     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.List} - редактор в виде списка {@link SBIS3.CONTROLS.ListView};</li>
+     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} с возможность выбора записей из справочника;</li>
+     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.FavoritesList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} с возможность выбора записей из справочника и добавлением записей в избранное.</li>
+     * </ul>
+     * <br/>
+     * При создании пользовательского редактора, вам следует наследоваться от этого класса.
      * @class SBIS3.CONTROLS.FilterPanelChooser.Base
      * @extends SBIS3.CONTROLS.CompoundControl
+     * @author Сухоручкин Андрей Сергеевич
+     *
+     * @mixes SBIS3.CONTROLS.IFilterItem
+     *
+     * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
     var FilterPanelChooserBase = CompoundControl.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelChooser.Base.prototype */ {
@@ -19,12 +33,34 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         $protected: {
             _options: {
                 /**
-                 * @cfg {WS.Data/Collection/RecordSet} Набор элементов из которых будет производиться выбор.
+                 * @cfg {WS.Data/Collection/RecordSet} Устанавливает набор элементов, из которых будет производиться выбор.
+                 * @remark
+                 * Обязательны для конфигурации опции {@link keyField} и {@link displayField}.
+                 * @see keyField
+                 * @see displayField
                  **/
                 items: undefined,
+                /**
+                 * @cfg {Array.<Number>} Устанавливает набор идентификаторов элементов, которые будут выбраны для фильтра.
+                 * @see setValue
+                 * @see getValue
+                 */
                 value: [],
+                /**
+                 * @cfg {String} Устанавливает поле первичного ключа (см. {@link items}).
+                 * @see displayField
+                 */
                 keyField: 'id',
+                /**
+                 * @cfg {String} Устанавливает поле отображения (см. {@link items}).
+                 * @see keyField
+                 */
                 displayField: 'title',
+                /**
+                 * @cfg {String} Устанавливает шаблон редактора.
+                 * @remark
+                 * Шаблон должен быть реализован только на <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизаторе</a>
+                 */
                 chooserTemplate: undefined
             }
         },

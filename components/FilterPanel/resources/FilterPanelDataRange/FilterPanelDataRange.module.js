@@ -9,9 +9,23 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
    ], function(IFilterItem, SliderInput) {
       'use strict';
       var
+          /**
+           * Класс контрола "Диапазон выбора дат", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel}.
+           * @class SBIS3.CONTROLS.FilterPanelDataRange
+           * @extends SBIS3.CONTROLS.CompoundControl
+           *
+           * @author Борисов Петр Сергеевич
+           *
+           * @mixes SBIS3.CONTROLS.IFilterItem
+           */
          FilterPanelDataRange = SliderInput.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelDataRange.prototype */{
             $protected: {
                _options: {
+                  /**
+                   * @cfg {Array} Устанавливает фильтр: начальное и конечное значение.
+                   * @remark
+                   * Первый и второй элементы массива устанавливают начальное и конечное значение диапазона дат соответственно.
+                   */
                   value: []
                },
                _notifyValueChange: null
