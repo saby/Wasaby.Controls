@@ -54,21 +54,11 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
             },
 
             setStartValue: function(value) {
-               if (value !== this._options.value[0]) {
-                  this.setTextValue(this._prepareTextValue([value, this._options.value[1]]));
-                  this._options.value = [value, this._options.value[1]];
-                  FilterPanelDataRange.superclass.setStartValue.apply(this, [value]);
-                  this._notifyValueChange();
-               }
+               this._setPointValue(value, 0);
             },
 
             setEndValue: function(value) {
-               if (value !== this._options.value[1]) {
-                  this.setTextValue(this._prepareTextValue([this._options.value[0], value]));
-                  this._options.value = [this._options.value[0], value];
-                  FilterPanelDataRange.superclass.setEndValue.apply(this, [value]);
-                  this._notifyValueChange();
-               }
+               this._setPointValue(value, 1);
             },
 
             _notifyValueChangeFn: function () {
@@ -83,6 +73,22 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
                if (textValue !== this._options.textValue) {
                   this._options.textValue = textValue;
                   this._notifyOnPropertyChanged('textValue');
+               }
+            },
+
+            _setPointValue: function(value, index) {
+               var
+                  valueArr = index == 0 ? [value, this._options.value[1]] : [this._options.value[0], value],
+                  methodName = index == 0 ? 'setStartValue' : 'setEndValue',
+                  input = index == 0 ? this._startTextBox : this._endTextBox;
+               if (value !== this._options.value[index]) {
+                  this.setTextValue(this._prepareTextValue(valueArr));
+                  this._options.value = valueArr;
+                  FilterPanelDataRange.superclass[methodName].apply(this, [value]);
+                  this._notifyValueChange();
+               } else {
+                  this._redraw();
+                  input.setText(value);
                }
             }
          });
