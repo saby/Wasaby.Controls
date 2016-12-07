@@ -7,9 +7,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
    ],
    function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
 
+      'use strict';
+
       /**
-       * Контрол представляющий из себя контейнер для контента с кастомным скроллом.
-       * Кастомный скролл {@link SBIS3.CONTROLS.Scrollbar}
+       * Контрол представляющий из себя контейнер для контента с тонким скроллом.
+       * Тонкий скролл {@link SBIS3.CONTROLS.Scrollbar}
        *
        * @class SBIS3.CONTROLS.ScrollContainer
        * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
@@ -35,9 +37,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * @control
        * @public
        */
-
-
-      'use strict';
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -45,10 +44,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          $protected: {
             _options: {
                /**
-                * @cfg {Content} Устанавливает контент в ScrollContainer
+                * @cfg {Content} Контент в ScrollContainer
                 * @remark
                 * Контент в ScrollContainer - это пользовательская верстка, которая будет скроллироваться.
-                * Контент будет добавлен в контейнер с кастомным скроллом.
                 * @example
                 * <pre class="brush: html">
                 *    <option name="content">
