@@ -41,7 +41,12 @@
       }
       .controls-DataGridView__table .controls-DataGridView__tr:first-child {
         .controls-DataGridView__td{
-          border-top-color: @data-grid-first-cell-separator-color;
+          border-top-color: @data-grid-edge-cell-separator-color;
+        }
+      }
+      .controls-DataGridView__table .controls-DataGridView__tr:last-child {
+        .controls-DataGridView__td{
+          border-bottom-color: @data-grid-edge-cell-separator-color;
         }
       }
    }
