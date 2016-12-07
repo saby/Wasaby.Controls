@@ -183,17 +183,21 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
             //todo удалить когда INITIALIZING_WAY_REMOTE окончательно устареет.
             this._showLoadingIndicator();
-            require([dialogComponent], this._initTemplateComponentCallback(config, meta, mode).addCallback(function(){
-               this._hideLoadingIndicator();
-               OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
-            }.bind(this)));
+            require([dialogComponent], function(templateComponent){
+               this._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function(){
+                  this._hideLoadingIndicator();
+                  OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
+               }.bind(this))
+            }.bind(this));
          }
          else if (initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE){
             this._showLoadingIndicator();
-            require([dialogComponent], this._getRecordDeferred(config, meta, mode).addCallback(function(){
-               this._hideLoadingIndicator();
-               OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
-            }.bind(this)));
+            require([dialogComponent], function(templateComponent) {
+               this._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function () {
+                  this._hideLoadingIndicator();
+                  OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
+               }.bind(this))
+            }.bind(this));
          }
          else {
             OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
@@ -230,7 +234,6 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                if (isNewRecord){
                   config.componentOptions.key = record.getId();
                }
-               self._initEditComponent(config, meta, mode);
             }).addErrback(function(error){
                InformationPopupManager.showMessageDialog({
                   message: error.message,
