@@ -61,7 +61,7 @@ define(
             it('should notify onError', function (done) {
                var myAction = new (ActionBase.extend({
                   _doExecute: function () {
-                     return (new Deferred()).errback(new Error());
+                     return Deferred.fail(new Error());
                   }
                }));
                myAction.subscribe('onError', function () {

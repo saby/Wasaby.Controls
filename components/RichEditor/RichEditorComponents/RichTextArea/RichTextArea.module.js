@@ -191,9 +191,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new Deferred().addCallback(function(){
+            this._readyContolDeffered = new Deferred().addCallbacks(function(){
                this._notify('onReady');
-            }.bind(this));
+            }.bind(this), function (e) {
+               return e;
+            });
             this._dChildReady.push(this._readyContolDeffered);
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new Deferred();

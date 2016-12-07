@@ -1020,6 +1020,11 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
          var
             self = this,
             resultDef = new Deferred();
+
+         resultDef.addErrback(function (e) {
+            return e;
+         });
+
          /*Метод бизнес логики*/
          if (this._sourceData.getDataType == 'standartBL') {
             /*если задан метод БЛ, дергаем его*/

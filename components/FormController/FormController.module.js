@@ -692,6 +692,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              updateDeferred = new Deferred(),
              onBeforeUpdateData;
 
+         updateDeferred.addErrback(function (e) {
+            return e;
+         });
+
          if (this.validate()) {
             //Событие onBeforeUpdateModel необходимо для пользовательской валидации.
             //Из события можно вернуть как Boolean(либо Error, который приравнивается к false), так и Deferred
