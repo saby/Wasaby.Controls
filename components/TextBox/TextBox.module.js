@@ -359,6 +359,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyPressBind: function(event) {
+         if (event.which == 13){
+            this._checkInputVal();
+         }
          if (this._options.inputRegExp && !event.ctrlKey){
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
