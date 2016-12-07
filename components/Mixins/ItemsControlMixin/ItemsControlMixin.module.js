@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * @event onDataLoad При загрузке данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
+        * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {

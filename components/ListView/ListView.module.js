@@ -888,7 +888,10 @@ define('js!SBIS3.CONTROLS.ListView',
                parent: this
             });
             if (constants.browser.isMobilePlatform){
-               $('> .controls-ListView__scrollPager', this._container).appendTo(this._scrollWatcher.getScrollContainer());
+               // скролл может быть у window, но нельзя делать appendTo(window)
+               var scrollContainer = this._scrollWatcher.getScrollContainer();
+               scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
+               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
@@ -1411,10 +1414,17 @@ define('js!SBIS3.CONTROLS.ListView',
          * */
          _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
-            var selId = id;
             if (lightVer !== true) {
                $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
-               $('.controls-ListView__item[data-id="' + selId + '"]', this._container).addClass('controls-ListView__item__selected');
+               if (this._getItemsProjection()) {
+                  var projItem = this._getItemsProjection().at(index);
+                  if (projItem) {
+                     var hash = projItem.getHash();
+                     $('.controls-ListView__item[data-hash="' + hash + '"]', this._container).addClass('controls-ListView__item__selected');
+                  }
+
+               }
+
             }
          },
          /**
@@ -3394,6 +3404,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} movedItems  Массив перемещаемых записей.
           * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
           * @param {MovePosition} position Как перемещать записи
+          * @return {Core/Deferred}
           * @example
           * <pre>
           *    new ListView({
@@ -3408,7 +3419,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            this._getMover().move(models, target.getModel(), position);
+            return this._getMover().move(models, target.getModel(), position);
          },
          //endregion moveMethods
          /**
