@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || ( target[0] === this._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
+            if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
