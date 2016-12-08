@@ -11,9 +11,19 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'use strict';
 
     /**
-     * @author Крайнов Дмитрий Олегович
+     * Класс редактора "Список со справочником".
+     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
+     * <br/>
+     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Все" под списком или командой {@link showDictionary}.
+     * По умолчанию отображается 3 записи в списке. Чтобы подгрузить все, используйте кнопку "Ещё" под списком или команду {@link showFullList}.
+     * <br/>
+     * Чтобы изменить шаблон отображения кнопок "Все" и "Ещё", измените опцию {@link afterChooserWrapper}.
+     * Если вы используете шаблон по умолчанию, то подпись кнопки "Все" можно изменить через опцию {@link captionFullList}.
      * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
      * @extends SBIS3.CONTROLS.FilterPanelChooser.List
+     * @author Сухоручкин Андрей Сергеевич
+     *
+     * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
     var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList.prototype */ {
@@ -22,20 +32,23 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                 afterChooserWrapper: footerTpl,
                 className: 'controls-FilterPanelChooser__dictionary',
                 /**
-                 * @typedef {String} selectionTypeDef Режим выбора.
-                 * @variant node выбираются только узлы
-                 * @variant leaf выбираются только листья
-                 * @variant all выбираются все записи
                  * @typedef {Object} dictionaryOptions
-                 * @property {String} template Компонент, на основе которого организован справочник.
-                 * @property {selectionTypeDef} selectionType
+                 * @property {String} template Компонент, на основе которого производится построение справочника.
+                 * @property {String} selectionType Режим выбора записей. О типах записей вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>. Возможные значения:
+                 * <ul>
+                 *     <li>node - выбираются только записи типа "Узел" и "Скрытый узел".</li>
+                 *     <li>leaf - выбираются только записи типа "Лист".</li>
+                 *     <li>all - выбираются все типы записей.</li>
+                 * </ul>
                  * @property {Object} componentOptions
-                 * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
+                 * Группа опций, которые передаются в секцию <b>_options</b> компонента из опции template (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}). На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
-                 **/
+                 */
                 /**
-                 * @cfg {dictionaryOptions} Устанавливает настройки справочника.
-                 **/
+                 * @cfg {dictionaryOptions} Устанавливает конфигурацию справочника.
+                 * @remark
+                 * Открытие справочника происходит при клике по кнопке под списком или командой {@link showDictionary}.
+                 */
                 dictionaryOptions: {}
             },
             _selectorAction: undefined,
@@ -50,7 +63,11 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             FilterPanelChooserDictionary.superclass.init.apply(this, arguments);
             this._getListView().subscribe('onSelectedItemsChange', this._selectedItemsChangeHandler.bind(this));
         },
-
+        /**
+         * Инициирует открытие справочника.
+         * @param {Object} meta Мета-данные.
+         * @command showDictionary
+         */
         _showDictionary: function(meta) {
             meta = cFunctions.merge(cFunctions.clone(this._options.dictionaryOptions), meta || {});
             meta.multiselect = true;

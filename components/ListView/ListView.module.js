@@ -516,8 +516,9 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
                 * @variant "" Запрещено перемещение.
-                * @variant allow Разрешено перемещение.
                 * @variant false Запрещено перемещение.
+                * @variant allow Разрешено перемещение.
+                * @variant true Разрешено перемещение.
                 * @example
                 * Подробнее о способах передачи значения в опцию вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/">Вёрстка компонента</a>.
                 * <b>Пример 1.</b> Ограничим возможность перемещения записей с помощью курсора мыши.
@@ -530,8 +531,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <pre>
                 *     <option name="itemsDragNDrop" type="string" value="allow"></option> <!-- Первый способ передачи allow -->
                 *     <option name="itemsDragNDrop" type="string">allow</option>          <!-- Второй способ передачи allow -->
-                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи true -->
-                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи true -->
+                *     <option name="itemsDragNDrop" value="true"></option> <!-- Первый способ передачи true -->
+                *     <option name="itemsDragNDrop">true</option>          <!-- Второй способ передачи true -->
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
@@ -2151,13 +2152,30 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
          },
-         _removeItems: function(item, groupId){
-            this._checkDeletedItems(item);
-            ListView.superclass._removeItems.call(this, item, groupId);
+         _removeItems: function(items, groupId){
+            this._checkDeletedItems(items);
+            ListView.superclass._removeItems.call(this, items, groupId);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom -= this._getAdditionalOffset(items);
+            }
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
          },
+         
+         _addItems: function(newItems, newItemsIndex, groupId){
+            ListView.superclass._addItems.apply(this, arguments);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
+            }
+         },
+
+         // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         _getAdditionalOffset: function(items){
+            return items.length;
+         },
+
          _cancelLoading: function(){
             ListView.superclass._cancelLoading.apply(this, arguments);
             if (this.isInfiniteScroll()){
@@ -2863,8 +2881,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _updateOffset: function () {
-            var more = this.getItems().getMetaData().more,
-               nextPage = this._hasNextPage(more);
+            var more = this.getItems().getMetaData().more;
             if (this.getPage() === -1) {
                this._offset = more - this._options.pageSize;
             }

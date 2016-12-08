@@ -929,11 +929,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                   }
                }
-
                removedElements.push(targetElement.get(0));
             }
          }
          removedElements.remove();
+      },
+
+      _getSourceNavigationType: function(){
+         if (this.getDataSource() && this.getDataSource()._options.options){
+            return this.getDataSource()._options.options.navigationType;
+         }
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {

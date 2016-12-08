@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
             //Подобная подписка на события через jQuery в редактировании по месту используется во многих местах
             //Имеет смысл в 374 перевести логику работы непосредственно через компонент, который мы получаем чуть выше
-            editor.bind('keydown', function (e) {
+            editor.bind('keypress', function (e) {
                self._keyPressHandler(e);
             });
          },

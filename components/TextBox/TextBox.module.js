@@ -65,6 +65,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _compatPlaceholder: null,
          _tooltipText: null,
          _fromTab: true,
+         _beforeFieldWrapper: null,
+         _afterFieldWrapper: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -359,6 +361,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyPressBind: function(event) {
+         if (event.which == 13){
+            this._checkInputVal();
+         }
          if (this._options.inputRegExp && !event.ctrlKey){
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }
@@ -433,7 +438,23 @@ define('js!SBIS3.CONTROLS.TextBox', [
          });
       },
 
+      _getAfterFieldWrapper: function() {
+         if(!this._afterFieldWrapper) {
+            this._afterFieldWrapper = this.getContainer().find('.controls-TextBox__afterFieldWrapper');
+         }
+         return this._afterFieldWrapper;
+      },
+
+      _getBeforeFieldWrapper: function() {
+         if(!this._beforeFieldWrapper) {
+            this._beforeFieldWrapper = this.getContainer().find('.controls-TextBox__beforeFieldWrapper');
+         }
+         return this._beforeFieldWrapper;
+      },
+
       destroy: function() {
+         this._afterFieldWrapper = undefined;
+         this._beforeFieldWrapper = undefined;
          this._inputField.off('*');
          this._inputField = undefined;
          TextBox.superclass.destroy.apply(this, arguments);

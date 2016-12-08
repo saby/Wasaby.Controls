@@ -989,6 +989,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          });
       },
 
+      _getAdditionalOffset: function(items){
+         var currentRootItems = 0;
+         for (i = 0; i < items.length; i++){
+            if (items[i].getContents().get(this._options.hierField) == this.getCurrentRoot()){
+               currentRootItems++;
+            }
+         }
+         return currentRootItems;
+      },
+
       before: {
          _modifyOptions: function(cfg) {
             if (cfg.hierField) {
