@@ -1388,17 +1388,32 @@ define('js!SBIS3.CONTROLS.ListView',
             return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
          },
 
-         _drawSelectedItems: function (idArray) {
-            /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
-               это дорого */
-            var domItems = this._container.find('.controls-ListView__item');
+         _drawSelectedItems: function (idArray, changes) {
+            var i;
+            //Если точно знаем что изменилось, можем оптимизировать отрисовку
+            if (changes && !Object.isEmpty(changes)) {
+               var rmKeyItems = $([]), addKeyItems = $([]);
+               for (i = 0; i < changes.added.length; i++) {
+                  addKeyItems.push(this._container.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]').get(0));
+               }
+               for (i = 0; i < changes.removed.length; i++) {
+                  rmKeyItems.push(this._container.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]').get(0));
+               }
+               addKeyItems.addClass('controls-ListView__item__multiSelected');
+               rmKeyItems.removeClass('controls-ListView__item__multiSelected');
+            }
+            else {
+               /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
+                это дорого */
+               var domItems = this._container.find('.controls-ListView__item');
 
-            /* Удаляем выделение */
-            domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
-            /* Проставляем выделенные ключи */
-            for(var i = 0; i < domItems.length; i++) {
-               if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
-                  domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+               /* Удаляем выделение */
+               domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
+               /* Проставляем выделенные ключи */
+               for (i = 0; i < domItems.length; i++) {
+                  if (ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
+                     domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+                  }
                }
             }
          },
@@ -2063,7 +2078,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
 
-            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys, {});
 
             hoveredItem = this.getHoveredItem();
             hoveredItemContainer = hoveredItem.container;

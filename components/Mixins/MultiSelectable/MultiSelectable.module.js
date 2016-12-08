@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       after : {
          init: function () {
-            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys, {});
          },
          _setItemsEventHandlers: function() {
             if (!this._onCollectionItemChangeSelected) {
@@ -785,7 +785,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             added : addedKeys,
             removed : removedKeys
          });
-         this._drawSelectedItems(this._options.selectedKeys);
+         this._drawSelectedItems(this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
 	   },
 
       _notifySelectedItems : function(idArray, changed) {
