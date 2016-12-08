@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             showMonths: true,
             showQuarters: true,
             showHalfyears: true,
+            showYears: true,
 
             checkedStart: null,
             checkedEnd: null,
@@ -136,7 +137,9 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             }.bind(this)
          );
 
-         container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
+         if (this._options.showYears) {
+            container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
+         }
 
          container.find('.controls-DateRangeChoose__year-prev').click(this._onPrevYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
