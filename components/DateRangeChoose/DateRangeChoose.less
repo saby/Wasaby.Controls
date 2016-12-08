@@ -45,7 +45,6 @@
       position: relative;
       margin-bottom: @date-range-choose-year-margin-bottom;
       .controls-DateRangeChoose__year {
-         cursor: pointer;
          display: block;
          font-size: @date-range-choose-year-font-size;
          font-weight: @date-range-choose-year-font-weight;
@@ -55,8 +54,11 @@
          margin: 0 auto;
          width: @date-range-choose-width - @date-range-choose-border-width*2 - @date-range-choose-year-prev-next-btns-width*2 - 15*2;
          vertical-align: middle;
-         &:hover {
-            background-color: @date-range-choose-bg-hover-color;
+         &.controls-DateRangeChoose__year-clickable{
+            cursor: pointer;
+            &:hover {
+               background-color: @date-range-choose-bg-hover-color;
+            }
          }
       }
 
