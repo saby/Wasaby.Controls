@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
        *             });
        *          },
        *          moveUp: function(el, key, record) {
-       *             move.execute({movedItems:record});
+       *             move.execute({movedItem:record});
        *          }
        *       }
        *    })
@@ -90,18 +90,18 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
             }
          },
          _doExecute: function(meta) {
-            this._move(meta.movedItems || meta.from);
+            this._move(meta.movedItem || meta.from);
          },
          /**
           * Метод выполнящий перемещение
-          * @param {WS.Data/Entity/Model} movedItems Элемент который будет перемещен
+          * @param {WS.Data/Entity/Model} movedItem Элемент который будет перемещен
           * @returns {Deferred}
           * @private
           */
-         _move: function (movedItems) {
-            var to = this._getNearestItem(movedItems);
+         _move: function (movedItem) {
+            var to = this._getNearestItem(movedItem);
             if (to) {
-               return this.getMoveStrategy().move(movedItems, to, (this._options.moveDirection === 'down'));
+               return this.getMoveStrategy().move([movedItem], to, (this._options.moveDirection === 'down'));
             }
             return (new Deferred()).callback(true);
          },
