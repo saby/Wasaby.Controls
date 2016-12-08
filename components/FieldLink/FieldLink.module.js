@@ -836,6 +836,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
+                /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
+                   надо на это проверить */
+                if(!self.isVisibleWithParents()) {
+                   self._lastFieldLinkWidth = 0;
+                }
                 linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
