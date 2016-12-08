@@ -1072,7 +1072,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
          this.setFilter(filter, true);
-         this._notify('onBeforeSetRoot');
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
@@ -1090,7 +1089,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             hierarchy = [];
          if (items){
             do {
-               record = dataSet.getRecordById(key);
+               record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.hierField) : null;
                if (record) {
                   hierarchy.push({
@@ -1102,7 +1101,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   });
                }
                key = parentKey;
-            } while (key !== this.getRoot());
+            // пока не дойдем до корня (корень может быть undefined)
+            } while (key != this.getRoot());
          }
          return hierarchy;
       },
