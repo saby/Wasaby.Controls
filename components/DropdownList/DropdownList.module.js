@@ -117,6 +117,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _options: {
                _getRecordsForRedraw: getRecordsForRedrawDDL,
                _defaultItemContentTemplate: ItemContentTemplate,
+               _defaultItemTemplate: dotTplFnForItem,
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
