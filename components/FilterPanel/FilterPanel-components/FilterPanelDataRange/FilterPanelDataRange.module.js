@@ -92,9 +92,9 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
 
             _setPointValue: function(value, index) {
                var
-                  valueArr = index == 0 ? [value, this._options.value[1]] : [this._options.value[0], value],
-                  methodName = index == 0 ? 'setStartValue' : 'setEndValue',
-                  input = index == 0 ? this._startTextBox : this._endTextBox;
+                  valueArr = index === 0 ? [value, this._options.value[1]] : [this._options.value[0], value],
+                  methodName = index === 0 ? 'setStartValue' : 'setEndValue',
+                  input = index === 0 ? this._startTextBox : this._endTextBox;
                if (value !== this._options.value[index]) {
                   this.setTextValue(this._prepareTextValue(valueArr));
                   this._options.value = valueArr;
