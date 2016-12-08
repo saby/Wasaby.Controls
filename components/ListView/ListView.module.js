@@ -3319,7 +3319,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          selectedMoveTo: function(target) {
             var selectedItems = this.getSelectedItems(false);
-            this._getMover.move(selectedItems, target).addCallback(function(res){
+            this._getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
