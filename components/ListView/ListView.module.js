@@ -1408,6 +1408,9 @@ define('js!SBIS3.CONTROLS.ListView',
                var domItems = this._container.find('.controls-ListView__item');
 
                /* Удаляем выделение */
+               /*TODO возможно удаление не нужно, и вообще состоние записи должно рисоваться исходя из модели
+               будет решено по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84
+               */
                domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
                /* Проставляем выделенные ключи */
                for (i = 0; i < domItems.length; i++) {
