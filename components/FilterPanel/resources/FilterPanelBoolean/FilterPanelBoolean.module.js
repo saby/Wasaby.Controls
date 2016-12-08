@@ -57,11 +57,6 @@ var
 
       getTextValue: function() {
          return this._options.textValue;
-      },
-
-      destroy: function() {
-         this._checkBox.unsubscribe('onCheckedChange');
-         FilterPanelBoolean.superclass.destroy.apply(this, arguments);
       }
    });
 
