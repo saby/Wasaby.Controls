@@ -1392,12 +1392,18 @@ define('js!SBIS3.CONTROLS.ListView',
             var i;
             //Если точно знаем что изменилось, можем оптимизировать отрисовку
             if (changes && !Object.isEmpty(changes)) {
-               var rmKeyItems = $([]), addKeyItems = $([]);
+               var rmKeyItems = $([]), addKeyItems = $([]), elem;
                for (i = 0; i < changes.added.length; i++) {
-                  addKeyItems.push(this._container.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]').get(0));
+                  elem = this._container.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]');
+                  if (elem.length) {
+                     addKeyItems.push(elem.get(0));
+                  }
                }
                for (i = 0; i < changes.removed.length; i++) {
-                  rmKeyItems.push(this._container.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]').get(0));
+                  elem = this._container.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]');
+                  if (elem.length) {
+                     rmKeyItems.push(elem.get(0));
+                  }
                }
                addKeyItems.addClass('controls-ListView__item__multiSelected');
                rmKeyItems.removeClass('controls-ListView__item__multiSelected');
