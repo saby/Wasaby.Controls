@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditorOffset: function(model) {
          var
              treeLevel = 0,
-             parentProj = this._getItemProjectionByItemId(model.get(this._options.hierField));
+             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
          if (parentProj) {
             treeLevel = parentProj.getLevel();
          }
@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
              selectedKey = this.getSelectedKey(),
              rec = this.getItems().getRecordById(selectedKey),
-             isBranch = rec && rec.get(this._options.hierField + '@');
+             isBranch = rec && rec.get(this._options.nodeProperty);
 
          switch(e.which) {
             case constants.key.right:
@@ -411,18 +411,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          TreeDataGridView.superclass._addItemAttributes.call(this, container, itemProjection);
          var
             item = itemProjection.getContents(),
-            hierType = item.get(this._options.hierField + '@'),
+            hierType = item.get(this._options.nodeProperty),
             itemType = hierType == null ? 'leaf' : hierType == true ? 'node' : 'hidden';
          container.addClass('controls-ListView__item-type-' + itemType);
          var
             key = item.getId(),
-            parentKey = item.get(this._options.hierField),
+            parentKey = item.get(this._options.parentProperty),
          	parentContainer = $('.controls-ListView__item[data-id="' + parentKey + '"]', this._getItemsContainer().get(0)).get(0);
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
             var hierarchy = this._getHierarchyRelation(),
-               children = hierarchy.getChildren(key, this._options._items);
+               children = hierarchy.getChildren(key, this.getItems());
 
             if (children.length) {
                $('.js-controls-TreeView__expand', container).addClass('controls-TreeView__expand__open');
@@ -464,7 +464,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /* Не обрабатываем клики по чекбоку и по стрелке редактирования, они обрабатываются в elemClickHandler'e */
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
-            } else if (data.get(this._options.hierField + '@')) {
+            } else if (data.get(this._options.nodeProperty)) {
                this._currentScrollPosition = 0;
                this.setCurrentRoot(id);
                this.reload();
@@ -474,7 +474,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             }
          }
          else {
-            if (data.get(this._options.hierField + '@')) {
+            if (data.get(this._options.nodeProperty)) {
                this.toggleNode(id);
             }
             else {
@@ -489,7 +489,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
        * @private
        */
       _groupByDefaultMethod: function(record){
-         if (record.get(this._options.hierField) != this.getCurrentRoot()){
+         if (record.get(this._options.parentProperty) != this.getCurrentRoot()){
             return false;
          }
          return TreeDataGridView.superclass._groupByDefaultMethod.apply(this, arguments);
@@ -497,7 +497,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditInPlaceConfig: function() {
          var config = TreeDataGridView.superclass._getEditInPlaceConfig.apply(this, arguments);
          config.getEditorOffset = this._getEditorOffset.bind(this);
-         config.hierField = this._options.hierField;
+         config.parentProperty = this._options.parentProperty;
          return config;
       },
 
