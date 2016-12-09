@@ -68,8 +68,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._context = this._context.getPrevious();
          },
 
-         _modifyOptionsAfter: function(finalConfig){
-            finalConfig.content = undefined;
+         _modifyOptionsAfter: function(finalConfig) {
+            delete finalConfig.content;
          },
 
          init: function() {
