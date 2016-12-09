@@ -8,3 +8,6 @@
 <ws:if data="{{ properties.editor === 'list' || properties.viewMode === 'list' || (!properties.editor && !properties.viewMode) }}">
     <ws:SBIS3.CONTROLS.FilterPanelChooser.List scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}"></ws:SBIS3.CONTROLS.FilterPanelChooser.List>
 </ws:if>
+<ws:if data="{{ properties.editor === 'radio'}}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.RadioGroup scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}"></ws:SBIS3.CONTROLS.FilterPanelChooser.RadioGroup>
+</ws:if>

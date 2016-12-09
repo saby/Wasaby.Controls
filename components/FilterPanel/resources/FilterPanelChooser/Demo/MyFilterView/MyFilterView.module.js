@@ -52,6 +52,13 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterView',
                     ],
                     idProperty: 'id'
                 });
+               cfg.items4 = new RecordSet({
+                    rawData: [{'title': 'Краснодарский край', 'id': 1, count: 11},
+                        {'title': 'Владимирская область', 'id': 2, count: 12},
+                        {'title': 'Нижегородская область', 'id': 3,count: 13}
+                    ],
+                    idProperty: 'id'
+                });
                 return cfg;
             }
         });
