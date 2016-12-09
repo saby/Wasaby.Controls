@@ -1054,9 +1054,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _reviveItems : function(lightVer) {
-         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this, lightVer)).addErrback(function(e){
+         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer)).addErrback(function(e){
             throw e;
          });
+      },
+
+      _onReviveItems: function(lightVer){
+         this._notifyOnDrawItems(lightVer);
       },
 
       _notifyOnDrawItems: function(lightVer) {
