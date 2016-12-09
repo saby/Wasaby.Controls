@@ -3,11 +3,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.full',
-      'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
+      'js!SBIS3.CORE.FloatAreaManager'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
 
       'use strict';
 
@@ -33,7 +31,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-            
+
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -58,14 +56,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * </pre>
                 * @see getContent
                 */
-               content: ''
+               content: '',
+               activableByClick: false
             },
             _content: null
          },
 
 
          $constructor: function() {
-            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась, 
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
             this._context = this._context.getPrevious();
          },
@@ -81,6 +80,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
+            // task: 1173330288
+            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
          },
 
          _subscribeOnScroll: function(){
@@ -95,10 +98,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _hideScrollbar: function(){
             if (!cDetection.safari && !cDetection.chrome){
-               var currentPadding = this._content.css('padding-right').replace(/[^0-9.]+/g, ''),
-                  style = {
+               var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
-                  }
+                  };
                this._content.css(style);
             }
          },
@@ -150,13 +152,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
-            return this._content.find('>*').height();
+            return this._content[0].scrollHeight;
          },
 
          destroy: function(){
             this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
             ScrollContainer.superclass.destroy.call(this);
+            // task: 1173330288
+            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+            delete $ws.single.FloatAreaManager._scrollableContainers[ this.getId() ];
          }
       });
 

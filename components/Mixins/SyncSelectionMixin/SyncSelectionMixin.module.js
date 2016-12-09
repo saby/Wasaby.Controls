@@ -128,12 +128,11 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
             /* Вызываем родительский метод, если:
              1) передали запись с обязательными полями
              2) передали null
-             3) передали запись ключевого поля, но у нас есть выделенные ключи,
-                такое может произойти, когда запись сбрасывается через контекст */
+             3) передали запись без ключевых полей, но у нас есть выделенные ключи,
+             такое может произойти, когда запись сбрасывается через контекст */
             if (hasRequiredFields ||
                 item === null ||
-                //FIXME опция для выпуска 211, выпилено в .220
-                ((this._options.checkKey1173336393 ?  isEmpty(item.get(keyField)) : !hasRequiredFields ) && !this._isEmptySelection() && isModel)) {
+                (!hasRequiredFields && !this._isEmptySelection() && isModel)) {
                parentFunc.call(this, item);
             }
          }
@@ -141,11 +140,11 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
    };
 
    function isEmptyItem(item, keyField, displayField) {
-      return isEmpty(item.get(displayField)) || isEmpty(item.get(keyField));
-   }
+      var isEmpty = function(val) {
+         return val === null || val === undefined;
+      };
 
-   function isEmpty(val) {
-      return val === null || val === undefined;
+      return isEmpty(item.get(displayField)) || isEmpty(item.get(keyField));
    }
 
    return SyncSelectionMixin;

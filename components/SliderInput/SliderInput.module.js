@@ -24,12 +24,10 @@ define('js!SBIS3.CONTROLS.SliderInput',
 
             init: function() {
                SliderInput.superclass.init.call(this);
-               this._textBoxStartChange = this._textBoxStartChange.debounce(300)
-               this._textBoxEndChange = this._textBoxEndChange.debounce(300)
                this._endTextBox = this.getChildControlByName('EndTextBox');
                this._startTextBox = this.getChildControlByName('StartTextBox');
-               this._startTextBox.subscribe('onTextChange', this._textBoxStartChange.bind(this));
-               this._endTextBox.subscribe('onTextChange', this._textBoxEndChange.bind(this));
+               this._startTextBox.subscribe('onFocusOut', this._textBoxStartFocusOut.bind(this));
+               this._endTextBox.subscribe('onFocusOut', this._textBoxEndFocusOut.bind(this));
                this.subscribe('onDrawValueChange', this._sliderDrawChange.bind(this));
             },
 
@@ -43,7 +41,17 @@ define('js!SBIS3.CONTROLS.SliderInput',
                this._endTextBox.setText(value);
             },
 
-            _textBoxStartChange: function () {
+            setMaxValue: function(value) {
+               SliderInput.superclass.setMaxValue.apply(this, [value]);
+               this._endTextBox.setPlaceholder(value);
+            },
+
+            setMinValue: function(value) {
+               SliderInput.superclass.setMinValue.apply(this, [value]);
+               this._startTextBox.setPlaceholder(value);
+            },
+
+            _textBoxStartFocusOut: function () {
                if (this._startTextBox._textChanged) {
                   this._setPreparedStartVale(this._startTextBox.getNumericValue());
                   this._pointsContainers.right.removeClass('lastActivePoint');
@@ -51,7 +59,7 @@ define('js!SBIS3.CONTROLS.SliderInput',
                }
             },
 
-            _textBoxEndChange: function () {
+            _textBoxEndFocusOut: function () {
                if (this._endTextBox._textChanged) {
                   this._setPreparedEndVale(this._endTextBox.getNumericValue());
                   this._pointsContainers.left.removeClass('lastActivePoint');

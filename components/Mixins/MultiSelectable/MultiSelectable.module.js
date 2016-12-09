@@ -98,8 +98,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              */
             selectedKeys : [],
              /**
-              * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой
-              * разрешается/запрещается отсутствие выбранных элементов коллекции.
+              * @cfg {Boolean} Устанавливает конфигурацию для режима множественного выбора, при которой разрешается/запрещается отсутствие выбранных элементов коллекции.
               * * true Отсутствие выбранных элементов коллекции разрешено.
               * * false Отсутствие выбранных элементов коллекции запрещено.
               * @remark
@@ -161,7 +160,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       after : {
          init: function () {
-            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys, {});
          },
          _setItemsEventHandlers: function() {
             if (!this._onCollectionItemChangeSelected) {
@@ -675,9 +674,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                   }
 
                   if(loadKeysArr[j] !== null) {
-                     dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallback(function (record) {
-                        self._options.selectedItems.add(record);
-                     }));
+                     dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallbacks(
+                         function (record) {
+                            self._options.selectedItems.add(record);
+                            return record;
+                         },
+                         function(err) {
+                            IoC.resolve('ILogger').info('MultiSelectable', 'У контрола ' + self.getName() + ' не удалось вычитать запись по ключу ' + loadKeysArr[j]);
+                         }
+                     ));
                   }
                }
 
@@ -739,7 +744,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          this._cloneSelectedItems();
          this._notifyOnPropertyChanged('selectedItems');
       },
-      
+
       _cloneSelectedItems: function() {
          this._options.selectedItems = this._options.selectedItems.clone(true);
       },
@@ -780,7 +785,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             added : addedKeys,
             removed : removedKeys
          });
-         this._drawSelectedItems(this._options.selectedKeys);
+         this._drawSelectedItems(this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
 	   },
 
       _notifySelectedItems : function(idArray, changed) {
@@ -907,11 +915,18 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @private
        */
       _convertToKeys: function(list) {
-         var keys = [];
+         var keys = [],
+             key;
 
-         if(list) {
+         if (list) {
             list.each(function (rec) {
-               keys.push(rec.get(this._options.keyField));
+               key = rec.get(this._options.keyField);
+
+               if (key === undefined) {
+                  throw new Error(this._moduleName + ': record key is undefined.')
+               }
+
+               keys.push(key);
             }.bind(this));
          }
 

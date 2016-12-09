@@ -1,0 +1,82 @@
+<html>
+<head>
+    <title>Unit tests</title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+<!-- Mocha setup -->
+<link rel="stylesheet" href="../../node_modules/mocha/mocha.css"/>
+<div id="mocha"></div>
+<div id="component"></div>
+<script src="../../node_modules/mocha/mocha.js"></script>
+<script src="../../node_modules/chai/chai.js"></script>
+<!-- Libs -->
+<script src="../../sbis3-ws/ws/ext/requirejs/require.js"></script>
+<script src="../../sbis3-ws/ws/ext/requirejs/config.js"></script>
+<script src="../../sbis3-ws/ws/ext/jquery-full.js" data-pack-name="ws"></script>
+<script src="../../sbis3-ws/ws/ext/jquery-cookie-min.js" data-pack-name="ws"></script>
+<script>
+    mocha.setup({
+        ui: 'bdd',
+        reporter: function (runner) {
+            var query = typeof window === 'undefined' ? '?reporter=XUnit' : window.location.search,
+                    result = query.match(new RegExp("[?&]reporter=([^&]*)&?$")),
+                    reporterCode = result ? result[1] : 'HTML';
+
+            if (!(reporterCode in Mocha.reporters)) {
+                throw new Error('Reporter "' + reporterCode + '" is undefined.');
+            }
+            var reporter = new Mocha.reporters[reporterCode](runner, {});
+
+            if (reporterCode == 'XUnit') {
+                //Change XUnit output stream
+                reporter.buffer = [];
+                reporter.domElement = $('<div/>')
+                        .attr('id', 'report')
+                        .appendTo('body');
+                reporter.write = function (line) {
+                    this.buffer.push(line);
+                    this.domElement.html(this.buffer.join("\n"));
+                };
+            }
+        }
+    });
+
+    var assert = chai.assert;
+</script>
+
+<!-- WS setup -->
+<script>
+    window.wsConfig = {
+        wsRoot: '../../sbis3-ws/ws/',
+        resourceRoot: '../../',
+        nostyle: true,
+        globalConfigSupport: false
+    };
+</script>
+<script data-pack-name="contents" src="contents.js"></script>
+<script src="../../sbis3-ws/ws/ext/requirejs/require.js"></script>
+<script src="../../sbis3-ws/ws/ext/requirejs/config.js"></script>
+<script src="../../sbis3-ws/ws/lib/core.js"></script>
+<script src="../../sbis3-ws/ws/res/js/bootup.js" data-pack-name="ws"></script>
+
+<!-- Run tests -->
+<script>
+    requirejs.config({
+        paths: {
+            Squire: '../../../node_modules/squirejs/src/Squire'
+        }
+    });
+
+    mocha.checkLeaks();
+
+    $ws.core.ready.addCallback(function () {
+        requirejs(['list.js'], function () {
+            mocha.run(function () {
+                $('body').addClass('tests-finished');
+            });
+        });
+    });
+</script>
+</body>
+</html>

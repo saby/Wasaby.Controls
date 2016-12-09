@@ -12,54 +12,84 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
          FilterPanelDataRange = SliderInput.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelDataRange.prototype */{
             $protected: {
                _options: {
-                  filter: []
+                  value: []
                },
-               _notifyFilterChange: null
+               _notifyValueChange: null
             },
 
             _modifyOptions: function(options) {
+               options.startValue = options.value[0];
+               options.endValue = options.value[1];
                options = SliderInput.superclass._modifyOptions.apply(this, arguments);
-               options.startValue = options.filter[0];
-               options.endValue = options.filter[1];
                return options;
             },
 
             $constructor: function() {
-               this._notifyFilterChange =  this._notifyFilterChangeFn.debounce(0);
+               this._notifyValueChange =  this._notifyValueChangeFn.debounce(0);
             },
 
-            setFilter: function(filter) {
-               if (filter[0] === this.getStartValue() && filter[1] === this.getEndValue()) {
+            setValue: function(value) {
+               if (value[0] === this.getStartValue() && value[1] === this.getEndValue()) {
                   return;
                }
-               this.setStartValue(filter[0]);
-               this.setEndValue(filter[1]);
-               this._options.filter = filter;
+               this.setStartValue(value[0]);
+               this.setEndValue(value[1]);
+               this._options.value = value;
             },
 
-            getFilter: function() {
-               return this._options.filter;
+            _prepareTextValue: function(value) {
+               var
+                  result = '';
+               if (value[0] !== null) {
+                  result += 'от ' + value[0]
+               }
+               if (value[1] !== null) {
+                  result += (value[0] !== null ? ' до ' : 'до ') + value[1];
+               }
+               return result;
+            },
+
+            getValue: function() {
+               return this._options.value;
             },
 
             setStartValue: function(value) {
-               if (value !== this._options.filter[0]) {
-                  this._options.filter = [value, this._options.filter[1]];
-                  FilterPanelDataRange.superclass.setStartValue.apply(this, [value]);
-                  this._notifyFilterChange();
-               }
+               this._setPointValue(value, 0);
             },
 
             setEndValue: function(value) {
-               if (value !== this._options.filter[1]) {
-                  this._options.filter = [this._options.filter[0], value];
-                  FilterPanelDataRange.superclass.setEndValue.apply(this, [value]);
-                  this._notifyFilterChange();
+               this._setPointValue(value, 1);
+            },
+
+            _notifyValueChangeFn: function () {
+               this._notifyOnPropertyChanged('value');
+            },
+
+            getTextValue: function() {
+               return this._options.textValue;
+            },
+
+            setTextValue: function(textValue) {
+               if (textValue !== this._options.textValue) {
+                  this._options.textValue = textValue;
+                  this._notifyOnPropertyChanged('textValue');
                }
             },
 
-            _notifyFilterChangeFn: function () {
-               this._notifyOnPropertyChanged('filter');
-               this._notify('onFilterChange', this._options.filter);
+            _setPointValue: function(value, index) {
+               var
+                  valueArr = index == 0 ? [value, this._options.value[1]] : [this._options.value[0], value],
+                  methodName = index == 0 ? 'setStartValue' : 'setEndValue',
+                  input = index == 0 ? this._startTextBox : this._endTextBox;
+               if (value !== this._options.value[index]) {
+                  this.setTextValue(this._prepareTextValue(valueArr));
+                  this._options.value = valueArr;
+                  FilterPanelDataRange.superclass[methodName].apply(this, [value]);
+                  this._notifyValueChange();
+               } else {
+                  this._redraw();
+                  input.setText(value);
+               }
             }
          });
       return FilterPanelDataRange;

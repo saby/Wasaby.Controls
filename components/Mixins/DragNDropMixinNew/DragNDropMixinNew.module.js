@@ -30,17 +30,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
       });
 
    }
-   var
-
-      buildTplArgsLV = function (cfg) {
-         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
-         tplOptions.multiselect = cfg.multiselect;
-         tplOptions.decorators = this._decorators;
-         tplOptions.colorField = cfg.colorField;
-
-         return tplOptions;
-      },
-      DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
+   var DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixinNew.prototype*/{
          $protected: {
             /**
              * @event onBeginDrag При начале перемещения элемента. Если из события вернуть false, то перемещение будет отменено.
@@ -95,7 +85,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
                 * </pre>
                 * @see setDragEntity
                 */
-               dragEntity: undefined
+               dragEntity: undefined,
+               /**
+                * @cfg {String|Function(): WS.Data/Collection/List}  Конструктор списка перемещаемых сущностей по умолчанию {@link WS.Data/Collection/List}
+                */
+               dragEntityList: 'collection.list',
+               /**
+               * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
+               */
+               itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -113,6 +111,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             init: function () {
                //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
                $(this.getContainer()).bind('mouseup', this._onMouseupInside.bind(this));
+            },
+
+            destroy: function() {
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside, this);
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove, this);
             }
          },
 
@@ -124,9 +127,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          setDragEntity: function(dragEntityFactory) {
             this._options.dragEntity = dragEntityFactory;
          },
-
+         /**
+          * Возвращает признак возможно ли перемещение элементов с помощью DragNDrop.
+          * @returns {Boolean}
+          */
          getItemsDragNDrop: function(){
-            return true;
+            return this._options.itemsDragNDrop;
+         },
+         /**
+          * Установить возможность перемещения элементов с помощью DragNDrop.
+          * @param {Boolean} itemsDragNDrop
+          */
+         setItemsDragNDrop: function(itemsDragNDrop){
+            this._options.itemsDragNDrop = itemsDragNDrop;
          },
 
          //endregion public
@@ -324,14 +337,16 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @param {Event} e Браузерное событие.
           */
          _beginDrag: function(e) {
-            DragObject.reset();
-            DragObject.onDragHandler(e);
-            if (this._beginDragHandler(DragObject, e) !== false) {
-               $('body').addClass('dragdropBody ws-unSelectable');
-               if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                  this._showAvatar(e);
-                  DragObject.setOwner(this);
-                  DragObject.setDragging(true);
+            if (this._options.itemsDragNDrop) {
+               DragObject.reset();
+               DragObject.onDragHandler(e);
+               if (this._beginDragHandler(DragObject, e) !== false) {
+                  $('body').addClass('dragdropBody ws-unSelectable');
+                  if (this._notify('onBeginDrag', DragObject, e) !== false) {
+                     this._showAvatar(e);
+                     DragObject.setOwner(this);
+                     DragObject.setDragging(true);
+                  }
                }
             }
 
@@ -402,6 +417,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
          _makeDragEntity: function(options) {
             return  Di.resolve(this._options.dragEntity, options);
          },
+         /**
+          *
+          * @param options
+          * @returns {*|Object|Array}
+          * @private
+          */
+         _makeDragEntityList: function(options) {
+            return Di.resolve(this._options.dragEntityList, options)
+         },
          //endregion protected
          //region mouseHandler
          /**
@@ -449,7 +473,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
             //todo разобраться с опцией выключения dragndrop
             //https://inside.tensor.ru/opendoc.html?guid=55df5f10-14b3-465d-b53e-3783fc9085a0&description=
             //Задача в разработку 22.03.2016 /** * @cfg {String} Разрешено или нет перемещение элементов 'Drag-and-Drop' ...
-            if (this._options.itemsDragNDrop !== false) {
+            //itemsDragNDrop сейчас не обязательно false
+            if (this._options.itemsDragNDrop) {
                this._preparePageXY(e);
                DragObject.onDragHandler(e);
                var target = DragObject.getTargetsControl();
@@ -466,7 +491,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixinNew', [
           * @param {Event} e Браузерное событие.
           */
          _onMousemove: function (buse, e) {
-            if (this._options.itemsDragNDrop !== false) {
+            if (this._options.itemsDragNDrop) {
                if (!DragObject.isDragging()) {
                   return;
                }

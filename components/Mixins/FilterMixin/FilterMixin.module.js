@@ -9,12 +9,6 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 ], function ( cFunctions, cMerge,FilterToStringUtil, colHelpers) {
 
 
-   /**
-    * Миксин, задающий любому контролу поведение работы с набором фильтров.
-    * @mixin SBIS3.CONTROLS.FilterMixin
-    * @public
-    * @author Крайнов Дмитрий Олегович
-    */
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
       internalValueField: null,
       internalCaptionField: null,
@@ -34,12 +28,19 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          return this.runInPropertiesUpdate(func, arguments);
       };
    }
-
+    /**
+     * Миксин, задающий любому контролу поведение работы с набором фильтров.
+     * @mixin SBIS3.CONTROLS.FilterMixin
+     * @public
+     * @author Крайнов Дмитрий Олегович
+     */
    var FilterMixin = /**@lends SBIS3.CONTROLS.FilterMixin.prototype  */{
       /**
-       * @event onResetFilter Возникает при сбросе фильтра (значения структуры value сбрасываются в resetValue)
+       * @event onResetFilter Происходит при сбросе фильтра.
+       * @remark
+       * Значения структуры value сбрасываются в resetValue.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {Boolean} internal Значения были сброшены только на панели фильтрации
+       * @param {Boolean} internal Значения были сброшены только на панели фильтрации.
        */
       $protected: {
          _options: {
@@ -58,27 +59,15 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
              * @translatable caption resetCaption
              */
             /**
-             * @cfg {filterStructure[]} Структура элемента фильтра
-             * @remark Важно! все, что задано в filterStructure влияет на объекты в контексе - filter и filterDescr(строится по полям value у структуры)
-             * @example
-             * <pre class="brush:xml">
-             *     <options name="filterStructure" type="array">
-             *        <options>
-             *            <option name="internalValueField">Поле1</option>
-             *            <option name="internalCaptionField">Поле2</option>
-             *            <option name="caption">Текущее текстовое отображение значения</option>
-             *            <option name="value">100</option>
-             *            <option name="resetValue">10</option>
-             *            <option name="resetCaption">Текст по умолчанию</option>
-             *         </options>
-             *      </options>
-             * </pre>
+             * @cfg {filterStructure[]} Устанавливает структуру элементов фильтра.
+             * @remark
+             * Примеры и подробное описание использования опции вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstructure/'>здесь</a>.
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
             /**
-             * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
+             * @cfg {String} Устанавливает поле в контексте, в котором будет храниться внутренний фильтр компонента.
              * @remark
-             * !Важно: Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя
+             * Если на одной форме, в одном контексте лежит несколько хлебных фильтров, то только в этом случае стоит менять стандартное имя.
              * @example
              * <pre class="brush:xml">
              *     <option name="internalContextFilterName">sbis3-controls-fast-filter</option>
@@ -98,8 +87,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          if (fromContext) {
             this._updateFilterStructure(
                 undefined,
-                context.getValue(contextName + '/caption'),
-                context.getValue(contextName + '/filter')
+                context.getValue(contextName + '/filter'),
+                context.getValue(contextName + '/caption')
             );
          }
       },
@@ -109,11 +98,28 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          this._notifyOnPropertyChanged('filterStructure');
       },
 
-      applyFilter: propertyUpdateWrapper(function() {
-         this._syncContext(true);
+      _notifyOnApplyFilter: function() {
          this._notify('onApplyFilter');
          this._notifyFilterUpdate();
+      },
+
+       /**
+        * Применяет фильтр, который формируется из значений на панели фильтров.
+        */
+      applyFilter: propertyUpdateWrapper(function() {
+         this._syncContext(true);
+         this._notifyOnApplyFilter();
       }),
+
+       /**
+        * Устанавливает структуру, стреляет событием об применении фильтров.
+        * @param structure
+        * @private
+        */
+       _setFilterStructure: function(structure) {
+          this._updateFilterStructure(structure);
+          this._notifyOnApplyFilter();
+       },
 
       _updateFilterStructure: function(filterStructure, filter, captions, visibility) {
          var processElementVisibility = function(elem) {
@@ -215,9 +221,9 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          });
       },
 
-      _resetFilter: function(internalOnly) {
+      _resetFilter: function(internalOnly, partial) {
          var context = this._getCurrentContext(),
-             resetFilter = this.getResetFilter(),
+             resetFilter = this.getResetFilter(partial),
              toSet = {};
 
          /* Синхронизация св-в должна происходить один раз, поэтому делаю обёртку */
@@ -276,6 +282,29 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          }, {});
       },
 
+      /**
+       * Собирает значения для сброса фильтра
+       * @returns {*}
+       * @private
+       */
+      _mapFilterStructureByResetValue: function(partial) {
+         return colHelpers.reduce(this.getFilterStructure(), function(result, element) {
+            if(element.hasOwnProperty('resetValue')) {
+               /* Надо смотреть только на itemTemplate, но сейчас есть проблема с компонентом dateRange,
+                  который делают через две дополнительные структуры и его сбрасывать надо. Как будет сделан компонент,
+                  который может отображать дату по стандарту в фильтра FIXME удалить "element.historyItemTemplate !== null" */
+               if(partial && element.itemTemplate === null && element.historyItemTemplate !== null) {
+                  if(element.hasOwnProperty('value')) {
+                     result[element.internalValueField] = element['value'];
+                  }
+               } else {
+                  result[element.internalValueField] = element['resetValue'];
+               }
+            }
+            return result;
+         }, {});
+      },
+
 
       getFilter: function() {
          return this._mapFilterStructureByProp('value');
@@ -289,8 +318,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          return this._filterStructure;
       },
 
-      getResetFilter: function() {
-         return this._mapFilterStructureByProp('resetValue');
+      getResetFilter: function(partial) {
+         return this._mapFilterStructureByResetValue(partial);
       }
    };
 

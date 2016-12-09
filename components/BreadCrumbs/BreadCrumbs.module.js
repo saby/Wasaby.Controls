@@ -86,6 +86,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
+      _modifyOptions: function(cfg) {
+         var newCfg = BreadCrumbs.superclass._modifyOptions.apply(this, arguments);
+         if (!cfg.items || cfg.length !== 0) {
+            newCfg.visible = false;
+         }
+         return newCfg;
+      },
+
       $constructor: function() {
          this._publish('onItemClick');
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);

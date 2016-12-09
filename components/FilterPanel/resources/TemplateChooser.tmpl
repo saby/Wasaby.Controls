@@ -1,2 +1,10 @@
-<ws:SBIS3.CONTROLS.FilterPanelChooser scope="{{properties}}" filter="{{ 'filter'|mutable:[] }}">
-</ws:SBIS3.CONTROLS.FilterPanelChooser>
+<!--viewMode оставлен для поддержки совместимости-->
+<ws:if data="{{ properties.editor === 'dictionary' || properties.viewMode === 'dictionary' }}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.DictionaryList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}"></ws:SBIS3.CONTROLS.FilterPanelChooser.DictionaryList>
+</ws:if>
+<ws:if data="{{ properties.editor === 'favorites' || properties.viewMode === 'favorites' }}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.FavoritesList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}"></ws:SBIS3.CONTROLS.FilterPanelChooser.FavoritesList>
+</ws:if>
+<ws:if data="{{ properties.editor === 'list' || properties.viewMode === 'list' || (!properties.editor && !properties.viewMode) }}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.List scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}"></ws:SBIS3.CONTROLS.FilterPanelChooser.List>
+</ws:if>

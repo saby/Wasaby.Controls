@@ -266,7 +266,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.displayType = cfg.displayType;
       tplOptions.hierField = cfg.hierField;
       tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
-      tplOptions.originallPadding = cfg._originallPadding;
+      tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hierarchy = new HierarchyRelation({
          idProperty: cfg.keyField,
@@ -276,7 +276,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return tplOptions;
    };
    /**
-    * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
+    * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
     * На DOM-элементы, отображающие развернутые узлы вешается css-класс "controls-TreeView__item-expanded". Для свернутых узлов используется css-класс "controls-TreeView__item-collapsed".
     * @mixin SBIS3.CONTROLS.TreeMixin
     * @public
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @name SBIS3.CONTROLS.TreeMixin#reload
        * @function
-       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * @description Перезагружает набор записей представления данных с последующим обновлением отображения.
        * @param {Object} filter Параметры фильтрации.
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.
@@ -354,12 +354,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       /**
        * @event onNodeExpand Происходит после разворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String|Number} key Идентификатор разворачиваемого узла.
+       * @param {String|Number} key Идентификатор узла.
+       * @param {jQuery} object Контейнер узла.
+       * @see onNodeCollapse
        */
       /**
        * @event onNodeCollapse Происходит после сворачивания узла.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String|Number} key Идентификатор разворачиваемого узла.
+       * @param {String|Number} key Идентификатор узла.
+       * @param {jQuery} object Контейнер узла.
+       * @see onNodeExpand
        */
       $protected: {
          _folderOffsets : {},
@@ -519,6 +523,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
+             /**
+              * @cfg {Boolean}
+              */
             hierarchyViewMode: false
          },
          _foldersFooters: {},
@@ -619,9 +626,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                this._options.openedPath[id] = true;
                this._folderOffsets[id] = 0;
-               return this._loadNode(id).addCallback(function() {
+               return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
                   this._getItemProjectionByItemId(id).setExpanded(true);
-               }.bind(this));
+               }).bind(this));
             }
          } else {
             return Deferred.fail();
@@ -631,14 +638,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
                this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
-            }.bind(this));
+            }).bind(this));
          } else {
             return Deferred.success();
          }
@@ -1065,8 +1072,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
          this.setFilter(filter, true);
-         this._notify('onBeforeSetRoot');
-         this._hier = this._getHierarchy(this._options._items, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
@@ -1077,13 +1082,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
+         this._hier = this._getHierarchy(this.getItems(), key);
       },
-      _getHierarchy: function(dataSet, key){
+      _getHierarchy: function(items, key){
          var record, parentKey,
             hierarchy = [];
-         if (dataSet){
+         if (items && items.getCount()){
             do {
-               record = dataSet.getRecordById(key);
+               record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.hierField) : null;
                if (record) {
                   hierarchy.push({
@@ -1095,7 +1101,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   });
                }
                key = parentKey;
-            } while (key);
+            // пока не дойдем до корня (корень может быть undefined)
+            } while (key && key != this.getRoot());
          }
          return hierarchy;
       },

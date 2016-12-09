@@ -1,0 +1,52 @@
+.controls-MenuButton__Menu {
+   &.controls-RichEditorToolbar__menuButtonPicker {
+      padding: 0px;
+      .controls-ListView__item {
+         padding: 0 6px;
+      }
+      .controls-MenuItem__icon {
+         left: 3px;
+      }
+      &.controls-MenuButton__withoutHeader{
+         /*TODO: в menuButton без Header`a  перейти на использование menuIcon*/
+         margin-top: 24px;
+         &.controls-popup-revert-vertical{
+            margin-top: 24px!important;
+         }
+         border-top: none;
+         border-width: 2px; //ie8
+         border-top-left-radius: 0px;
+         border-top-right-radius: 0px;
+      }
+      .controls-MenuItem__icon-wrapper{
+         width:0px;
+         padding:0px;
+      }
+      .control-MenuItem__child-expand{
+         padding: 0px;
+      }
+   }
+}
+.controls-RichEditorToolbar__menuButtonHeader {
+   &.controls-MenuButton__header {
+      display: inline-block;
+   }
+   &.controls-MenuButton__header {
+      .controls-MenuButton__headerRight {
+         margin: 0 0px 0 -6px;
+      }
+      .controls-MenuButton__headerCenter {
+         vertical-align: top;
+         margin-top: 6px;
+         height: 4px;
+      }
+   }
+   //необходимо сдвигать picker на 2px тк в тулбаре нестандартная menuButton
+   &.controls-MenuButton__header-revert-vertical {
+      margin-top: 2px;
+      .controls-MenuButton__headerCenter {
+         margin-top: 0;
+         height: 8px;
+      }
+   }
+}

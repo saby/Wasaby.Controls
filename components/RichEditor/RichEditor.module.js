@@ -14,11 +14,17 @@ define('js!SBIS3.CONTROLS.RichEditor',
          toolbarHeight: 24
       },
       /**
+       * Контрол "Богатый текстовый редактор" (БТР). Состоит из двух компонентов: {@link SBIS3.CONTROLS.RichTextArea} и {@link SBIS3.CONTROLS.RichEditorToolbar}.
        * @class SBIS3.CONTROLS.RichEditor
        * @extends SBIS3.CONTROLS.RichTextArea
-       * @author Борисов П.С.
+       * @author Борисов Петр Сергеевич
        * @public
        * @control
+       *
+       * @demo SBIS3.CONTROLS.Demo.RichEditorDemo В следующем примере первый контрол - SBIS3.CONTROLS.RichEditor.
+       * Ниже добавлен контрол SBIS3.CONTROLS.RichEditorToolbar, который связан с контролом SBIS3.CONTROLS.RichTextArea с помощью метода {@link SBIS3.CONTROLS.RichEditorToolbarBase#setLinkedEditor}.
+       *
+       * @category Inputs
        */
       RichEditor = RichTextArea.extend(/** @lends SBIS3.CONTROLS.RichEditor.prototype */{
          _dotTplFn: dotTplFn,

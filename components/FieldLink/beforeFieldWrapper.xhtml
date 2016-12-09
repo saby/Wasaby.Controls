@@ -30,5 +30,10 @@
     </component>
 </div>
 {{? it.multiselect}}
-    <span class="controls-FieldLink__copyShowAll">...</span>
+    <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__copyShowAll">
+        <opt name="caption">&#133;</opt>
+        <opt name="allowChangeEnable" type="boolean">false</opt>
+        <opt name="tabindex">0</opt>
+        <opt name="command">showAllItems</opt>
+    </component>
 {{?}}

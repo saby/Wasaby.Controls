@@ -1,3 +1,5 @@
+@import "header";
+
 //body, html {
 //  font: @font-basic-size @font-basic-name;
 //  color: @text-color;
@@ -63,11 +65,37 @@ input[type="reset"]::-moz-focus-inner {
   color: @gray-color;
 }
 
+.blue-color {
+  color: @darkcyan-color;
+}
+
+// Модификаторы цвета ссылки
+.mainLink__2 {
+  color: @gray-lamantin-color;
+}
+
+.additionalLink {
+  color: @gray-color;
+}
+.additionalLink__2 {
+  color: @black-color;
+}
+.additionalLink__3 {
+  color: @red-color;
+}
+.additionalLink__4 {
+  color: @green-color;
+}
+.additionalLink__5 {
+  color: @purple-color;
+}
+
+.blue-dark-color {
+  color: @blue-dark-color;
+}
+
 .ws-is-desktop-platform {
   .action-hover:not(.ws-disabled):hover {
     color: @blue-dark-color !important;
-  }
-  .gray-color:not(.ws-disabled):hover {
-    color: @gray-color;
   }
 }

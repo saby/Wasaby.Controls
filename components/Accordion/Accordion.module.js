@@ -6,10 +6,11 @@ define('js!SBIS3.CONTROLS.Accordion', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'html!SBIS3.CONTROLS.Accordion',
+   "Core/Context",
    'browser!tmpl!SBIS3.CONTROLS.Accordion/resources/ItemTemplate',
    'browser!tmpl!SBIS3.CONTROLS.Accordion/resources/ItemContentTemplate',
    'js!SBIS3.CONTROLS.Spoiler'
-], function(CompoundControl, ItemsControlMixin, dotTplFn, ItemTemplate, ItemContentTemplate) {
+], function(CompoundControl, ItemsControlMixin, dotTplFn, cContext, ItemTemplate, ItemContentTemplate) {
 
    'use strict';
 
@@ -28,7 +29,17 @@ define('js!SBIS3.CONTROLS.Accordion', [
          _options: {
             itemTpl: ItemTemplate,
             itemContentTpl: ItemContentTemplate,
-            _canServerRender: true
+            _canServerRender: true,
+            _buildTplArgs: function(cfg) {
+               var
+                  tplCfg = cfg._buildTplArgsSt.apply(this, arguments);
+               // Контекст каждого элемента аккордеона должен быть изолирован, иначе бинды поплывут вверх до родительских
+               // контекстов, возможно их пересечение между собой и просто с другими забинденными свойствами
+               tplCfg.generateContext = function() {
+                  return new cContext({restriction: 'set'});
+               };
+               return tplCfg;
+            }
          },
          _checkClickByTap: false
       }

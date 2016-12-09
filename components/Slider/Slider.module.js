@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.Slider',
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.Slider',
       'js!SBIS3.CONTROLS.DragNDropMixinNew',
-      'js!SBIS3.CONTROLS.RangeMixin'
-   ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin) {
+      'js!SBIS3.CONTROLS.RangeMixin',
+      'Core/IoC'
+   ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin, IoC) {
       'use strict';
       //TODO: documentation
       ///controls-Slider__withBorder
@@ -86,9 +87,13 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             setMinValue: function(minValue){
-               this._options.minValue = minValue;
-               this._drawStartValue(this._startValue);
-               this._drawEndValue(this._endValue);
+               if (minValue >= this._options.maxValue) {
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное минимальное значение');
+               } else {
+                  this._options.minValue = minValue;
+                  this._drawStartValue(this._options._startValue);
+                  this._drawEndValue(this._options._endValue);
+               }
             },
 
             getMinValue: function(){
@@ -96,9 +101,13 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             setMaxValue: function(maxValue) {
-               this._options.maxValue = maxValue;
-               this._drawStartValue(this._startValue);
-               this._drawEndValue(this._endValue);
+               if (maxValue <= this._options.minValue) {
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное максимальное значение');
+               } else {
+                  this._options.maxValue = maxValue;
+                  this._drawStartValue(this._options._startValue);
+                  this._drawEndValue(this._options._endValue);
+               }
             },
 
             getMaxValue: function(){
@@ -167,16 +176,18 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _onDragHandler: function(DragObject, event) {
-               var
-                  width = this._container.width(),
-                  instance = DragObject.getOwner(),
-                  rangeLength = instance._options.maxValue - instance._options.minValue,
-                  side = $(DragObject.getTarget()).hasClass('controls-Slider__point__left') ? 'left' : 'right',
-                  percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
-                  value = instance._options.minValue + percent * rangeLength;
-               if (instance._dragInProcess && instance.isEnabled()) {
-                  instance[side === 'left' ? '_drawStartValue' : '_drawEndValue'](value);
-                  this._notify('onDrawValueChange', this._startValue, this._endValue)
+               if (DragObject.getOwner() === this) {
+                  var
+                     width = this._container.width(),
+                     instance = DragObject.getOwner(),
+                     rangeLength = instance._options.maxValue - instance._options.minValue,
+                     side = $(DragObject.getTarget()).hasClass('controls-Slider__point__left') ? 'left' : 'right',
+                     percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
+                     value = instance._options.minValue + percent * rangeLength;
+                  if (instance._dragInProcess && instance.isEnabled()) {
+                     instance[side === 'left' ? '_drawStartValue' : '_drawEndValue'](value);
+                     this._notify('onDrawValueChange', this._startValue, this._endValue)
+                  }
                }
             },
 

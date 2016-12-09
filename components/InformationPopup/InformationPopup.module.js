@@ -7,12 +7,18 @@ define('js!SBIS3.CONTROLS.InformationPopup',
    ],
 
    /**
-    * Всплывающий контрол с линией в шапке, зависящей от состояния, и содержимым.
+    * Класс контрола "Всплывающее информационное окно". Содержимое окна строится по шаблону, установленному в опции {@link template}. Цвет линии в шапке окна зависит от установленного состояния {@link status}.
+    *
     * @class SBIS3.CONTROLS.InformationPopup
     * @extends SBIS3.CORE.CompoundControl
+    *
+    * @mixes SBIS3.CONTROLS.PopupMixin
+    * @mixes SBIS3.CORE.LikeWindowMixin
+    *
+    *
     * @control
     * @public
-    * @author Степин П.В.
+    * @author Степин Павел Владимирович
     */
    function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl){
       'use strict';
@@ -20,21 +26,19 @@ define('js!SBIS3.CONTROLS.InformationPopup',
          /**
           * @typedef {String} InformationPopupStatus
           * @variant default  Окно без состояния. Цвет линии в шапке - синий, иконка по умолчанию не задана.
-          * @variant success  "Успешно". Цвет линии в шапке - зеленый, иконка - зелёная галка.
-          * @variant error    "Ошибка". Цвет линии в шапке - красный, иконка - треугольник с воскл.знаком.
+          * @variant success  Состояние "Успешно". Цвет линии в шапке - зеленый, иконка - зелёная галка.
+          * @variant error    Состояние "Ошибка". Цвет линии в шапке - красный, иконка - треугольник с восклицательным знаком.
           */
-
          _dotTplFn : dotTpl,
          $protected: {
             _options: {
 
                /**
-                * @cfg {InformationPopupStatus} Состояние окна. От состояния заивисит цвет линии в шапке и иконка по умолчани.
+                * @cfg {InformationPopupStatus} Устанавливает состояние окна. От состояния зависит цвет линии в шапке и иконка.
                 */
                status: 'default',
-
                /**
-                * @cfg {Function} Шаблон содержимого
+                * @cfg {Function} Устанавливает шаблон содержимого диалога.
                 */
                template: null
             }
@@ -47,8 +51,8 @@ define('js!SBIS3.CONTROLS.InformationPopup',
          },
 
          /**
-          * Установить новое состояние
-          * @param {InformationPopupStatus} status
+          * Устанавливает новое состояние окна.
+          * @param {InformationPopupStatus} status Состояние.
           */
          setStatus: function(status){
             this.getContainer().removeClass('controls-InformationPopup__status-' + this._options.status).addClass('controls-InformationPopup__status-' + status);

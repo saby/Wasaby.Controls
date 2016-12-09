@@ -9,7 +9,9 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonMainFull', [
       'js!SBIS3.CONTROLS.Demo.FilterButtonMocks',
       'js!SBIS3.CONTROLS.Demo.AdditionalFilterTemplate',
       'js!SBIS3.CONTROLS.FilterText',
-      'js!SBIS3.CONTROLS.FilterLink'
+      'js!SBIS3.CONTROLS.FilterLink',
+      'js!SBIS3.CONTROLS.TextBox',
+      'js!SBIS3.CONTROLS.FilterSelect'
    ],
    function(CompoundControl, FilterButton, MainTpl, FilterHistoryController) {
       var Main = CompoundControl.extend({

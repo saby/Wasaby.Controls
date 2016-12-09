@@ -4,10 +4,14 @@
 @gray-dark-color:                         #515151;
 @gray-color:                              #919191;
 @gray-light-color:                        #d1d1d1;
+@gray-lamantin-color:                     #8991A9;
 @gray-ccc-color:                          #CCC;
 @lightgray-color:                         #CBD5E5;
 @darkcyan-color:                          #0055BB;
 @dodgerblue-color:                        #0066FF;
+@red-color:                               #ef463a;
+@green-color:                             #53A52C;
+@purple-color:                            #9122BF;
 
 @blue-dark-color:                         #313E78;
 
@@ -17,7 +21,7 @@
 
 @icon-color-attention:                    #FEC63F;
 @icon-color-done:                         #72be44;
-@icon-color-error:                        #ef463a;
+@icon-color-error:                        @red-color;
 @icon-color-primary:                      #587ab0;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
@@ -111,6 +115,51 @@
 @FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
+
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-count-box-shadow-pos:             -12px 0 5px;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     6px 30px 6px 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    6px;
+@filter-panel-chooser-list-view-check-box-left:                   4px;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding-right:              8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-count-box-shadow:                 @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-count-box-shadow:         @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-count-box-shadow:        @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
 
 // Normal default button
 @button-text-color:                       @gray-color;
@@ -619,7 +668,7 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  3px;
 @menu-expand-top-offset32:                7px;
-@menu-expand-right-offset:                0;
+@menu-expand-right-offset:                8px;
 @menu-expand-spritesheet:                'img/MenuExpand.png';
 
 @menu-expand-border-width:                0;
@@ -647,7 +696,7 @@
 @menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
 @menu-item-default-padding:               0 8px;
-@menu-item-expand-padding-right:          16px;
+@menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
@@ -1085,13 +1134,13 @@
 @combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
 @combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
-@combo-box-picker-border:                       1px solid @gray-light-color;
+@combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-margin:                       -2px 0 0;
-@combo-box-picker-item-padding:                 2px 7px;
+@combo-box-picker-margin:                       -2px;
+@combo-box-picker-padding:                      0 2px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
-@combo-box-picker-item-padding:                 6px 4px;
+@combo-box-picker-item-padding:                 7px 4px 6px 4px;
 
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
 @combo-box-picker-item-bg:                      @white-color;
@@ -1169,6 +1218,7 @@
 
 @suggest-text-box-reset-margin:              3px 4px;
 @suggest-text-box-wrapper-width:             22px;
+@suggest-text-box-icon-cross-color:          #8991A9;
 
 // ----------- //
 // Suggest //
@@ -1226,13 +1276,11 @@
 @date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
 
 @date-picker-calendar-icon-cursor:              pointer;
-@date-picker-calendar-icon-width:               16px;
-@date-picker-calendar-icon-height:              16px;
+@date-picker-calendar-icon-width:               18px;
+@date-picker-calendar-icon-height:              18px;
 @date-picker-calendar-icon-top-offset:          4px;
 @date-picker-calendar-icon-left-offset:         1px;
-@date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
-@date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
-@date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
+
 
 // -------- //
 // Calendar //
@@ -1545,7 +1593,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1639,12 +1690,24 @@
 
 @bottomStyle-small-items-toolbar-margin-top:        4px;
 
+/*group*/
+@list-view-separator-height:                       24px;
+@list-view-separator-line:                         1px solid #eaeaea;
+@list-view-separator-content-padding:              0 12px;
+@list-view-separator-content-color:                @gray-color;
+@list-view-separator-content-size:                 12px;
+@list-view-separator-expander-size:                16px;
+@list-view-separator-content-hover-color:          @blue-dark-color;
+
 // --------- //
 //  ToolBar  //
 // --------- //
 
 @controls-toolbar-display:                      inline-block;
-@controls-toolbar-item-margin-right:            8px;
+@controls-toolbar-default-margin:               8px;
+@controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
+@controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
+@controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
 @controls-toolbar-item-vertical-align:          middle;
 
 // --------- //
@@ -1755,13 +1818,14 @@
 @data-grid-cell-line-height:                    21px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
+@data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
-@data-grid-first-cell-separator-color:          #EAEAEA;
+@data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1774,8 +1838,8 @@
 @data-grid-td-checkbox-width:                   16px;
 @data-grid-td-visible-checkbox-width:           24px;
 @data-grid-td-hidden-checkbox-width:            4px;
-//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
-@data-grid-checkbox-margin:                     2px 0 -2px 0;
+@data-grid-check-box-top:                       6px;
+@data-grid-check-box-left:                      6px;
 @data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
@@ -1863,6 +1927,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    1px;
+@controls-editInPlace-editor-without-offset-margin: 0;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1955,6 +2020,7 @@
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
 @DropdownList-picker-head-border-radius:              4px 4px 0 0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
@@ -1963,9 +2029,9 @@
 @DropdownList-picker-list-border-radius:              4px;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
-@DropdownList-picker-menu-item-padding:               6px 8px;
+@DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
 @DropdownList-picker-menu-item-margin:                0;
-@DropdownList-picker-menu-item-height:                20px;
+@DropdownList-picker-menu-item-height:                19px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
@@ -1975,8 +2041,10 @@
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
+@DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    4px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
@@ -2118,6 +2186,7 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-padding:          0 4px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
+@controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkItem-line-height:          18px;
 @controls-FieldLink-linkContainer-padding:         4px 0;
 
@@ -2131,6 +2200,7 @@
 @controls-FieldLink-linkItem-position:             relative;
 @controls-FieldLink-linkItem-padding:              0 17px 0 4px;
 @controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-width:          20px;
 @controls-FieldLink-linkItem-cross-right:          -4px;
 @controls-FieldLink-linkItem-cross-top:            -2px;
 @controls-FieldLink-linkItem-cross-padding:        3px 5px 3px 0;
@@ -2142,6 +2212,8 @@
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -2217,8 +2289,80 @@
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
 @controls-Scrollbar-thumb-border-radius:           2px;
-@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
-@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+@controls-Scrollbar-light-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-light-active-thumb-color:       rgba(255, 255, 255, 0.50);
 
-@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
-@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+@controls-Scrollbar-dark-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-dark-active-thumb-color:      rgba(0, 0, 0, 0.15);
+
+//----------//
+//  Header  //
+//----------//
+@header-font-family:                               'TensorFont';
+
+@header-padding-left:                              8px;
+@header-padding-right:                             12px;
+@header-height:                                    32px;
+
+@header-font:                                      700 18px escape('/') @header-height @header-font-family;
+@header-color:                                     #D94700;
+
+@bigHeader-font:                                   700 20px escape('/') @header-height @header-font-family;
+@bigHeader-color:                                  @header-color;
+
+@subheader-font:                                   700 15px escape('/') @header-height @header-font-family;
+@subheader-color:                                  @blue-dark-color;
+
+@bigSubheader-font:                                700 18px escape('/') @header-height @header-font-family;
+@bigSubheader-color:                               @subheader-color;
+
+//--------------//
+//  LinkHeader  //
+//--------------//
+
+@link-header-padding-left:                         @header-padding-left;
+@link-header-padding-right:                        @header-padding-right;
+@link-header-height:                               @header-height;
+
+@link-header-font:                                 700 18px escape('/') @header-height @header-font-family;
+@link-header-color:                                #D94700;
+@link-header-text-decoration:                      none;
+
+@link-header-after-content:                        '\E002';
+@link-header-after-font:                           18px @header-font-family;
+@link-header-after-color:                          @blue-dark-color;
+@link-header-after-margin-left:                    4px;
+
+@link-header-hover-color:                          @primary-color;
+@link-header-hover-after-color:                    @link-header-hover-color;
+
+@link-header-separator-color:                      #F4F4F4;
+@link-header-separator-margin:                     0 0 0 8px;
+
+//----------------//
+//  ToggleHeader  //
+//----------------//
+
+@toggle-header-padding-right:                      8px;
+@toggle-header-height:                             24px;
+
+@toggle-header-font:                               700 15px escape('/') @toggle-header-height @header-font-family;
+@toggle-header-color:                              @blue-dark-color;
+@toggle-header-border:                             none;
+@toggle-header-background:                         none;
+
+@toggle-header-before-content:                     '\E013';
+@toggle-header-before-font:                        18px @header-font-family;
+@toggle-header-before-color:                       #D94700;
+@toggle-header-before-width:                       24px;
+
+@toggle-header-count-font:                         15px @header-font-family;
+@toggle-header-count-color:                        #D94700;
+@toggle-header-count-margin-right:                 4px;
+
+
+@toggle-header-hover-color:                        @primary-color;
+@toggle-header-hover-before-color:                 @toggle-header-hover-color;
+@toggle-header-hover-count-color:                  @toggle-header-hover-color;
+
+@toggle-header-checked-before-content:             '\E000';

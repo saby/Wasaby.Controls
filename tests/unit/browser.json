@@ -1,0 +1,8 @@
+{
+  "url": {
+    "host": "localhost",
+    "port": 666,
+    "path": "/tests/unit/browser.html?reporter=XUnit"
+  },
+  "checkerTimeout": 120000
+}

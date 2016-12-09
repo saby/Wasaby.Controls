@@ -23,6 +23,8 @@ define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], fun
       $protected: {
          //Чтобы событие onReset не отправлялось непрерывно
          _onResetIsFired: true,
+         /* Чтобы при вставке одного и того-же текста не отправлялись лишние запросы и не стреляли события */
+         _searchText: '',
          _searchDelay: null,
          _options: {
             /**
@@ -42,9 +44,22 @@ define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], fun
          this._publish('onSearch','onReset');
       },
 
-      after : {
+      before: {
          _setTextByKeyboard : function(text) {
-            this._startSearch(text);
+            if(text !== this._searchText) {
+               this._startSearch(text);
+            }
+         }
+      },
+
+      after : {
+         setText : function(text) {
+            /* Текст может меняться как кодом, так и напрямую пользователем.
+               _searchText надо запоминать в обоих случаях. Зачем:
+               например когда после поиска проваливаемся в папку, текст из строки поиска удаляется,
+               но удаляется не кодом а пользователем, и если ввести тот же поисковой запрос,
+               то он должен выполниться. А вот если пользователь сам вствляет один и тот же текст, то поиска происходить не должно. */
+            this._searchText = text;
          },
          destroy : function() {
             this._clearSearchDelay();

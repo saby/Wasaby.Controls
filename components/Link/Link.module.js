@@ -34,6 +34,14 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
     * !Важно: при добавлении этого класса сломается "Базовая линия".
     *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
+    * @css controls-Link__disabledHover Класс отключающий изменения цвета по ховеру
+    * @css controls-Link__underline Класс подчеркивает ссылку по-умолчанию
+    * @css mainLink__2 Основная ссылка 2
+    * @css additionalLink Дополнительная ссылка
+    * @css additionalLink__2 Дополнительная ссылка 2
+    * @css additionalLink__3 Дополнительная ссылка 3
+    * @css additionalLink__4 Дополнительная ссылка 4
+    * @css additionalLink__5 Дополнительная ссылка 5
     *
     * @control
     * @public

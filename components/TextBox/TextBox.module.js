@@ -170,7 +170,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      text = newText;
                   }
                   self._inputField.val(text);
-                  self.setText(self._formatText(text));
+                  /* Событие paste может срабатывать:
+                     1) При нажатии горячих клавиш
+                     2) При вставке из котекстного меню.
+
+                     Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
+                     но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
+                     можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
+                     которые на это рассчитывают.
+                   */
+                  self._setTextByKeyboard(self._formatText(text));
                }
             }, 100);
          });
@@ -350,6 +359,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyPressBind: function(event) {
+         if (event.which == 13){
+            this._checkInputVal();
+         }
          if (this._options.inputRegExp && !event.ctrlKey){
             return this._inputRegExp(event, new RegExp(this._options.inputRegExp));
          }

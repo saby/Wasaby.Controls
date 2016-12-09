@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
-   'js!SBIS3.CONTROLS.OperationMove'
+   'js!SBIS3.CONTROLS.OperationMove',
+   'js!SBIS3.CONTROLS.MenuIcon'
 ], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
@@ -40,7 +41,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
-    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
+    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
+    *
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
     *
@@ -108,7 +112,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              * @variant horizontal ПМО выехжает слева направо
              */
             panelFloatDirection: 'vertical',
-            visible: false
+            visible: false,
+            /**
+             * @cfg {Boolean} Показывать ли кнопку с операциями, если операции не помещаются
+             */
+            hasItemsMenu: false
          },
          _blocks: undefined,
          _itemsDrawn: false
@@ -120,6 +128,31 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);
+
+
+         if(this._options.hasItemsMenu){
+            //TODO
+            this._itemsMenu = this.getChildControlByName('itemsMenu');
+            this._itemsMenu._setPickerContent = function() {
+               $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
+            };
+            //TODO Конец
+
+            this.subscribeTo(this._itemsMenu, 'onMenuItemActivate', function(e, id){
+               this.getItems().each(function(item){
+                  if(item.get('id') === id){
+                     var instance = item.get('instance');
+                     if($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                        instance._notify('onMenuItemActivate', id);
+                     }
+                     else {
+                        instance._clickHandler();
+                     }
+                     return false;
+                  }
+               });
+            });
+         }
 
          //Отрисуем элементы если панель изначально показана
          if (this.isVisible()) {
@@ -140,7 +173,54 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       _drawItemsCallback: function() {
          this._itemsDrawn = true;
+         if(this._options.hasItemsMenu){
+            this._updateActionsMenuButtonItems();
+         }
       },
+
+      _updateActionsMenuButtonItems: function(){
+         var self = this;
+         var buttonItems = [];
+
+         //TODO ГОВНОКОДИЩЕ!!! Собираем мета описание операций через инстансы. При первой же возможности выпилить.
+         var addItems = function(items, parentKey, instance){
+            items.each(function(item){
+               if(parentKey || self._getItemType(item.get('type')) !== 'mark'){
+                  var obj = {
+                     parent: parentKey || null
+                  };
+                  if(parentKey){
+                     obj.id = item.get('id') || item.get('title');
+                     obj.icon = item.get('icon');
+                     obj.caption = item.get('title');
+                     obj.instance = instance;
+                  }
+                  else {
+                     var name = item.get('name');
+                     instance = self.getItemInstance(name);
+                     obj.id = name;
+                     obj.icon = instance.getIcon();
+                     obj.caption = instance.getCaption();
+                     obj.instance = instance;
+                     obj.className = 'controls-operationsPanel__actionType-' + self._getItemType(item.get('type'));
+
+                     if(typeof instance.getItems === 'function'){
+                        var childItems = instance.getItems();
+                        if(childItems.getCount() > 1){
+                           addItems(childItems, name, instance);
+                        }
+                     }
+                  }
+
+                  buttonItems.push(obj);
+               }
+            });
+         };
+
+         addItems(this.getItems());
+         this._itemsMenu.setItems(buttonItems);
+      },
+
       _setVisibility: function(show) {
          var self = this;
          this._initBlocks();
@@ -205,6 +285,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                this._onSelectedItemsChange(idArray);
             }.bind(this));
          }
+
+         if(this._options.hasItemsMenu){
+            var pickerContainer = $('.controls-operationsPanel__itemsMenu_picker');
+            pickerContainer.toggleClass('controls-operationsPanel__massMode', !idArray.length);
+            pickerContainer.toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+
+            this._checkCapacity();
+         }
       },
       _onSelectedItemsChange: function(idArray) {
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
@@ -213,6 +301,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                instance.onSelectedItemsChange(idArray);
             }
          });
+      },
+      _onResizeHandler: function(){
+         if(this._options.hasItemsMenu && this._itemsDrawn){
+            this._checkCapacity();
+         }
+      },
+
+      _checkCapacity: function(){
+         this._itemsMenu.getContainer().toggleClass('ws-hidden', !(this._blocks.wrapper.height() < this._blocks.wrapper.children().height()));
       },
       /**
        * @cfg {String} Установка направления выезжания панели массовых операций

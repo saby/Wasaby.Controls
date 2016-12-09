@@ -1,9 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.List.Move', [
       'js!SBIS3.CONTROLS.Action.Action',
-      'js!SBIS3.CONTROLS.Action.List.ListMixin'
+      'js!SBIS3.CONTROLS.Action.List.ListMixin',
+      'js!WS.Data/Di'
    ],
-   function (ActionBase, ListMixin) {
+   function (ActionBase, ListMixin, Di) {
       'use strict';
       /**
        * Базовый класс перемещения элементов в списке
@@ -30,14 +31,49 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
        * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
        */
       var Move = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Move.prototype */{
-
-         _doExecute: function (params) {
-            if (params) {
-               return this._move(params.from, params.to, params.up);
+         $protected: {
+            _options:{
+               moveStrategy: 'movestrategy.base'
             }
          },
+         /**
+          * Перемещает елементы. Должен быть реализован в наследниках
+          * @private
+          */
+         _move: function(){
 
-         _move: function () {
+         },
+
+         /**
+          * Возвращает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          */
+         getMoveStrategy: function () {
+            return this._moveStrategy || (this._moveStrategy = this._makeMoveStrategy());
+         },
+
+         /**
+          * Устанавливает стратегию перемещения
+          * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
+          */
+         setMoveStrategy: function (strategy){
+            if(!cInstance.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
+               throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
+            }
+            this._moveStrategy = strategy;
+         },
+         /**
+          * Создает стратегию перемещения в зависимости от источника данных
+          * @returns {WS.Data/MoveStrategy/IMoveStrategy}
+          * @private
+          */
+         _makeMoveStrategy: function () {
+            return Di.resolve(this._options.moveStrategy, {
+               dataSource: this.getDataSource(),
+               listView: this._getListView()
+            });
          }
 
       });

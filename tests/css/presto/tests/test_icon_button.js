@@ -73,7 +73,6 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
             })
 
             .capture('plain');
-    });
     */
     gemini.suite('round_border', function (test) {
 
@@ -216,7 +215,6 @@ gemini.suite('SBIS3.CONTROLS.IconButton Online', function () {
             })
 
             .capture('plain');
-    });
     */
     gemini.suite('round_border_with_icon24', function (test) {
 

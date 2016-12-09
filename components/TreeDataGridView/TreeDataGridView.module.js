@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
-   "Core/ConsoleLogger"
+   "Core/ConsoleLogger",
+   'js!SBIS3.CONTROLS.Link'
 ], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.foldersColspan = cfg.foldersColspan;
          return tplOptions;
       },
       getSearchCfg = function(cfg) {
@@ -48,12 +50,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
-    * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/"> Добавление по месту в иерархическом списке</a>.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -144,16 +146,26 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * @see $ws.proto.Control#sendCommand
              * @see SBIS3.CONTROLS.ListView#onItemActivate
              * @see SBIS3.CONTROLS.ListView#activateItem
+             * @see editArrow
              */
             arrowActivatedHandler: undefined,
             /**
-             * @cfg {String} Отображать кнопку редактирования папки или нет ( >> рядом с названием папки ).
+             * @cfg {String} Устанавливает отображение кнопки (>>) справа от названия узла (папки) или скрытого узла.
              * @example
              * <pre>
-             *     <option name="editArrow" type="boolean">false</option>
+             *     <option name="editArrow" type="boolean">true</option>
              * </pre>
+             * @see arrowActivatedHandler
              */
-            editArrow: false
+            editArrow: false,
+            /**
+             * @cfg {Boolean} отображает папки с одной колонкой на всю строку
+             * Значение по умолчанию false
+             * @deprecated
+             */
+            // Добавил опцию для версии 220
+            // с 3.7.5 будет рулиться через пользовательский шаблон
+            foldersColspan: false
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -192,13 +204,23 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       //последнего элемента, иначе будет выполнена штатная логика.
       _getInsertMarkupConfig: function(newItemsIndex, newItems) {
          var
-             lastItem,
-             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments);
+            cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
+            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
 
          if (cfg.inside && !cfg.prepend) {
-            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
             cfg.inside = false;
             cfg.container = this._getDomElementByItem(lastItem);
+         }
+
+         // Если в режиме поиска контейнер для вставки так и не был определен и lastItem - хлебная крошка (isNode), то ищем tr-ку в которой она лежит.
+         // Подробное объяснение:
+         // В режиме поиска последним отрисованным элементом запросто может быть хлебная крошка и вставлять нужно после tr-ки в которая она лежит.
+         // Можно было вызывать перерисовку, если запущен режим поиска и последним элементом на текущей загруженной странице является папка.
+         // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
+         // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
+         // p.s. data-id используется потому что у крошек нет data-hash.
+         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode()) {
+            cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
       },
@@ -285,7 +307,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
                      // TODO для обратной совместимости - удалить позже
                      if(self._options.arrowActivatedHandler) {
-                        IoC.resolve('ILogger').log('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.4.200.');
+                        IoC.resolve('ILogger').error('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.5');
                         self._options.arrowActivatedHandler.call(this,
                             hoveredItem.record,
                             id,
@@ -472,6 +494,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.hierField + '@')) {
+               this._currentScrollPosition = 0;
                this.setCurrentRoot(id);
                this.reload();
             }

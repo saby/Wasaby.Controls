@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/Deferred",
    "Core/EventBus",
    "Core/IoC",
+   "Core/core-merge",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -22,34 +23,58 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
+   "js!SBIS3.CONTROLS.ScrollContainer",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListItem",
+   "html!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
    "Core/helpers/dom&controls-helpers",
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, EventBus, IoC, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
-       * Контрол, отображающий по клику или ховеру список однотипных сущностей.
-       * Выпадающий список с разными вариантами отображения и возможностью задать для сущностей шаблон отображения.
+       * Класс контрола "Выпадающий список".
+       * <br/>
+       * Особенности работы с контролом:
+       * <ul>
+       *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
+       *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+       * </ul>
+       * <br/>
+       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+       * <pre>
+       *    <component data-component="SBIS3.CONTROLS.DropdownList">
+       *       <options name="items" type="array" bind="record/MyEnumField"></options>
+       *       <option name="keyField">@Идентификатор</option>
+       *       <option name="displayField">Описание</option>
+       *    </component>
+       * </pre>
+       *
        * @class SBIS3.CONTROLS.DropdownList
        * @extends $ws.proto.CompoundControl
-       * @author Крайнов Дмитрий Олегович
-       * @mixes SBIS3.CONTROLS.DSMixin
+       *
+       * @author Красильников Андрей Сергеевич
+       *
+       * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Простой пример работы контрола
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter Выпадающий список с фильтрацией
+       * @mixes SBIS3.CONTROLS.DataBindMixin
+       *
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.
+       *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
-       * @cssModifier controls-DropdownList__withoutCross Убрать крестик справа от выбранного текста.
+       *
+       * @cssModifier controls-DropdownList__withoutCross Скрывает крестик справа от выбранного значения.
+       *
        * @control
        * @public
        * @category Inputs
@@ -85,143 +110,123 @@ define('js!SBIS3.CONTROLS.DropdownList',
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
-          * @event onClickMore При клике на кнопку "Ещё"
+          * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           */
          $protected: {
             _options: {
                _getRecordsForRedraw: getRecordsForRedrawDDL,
+               _defaultItemContentTemplate: ItemContentTemplate,
+               _defaultItemTemplate: dotTplFnForItem,
                /**
-                * @cfg {String} Устанавливает шаблон отображения заголовка выпадающего списка.
+                * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон - это XHTML-файл с вёрсткой заголовка. Этот шаблон должен быть создан в компоненте в подпапке resources.
-                * Так его можно использовать, как и любой другой шаблон, в разных компонентах.
-                * Кроме шаблона отображения заголовка можно установить шаблон отображения элемента коллекции с помощью опции {@link itemTpl}.
-                * @example
-                * Чтобы можно было использовать шаблон в компоненте и передать в опцию headTemplate, нужно выполнить следующее:
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон создают в компоненте в подпапке resources.
+                * Порядок работы с шаблоном:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента.</li>
                 *    <li>Импортировать его в отдельную переменную.</li>
-                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).
-                *       <pre>
-                *          define('js!SBIS3.MyArea.MyComponent',
-                *             [ // Массив зависимостей компонента
-                *                ...
-                *                'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' // Подключаем шаблон в массив зависимостей компонента
-                *             ],
-                *             function(..., myHeadTpl){ // Импортируем шаблон в отдельную переменную
-                *                ...
-                *                $protected: {
-                *                   _options: {
-                *                      ...
-                *                      myHeadTemplate: myHeadTpl // Создаём новую опцию компонента, в которую передаём шаблон заголовка
-                *                   }
-                *                }
-                *                ...
-                *          });
-                *       </pre>
-                *    </li>
+                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).</li>
                 *    <li>В вёрстке компонента в значение опции headTemplate передать значение опции с помощью инструкций шаблонизатора.
-                *       <pre>
-                *          <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
-                *       </pre>
                 *    </li>
                 * </ol>
-                * Шаблон может быть любым. Например, такой шаблон:
+                * @example
+                * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                *    <div class="docs-myHeadTemplate">
-                *       <span class="docs-myHeadTemplate__span">Мой заголовок</span>
-                *    </div>
+                * define('js!SBIS3.MyArea.MyComponent',
+                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadTpl' ],
+                *    function(..., myHeadTpl){
+                *       ...
+                *       $protected: {
+                *          _options: {
+                *             myHeadTemplate: myHeadTpl
+                *          }
+                *       }
+                *       ...
+                * });
+                * </pre>
+                * Передача шаблона в опцию компонента:
+                * <pre>
+                *    <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
                 * </pre>
                 * @editor ExternalComponentChooser
+                * @see headPickerTemplate
                 * @see itemTpl
                 */
                headTemplate: dotTplFnHead,
+               /**
+                *  @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
+                *  @see headTemplate
+                *  @see itemTpl
+                */
                headPickerTemplate: dotTplFnPickerHead,
                /**
-                * @cfg {String} Устанавливает шаблон отображения элемента коллекции.
+                * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон - это XHTML-файл с вёрсткой элемента коллекции. Этот шаблон должен быть создан в компоненте в подпапке resources.
-                * Так его можно использовать, как и любой другой шаблон, в разных компонентах.
-                * Кроме шаблона отображения элемента коллекции можно установить шаблон отображения заголовка с помощью опции {@link headTemplate}.
-                * Из шаблона можно получить доступ к записи с помощью инструкци шаблонизатора:
-                * <pre>
-                *    {{=it.item.get(it.displayField)}}
-                * </pre>
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента.</li>
                 *    <li>Импортировать его в отдельную переменную.</li>
-                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).
-                *       <pre>
-                *          define('js!SBIS3.MyArea.MyComponent',
-                *             [ // Массив зависимостей компонента
-                *                ...
-                *                'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' // Подключаем шаблон в массив зависимостей компонента
-                *             ],
-                *             function(..., myItemTpl){ // Импортируем шаблон в отдельную переменную
-                *                ...
-                *                $protected: {
-                *                   _options: {
-                *                      ...
-                *                      myitemTpl: myItemTpl // Создаём новую опцию компонента, в которую передаём шаблон элемента коллекции
-                *                   }
-                *                }
-                *                ...
-                *          });
-                *       </pre>
-                *    </li>
-                *    <li>В вёрстке компонента в значение опции itemTpl передать значение опции с помощью инструкций шаблонизатора.
-                *       <pre>
-                *          <option name="itemTpl" type="ref">{{@it.myitemTpl}}</option>
-                *       </pre>
-                *    </li>
+                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).</li>
+                *    <li>В вёрстке компонента в значение опции itemTpl передать значение опции с помощью инструкций шаблонизатора.</li>
                 * </ol>
-                * Шаблон может быть любым. Например, такой шаблон:
+                * @example
+                * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
-                *    <div class="docs-myItemTpl">
-                *       {{=it.item.get(it.displayField)}}
-                *       <span class="docs-myItemTpl__span">Мой подтекст рядом с записью</span>
-                *    </div>
+                * define('js!SBIS3.MyArea.MyComponent',
+                *    [ ..., 'html!SBIS3.MyArea.MyComponent/resources/myItemTpl' ],
+                *    function(..., myItemTpl){
+                *       ...
+                *       $protected: {
+                *          _options: {
+                *             newItemTpl: myItemTpl // Создаём новую опцию компонента, в которую передаём шаблон элемента коллекции
+                *          }
+                *       }
+                *    ...
+                * });
+                * </pre>
+                * Передача шаблона в опцию компонента:
+                * <pre>
+                *     <option name="itemTpl" type="ref">{{@it.newItemTpl}}</option>
                 * </pre>
                 * @editor ExternalComponentChooser
                 * @see headTemplate
+                * @see headPickerTemplate
                 */
                itemTpl: dotTplFnForItem,
                /**
-                * @cfg {String} Режим работы выпадающего списка
-                * @remark
-                * По умолчанию - 'hover'
-                * Если задать 'click', то работа будет по клику
+                * @cfg {String} Устанавливает режим открытия выпадающего списка.
+                * @variant click Открытие клику на заголовок.
+                * @variant hover Открытие по наведению курсора мыши.
                 */
                mode: 'click',
                /**
-                * @cfg {String} Текст заголовка
+                * @cfg {String} Устанавливает текст в заголовке.
                 * @translatable
                 */
                text : '',
                /**
-                * @cfg {String} Текст заголовка в headPickerTemplate
+                * @cfg {String} Устанавливает текст, отображаемый в шапке выпадающего списка используемый (см. {@link headPickerTemplate}).
                 * @remark
-                * Используется только совместно с опцией type = 'titleHeader'
+                * Опция актуальная, если {@link type} = 'titleHeader'.
                 */
                title: '',
                /**
-                * @cfg {String} Стилистическое отображение выпадающего списка
-                * @remark
-                * Возможные значение
-                * <ul>
-                *    <li><b>simple</b> - значение по умолчанию. В выпадающем списке отображаются все доступные записи</li>
-                *    <li><b>duplicateHeader</b> - В выпадающем списке выбранное значение дублируется в шапке</li>
-                *    <li><b>titleHeader</b> - В шапке отображается заголовок, установленный в опции title</li>
-                * </ul>
+                * @cfg {String} Устанавливает режим отображения выпадающего списка.
+                * @variant simple В выпадающем списке отображаются только элементы коллекции.
+                * @variant duplicateHeader В выпадающем списке выбранное значение дублируется в шапке.
+                * @variant titleHeader В шапке отображается текст, установленный в опции {@link title}.
+                * @variant filter Для выпадающих списков, располагающихся на панели фильтрации.
                 */
                type: 'simple',
                /**
                 * @cfg {String} Устанавливает поле иерархии.
                 * @remark
-                * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
+                * По значениям поля иерархии иерархические отношения между элементами коллекции выпадающего списка.
                 */
                hierField: null,
                allowEmptyMultiSelection: false,
@@ -290,14 +295,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _buildTplArgs: function(item) {
-            return {
+            var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
+            return cMerge(defaultArgs, {
                item: item,
-               itemTpl: TemplateUtil.prepareTemplate(this._options.itemTpl),
                defaultId: this._defaultId,
-               displayField: this._options.displayField,
                hierField: this._options.hierField,
                multiselect: this._options.multiselect
-            };
+            });
          },
          setItems: function () {
             /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
@@ -320,6 +324,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      break;
                   }
                }
+            }
+            if (this._isEnumTypeData()) {
+               this.getItems().set(idArray[0]);
             }
             DropdownList.superclass.setSelectedKeys.call(this, idArray);
             this._updateCurrentSelection();
@@ -413,10 +420,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _getIdByRow: function(row){
-            if (!row.length || !row.data('hash')){
+            var itemProjection;
+            if (!row.length || !row.data('hash')) {
                return undefined;
             }
-            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
+            if (this._isEnumTypeData()) {
+               return this._getItemsProjection().getIndexByHash(row.data('hash'));
+            }
+            itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
             return itemProjection ? itemProjection.getContents().getId() : null;
          },
@@ -435,8 +446,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          showPicker: function(ev) {
             if (this.isEnabled()) {
-               var pickerBodyWidth,
-                   pickerHeaderWidth;
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
                if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
@@ -451,16 +460,42 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.showPicker.apply(this, arguments);
 
-               this._pickerBodyContainer.css('max-width', '');
-               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
-               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
-               this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
-               if (pickerHeaderWidth > pickerBodyWidth){
-                  this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
-               }
+               this._calcPickerSize();
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
+            }
+         },
+         _calcPickerSize: function(){
+            var pickerBodyWidth,
+               pickerHeaderWidth,
+               containerWidth,
+               needResizeHead,
+               minResizeWidth = 400; //Минимальная ширина, с которой начнется ресайз шапки.
+
+            //Сбрасываем значения, выставленные при предыдущем вызове метода _calcPickerSize
+            this._pickerBodyContainer.css('max-width', '');
+            this._pickerHeadContainer.css('width', '');
+
+            pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+            pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
+            containerWidth = this.getContainer()[0].clientWidth;
+            needResizeHead = pickerHeaderWidth > minResizeWidth && pickerHeaderWidth > containerWidth;
+
+            //Ширина шапки не больше, чем ширина контейнера
+            if (needResizeHead){
+               this._pickerHeadContainer.width(containerWidth);
+               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth; //изменилась ширина контейрена, нужно взять актуальную
+            }
+
+            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
+            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
+
+            //Контейнер с итемами ресайзится в 2-х случаях
+            //1: Ширина шапки < 400px, ширина контейнера с итемами > 400px => ширина контейнера = 400px, ограничение прописано в less
+            //2: Ширина шапки > 400px => ширина контейнера с итемами = ширине шапки
+            if (pickerHeaderWidth > pickerBodyWidth){
+               this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
             }
          },
          hide: function(){
@@ -508,7 +543,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            var item =  this.getItems().at(0);
+            if (this._isEnumTypeData()){
+               if (this._options.multiselect){
+                  throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
+               }
+               return;
+            }
+            var item = this.getItems().at(0);
             if (item) {
                if (!this._options.emptyValue){
                   this._defaultId = item.getId();
@@ -516,9 +557,37 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
             }
          },
+         _setSelectedItems: function(){
+            //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
+            if (!this._isEnumTypeData()) {
+              DropdownList.superclass._setSelectedItems.apply(this, arguments);
+           }
+         },
+
+         _isEnumTypeData: function(){
+            //TODO избавиться от этого по задаче https://inside.tensor.ru/opendoc.html?guid=711857a8-d8f0-4b34-aa31-e2f1a0d4b07b&des=
+            //Сейчас multiselectable не умеет работать с enum => приходится поддерживать эту логику на уровне выпадающего списка.
+            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Enum');
+         },
+         _setFirstItemAsSelected : function() {
+            //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
+            var items = this.getItems(),
+                id;
+
+            if (this._isEnumTypeData()){
+               id = items.get();
+            }
+            else{
+               id = items && items.at(0) && items.at(0).getId();
+            }
+
+            if (id !== undefined) {
+               this._options.selectedKeys = [id];
+            }
+         },
          _setHasMoreButtonVisibility: function(){
             if (this.getItems()) {
-               var needShowHasMoreButton = this._hasNextPage(this.getItems().getMetaData().more, 0);
+               var needShowHasMoreButton = this.getItems().getMetaData && this._hasNextPage(this.getItems().getMetaData().more, 0);
                if (!this._options.multiselect){
                   this._buttonHasMore.getContainer().closest('.controls-DropdownList__buttonsBlock').toggleClass('ws-hidden', !needShowHasMoreButton);
                }
@@ -569,8 +638,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerResetButton.bind('click', this._resetButtonClickHandler.bind(this));
          },
          _resetButtonClickHandler: function(){
-            this.removeItemsSelectionAll();
-            this.hidePicker();
+            if (this._options.type == 'filter'){
+               this._hideAllowed = true;
+               this._options.selectedKeys = [null];
+               this._notifyOnPropertyChanged('selectedKeys');
+               this.hide();
+            }
+            else{
+               this.removeItemsSelectionAll();
+               this.hidePicker();
+            }
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
@@ -590,9 +667,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                item, pickerContainer, def;
-
-            if(len) {
+                item, def;
+            if (this._isEnumTypeData()){
+               this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
+            }
+            else if(len) {
                def = new Deferred();
 
                if(!this._picker) {
@@ -712,11 +791,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setPickerConfig: function () {
             var pickerClassName,
                offset = {
-                   top: -8,
+                   top: -10,
                    left: -10
                 };
             if (this._options.type == 'duplicateHeader'){
-               offset.top = -10;
                pickerClassName = 'controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
             }
             else if (this._options.type == 'titleHeader'){

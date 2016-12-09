@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBox",
    "html!SBIS3.CONTROLS.ComboBox",
+   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!WS.Data/Collection/RecordSet",
@@ -10,31 +11,52 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   "js!SBIS3.CORE.MarkupTransformer",
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance"
-], function ( constants, Deferred,TextBox, dotTplFn, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
-    * Выпадающий список с выбором значений из набора.
-    * Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.
-    * Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем
-    * отображать данные в выпадающий блок - {@link displayField}.
-    * При отсутствии данных на бизнес-логике будет выведен текст опции {@link emptyHTML}.
-    * Контрол по умолчанию позволяет {@link editable вручную вводить значение}.
+    * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
+    * <br/>
+    * Особенности работы с контролом:
+    * <ul>
+    *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
+    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+    *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
+    *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
+    *    <li>По стандарту максимальная высота выпадающего списка 400px. В некоторых случаях может возникнуть необходимость её изменить.
+    *        Для этого в опции {@link pickerClassName} нужно указать свой класс someClass и в css указать селектор .someClass.controls-ComboBox__picker .controls-ComboBox__scrollContainer, установив свойство max-height в нужное значение</li>
+    * </ul>
+    * <br/>
+    * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+    * <pre>
+    *    <component data-component="SBIS3.CONTROLS.ComboBox">
+    *       <options name="items" type="array" bind="record/MyEnumField"></options>
+    *       <option name="keyField">@Идентификатор</option>
+    *       <option name="displayField">Описание</option>
+    *    </component>
+    * </pre>
+    *
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
+    *
     * @author Крайнов Дмитрий Олегович
-    * @demo SBIS3.CONTROLS.Demo.MyComboBox
-    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Выпадающий список с dataSource
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
+    * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
+    *
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     * @mixes SBIS3.CONTROLS.Selectable
+    * @mixes SBIS3.CONTROLS.DataBindMixin
+    * @mixes SBIS3.CONTROLS.SearchMixin
     *
     * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
+    * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
     *
     * @public
     * @control
@@ -85,6 +107,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFn: dotTplFn,
+      _dotTplFnPicker: dotTplFnPicker,
       /**
        * @typedef {Object} ItemsComboBox
        * @property {String} title Текст пункта меню.
@@ -464,13 +487,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             },
             closeByExternalClick: true,
             targetPart: true,
-            activableByClick: false
+            activableByClick: false,
+            template : MarkupTransformer(this._dotTplFnPicker)({})
          };
       },
 
       _getItemsContainer: function () {
          if (this._picker){
-         	return this._picker.getContainer();
+         	return $('.controls-ComboBox__list', this._picker.getContainer()[0]);
          } else {
          	return null;
          }
@@ -556,19 +580,31 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var noItems = true,
             selKey,
             oldKey = this._options.selectedKey,
+            oldIndex = this._options.selectedIndex,
             oldText = this.getText(),
             self = this;
          items.each(function (item) {
             noItems = false;
             if (self._propertyValueGetter(item, self._options.displayField) == self._options.text) {
-               selKey = item.getId();
-               self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-               self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
-               //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-               if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-                  self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
-                  self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+               //для рекордов и перечисляемого чуть разный механизм
+               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+                  selKey = item.getId();
+                  self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+                  //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+                  if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                  }
                }
+               else {
+                  self._options.selectedIndex = self._getItemsProjection().getIndexBySourceItem(item);
+                  if (oldIndex !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(null, self._options.selectedIndex);
+                     self._drawSelectedItem(null, self._options.selectedIndex);
+                  }
+               }
+
             }
          });
 

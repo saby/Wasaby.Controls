@@ -15,11 +15,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    /**
     * Контрол, отображающий набор данных с иерархической структурой в виде таблицы, плитки или списка.
     * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
-    *
     * @class SBIS3.CONTROLS.TreeCompositeView
     * @extends SBIS3.CONTROLS.TreeDataGridView
+    *
     * @mixes SBIS3.CONTROLS.CompositeViewMixin
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
     *
     * @public
@@ -42,6 +44,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
 
       $protected: {
+         _prevMode: null,
          _options: {
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
@@ -200,6 +203,22 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
        */
       setListFolderTemplate : function(tpl) {
          this._options.listFolderTemplate = tpl;
+      },
+
+      redraw: function() {
+         if (this._options.hierarchyViewMode) {
+            if (!this._prevMode) {
+               this._prevMode = this._options.viewMode;
+               this.setViewMode('table');
+            }
+         }
+         else {
+            if (this._prevMode) {
+               this.setViewMode(this._prevMode);
+            }
+            this._prevMode = null;
+         }
+         TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
       /*
        TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!

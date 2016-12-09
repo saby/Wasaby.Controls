@@ -11,16 +11,17 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
    'use strict';
 
    /**
-    * Контрол, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
-    * @class SBIS3.CONTROLS.ButtonGroupBaseDS
-    * @public
-    * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.DataBindMixin
+    * Класс, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
+    * @class SBIS3.CONTROLS.ButtonGroupBase
     * @extends $ws.proto.CompoundControl
+    *
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    *
+    * @public
     * @author Крайнов Дмитрий Олегович
     */
 
-   var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDS.prototype */ {
+   var ButtonGroupBase = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBase.prototype */ {
       $protected: {
          _options: {
             _defaultItemTemplate: ItemTemplate
