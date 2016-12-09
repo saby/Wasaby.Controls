@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
 
          if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
-            noSaveFilters.push(view.getHierField());
+            noSaveFilters.push(view.getParentProperty());
          }
 
          if(ignoreFiltersList && ignoreFiltersList.length) {
