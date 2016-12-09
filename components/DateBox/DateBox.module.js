@@ -190,14 +190,6 @@ define(
              * @see getDate
              */
             date: null,
-            /**
-             * @cfg {String} Режим уведомления о смене даты.
-             * @variant 'complete' событие onDateChange стреляет только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
-             * @variant 'change' событие onDateChange стреляет при каждом изменении значения даты.
-             * @noShow
-             * @deprecated
-             */
-            notificationMode: 'change',
 
             /**
              * @cfg {String} Режим серализации даты при отправке в бизнес логику. В 140 версии значение по умолчанию datetime. В последующих опция будет убрана, а поведение будет соответствовать auto.
@@ -208,12 +200,25 @@ define(
              * @noShow
              * @deprecated
              */
-            serializationMode: 'auto'
+            serializationMode: 'auto',
+
+            /**
+             * @cfg {String} Режим уведомления о смене даты. Значение по умолчанию textChange.
+             * @variant 'complete' события onDateChange и onTextChange стреляют только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
+             * @variant 'dateChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
+             * @variant 'change' 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения даты.
+             */
+            notificationMode: 'textChange'
          }
       },
 
       _modifyOptions: function(options) {
          var options = DateBox.superclass._modifyOptions.apply(this, arguments);
+
+         if (options.notificationMode === 'change') {
+            options.notificationMode = 'textChange';
+         }
+
          // Нормализуем опцию date и обновляем опцию text
          if (options.date) {
             this._updateOptionsByDate(options.date, options);
@@ -481,7 +486,10 @@ define(
             }
             this._setLastDate(this._options.date);
             this._onTextChanged();
-            this._notifyOnTextChange();
+            if (this._options.notificationMode === 'textChange' || (this._options.notificationMode === 'dateChange' && oldDate !== this._options.date)) {
+               this._notifyOnTextChange();
+               this._notifyOnDateChanged();
+            }
          }
       },
       //TODO: логика валидации находится на уровне TextBoxBase, но сейчас форматные поля не вызывают функции базового контрола поэтому
@@ -510,6 +518,10 @@ define(
                }
             }
             this._notifyOnDateChanged();
+            if (this._options.notificationMode === 'complete') {
+               this._notifyOnTextChange();
+               this._notifyOnDateChanged();
+            }
          }
          DateBox.superclass.setActive.apply(this, arguments);
       },
