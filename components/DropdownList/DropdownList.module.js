@@ -248,12 +248,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 */
                itemTpl: dotTplFnForItem,
                /**
-                * @cfg {String} Устанавливает режим открытия выпадающего списка.
-                * @variant click Открытие клику на заголовок.
-                * @variant hover Открытие по наведению курсора мыши.
-                */
-               mode: 'click',
-               /**
                 * @cfg {String} Устанавливает текст в заголовке.
                 * @translatable
                 */
@@ -302,7 +296,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          $constructor: function() {
             this._publish('onClickMore');
-            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
+            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
             if (!this._picker) {
                if (this._container.hasClass('controls-DropdownList__withoutCross')){
                   this._options.pickerClassName += ' controls-DropdownList__withoutCross';
@@ -334,12 +328,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this.reload();
             this._bindItemSelect();
 
-            if(this._options.mode === 'hover') {
+            if(this._isHoverMode()) {
                this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
                this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
                pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, null));
             }
-            else if (this._options.mode === 'click'){
+            else {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
          },
@@ -496,7 +490,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          showPicker: function(ev) {
             if (this.isEnabled()) {
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
-               if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
+               if (!this._isHoverMode() && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
                }
                var items = this._getPickerContainer().find('.controls-DropdownList__item');
@@ -514,6 +508,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
             }
+         },
+         _isHoverMode: function(){
+            return this._options.type === 'fastDataFilter';
          },
          _calcPickerSize: function(){
             var pickerBodyWidth,
@@ -868,7 +865,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                className: pickerClassName,
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
-               closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
+               closeByExternalOver: this._isHoverMode() && !this._options.multiselect,
                closeByExternalClick : true,
                activableByClick: false,
                targetPart: true,
