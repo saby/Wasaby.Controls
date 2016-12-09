@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
    'js!WS.Data/Di',
    "Core/core-instance",
    "Core/Deferred",
-   "Core/Abstract"
-], function (Di, cInstance, Deferred, Abstract) {
+   "Core/Abstract",
+   "Core/IoC"
+], function (Di, cInstance, Deferred, Abstract, IoC) {
    'use strict';
    /**
     * Перемещает элементы
