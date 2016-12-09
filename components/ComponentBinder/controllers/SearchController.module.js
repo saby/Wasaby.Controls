@@ -96,11 +96,11 @@ define('js!SBIS3.CONTROLS.SearchController',
             if (self._options.searchMode === 'root') {
                root = view._options.root !== undefined ? view._options.root : null;
                //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-               callProjectionMethod('setEventRaising',[false]);
+               callProjectionMethod('setEventRaising',[false, true]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
                view._options._curRoot = root;
-               callProjectionMethod('setEventRaising', [true]);
+               callProjectionMethod('setEventRaising', [true, true]);
             }
          });
 
