@@ -8,7 +8,17 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'Core/core-functions'
 ], function(FilterPanelChooserBase, RadioGroup, chooserTpl , cFunctions) {
    'use strict';
-
+   /**
+    * Класс редактора "Набор радиокнопок".
+    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef FilterPanelItem}).
+    * <br/>
+    * Реализует выборку идентификатора из списка {@link SBIS3.CONTROLS.Ragiogroup}.
+    * <br/>
+    * @class SBIS3.CONTROLS.FilterPanelChooser.RadioGroup
+    * @extends SBIS3.CONTROLS.FilterPanelChooserBase
+    * @author Борисов Петр Сергеевич
+    * @demo SBIS3.CONTROLS.Demo.MyFilterView
+    */
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
       $protected: {
          _options: {
