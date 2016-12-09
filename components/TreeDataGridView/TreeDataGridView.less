@@ -49,12 +49,19 @@
       }
    }
 }
-.controls-TreeDataGridView.controls-ListView__multiselect__off {
-   .controls-DataGridView__table {
-      .controls-DataGridView__tbody {
-         .controls-DataGridView__td {
-            &.controls-DataGridView__firstContentCell {
-               padding-left: @tree-view-first-td-padding-left;
+.controls-TreeDataGridView {
+   .controls-DataGridView__firstContentCell {
+      > .controls-TreeView__folderTitle, > .controls-DataGridView__columnValue {
+         margin-left: 18px;
+      }
+   }
+   &.controls-ListView__multiselect__off {
+      .controls-DataGridView__table {
+         .controls-DataGridView__tbody {
+            .controls-DataGridView__td {
+               &.controls-DataGridView__firstContentCell {
+                  padding-left: @tree-view-first-td-padding-left;
+               }
             }
          }
       }
