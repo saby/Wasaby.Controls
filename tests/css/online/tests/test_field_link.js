@@ -236,7 +236,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				actions.executeJS(function (window) {
                     window.$('.capture').height(150);
                 });
-				actions.click('.controls-FieldLink__showAllLinks');
+				actions.click('.controls-FieldLink__copyShowAll');
 				actions.wait(500);
 				actions.mouseMove(this.box);
             })

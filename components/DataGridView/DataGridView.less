@@ -41,7 +41,12 @@
       }
       .controls-DataGridView__table .controls-DataGridView__tr:first-child {
         .controls-DataGridView__td{
-          border-top-color: @data-grid-first-cell-separator-color;
+          border-top-color: @data-grid-edge-cell-separator-color;
+        }
+      }
+      .controls-DataGridView__table .controls-DataGridView__tr:last-child {
+        .controls-DataGridView__td{
+          border-bottom-color: @data-grid-edge-cell-separator-color;
         }
       }
    }
@@ -118,6 +123,7 @@
                background-color: @data-grid-row-selected-bg;
             }
             .controls-DataGridView__td {
+               background-color: @data-grid-row-selected-bg;
                color: @data-grid-row-selected-cell-text-color;
             }
          }
@@ -258,7 +264,8 @@
       vertical-align: @data-grid-cell-check-box-vertical-align;
       overflow: hidden;
       .controls-ListView__itemCheckBox {
-         margin: @data-grid-checkbox-margin;
+         top: @data-grid-check-box-top;
+         left: @data-grid-check-box-left;
       }
    }
 

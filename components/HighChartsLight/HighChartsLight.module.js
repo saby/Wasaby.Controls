@@ -13,7 +13,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
 
    /**
     * Диаграмма HighChartsLight
-    * @class HighChartsLight
+    * @class SBIS3.CONTROLS.HighChartsLight
     * @extends $ws.proto.Control
     * @control
     * @author Крайнов Дмитрий Олегович
@@ -24,7 +24,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
     * <component data-component='SBIS3.CONTROLS.HighChartsLight'>
     * </component>
     */
-   var HighChartsLight = BaseControl.Control.extend(/** @lends HighChartsLight.prototype */{
+   var HighChartsLight = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS.HighChartsLight.prototype */{
       _dotTplFn : dotTpl,
       $protected : {
          _chartObj : null,

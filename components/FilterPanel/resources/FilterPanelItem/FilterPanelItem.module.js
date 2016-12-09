@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
     * Миксин, задающий любому контролу поведение работы с набором фильтров.
     * @mixin SBIS3.CONTROLS.FilterPanelItem
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Авраменко Алексей Сергеевич
     */
 
    var

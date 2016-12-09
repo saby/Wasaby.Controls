@@ -3,11 +3,15 @@
 
 @gray-dark-color:                         #666;
 @gray-color:                              #999;
+@gray-lamantin-color:                     #8991A9;
 @gray-light-color:                        #E4E4E4;
 @gray-ccc-color:                          #CCC;
 @lightgray-color:                         #CBD5E5;
 @darkcyan-color:                          #0055BB;
 @dodgerblue-color:                        #0066FF;
+@red-color:                               #ef463a;
+@green-color:                             #53A52C;
+@purple-color:                            #9122BF;
 
 @blue-dark-color:                         #313E78;
 
@@ -17,7 +21,7 @@
 
 @icon-color-attention:                    #FEC63F;
 @icon-color-done:                         #72be44;
-@icon-color-error:                        #ef463a;
+@icon-color-error:                        @red-color;
 @icon-color-primary:                      @default-color;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
@@ -1816,7 +1820,7 @@
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
-@data-grid-first-cell-separator-color:          #EAEAEA;
+@data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1830,8 +1834,8 @@
 @data-grid-td-visible-checkbox-width:           24px;
 @data-grid-td-hidden-checkbox-width:            8px;
 @data-grid-td-checkbox-width-without-marker:    20px;
-//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
-@data-grid-checkbox-margin:                     2px 0 -2px 0;
+@data-grid-check-box-top:                       2px;
+@data-grid-check-box-left:                      0px;
 
 @data-grid-table-layot: 								fixed;
 // ---------- //
@@ -2202,6 +2206,7 @@
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
 @controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;

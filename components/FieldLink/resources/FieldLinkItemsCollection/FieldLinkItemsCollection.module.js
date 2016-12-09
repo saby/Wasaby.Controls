@@ -124,6 +124,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
                поэтому добавляю проверку на видимость выпадающего списка */
             args.needSort = this.isPickerVisible();
+            /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
+               в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
+            args.needTitle = !this._options.itemContentTpl;
             return args;
          },
 
