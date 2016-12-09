@@ -104,6 +104,24 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             value: false,
             resetValue: false,
             template: 'js!SBIS3.CONTROLS.FilterPanelBoolean'
+         },
+         {
+            caption: 'Оплата',
+            expanded: true,
+            id: 'Оплата',
+            value: 'yes',
+            resetValue: null,
+            template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
+            properties: {
+               items: new RecordSet({
+                  rawData:[
+                     { id: 'yes', title: 'Оплачено' },
+                     { id: 'no', title: 'Не оплачено' }
+                  ],
+                  idProperty: 'id'
+               }),
+               editor: 'radio'
+            }
          }
       ];
 
