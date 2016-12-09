@@ -1155,8 +1155,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
          this.setFilter(filter, true);
-         this._notify('onBeforeSetRoot');
-         this._hier = this._getHierarchy(this._options._items, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
@@ -1167,13 +1165,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
+         this._hier = this._getHierarchy(this.getItems(), key);
       },
-      _getHierarchy: function(dataSet, key){
+      _getHierarchy: function(items, key){
          var record, parentKey,
             hierarchy = [];
-         if (dataSet){
+         if (items && items.getCount()){
             do {
-               record = dataSet.getRecordById(key);
+               record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
                   hierarchy.push({
@@ -1185,7 +1184,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   });
                }
                key = parentKey;
-            } while (key);
+            // пока не дойдем до корня (корень может быть undefined)
+            } while (key && key != this.getRoot());
          }
          return hierarchy;
       },
