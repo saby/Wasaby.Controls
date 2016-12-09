@@ -152,6 +152,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
+            // Баг в IE версии старше 10, если повесить стиль overflow-y:scroll, то scrollHeight увеличивается на 1px,
+            // поэтому мы вычтем его.
+            if (cDetection.IEVersion > 10) {
+               return this._content[0].scrollHeight - 1;
+            }
             return this._content[0].scrollHeight;
          },
 
