@@ -3319,6 +3319,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          selectedMoveTo: function(target) {
             var selectedItems = this.getSelectedItems(false);
+            if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
+               selectedItems = selectedItems.toArray();
+            }
             this._getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
