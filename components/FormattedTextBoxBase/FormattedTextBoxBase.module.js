@@ -1040,7 +1040,14 @@ define(
             child = !this._getFormatModel().model[0].isGroup ? 1 : 0,
             startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
             startPosition = 0;
-         _moveCursor(startContainer, startPosition);
+         //В IE если ставить курсор синхронно по событию focusin, то он не устанавливается.
+         if (constants.browser.isIE) {
+            setTimeout(function() {
+               _moveCursor(startContainer, startPosition);
+            }, 0);
+         } else {
+            _moveCursor(startContainer, startPosition);
+         }
       },
 
       _setEnabled: function(enabled) {
