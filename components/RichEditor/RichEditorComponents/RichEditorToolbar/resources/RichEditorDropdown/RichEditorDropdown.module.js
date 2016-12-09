@@ -18,9 +18,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                multiselect: false,
                type: 'fastDataFilter',
                headTemplate: headerTemplate,
-               itemTpl: itemTemplate,
-               //TODO: 1 января 2017 после боя курантов и бокала шампанского подключиться удалённо к рабочему компьютеру и удалить этот код
-               mode: cConstants.browser.isIE8 ? 'hover' : 'click'
+               itemTpl: itemTemplate
             }
          },
          _modifyOptions: function (options) {
@@ -41,6 +39,9 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                this._selectedItemContainer.html(headTpl);
                this._setHasMoreButtonVisibility();
             }.bind(this))
+         },
+         _isHoverMode: function () {
+            return false;
          }
       });
    return RichEditorDropdown;

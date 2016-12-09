@@ -35,13 +35,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
-               _buildTplArgs: function(cfg){
-                  var tplOptions = cfg._buildTplArgsSt.apply(this, arguments);
-                  tplOptions.mode = cfg.mode;
-                  return tplOptions;
-               },
                itemTpl: ItemTpl,
-               mode: 'hover',
                displayField: '',
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
