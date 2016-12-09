@@ -143,12 +143,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _initScrollbar: function(){
-            var classScrollbar = this._container.hasClass("controls-ScrollContainer__scrollbar-dark") ? "controls-Scrollbar__dark" : "";
             this._scrollbar = new Scrollbar({
                element: $('.controls-ScrollContainer__scrollbar', this._container),
                contentHeight: this._getScrollHeight(),
-               parent: this,
-               className: classScrollbar
+               parent: this
             });
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },

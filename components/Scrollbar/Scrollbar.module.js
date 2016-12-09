@@ -16,8 +16,6 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
        *
        * @mixin SBIS3.CONTROLS.DragNDropMixinNew
        *
-       * @cssModifier controls-Scrollbar__dark Устанавливает темный Scrollbar
-       *
        * @control
        * @private
        * @autor Крайнов Дмитрий Олегович
