@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * @event onDataLoad При загрузке данных
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
+        * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -927,11 +927,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                   }
                }
-
                removedElements.push(targetElement.get(0));
             }
          }
          removedElements.remove();
+      },
+
+      _getSourceNavigationType: function(){
+         if (this.getDataSource() && this.getDataSource()._options.options){
+            return this.getDataSource()._options.options.navigationType;
+         }
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {

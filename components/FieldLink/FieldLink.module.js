@@ -175,8 +175,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _selectorAction: null,   /* Action выбора */
              _isDynamicInputWidth: false,
              _lastFieldLinkWidth: null,
-             _afterFieldWrapper: null,
-             _beforeFieldWrapper: null,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
@@ -298,6 +296,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  */
                 useSelectorAction: false,
                 /**
+                 * @cfg {String} Устанавливает режим открытия компонента выбора.
+                 * @variant dialog Открытие производится в новом диалоговом окне.
+                 * @variant floatArea Открытие производится на всплывающей панели.
+                 */
+                selectMode: 'floatArea',
+                /**
                  * @noshow
                  * @depreacted
                  */
@@ -310,10 +314,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  self = this;
 
              this._publish('onItemActivate');
-
-             /* Проиницализируем переменные */
-             this._afterFieldWrapper = this._container.find('.controls-TextBox__afterFieldWrapper');
-             this._beforeFieldWrapper = this._container.find('.controls-TextBox__beforeFieldWrapper');
              /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
                 а базовую линию меток будем выставлять через line-height */
              this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
@@ -626,7 +626,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
                          поэтому считать надо. */
                    if (needResizeInput || (isEnabled && this._options.multiselect && itemsCount === 1)) {
-                      additionalWidth = isEnabled ? this._afterFieldWrapper.outerWidth() : 0;
+                      additionalWidth = isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0;
 
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
@@ -739,7 +739,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @returns {string}
            */
           getCaption: function() {
-             IoC.resolve('ILogger').log('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
+             IoC.resolve('ILogger').error('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
              return this.getTextValue();
           },
 
@@ -836,20 +836,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
-                self._dataLoadedCallback();
+                /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
+                   надо на это проверить */
+                if(!self.isVisibleWithParents()) {
+                   self._lastFieldLinkWidth = 0;
+                }
                 linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
              });
-          },
-
-          _dataLoadedCallback: function() {
-             /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
-                надо на это проверить */
-             if(!this.isVisibleWithParents()) {
-                this._lastFieldLinkWidth = 0;
-             }
-             FieldLink.superclass._dataLoadedCallback.apply(this, arguments);
           },
 
           _drawSelectedItems: function(keysArr) {
@@ -967,7 +962,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Конфигурация пикера
            */
           _setPickerConfig: function () {
-             var cfg = {
+             return {
                 corner: 'bl',
                 target: this._container,
                 opener: this,
@@ -999,22 +994,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }.bind(this)
                 }
              };
-             // Придрот для айпада. Выезжающая клавиатура может скрывать выпадашку, так как та влезает под нее. Поэтому на айпаде всегда открываем автодополнение вверх
-             if (constants.browser.isMobileIOS){
-                cfg.corner = 'tl';
-                cfg.verticalAlign.side = 'bottom';
-             }
-             return cfg;
           },
 
           _isSuggestPickerRevertedVertical: function() {
-             var revertedVertical = this._picker.getContainer().hasClass('controls-popup-revert-vertical');
-
-             if(constants.browser.isMobileIOS) {
-                revertedVertical = !revertedVertical;
-             }
-
-             return revertedVertical;
+             return this._picker.getContainer().hasClass('controls-popup-revert-vertical');
           },
 
           /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
@@ -1107,8 +1090,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _getInputWidth: function() {
              var width = this._container[0].clientWidth -
-                 ( this._afterFieldWrapper.outerWidth() +
-                   this._beforeFieldWrapper.outerWidth() +
+                 ( this._getAfterFieldWrapper().outerWidth() +
+                   this._getBeforeFieldWrapper().outerWidth() +
                    INPUT_WRAPPER_PADDING );
 
              /* Когда поле связи скрыто, могут происходить неправильные расчёты, самый дешёвый способ этого избежать,
@@ -1145,9 +1128,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
 
           destroy: function() {
-             this._afterFieldWrapper = undefined;
-             this._beforeFieldWrapper = undefined;
-
              if(this._linkCollection) {
                 this._linkCollection.destroy();
                 this._linkCollection = undefined;

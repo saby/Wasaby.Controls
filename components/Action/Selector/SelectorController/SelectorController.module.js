@@ -15,8 +15,11 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        /**
         * Описание логики выбора из диалога/панели.
+        * @class SBIS3.CONTROLS.SelectorController
+        * @extends SBIS3.CORE.CompoundControl
         * @public
         * @author Крайнов Дмитрий Олегович
+        * @control
         */
        var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.SelectorController.prototype  */{
           $protected: {

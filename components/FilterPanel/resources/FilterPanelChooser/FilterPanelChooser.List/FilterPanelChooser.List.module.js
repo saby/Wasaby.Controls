@@ -29,9 +29,20 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'use strict';
 
     /**
-     * @author Крайнов Дмитрий Олегович
+     * Класс редактора "Список".
+     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
+     * <br/>
+     * Реализует выборку идентификаторов из списка {@link SBIS3.CONTROLS.ListView}.
+     * <br/>
+     * По умолчанию отображаются только 3 записи списка.
+     * Чтобы подгрузить все записи, используют кнопку "Все", которая расположена под списком, или команду {@link showFullList}.
+     * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}. При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
+     * <br/>
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
      * @extends SBIS3.CONTROLS.FilterPanelChooserBase
+     * @author Сухоручкин Андрей Сергеевич
+     *
+     * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
     var FilterPanelChooserList = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.List.prototype */ {
@@ -42,14 +53,27 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
                 _getRecordsForRedraw: getRecordsForRedraw,
                 _itemsSortMethod: itemsSortMethod,
                 chooserTemplate: chooserTpl,
+                /**
+                 * @cfg {String} Устанавливает шаблон, отображаемый под списком.
+                 * @remark
+                 * Шаблон по умолчанию реализует кнопку "Все", клик по которой подгружает все записи списка.
+                 * Шаблон должен быть реализован только на <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизаторе</a>
+                 * @see captionFullList
+                 * @see chooserTemplate
+                 */
                 afterChooserWrapper: footerTpl,
                 /**
-                 * @cfg {String} Текст отображаемый на кнопке, по которой отображаются все записи.
-                 **/
+                 * @cfg {String} Устанавливает текст, отображаемый на кнопке под списком.
+                 * @remark
+                 * Кнопка реализована в шаблоне {@link afterChooserWrapper}. Клик по кнопке подгружает все записи списка.
+                 * @see afterChooserWrapper
+                 */
                 captionFullList: 'Все',
                 /**
-                 * @cfg {String} Поле записи, в котором лежит количественное значения наименования.
-                 **/
+                 * @cfg {String} Устанавливает поле, в котором лежит количественное значения наименования.
+                 * @see keyField
+                 * @see displayField
+                 */
                 countField: 'count'
             },
             _listView: undefined
@@ -106,7 +130,11 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _updateValue: function() {
             this._setValue(cFunctions.clone(this._getListView().getSelectedKeys()));
         },
-
+        /**
+         * Инициирует подгрузку всех записей списка.
+         * @param {Boolean} toggle
+         * @command showFullList
+         */
         _toggleFullState: function(toggle) {
             showFullList = toggle;
             this._getListView().redraw();

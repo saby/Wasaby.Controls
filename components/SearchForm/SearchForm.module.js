@@ -53,17 +53,18 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       },
 
       $constructor:function () {
-         var self = this;
+         var self = this,
+             afterFieldWrapper = this._getAfterFieldWrapper();
 
          this.subscribe('onTextChange', function(e, text) {
-            $('.js-controls-SearchForm__reset', self.getContainer().get(0)).toggleClass('ws-hidden', text == '');
+            $('.js-controls-SearchForm__reset', afterFieldWrapper).toggleClass('ws-hidden', text == '');
          });
 
-         $('.js-controls-SearchForm__reset', this.getContainer().get(0)).click(function() {
-            self.resetSearch();
+         afterFieldWrapper.on('click', '.js-controls-SearchForm__reset', function() {
+            self.resetSearch()
          });
 
-         $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
+         afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
                self.applySearch(true);
             }

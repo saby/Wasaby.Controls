@@ -12,5 +12,7 @@
     <option name="command">showSelector</option>
 </component>
 {{? it.useSelectorAction}}
-    <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="FieldLinkSelectorAction"></component>
+    <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="FieldLinkSelectorAction">
+        <option name="mode">{{=it.selectMode}}</option>
+    </component>
 {{?}}
