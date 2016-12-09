@@ -6,14 +6,20 @@
       font-weight: bold;
       background-color: #F4F4F4;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+
+      .controls-Menu-headWrapper {
+         display: flex;
+         align-items: center;
+      }
       .controls-Menu__header-caption {
          color: @blue-dark-color;
-         vertical-align: top;
-         position: relative;
-         top: -1px;
+         flex-shrink: 0;
       }
       .controls-Menu__header-icon{
          color: @button-icon-color-hover !important;
+         position: relative;
       }
       .controls-Menu__header-icon + .controls-Menu__header-caption{
          padding-left: 0;
@@ -43,19 +49,25 @@
    }
 }
 
-.ws-is-mobile-platform, .ws-is-firefox  {
-// в заголовке меню на айпаде/ff текст и иконка съезжают на пиксель вниз
+.ws-is-firefox {
    .controls-Menu {
-      &:not(.controls-Menu__big-header) {
-         .controls-Menu__header {
-            .icon-16 + .controls-Menu__header-caption {
-               top: -2px;
-            }
+      .controls-Menu__header {
+         .icon-24 {
+            top: -1px;
+            position: relative;
          }
       }
-      &.controls-Menu__big-header {
-         .icon-24 + .controls-Menu__header-caption {
-            top: 3px;
+   }
+}
+
+// удалить в .230
+.ws-is-ie8, .ws-is-ie9 {
+   .controls-Menu {
+      .controls-Menu__header {
+         .controls-Menu__header-caption {
+            vertical-align: top;
+            position: relative;
+            top: -1px;
          }
       }
    }
