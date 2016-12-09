@@ -150,15 +150,52 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * <pre>
                 *    <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
                 * </pre>
+                * Шаблон, который используется по умолчанию:
+                * <pre>
+                *    <div class="controls-DropdownList__beforeCaptionWrapper">
+                *       <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                *    </div>
+                *    <div class="controls-DropdownList__textWrapper">
+                *       <span class="controls-DropdownList__text">{{=it.text}}</span>
+                *    </div>
+                *    <div class="controls-DropdownList__afterCaptionWrapper">
+                *       <i class="controls-DropdownList__crossIcon icon-16 icon-size icon-Close icon-disabled action-hover"></i>
+                *    </div>
+                * </pre>
                 * @editor ExternalComponentChooser
                 * @see headPickerTemplate
                 * @see itemTpl
                 */
                headTemplate: dotTplFnHead,
                /**
-                *  @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
-                *  @see headTemplate
-                *  @see itemTpl
+                * @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
+                * @example
+                * Подключение, импорт в переменную и передача шаблона в переменную:
+                * <pre>
+                * define('js!SBIS3.MyArea.MyComponent',
+                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadPickerTpl' ],
+                *    function(..., myHeadPickerTpl){
+                *       ...
+                *       $protected: {
+                *          _options: {
+                *             myHeadPickerTemplate: myHeadPickerTpl
+                *          }
+                *       }
+                *       ...
+                * });
+                * </pre>
+                * Передача шаблона в опцию компонента:
+                * <pre>
+                *    <option name="headPickerTemplate" type="ref">{{@it.myHeadPickerTemplate}}</option>
+                * </pre>
+                * Шаблон, который используется по умолчанию:
+                * <pre>
+                *    <div class="controls-DropdownList__pickerHead">
+                *       <span class="controls-DropdownList__pickerHead-text">{{=(it.title || it.text)}}</span>
+                *    </div>
+                * </pre>
+                * @see headTemplate
+                * @see itemTpl
                 */
                headPickerTemplate: dotTplFnPickerHead,
                /**
@@ -192,6 +229,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * Передача шаблона в опцию компонента:
                 * <pre>
                 *     <option name="itemTpl" type="ref">{{@it.newItemTpl}}</option>
+                * </pre>
+                * Шаблон, который используется по умолчанию:
+                * <pre>
+                *    <div class="controls-DropdownList__item{{?it.className}} {{=it.className}}{{?}}{{?it.multiselect}} controls-DropdownList__multiselect{{?}}{{?it.item.get && it.item.get('isEmptyValue')}} controls-DropdownList__defaultItem{{?}}{{?it.item.get && it.item.get(it.hierField)}} controls-DropdownList__child{{?}}{{?((it.item.getId && it.item.getId()) === it.defaultId)}} controls-ListView__defaultItem{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{?it.item.getId}}{{=it.item.getId()}}{{?}}">
+                *        {{?it.multiselect}}
+                *        <div class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></div>
+                *        {{?}}
+                *        <div class="controls-DropdownList__itemTextWrapper controls-DropdownList__itemTextWrapper-height">
+                *            <div class="controls-DropdownList__item-text" title="{{=it.getPropertyValue(it.item, it.displayField)}}">{{=it.getPropertyValue(it.item, it.displayField)}}</div>
+                *            <div class="controls-DropdownList__item-text-shadow"></div>
+                *        </div>
+                *    </div>
                 * </pre>
                 * @editor ExternalComponentChooser
                 * @see headTemplate
