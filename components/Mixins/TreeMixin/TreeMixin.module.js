@@ -1087,7 +1087,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       _getHierarchy: function(items, key){
          var record, parentKey,
             hierarchy = [];
-         if (items){
+         if (items && items.getCount()){
             do {
                record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.hierField) : null;
@@ -1102,7 +1102,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                key = parentKey;
             // пока не дойдем до корня (корень может быть undefined)
-            } while (key != this.getRoot());
+            } while (key && key != this.getRoot());
          }
          return hierarchy;
       },
