@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              * @cfg {String} Устанавливает поле отображения.
              * @remark
              * Опция актуальна для использования, когда источник данных имеет иерархическую структуру.
-             * @see hierField
+             * @see parentProperty
              */
             displayField: undefined,
             /**
@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
          if (cfg.parentProperty && !cfg.nodeProperty) {
             cfg.nodeProperty = cfg.parentProperty + '@';
          }
-         MergeAction.superclass._modifyOptions.apply(this, arguments);
+         return MergeAction.superclass._modifyOptions.apply(this, arguments);
       },
 
       _notifyOnExecuted: function (meta) {

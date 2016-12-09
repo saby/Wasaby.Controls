@@ -121,7 +121,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             if (cfg.parentProperty && !cfg.nodeProperty) {
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
-            InteractiveMove.superclass._modifyOptions.apply(this, arguments);
+            return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
          _doExecute: function(meta) {

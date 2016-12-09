@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (cfg.parentProperty && !cfg.nodeProperty) {
             cfg.nodeProperty = cfg.parentProperty + '@';
          }
-         Mover.superclass._modifyOptions.apply(this, arguments);
+         return Mover.superclass._modifyOptions.apply(this, arguments);
       },
       moveRecordDown: function(record) {
          this._moveToOneRow(record, true);
