@@ -517,7 +517,6 @@ define(
                   this._setDate(date);
                }
             }
-            this._notifyOnDateChanged();
             if (this._options.notificationMode === 'complete') {
                this._notifyOnTextChange();
                this._notifyOnDateChanged();
