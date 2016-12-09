@@ -2164,6 +2164,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          
          _addItems: function(newItems, newItemsIndex, groupId){
+            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
+            // стреляет для каждой группы по отдельности, поэтому будет переставлять флаг о необходимости компенсации
+            // каждый раз при добавлении элементов
+            this._needScrollCompensation = this._infiniteScrollState.mode == 'up';
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -2438,14 +2442,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
-         },
-
-         _addItems: function(){
-            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
-            // стреляет для каждой группы по отдельности, поэтому будет переставлять флаг о необходимости компенсации
-            // каждый раз при добавлении элементов
-            this._needScrollCompensation = this._infiniteScrollState.mode == 'up';
-            ListView.superclass._addItems.apply(this, arguments);
          },
 
          _updateScrolOffset: function(){
