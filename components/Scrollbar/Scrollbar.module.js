@@ -9,6 +9,19 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
       var BROWSER_SCROLLBAR_MIN_HEIGHT = 50;
 
+      /**
+       * Тонкий скролл.
+       * @class SBIS3.CONTROLS.Scrollbar
+       * @extends SBIS3.CONTROLS.CompoundControl
+       *
+       * @mixin SBIS3.CONTROLS.DragNDropMixinNew
+       *
+       * @cssModifier controls-Scrollbar__dark Устанавливает темный Scrollbar
+       *
+       * @control
+       * @private
+       * @autor Крайнов Дмитрий Олегович
+       */
       var Scrollbar = CompoundControl.extend([DragNDropMixinNew], {
          _dotTplFn: dotTplFn,
 
