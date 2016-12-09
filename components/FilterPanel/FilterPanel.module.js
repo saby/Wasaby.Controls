@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * @mixes SBIS3.CONTROLS.Expandable
     *
-    * @demo SBIS3.CONTROLS.Demo.MyFilterPanel
+    * @demo SBIS3.CONTROLS.Demo.TestFilterPanel Временный демонстрационный пример без возможности редактировать контрол SBIS3.CONTROLS.FilterPanel. Расширенная версия демонстрационного примера с возможностью редактирования будет доступна позже.
     */
    var
       ITEM_FILTER_ID          = 'id',
