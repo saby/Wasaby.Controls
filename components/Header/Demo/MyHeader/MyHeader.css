@@ -1,0 +1,48 @@
+*:focus {
+    outline: none;
+}
+
+.position {
+    margin: 20px;
+    width: 1000px;
+}
+
+.controls-Header__mainArea {
+    width: 70%;
+    bottom: 15px;
+}
+
+
+.controls-Header .TextBox {
+    border-style: dashed !important;
+    border-color: transparent;
+    padding: 0 6px;
+    border-radius: 4px;
+    margin: 2px 0;
+    background: transparent !important;
+    color: inherit;
+    width: 100%;
+}
+
+.controls-Header__editing.controls-Header__whiteTheme .TextBox:hover {
+    border-color: #000;
+}
+.controls-Header__editing.controls-Header__whiteTheme .TextBox {
+    border-color: #999;
+}
+
+.controls-Header__whiteTheme .TextBoxContainer {
+    color: #313E78;
+}
+
+.controls-Header__editing.controls-Header__blackTheme .TextBox:hover {
+    border-color: #fff;
+}
+
+.controls-Header__editing.controls-Header__blackTheme .TextBox {
+    border-color: #999;
+}
+
+.controls-Header__blackTheme .TextBoxContainer {
+    color: #fff;
+}

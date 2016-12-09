@@ -1,0 +1,178 @@
+.controls-Header {
+   .controls-Header_header {
+      height: 100px;
+      position: relative;
+
+      .controls-Header__imageContainer {
+         overflow: hidden;
+         height: 100%;
+         display: flex;
+         align-items: center;
+
+         .controls-Header__image {
+            width: 100%;
+            z-index: 1;
+         }
+      }
+
+      .controls-Header__mainArea {
+         z-index: 3;
+         position: absolute;
+         left: 110px;
+      }
+
+      .controls-Header__logo {
+         width: 96px;
+         height: 96px;
+         z-index: 10;
+         position: absolute;
+         left: 10px;
+         bottom: -20px;
+         border-radius: 8px;
+      }
+
+      .controls-Header__overlay {
+         position: absolute;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         z-index: 2;
+      }
+   }
+
+   .controls-Header_footer {
+      position: relative;
+
+      .controls-Header__beginEdit {
+         position: absolute;
+         right: 5px;
+         top: 7px;
+      }
+
+      .controls-Header_editingPanel {
+         display: none;
+         width: 100%;
+         height: 30px;
+         position: absolute;
+         background-color: #f0f5fb;
+         z-index: 100;
+         top: 0;
+
+         .controls-EditPanel__toolbar {
+            position: absolute;
+            left: 120px;
+            line-height: 30px;
+         }
+
+         .controls-EditPanel__cancelEdit {
+            position: absolute;
+            right: 0;
+            top: 3px;
+         }
+
+         .controls-EditPanel__commitEdit {
+            position: absolute;
+            right: 40px;
+            top: 3px;
+         }
+
+         .controls-EditPanel__sliderBlock {
+            display: inline-block;
+            position: absolute;
+            right: 80px;
+            top: 3px;
+            height: 24px;
+            color: #ccc;
+
+            .controls-EditPanel__sliderBlock-whiteLabel, .controls-EditPanel__sliderBlock-blackLabel {
+               margin: 2px 8px 0;
+            }
+
+            .controls-EditPanel__sliderBlock-whiteLabel {
+               float: right;
+            }
+
+            .controls-EditPanel__sliderBlock-blackLabel {
+               float: left;
+            }
+
+            .controls-EditPanel__slider {
+               display: inline-block;
+               width: 200px;
+               padding-top: 0;
+               height: 24px;
+               line-height: 24px;
+            }
+         }
+      }
+   }
+
+   &.controls-Header__editing {
+
+      .controls-Header__logo {
+         z-index: 110;
+      }
+
+      .controls-Header_footer {
+         .controls-Header__beginEdit {
+            display: none;
+         }
+         .controls-Header_editingPanel {
+            display: block;
+         }
+      }
+   }
+
+   &.controls-Header__logoInTabs:not(.controls-Header__withoutLogo) {
+      .controls-Header_footer {
+         .controls-TabButtons {
+            .controls-TabButton:first-child {
+               width: 110px;
+
+               .controls-TabButton__caption {
+                  position: absolute;
+                  width: 96px;
+                  height: 110px;
+                  bottom: 0;
+                  /*скрываем внутренности tabButton'а*/
+                  font-size: 0;
+                  * > {
+                     display: none;
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   &.controls-Header__withoutLogo {
+      .controls-Header__logo {
+         display: none;
+      }
+
+      .controls-Header__mainArea {
+         left: 10px;
+      }
+   }
+
+
+
+   &.controls-Header__whiteTheme {
+      .controls-Header__overlay {
+         background-color: #fff;
+      }
+   }
+
+   &.controls-Header__blackTheme {
+      .controls-Header__overlay {
+         background-color: #000;
+      }
+   }
+
+   &.controls-Header__withoutTheme {
+      .controls-Header__imageContainer {
+         display: none;
+      }
+   }
+}
