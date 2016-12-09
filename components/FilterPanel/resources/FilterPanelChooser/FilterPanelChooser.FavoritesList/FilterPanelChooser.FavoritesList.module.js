@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
                 /**
                 * @cfg {WS.Data/Collection/RecordSet} Набор избранных записей.
                 **/
-                favorites: undefined,
+                favorites: [],
                 favoritesCount: undefined
             },
             _favoritesCheckBox: undefined
@@ -47,6 +47,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
 
         _modifyOptions: function() {
             var opts = FilterPanelChooserFavorites.superclass._modifyOptions.apply(this, arguments);
+            if (Array.isArray(opts.favorites)) {
+                IoC.resolve('ILogger').log('items', 'Array type option is deprecated. Use WS.Data/Collection/RecordSet.');
+                opts.favorites = new RecordSet({
+                    rawData: opts.favorites,
+                    idProperty: opts.keyField
+                });
+            }
             opts.favoritesIsChecked = favoritesIsChecked(opts.value, opts.favorites, opts.keyField);
             return opts;
         },

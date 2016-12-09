@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 /**
                  * @cfg {WS.Data/Collection/RecordSet} Набор элементов из которых будет производиться выбор.
                  **/
-                items: undefined,
+                items: [],
                 value: [],
                 keyField: 'id',
                 displayField: 'title',
