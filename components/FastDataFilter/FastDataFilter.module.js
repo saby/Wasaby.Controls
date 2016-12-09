@@ -100,13 +100,16 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             this._container.removeClass('ws-area');
          },
          _drawItemsCallbackSync: function(){
+            this._setSelectionToItemsInstances();
+         },
+
+         _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
             for (var i in instances) {
                if (instances.hasOwnProperty(i)) {
                   this._subscribeItemToHandlers(instances[i])
                }
             }
-            this._setSelectionToItemsInstances();
             this._recalcDropdownWidth();
          },
          _getCurrentContext : function(){
