@@ -530,7 +530,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
-            if (this._options.emptyValue){
+            if (this._isEmptyValueSelected()){
                this._options.selectedKeys = [null];
                this._drawSelectedValue(null, [this._emptyText]);
             }
@@ -540,6 +540,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
 
+         },
+         _isEmptyValueSelected: function(){
+            return this._options.emptyValue && this.getSelectedKeys[0] == null;
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
