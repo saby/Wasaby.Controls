@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Function}
              * @see editArrow
-             * @depricated Опция устарела и будет удалена в версии 3.7.5. Используйте {@link editArrow}.
+             * @deprecated Опция устарела и будет удалена в версии 3.7.5. Используйте {@link editArrow}.
              */
             arrowActivatedHandler: undefined,
             /**
