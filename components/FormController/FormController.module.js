@@ -640,19 +640,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onReadModel'
             },
             self = this,
-            readDeferred,
-            key;
+            key = (config && config.key) || this._options.key,
+            readDeferred;
 
-         //TODO Выпилить в 200, все должны уже блыи перейти на объект
-         if (typeof(config) !== 'object'){
-            key = config;
-            config = {};
-            IoC.resolve('ILogger').log('FormController', 'команда read в качестве аргумента принимает объект');
-         }
-         else {
-            key = config.key;
-         }
-         key = key || this._options.key;
          readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
@@ -921,7 +911,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
-      //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
+      //Функционал, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
          var prototypeProtectedData = {},
              dataSource,
