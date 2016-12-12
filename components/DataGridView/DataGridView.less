@@ -249,22 +249,26 @@
           vertical-align: bottom;
         }
       }
+
+      .controls-DataGridView__td__checkBox {
+         width: @data-grid-td-checkbox-width;
+         padding: 0;
+         /*У колонки с чекбоксом, не должно быть левого и правого бордера, иначе при table-layout: auto;
+         ширина ячейки увеличивается на размер бордеров*/
+         border-left-width: 0;
+         border-right-width: 0;
+         vertical-align: @data-grid-cell-check-box-vertical-align;
+         overflow: hidden;
+         .controls-ListView__itemCheckBox {
+            top: @data-grid-check-box-top;
+            left: @data-grid-check-box-left;
+         }
+      }
    }
 
    &.controls-DataGridView__overflow-ellipsis{
       .controls-DataGridView__td{
          .column-ellipsis();
-      }
-   }
-
-   .controls-DataGridView__td__checkBox {
-      width: @data-grid-td-checkbox-width;
-      padding-right: 0!important;
-      vertical-align: @data-grid-cell-check-box-vertical-align;
-      overflow: hidden;
-      .controls-ListView__itemCheckBox {
-         top: @data-grid-check-box-top;
-         left: @data-grid-check-box-left;
       }
    }
 
