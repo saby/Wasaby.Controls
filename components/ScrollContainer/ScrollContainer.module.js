@@ -10,40 +10,47 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'use strict';
 
       /**
-       * Контрол представляющий из себя контейнер для контента с кастомным скроллом
-       * Кастомный скролл SBIS3.CONTROLS.Scrollbar
+       * Контрол представляющий из себя контейнер для контента с тонким скроллом.
+       * Тонкий скролл {@link SBIS3.CONTROLS.Scrollbar}
+       *
        * @class SBIS3.CONTROLS.ScrollContainer
        * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
        * @extends SBIS3.CONTROLS.CompoundControl
+       * @author Крайнов Дмитрий Олегович
+       *
+       * @example
+       * Использование ScrollContainer с вложенным в него ListView, и настройкой автоподгрузки вниз.
+       * <pre class="brush: html">
+       *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
+       *       <option name="content">
+       *          <component data-component="SBIS3.CONTROLS.ListView">
+       *             <option name="displayField">title</option>
+       *             <option name="keyField">id</option>
+       *             <option name="infiniteScroll">down</option>
+       *             <option name="infiniteScrollContainer">.myScrollContainer</option>
+       *             <option name="pageSize">7</option>
+       *          </component>
+       *       </option>
+       *    </component>
+       * </pre>
+       *
+       * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       *
        * @control
        * @public
-       * @initial
-       * <component data-component="SBIS3.CONTROLS.ScrollContainer">
-       *    <option name="content">
-       *       <component data-component="SBIS3.CONTROLS.ListView">
-       *          <option name="displayField">title</option>
-       *          <option name="keyField">id</option>
-       *          <option name="infiniteScroll">down</option>
-       *          <option name="infiniteScrollContainer">#Scroll</option>
-       *          <option name="pageSize">7</option>
-       *       </component>
-       *    </option>
-       * </component>
-       * @author Крайнов Дмитрий Олегович
        */
-
-      var ScrollContainer = CompoundControl.extend({
+      var ScrollContainer = CompoundControl.extend({ /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */
 
          _dotTplFn: dotTplFn,
 
          $protected: {
             _options: {
                /**
-                * @cfg {String} Html-разметка
-                * Html код будет добавлен в контейнер с кастомным скроллом который появится если высота
-                * контента превысит высоту контейнера.
+                * @cfg {Content} Контент в ScrollContainer
+                * @remark
+                * Контент в ScrollContainer - это пользовательская верстка, которая будет скроллироваться.
                 * @example
-                * <pre>
+                * <pre class="brush: html">
                 *    <option name="content">
                 *       <component data-component="SBIS3.CONTROLS.ListView">
                 *          <option name="displayField">title</option>
