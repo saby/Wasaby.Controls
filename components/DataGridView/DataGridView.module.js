@@ -79,6 +79,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             tplOptions.cellData = {
                /*TODO hierField вроде тут не должно быть*/
                hierField: cfg.hierField,
+               parentProperty: cfg.parentProperty,
+               nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
                decorators : tplOptions.decorators,
                displayField : tplOptions.displayField
@@ -287,7 +289,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Данные, которые передаются в cellTemplate:
              * <ol>
              *    <li>item - отрисовываемая запись {@link WS.Data/Entity/Record}</li>
-             *    <li>hierField - поле иерархии</li>
+             *    <li>parentProperty - поле иерархии</li>
              *    <li>isNode - является ли узлом</li>
              *    <li>decorators - объект декораторов</li>
              *    <li>field - имя поля</li>
@@ -580,6 +582,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          args.cellData = {
             /*TODO hierField вроде тут не должно быть*/
             hierField: cfg.hierField,
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
             displayField : args.displayField,
@@ -1270,7 +1274,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             var tplOptions = {
                item: item,
                hierField: this._options.hierField,
-               isNode: item.get(this._options.hierField + '@'),
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
+               isNode: item.get(this._options.nodeProperty),
                decorators: this._options._decorators,
                field: column.field,
                value: value,

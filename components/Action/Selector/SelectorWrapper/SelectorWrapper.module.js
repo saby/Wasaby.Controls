@@ -15,6 +15,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
     * @author Крайнов Дмитрий
     * @public
     * @control
+    *
+    * @demo SBIS3.CONTROLS.Demo.SelectorActionButton Пример 1. Окно выбора из справочника с использованием кнопок Button и Link.
+    * @demo SBIS3.CONTROLS.Demo.SelectorFieldLink Пример 2. Окно выбора из справочника с использованием поля связи.
     */
 
    var SELECTION_TYPE_CLASSES = {
@@ -92,7 +95,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                   Если опция selectionType установлена как 'node' (выбор только папок), то обработку листьев производить не надо.
                   Если опция selectionType установлена как 'leaf' (только листьев), то обработку папок производить не надо. */
                if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.TreeMixin')) {
-                  var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
+                  var isBranch = meta.item.get(childControl.getNodeProperty());
 
                   if (isBranch && _private.selectionType === 'node' || !isBranch && _private.selectionType === 'leaf') {
                      return;

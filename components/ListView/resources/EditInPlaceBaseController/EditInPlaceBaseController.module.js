@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   items: undefined,
                   itemsContainer: undefined,
                   getEditorOffset: undefined,
-                  hierField: undefined
+                  parentProperty: undefined
                },
                _eip: undefined,
                // Используется для хранения Deferred при сохранении в редактировании по месту.
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
-                        if (self._options.hierField) {
+                        if (self._options.parentProperty) {
                            parentProjItem = itemProjItem.getParent();
                            self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
@@ -475,8 +475,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._createModel(modelOptions, preparedModel).addCallback(function (createdModel) {
                      return self._prepareEdit(createdModel).addCallback(function(model) {
-                        if (self._options.hierField) {
-                           model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
+                        if (self._options.parentProperty) {
+                           model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
                         }
                         //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
                         //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
