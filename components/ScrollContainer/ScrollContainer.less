@@ -36,18 +36,21 @@
    overflow: hidden;
 }
 
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-ScrollContainer__content {
-      &::-webkit-scrollbar {
-         width: 0!important;
-      }
-      -webkit-overflow-scrolling: touch;
+.controls-ScrollContainer__content {
+   &::-webkit-scrollbar {
+      width: 0!important;
    }
+   -webkit-overflow-scrolling: touch;
 }
+
 .ws-is-mobile-android {
    .controls-ScrollContainer {
       overflow: auto;
-      -webkit-overflow-scrolling: touch;
+   }
+   .controls-ScrollContainer__content {
+      &::-webkit-scrollbar {
+         width: auto!important;
+      }
    }
 }
 
