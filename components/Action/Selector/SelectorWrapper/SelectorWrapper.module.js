@@ -15,6 +15,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
     * @author Крайнов Дмитрий
     * @public
     * @control
+    *
+    * @demo SBIS3.CONTROLS.Demo.SelectorActionButton Пример 1. Окно выбора из справочника с использованием кнопок Button и Link.
+    * @demo SBIS3.CONTROLS.Demo.SelectorFieldLink Пример 2. Окно выбора из справочника с использованием поля связи.
     */
 
    var SELECTION_TYPE_CLASSES = {

@@ -156,21 +156,29 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
          if (currentRecord && currentRecord.isChanged()){
-            fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
-               if (result === true){
-                  templateComponent.update({hideQuestion: true}).addCallback(function(){
-                     self._setConfig.apply(self, args);
-                  });
-               }
-               else {
-                  self._setConfig.apply(self, args);
-               }
-            });
+            InformationPopupManager.showConfirmDialog({
+                  message: rk('Сохранить изменения?')
+               },
+               this._positiveSaveConfirmDialogHandler.bind(this, templateComponent, args),
+               this._negativeSaveConfirmDialogHandler.bind(this, args)
+            );
          }
          else{
             self._setConfig.apply(self, args);
          }
       },
+
+      _positiveSaveConfirmDialogHandler: function(templateComponent, args){
+         var self = this;
+         templateComponent.update({hideQuestion: true}).addCallback(function(){
+            self._setConfig.apply(self, args);
+         });
+      },
+
+      _negativeSaveConfirmDialogHandler: function(args){
+         this._setConfig.apply(this, args);
+      },
+
       _setConfig: function(meta, dialogComponent, mode){
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан

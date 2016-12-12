@@ -2189,9 +2189,10 @@ define('js!SBIS3.CONTROLS.ListView',
          
          _addItems: function(newItems, newItemsIndex, groupId){
             // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
-            // стреляет для каждой группы по отдельности, поэтому будет переставлять флаг о необходимости компенсации
-            // каждый раз при добавлении элементов
-            this._needScrollCompensation = this._infiniteScrollState.mode == 'up';
+            // стреляет для каждой группы по отдельности, поэтому компенсация срабатывает только один раз.
+            // Будем переставлять флаг о необходимости компенсации каждый раз при добавлении элементов
+            this._needScrollCompensation = this._infiniteScrollState.mode == 'up' ||
+                                           this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse;
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -3373,6 +3374,10 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          selectedMoveTo: function(target) {
             var selectedItems = this.getSelectedItems(false);
+            if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
+               selectedItems = selectedItems.toArray();
+            }
+
             this._getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
