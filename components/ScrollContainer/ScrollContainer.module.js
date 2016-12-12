@@ -75,12 +75,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
-            //Под ios и android оставляем нативный скролл
-            if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
-               this._container.one('touchstart mousemove', this._initScrollbar.bind(this));
+            //Под android оставляем нативный скролл
+            if (!cDetection.isMobileAndroid){
+               this._initScrollbar = this._initScrollbar.bind(this)
+               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               this._container[0].addEventListener('mousemove', this._initScrollbar, true);
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
+
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
@@ -151,6 +154,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
+            this._container[0].removeEventListener('touchstart', this._initScrollbar);
+            this._container[0].removeEventListener('mousemove', this._initScrollbar);
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
@@ -164,7 +169,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          destroy: function(){
-            this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
             ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288

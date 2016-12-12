@@ -25,9 +25,6 @@
    height: 100%;
    max-height: inherit;
    min-width: inherit;
-   &::-webkit-scrollbar {
-      width: 0!important;
-   }
    /*https://inside.tensor.ru/opendoc.html?guid=3d32d044-8a60-432d-9cd8-db555ad0786d&des=
    R! Убрать с новых контролов класс ws-area с height:100%, чтобы работало по человечески.*/
    &> .controls-ListView {
@@ -39,7 +36,15 @@
    overflow: hidden;
 }
 
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-mobile-chrome-ios {
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   .controls-ScrollContainer__content {
+      &::-webkit-scrollbar {
+         width: 0!important;
+      }
+      -webkit-overflow-scrolling: touch;
+   }
+}
+.ws-is-mobile-android {
    .controls-ScrollContainer {
       overflow: auto;
       -webkit-overflow-scrolling: touch;
