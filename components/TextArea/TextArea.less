@@ -11,6 +11,11 @@
    .box-sizing(border-box);
 
    .controls-TextArea__inputField {
+      top: @text-area-top-padding;
+      left: @text-area-left-padding;
+      right: @text-area-right-padding;
+      bottom: @text-area-bottom-padding;
+      position: absolute;
       overflow: auto;
       font: @text-area-field-font;
       color: @text-area-field-text-color;
@@ -102,5 +107,8 @@
    .controls-TextArea__disabled-wrapper {
       position: absolute;
       min-height: 0;
+   }
+   .controls-TextArea__inputField {
+      position: static;
    }
 }
