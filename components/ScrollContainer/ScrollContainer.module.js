@@ -34,6 +34,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *    </component>
        * </pre>
        *
+       * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       *
        * @control
        * @public
        */
