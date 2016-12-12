@@ -62,11 +62,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             _content: null
          },
 
-
          $constructor: function() {
             // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
             this._context = this._context.getPrevious();
+         },
+
+         _modifyOptionsAfter: function(finalConfig) {
+            delete finalConfig.content;
          },
 
          init: function() {
