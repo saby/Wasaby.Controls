@@ -3347,6 +3347,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   action = new InteractiveMove({
                      linkedObject: this,
                      parentProperty: this._options.parentProperty,
+                     nodeProperty: this._options.nodeProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems();
@@ -3414,6 +3415,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),
                hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
                listView: this
             });
          },
@@ -3438,7 +3441,8 @@ define('js!SBIS3.CONTROLS.ListView',
                moveStrategy: this.getMoveStrategy(),
                items: this.getItems(),
                projection: this._getItemsProjection(),
-               hierField: this._options.parentProperty
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             }));
          },
          /**

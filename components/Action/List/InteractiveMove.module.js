@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!WS.Data/Di',
       'Core/Indicator',
       'Core/core-merge',
-      "Core/helpers/collection-helpers"
+      "Core/helpers/collection-helpers",
+      "Core/IoC"
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -105,11 +106,23 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             _options : {
                template : 'js!SBIS3.CONTROLS.MoveDialogTemplate',
                parentProperty: undefined,
+               nodeProperty: undefined,
                /**
                 * @cfg {componentOptions} Набор опций для компонента отображающего список.
                 */
                componentOptions: null
             }
+         },
+
+         _modifyOptions: function (cfg) {
+            if (cfg.hierField) {
+               IoC.resolve('ILogger').log('InteractiveMove', 'Опция hierField является устаревшей, используйте parentProperty');
+               cfg.parentProperty = cfg.hierField;
+            }
+            if (cfg.parentProperty && !cfg.nodeProperty) {
+               cfg.nodeProperty = cfg.parentProperty + '@';
+            }
+            return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
          _doExecute: function(meta) {
@@ -130,7 +143,8 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             return cMerge(options, {
                linkedView: this._getListView(),
                dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
                records: meta.movedItems,
                handlers: {
                   onMove: function(e, movedItems, target) {
@@ -155,6 +169,8 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),
                hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
                listView: this._getListView()
             });
          },
