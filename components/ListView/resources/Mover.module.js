@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
    'js!WS.Data/Di',
    "Core/core-instance",
    "Core/Deferred",
-   "Core/Abstract"
-], function (Di, cInstance, Deferred, Abstract) {
+   "Core/Abstract",
+   "Core/IoC"
+], function (Di, cInstance, Deferred, Abstract, IoC) {
    'use strict';
    /**
     * Перемещает элементы
@@ -30,8 +31,39 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             /**
              *
              */
-            hierField: undefined
+            /**
+             * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
+             * @remark
+             * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
+             * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел</option>
+             * </pre>
+             */
+            parentProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
+             * @remark
+             * null - лист, false - скрытый узел, true - узел
+             *
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел@</option>
+             * </pre>
+             */
+            nodeProperty: null
          }
+      },
+      _modifyOptions: function (cfg) {
+         if (cfg.hierField) {
+            IoC.resolve('ILogger').log('Mover', 'Опция hierField является устаревшей, используйте parentProperty');
+            cfg.parentProperty = cfg.hierField;
+         }
+         if (cfg.parentProperty && !cfg.nodeProperty) {
+            cfg.nodeProperty = cfg.parentProperty + '@';
+         }
+         return Mover.superclass._modifyOptions.apply(this, arguments);
       },
       moveRecordDown: function(record) {
          this._moveToOneRow(record, true);
@@ -116,7 +148,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
 
          if (target !== null) {
-            isNodeTo = target.get(this._options.hierField + '@');
+            isNodeTo = target.get(this._options.nodeProperty);
          }
 
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
@@ -163,7 +195,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target === undefined) {
             return false;
          }
-         if (target !== null && this._options.hierField) {
+         if (target !== null && this._options.parentProperty) {
             toMap = this._getParentsMap(target.getId());
          }
          for (var i = 0; i < movedItems.length; i++) {
@@ -171,7 +203,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             if ($.inArray(key, toMap) !== -1) {
                return false;
             }
-            if (target !== null && !isChangeOrder && !target.get(this._options.hierField + '@')) {
+            if (target !== null && !isChangeOrder && !target.get(this._options.nodeProperty)) {
                return false;
             }
          }
@@ -209,7 +241,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             if ($.inArray(parentKey, toMap) === -1) {
                toMap.push(parentKey);
             }
-            parentKey = record.get(this._options.hierField);
+            parentKey = record.get(this._options.parentProperty);
             record = recordSet.getRecordById(parentKey);
          }
          return toMap;
