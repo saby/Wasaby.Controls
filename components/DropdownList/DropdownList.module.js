@@ -458,9 +458,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                for (var i = 0 ; i < items.length; i++) {
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
                }
+               this._calcPickerSize();
                DropdownList.superclass.showPicker.apply(this, arguments);
 
-               this._calcPickerSize();
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
@@ -476,6 +476,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Сбрасываем значения, выставленные при предыдущем вызове метода _calcPickerSize
             this._pickerBodyContainer.css('max-width', '');
             this._pickerHeadContainer.css('width', '');
+            this._togglePickerVisibility(true);
 
             pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
             pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
@@ -485,18 +486,27 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Ширина шапки не больше, чем ширина контейнера
             if (needResizeHead){
                this._pickerHeadContainer.width(containerWidth);
-               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth; //изменилась ширина контейрена, нужно взять актуальную
+               pickerHeaderWidth = containerWidth; //изменилась ширина контейрена, нужно взять актуальную
             }
-
-            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
-            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
 
             //Контейнер с итемами ресайзится в 2-х случаях
             //1: Ширина шапки < 400px, ширина контейнера с итемами > 400px => ширина контейнера = 400px, ограничение прописано в less
             //2: Ширина шапки > 400px => ширина контейнера с итемами = ширине шапки
             if (pickerHeaderWidth > pickerBodyWidth){
                this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
+               pickerBodyWidth = pickerHeaderWidth; //изменилась ширина контейрена, нужно взять актуальную
             }
+            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
+            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
+
+            this._togglePickerVisibility(false);
+         },
+         _togglePickerVisibility: function(toggle){
+            //Расчет ширины пикера должен производиться до показа контейнера, иначе пикер сам установит ширину, исходя из текущей верстки, и наш ресайз приведет к неправильому позиционированию
+            //Ставим пикеру visibility: hidden, чтобы перед показом контейнера иметь доступ к его размерам для ресайза.
+            var pickerContainer = this._picker.getContainer();
+            pickerContainer.toggleClass('ws-invisible', toggle);
+            pickerContainer.toggleClass('ws-hidden', !toggle);
          },
          hide: function(){
             if (this._hideAllowed) {
