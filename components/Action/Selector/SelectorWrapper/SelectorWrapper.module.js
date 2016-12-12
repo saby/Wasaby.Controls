@@ -10,9 +10,14 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
    /**
     * Интерфейс открывателя диалога/всплывающей панели
-    * @extend SBIS3.CORE.CompoundControl
-    * @public
+    * @class SBIS3.CONTROLS.SelectorWrapper
+    * @extends SBIS3.CORE.CompoundControl
     * @author Крайнов Дмитрий
+    * @public
+    * @control
+    *
+    * @demo SBIS3.CONTROLS.Demo.SelectorActionButton Пример 1. Окно выбора из справочника с использованием кнопок Button и Link.
+    * @demo SBIS3.CONTROLS.Demo.SelectorFieldLink Пример 2. Окно выбора из справочника с использованием поля связи.
     */
 
    var SELECTION_TYPE_CLASSES = {
@@ -21,7 +26,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       all: ''
    };
 
-   var SelectorWrapper = CompoundControl.extend([], {
+   var SelectorWrapper = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SelectorWrapper.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options : {
@@ -51,11 +56,18 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
                function onSelectionChanged() {
                   var selectedItems = childControl.getSelectedItems(),
-                      keyField = childControl.getProperty('keyField');
+                      keyField = childControl.getProperty('keyField'),
+                      index;
 
                   if(diff.added.length) {
                      collectionHelpers.forEach(diff.added, function(addedKey) {
-                        result.added.push(selectedItems.at(selectedItems.getIndexByValue(keyField, addedKey)));
+                        /* Записи с выделенным ключём может не быть в recordSet'e
+                           (например это запись внутри папки или на другой странице) */
+                        index = selectedItems.getIndexByValue(keyField, addedKey);
+
+                        if(index !== -1) {
+                           result.added.push(selectedItems.at(index));
+                        }
                      });
                   }
 
@@ -83,7 +95,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                   Если опция selectionType установлена как 'node' (выбор только папок), то обработку листьев производить не надо.
                   Если опция selectionType установлена как 'leaf' (только листьев), то обработку папок производить не надо. */
                if(cInstance.instanceOfMixin(childControl, 'SBIS3.CONTROLS.TreeMixin')) {
-                  var isBranch = meta.item.get(childControl.getProperty('hierField') + '@');
+                  var isBranch = meta.item.get(childControl.getNodeProperty());
 
                   if (isBranch && _private.selectionType === 'node' || !isBranch && _private.selectionType === 'leaf') {
                      return;
@@ -107,16 +119,18 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
       setSelectedItems: function(items) {
          var self = this,
-             keys = [];
+             keys = [],
+             linkedObject = this._getLinkedObject(),
+             keyField = linkedObject.getProperty('keyField');
 
          items.each(function(rec) {
             if(self._options.selectedFilter(rec)) {
-               keys.push(rec.getId());
+               keys.push(rec.get(keyField));
             }
          });
 
          if(keys.length) {
-            this._getLinkedObject().setSelectedKeys(keys);
+            linkedObject.setSelectedKeys(keys);
          }
       },
 

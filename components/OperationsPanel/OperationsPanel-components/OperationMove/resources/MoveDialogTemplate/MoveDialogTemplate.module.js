@@ -24,7 +24,6 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             resizable: false,
             linkedView: undefined,
             records: undefined,
-            cssClassName: 'controls-MoveDialog',
             dataSource: undefined,
             partialyReload: undefined,
             displayField: undefined,

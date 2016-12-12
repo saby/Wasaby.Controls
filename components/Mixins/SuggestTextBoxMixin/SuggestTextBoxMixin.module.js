@@ -15,18 +15,22 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
    var SuggestTextBoxMixin = {
       $protected: {
-         _changedByKeyboard: false  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
+         _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
+         /* Т.к. при выборе из списка, фокус может находиться на нём, а не на поле ввода,
+            то обрабатывать клавиатурные события надо на списке. Но надо учитывать,
+            что список находится в body, а блокировать всплытие события надо на уровне поля ввода,
+            поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
+         _selectedFromList: false
       },
       $constructor: function () {
          var self = this;
 
          this._options.observableControls.unshift(this);
 
-         /* Проверяем на изменение раскладки */
          this.once('onListReady', function(e, list) {
-            self.subscribeTo(list, 'onDataLoad', function (event, data) {
-               if (data.getMetaData()['Switched']) {
-                  self.setText(KbLayoutRevertUtil.process(self.getText()));
+            self.subscribeTo(list, 'onKeyPressed', function (event, jqEvent) {
+               if(jqEvent.which === constants.key.enter) {
+                  self._selectedFromList = true;
                }
             });
          });
@@ -65,19 +69,27 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
           * @private
           */
          _keyUpBind: function(e) {
+            var isPickerVisible = this.isPickerVisible();
+
             switch (e.which) {
                /* Чтобы нормально работала навигация стрелками и не случалось ничего лишнего,
                 то запретим всплытие события */
                case constants.key.down:
                case constants.key.up:
                case constants.key.enter:
-                  if(this.isPickerVisible()) {
-                     this._list && this._list._keyboardHover(e);
+                  if(isPickerVisible || this._selectedFromList) {
                      stopEvent(e);
+                  }
+
+                  this._selectedFromList = false;
+
+                  if(isPickerVisible) {
+                     var list = this.getList();
+                     list._keyboardHover(e);
                   }
                   break;
                case constants.key.esc:
-                  if(this.isPickerVisible()) {
+                  if(isPickerVisible) {
                      this.hidePicker();
                      stopEvent(e);
                   }

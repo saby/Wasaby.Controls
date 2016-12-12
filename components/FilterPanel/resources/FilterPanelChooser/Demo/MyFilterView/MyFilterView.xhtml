@@ -1,33 +1,24 @@
 <div class="MyFilterView">
-   <div class="ComponentBlock">
-      <div>Список</div>
-      <component data-component="SBIS3.CONTROLS.FilterPanelChooser" config="{{=$ws.helpers.encodeCfgAttr({items: it.items1})}}">
-
-      </component>
-      <component data-component="SBIS3.CONTROLS.FilterPanelChooser" config="{{=$ws.helpers.encodeCfgAttr({items: it.items2})}}">
-
-      </component>
-      <component data-component="SBIS3.CONTROLS.FilterPanelChooser" config="{{=$ws.helpers.encodeCfgAttr({items: it.items3})}}">
-
-      </component>
-   </div>
-   <div class="ComponentBlock">
-      <div>Справочник</div>
-      <component data-component="SBIS3.CONTROLS.FilterPanelChooser" config="{{=$ws.helpers.encodeCfgAttr({items: it.items6})}}">
-         <option name="viewMode">dictionary</option>
-         <option name="dictionaryTemplate">js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate</option>
-      </component>
-   </div>
-   <div class="ComponentBlock">
-      <div>Справочник со вкладкой "Избранные</div>
-      <component data-component="SBIS3.CONTROLS.FilterPanelChooser" config="{{=$ws.helpers.encodeCfgAttr({items: it.items5})}}">
-         <option name="viewMode">favorites</option>
-         <option name="dictionaryTemplate">js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate</option>
-         <option name="favoritesCount">10</option>
-         <options name="favorites" type="array">
-            <option>1</option>
-            <option>2</option>
-         </options>
-      </component>
-   </div>
+    <div class="ComponentBlock">
+        <div>Редактор "Список"</div>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.List" config="{{=$ws.helpers.encodeCfgAttr({items: it.items1})}}"></component>
+        <div>Редактор "Список со справочником"</div>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.DictionaryList" config="{{=$ws.helpers.encodeCfgAttr({items: it.items2})}}">
+            <options name="dictionaryOptions">
+                <option name="template">js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate</option>
+            </options>
+        </component>
+        <div>Редактор "Список с избранными записями"</div>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.FavoritesList" config="{{=$ws.helpers.encodeCfgAttr({items: it.items3, favorites: it.favorites})}}">
+            <options name="dictionaryOptions">
+                <option name="template">js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate</option>
+            </options>
+            <options name="value" type="array">
+                <option>2</option>
+                <option>3</option>
+            </options>
+            <option name="favoritesCount">10</option>
+        </component>
+       <component data-component="SBIS3.CONTROLS.FilterPanelChooser.RadioGroup" config="{{=$ws.helpers.encodeCfgAttr({items: it.items4})}}"></component>
+    </div>
 </div>

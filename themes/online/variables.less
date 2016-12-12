@@ -3,11 +3,15 @@
 
 @gray-dark-color:                         #666;
 @gray-color:                              #999;
+@gray-lamantin-color:                     #8991A9;
 @gray-light-color:                        #E4E4E4;
 @gray-ccc-color:                          #CCC;
 @lightgray-color:                         #CBD5E5;
 @darkcyan-color:                          #0055BB;
 @dodgerblue-color:                        #0066FF;
+@red-color:                               #ef463a;
+@green-color:                             #53A52C;
+@purple-color:                            #9122BF;
 
 @blue-dark-color:                         #313E78;
 
@@ -17,7 +21,7 @@
 
 @icon-color-attention:                    #FEC63F;
 @icon-color-done:                         #72be44;
-@icon-color-error:                        #ef463a;
+@icon-color-error:                        @red-color;
 @icon-color-primary:                      @default-color;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
@@ -106,6 +110,51 @@
 @FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
+
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-count-box-shadow-pos:             -12px 0 5px;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     6px 30px 6px 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    3px;
+@filter-panel-chooser-list-view-check-box-left:                   0;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding-right:              8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-count-box-shadow:                 @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-count-box-shadow:         @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-count-box-shadow:        @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
 
 // Normal default button
 @button-text-color:                       @black-color;
@@ -1153,13 +1202,10 @@
 @date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
 
 @date-picker-calendar-icon-cursor:              pointer;
-@date-picker-calendar-icon-width:               16px;
-@date-picker-calendar-icon-height:              16px;
+@date-picker-calendar-icon-width:               18px;
+@date-picker-calendar-icon-height:              18px;
 @date-picker-calendar-icon-top-offset:          4px;
 @date-picker-calendar-icon-left-offset:         1px;
-@date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
-@date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
-@date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
 
 // -------- //
 // Calendar //
@@ -1538,7 +1584,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
+@listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
+@listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
+@listView-check-box-icon-checked-bg:            url(@listView-check-box-icon-spritesheet) 0 72px;
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1761,13 +1810,14 @@
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
 @data-grid-first-content-cell-padding-left:     8px;
+@data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
-@data-grid-first-cell-separator-color:          #EAEAEA;
+@data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1779,10 +1829,10 @@
 
 @data-grid-td-checkbox-width:                   24px;
 @data-grid-td-visible-checkbox-width:           24px;
-@data-grid-td-hidden-checkbox-width:            4px;
+@data-grid-td-hidden-checkbox-width:            8px;
 @data-grid-td-checkbox-width-without-marker:    20px;
-//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
-@data-grid-checkbox-margin:                     2px 0 -2px 0;
+@data-grid-check-box-top:                       2px;
+@data-grid-check-box-left:                      0px;
 
 @data-grid-table-layot: 								fixed;
 // ---------- //
@@ -1905,6 +1955,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    3px;
+@controls-editInPlace-editor-without-offset-margin: -6px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1912,10 +1963,10 @@
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                           3px;
-@listView-check-box-top:                            5px;
-@listView-check-box-width:                          16px;
-@listView-check-box-height:                         16px;
+@listView-check-box-left:                           0px;
+@listView-check-box-top:                            0px;
+@listView-check-box-width:                          24px;
+@listView-check-box-height:                         24px;
 @listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
@@ -1981,8 +2032,10 @@
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
+@DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    4px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
@@ -2149,6 +2202,8 @@
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -2161,7 +2216,7 @@
 @back-button-font-size:                            18px;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
-@back-button-arrow-height:                         17px;
+@back-button-arrow-height:                         24px;
 @icon-size:                                        16px;
 @icon-width:                                       16px;
 @icon-height:                                      16px;
@@ -2217,7 +2272,7 @@
 @controls-NotificationPopup-header-icon-height:                              24px;
 
 //SubmitPopup
-@controls-SubmitPopup-size-standart-width:         351px;
+@controls-SubmitPopup-size-standard-width:         351px;
 @controls-SubmitPopup-size-big-width:              440px;
 @controls-SubmitPopup-body-padding:                32px;
 @controls-SubmitPopup-message-font-size:           18px;
@@ -2235,6 +2290,8 @@
 @controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
+@controls-SubmitPopup-message-color:               inherit;
+@controls-SubmitPopup-details-color:               inherit;
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
@@ -2269,11 +2326,11 @@
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
 @controls-Scrollbar-thumb-border-radius:           2px;
-@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
-@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+@controls-Scrollbar-light-hover-thumb-color:       rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-light-active-thumb-color:      rgba(255, 255, 255, 0.50);
 
-@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
-@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(0, 0, 0, 0.15);
 
 //----------//
 //  Header  //

@@ -3,11 +3,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar.full',
-      'is!browser?css!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mCustomScrollbar',
-      'is!browser?js!SBIS3.CONTROLS.ScrollContainer/resources/custom-scrollbar-plugin/jquery.mousewheel-3.1.13'
+      'js!SBIS3.CORE.FloatAreaManager'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
 
       'use strict';
 
@@ -33,7 +31,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </component>
        * @author Крайнов Дмитрий Олегович
        */
-            
+
       var ScrollContainer = CompoundControl.extend({
 
          _dotTplFn: dotTplFn,
@@ -64,11 +62,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             _content: null
          },
 
-
          $constructor: function() {
-            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась, 
+            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
             this._context = this._context.getPrevious();
+         },
+
+         _modifyOptionsAfter: function(finalConfig) {
+            delete finalConfig.content;
          },
 
          init: function() {
@@ -80,7 +81,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
+            // Что бы до инициализации не было видно никаких скроллов
+            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
+            // task: 1173330288
+            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
          },
 
          _subscribeOnScroll: function(){
@@ -97,10 +103,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (!cDetection.safari && !cDetection.chrome){
                var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
-                  }
+                  };
                this._content.css(style);
             }
-            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
          },
 
          _getBrowserScrollbarWidth: function() {
@@ -125,6 +130,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
+            ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -149,6 +155,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
+            // Баг в IE версии старше 10, если повесить стиль overflow-y:scroll, то scrollHeight увеличивается на 1px,
+            // поэтому мы вычтем его.
+            if (cDetection.IEVersion > 10) {
+               return this._content[0].scrollHeight - 1;
+            }
             return this._content[0].scrollHeight;
          },
 
@@ -156,6 +167,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
             ScrollContainer.superclass.destroy.call(this);
+            // task: 1173330288
+            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+            delete $ws.single.FloatAreaManager._scrollableContainers[ this.getId() ];
          }
       });
 

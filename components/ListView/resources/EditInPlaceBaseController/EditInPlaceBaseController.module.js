@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   items: undefined,
                   itemsContainer: undefined,
                   getEditorOffset: undefined,
-                  hierField: undefined
+                  parentProperty: undefined
                },
                _eip: undefined,
                // Используется для хранения Deferred при сохранении в редактировании по месту.
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         editingRecord = self._getEip().getEditingRecord();
                         self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
-                        if (self._options.hierField) {
+                        if (self._options.parentProperty) {
                            parentProjItem = itemProjItem.getParent();
                            self._lastTargetAdding = parentProjItem.isRoot() ? null : parentProjItem;
                         }
@@ -391,7 +391,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
 
                if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
-                  this._savingDeferred.errback();
+                  // TODO: errback без обработчика кидает ошибку в консоль https://inside.tensor.ru/opendoc.html?guid=5aba818a-4764-4c2b-b6d0-767abd2add7e&des=
+                  this._savingDeferred.addErrback(function(res) {return res;}).errback();
                   return Deferred.fail();
                } else {
                   if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
@@ -440,16 +441,25 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
+               var isAdd = this._isAdd;
                //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
                //Иначе если сначала скрыть редакторы, курсор мыши может оказаться над фейковой строкой и произойдёт
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
-               if (this._isAdd) {
+               if (isAdd) {
                   this._isAdd = false;
                   this._addTarget.remove();
                   this._addTarget = undefined;
                }
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
+
+               if(isAdd) {
+                  /* Почему делаеться destroy:
+                   Добавление по месту как и редактирование, не пересоздаёт компоненты при повторном добавлении/редактировании,
+                   поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
+                   валидация ). В редактировании по месту это сейчас не внедрить, т.к. там есть режим по ховеру. */
+                  this._destroyEip();
+               }
                if (!this._savingDeferred.isReady()) {
                   this._savingDeferred.callback();
                }
@@ -465,8 +475,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this.endEdit(true).addCallback(function() {
                   return self._createModel(modelOptions, preparedModel).addCallback(function (createdModel) {
                      return self._prepareEdit(createdModel).addCallback(function(model) {
-                        if (self._options.hierField) {
-                           model.set(self._options.hierField, options.target ? options.target.getContents().getId() : options.target);
+                        if (self._options.parentProperty) {
+                           model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
                         }
                         //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
                         //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.

@@ -35,13 +35,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
-               _buildTplArgs: function(cfg){
-                  var tplOptions = cfg._buildTplArgsSt.apply(this, arguments);
-                  tplOptions.mode = cfg.mode;
-                  return tplOptions;
-               },
                itemTpl: ItemTpl,
-               mode: 'hover',
                displayField: '',
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
@@ -105,6 +99,10 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             FastDataFilter.superclass.init.apply(this, arguments);
             this._container.removeClass('ws-area');
          },
+         _drawItemsCallbackSync: function(){
+            this._setSelectionToItemsInstances();
+         },
+
          _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
             for (var i in instances) {
@@ -230,15 +228,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                filterChanged: changed,
                filterStructure: this._filterStructure
             });
-            //TODO Во-первых этого здесь бюыть не должно, но привязки не завелись из-за того, что dropDown не смог связаться по контексту и выставить свое значение
-            //TODO во-вторых возможнны проблемы с value array||number. Пока обратим внимание на instances.second._options.multiselect
-            var instances = this.getItemsInstances();
-            //Если компоненты еще не построились, подождем когда они будут готовы, чтобы поставить в соответсвие с фильтром
-            if (Object.isEmpty(instances)) {
-               this.once('onDrawItems', this._setSelectionToItemsInstances.bind(this));
-            } else {
-               this._setSelectionToItemsInstances();
-            }
+            this._setSelectionToItemsInstances();
          },
          _setSelectionToItemsInstances : function(){
             var instances = this.getItemsInstances();
@@ -246,6 +236,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   if (instances.hasOwnProperty(i)){
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
+                     value = this._prepareValue(instances[i], value);
                      if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
                         if(instances[i].getItems()){
                            instances[i].setSelectedKeys(value);
@@ -257,6 +248,16 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      }
                   }
                }
+         },
+
+         _prepareValue: function(instance, newKeys){
+            //В структуре resetValue может содержать ключ, которого нет в выпадающем списке
+            //В этом случае мы должны выставить первую запись, которая содержится в наборе данных
+            var items = instance.getItems();
+            if (items && items.getRecordById(newKeys[0])){
+               return newKeys;
+            }
+            return [instance._defaultId];
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){

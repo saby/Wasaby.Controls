@@ -97,7 +97,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
              * @variant remote
              * @variant delayedRemote
              */
-            initializingWay: 'remote'
+            initializingWay: 'remote',
+            /**
+             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             */
+            urlProperty: ''
          },
          /**
           * Ключ модели из связного списка
@@ -105,7 +109,12 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         _showedLoading: false
+         _showedLoading: false,
+         _openInNewTab: false
+      },
+      init: function(){
+         OpenDialogAction.superclass.init.apply(this, arguments);
+         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -120,8 +129,18 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
        */
       _getEditKey: function(item){
       },
+      _setOpeningMode: function(event){
+         this._openInNewTab = event.ctrlKey;
+      },
+      _needOpenInNewTab: function(){
+        return this._openInNewTab;
+      },
       _opendEditComponent: function(meta, dialogComponent, mode){
-         if (this._isNeedToRedrawDialog()){
+         var openUrl = meta.item && meta.item.get(this._options.urlProperty);
+         if (this._needOpenInNewTab() && openUrl){
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()){
             this._saveRecord(meta, dialogComponent, mode)
          }
          else{
@@ -137,21 +156,29 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
          if (currentRecord && currentRecord.isChanged()){
-            fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
-               if (result === true){
-                  templateComponent.update({hideQuestion: true}).addCallback(function(){
-                     self._setConfig.apply(self, args);
-                  });
-               }
-               else {
-                  self._setConfig.apply(self, args);
-               }
-            });
+            InformationPopupManager.showConfirmDialog({
+                  message: rk('Сохранить изменения?')
+               },
+               this._positiveSaveConfirmDialogHandler.bind(this, templateComponent, args),
+               this._negativeSaveConfirmDialogHandler.bind(this, args)
+            );
          }
          else{
             self._setConfig.apply(self, args);
          }
       },
+
+      _positiveSaveConfirmDialogHandler: function(templateComponent, args){
+         var self = this;
+         templateComponent.update({hideQuestion: true}).addCallback(function(){
+            self._setConfig.apply(self, args);
+         });
+      },
+
+      _negativeSaveConfirmDialogHandler: function(args){
+         this._setConfig.apply(this, args);
+      },
+
       _setConfig: function(meta, dialogComponent, mode){
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан

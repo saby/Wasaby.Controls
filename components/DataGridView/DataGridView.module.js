@@ -79,6 +79,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             tplOptions.cellData = {
                /*TODO hierField вроде тут не должно быть*/
                hierField: cfg.hierField,
+               parentProperty: cfg.parentProperty,
+               nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
                decorators : tplOptions.decorators,
                displayField : tplOptions.displayField
@@ -190,8 +192,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
+    * @mixes SBIS3.CONTROLS.DragAndDropMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
+    *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -284,7 +289,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Данные, которые передаются в cellTemplate:
              * <ol>
              *    <li>item - отрисовываемая запись {@link WS.Data/Entity/Record}</li>
-             *    <li>hierField - поле иерархии</li>
+             *    <li>parentProperty - поле иерархии</li>
              *    <li>isNode - является ли узлом</li>
              *    <li>decorators - объект декораторов</li>
              *    <li>field - имя поля</li>
@@ -577,12 +582,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
          args.cellData = {
             /*TODO hierField вроде тут не должно быть*/
             hierField: cfg.hierField,
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
             displayField : args.displayField,
             isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;
+         args.currentScrollPosition = this._getColumnsScrollPosition();
          buildTplArgsLadder(args.cellData, cfg);
 
          return args;
@@ -606,6 +614,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._bindHead();
          }
          headData = prepareHeadData(this._options);
+         headData.columnsScrollPosition = this._getColumnsScrollPosition();
+         headData.thumbPosition = this._currentScrollPosition;
          headMarkup = MarkupTransformer(this._options._headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
@@ -1019,12 +1029,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
-         var movePosition = -this._currentScrollPosition*this._partScrollRatio;
+         var movePosition = this._getColumnsScrollPosition();
 
          this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.left = movePosition + 'px';
          }
+      },
+
+      _getColumnsScrollPosition: function() {
+         return -this._currentScrollPosition*this._partScrollRatio;
       },
 
       _setThumbPosition: function(cords) {
@@ -1060,13 +1074,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _findMovableCells: function() {
          this._movableElems = this._container.find('.controls-DataGridView__scrolledCell');
-      },
-
-      _appendResultsContainer: function(container, resultRow){
-         DataGridView.superclass._appendResultsContainer.call(this, container, resultRow);
-         if(this.hasPartScroll()) {
-            this.updateScrollAndColumns();
-         }
       },
 
       _checkThumbPosition: function(cords) {
@@ -1159,6 +1166,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
+          /* При установке колонок, надо сбросить частичный скролл */
+          this._currentScrollPosition = 0;
           checkColumns(this._options);
           this._destroyEditInPlace();
        },
@@ -1215,6 +1224,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
          });
          return data;
       },
+
+      _getResultsTplCfg: function() {
+         var cfg = DataGridView.superclass._getResultsTplCfg.apply(this, arguments);
+         cfg.startScrollColumn = this._options.startScrollColumn;
+         cfg.columnsScrollPosition = this._getColumnsScrollPosition();
+         return cfg;
+      },
+
       _getColumnResultTemplate: function (column, index, result, item) {
          var columnTpl = result;
          if (column.resultTemplate) {
@@ -1257,7 +1274,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             var tplOptions = {
                item: item,
                hierField: this._options.hierField,
-               isNode: item.get(this._options.hierField + '@'),
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
+               isNode: item.get(this._options.nodeProperty),
                decorators: this._options._decorators,
                field: column.field,
                value: value,

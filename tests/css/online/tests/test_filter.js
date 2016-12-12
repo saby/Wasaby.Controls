@@ -182,7 +182,7 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 			
 			.after(function (actions) {
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('filterHistory')._historyController.clearHistory()
+                    window.$ws.single.UserConfig.setParam('historyId', '');
                 });
             })
     });
@@ -248,7 +248,7 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 			
 			.after(function (actions) {
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('filterHistory')._historyController.clearHistory()
+                    window.$ws.single.UserConfig.setParam('historyId', '');
                 });
             })
     });

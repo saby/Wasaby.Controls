@@ -60,41 +60,43 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
       /**
        * Перемещает записи из внешнего контрола, через drag'n'drop
-       * @param {SBIS3.CONTROLS.DragObject} dragObject
+       * @param {SBIS3.CONTROLS.DragEntity.List} dragSource Объект содержащий данные
+       * @param {SBIS3.CONTROLS.DragEntity.Row} target Объект указывающий куда надо перенести данные
+       * @param {WS.Data/Collection/RecordSet} ownerItems Рекордсет из которого переносятся данные
+       * @param {Boolean} move Использовать стандартное перемещение.
+       * @remark Подходит только если у контролов одинаковые источники данных.
        * @private
        */
-      moveFromOutside: function(dragObject){
-         var target = dragObject.getTarget(),
-            dragSource = dragObject.getSource();
-         if(dragObject.getSource().getAction()) {
-            def = dragObject.getSource().getAction().execute();
-         } else {
-            var dragOwnerSource = dragObject.getOwner().getDataSource(),
-               dataSource = dragObject.getTargetsControl().getDataSource();
-            var def;
-            if (dataSource === dragOwnerSource || dragOwnerSource.getEndpoint().contract == dataSource.getEndpoint().contract) {
-               var movedItems = [];
-               dragSource.each(function (movedItem) {
-                  movedItems.push(movedItem.getModel());
-               });
-               def = this.move(movedItems, dragObject.getTarget().getModel(), target.getPosition());
-            }
-         }
-         def = (def instanceof Deferred) ? def : new Deferred().callback();
-         var position = this.getItems().getIndex(target.getModel()),
-            ownerItems = dragObject.getOwner().getItems(),
-            self = this,
-            operation = dragSource.getOperation();
-         def.addCallback(function() {
-            dragSource.each(function(movedItem) {
-               var model = movedItem.getModel();
-               if (operation === 'add' || operation === 'move') {
-                  self.getItems().add(model.clone(), position);
-               }
-               if (operation === 'delete' || operation === 'move') {
-                  ownerItems.remove(model);
-               }
+      moveFromOutside: function(dragSource, target, ownerItems, move) {
+         var operation = dragSource.getOperation(),
+            action = dragSource.getAction(),
+            def;
+         if (typeof action === 'function') {
+            def =  action.call(dragSource);
+         } else  if (move && (operation === 'add' || operation === 'move')) {
+            var movedItems = [];
+            dragSource.each(function (movedItem) {
+               movedItems.push(movedItem.getModel());
             });
+            def = this.move(movedItems, target.getModel(), target.getPosition());
+         }
+         def = (def instanceof Deferred) ? def : new Deferred().callback(def);
+         var position = this.getItems().getIndex(target.getModel()),
+            items = this.getItems();
+         position = target.getPosition() != 'after' ? position : position +1;
+         def.addCallback(function(result) {
+            if (result !== false) {
+               dragSource.each(function(movedItem) {
+                  var model = movedItem.getModel();
+                  if (operation === 'add' || operation === 'move' && items.getIndex(model) === -1) {
+                     items.add(model.clone(), position);
+                  }
+                  if (operation === 'delete' || operation === 'move') {
+                     ownerItems.remove(model);
+                  }
+               });
+            }
+            return result;
          });
       },
       /**
@@ -119,7 +121,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
             if (isNodeTo && !isChangeOrder) {
-               result = this.getMoveStrategy().hierarсhyMove(movedItems, target);
+               result = this.getMoveStrategy().hierarchyMove(movedItems, target);
             } else if(isChangeOrder)  {
                result = this.getMoveStrategy().move(movedItems, target, position == 'after');
             }

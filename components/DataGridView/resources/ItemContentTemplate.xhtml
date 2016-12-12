@@ -1,5 +1,6 @@
-{{~it.columns :column:index}}{{it.cellData['item'] = it.item;it.cellData['projItem'] = it.projItem;it.cellData['Sanitize']=it.Sanitize;it.cellData['field']=column.field;it.cellData['column']=column;it.cellData['included']=column.included;it.cellData['templateBinding']=column.templateBinding;it.cellData['decorators']=it.decorators;}}<td class="controls-DataGridView__td
+{{~it.columns :column:index}}{{it.cellData['item'] = it.item;it.cellData['projItem'] = it.projItem;it.cellData['Sanitize']=it.Sanitize;it.cellData['field']=column.field;it.cellData['column']=column;it.cellData['included']=column.included;it.cellData['templateBinding']=column.templateBinding;it.cellData['decorators']=it.decorators;var isColumnScrolling= it.startScrollColumn <= index;}}<td class="controls-DataGridView__td
       {{? !!column.editor}} controls-DataGridView__edited-td{{?}}
       {{?column.className}} {{=column.className}}{{?}}
-      {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
-      ><div class="controls-DataGridView__columnValue">{{=column.contentTpl(it.cellData)}}</div></td>{{~}}
+      {{?index == 0}} controls-DataGridView__firstContentCell {{?}}
+      {{?it.startScrollColumn !== undefined}}{{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
+      {{?isColumnScrolling}} style="left:{{=it.columnsScrollPosition}}px;"{{?}}><div class="controls-DataGridView__columnValue">{{=column.contentTpl(it.cellData)}}</div></td>{{~}}

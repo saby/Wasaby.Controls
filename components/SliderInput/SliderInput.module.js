@@ -10,12 +10,36 @@ define('js!SBIS3.CONTROLS.SliderInput',
    ], function(Slider, dotTplFn) {
       'use strict';
       var
+         /**
+          * Класс контрола "Слайдер с полям ввода".
+          * @class SBIS3.CONTROLS.SliderInput
+          * @extends SBIS3.CONTROLS.Slider
+          *
+          * @author Борисов Петр Сергеевич
+          *
+          * @demo SBIS3.CONTROLS.Demo.SliderInputDemo
+          */
          SliderInput = Slider.extend(/** @lends SBIS3.CONTROLS.SliderInput.prototype */{
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
+                  /**
+                   * @cfg {String} Устанавливает подпись перед первым полем ввода.
+                   * @see middleLabel
+                   * @see endLabel
+                   */
                   startLabel: '',
+                   /**
+                    * @cfg {String} Устанавливает подпись между первым и вторым полем ввода.
+                    * @see startLabel
+                    * @see endLabel
+                    */
                   middleLabel: '',
+                   /**
+                    * @cfg {String} Устанавливает подпись после второго поля ввода.
+                    * @see startLabel
+                    * @see middleLabel
+                    */
                   endLabel: ''
                },
                _endTextBox: undefined,
@@ -24,12 +48,10 @@ define('js!SBIS3.CONTROLS.SliderInput',
 
             init: function() {
                SliderInput.superclass.init.call(this);
-               this._textBoxStartChange = this._textBoxStartChange.debounce(300)
-               this._textBoxEndChange = this._textBoxEndChange.debounce(300)
                this._endTextBox = this.getChildControlByName('EndTextBox');
                this._startTextBox = this.getChildControlByName('StartTextBox');
-               this._startTextBox.subscribe('onTextChange', this._textBoxStartChange.bind(this));
-               this._endTextBox.subscribe('onTextChange', this._textBoxEndChange.bind(this));
+               this._startTextBox.subscribe('onFocusOut', this._textBoxStartFocusOut.bind(this));
+               this._endTextBox.subscribe('onFocusOut', this._textBoxEndFocusOut.bind(this));
                this.subscribe('onDrawValueChange', this._sliderDrawChange.bind(this));
             },
 
@@ -53,7 +75,7 @@ define('js!SBIS3.CONTROLS.SliderInput',
                this._startTextBox.setPlaceholder(value);
             },
 
-            _textBoxStartChange: function () {
+            _textBoxStartFocusOut: function () {
                if (this._startTextBox._textChanged) {
                   this._setPreparedStartVale(this._startTextBox.getNumericValue());
                   this._pointsContainers.right.removeClass('lastActivePoint');
@@ -61,7 +83,7 @@ define('js!SBIS3.CONTROLS.SliderInput',
                }
             },
 
-            _textBoxEndChange: function () {
+            _textBoxEndFocusOut: function () {
                if (this._endTextBox._textChanged) {
                   this._setPreparedEndVale(this._endTextBox.getNumericValue());
                   this._pointsContainers.left.removeClass('lastActivePoint');

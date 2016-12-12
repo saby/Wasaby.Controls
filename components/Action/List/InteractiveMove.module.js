@@ -118,7 +118,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             meta.movedItems = movedItems;
             this._opendEditComponent({
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               cssClassName: 'controls-moveDialog',
                opener: this._getListView(),
                movedItems: movedItems,
                componentOptions: meta.componentOptions
@@ -143,7 +142,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
-            this.getMoveStrategy().hierarhyMove(movedItems, target).addCallback(function(result){
+            this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }

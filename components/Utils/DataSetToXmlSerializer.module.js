@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       },
       /**
        * Сериализует контейнер в XML-документ
-       * @param {SBIS3.CONTROLS.DataSet} records набор сериализуемых записей
+       * @param {WS.Data/Collection/RecordSet} records набор сериализуемых записей
        * @return {Document}  результат сериализации
        */
       serialize: function(dataSet, columns){

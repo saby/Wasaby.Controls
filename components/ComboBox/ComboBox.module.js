@@ -28,6 +28,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
     *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
     *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
+    *    <li>По стандарту максимальная высота выпадающего списка 400px. В некоторых случаях может возникнуть необходимость её изменить.
+    *        Для этого в опции {@link pickerClassName} нужно указать свой класс someClass и в css указать селектор .someClass.controls-ComboBox__picker .controls-ComboBox__scrollContainer, установив свойство max-height в нужное значение</li>
     * </ul>
     * <br/>
     * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
@@ -168,6 +170,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *         </div>
              *     </option>
              * </pre>
+             * @deprecated Используйте опцию {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
@@ -199,7 +202,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /*
-               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке 
+               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
             */
             autocomplete: false
          }
@@ -221,10 +224,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || target.hasClass('controls-TextBox__afterFieldWrapper') || self.isEditable() === false) {
+            if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
-                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку 
+                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку
                   if (isArrow) {
                      e.preventDefault();
                   }
@@ -401,7 +404,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);                              
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
             }
             /*управлять этим классом надо только когда имеем дело с рекордами
              * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
@@ -502,7 +505,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             item = projItem.getContents(),
             title = item.get(this._options.displayField);
-         
+
          if (this._options.itemTemplate) {
             return doT.template(this._options.itemTemplate)({item : item, displayField : title})
          }
@@ -573,20 +576,36 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _findItemByKey: function(items) {
+         //Алгоритм ищет нужный рекорд по текстовому полю. Это нужно в случае, если в комбобокс
+         //передают текст, и надо оперделить ключ записи
          var noItems = true,
             selKey,
             oldKey = this._options.selectedKey,
+            oldIndex = this._options.selectedIndex,
             oldText = this.getText(),
             self = this;
          items.each(function (item) {
             noItems = false;
-            selKey = item.getId();
-            self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-            self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
-            //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-            if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-               self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
-               self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+            if (self._propertyValueGetter(item, self._options.displayField) == self._options.text) {
+               //для рекордов и перечисляемого чуть разный механизм
+               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+                  selKey = item.getId();
+                  self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+                  //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+                  if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                  }
+               }
+               else {
+                  self._options.selectedIndex = self._getItemsProjection().getIndexBySourceItem(item);
+                  if (oldIndex !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(null, self._options.selectedIndex);
+                     self._drawSelectedItem(null, self._options.selectedIndex);
+                  }
+               }
+
             }
          });
 
