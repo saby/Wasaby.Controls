@@ -110,8 +110,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             },
 
             destroy: function() {
-               EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside);
-               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove);
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside, this);
+               EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove, this);
             }
          },
 
