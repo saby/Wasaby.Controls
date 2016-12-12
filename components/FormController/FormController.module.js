@@ -722,12 +722,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see dataSource
        */
       update: function(config){
-         if (typeof(config) !== 'object'){
-            config = {
-               closePanelAfterSubmit: config
-            };
-            IoC.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
-         }
          return this._prepareUpdatingRecord(config);
       },
 
