@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                  * @see keyField
                  * @see displayField
                  **/
-                items: undefined,
+                items: [],
                 /**
                  * @cfg {Array.<Number>} Устанавливает набор идентификаторов элементов, которые будут выбраны для фильтра.
                  * @see setValue
