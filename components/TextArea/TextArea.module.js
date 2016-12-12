@@ -220,6 +220,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
          if (!this.isEnabled()) {
             this._inputField.removeClass('ws-hidden').addClass('ws-invivsible');
          }
+         else {
+            $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invivsible').addClass('ws-hidden');
+         }
          this._container.addClass('controls-TextArea__heightInit');
       },
 
