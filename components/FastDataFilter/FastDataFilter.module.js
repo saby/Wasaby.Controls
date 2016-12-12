@@ -7,13 +7,14 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
+   'Core/Deferred',
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
    "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
    "Core/helpers/collection-helpers"
 ],
 
-   function( constants,CompoundControl, ItemsControlMixin, FilterMixin, DropdownList, dotTplFn, ItemTpl, colHelpers) {
+   function( constants,CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers) {
 
       'use strict';
       /**
@@ -236,16 +237,17 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   if (instances.hasOwnProperty(i)){
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
-                     value = this._prepareValue(instances[i], value);
-                     if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
-                        if(instances[i].getItems()){
-                           instances[i].setSelectedKeys(value);
-                        }else {
-                           instances[i].once('onItemsReady', function () {
-                              instances[i].setSelectedKeys(value);
-                           });
+                     this._prepareValue(instances[i], value).addCallback(function(instance, value){
+                        if (!this._isSimilarArrays(instance.getSelectedKeys(), value)) {
+                           if(instance.getItems()){
+                              instance.setSelectedKeys(value);
+                           }else {
+                              instance.once('onItemsReady', function () {
+                                 instance.setSelectedKeys(value);
+                              });
+                           }
                         }
-                     }
+                     }.bind(this, instances[i]));
                   }
                }
          },
@@ -253,11 +255,25 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _prepareValue: function(instance, newKeys){
             //В структуре resetValue может содержать ключ, которого нет в выпадающем списке
             //В этом случае мы должны выставить первую запись, которая содержится в наборе данных
+            var def = new cDeferred();
             var items = instance.getItems();
             if (items && items.getRecordById(newKeys[0])){
-               return newKeys;
+               return def.callback(newKeys);
             }
-            return [instance._defaultId];
+            //Проверки на текущем наборе данных недостаточно, multiSelectable может пойти на БЛ за записью с указанным ключом.
+            //todo Нужно рассмотреть возможность отказаться от этого поведения, выписал задачу в 230 https://inside.tensor.ru/opendoc.html?guid=a40189c0-f472-46cf-bd3c-44e641d3ebb9&des=
+            if (instance.getDataSource()){
+               instance.getDataSource().read(newKeys[0]).addCallbacks(
+                  function () {
+                     def.callback(newKeys);
+                  },
+                  function() {
+                     def.callback([instance._defaultId]);
+                  }
+               );
+               return def;
+            }
+            return def.callback([instance._defaultId]);
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){
