@@ -171,8 +171,8 @@ define('js!SBIS3.CONTROLS.Slider',
                   IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное минимальное значение');
                } else {
                   this._options.minValue = minValue;
-                  this._drawStartValue(this._options._startValue);
-                  this._drawEndValue(this._options._endValue);
+                  this._drawStartValue(this._options.startValue);
+                  this._drawEndValue(this._options.endValue);
                }
             },
              /**
@@ -195,8 +195,8 @@ define('js!SBIS3.CONTROLS.Slider',
                   IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное максимальное значение');
                } else {
                   this._options.maxValue = maxValue;
-                  this._drawStartValue(this._options._startValue);
-                  this._drawEndValue(this._options._endValue);
+                  this._drawStartValue(this._options.startValue);
+                  this._drawEndValue(this._options.endValue);
                }
             },
              /**
