@@ -591,7 +591,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
                   selKey = item.getId();
                   self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-                  self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+
+                  //могут позвать setText, когда проекции еще не создали. Весь этот код уберется по задаче
+                  //https://inside.tensor.ru/opendoc.html?guid=8dd659f0-a83e-4804-970f-2c0d482193c9&des=
+                  if (self._getItemsProjection) {
+                     self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+                  }
                   //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
                   if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
                      self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
