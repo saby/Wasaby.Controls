@@ -10,6 +10,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
 
    'use strict';
 
+   var TPL_FIELD = 'itemTemplate';
+   var HISTORY_TPL_FIELD = 'historyItemTemplate';
+
    return {
       prepareStructureToSave: function(structure) {
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
@@ -25,12 +28,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                }
             }
             /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
-            if(elem.itemTemplate) {
-               delete elem.itemTemplate;
+            if(elem.hasOwnProperty(TPL_FIELD)) {
+               delete elem[TPL_FIELD];
             }
 
-            if(elem.historyItemTemplate) {
-               delete elem.historyItemTemplate;
+            if(elem.hasOwnProperty(HISTORY_TPL_FIELD)) {
+               delete elem[HISTORY_TPL_FIELD];
             }
          });
 
@@ -101,7 +104,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
       },
 
       prepareNewStructure: function(currentStructure, newStructure) {
-         var toDelete = [];
+         var toDelete = [],
+             hasStructureElem = false;
 
          colHelpers.forEach(newStructure, function(newStructureElem, key) {
             var elemFromCurrentStructure = colHelpers.find(currentStructure, function(elem) {
@@ -111,7 +115,17 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                   IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
                   return false;
                } else {
-                  return newStructureElem.internalValueField === elem.internalValueField;
+                  hasStructureElem = newStructureElem.internalValueField === elem.internalValueField;
+
+                  if(hasStructureElem) {
+                     if(elem.hasOwnProperty(TPL_FIELD)) {
+                        newStructureElem[TPL_FIELD] = elem[TPL_FIELD];
+                     }
+                     if(elem.hasOwnProperty(HISTORY_TPL_FIELD)) {
+                        newStructureElem[HISTORY_TPL_FIELD] = elem[HISTORY_TPL_FIELD];
+                     }
+                  }
+                  return hasStructureElem;
                }
             });
 
