@@ -236,27 +236,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    expandAllItems = function(projection) {
       var
-         enumerator = projection.getEnumerator(),
-         doNext = true,
+         recordSet = projection.getCollection(),
+         projItems = projection.getItems(),
+         hierarchy = new HierarchyRelation({
+            idProperty: recordSet.getIdProperty(),
+            parentProperty: projection.getParentProperty()
+         }),
          item;
-      while (doNext && (item = enumerator.getNext())) {
-         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+      for (var i = 0; i < projItems.length; i++) {
+         item = projItems[i];
          if (item.isNode() && !item.isExpanded()) {
-            var items = projection.getCollection(),
-               hierarchy = new HierarchyRelation({
-                  idProperty: items.getIdProperty(),
-                  parentProperty: projection.getParentProperty()
-               }),
-               children = hierarchy.getChildren(
-                  item.getContents().getId(),
-                  projection.getCollection()
-               );
-
-            if (children.length) {
+            if (hierarchy.getChildren(item.getContents().getId(), recordSet).length) {
                item.setExpanded(true);
                item.setLoaded(true);
-               doNext = false;
-               expandAllItems(projection);
             }
          }
       }
