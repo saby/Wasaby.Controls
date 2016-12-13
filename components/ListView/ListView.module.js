@@ -2856,23 +2856,21 @@ define('js!SBIS3.CONTROLS.ListView',
          _setLastPage: function(){
             var more = this.getItems() ? this.getItems().getMetaData().more : false,
                pageNumber;
-            if (typeof more == 'number'){
-               pageNumber = more / this._options.pageSize;
-            } else {
-               this._lastPageLoaded = true;
-               this._setInfiniteScrollState('up');
-               this.reload(undefined, undefined, -1).addCallback(function(items){
-                  more = items.getMetaData().more;
-                  if (typeof more == 'number'){
-                     pageNumber = Math.floor(more / this._options.pageSize);
-                     this._scrollOffset.bottom = more;
-                     this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
-                     this._scrollOffset.top = more - items.getCount();
-                     this.setPage(pageNumber, true);
-                     this._scrollWatcher.scrollTo('bottom');
-                  }
-               }.bind(this));
-            }
+            
+            this._lastPageLoaded = true;
+            this._setInfiniteScrollState('up');
+            this.reload(undefined, undefined, -1).addCallback(function(items){
+               more = items.getMetaData().more;
+               if (typeof more == 'number'){
+                  pageNumber = Math.floor(more / this._options.pageSize);
+                  this._scrollOffset.bottom = more;
+                  this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
+                  this._scrollOffset.top = more - items.getCount();
+                  this.setPage(pageNumber, true);
+                  this._scrollWatcher.scrollTo('bottom');
+               }
+            }.bind(this));
+
          },
 
          _isPageLoaded: function(pageNumber) {
