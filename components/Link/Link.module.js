@@ -3,12 +3,13 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
    'use strict';
 
    /**
-    * Контрол, отображающий кнопку в виде ссылки. Используется только в онлайне.
-    * Сторонние пользователи скорее предпочтут использовать просто <a></a>
+    * Класс контрол "Кнопка в виде ссылки". Используется только в онлайн.
+    *
     * @class SBIS3.CONTROLS.Link
-	 * @demo SBIS3.CONTROLS.Demo.MyLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @author Крайнов Дмитрий Олегович
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyLink
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -30,18 +31,18 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-Button__ellipsis При нехватке ширины текст на кнопке оборвётся многоточием.
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
-    *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
-    * @css controls-Link__disabledHover Класс отключающий изменения цвета по ховеру
-    * @css controls-Link__underline Класс подчеркивает ссылку по-умолчанию
-    * @css mainLink__2 Основная ссылка 2
-    * @css additionalLink Дополнительная ссылка
-    * @css additionalLink__2 Дополнительная ссылка 2
-    * @css additionalLink__3 Дополнительная ссылка 3
-    * @css additionalLink__4 Дополнительная ссылка 4
-    * @css additionalLink__5 Дополнительная ссылка 5
+    *
+    * @cssModifier controls-Button__ellipsis Устанавливает отображение многоточия в тексте кнопки при нехватке ширины.
+    * !Важно: при добавлении этого модификатора сломается "Базовая линия".
+    * @cssModifier controls-Link__disabledHover Отключает изменение цвета текста кнопки, которое происходит по наведению курсора.
+    * @cssModifier controls-Link__underline Устанавливает постоянное подчеркивание текста кнопки.
+    * @cssModifier mainLink__2 Устанавливает для кнопки стилевое оформление "Основная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink Устанавливает для кнопки стилевое оформление "Дополнительная ссылка" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__2 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__3 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 3" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__4 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 4" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__5 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 5" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
     *
     * @control
     * @public
