@@ -894,10 +894,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                targetElement.get(0).outerHTML = markup;
-               for (i = 0; i < comps.length; i++) {
-                  if (comps[i]) {
-                     comps[i].destroy();
-                  }
+            }
+            for (i = 0; i < comps.length; i++) {
+               if (comps[i]) {
+                  comps[i].destroy();
                }
             }
             result = true;
