@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
        var TEMPLATES = {
           main: 'template',
+          header: 'topTemplate',
           additional: 'additionalFilterParamsTemplate'
        };
 
@@ -97,6 +98,16 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  * @see additionalFilterParamsTemplate
                  */
                 template: '',
+                /**
+                 * @сfg {String} Устанавливает шаблон заголовка всплывающей панели кнопки фильтров.
+                 * @remark
+                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                 * @example
+                 * <pre>
+                 *   <option name="topTemplate" value="SBIS3.EDO.CtxFilter"/>
+                 * </pre>
+                 */
+                topTemplate: '',
                 /**
                  * @сfg {String} Устанавливает шаблон для блока "Можно отобрать" на всплывающей панели.
                  * @remark
@@ -215,8 +226,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              this._dTemplatesReady = new ParallelDeferred();
 
-             processTemplate(this.getProperty(TEMPLATES.main), TEMPLATES.main);
-             processTemplate(this.getProperty(TEMPLATES.additional), TEMPLATES.additional);
+             colHelpers.forEach(TEMPLATES, function(template) {
+                processTemplate(self.getProperty(template), template);
+             });
 
              return this._dTemplatesReady.done().getResult();
           },
@@ -266,8 +278,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                     internalContextFilterName: this._options.internalContextFilterName
                  },
                  self = this,
-                 main = this.getProperty(TEMPLATES.main),
-                 additional = this.getProperty(TEMPLATES.additional);
+                 templateProperty;
 
              /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
              function getCompTpl(tpl) {
@@ -279,9 +290,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 return prepTpl(tpl);
              }
 
-             config[TEMPLATES.main] = components[TEMPLATES.main] ? getCompTpl(main) : getTpl(main);
-             config[TEMPLATES.additional] = components[TEMPLATES.additional] ? getCompTpl(additional) : getTpl(additional);
-
+             colHelpers.forEach(TEMPLATES, function(template) {
+                templateProperty = self.getProperty(template);
+                config[template] = components[template] ? getCompTpl(templateProperty) : getTpl(templateProperty);
+             });
 
              return MarkupTransformer(prepTpl(dotTplForPicker)(config));
           },
