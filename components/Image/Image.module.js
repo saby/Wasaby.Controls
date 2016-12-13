@@ -35,6 +35,8 @@ define('js!SBIS3.CONTROLS.Image',
           * @author Крайнов Дмитрий Олегович
           *
           * @ignoreOptions validators
+          * @ignoreEvents onAfterLoad onChange onStateChange
+          * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
           *
           * @public
           * @control

@@ -8,6 +8,9 @@ define('js!SBIS3.CONTROLS.Demo.SliderDemo',
    function(CompoundControl, dotTplFn) {
       var moduleClass = CompoundControl.extend({
          _dotTplFn: dotTplFn,
+         init: function() {
+            moduleClass.superclass.init.call(this);
+         }
       });
       return moduleClass;
    }

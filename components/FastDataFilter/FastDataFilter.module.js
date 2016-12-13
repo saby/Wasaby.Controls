@@ -22,12 +22,20 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends $ws.proto.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       *
+       * @author Герасимов Александр Максимович
+       *
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
+       *
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
+       *
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
+       *
+       * @ignoreEvents onAfterLoad onChange onStateChange
+       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+       *
        * @control
        * @public
        * @category Filtering
