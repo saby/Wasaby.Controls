@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return Utils.getItemPropertyValue(itemContents, field);
       }
    },
-      
+
    canApplyGrouping = function(projItem, cfg) {      var
          itemParent = projItem.getParent && projItem.getParent();
       return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
@@ -929,6 +929,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
                removedElements.push(targetElement.get(0));
+               /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
+                  поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
+            } else if(this._isSearchMode() && item.isNode()) {
+               this.redraw();
+               return;
             }
          }
          removedElements.remove();
@@ -1380,7 +1385,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._itemsReadyCallback();
                       self.redraw();
                    }
-                   
+
                    self._checkKeyField();
 
                    this._dataLoadedCallback();
