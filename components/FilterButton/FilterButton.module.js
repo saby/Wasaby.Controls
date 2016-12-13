@@ -68,6 +68,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
           return hasResetValue && hasValue ? FilterToStringUtil.isEqualValues(filter[fieldName], element.resetValue) : !hasValue;
        }
 
+       var TEMPLATES = {
+          main: 'template',
+          additional: 'additionalFilterParamsTemplate'
+       };
+
        var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
           _dotTplFn: dotTplFn,
           _dotTplPicker: dotTplForPicker,
@@ -127,10 +132,24 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   * @see filterLineComponent
                   */
                 filterLineTemplate: undefined,
-                 /**
-                  * @cfg {Boolean}
-                  */
-                independentContext: true,
+                /** @cfg {Object.<String, Boolean|Number|String|Function>} Опции для компонента, отображаемом внутри области
+                 * <wiTag group="Управление">
+                 * Передаем опции для комопнента, которой будем отображать внутри области.
+                 * <b>Опция актуальна только если в качестве шаблона выступает компонент</b>
+                 *
+                 * Пример:
+                 * <pre>
+                 *    ...
+                 *    template: 'js!SBIS3.User.Info'
+                 *    componentOptions: {
+             *       firstName: 'John',
+             *       secondName: 'Snow',
+             *       nationality: 'Westerosi'
+             *    }
+                 *    ...
+                 * </pre>
+                 */
+                componentOptions: {},
                  /**
                   * @cfg {String}
                   */
@@ -167,10 +186,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
              if(!this.isEnabled()) return;
 
              if(!this._picker) {
-                this._initTemplates();
-                this._dTemplatesReady.getResult().addCallback(function() {
+                this._initTemplates().addCallback(function() {
                    showPicker();
-                })
+                });
              } else {
                 showPicker();
              }
@@ -178,17 +196,18 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
           _initTemplates: function() {
              if(this._dTemplatesReady) {
-                return;
+                return this._dTemplatesReady.getResult();
              }
 
              var self = this;
 
              function processTemplate(template, name) {
                 /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
-                 то перед отображением панели фильтров сначала загрузим компонент. */
+                   то перед отображением панели фильтров сначала загрузим компонент. */
                 if(template && /^(js!)?SBIS3.*/.test(template)) {
                    self._dTemplatesReady.push(mStubs.require(((template.indexOf('js!') !== 0 ? 'js!' : '') + template)).addCallback(function(comp) {
-                      self._filterTemplates[name] = comp[0];
+                      /* Запишем, что в качестве шаблона задали компонент */
+                      self._filterTemplates[name] = true;
                       return comp;
                    }));
                 }
@@ -196,10 +215,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              this._dTemplatesReady = new ParallelDeferred();
 
-             processTemplate(this._options.template, 'filterArea');
-             processTemplate(this._options.additionalFilterParamsTemplate, 'additionalFilterArea');
+             processTemplate(this._options.template, TEMPLATES.main);
+             processTemplate(this._options.additionalFilterParamsTemplate, TEMPLATES.additional);
 
-             this._dTemplatesReady.done();
+             return this._dTemplatesReady.done().getResult();
           },
 
           applyFilter: function() {
@@ -239,14 +258,40 @@ define('js!SBIS3.CONTROLS.FilterButton',
              }
           },
 
+          _getAreaTemplate: function() {
+             var prepTpl = TemplateUtil.prepareTemplate,
+                 components = this._filterTemplates,
+                 config = {
+                    historyController: this._historyController,
+                    internalContextFilterName: this._options.internalContextFilterName
+                 },
+                 self = this,
+                 main = this.getProperty(TEMPLATES.main),
+                 additional = this.getProperty(TEMPLATES.additional);
+
+             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
+             function getCompTpl(tpl) {
+                return prepTpl(dotTplForComp({component: tpl, componentOptions: self.getProperty('componentOptions')}));
+             }
+
+             /* Если в качестве шаблона передали вёрстку */
+             function getTpl(tpl) {
+                return prepTpl(tpl);
+             }
+
+             config[TEMPLATES.main] = components[TEMPLATES.main] ? getCompTpl(main) : getTpl(main);
+             config[TEMPLATES.additional] = components[TEMPLATES.additional] ? getCompTpl(additional) : getTpl(additional);
+
+
+             return MarkupTransformer(prepTpl(dotTplForPicker)(config));
+          },
+
           _setPickerConfig: function () {
              var context = new cContext({restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
                  isRightAlign = this._options.filterAlign === 'right',
                  firstTime = true,
                  self = this,
-                 prepTpl = TemplateUtil.prepareTemplate,
-                 tpls = this._filterTemplates,
                  byFilter, byCaption, byVisibility;
 
              function updatePickerContext() {
@@ -317,12 +362,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeByExternalClick: true,
                 context: context,
                 className: 'controls__filterButton__picker',
-                template: MarkupTransformer(prepTpl(dotTplForPicker)({
-                   template: prepTpl(tpls.filterArea ? dotTplForComp({component: self._options.template}) : self._options.template),
-                   additionalFilterParamsTemplate: prepTpl(tpls.additionalFilterArea ? dotTplForComp({component: self._options.additionalFilterParamsTemplate}) : self._options.additionalFilterParamsTemplate),
-                   historyController: this._historyController,
-                   internalContextFilterName: this._options.internalContextFilterName
-                })),
+                template: this._getAreaTemplate(),
                 handlers: {
                    onClose: function() {
                       /* Разрушаем панель при закрытии,
