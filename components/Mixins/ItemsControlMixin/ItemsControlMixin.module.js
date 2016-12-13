@@ -888,12 +888,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
-            this._clearItems(targetElement);
+            var comps = this._destroyInnerComponents(targetElement, this._options.easyGroup);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
                targetElement.after(markup).remove();
             }
             else {
                targetElement.get(0).outerHTML = markup;
+               for (i = 0; i < comps.length; i++) {
+                  if (comps[i]) {
+                     comps[i].destroy();
+                  }
+               }
             }
             result = true;
          }
