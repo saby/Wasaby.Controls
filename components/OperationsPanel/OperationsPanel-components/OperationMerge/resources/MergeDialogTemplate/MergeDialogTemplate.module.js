@@ -44,7 +44,8 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,
                 dataSource: undefined,
-                hierField: undefined,
+                parentProperty: undefined,
+                nodeProperty: undefined,
                 displayField: undefined,
                 titleCellTemplate: undefined
             },
@@ -84,7 +85,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 //Получим ключи всех записей которые хотим объединять.
                 //Не берём папки, которые присутствуют в датасете для построения структуры.
                 recordSet.each(function(rec) {
-                    if (!rec.get(self._options.hierField + '@')) {
+                    if (!rec.get(self._options.parentProperty + '@')) {
                         self._treeViewKeys.push(rec.getId());
                     }
                 });

@@ -89,6 +89,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   columns : cFunctions.clone(cfg.columns || []),
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
+                  parentProperty: cfg.parentProperty,
+                  nodeProperty: cfg.nodeProperty,
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
                   groupId: groupId
@@ -927,11 +929,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                   }
                }
-
                removedElements.push(targetElement.get(0));
             }
          }
          removedElements.remove();
+      },
+
+      _getSourceNavigationType: function(){
+         if (this.getDataSource() && this.getDataSource()._options.options){
+            return this.getDataSource()._options.options.navigationType;
+         }
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {
@@ -1716,7 +1723,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                tplOptions = {
                   columns : cFunctions.clone(this._options.columns || []),
                   multiselect : this._options.multiselect,
-                  hierField: this._options.hierField + '@'
+                  hierField: this._options.hierField + '@',
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty
                },
                targetContainer,
                itemInstance, groupTemplateFnc;

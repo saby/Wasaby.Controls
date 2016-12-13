@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
 
                /* При выборе в иерархических представлених, нельзя реагировать на событие onItemActivate вызваное
                   кликом по узлу / нажатии на >> . Выбор узлов в иерархических представлениях обрабатывается прикладной логикой */
-               if(cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.TreeMixin') && item.get(linkedView.getHierField() + '@')) {
+               if(cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.TreeMixin') && item.get(linkedView.getNodeProperty())) {
                   return;
                }
 

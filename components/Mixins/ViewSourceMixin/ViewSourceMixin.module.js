@@ -77,6 +77,9 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
               .orderBy(sorting || {});
 
          queryDef = source.query(query);
+         queryDef.addErrback(function(e) {
+            return e
+         });
 
          /* По готовности компонента установим данные */
          this.subscribe('onInit', function() {

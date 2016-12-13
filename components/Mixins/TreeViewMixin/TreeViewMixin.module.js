@@ -352,7 +352,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             this.toggleNode(nodeID);
             /* Не вызываем активацию item'a при клике на чекбокс */
          } else if(!$target.hasClass('js-controls-ListView__itemCheckBox')) {
-            if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
+            if ((this._options.allowEnterToFolder) && ((data.get(this._options.nodeProperty)))){
                this.setCurrentRoot(nodeID);
                this.reload();
             }
@@ -365,11 +365,12 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._options._items.getRecordById(id),
+            item = this.getItems().getRecordById(id),
             meta = {
                id: id,
                item: item,
-               hierField : this._options.hierField
+               hierField : this._options.parentProperty,
+               parentProperty: this._options.parentProperty
             };
 
          this._notify('onItemActivate', meta);

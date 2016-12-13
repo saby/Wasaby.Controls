@@ -51,11 +51,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
       var decimals = onlyInteger ? 0 : decimals,
-          isDotLast = (value && value.length) ? value.indexOf('.') === value.length - 1 : false;
+          dotPos = (value = (value + "")).indexOf('.'),
+          parsedVal = dotPos != -1 ? value.substr(dotPos) : 0,
+          isDotLast = (value && value.length) ? dotPos === value.length - 1 : false;
 
       if (value == '-') {
          return value;
       }
+
       value = cDefaultRenders.numeric(
          value,
          integers,
@@ -68,6 +71,16 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       if(isDotLast){
          value = value ? value + '.' : '.';
       }
+
+      if(value){
+         dotPos = value.indexOf('.');
+         if (!onlyInteger && decimals && (parsedVal == "." || parsedVal === 0)) {
+            value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
+         } else {
+            value = (dotPos !== -1 ? value.substring(0, dotPos) + parsedVal : value);
+         }
+      }
+
       if(!checkMaxLength(value, maxLength)){
          return text;
       }
@@ -75,7 +88,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    }
 
    function checkMaxLength(value, maxLength){
-      var length = value ? value.replace(/[\s-]/g,'').length : 0;
+      var length = value ? value.replace(/[\.\s-]/g,'').length : 0;
       return !(maxLength && length > maxLength);
    }
 
@@ -145,7 +158,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * <pre>
              * @see decimals
              */
-            hideEmptyDecimals: false,
+            hideEmptyDecimals: true,
             /**
              * @cfg {Boolean} Использовать ли кнопки для изменения значения
              * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
@@ -265,15 +278,18 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _hideEmptyDecimals: function () {
          var value = this._inputField.val();
-         if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)){
-            while (value[value.length - 1] == '0' || value[value.length - 1] == '.'){
-               value = value.substr(0, value.length - 1);
-               if (value.indexOf('.') == -1) { // удаляем только дробную часть
-                  break;
+         if(value) {
+            if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)) {
+               while (value[value.length - 1] == '0' || value[value.length - 1] == '.') {
+                  value = value.substr(0, value.length - 1);
+                  if (value.indexOf('.') == -1) { // удаляем только дробную часть
+                     break;
+                  }
                }
             }
+            this._options.text = value;
+            this._inputField.val(value);
          }
-         this._inputField.val(value);
       },
 
        /**
@@ -382,7 +398,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
          var keyCode = (event.which >= 96 && event.which <= 105) ? event.which - 48 : event.which;
          /*точка*/
-         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (!event.key || event.key == ',' || event.key == '.'|| event.key == 'Decimal')) {
+         if ((keyCode == 190 || keyCode == 110 || keyCode == 191 || keyCode == 188) && (!event.key || event.key == ',' || event.key == '.'|| event.key == 'б' || event.key == 'ю' || event.key == 'Decimal')) {
             this._dotHandler(event);
             return;
          }
@@ -439,7 +455,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if (b > dotPosition && e > dotPosition){ // после точки
                if (b == e) {
                   if(checkMaxLengthResult || (e <= dotPosition + this._options.decimals)) {
-                     currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals > 0) ? 1 : 0));
+                     currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals !== 0) ? 1 : 0));
                   }
                } else {
                   currentVal = currentVal.substr(0, b) + symbol + ((this._options.decimals > 0) ? this._getZeroString(e - b - 1) : '') + currentVal.substr(e);
@@ -481,8 +497,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                }
             } else if (b > dotPosition && e > dotPosition) { // после точки
                if (b == e) {
-                  currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e + 1);
-                  (this._options.decimals > 0) ? newCaretPosition++ : newCaretPosition;
+                  currentVal = currentVal.substr(0, b) + currentVal.substr(e + 1);
                } else {
                   currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
                }
@@ -523,9 +538,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             } else if (b > dotPosition && e > dotPosition) { // после точки
                if (b == e) {
                   if (!(b == dotPosition + 1 && this._options.decimals > 0)) {
-                     currentVal = currentVal.substr(0, b - 1) + (this._options.decimals > 0 ? '0' : '') + currentVal.substr(e);
+                     currentVal = currentVal.substr(0, b - 1) + currentVal.substr(e);
                   }
-                  newCaretPosition--;
+                  newCaretPosition = dotPosition === b - 2 ? newCaretPosition - 2 : newCaretPosition - 1;
                } else {
                   currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
                }
