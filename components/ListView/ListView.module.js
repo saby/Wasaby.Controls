@@ -2854,7 +2854,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLastPage: function(){
-            var more = this.getItems().getMetaData().more,
+            var more = this.getItems() ? this.getItems().getMetaData().more : false,
                pageNumber;
             if (typeof more == 'number'){
                pageNumber = more / this._options.pageSize;
