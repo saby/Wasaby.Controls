@@ -435,7 +435,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             integerCount =  this._getIntegersCount(currentVal),
             checkMaxLengthResult = checkMaxLength(currentVal, this._options.maxLength),
             newCaretPosition = b;
-         if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
+         if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
             newCaretPosition--;
          }
          if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
@@ -588,12 +588,18 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _toggleMinus: function(){
+         var value;
          if (!this._options.onlyPositive) {
+            value = this._inputField.val();
+
+            if(!value){
+               value = '0';
+            }
             if (this._options.text.indexOf('-') == -1) {
-               this._setText('-' + this._inputField.val());
-               this._setCaretPosition(this._caretPosition[0] + 1);
+               this._setText('-' + value);
+               this._setCaretPosition(this._caretPosition[0] + 2);
             } else {
-               this._setText(this._inputField.val().substr(1));
+               this._setText(value.substr(1));
                this._setCaretPosition(this._caretPosition[0] - 1);
             }
             TextBox.superclass.setText.call(this, this._inputField.val());
