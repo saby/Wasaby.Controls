@@ -1,4 +1,4 @@
-<div class="controls-TextBox" {{?it.tooltip}} title="{{=it.tooltip}}"{{?}}>
+<div class="controls-TextBox" {{?it.tooltip}} title="{{=$ws.helpers.htmlToText(it.tooltip)}}"{{?}}>
    {{? it.beforeFieldWrapper}}<div class="controls-TextBox__beforeFieldWrapper">{{= typeof(it.beforeFieldWrapper) === 'function' ? it.beforeFieldWrapper(it) : it.beforeFieldWrapper}}</div>{{?}}
    {{? it.afterFieldWrapper}}{{? it.enableArrows !== false}}<div class="controls-TextBox__afterFieldWrapper">{{= typeof(it.afterFieldWrapper) === 'function' ? it.afterFieldWrapper(it) : it.afterFieldWrapper}}</div>{{?}}{{?}}
    <div class="controls-TextBox__fieldWrapper {{? it.enableArrows !== false}}controls-NumberTextBox__enable-arrow{{?}}">

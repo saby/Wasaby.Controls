@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    "js!SBIS3.CONTROLS.FilterPanelChooser.List",
    "js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList",
    "js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList",
+   "js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup",
    "js!SBIS3.CONTROLS.FilterPanelDataRange",
    "js!SBIS3.CONTROLS.FilterPanelBoolean",
    "js!SBIS3.CONTROLS.IconButton",
@@ -94,6 +95,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *     <li>list - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.List}.</li>
              *     <li>dictionary - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList}.</li>
              *     <li>favorites - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FavoritesList}.</li>
+             *     <li>radio - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup}.</li>
              * </ul>
              *
              */

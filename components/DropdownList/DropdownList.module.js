@@ -28,13 +28,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListItem",
+   "html!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
    "Core/helpers/dom&controls-helpers",
    "i18n!SBIS3.CONTROLS.DropdownList"
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -115,6 +116,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
          $protected: {
             _options: {
                _getRecordsForRedraw: getRecordsForRedrawDDL,
+               _defaultItemContentTemplate: ItemContentTemplate,
+               _defaultItemTemplate: dotTplFnForItem,
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
@@ -147,15 +150,52 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * <pre>
                 *    <option name="headTemplate" type="ref">{{@it.myHeadTemplate}}</option>
                 * </pre>
+                * Шаблон, который используется по умолчанию:
+                * <pre>
+                *    <div class="controls-DropdownList__beforeCaptionWrapper">
+                *       <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                *    </div>
+                *    <div class="controls-DropdownList__textWrapper">
+                *       <span class="controls-DropdownList__text">{{=it.text}}</span>
+                *    </div>
+                *    <div class="controls-DropdownList__afterCaptionWrapper">
+                *       <i class="controls-DropdownList__crossIcon icon-16 icon-size icon-Close icon-disabled action-hover"></i>
+                *    </div>
+                * </pre>
                 * @editor ExternalComponentChooser
                 * @see headPickerTemplate
                 * @see itemTpl
                 */
                headTemplate: dotTplFnHead,
                /**
-                *  @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
-                *  @see headTemplate
-                *  @see itemTpl
+                * @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
+                * @example
+                * Подключение, импорт в переменную и передача шаблона в переменную:
+                * <pre>
+                * define('js!SBIS3.MyArea.MyComponent',
+                *    [ ... , 'html!SBIS3.MyArea.MyComponent/resources/myHeadPickerTpl' ],
+                *    function(..., myHeadPickerTpl){
+                *       ...
+                *       $protected: {
+                *          _options: {
+                *             myHeadPickerTemplate: myHeadPickerTpl
+                *          }
+                *       }
+                *       ...
+                * });
+                * </pre>
+                * Передача шаблона в опцию компонента:
+                * <pre>
+                *    <option name="headPickerTemplate" type="ref">{{@it.myHeadPickerTemplate}}</option>
+                * </pre>
+                * Шаблон, который используется по умолчанию:
+                * <pre>
+                *    <div class="controls-DropdownList__pickerHead">
+                *       <span class="controls-DropdownList__pickerHead-text">{{=(it.title || it.text)}}</span>
+                *    </div>
+                * </pre>
+                * @see headTemplate
+                * @see itemTpl
                 */
                headPickerTemplate: dotTplFnPickerHead,
                /**
@@ -190,17 +230,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * <pre>
                 *     <option name="itemTpl" type="ref">{{@it.newItemTpl}}</option>
                 * </pre>
+                * Шаблон, который используется по умолчанию:
+                * <pre>
+                *    <div class="controls-DropdownList__item{{?it.className}} {{=it.className}}{{?}}{{?it.multiselect}} controls-DropdownList__multiselect{{?}}{{?it.item.get && it.item.get('isEmptyValue')}} controls-DropdownList__defaultItem{{?}}{{?it.item.get && it.item.get(it.hierField)}} controls-DropdownList__child{{?}}{{?((it.item.getId && it.item.getId()) === it.defaultId)}} controls-ListView__defaultItem{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{?it.item.getId}}{{=it.item.getId()}}{{?}}">
+                *        {{?it.multiselect}}
+                *        <div class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></div>
+                *        {{?}}
+                *        <div class="controls-DropdownList__itemTextWrapper controls-DropdownList__itemTextWrapper-height">
+                *            <div class="controls-DropdownList__item-text" title="{{=it.getPropertyValue(it.item, it.displayField)}}">{{=it.getPropertyValue(it.item, it.displayField)}}</div>
+                *            <div class="controls-DropdownList__item-text-shadow"></div>
+                *        </div>
+                *    </div>
+                * </pre>
                 * @editor ExternalComponentChooser
                 * @see headTemplate
                 * @see headPickerTemplate
                 */
                itemTpl: dotTplFnForItem,
-               /**
-                * @cfg {String} Устанавливает режим открытия выпадающего списка.
-                * @variant click Открытие клику на заголовок.
-                * @variant hover Открытие по наведению курсора мыши.
-                */
-               mode: 'click',
                /**
                 * @cfg {String} Устанавливает текст в заголовке.
                 * @translatable
@@ -250,7 +296,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          $constructor: function() {
             this._publish('onClickMore');
-            this._container.bind(this._options.mode === 'hover' ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
+            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'mouseup', this.showPicker.bind(this));
             if (!this._picker) {
                if (this._container.hasClass('controls-DropdownList__withoutCross')){
                   this._options.pickerClassName += ' controls-DropdownList__withoutCross';
@@ -282,12 +328,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this.reload();
             this._bindItemSelect();
 
-            if(this._options.mode === 'hover') {
+            if(this._isHoverMode()) {
                this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
                this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
                pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, null));
             }
-            else if (this._options.mode === 'click'){
+            else {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
          },
@@ -444,7 +490,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          showPicker: function(ev) {
             if (this.isEnabled()) {
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
-               if (this._options.mode !== 'hover' && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
+               if (!this._isHoverMode() && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
                }
                var items = this._getPickerContainer().find('.controls-DropdownList__item');
@@ -455,13 +501,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                for (var i = 0 ; i < items.length; i++) {
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
                }
+               this._calcPickerSize();
                DropdownList.superclass.showPicker.apply(this, arguments);
 
-               this._calcPickerSize();
                if (this._buttonChoose) {
                   this._buttonChoose.getContainer().addClass('ws-hidden');
                }
             }
+         },
+         _isHoverMode: function(){
+            return this._options.type === 'fastDataFilter';
          },
          _calcPickerSize: function(){
             var pickerBodyWidth,
@@ -473,6 +522,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Сбрасываем значения, выставленные при предыдущем вызове метода _calcPickerSize
             this._pickerBodyContainer.css('max-width', '');
             this._pickerHeadContainer.css('width', '');
+            this._togglePickerVisibility(true);
 
             pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
             pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
@@ -482,18 +532,27 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Ширина шапки не больше, чем ширина контейнера
             if (needResizeHead){
                this._pickerHeadContainer.width(containerWidth);
-               pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth; //изменилась ширина контейрена, нужно взять актуальную
+               pickerHeaderWidth = containerWidth; //изменилась ширина контейрена, нужно взять актуальную
             }
-
-            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
-            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
 
             //Контейнер с итемами ресайзится в 2-х случаях
             //1: Ширина шапки < 400px, ширина контейнера с итемами > 400px => ширина контейнера = 400px, ограничение прописано в less
             //2: Ширина шапки > 400px => ширина контейнера с итемами = ширине шапки
             if (pickerHeaderWidth > pickerBodyWidth){
                this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
+               pickerBodyWidth = pickerHeaderWidth; //изменилась ширина контейрена, нужно взять актуальную
             }
+            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
+            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
+
+            this._togglePickerVisibility(false);
+         },
+         _togglePickerVisibility: function(toggle){
+            //Расчет ширины пикера должен производиться до показа контейнера, иначе пикер сам установит ширину, исходя из текущей верстки, и наш ресайз приведет к неправильому позиционированию
+            //Ставим пикеру visibility: hidden, чтобы перед показом контейнера иметь доступ к его размерам для ресайза.
+            var pickerContainer = this._picker.getContainer();
+            pickerContainer.toggleClass('ws-invisible', toggle);
+            pickerContainer.toggleClass('ws-hidden', !toggle);
          },
          hide: function(){
             if (this._hideAllowed) {
@@ -527,7 +586,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
-            if (this._options.emptyValue){
+            if (this._isEmptyValueSelected()){
                this._options.selectedKeys = [null];
                this._drawSelectedValue(null, [this._emptyText]);
             }
@@ -537,6 +596,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
 
+         },
+         _isEmptyValueSelected: function(){
+            return this._options.emptyValue && this.getSelectedKeys[0] == null;
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
@@ -816,7 +878,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                className: pickerClassName,
                //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
-               closeByExternalOver: this._options.mode === 'hover' && !this._options.multiselect,
+               closeByExternalOver: this._isHoverMode() && !this._options.multiselect,
                closeByExternalClick : true,
                activableByClick: false,
                targetPart: true,

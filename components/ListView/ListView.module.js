@@ -1395,17 +1395,41 @@ define('js!SBIS3.CONTROLS.ListView',
             return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
          },
 
-         _drawSelectedItems: function (idArray) {
-            /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
-               это дорого */
-            var domItems = this._container.find('.controls-ListView__item');
+         _drawSelectedItems: function (idArray, changes) {
+            var i;
+            //Если точно знаем что изменилось, можем оптимизировать отрисовку
+            if (changes && !Object.isEmpty(changes)) {
+               var rmKeyItems = $([]), addKeyItems = $([]), elem;
+               for (i = 0; i < changes.added.length; i++) {
+                  elem = this._container.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]');
+                  if (elem.length) {
+                     addKeyItems.push(elem.get(0));
+                  }
+               }
+               for (i = 0; i < changes.removed.length; i++) {
+                  elem = this._container.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]');
+                  if (elem.length) {
+                     rmKeyItems.push(elem.get(0));
+                  }
+               }
+               addKeyItems.addClass('controls-ListView__item__multiSelected');
+               rmKeyItems.removeClass('controls-ListView__item__multiSelected');
+            }
+            else {
+               /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
+                это дорого */
+               var domItems = this._container.find('.controls-ListView__item');
 
-            /* Удаляем выделение */
-            domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
-            /* Проставляем выделенные ключи */
-            for(var i = 0; i < domItems.length; i++) {
-               if(ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
-                  domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+               /* Удаляем выделение */
+               /*TODO возможно удаление не нужно, и вообще состоние записи должно рисоваться исходя из модели
+               будет решено по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84
+               */
+               domItems.filter('.controls-ListView__item__multiSelected').removeClass('controls-ListView__item__multiSelected');
+               /* Проставляем выделенные ключи */
+               for (i = 0; i < domItems.length; i++) {
+                  if (ArraySimpleValuesUtil.hasInArray(idArray, domItems[i].getAttribute('data-id'))) {
+                     domItems.eq(i).addClass('controls-ListView__item__multiSelected');
+                  }
                }
             }
          },
@@ -2077,7 +2101,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
 
-            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys, {});
 
             hoveredItem = this.getHoveredItem();
             hoveredItemContainer = hoveredItem.container;
@@ -2164,6 +2188,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          
          _addItems: function(newItems, newItemsIndex, groupId){
+            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
+            // стреляет для каждой группы по отдельности, поэтому компенсация срабатывает только один раз.
+            // Будем переставлять флаг о необходимости компенсации каждый раз при добавлении элементов
+            this._needScrollCompensation = this._infiniteScrollState.mode == 'up' ||
+                                           this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse;
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -2438,14 +2467,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
-         },
-
-         _addItems: function(){
-            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
-            // стреляет для каждой группы по отдельности, поэтому будет переставлять флаг о необходимости компенсации
-            // каждый раз при добавлении элементов
-            this._needScrollCompensation = this._infiniteScrollState.mode == 'up';
-            ListView.superclass._addItems.apply(this, arguments);
          },
 
          _updateScrolOffset: function(){
@@ -3325,7 +3346,8 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   action = new InteractiveMove({
                      linkedObject: this,
-                     parentProperty: this._options.hierField,
+                     parentProperty: this._options.parentProperty,
+                     nodeProperty: this._options.nodeProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems();
@@ -3352,7 +3374,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          selectedMoveTo: function(target) {
             var selectedItems = this.getSelectedItems(false);
-            this._getMover.move(selectedItems, target).addCallback(function(res){
+            if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
+               selectedItems = selectedItems.toArray();
+            }
+
+            this._getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3388,7 +3414,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _makeMoveStrategy: function () {
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),
-               hierField: this._options.hierField,
+               hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
                listView: this
             });
          },
@@ -3413,7 +3441,8 @@ define('js!SBIS3.CONTROLS.ListView',
                moveStrategy: this.getMoveStrategy(),
                items: this.getItems(),
                projection: this._getItemsProjection(),
-               hierField: this._options.hierField
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             }));
          },
          /**

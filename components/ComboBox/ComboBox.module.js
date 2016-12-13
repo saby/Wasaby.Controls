@@ -28,6 +28,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
     *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
     *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
+    *    <li>По стандарту максимальная высота выпадающего списка 400px. В некоторых случаях может возникнуть необходимость её изменить.
+    *        Для этого в опции {@link pickerClassName} нужно указать свой класс someClass и в css указать селектор .someClass.controls-ComboBox__picker .controls-ComboBox__scrollContainer, установив свойство max-height в нужное значение</li>
     * </ul>
     * <br/>
     * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
@@ -222,7 +224,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || ( target[0] === this._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
+            if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку

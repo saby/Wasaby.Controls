@@ -1,7 +1,8 @@
 <!--WS-EXPERT
-{{ var
-      hierField = it.item.get(it.hierField + '@'),
-      hierField$ = it.projItem.getContents().get(it.hierField + '$'),
+{{
+var
+      hierField = it.item.get(it.nodeProperty),
+      hierField$ = it.projItem.getContents().get(it.parentProperty + '$'),
       projection = it.projItem.getOwner(),
       children = it.hierarchy.getChildren(
          it.item,
@@ -14,7 +15,7 @@
       classPresenceLoadedNodes = loadedWithoutChilds ? ' controls-ListView__item-without-child' : '',
       isColumnScrolling = it.startScrollColumn === 0,
       addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item' + (it.className ? ' ' + it.className : '') + (isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + classNodeType + classNodeState + classPresenceLoadedNodes;
-   it.isNode = it.projItem.getContents().get(it.hierField + '@'); it.hasChilds = it.projItem.getContents().get(it.hierField + '$') !== false; }}
+   it.isNode = it.projItem.getContents().get(it.nodeProperty); it.hasChilds = it.projItem.getContents().get(it.hierField + '$') !== false; }}
 <tr class="{{=addClasses}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-parent-hash="{{?it.projItem.getParent()}}{{=it.projItem.getParent().getHash()}}{{?}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"
    {{for(var j in it.attributes){}}
       {{=j}}="{{=it.attributes[j]}}"

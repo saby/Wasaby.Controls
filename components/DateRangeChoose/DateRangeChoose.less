@@ -1,6 +1,6 @@
 .controls-DateRangeChoose__container () {
    position: relative;
-   height:auto;
+   height: auto;
 }
 
 .controls-DateRangeChoose__container-caption () {
@@ -25,6 +25,12 @@
    font-size: @date-range-choose-font-size;
    min-width: @date-range-choose-year-state-width;
 
+   padding: @date-range-choose-padding;
+
+   &.ws-area{
+      height: auto;
+   }
+
    .controls-DateRangeChoose__currentValue {
       font-size:  @date-range-choose-current-value-font-size;
       font-weight: @date-range-choose-current-value-font-weight;
@@ -45,7 +51,6 @@
       position: relative;
       margin-bottom: @date-range-choose-year-margin-bottom;
       .controls-DateRangeChoose__year {
-         cursor: pointer;
          display: block;
          font-size: @date-range-choose-year-font-size;
          font-weight: @date-range-choose-year-font-weight;
@@ -55,8 +60,11 @@
          margin: 0 auto;
          width: @date-range-choose-width - @date-range-choose-border-width*2 - @date-range-choose-year-prev-next-btns-width*2 - 15*2;
          vertical-align: middle;
-         &:hover {
-            background-color: @date-range-choose-bg-hover-color;
+         &.controls-DateRangeChoose__year-clickable{
+            cursor: pointer;
+            &:hover {
+               background-color: @date-range-choose-bg-hover-color;
+            }
          }
       }
 
@@ -223,7 +231,7 @@
       }
    }
    .controls-DateRangeChoose__home {
-      margin: 4px auto;
+      margin: @date-range-choose-home-button-margin;
       display: block;
    }
 

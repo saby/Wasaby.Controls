@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          //Флаг обозначает, что ввод был произведен пользователем
          this._searchReload = true;
          if (this._options.searchMode == 'root') {
-            filter[view.getHierField()] = undefined;
+            filter[view.getParentProperty()] = undefined;
          }
 
          view.once('onDataLoad', function(event, data) {
@@ -96,11 +96,11 @@ define('js!SBIS3.CONTROLS.SearchController',
             if (self._options.searchMode === 'root') {
                root = view._options.root !== undefined ? view._options.root : null;
                //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-               callProjectionMethod('setEventRaising',[false]);
+               callProjectionMethod('setEventRaising',[false, true]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
                view._options._curRoot = root;
-               callProjectionMethod('setEventRaising', [true]);
+               callProjectionMethod('setEventRaising', [true, true]);
             }
          });
 
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          if (this._searchReload) {
             //Нужно поменять фильтр и загрузить нужный корень.
             //TODO менять фильтр в контексте, когда появятся data-binding'и
-            filter[view.getHierField()] = this._lastRoot;
+            filter[view.getParentProperty()] = this._lastRoot;
             //DataGridView._filter = filter;
             //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
             //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
