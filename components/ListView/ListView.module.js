@@ -1396,18 +1396,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItems: function (idArray, changes) {
-            var i;
+            var i, itemsContainer = this._getItemsContainer();
             //Если точно знаем что изменилось, можем оптимизировать отрисовку
             if (changes && !Object.isEmpty(changes)) {
                var rmKeyItems = $([]), addKeyItems = $([]), elem;
                for (i = 0; i < changes.added.length; i++) {
-                  elem = this._container.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]');
+                  elem = itemsContainer.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]');
                   if (elem.length) {
                      addKeyItems.push(elem.get(0));
                   }
                }
                for (i = 0; i < changes.removed.length; i++) {
-                  elem = this._container.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]');
+                  elem = itemsContainer.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]');
                   if (elem.length) {
                      rmKeyItems.push(elem.get(0));
                   }
@@ -1418,7 +1418,7 @@ define('js!SBIS3.CONTROLS.ListView',
             else {
                /* Запоминаем элементы, чтобы не делать лишний раз выборку по DOM'у,
                 это дорого */
-               var domItems = this._container.find('.controls-ListView__item');
+               var domItems = itemsContainer.find('.controls-ListView__item');
 
                /* Удаляем выделение */
                /*TODO возможно удаление не нужно, и вообще состоние записи должно рисоваться исходя из модели
