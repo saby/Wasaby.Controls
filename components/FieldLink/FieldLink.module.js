@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
+        * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
         * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect

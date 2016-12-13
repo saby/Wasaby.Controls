@@ -163,30 +163,6 @@
             }
          }
       }
-
-      .controls-FieldLink__copyShowAll {
-         float: left;
-         position: relative;
-         top: -22px;
-         width: 16px;
-         line-height: @controls-FieldLink-showAllLinks-lineHeight;
-         margin-right: -22px;
-         text-align: center;
-         background-color: @white-color;
-         color: @link-text-color;
-         padding: @controls-FieldLink-showAllLinks-padding;
-
-         &:after {
-            content: '';
-            position: absolute;
-            right: -@controls-FieldLink-showAll-shadow-width;
-            width: @controls-FieldLink-showAll-shadow-width;
-            top: 0;
-            bottom: 0;
-            .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
-            background-color: transparent;
-         }
-      }
    }
 
    .controls-TextBox__afterFieldWrapper {
@@ -235,16 +211,6 @@
       }
    }
 
-   &.controls-FieldLink__dynamicInputWidth {
-      .controls-TextBox__fieldWrapper {
-         display: flex;
-
-         .controls-TextBox__field {
-            width: 100%;
-         }
-      }
-   }
-
    .controls-FieldLink__Link {
       display: inline;
       line-height: 20px;
@@ -274,6 +240,40 @@
    }
 }
 
+.controls-FieldLink__copyShowAll {
+   float: left;
+   position: relative;
+   top: -22px;
+   width: 16px;
+   line-height: @controls-FieldLink-showAllLinks-lineHeight;
+   margin-right: -22px;
+   text-align: center;
+   background-color: @white-color;
+   color: @link-text-color;
+   padding: @controls-FieldLink-showAllLinks-padding;
+
+   &:after {
+      content: '';
+      position: absolute;
+      right: -@controls-FieldLink-showAll-shadow-width;
+      width: @controls-FieldLink-showAll-shadow-width;
+      top: 0;
+      bottom: 0;
+      .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
+      background-color: transparent;
+   }
+}
+
+.controls-FieldLink__dynamicInputWidth {
+   .controls-TextBox__fieldWrapper {
+      display: flex;
+
+      .controls-TextBox__field {
+         width: 100%;
+      }
+   }
+}
+
 /* Для того, чтобы при инициализации не прыгал placeholder +
    в дальнейшем можно будет вообще не считать размеры поля, просто использовать этот класс*/
 .controls-FieldLink__selected {
@@ -295,6 +295,10 @@
          margin-right: @controls-FieldLink-showAll-margin-right-ff;
       }
    }
+}
+
+.controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
+   display: none;
 }
 
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
