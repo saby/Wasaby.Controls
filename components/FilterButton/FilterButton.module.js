@@ -215,8 +215,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              this._dTemplatesReady = new ParallelDeferred();
 
-             processTemplate(this._options.template, TEMPLATES.main);
-             processTemplate(this._options.additionalFilterParamsTemplate, TEMPLATES.additional);
+             processTemplate(this.getProperty(TEMPLATES.main), TEMPLATES.main);
+             processTemplate(this.getProperty(TEMPLATES.additional), TEMPLATES.additional);
 
              return this._dTemplatesReady.done().getResult();
           },
