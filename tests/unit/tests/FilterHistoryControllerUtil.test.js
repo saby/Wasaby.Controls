@@ -15,13 +15,17 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                internalCaptionField: "Тест_CaptionField",
                internalValueField: "Тест_ValueField",
                resetValue: null,
-               value: "Тест_Value"
+               value: "Тест_Value",
+               itemTemplate: null,
+               historyItemTemplate: null
             },
             {
                internalCaptionField: "FilterDatePeriodText",
                internalValueField: "FilterDatePeriod",
                resetValue: "Все",
-               value: new Date(2016, 11, 11)
+               value: new Date(2016, 11, 11),
+               itemTemplate: null,
+               historyItemTemplate: null
             }
          ];
 
@@ -88,14 +92,18 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                   internalCaptionField: "Тест_CaptionField",
                   internalValueField: "Тест_ValueField",
                   resetValue: null,
-                  value: null
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
                },
                {
                   caption: "За сегодня",
                   internalCaptionField: "FilterDatePeriodText",
                   internalValueField: "FilterDatePeriod",
                   resetValue: "Все",
-                  value: "Сегодня"
+                  value: "Сегодня",
+                  itemTemplate: null,
+                  historyItemTemplate: null
                }
             ];
 
@@ -116,14 +124,18 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                   internalCaptionField: "Тест_CaptionField",
                   internalValueField: "Тест_ValueField",
                   resetValue: null,
-                  value: null
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
                },
                {
                   caption: "За сегодня",
                   internalCaptionField: "FilterDatePeriodText",
                   internalValueField: "FilterDatePeriod",
                   resetValue: "Все",
-                  value: "Сегодня"
+                  value: "Сегодня",
+                  itemTemplate: null,
+                  historyItemTemplate: null
                }
             ];
 
