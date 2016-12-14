@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
                paging: paging || this._options.paging,
-               useClientRect: scrollPagingUseClientRect
+               useClientRect: useClientRect
             })
          }
          this._scrollPagingController.bindScrollPaging();

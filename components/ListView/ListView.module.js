@@ -891,7 +891,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
-               paging: this._scrollPager,
+               paging: this._scrollPager
             });
             this._scrollBinder.bindScrollPaging(paging, this._options.scrollPagingUseClientRect);
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
