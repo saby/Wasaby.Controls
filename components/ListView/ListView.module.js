@@ -737,6 +737,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
+               scrollPagingUseClientRect: false,
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
                 * @see DragEntityOptions
@@ -899,7 +900,7 @@ define('js!SBIS3.CONTROLS.ListView',
                view: this,
                paging: this._scrollPager
             });
-            this._scrollBinder.bindScrollPaging();
+            this._scrollBinder.bindScrollPaging(paging, this._options.scrollPagingUseClientRect);
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
          },
 
