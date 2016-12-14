@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             view.reload();
          }
 
-         view.subscribe('onSetRoot', function(event, id, hier, hasPath){
+         view.subscribe('onSetRoot', function(event, id, hier){
             //Этот массив могут использовать другие подписанты, а мы его модифицируем
             var hierClone = $ws.core.clone(hier);
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                 что в папку не провалились, а попали через перенос.
                 От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
                 */
-               if (self._currentRoot && hierClone.length && hierClone[hierClone.length - 1].parent != self._currentRoot.id && hasPath){
+               if ((self._currentRoot && hierClone.length && hierClone[hierClone.length - 1].parent != self._currentRoot.id) && hierClone.length != 1){
                   self._currentRoot = hierClone[0];
                   self._path = hierClone.reverse();
                } else {
