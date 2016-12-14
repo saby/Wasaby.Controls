@@ -946,8 +946,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getSourceNavigationType: function(){
-         if (this.getDataSource() && this.getDataSource()._options.options){
-            return this.getDataSource()._options.options.navigationType;
+         if (this.getDataSource()) {
+            return this.getDataSource().getOptions().navigationType;
          }
       },
 
