@@ -70,6 +70,11 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
 
+      _modifyOptions : function(options) {
+         options.pickerClassName += ' controls-OperationPanel__Menu';
+         return MenuLink.superclass._modifyOptions.apply(this, arguments);
+      },
+
       _onOperationActivated: function() {
       },
 
@@ -195,10 +200,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _loadFullData: function(pageSize){
          var deferred = new Deferred(),
             self = this;
-
-         deferred.addErrback(function (e) {
-            return e;
-         });
          fcHelpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
             if (answer) {
                fcHelpers.toggleIndicator(true);
