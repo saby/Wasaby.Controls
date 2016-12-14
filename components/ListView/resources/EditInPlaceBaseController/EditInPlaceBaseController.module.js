@@ -453,7 +453,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
 
-               if(isAdd) {
+               if (isAdd) {
                   /* Почему делаеться destroy:
                    Добавление по месту как и редактирование, не пересоздаёт компоненты при повторном добавлении/редактировании,
                    поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
@@ -585,12 +585,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _destroyEip: function() {
                if (this._eip) {
-                  this.endEdit();
                   this._eip.destroy();
                   this._eip = null;
                }
             },
             destroy: function() {
+               this.endEdit();
                this._destroyEip();
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }
