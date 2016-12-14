@@ -52,8 +52,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + "")).indexOf('.'),
-          parsedVal = dotPos != -1 ? value.substr(dotPos) : 0,
-          isDotLast = (value && value.length) ? dotPos === value.length - 1 : false;
+          parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
+          isDotLast = (value && value.length) ? dotPos === value.length - 1 : false,
+          decimalsPart;
 
       if (value == '-') {
          return value;
@@ -72,12 +73,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          value = value ? value + '.' : '.';
       }
 
-      if(value){
+      if(value && decimals){
          dotPos = value.indexOf('.');
-         if (!onlyInteger && decimals && (parsedVal == "." || parsedVal === 0)) {
+         if (parsedVal == "." || parsedVal == 0) {
             value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
          } else {
-            value = (dotPos !== -1 ? value.substring(0, dotPos) + parsedVal : value);
+            decimalsPart = decimals == -1 ? parsedVal : parsedVal.substr(0, decimals + 1);
+            value = (dotPos !== -1 ? value.substring(0, dotPos) + decimalsPart : value);
          }
       }
 
@@ -564,7 +566,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _dotHandler: function(event){
-         if (!this._options.onlyInteger) {
+         if (!this._options.onlyInteger && this._options.decimals !== 0) {
             var currentVal = this._inputField.val(),
                dotPosition = currentVal.indexOf('.');
             if (dotPosition != -1) {
