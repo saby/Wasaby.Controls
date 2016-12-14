@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', fHelpers.forAliveOnly(this._onBeforeNavigate, this));
+         this._subscribeToEventBus();
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
@@ -214,6 +214,13 @@ define('js!SBIS3.CONTROLS.FormController', [
                this._getRecordFromSource({});
             }
          }
+      },
+
+      _subscribeToEventBus: function(){
+         this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
+         this._onOfflineModeErrorHandler = this._onOfflineModeError.bind(this);
+         this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         this.subscribeTo(EventBus.globalChannel(), 'onOfflineModeError', this._onOfflineModeErrorHandler);
       },
 
       _declareCommands: function(){
@@ -238,6 +245,12 @@ define('js!SBIS3.CONTROLS.FormController', [
                self._actionNotify(eventName);
             });
          }
+      },
+
+      _onOfflineModeError: function(){
+         //Если перешли в offline-режим и были запросы на БЛ - скроем индикаторы и overlay, т.к. не дождемся ответа от сервера
+         this._hideLoadingIndicator();
+         this._toggleOverlay(false);
       },
 
       _onAfterShowHandler: function(){
@@ -888,6 +901,8 @@ define('js!SBIS3.CONTROLS.FormController', [
       destroy: function(){
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
+         this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         this.unsubscribeFrom(EventBus.globalChannel(), 'onOfflineModeError', this._onOfflineModeErrorHandler);
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
