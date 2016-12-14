@@ -10,40 +10,47 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'use strict';
 
       /**
-       * Контрол представляющий из себя контейнер для контента с кастомным скроллом
-       * Кастомный скролл SBIS3.CONTROLS.Scrollbar
+       * Контрол представляющий из себя контейнер для контента с тонким скроллом.
+       * Тонкий скролл {@link SBIS3.CONTROLS.Scrollbar}
+       *
        * @class SBIS3.CONTROLS.ScrollContainer
        * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
        * @extends SBIS3.CONTROLS.CompoundControl
+       * @author Крайнов Дмитрий Олегович
+       *
+       * @example
+       * Использование ScrollContainer с вложенным в него ListView, и настройкой автоподгрузки вниз.
+       * <pre class="brush: html">
+       *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
+       *       <option name="content">
+       *          <component data-component="SBIS3.CONTROLS.ListView">
+       *             <option name="displayField">title</option>
+       *             <option name="keyField">id</option>
+       *             <option name="infiniteScroll">down</option>
+       *             <option name="infiniteScrollContainer">.myScrollContainer</option>
+       *             <option name="pageSize">7</option>
+       *          </component>
+       *       </option>
+       *    </component>
+       * </pre>
+       *
+       * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       *
        * @control
        * @public
-       * @initial
-       * <component data-component="SBIS3.CONTROLS.ScrollContainer">
-       *    <option name="content">
-       *       <component data-component="SBIS3.CONTROLS.ListView">
-       *          <option name="displayField">title</option>
-       *          <option name="keyField">id</option>
-       *          <option name="infiniteScroll">down</option>
-       *          <option name="infiniteScrollContainer">#Scroll</option>
-       *          <option name="pageSize">7</option>
-       *       </component>
-       *    </option>
-       * </component>
-       * @author Крайнов Дмитрий Олегович
        */
-
-      var ScrollContainer = CompoundControl.extend({
+      var ScrollContainer = CompoundControl.extend({ /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */
 
          _dotTplFn: dotTplFn,
 
          $protected: {
             _options: {
                /**
-                * @cfg {String} Html-разметка
-                * Html код будет добавлен в контейнер с кастомным скроллом который появится если высота
-                * контента превысит высоту контейнера.
+                * @cfg {Content} Контент в ScrollContainer
+                * @remark
+                * Контент в ScrollContainer - это пользовательская верстка, которая будет скроллироваться.
                 * @example
-                * <pre>
+                * <pre class="brush: html">
                 *    <option name="content">
                 *       <component data-component="SBIS3.CONTROLS.ListView">
                 *          <option name="displayField">title</option>
@@ -75,12 +82,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
-            //Под ios и android оставляем нативный скролл
-            if (!cDetection.isMobileIOS && !cDetection.isMobileAndroid){
-               this._container.one('touchstart mousemove', this._initScrollbar.bind(this));
+            //Под android оставляем нативный скролл
+            if (!cDetection.isMobileAndroid){
+               this._initScrollbar = this._initScrollbar.bind(this)
+               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               this._container[0].addEventListener('mousemove', this._initScrollbar, true);
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
+
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
@@ -151,6 +161,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
+            this._container[0].removeEventListener('touchstart', this._initScrollbar);
+            this._container[0].removeEventListener('mousemove', this._initScrollbar);
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
@@ -164,7 +176,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          destroy: function(){
-            this._container.off('touchstart mousemove');
             this._content.off('scroll', this._onScroll);
             ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288

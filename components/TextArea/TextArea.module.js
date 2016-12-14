@@ -201,6 +201,22 @@ define('js!SBIS3.CONTROLS.TextArea', [
             if (this._options.minLinesCount){
                this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
             }
+            this._removeAutoSizeDognail();
+         }
+      },
+
+      _removeAutoSizeDognail: function() {
+         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
+         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
+         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
+
+         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
+         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
+         if (!this.isEnabled()) {
+            this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
+         }
+         else {
+            $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
          }
       },
 
@@ -210,16 +226,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
             callback: self._notifyOnSizeChanged(self, self),
             hard: hard
          });
-         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
-         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
-         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
 
-         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
-         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
 
-         if (!this.isEnabled()) {
-            this._inputField.removeClass('ws-hidden').addClass('ws-invivsible');
-         }
+         this._removeAutoSizeDognail();
          this._container.addClass('controls-TextArea__heightInit');
       },
 
@@ -229,7 +238,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
-         this._inputField.toggleClass('ws-invisible', !state)
+         this._inputField.toggleClass('ws-invisible', !state);
          this._disabledWrapper.toggleClass('ws-hidden', state);
          if (!state){
             this._inputField.attr('readonly', 'readonly')

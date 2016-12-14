@@ -1,6 +1,6 @@
 .controls-DateRangeChoose__container () {
    position: relative;
-   height:auto;
+   height: auto;
 }
 
 .controls-DateRangeChoose__container-caption () {
@@ -24,6 +24,12 @@
    font-family: @date-range-choose-font-family;
    font-size: @date-range-choose-font-size;
    min-width: @date-range-choose-year-state-width;
+
+   padding: @date-range-choose-padding;
+
+   &.ws-area{
+      height: auto;
+   }
 
    .controls-DateRangeChoose__currentValue {
       font-size:  @date-range-choose-current-value-font-size;
@@ -225,7 +231,7 @@
       }
    }
    .controls-DateRangeChoose__home {
-      margin: 4px auto;
+      margin: @date-range-choose-home-button-margin;
       display: block;
    }
 
