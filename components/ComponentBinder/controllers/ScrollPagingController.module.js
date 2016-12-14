@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          _options: {
             view: null,
             paging: null,
-            useClientRect: fasle
+            useClientRect: false
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
