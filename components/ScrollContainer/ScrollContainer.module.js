@@ -161,8 +161,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
-            this._container[0].removeEventListener('touchstart', this._initScrollbar);
-            this._container[0].removeEventListener('mousemove', this._initScrollbar);
+            this._container[0].removeEventListener('touchstart', this._initScrollbar, true);
+            this._container[0].removeEventListener('mousemove', this._initScrollbar, true);
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
