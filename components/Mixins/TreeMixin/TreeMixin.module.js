@@ -945,8 +945,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
-            /*TODO onSetRoot стреляет при каждой перезагрузке, чтоб корректно рисовать хлебные крошки в биндере*/
-            this._notify('onSetRoot', this._options._curRoot, hierarchy);
+            /*TODO onSetRoot стреляет при каждой перезагрузке, чтоб корректно рисовать хлебные крошки в биндере
+            от этого, а так же последнего аргумента, нужно избавиться по ошибке
+            последний аргумент обозначает, что путь пришел с БЛ и необходимо подставить его целиком хлебные крошки 
+            https://inside.tensor.ru/opendoc.html?guid=da604585-126b-43f7-822c-72c8fa590a42&*/
+            this._notify('onSetRoot', this._options._curRoot, hierarchy, !!path);
             if (this._previousRoot !== this._options._curRoot) {
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
