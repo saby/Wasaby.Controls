@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.OpenDialogAction', [
    'js!SBIS3.CONTROLS.DialogActionBase',
    'Core/core-instance',
+   'Core/EventBus',
    'Core/core-merge',
    'Core/Indicator',
    'Core/IoC',
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
    'js!WS.Data/Di',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea'
-], function (DialogActionBase, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
+], function (DialogActionBase, cInstance, EventBus, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
 
    'use strict';
 
@@ -115,6 +116,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       init: function(){
          OpenDialogAction.superclass.init.apply(this, arguments);
          $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
+         this._hideLoadingIndicatorMethod = this._hideLoadingIndicator.bind(this);
+         this.subscribeTo(EventBus.globalChannel(), 'onOfflineModeError', this._hideLoadingIndicatorMethod);
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -553,6 +556,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
             collection = collection.getItems();
          }
          return collection;
+      },
+
+      destroy: function(){
+         this.unsubscribeFrom(EventBus.globalChannel(), 'onOfflineModeError', this._hideLoadingIndicatorMethod);
+         OpenDialogAction.superclass.destroy.apply(this, arguments);
       }
    });
 
