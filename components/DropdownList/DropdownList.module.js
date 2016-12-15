@@ -713,11 +713,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //для DDL эта логика не подходит, по кнопке "Еще" могут выбрать запись, которой на текущий момент нет в наборе данных, и вставить ее на первое место в рекордсете
             //При нажатии на крест, нам нужно выбрать дефолтный id, который был, а не новую запись, которая встала на первое место
             //выписал задачу, чтобы обобщить эту логику https://inside.tensor.ru/opendoc.html?guid=bf8da125-b41a-47d9-aa1a-2f2ba2f309f4&des=
-            var emptyKeys = [this._defaultId];
-            if (this._defaultId === undefined) {
-               emptyKeys = [];
+            if (this._defaultId !== undefined){
+               this.setSelectedKeys([this._defaultId]);
             }
-            this.setSelectedKeys(emptyKeys);
+            else{
+               DropdownList.superclass.removeItemsSelectionAll.apply(this, arguments);
+            }
          },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
