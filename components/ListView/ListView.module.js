@@ -2159,7 +2159,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                if (this._needScrollCompensation) {
                   this._moveTopScroll();
-                  this._needScrollCompensation = false;
                }
             }
          },
@@ -2466,6 +2465,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
+            
+            this._needScrollCompensation = false;
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
