@@ -77,9 +77,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
             //Под android оставляем нативный скролл
             if (!cDetection.isMobileAndroid){
-               this._initScrollbar = this._initScrollbar.bind(this)
-               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               this._container[0].addEventListener('mousemove', this._initScrollbar, true);
+               this._initScrollbar = this._initScrollbar.bind(this);
+               if (!cDetection.isIE8){
+                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               }
+               this._container.one('mousemove', this._initScrollbar);
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
@@ -154,8 +156,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
-            this._container[0].removeEventListener('touchstart', this._initScrollbar, true);
-            this._container[0].removeEventListener('mousemove', this._initScrollbar, true);
+            if (!cDetection.isIE8){
+               this._container[0].removeEventListener('touchstart', this._initScrollbar);
+            }
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
@@ -170,6 +173,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          destroy: function(){
             this._content.off('scroll', this._onScroll);
+            this._container.off('mousemove', this._initScrollbar);
             ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
