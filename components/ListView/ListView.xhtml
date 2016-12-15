@@ -14,7 +14,7 @@
       {{?}}
    </div>
    <div class="controls-ListView__results-bottom"></div>
-   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
+   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length || !it.emptyHTML}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}
