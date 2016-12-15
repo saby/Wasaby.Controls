@@ -123,7 +123,7 @@ define(
             context.setValue(context.getValue(ContextRecordField));
          } else {
             //TODO: Тут нужно каким-то образом синхронизировать контекст, т.к. в контролах мы значения поменяли, а в контексте нет.
-            //Нужно чтобы значения из контекста попали в контролы.
+            //Нужно чтобы значения из контекста попали в контролы. Другого способа пока что не нашёл.
             context.setValue('controls-Header__updateContextValue', new Date().getTime());
          }
       },
