@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'Core/detection',
       'js!SBIS3.CORE.FloatAreaManager'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, cCompatibility, FloatAreaManager) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
 
       'use strict';
 
