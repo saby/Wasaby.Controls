@@ -508,13 +508,22 @@ define(
          }
       },
       setActive: function(active, shiftKey, noFocus, focusedControl) {
-         var date;
+         var date,
+            oldText,
+            oldDate;
 
          if (!active) {
             if (!this._getFormatModel().isFilled()) {
+               oldText = this.getText();
+               oldDate = this.getDate();
                date = this._getDateByText(this._options.text, this._lastDate, true);
                if (date) {
                   this._setDate(date);
+               }
+               if ((this._options.notificationMode === 'textChange' && oldText !== this.getText()) ||
+                   (this._options.notificationMode === 'dateChange' && oldDate !== this.getDate())) {
+                  this._notifyOnTextChange();
+                  this._notifyOnDateChanged();
                }
             }
             if (this._options.notificationMode === 'complete') {
