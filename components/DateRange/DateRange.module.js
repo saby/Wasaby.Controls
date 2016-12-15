@@ -141,6 +141,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _setPickerConfig: function() {
          return {
             corner: 'tl',
+            bodyBounds: true,
             horizontalAlign: {
                side: 'left',
                offset: -133
