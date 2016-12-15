@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //Под android оставляем нативный скролл
             if (!cDetection.isMobileAndroid){
                this._initScrollbar = this._initScrollbar.bind(this);
-               if (cCompatibility.touch){
+               if (cCompatibility.touch && !cDetection.isIE8){
                   this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                }
                this._container.one('mousemove', this._initScrollbar);
