@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
+      'Core/compatibility',
       'js!SBIS3.CORE.FloatAreaManager'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, cCompatibility, FloatAreaManager) {
 
       'use strict';
 
@@ -77,8 +78,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
             //Под android оставляем нативный скролл
             if (!cDetection.isMobileAndroid){
-               this._initScrollbar = this._initScrollbar.bind(this)
-               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               this._initScrollbar = this._initScrollbar.bind(this);
+               if (cCompatibility.touch){
+                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               }
                this._container.one('mousemove', this._initScrollbar);
                this._hideScrollbar();
                this._subscribeOnScroll();
@@ -154,7 +157,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
-            this._container[0].removeEventListener('touchstart', this._initScrollbar);
+            if (cCompatibility.touch){
+               this._container[0].removeEventListener('touchstart', this._initScrollbar);
+            }
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
