@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
             //Под android оставляем нативный скролл
-            if (!cDetection.isMobileAndroid){
+            if (!cDetection.isMobileSafari && !cDetection.isMobileAndroid){
                this._initScrollbar = this._initScrollbar.bind(this);
                if (!cDetection.isIE8){
                   this._container[0].addEventListener('touchstart', this._initScrollbar, true);
