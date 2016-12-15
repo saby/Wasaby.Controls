@@ -735,7 +735,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
-
+         this._containerOffsetWidth = this.getContainer().outerWidth();
          if(this._isPartScrollVisible) {
             this._updatePartScrollWidth();
          }
@@ -888,6 +888,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var cols = this._colgroup.find('col'),
             columns = this.getColumns(),
             columnsWidth = 0,
+            containerWidth,
             colIndex,
             minWidth;
 
@@ -901,8 +902,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
             columnsWidth += (columns[i].width && parseInt(columns[i].width)) || (columns[i].minWidth && parseInt(columns[i].minWidth)) || 0;
          }
 
+         //TODO Баг. ie неправильно рендерит таблицу, если мы обращаемся к дом элементу в этом месте
+         //В чем причина не разобрались, в 220 для ie вынес получение ширины контейнера в onResizeHandler
+         if (constants.browser.isIE){
+            containerWidth = this._containerOffsetWidth;
+         }
+         else{
+            containerWidth = this._container[0].offsetWidth;
+         }
+
          /* Проставим ширину колонкам, если нужно */
-         if(columnsWidth > this._container[0].offsetWidth) {
+         if(columnsWidth > containerWidth) {
             for (var j = 0; j < columns.length; j++) {
                colIndex = this._options.multiselect ? j + 1 : j;
                minWidth = columns[j].minWidth && parseInt(columns[j].minWidth, 10);
