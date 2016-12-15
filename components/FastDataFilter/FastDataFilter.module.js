@@ -244,7 +244,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
                      this._prepareValue(instances[i], value).addCallback(function(instance, value){
-                        if (!this._isSimilarArrays(instance.getSelectedKeys(), value)) {
+                        if (!this._isSimilarArrays(instance.getSelectedKeys(), value) && !instance.isDestroyed()) {
                            if(instance.getItems()){
                               instance.setSelectedKeys(value);
                            }else {

@@ -235,7 +235,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @remark
                 * Пустое значение имеет ключ null
                 */
-               emptyValue: null
+               emptyValue: null,
+               setDefaultIdAfterRemoveSelection: false
             },
             _pickerListContainer: null,
             _pickerHeadContainer: null,
@@ -660,6 +661,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
             else{
                this.removeItemsSelectionAll();
                this.hidePicker();
+            }
+         },
+         removeItemsSelectionAll: function(){
+            //в multiselectableMixin при вызове removeItemsSelectionAll выбранной становится первая запись
+            //для DDL эта логика не подходит, по кнопке "Еще" могут выбрать запись, которой на текущий момент нет в наборе данных, и вставить ее на первое место в рекордсете
+            //При нажатии на крест, нам нужно выбрать дефолтный id, который был, а не новую запись, которая встала на первое место
+            //выписал задачу, чтобы обобщить эту логику https://inside.tensor.ru/opendoc.html?guid=bf8da125-b41a-47d9-aa1a-2f2ba2f309f4&des=
+            if (this._options.setDefaultIdAfterRemoveSelection && this._defaultId !== undefined){
+               this.setSelectedKeys([this._defaultId]);
+            }
+            else{
+               DropdownList.superclass.removeItemsSelectionAll.apply(this, arguments);
             }
          },
          _addItemAttributes: function (container, item) {
