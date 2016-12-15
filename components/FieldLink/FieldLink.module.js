@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
+       "js!SBIS3.CONTROLS.MenuIcon",
        "i18n!SBIS3.CONTROLS.FieldLink"
 
     ],
@@ -301,7 +302,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @noshow
                  * @depreacted
                  */
-                saveParentRecordChanges: false
+                saveParentRecordChanges: false,
+                /**
+                 * @noshow
+                 * @depreacted
+                 */
+                menuSelector: false
              }
           },
 
@@ -395,6 +401,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }.bind(this)
                 );
              }
+
+             if(this._options.menuSelector) {
+                this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+             }
           },
 
           _getSelectorAction: function() {
@@ -460,6 +470,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
+             if(this._options.menuSelector) {
+                this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
+             }
              this._notifyOnPropertyChanged('dictionaries');
           },
 
