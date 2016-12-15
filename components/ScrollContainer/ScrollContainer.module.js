@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
-            if (cCompatibility.touch){
+            if (cCompatibility.touch && !cDetection.isIE8){
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
             }
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
