@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return Utils.getItemPropertyValue(itemContents, field);
       }
    },
-      
+
    canApplyGrouping = function(projItem, cfg) {      var
          itemParent = projItem.getParent && projItem.getParent();
       return !Object.isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
@@ -844,7 +844,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                }
             }
-            for (i = 0; i < comps.length; i++) {
+            for (var i = 0; i < comps.length; i++) {
                if (comps[i]) {
                   comps[i].destroy();
                }
@@ -890,12 +890,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
-            this._clearItems(targetElement);
+            var comps = this._destroyInnerComponents(targetElement, true);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
                targetElement.after(markup).remove();
             }
             else {
                targetElement.get(0).outerHTML = markup;
+            }
+            for (var i = 0; i < comps.length; i++) {
+               if (comps[i]) {
+                  comps[i].destroy();
+               }
             }
             result = true;
          }
@@ -930,6 +935,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
                }
                removedElements.push(targetElement.get(0));
+               /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
+                  поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
+            } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
+               this.redraw();
+               return;
             }
          }
          removedElements.remove();
@@ -1387,7 +1397,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       this._itemsReadyCallback();
                       self.redraw();
                    }
-                   
+
                    self._checkKeyField();
 
                    this._dataLoadedCallback();

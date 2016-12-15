@@ -49,11 +49,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </component>
     */
 
-   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
+   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, newStandtart){
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + "")).indexOf('.'),
-          parsedVal = dotPos != -1 ? value.substr(dotPos) : 0,
-          isDotLast = (value && value.length) ? dotPos === value.length - 1 : false;
+          parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
+          isDotLast = (value && value.length) ? dotPos === value.length - 1 : false,
+          decimalsPart;
 
       if (value == '-') {
          return value;
@@ -71,13 +72,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       if(isDotLast){
          value = value ? value + '.' : '.';
       }
-
-      if(value){
+      if(value && newStandtart && decimals){
          dotPos = value.indexOf('.');
-         if (!onlyInteger && decimals && (parsedVal == "." || parsedVal === 0)) {
+         if (parsedVal == "." || parsedVal == 0) {
             value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
          } else {
-            value = (dotPos !== -1 ? value.substring(0, dotPos) + parsedVal : value);
+            decimalsPart = decimals == -1 ? parsedVal : parsedVal.substr(0, decimals + 1);
+            value = (dotPos !== -1 ? value.substring(0, dotPos) + decimalsPart : value);
          }
       }
 
@@ -158,7 +159,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * <pre>
              * @see decimals
              */
-            hideEmptyDecimals: true,
+            hideEmptyDecimals: false,
             /**
              * @cfg {Boolean} Использовать ли кнопки для изменения значения
              * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
@@ -190,7 +191,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * </pre>
              * @see text
              */
-            numericValue: null
+            numericValue: null,
+            // включает новый поведение Числового поля по стандарту,
+            // в .230 когда будут готово Денежное поле удалить опцию и включить поведение по умолчанию
+            newStandtart: false
          }
       },
 
@@ -205,7 +209,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.integers, 
                options.delimiters, 
                options.onlyPositive, 
-               options.maxLength
+               options.maxLength,
+               options.newStandtart
             );
          }
          return options;
@@ -230,6 +235,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             // Прятать нулевую дробную часть при потере фокуса
             self._hideEmptyDecimals();
          });
+
+         if(this._options.newStandtart){
+            this._options.hideEmptyDecimals = true;
+         }
 
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
             this._options.text = this._options.numericValue + '';
@@ -287,7 +296,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                   }
                }
             }
-            this._options.text = value;
+            if(this._options.newStandtart) {
+               this._options.text = value;
+            }
             this._inputField.val(value);
          }
       },
@@ -361,7 +372,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._options.integers, 
             this._options.delimiters, 
             this._options.onlyPositive, 
-            this._options.maxLength
+            this._options.maxLength,
+            this._options.newStandtart
          );
       },
 
@@ -435,7 +447,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             integerCount =  this._getIntegersCount(currentVal),
             checkMaxLengthResult = checkMaxLength(currentVal, this._options.maxLength),
             newCaretPosition = b;
-         if (currentVal[0] == 0 && b == e && b == 1){ // заменяем первый ноль если курсор после него
+         if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
             newCaretPosition--;
          }
          if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
@@ -564,7 +576,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _dotHandler: function(event){
-         if (!this._options.onlyInteger) {
+         if (!this._options.onlyInteger && this._options.decimals !== 0) {
             var currentVal = this._inputField.val(),
                dotPosition = currentVal.indexOf('.');
             if (dotPosition != -1) {
@@ -588,12 +600,18 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _toggleMinus: function(){
+         var value;
          if (!this._options.onlyPositive) {
+            value = this._inputField.val();
+
+            if(!value){
+               value = '0';
+            }
             if (this._options.text.indexOf('-') == -1) {
-               this._setText('-' + this._inputField.val());
-               this._setCaretPosition(this._caretPosition[0] + 1);
+               this._setText('-' + value);
+               this._setCaretPosition(this._caretPosition[0] + 2);
             } else {
-               this._setText(this._inputField.val().substr(1));
+               this._setText(value.substr(1));
                this._setCaretPosition(this._caretPosition[0] - 1);
             }
             TextBox.superclass.setText.call(this, this._inputField.val());
