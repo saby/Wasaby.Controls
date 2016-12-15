@@ -560,6 +560,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
 
       destroy: function(){
          this.unsubscribeFrom(EventBus.globalChannel(), 'onOfflineModeError', this._hideLoadingIndicatorMethod);
+         OpenDialogAction.superclass.destroy.apply(this, arguments);
       }
    });
 
