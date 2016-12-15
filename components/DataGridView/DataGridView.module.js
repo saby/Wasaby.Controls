@@ -904,7 +904,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          //TODO Баг. ie неправильно рендерит таблицу, если мы обращаемся к дом элементу в этом месте
          //В чем причина не разобрались, в 220 для ie вынес получение ширины контейнера в onResizeHandler
-         if (constants.browser.isIE){
+         if (constants.browser.isIE && this._containerOffsetWidth){
             containerWidth = this._containerOffsetWidth;
          }
          else{
