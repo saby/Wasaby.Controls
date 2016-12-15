@@ -593,7 +593,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
                   //могут позвать setText, когда проекции еще не создали. Весь этот код уберется по задаче
                   //https://inside.tensor.ru/opendoc.html?guid=8dd659f0-a83e-4804-970f-2c0d482193c9&des=
-                  if (self._getItemsProjection) {
+                  if (self._getItemsProjection()) {
                      self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
                   }
                   //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
