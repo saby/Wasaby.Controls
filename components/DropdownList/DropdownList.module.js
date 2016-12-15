@@ -598,7 +598,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          },
          _isEmptyValueSelected: function(){
-            return this._options.emptyValue && this.getSelectedKeys[0] == null;
+            return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
