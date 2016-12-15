@@ -161,7 +161,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @variant dontMove всплывающая панель не двигается относительно таргета
              */
             locationStrategy: null,
-
+            /**
+             * Может ли popup выходить за пределы body слева и сверху т.е иметь отрицательные координаты
+             * TODO: это поведение вероятнее всего должно быть по умолчанию
+             * https://inside.tensor.ru/opendoc.html?guid=75ee0e7b-4b6d-4335-964d-6c93b40a0adc&des=
+             * Задача в разработку 15.12.2016
+             * Избавиться от опции bodyBounds в PopupMixin, добавленной по надзадаче. Вероятнее всего это п...
+             * @type {Boolean}
+             */
+            bodyBounds: false,
             isHint: true
          }
       },
@@ -834,6 +842,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('height', '');
                this._overflowedV = false;
             }
+            if (this._options.bodyBounds && offset.top < 0) {
+               offset.top = 0;
+            }
             return offset.top;
          }
          else {
@@ -856,6 +867,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('overflow-x', 'visible');
                this._container.css('width', '');
                this._overflowedH = false;
+            }
+            if (this._options.bodyBounds && offset.left < 0) {
+               offset.left = 0;
             }
             return offset.left;
          }
