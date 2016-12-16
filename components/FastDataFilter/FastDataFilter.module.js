@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             }
             //Проверки на текущем наборе данных недостаточно, multiSelectable может пойти на БЛ за записью с указанным ключом.
             //todo Нужно рассмотреть возможность отказаться от этого поведения, выписал задачу в 230 https://inside.tensor.ru/opendoc.html?guid=a40189c0-f472-46cf-bd3c-44e641d3ebb9&des=
-            if (instance.getDataSource()){
+            if (instance.getDataSource() && newKeys[0] !== null){
                instance.getDataSource().read(newKeys[0]).addCallbacks(
                   function () {
                      def.callback(newKeys);
