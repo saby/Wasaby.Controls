@@ -165,7 +165,11 @@ define('js!SBIS3.CONTROLS.Selectable', [
                   this._options.selectedIndex = projPos;
                }
             }
+
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex)) {
+               this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, true);
+            }
          }
       },
 
