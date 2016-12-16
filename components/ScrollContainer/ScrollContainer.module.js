@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
+            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
          },
 
          _subscribeOnScroll: function(){
