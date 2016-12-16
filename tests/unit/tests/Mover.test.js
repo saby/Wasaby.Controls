@@ -59,14 +59,14 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
       mover = new Mover({
          moveStrategy: (new MoveStrategy()),
          items: items,
-         projection: projection,
-         hierField: undefined
+         projection: projection
       });
       treeMover = new Mover({
          moveStrategy: (new MoveStrategy()),
          items: treeItems,
          projection: projection,
-         hierField: 'parent'
+         parentProperty: 'parent',
+         nodeProperty: 'parent@'
       });
    });
    describe('SBIS3.CONTROLS.ListView.Mover', function () {
