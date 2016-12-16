@@ -2146,7 +2146,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
          //this._view.checkEmpty(); toggleEmtyData
          this.reviveComponents(); //надо?
-         this._drawItemsCallbackDebounce();
+         this._notifyOnDrawItems();
       },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
