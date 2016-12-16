@@ -217,6 +217,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          }
          else {
             $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
+            this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
          }
       },
 
