@@ -2159,7 +2159,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                if (this._needScrollCompensation) {
                   this._moveTopScroll();
-                  this._needScrollCompensation = false;
                }
             }
          },
@@ -2190,11 +2189,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          
          _addItems: function(newItems, newItemsIndex, groupId){
-            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
-            // стреляет для каждой группы по отдельности, поэтому компенсация срабатывает только один раз.
-            // Будем переставлять флаг о необходимости компенсации каждый раз при добавлении элементов
-            this._needScrollCompensation = this._infiniteScrollState.mode == 'up' ||
-                                           this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse;
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -2466,6 +2460,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
+            
+            this._needScrollCompensation = false;
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
@@ -2856,7 +2852,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLastPage: function(){
-            var more = this.getItems().getMetaData().more,
+            var more = this.getItems() ? this.getItems().getMetaData().more : false,
                pageNumber;
             if (typeof more == 'number'){
                pageNumber = more / this._options.pageSize;
