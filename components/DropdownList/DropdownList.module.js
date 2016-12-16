@@ -591,6 +591,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._isEnumTypeData()){
                id = items.get();
             }
+            else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
+               id = null;
+            }
             else{
                id = items && items.at(0) && items.at(0).getId();
             }
