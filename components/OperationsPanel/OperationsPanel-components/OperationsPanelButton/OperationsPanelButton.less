@@ -1,20 +1,11 @@
 .controls-OperationsPanelButton {
-   &.ws-enabled {
-      cursor: @controls-OperationsPanelButton-cursor;
+   color: @default-color;
+   cursor: @controls-OperationsPanelButton-cursor;
 
-      &.controls-OperationsPanelButton__horizontal:hover .controls-OperationsPanelButton__icon {
-         color: @controls-OperationsPanelButton-active-icon-color;
-      }
-
-      &.controls-OperationsPanelButton__vertical:hover {
-         background-color: @controls-OperationsPanel-bg;
-      }
-   }
    .controls-OperationsPanelButton__icon {
       font: @controls-OperationsPanelButton-font;
       position: relative;
       left: @controls-OperationsPanelButton-icon-left;
-      color: @default-color;
    }
 
    /* стили для кнопки вверх-вниз */
@@ -61,6 +52,10 @@
          &:before {
             content: "\e007";
          }
+      }
+
+      &:hover {
+         color: @controls-OperationsPanelButton-active-icon-color;
       }
    }
 }
