@@ -1383,6 +1383,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
                endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
                regResult;
+            text = this._removeEmptyTags(text);
             while ((regResult = beginReg.exec(text)) !== null)
             {
                text = text.substr(regResult[0].length + 1);
@@ -1392,6 +1393,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+         },
+         /**
+          * Проблема:
+          *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
+          *          опция text при этом перестает быть пустой
+          * Решение:
+          *          убирать пустые теги перед тем как отдать значение опции text
+          * @param text
+          * @returns {String}
+          * @private
+          */
+         _removeEmptyTags: function(text) {
+            var
+               temp = $(text);
+            while ( temp.find(':empty:not(img, iframe)').length) {
+               temp.find(':empty:not(img, iframe)').remove();
+            }
+            return $('<div></div>').append(temp).html();
          },
 
          /**
