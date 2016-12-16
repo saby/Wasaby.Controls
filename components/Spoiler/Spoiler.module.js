@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'tmpl!SBIS3.CONTROLS.Spoiler',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate',
+   'Core/helpers/collection-helpers',
    'Core/helpers/dom&controls-helpers'
-], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, dcHelpers) {
+], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
 
    'use strict';
 
@@ -102,8 +103,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
              */
             properties: null
          },
-         _checkClickByTap: false,
-         _contentInitialized: false
+         _checkClickByTap: false
       },
       _modifyOptions: function(opts) {
          var
@@ -116,9 +116,6 @@ define('js!SBIS3.CONTROLS.Spoiler', [
       },
       init: function() {
          this.subscribe('onExpandedChange', this._onExpandedChange);
-         if (this.isExpanded()) {
-            this._contentInitialized = true;
-         }
          Spoiler.superclass.init.apply(this, arguments);
       },
       setCaption: function(caption){
@@ -145,14 +142,21 @@ define('js!SBIS3.CONTROLS.Spoiler', [
       },
       _onExpandedChange: function(event, expanded) {
          this._getToggleItemContainer().toggleClass('icon-CollapseLight', expanded).toggleClass('icon-ExpandLight', !expanded);
-         if (expanded && !this._contentInitialized) {
+         if (expanded) {
             this._initializeContent();
+         } else {
+            this._destroyContent();
          }
       },
       _initializeContent: function() {
          this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options)));
          this.reviveComponents();
-         this._contentInitialized = true;
+      },
+      _destroyContent: function() {
+         colHelpers.forEach(dcHelpers.findControlsInContainer(this._getContentContainer()), function(item) {
+            item.destroy();
+         });
+         dcHelpers.clearContainer(this._getContentContainer());
       },
       _notifyOnActivated: function(originalEvent){
          var
