@@ -550,6 +550,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
           setActive: function(active) {
              var wasActive = this.isActive();
 
+             /* Хак, который чинит баг firefox с невидимым курсором в input'e.
+                Это довольно старая и распростронённая проблема в firefox'e,
+                повторяется с разными сценариями и с разными способомами починки.
+                В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a). */
+             if(active && wasActive && constants.browser.firefox) {
+                this._getElementToFocus().blur();
+             }
+
              FieldLink.superclass.setActive.apply(this, arguments);
 
              /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
