@@ -138,6 +138,7 @@
 
 .controls-ComboBox__picker {
    padding: @combo-box-picker-padding;
+   overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
    .controls-ComboBox__body{
      margin: @combo-box-picker-margin;
      border: @combo-box-picker-border;
@@ -146,6 +147,7 @@
    }
    .controls-ComboBox__scrollContainer{
      max-height: 400px;
+     height: inherit;
    }
 
    .controls-ComboBox__itemRow {
