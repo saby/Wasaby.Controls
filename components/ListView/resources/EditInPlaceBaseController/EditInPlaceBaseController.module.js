@@ -331,6 +331,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   opener = this.getOpener();
                if (opener && this._pendingOperation) {
                   this._unregisterPendingOperation(this._pendingOperation);
+                  this._pendingOperation = undefined;
                }
             },
             /**
