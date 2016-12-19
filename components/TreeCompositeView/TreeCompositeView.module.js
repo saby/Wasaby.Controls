@@ -40,12 +40,35 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     *    </options>
     * </component>
     */
+   var
+   getRecordsForRedraw = function(projection, cfg) {
+      if (cfg.viewMode == 'table') {
+         return cfg._getRecordsForRedrawTree.call(this, projection, cfg)
+      }
+      else {
+         var
+            records = {
+               folders : [],
+               leafs : []
+            };
+         projection.each(function (item, index, group) {
+            if (item.isNode) {
+               records.folders.push(item);
+            }
+            else {
+               records.leafs.push(item);
+            }
+         });
+         return records;
+      }
+   };
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
 
       $protected: {
          _prevMode: null,
          _options: {
+            _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
              * @remark

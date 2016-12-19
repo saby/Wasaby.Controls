@@ -159,6 +159,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       return tplOptions;
    },
+   canServerRenderOther = function(cfg) {
+      return !cfg.itemTemplate;
+   },
    findKeyField  = function(json){
       var itemFirst = json[0];
       if (itemFirst) {
@@ -269,6 +272,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _groupCollapsing: {},
          _options: {
             _canServerRender: false,
+            _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
@@ -594,7 +598,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   parsedCfg._itemsProjection = proj;
                }
 
-               if (cfg._canServerRender && !cfg.itemTemplate) {
+               if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
                      newCfg._itemData = cfg._buildTplArgs(cfg);

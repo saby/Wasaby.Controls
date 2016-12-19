@@ -1,0 +1,7 @@
+{{var stashTpl = it._itemData.itemTpl;}}
+<div class="controls-CompositeView__foldersContainer">
+   {{if (it.viewMode = 'list') it._itemData.itemTpl = listTemplate;}}
+   {{=it._itemsTemplate({records : it._records.folder, tplData : it._itemData})}}
+</div>
+      {{=it._itemsTemplate({records : it._records.leafs, tplData : it._itemData})}}
+      {{it._itemData.itemTpl = stashTpl;}}

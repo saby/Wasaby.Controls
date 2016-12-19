@@ -10,7 +10,10 @@
       </div>
    </div>
    <div class="controls-CompositeView__itemsContainer ws-hidden">
-      <div class="controls-CompositeView__foldersContainer"></div>
+      {{?it._serverRender}}
+         {{debugger;}}
+         {{=it._compositeItemsTemplate(it)}}
+      {{?}}
    </div>
    <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
       <tbody class="controls-DataGridView__tbody"></tbody>

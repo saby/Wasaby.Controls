@@ -1,8 +1,10 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
    'html!SBIS3.CONTROLS.CompositeViewMixin',
+   "Core/IoC",
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -10,13 +12,28 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
     * @public
     * @author Крайнов Дмитрий Олегович
     */
+   var canServerRenderOther = function(cfg) {
+      return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate)
+   },
+   buildTplArgs = function(cfg) {
+      var parentOptions = cfg._buildTplArgsDG(cfg);
+      if ((cfg.viewMode == 'list') || (cfg.viewMode == 'tile')) {
+         parentOptions.image = cfg.imageField;
+         parentOptions.description = cfg.displayField;
+
+      }
+      return parentOptions;
+   };
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
       _dotTplFn : dotTplFn,
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
          _options: {
-            _canServerRender: false,
+            _canServerRender: true,
+            _canServerRenderOther : canServerRenderOther,
+            _compositeItemsTemplate : CompositeItemsTemplate,
+            _buildTplArgs : buildTplArgs,
             /**
              * @cfg {String} Устанавливает режим отображения элементов коллекции
              * @variant table Режим отображения "Таблица"
@@ -88,6 +105,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                self._calculateTileWidth();
             }
          });
+
+         if (this._options.tileTemplate) {
+            IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
+         }
+         if (this._options.listTemplate) {
+            IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан listTemplate');
+         }
       },
       _updateHeadAfterInit: function() {
          this._redrawHead();
@@ -246,8 +270,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          //TODO заглушка для CompositeView
          _isSlowDrawing: function(parentFnc, easy) {
             var flag = parentFnc.call(this, easy);
-            if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
-               flag = true;
+            if (this._options.viewMode == 'list') {
+               if (this._options.listTemplate) {
+                  flag = true;
+               }
+            }
+
+            if (this._options.viewMode == 'tile') {
+               if (this._options.tileTemplate) {
+                  flag = true;
+               }
             }
             return flag;
          },
