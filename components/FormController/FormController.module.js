@@ -795,7 +795,6 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
                updateConfig.additionalData.key = key;
                self._newRecord = false;
-               self._updateDeferred = false;
                return key;
             }).addErrback(function (error) {
                self._updateDeferred = false;
@@ -806,6 +805,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             dResult.callback();
          }
          dResult.addCallback(function (result) {
+            self._updateDeferred = false; //в 230+ версии можно перенести в колбэк самого _updateDeferred, когда выпилится опция source
             if (config.closePanelAfterSubmit) {
                self._closePanel(true);
             }
