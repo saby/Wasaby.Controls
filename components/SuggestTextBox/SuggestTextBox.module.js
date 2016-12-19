@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
          if(this._options.searchParam) {
             var showPicker = function() {
-                   if(self._checkPickerState(false)) {
+                   if(self._checkPickerState(!self._options.showEmptyList)) {
                       self.showPicker();
                    }
                 },
