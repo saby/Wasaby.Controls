@@ -271,7 +271,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @remark
                 * По значениям поля иерархии иерархические отношения между элементами коллекции выпадающего списка.
                 */
-               hierField: null,
+               parentProperty: null,
                allowEmptyMultiSelection: false,
                /**
                 * @cfg {Boolean} Добавить пустое значение в выпадающий список с текстом "Не выбрано"
@@ -305,6 +305,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _modifyOptions: function(cfg, parsedCfg) {
+            if (cfg.hierField) {
+               IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
+               cfg.parentProperty = cfg.hierField;
+            }
             cfg.pickerClassName += ' controls-DropdownList__picker';
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
             return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
@@ -342,7 +346,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return cMerge(defaultArgs, {
                item: item,
                defaultId: this._defaultId,
-               hierField: this._options.hierField,
+               hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
                multiselect: this._options.multiselect
             });
          },
@@ -755,7 +760,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
-                        var parentId = rec.get(self._options.hierField),
+                        var parentId = rec.get(self._options.parentProperty),
                             parentRecord,
                             text;
                         if (parentId !== undefined){
