@@ -6,8 +6,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       $protected: {
          _options: {
             view: null,
-            paging: null,
-            useClientRect: false
+            paging: null
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -94,9 +93,11 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _isPageStartVisisble: function(page){
-         var top = page.element.offset().top + page.element.outerHeight(true);
-         if (this._options.useClientRect) {
+         var top;
+         if (this._options.view._getScrollWatcher().getScrollContainer()[0] == window) {
             top = page.element[0].getBoundingClientRect().bottom;
+         } else {
+            top = page.element.offset().top + page.element.outerHeight(true);
          }
          return top >= 0;
       },
