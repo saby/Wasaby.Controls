@@ -481,7 +481,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          return {
             corner: 'bl',
             verticalAlign: {
-               side: 'top'
+               side: 'top',
+               offset: -1
             },
             horizontalAlign: {
                side: 'left'
