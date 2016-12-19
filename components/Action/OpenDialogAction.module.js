@@ -531,6 +531,9 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+               if (recValue && (typeof recValue.clone == 'function')) {
+                  recValue = recValue.clone();
+               }
                try {
                   this.set(key, recValue);
                } catch (e) {
