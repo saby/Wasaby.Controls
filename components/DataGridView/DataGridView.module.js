@@ -1193,7 +1193,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
          if (this._options.emptyHTML && this._options.allowToggleHead) {
-            this._thead.toggleClass('ws-hidden', !!show);
+            if (this._thead) {
+               this._thead.toggleClass('ws-hidden', !!show);
+            }
             this._notify('onChangeHeadVisibility');
          }
       },

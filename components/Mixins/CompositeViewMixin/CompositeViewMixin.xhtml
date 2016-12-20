@@ -10,6 +10,7 @@
       </div>
    </div>
    <div class="controls-CompositeView__itemsContainer ws-hidden">
+
       {{?it._serverRender}}
          {{it.tplData = it._itemData; it.records = it._records; it.tplData.viewMode = it.viewMode; it.tplData._itemsTemplate = it._itemsTemplate;}}
          {{=it._compositeItemsTemplate(it)}}
