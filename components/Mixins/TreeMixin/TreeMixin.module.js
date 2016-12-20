@@ -635,9 +635,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
-               this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
-            }).bind(this));
+            }).bind(this))
+            .addBoth(function(error){
+               this._toggleIndicator(false);
+            }.bind(this));
          } else {
             return Deferred.success();
          }

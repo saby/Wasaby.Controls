@@ -1400,7 +1400,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addErrback(fHelpers.forAliveOnly(function (error) {
                    if (!error.canceled) {
                       self._toggleIndicator(false);
-                      if (self._notify('onDataLoadError', error) !== true) {
+                      if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
                          error.message = error.message.toString().replace('Error: ', '');
                          fcHelpers.alert(error);
                          error.processed = true;
