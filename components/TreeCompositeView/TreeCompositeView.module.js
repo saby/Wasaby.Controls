@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             listFolderContentTpl = cfg.folderContentTpl;
          }
          else {
-            listFolderContentTpl = cfg._defaultFolderTemplate;
+            listFolderContentTpl = cfg._defaultFolderContentTemplate;
          }
       }
       parentOptions.listFolderContent = TemplateUtil.prepareTemplate(listFolderContentTpl);
