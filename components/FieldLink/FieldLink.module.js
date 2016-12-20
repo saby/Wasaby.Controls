@@ -554,8 +554,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 Это довольно старая и распростронённая проблема в firefox'e,
                 повторяется с разными сценариями и с разными способомами починки.
                 В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a). */
-             if(active && wasActive && constants.browser.firefox) {
-                this._getElementToFocus().blur();
+             if(active && wasActive && constants.browser.firefox && this._isInputVisible()) {
+                this._getElementToFocus().blur().focus();
+                dcHelpers.clearSelection();
              }
 
              FieldLink.superclass.setActive.apply(this, arguments);
