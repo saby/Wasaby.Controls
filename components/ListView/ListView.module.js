@@ -2429,9 +2429,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
             }, this)).addErrback(function (error) {
+               this._hideLoadingIndicator();
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
-            });
+               }.bind(this));
          },
 
          _getNextOffset: function(){
