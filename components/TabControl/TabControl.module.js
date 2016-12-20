@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * @control
     * @author Красильников Андрей Сергеевич
     * @public
+    * @demo SBIS3.CONTROLS.Demo.MyTabControl
     */
 
    var TabControl = CompoundControl.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
