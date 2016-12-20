@@ -6,8 +6,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -21,7 +23,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    buildTplArgs = function(cfg) {
       var parentOptions = cfg._buildTplArgsDG(cfg);
       if ((cfg.viewMode == 'list') || (cfg.viewMode == 'tile')) {
-         var tileContentTpl, tileTpl;
+         var tileContentTpl, tileTpl, listContentTpl, listTpl;
 
          parentOptions.image = cfg.imageField;
          parentOptions.description = cfg.displayField;
@@ -41,6 +43,22 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
          parentOptions.tileTpl = TemplateUtil.prepareTemplate(tileTpl);
          parentOptions.defaultTileTpl = TemplateUtil.prepareTemplate(cfg._defaultTileTemplate);
+
+         if (cfg.listContentTpl) {
+            listContentTpl = cfg.listContentTpl;
+         }
+         else {
+            listContentTpl = cfg._defaultListContentTemplate;
+         }
+         parentOptions.listContent = TemplateUtil.prepareTemplate(listContentTpl);
+         if (cfg.listTpl) {
+            listTpl = cfg.listTpl;
+         }
+         else {
+            listTpl = cfg._defaultListTemplate;
+         }
+         parentOptions.listTpl = TemplateUtil.prepareTemplate(listTpl);
+         parentOptions.defaultListTpl = TemplateUtil.prepareTemplate(cfg._defaultListTemplate);
          parentOptions.resourceRoot = constants.resourceRoot;
 
       }
@@ -54,6 +72,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          _options: {
             _defaultTileContentTemplate: TileContentTemplate,
             _defaultTileTemplate: TileTemplate,
+            _defaultListContentTemplate: ListContentTemplate,
+            _defaultListTemplate: ListTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
             _compositeItemsTemplate : CompositeItemsTemplate,
@@ -78,19 +98,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             imageField : null,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Список".
-             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
-             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
-             * @example
-             * Шаблон для отображения только картинки, наименования и идентификатора.
-             * <pre>
-             *    <div>
-             *       <img class="docs-MyCompositeView__list-image" src="{{=it.item.get('Изображение')}}" />
-             *       <div class="docs-MyCompositeView__list-title">{{=it.item.get('Наименование')}}</div>
-             *       <div class="docs-MyCompositeView__list-id">{{=it.item.get('@СписокИмущества')}}</div>
-             *    </div>
-             * </pre>
-             * @see tileTemplate
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @deprecated
              */
             listTemplate : null,
             /**
@@ -98,9 +106,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * @deprecated
              */
             tileTemplate : null,
-            tileContentTpl : null,
             /**
-             * @cfg {String} Шаблон отображения элемента в режиме "Плитка".
+             * @cfg {String} Шаблон отображения внутреннего содержимого элемента в режиме "Плитка".
              * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
              * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
              * @example
@@ -115,7 +122,52 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * @see listTemplate
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              */
-            tileTpl: null
+            tileContentTpl : null,
+            /**
+             * @cfg {String} Шаблон отображения элемента в режиме "Плитка".
+             * Используется чтобы добавить атрибуты на элементы или полностью переопрделить шаблон
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Навешивание класса на элементы
+             * <pre>
+             *    {{it.className="myClass";}}{{=it.defaultTileTpl(it)}}
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
+            tileTpl: null,
+            /**
+             * @cfg {String} Шаблон отображения внутреннего содержимого элемента в режиме "Список".
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Шаблон для отображения только картинки, наименования и идентификатора.
+             * <pre>
+             *    <div>
+             *       <img class="docs-MyCompositeView__tile-image" src="{{=it.item.get('Изображение')}}" />
+             *       <div class="docs-MyCompositeView__tile-title">{{=it.item.get('Наименование')}}</div>
+             *       <div class="docs-MyCompositeView__tile-id">{{=it.item.get('@СписокИмущества')}}</div>
+             *    </div>
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
+            listContentTpl : null,
+            /**
+             * @cfg {String} Шаблон отображения элемента в режиме "Список".
+             * Используется чтобы добавить атрибуты на элементы или полностью переопрделить шаблон
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Навешивание класса на элементы
+             * <pre>
+             *    {{it.className="myClass";}}{{=it.defaultTileTpl(it)}}
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
+            listTpl: null
          }
       },
 

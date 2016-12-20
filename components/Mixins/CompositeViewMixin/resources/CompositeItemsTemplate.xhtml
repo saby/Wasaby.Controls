@@ -3,7 +3,13 @@
 
 </div>
 {{?it._serverRender}}
-   {{it._itemData.itemTpl = it._itemData.tileTpl;}}
-   {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+   {{?it.viewMode == 'list'}}
+      {{it._itemData.itemTpl = it._itemData.listTpl;}}
+      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+   {{?}}
+   {{?it.viewMode == 'tile'}}
+      {{it._itemData.itemTpl = it._itemData.tileTpl;}}
+      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+   {{?}}
    {{it._itemData.itemTpl = stashTpl;}}
 {{?}}
