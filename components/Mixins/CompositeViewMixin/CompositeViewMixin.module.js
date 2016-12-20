@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
+   'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, cMerge) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -20,8 +21,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    var canServerRenderOther = function(cfg) {
       return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate)
    },
-   buildTplArgs = function(cfg) {
-      var parentOptions = cfg._buildTplArgsDG(cfg);
+   buildTplArgsComposite = function(cfg) {
+      var parentOptions = cfg;
       if ((cfg.viewMode == 'list') || (cfg.viewMode == 'tile')) {
          var tileContentTpl, tileTpl, listContentTpl, listTpl;
 
@@ -63,6 +64,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          parentOptions.listTpl = TemplateUtil.prepareTemplate(listTpl);
          parentOptions.defaultListTpl = TemplateUtil.prepareTemplate(cfg._defaultListTemplate);
       }
+      return parentOptions
+   },
+   buildTplArgs = function(cfg) {
+      var parentOptions = cfg._buildTplArgsDG(cfg);
+      var myOptions = cfg._buildTplArgsComposite(cfg);
+      cMerge(parentOptions, myOptions);
       return parentOptions;
    };
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
@@ -79,6 +86,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _canServerRenderOther : canServerRenderOther,
             _compositeItemsTemplate : CompositeItemsTemplate,
             _buildTplArgs : buildTplArgs,
+            _buildTplArgsComposite: buildTplArgsComposite,
             /**
              * @cfg {String} Устанавливает режим отображения элементов коллекции
              * @variant table Режим отображения "Таблица"
