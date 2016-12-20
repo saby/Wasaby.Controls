@@ -906,7 +906,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _removeItems: function (items, groupId) {
-         var removedElements = $([]);
+         var removedElements = $([]), prev;
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -923,11 +923,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                   }
                   else {
-                     var prev = targetElement.prev();
+                     if (!prev)
+                        prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
                         if (!next.length || next.hasClass('controls-GroupBy')) {
                            prev.remove();
+                           prev = undefined;
                         }
                      }
                   }
