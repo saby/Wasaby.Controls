@@ -27,6 +27,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
          parentOptions.image = cfg.imageField;
          parentOptions.description = cfg.displayField;
+         parentOptions.viewMode = cfg.viewMode;
+         parentOptions._itemsTemplate = cfg._itemsTemplate;
+         parentOptions.resourceRoot = constants.resourceRoot;
 
          if (cfg.tileContentTpl) {
             tileContentTpl = cfg.tileContentTpl;
@@ -59,8 +62,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
          parentOptions.listTpl = TemplateUtil.prepareTemplate(listTpl);
          parentOptions.defaultListTpl = TemplateUtil.prepareTemplate(cfg._defaultListTemplate);
-         parentOptions.resourceRoot = constants.resourceRoot;
-
       }
       return parentOptions;
    };
@@ -224,6 +225,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
        */
       getViewMode: function(){
          return this._options.viewMode;
+      },
+
+      _getItemsTemplate: function() {
+         if (this._options.viewMode == 'table') {
+            return this._options._itemsTemplate;
+         }
+         else {
+            return TemplateUtil.prepareTemplate(this._options._compositeItemsTemplate);
+         }
       },
 
       _drawViewMode : function(mode) {

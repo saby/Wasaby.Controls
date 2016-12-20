@@ -1,15 +1,13 @@
-{{?it._serverRender}}{{var stashTpl = it._itemData.itemTpl;}}{{?}}
+{{var stashTpl = it.tplData.itemTpl;}}
 <div class="controls-CompositeView__foldersContainer">
 
 </div>
-{{?it._serverRender}}
-   {{?it.viewMode == 'list'}}
-      {{it._itemData.itemTpl = it._itemData.listTpl;}}
-      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
-   {{?}}
-   {{?it.viewMode == 'tile'}}
-      {{it._itemData.itemTpl = it._itemData.tileTpl;}}
-      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
-   {{?}}
-   {{it._itemData.itemTpl = stashTpl;}}
+{{?it.tplData.viewMode == 'list'}}
+   {{it.tplData.itemTpl = it.tplData.listTpl;}}
+   {{=it.tplData._itemsTemplate({records : it.records, tplData : it.tplData})}}
 {{?}}
+{{?it.tplData.viewMode == 'tile'}}
+   {{it.tplData.itemTpl = it.tplData.tileTpl;}}
+   {{=it.tplData._itemsTemplate({records : it.records, tplData : it.tplData})}}
+{{?}}
+{{it.tplData.itemTpl = stashTpl;}}

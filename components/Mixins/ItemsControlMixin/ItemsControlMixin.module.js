@@ -640,6 +640,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       },
 
+      _getItemsTemplate: function() {
+         return this._options._itemsTemplate;
+      },
+
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
             this._dataSource = this._prepareSource(this._options.dataSource);
@@ -792,7 +796,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
-         data.itemsTemplate = this._options._itemsTemplate;
+         data.itemsTemplate = this._getItemsTemplate();
          return data;
       },
 
@@ -827,7 +831,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
@@ -1002,7 +1006,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._reviveItems();
                }
