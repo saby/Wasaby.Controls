@@ -1,10 +1,13 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
    'html!SBIS3.CONTROLS.CompositeViewMixin',
-   "Core/IoC",
+   'Core/IoC',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -18,8 +21,27 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    buildTplArgs = function(cfg) {
       var parentOptions = cfg._buildTplArgsDG(cfg);
       if ((cfg.viewMode == 'list') || (cfg.viewMode == 'tile')) {
+         var tileContentTpl, tileTpl;
+
          parentOptions.image = cfg.imageField;
          parentOptions.description = cfg.displayField;
+
+         if (cfg.tileContentTpl) {
+            tileContentTpl = cfg.tileContentTpl;
+         }
+         else {
+            tileContentTpl = cfg._defaultTileContentTemplate;
+         }
+         parentOptions.tileContent = TemplateUtil.prepareTemplate(tileContentTpl);
+         if (cfg.tileTpl) {
+            tileTpl = cfg.tileTpl;
+         }
+         else {
+            tileTpl = cfg._defaultTileTemplate;
+         }
+         parentOptions.tileTpl = TemplateUtil.prepareTemplate(tileTpl);
+         parentOptions.defaultTileTpl = TemplateUtil.prepareTemplate(cfg._defaultTileTemplate);
+         parentOptions.resourceRoot = constants.resourceRoot;
 
       }
       return parentOptions;
@@ -30,6 +52,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          _tileWidth: null,
          _folderWidth: null,
          _options: {
+            _defaultTileContentTemplate: TileContentTemplate,
+            _defaultTileTemplate: TileTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
             _compositeItemsTemplate : CompositeItemsTemplate,
@@ -71,6 +95,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             listTemplate : null,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Плитка".
+             * @deprecated
+             */
+            tileTemplate : null,
+            tileContentTpl : null,
+            /**
+             * @cfg {String} Шаблон отображения элемента в режиме "Плитка".
              * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
              * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
              * @example
@@ -85,7 +115,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * @see listTemplate
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              */
-            tileTemplate : null
+            tileTpl: null
          }
       },
 
@@ -114,7 +144,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
       },
       _updateHeadAfterInit: function() {
-         this._redrawHead();
+         if (this._options.viewMode == 'table') {
+            this._redrawHead();
+         }
       },
       /**
        * Устанавливает режим отображения данных.
