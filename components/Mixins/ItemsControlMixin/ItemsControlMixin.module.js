@@ -271,6 +271,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _propertyValueGetter: getPropertyValue,
          _groupCollapsing: {},
          _options: {
+            _itemsTemplate: ItemsTemplate,
             _canServerRender: false,
             _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
@@ -572,7 +573,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       around: {
          _modifyOptions : function(parentFnc, cfg, parsedCfg) {
             var newCfg = parentFnc.call(this, cfg), proj, items;
-            newCfg._itemsTemplate = ItemsTemplate;
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;

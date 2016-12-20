@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, cMerge) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, cMerge) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -84,6 +85,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _defaultListTemplate: ListTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
+            /*TODO для лечения тестов пришлось закоппипастить шаблон*/
+            _getItemsTemplate: ItemsTemplate,
             _compositeItemsTemplate : CompositeItemsTemplate,
             _buildTplArgs : buildTplArgs,
             _buildTplArgsComposite: buildTplArgsComposite,
