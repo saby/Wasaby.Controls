@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
             /*TODO для лечения тестов пришлось закоппипастить шаблон*/
-            _getItemsTemplate: ItemsTemplate,
+            _itemsTemplate: ItemsTemplate,
             _compositeItemsTemplate : CompositeItemsTemplate,
             _buildTplArgs : buildTplArgs,
             _buildTplArgsComposite: buildTplArgsComposite,
