@@ -1121,7 +1121,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
-                  inst.destroy();
+                  inst.destroy(true);
                }
                else {
                   compsArray.push(inst);
