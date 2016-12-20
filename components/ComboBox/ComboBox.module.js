@@ -234,7 +234,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
-         this.reload();
       },
 
       init : function() {
