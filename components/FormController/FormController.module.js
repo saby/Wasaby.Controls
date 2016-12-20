@@ -219,9 +219,7 @@ define('js!SBIS3.CONTROLS.FormController', [
 
       _subscribeToEventBus: function(){
          this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
-         this._onOfflineModeErrorHandler = this._onOfflineModeError.bind(this);
          this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
-         this.subscribeTo(EventBus.globalChannel(), 'onOfflineModeError', this._onOfflineModeErrorHandler);
       },
 
       _declareCommands: function(){
@@ -246,12 +244,6 @@ define('js!SBIS3.CONTROLS.FormController', [
                self._actionNotify(eventName);
             });
          }
-      },
-
-      _onOfflineModeError: function(){
-         //Если перешли в offline-режим и были запросы на БЛ - скроем индикаторы и overlay, т.к. не дождемся ответа от сервера
-         this._hideLoadingIndicator();
-         this._toggleOverlay(false);
       },
 
       _onAfterShowHandler: function(){
@@ -851,7 +843,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             self._notify(config.eventName, self._options.record, config.additionalData);
             return data;
          }).addErrback(function(err){
-               if (!config.hideErrorDialog && (err instanceof Error)){
+               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+               if (!config.hideErrorDialog && (err instanceof Error) && !err._isOfflineMode){
                   self._processError(err);
                }
                return err;
@@ -932,7 +925,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
-         this.unsubscribeFrom(EventBus.globalChannel(), 'onOfflineModeError', this._onOfflineModeErrorHandler);
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
