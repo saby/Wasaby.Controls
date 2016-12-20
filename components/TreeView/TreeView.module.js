@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
     *    <option name="keyField">key</option>
     *    <option name="displayField">title</option>
     *    <option name="emptyHTML">Нет записей</option>
-    *    <option name="hierField">parent</option>
+    *    <option name="parentProperty">parent</option>
     * </component>
     *
     *
