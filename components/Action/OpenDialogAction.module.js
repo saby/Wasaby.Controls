@@ -530,12 +530,9 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          Record.prototype.each.call(collectionRecord, function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
-               //клонируем значение перед тем как вставить в рекорд, для объектов при повторной синхронизации не найдутся изменения,
-               //а модели, флаги и пр потеряют связь с текущим рекордом.
+               //клонируем модели, флаги, потому что при сете они теряют связь с рекордом текущим рекордом. не актульно в 375
                if (recValue && (typeof recValue.clone == 'function')) {
                   recValue = recValue.clone();
-               } else {
-                  recValue = cMerge({}, recValue, {clone: true});
                }
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
                try {
