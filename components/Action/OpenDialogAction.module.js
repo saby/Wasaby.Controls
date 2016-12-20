@@ -530,10 +530,14 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          Record.prototype.each.call(collectionRecord, function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
-               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+               //клонируем значение перед тем как вставить в рекорд, для объектов при повторной синхронизации не найдутся изменения,
+               //а модели, флаги и пр потеряют связь с текущим рекордом.
                if (recValue && (typeof recValue.clone == 'function')) {
                   recValue = recValue.clone();
+               } else {
+                  recValue = cMerge({}, recValue, {clone: true});
                }
+               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
                try {
                   this.set(key, recValue);
                } catch (e) {
