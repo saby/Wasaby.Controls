@@ -2311,7 +2311,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
 
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && scrollDown) || !this._scrollWatcher.hasScroll()) {
+            if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
             }
          },
