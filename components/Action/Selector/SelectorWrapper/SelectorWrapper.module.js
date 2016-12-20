@@ -1,11 +1,12 @@
 /* global define */
 define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'html!SBIS3.CONTROLS.SelectorWrapper',
    'Core/helpers/collection-helpers',
    'Core/helpers/functional-helpers',
    'Core/core-instance'
-], function (CompoundControl, dotTplFn, collectionHelpers, functionalHelpers, cInstance) {
+], function (CompoundControl, TemplateUtil, dotTplFn, collectionHelpers, functionalHelpers, cInstance) {
 
 
    /**
@@ -115,6 +116,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
             this.sendCommand('selectorWrapperInitialized', this);
          });
+      },
+
+      _modifyOptions: function() {
+         var options = SelectorWrapper.superclass._modifyOptions.apply(this, arguments);
+         options.content = TemplateUtil.prepareTemplate(options.content);
+         return options;
       },
 
       setSelectedItems: function(items) {
