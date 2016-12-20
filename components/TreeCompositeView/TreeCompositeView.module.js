@@ -67,18 +67,30 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       parentOptions.folderTpl = TemplateUtil.prepareTemplate(folderTpl);
       parentOptions.defaultFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultFolderTemplate);
 
+
       if (cfg.listFolderContentTpl) {
          listFolderContentTpl = cfg.listFolderContentTpl;
       }
       else {
-         listFolderContentTpl = cfg._defaultListFolderContentTemplate;
+         if (cfg.folderContentTpl) {
+            listFolderContentTpl = cfg.folderContentTpl;
+         }
+         else {
+            listFolderContentTpl = cfg._defaultFolderTemplate;
+         }
       }
       parentOptions.listFolderContent = TemplateUtil.prepareTemplate(listFolderContentTpl);
       if (cfg.listFolderTpl) {
          listFolderTpl = cfg.listFolderTpl;
       }
       else {
-         listFolderTpl = cfg._defaultListFolderTemplate;
+         if (cfg.folderTpl) {
+            listFolderTpl = cfg.folderTpl;
+         }
+         else {
+            listFolderTpl = cfg._defaultListFolderTemplate;
+         }
+
       }
       parentOptions.listFolderTpl = TemplateUtil.prepareTemplate(listFolderTpl);
       parentOptions.defaultlistFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultListFolderTemplate);
@@ -95,7 +107,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                leafs : []
             };
          projection.each(function (item, index, group) {
-            if (item.isNode) {
+            if (item.isNode()) {
                records.folders.push(item);
             }
             else {
@@ -162,7 +174,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             _defaultFolderTemplate: FolderTemplate,
             _defaultFolderContentTemplate: FolderContentTemplate,
             _defaultListFolderTemplate: ListFolderTemplate,
-            _defaultListFolderContentTemplate: '',
             _compositeItemsTemplate : TreeCompositeItemsTemplate,
             _canServerRenderOther : canServerRenderOther
          }
