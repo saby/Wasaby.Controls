@@ -6,11 +6,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.CompositeViewMixin",
    "html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/TreeCompositeItemsTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-merge'
-], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, colHelpers, fcHelpers, TemplateUtil, cMerge) {
+], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
 
@@ -45,7 +49,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    var
    buildTplArgs = function(cfg) {
       var parentOptions = cfg._buildTplArgsTDG(cfg), folderContentTpl, folderTpl, listFolderTpl, listFolderContentTpl;
-      var myOptions = cfg._buildTplArgsComposite(parentOptions);
+      var myOptions = cfg._buildTplArgsComposite(cfg);
       cMerge(parentOptions, myOptions);
       if (cfg.folderContentTpl) {
          folderContentTpl = cfg.folderContentTpl;
@@ -100,6 +104,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          });
          return records;
       }
+   },
+   canServerRenderOther = function(cfg) {
+      return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate || cfg.folderTemplate || cfg.listFolderTemplate)
    };
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
@@ -152,10 +159,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             listFolderTemplate: undefined,
             listFolderTpl: null,
             listFolderContentTpl: null,
-            _defaultFolderTemplate: '',
-            _defaultFolderContentTemplate: '',
-            _defaultListFolderTemplate: '',
-            _defaultListFolderContentTemplate: ''
+            _defaultFolderTemplate: FolderTemplate,
+            _defaultFolderContentTemplate: FolderContentTemplate,
+            _defaultListFolderTemplate: ListFolderTemplate,
+            _defaultListFolderContentTemplate: '',
+            _compositeItemsTemplate : TreeCompositeItemsTemplate,
+            _canServerRenderOther : canServerRenderOther
          }
       },
 

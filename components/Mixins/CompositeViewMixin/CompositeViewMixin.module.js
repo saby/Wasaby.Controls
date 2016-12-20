@@ -19,10 +19,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
     * @author Крайнов Дмитрий Олегович
     */
    var canServerRenderOther = function(cfg) {
-      return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate)
+      return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate);
    },
    buildTplArgsComposite = function(cfg) {
-      var parentOptions = cfg;
+      var parentOptions = cfg._buildTplArgsLV.call(this, cfg);
       if ((cfg.viewMode == 'list') || (cfg.viewMode == 'tile')) {
          var tileContentTpl, tileTpl, listContentTpl, listTpl;
 
