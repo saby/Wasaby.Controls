@@ -19,9 +19,15 @@
       {{?}}
    </div>
    <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
-      <tbody class="controls-DataGridView__tbody"></tbody>
-       <tfoot class="controls-DataGridView__tfoot">
-       </tfoot>
+      {{=it._colGroupTpl(it._colgroupData)}}
+      {{=it._headTpl(it._headData)}}
+      <tbody class="controls-DataGridView__tbody">
+      {{?it._serverRender}}
+      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+      {{?}}
+      </tbody>
+      <tfoot class="controls-DataGridView__tfoot">
+      </tfoot>
    </table>
    <div class="controls-ListView__EmptyData ws-hidden">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
