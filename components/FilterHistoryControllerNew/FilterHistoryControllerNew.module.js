@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
    [
       'js!SBIS3.CONTROLS.HistoryController',
-      'js!WS.Data/Collection/RecordSet',
+      'js!WS.Data/Collection/List',
       'js!WS.Data/Entity/Model',
       'Core/Serializer',
       'Core/helpers/generate-helpers',
@@ -23,8 +23,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
          {name: ID_FIELD, type: 'string'}
       ];
 
-      function getEmptyRecordSet() {
-         return new RecordSet({format: FORMAT, idProperty: ID_FIELD});
+      function getEmptyList() {
+         return new List();
       }
 
       var FilterHistoryControllerNew = HistoryController.extend({
@@ -36,10 +36,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
                   if (serialize) {
                      return JSON.stringify(value, serializer.serialize);
                   } else {
-                     return value ? JSON.parse(value, serializer.deserialize) : getEmptyRecordSet();
+                     return value ? JSON.parse(value, serializer.deserialize) : getEmptyList();
                   }
                },
-               emptyValue: getEmptyRecordSet()
+               emptyValue: getEmptyList()
             }
          },
 
