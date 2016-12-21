@@ -134,7 +134,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                cssClassName: 'controls-moveDialog',
                opener: this._getListView(),
                movedItems: movedItems,
-               componentOptions: meta.componentOptions
+               componentOptions: meta.componentOptions || {}
             }, this._options.template);
          },
 
@@ -175,7 +175,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                listView: this._getListView()
             });
          },
-
          _getComponentOptions: function() {
             var options = ['displayField', 'partialyReload', 'keyField', 'hierField'],
                listView = this._getListView(),
