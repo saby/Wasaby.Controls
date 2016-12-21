@@ -1060,7 +1060,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              scrollContainer = this._getPartScrollContainer(),
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
-             notScrolledCells;
+             lastRightStop = this._stopMovingCords.right,
+             notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
@@ -1079,6 +1080,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._stopMovingCords = {
             right: scrollContainer[0].offsetWidth - thumbWidth - 40,
             left: correctMargin
+         };
+
+         /* Скролл мог выехать за правую/левую границу,
+            если например меняли размеры окна, надо это проверить */
+         thumbPos = this._checkThumbPosition({left: this._currentScrollPosition});
+
+         if(this._currentScrollPosition !== thumbPos || lastRightStop < this._stopMovingCords.right) {
+            this._currentScrollPosition = thumbPos;
+            this.updateScrollAndColumns();
          }
       },
 
