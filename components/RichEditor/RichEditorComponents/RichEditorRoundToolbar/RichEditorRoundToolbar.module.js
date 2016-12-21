@@ -8,10 +8,11 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
    'Core/helpers/string-helpers',
+   'js!SBIS3.CONTROLS.StylesPanelNew',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.StylesPanel'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
 
    'use strict';
    var
@@ -81,7 +82,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                italic:false,
                underline:false,
                strikethrough: false
-            }
+            },
+            _stylesPanel: undefined
          },
 
          _modifyOptions: function(options) {
@@ -216,35 +218,33 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             }
          },
 
-         _openStylesPanel: function(target){
-            var
-               area = new FloatArea({
-                  visible: true,
-                  template: 'js!SBIS3.CONTROLS.StylesPanel',
-                  element: $('<div class="controls-RichEditorRoundToolbar__stylesPanel"></div>'),
-                  target: target,
-                  componentOptions: {
-                     formats: {
-                        fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
-                        buttons: this._buttons,
-                        color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)]
-                     },
-                     linkedToolbar: this
-                  },
-                  activableByClick: false,
-                  closeByExternalClick: true,
+         _openStylesPanel: function(button){
+            this._getStylesPanel(button).show();
+         },
+
+         _getStylesPanel: function(button){
+            if (!this._stylesPanel) {
+               this._stylesPanel = new StylesPanel({
+                  parent: button,
+                  target: button.getContainer(),
                   corner: 'tl',
-                  closeButton: true,
-                  verticalAlign: {
-                     side: 'top',
-                     offset: -8
-                  },
-                  horizontalAlign: {
-                     side: 'left',
-                     offset: -8
-                  }
+                  element: $('<div></div>'),
+                  fontSizes: [12, 14, 15, 18],
+                  colors: [
+                     {color:'black'},
+                     {color:'red'},
+                     {color:'green'},
+                     {color:'blue'},
+                     {color:'purple'},
+                     {color:'grey'}
+                  ]
                });
-            area.show();
+            }
+            this._stylesPanel.subscribe('changeFormat', function(){
+               console.log(arguments);
+
+            });
+            return this._stylesPanel;
          },
 
          _applyFormats: function(formats){
