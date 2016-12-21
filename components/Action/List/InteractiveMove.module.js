@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
                opener: this._getListView(),
                movedItems: movedItems,
-               componentOptions: meta.componentOptions
+               componentOptions: meta.componentOptions || {}
             }, this._options.template);
          },
 
@@ -174,7 +174,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                listView: this._getListView()
             });
          },
-
          _getComponentOptions: function() {
             var options = ['displayField', 'partialyReload', 'keyField', 'hierField'],
                listView = this._getListView(),
