@@ -358,7 +358,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @see getText
           */
          setText: function(text) {
-            if (this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
             }
             if (text !== this._curValue()) {
