@@ -308,6 +308,13 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._initializeFilterItems();
          this._contentInitialized = true;
       },
+      /**
+       * Сбрасывает результирующий фильтр (см. {@link filter}).
+       * @remark
+       * При выполнении команды происходит событие {@link onFilterReset}.
+       * @see resetFilterField
+       * @command resetFilter
+       */
       _resetFilter: function() {
          this._filterRecordSet.each(function(item) {
             item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
@@ -315,6 +322,12 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          });
          this._notify('onFilterReset', this.getFilter());
       },
+      /**
+       * Сбрасывает поле результирующего фильтра (см. {@link filter}).
+       * @param {String} fieldName
+       * @see resetFilter
+       * @command resetFilterField
+       */
       _resetFilterField: function(fieldName) {
          var
             item = this._filterRecordSet.at(this._filterRecordSet.getIndexByValue(ITEM_FILTER_ID, fieldName));
