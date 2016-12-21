@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.FilterSelect',
         * </pre>
         * @class SBIS3.CONTROLS.FilterSelect
         * @extends SBIS3.CORE.CompoundControl
+        * @mixes SBIS3.CORE.ItemsControlMixin
         * @control
         * @public
         */
@@ -37,7 +38,17 @@ define('js!SBIS3.CONTROLS.FilterSelect',
           $protected: {
              _options: {
                 itemTpl: itemTpl,
+                /**
+                 * @cfg {boolean} Инвертированное значение опции visible.
+                 * Если значение false - компонент отображается, если значение true - компонент скрыт.
+                 * @see setInvertedVisible
+                 * @see getInvertedVisible
+                 */
                 invertedVisible: false,
+                /**
+                 * @cfg {*} Выбранное значение
+                 * @see getFilterValue
+                 */
                 filterValue: null
              }
           },
