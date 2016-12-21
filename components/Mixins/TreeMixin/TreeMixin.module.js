@@ -374,6 +374,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _getRecordsForRedrawTree: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
