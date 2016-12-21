@@ -48,14 +48,15 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Устанавливаем и�
                    idProperty: 'Ид' // Устанавливаем поле первичного ключа
                 });
             this.getChildControlByName('FieldLinkMultiSelect').setDataSource(dataSource); // Устанавливаем источник данных для контрола
+            this.getChildControlByName('FieldLinkMultiSelect1').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkMultiSelect2').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkMultiSelect3').setDataSource(dataSource);
+            this.getChildControlByName('FieldLinkMultiSelect4').setDataSource(dataSource);
+            fcHelpers.message('Поле связи в режиме множественного выбора значений. <br/>Выбор можно производить как через диалог, так и через автодополнение.');
          }
       });
       
-   FieldLinkDemo.webPage = {
-      htmlTemplate: "/Тема Скрепка/Шаблоны/empty-template.html", 
-      outFileName: "index8"
-   };
-      
+
       return FieldLinkDemo;
    }
 );
