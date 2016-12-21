@@ -64,6 +64,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @see getContent
                 */
                content: '',
+
+               /**
+                * @cfg {Boolean} Включает фиксацию заголовоков в рамках контенера ScrollContainer
+                */
+               stickyContainer: false,
+
                activableByClick: false
             },
             _content: null
