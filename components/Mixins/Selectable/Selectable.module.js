@@ -167,6 +167,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
             }
 
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
             if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex)) {
                this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, true);
             }
