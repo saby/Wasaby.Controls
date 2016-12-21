@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
 
          _fillHistory: function(){
             var
-               prepareHistory= function(value){
+               prepareHistory = function(value){
                   var
                      stripText, title,
                      $tmpDiv = $('<div/>').append(value);
@@ -162,24 +162,26 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                   }
                   return stripText;
                };
-            this.getLinkedEditor().getHistory().addCallback(function(arrBL) {
-               var
-                  items= [],
-                  history = this.getItemInstance('history');
-               for ( var i in arrBL) {
-                  if (arrBL.hasOwnProperty(i)) {
-                     items.push({
-                        key: items.length,
-                        title: prepareHistory(arrBL[i]),
-                        value: arrBL[i]
-                     })
+            if (this.getItems().getRecordById('history')) {
+               this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
+                  var
+                     items = [],
+                     history = this.getItemInstance('history');
+                  for (var i in arrBL) {
+                     if (arrBL.hasOwnProperty(i)) {
+                        items.push({
+                           key: items.length,
+                           title: prepareHistory(arrBL[i]),
+                           value: arrBL[i]
+                        })
+                     }
                   }
-               }
-               if (!arrBL.length) {
-                  history.setEnabled(false);
-               }
-               history.setItems(items)
-            }.bind(this));
+                  if (!arrBL.length) {
+                     history.setEnabled(false);
+                  }
+                  history.setItems(items)
+               }.bind(this));
+            }
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
