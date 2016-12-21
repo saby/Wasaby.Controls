@@ -678,8 +678,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                 this.input = '[name="TextBox 1"] .controls-TextBox__field';
 				this.add_top = '[sbisname="Добавить сверху"]';
 				this.add_bot = '[sbisname="Добавить снизу"]';
-				this.eip_input = '[sbisname="Номер_bind"]';
-				this.eip_input2 = '[sbisname="Цена_bind"]';
+				this.eip_input = '[sbisname="Nomer_bind"]';
+				this.eip_input2 = '[sbisname="Price_bind"]';
             })
 
             .capture('plain', function (actions) {
@@ -699,8 +699,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                 this.input = '[name="TextBox 1"] .controls-TextBox__field';
 				this.add_top = '[sbisname="Добавить сверху"]';
 				this.add_bot = '[sbisname="Добавить снизу"]';
-				this.eip_input = '[sbisname="Номер_bind"]';
-				this.eip_input2 = '[sbisname="Цена_bind"]';
+				this.eip_input = '[sbisname="Nomer_bind"]';
+				this.eip_input2 = '[sbisname="Price_bind"]';
             })
 
 			.capture('plain', function (actions) {
