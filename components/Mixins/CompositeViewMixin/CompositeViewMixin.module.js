@@ -184,7 +184,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       },
 
       $constructor: function() {
-         this._drawViewMode(this._options.mode);
+         //this._drawViewMode(this._options.mode);
          this._container.addClass('controls-CompositeView-' + this._options.viewMode);
          var self = this;
 
