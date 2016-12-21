@@ -219,10 +219,22 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          },
 
          _openStylesPanel: function(button){
-            this._getStylesPanel(button).show();
+            var
+               stylesPanel = this._getStylesPanel(button);
+            stylesPanel.setStylesFromObject({
+               fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
+               color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)],
+               bold: this._buttons.bold,
+               italic: this._buttons.italic,
+               underline: this._buttons.underline,
+               strikethrough: this._buttons.strikethrough
+            });
+            stylesPanel.show();
          },
 
          _getStylesPanel: function(button){
+            var
+               self = this;
             if (!this._stylesPanel) {
                this._stylesPanel = new StylesPanel({
                   parent: button,
@@ -239,11 +251,11 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      {color:'grey'}
                   ]
                });
-            }
-            this._stylesPanel.subscribe('changeFormat', function(){
-               console.log(arguments);
 
-            });
+               this._stylesPanel.subscribe('changeFormat', function(){
+                  self._applyFormats(self._stylesPanel.getStylesObject())
+               });
+            }
             return this._stylesPanel;
          },
 
@@ -253,7 +265,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                this._options.linkedEditor.setFontSize(formats.fontsize);
                for ( var button in this._buttons) {
                   if (this._buttons.hasOwnProperty(button)) {
-                     if (this._buttons[button] !== formats.buttons[button]) {
+                     if (this._buttons[button] !== formats[button]) {
                         this._options.linkedEditor.execCommand(button);
                      }
                   }
