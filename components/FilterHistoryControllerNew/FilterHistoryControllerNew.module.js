@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
    [
       'js!SBIS3.CONTROLS.HistoryController',
-      'js!WS.Data/Collection/List',
+      'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Entity/Model',
       'Core/Serializer',
       'Core/helpers/generate-helpers',
@@ -23,8 +23,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
          {name: ID_FIELD, type: 'string'}
       ];
 
-      function getEmptyList() {
-         return new List();
+      function getEmptyRecordSet() {
+         return new RecordSet({format: FORMAT, idProperty: ID_FIELD});
       }
 
       var FilterHistoryControllerNew = HistoryController.extend({
@@ -36,10 +36,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
                   if (serialize) {
                      return JSON.stringify(value, serializer.serialize);
                   } else {
-                     return value ? JSON.parse(value, serializer.deserialize) : getEmptyList();
+                     return value ? JSON.parse(value, serializer.deserialize) : getEmptyRecordSet();
                   }
                },
-               emptyValue: getEmptyList()
+               emptyValue: getEmptyRecordSet()
             }
          },
 
@@ -56,10 +56,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
                 rawData = {},
                 hasEqualFilter = false;
 
-            rawData[DATA_FIELD] = cFunctions.clone(filerObj);
+            rawData[DATA_FIELD] = filerObj;
             rawData[ID_FIELD] = genHelpers.randomId();
 
-            toSave.setRawData(rawData);
+            toSave.set(rawData);
 
             historyList.each(function (val, index) {
                if(!hasEqualFilter && val.get(DATA_FIELD).isEqual(toSave.get(DATA_FIELD))) {
