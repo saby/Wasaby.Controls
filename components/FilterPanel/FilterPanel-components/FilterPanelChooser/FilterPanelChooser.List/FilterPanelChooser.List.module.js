@@ -12,13 +12,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.ListView'
 ], function(FilterPanelChooserBase, cInstance, cFunctions, CommandDispatcher, colHelpers, dotTplFn, itemTpl, chooserTpl, footerTpl) {
     var
-        showFullList = false,
         //TODO: выписана задача https://inside.tensor.ru/opendoc.html?guid=62947517-9859-4291-a899-42bacf350341 по которой
         //будет предоставлен функционал фильтрации на уровне проекции с учётом сортировки, и перебитие приватной опции
         //_getRecordsForRedraw у ListView можно будет удалить.
         getRecordsForRedraw = function(projection, cfg) {
             var records = cfg._getRecordsForRedrawSt.apply(this, arguments);
-            if (showFullList === false) {
+            if (cfg._showFullList === false) {
                 records = records.slice(0, 3);
             }
             return records;
@@ -136,7 +135,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
          * @command showFullList
          */
         _toggleFullState: function(toggle) {
-            showFullList = toggle;
+            this._getListView()._options._showFullList = toggle;
             this._getListView().redraw();
             //Скрываем кнопку если показываются все записи (toggle = true) или показываем не все записи, но их меньше 4
             this._getAllButton().toggle(!(toggle || this._options.items.getCount() < 4));
