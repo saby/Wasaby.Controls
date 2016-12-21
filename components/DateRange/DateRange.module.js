@@ -136,6 +136,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
 
          this._addDefaultValidator();
+         this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
       },
 
       _setPickerConfig: function() {
@@ -300,6 +301,10 @@ define('js!SBIS3.CONTROLS.DateRange', [
             date.setSQLSerializationMode(this._getSQLSerializationMode());
          }
          return date;
+      },
+
+      _focusOutHandler: function () {
+         this.validate()
       }
    });
    return DateRange;
