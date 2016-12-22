@@ -33,7 +33,7 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
          controlTestCase();
 
-         it('should be current century if short year < current year + 10', function () {
+         it('should be current century if short year less then current year + 10', function () {
             var date = new Date();
             date.setYear(date.getFullYear() + 9);
             this.testControl.setText('01.02.00');
@@ -44,7 +44,7 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
             assert.equal(this.testControl.getDate().getFullYear(), date.getFullYear());
          });
 
-         it('should be last century if short year > current year + 10', function () {
+         it('should be last century if short year greater than current year + 10', function () {
             var date = new Date();
             date.setYear(date.getFullYear() + 11);
             this.testControl.setText(date.strftime('%d.%m.%y'));
