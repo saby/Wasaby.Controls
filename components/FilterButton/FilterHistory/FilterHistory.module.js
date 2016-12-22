@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          });
 
          self.subscribeTo(self._historyView, 'onDrawItems', function(e) {
-            var dsCount = self._historyView.getDataSet().getCount();
+            var dsCount = self._historyView.getItems().getCount();
 
             /* Если записей в истории нет - скроем историю */
             self._container.toggleClass('ws-hidden', !dsCount);
