@@ -30,9 +30,6 @@
    &> .controls-ListView {
       height: auto;
    }
-   &::-webkit-scrollbar {
-      width: 0!important;
-   }
    -webkit-overflow-scrolling: touch;
 }
 
@@ -40,8 +37,16 @@
    overflow: hidden;
 }
 
-// показываем нативный скролл только на androidgit st
-.ws-is-mobile-android {
+.ws-is-desktop-platform {
+   .controls-ScrollContainer__content {
+      &::-webkit-scrollbar {
+         width: 0!important;
+      }
+   }
+}
+
+// показываем нативный скролл только на android и ios
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-mobile-chrome-ios{
    .controls-ScrollContainer {
       overflow: auto;
    }

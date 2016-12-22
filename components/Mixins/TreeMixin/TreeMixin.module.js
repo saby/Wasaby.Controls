@@ -374,6 +374,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _getRecordsForRedrawTree: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
@@ -699,9 +700,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
-               this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
-            }).bind(this));
+            }).bind(this))
+            .addBoth(function(error){
+               this._toggleIndicator(false);
+            }.bind(this));
          } else {
             return Deferred.success();
          }
@@ -1028,9 +1031,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
-            /*TODO onSetRoot стреляет при каждой перезагрузке, чтоб корректно рисовать хлебные крошки в биндере*/
-            this._notify('onSetRoot', this._options._curRoot, hierarchy);
             if (this._previousRoot !== this._options._curRoot) {
+               this._notify('onSetRoot', this._options._curRoot, hierarchy);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор

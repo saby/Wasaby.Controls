@@ -76,20 +76,32 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          }
       },
 
-      _onListDataLoad: function() {
+      _onListDataLoad: function(e, dataSet) {
+         var self = this;
+
          SuggestTextBox.superclass._onListDataLoad.apply(this, arguments);
 
          if(this._options.searchParam) {
+            var showPicker = function() {
+                   if(self._checkPickerState(!self._options.showEmptyList)) {
+                      self.showPicker();
+                   }
+                },
+                list = this.getList(),
+                listItems = list.getItems();
+
             /* В событии onDataLoad момент нельзя показывать пикер т.к. :
-               1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
-               2) Данных в рекордсете ещё нет.
-               3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
-               Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
-            this.subscribeOnceTo(this.getList(), 'onDrawItems', function() {
-               if(this._checkPickerState(!this._options.showEmptyList)) {
-                  this.showPicker();
-               }
-            }.bind(this));
+             1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
+             2) Данных в рекордсете ещё нет.
+             3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
+             Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
+            if( (dataSet && !dataSet.getCount()) && (listItems && !listItems.getCount()) ) {
+               /* Если был пустой список и после загрузки пустой, то события onDrawItems не стрельнёт,
+                т.к. ничего не рисовалось */
+               showPicker();
+            } else {
+               this.subscribeOnceTo(list, 'onDrawItems', showPicker);
+            }
          }
       },
 

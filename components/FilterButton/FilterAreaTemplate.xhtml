@@ -6,6 +6,7 @@
             <option name="enabled" bind="{{=it.internalContextFilterName}}/filterChanged">false</option>
             <option name="tabindex">0</option>
         </component>
+        {{?it.topTemplate}}{{=it.topTemplate()}}{{?}}
         <component data-component="SBIS3.CONTROLS.Button" class="controls__filter-button__apply-filter">
             <option name="caption">Отобрать</option>
             <option name="primary" type="boolean">true</option>

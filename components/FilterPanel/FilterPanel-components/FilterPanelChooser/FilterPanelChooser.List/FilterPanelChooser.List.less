@@ -2,6 +2,7 @@
    .controls-ListView {
       .controls-ListView__itemsContainer {
          .controls-ListView__item {
+            display: flex;
             cursor: @filter-panel-chooser-list-view-item-cursor;
             padding: @filter-panel-chooser-list-view-item-padding;
             background-color: @filter-panel-chooser-list-view-item-bg;
@@ -14,16 +15,13 @@
 
             .controls-FilterPanelChooser__count {
                display: inline-block;
-               position: absolute;
-               top: @filter-panel-chooser-list-view-count-top;
-               right: @filter-panel-chooser-list-view-count-right;
-               padding-right: @filter-panel-chooser-list-view-count-padding-right;
+               padding: @filter-panel-chooser-list-view-count-padding;
                color: @filter-panel-chooser-list-view-count-color;
-               background-color: transparent;
-               box-shadow: @filter-panel-chooser-list-view-count-box-shadow;
+               background-color: @filter-panel-chooser-default-color;
             }
 
             .controls-FilterPanelChooser__title {
+               width: 100%;
                color: @filter-panel-chooser-list-view-title-color;
                max-height: @filter-panel-chooser-list-view-title-max-height;
                overflow: hidden;
@@ -53,7 +51,7 @@
                }
 
                .controls-FilterPanelChooser__count {
-                  box-shadow: @filter-panel-chooser-list-view-selected-count-box-shadow;
+                  background-color: @filter-panel-chooser-selected-color;
                }
             }
 
@@ -61,7 +59,7 @@
                background-color: @filter-panel-chooser-list-view-hovered-item-bg;
 
                .controls-FilterPanelChooser__count {
-                  box-shadow: @filter-panel-chooser-list-view-hovered-count-box-shadow;
+                  background-color: @filter-panel-chooser-hovered-color;
                }
 
                .controls-FilterPanelChooser__title {

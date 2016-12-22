@@ -19,7 +19,7 @@
         <opt name="name" value="DropdownList3"></opt>
         <opt name="keyField" value="key"></opt>
         <opt name="displayField" value="title"></opt>
-        <opt name="hierField" value="parent"></opt>
+        <opt name="parentProperty" value="parent"></opt>
         <opt name="multiselect" >false</opt>
         <opts name="selectedKeys" type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
     </component>
@@ -45,8 +45,8 @@
         <opt name="keyField" value="key"></opt>
         <opt name="displayField" value="title"></opt>
         <opt name="multiselect" >false</opt>
-        <opt name="headTemplate" >html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead</opt>
-        <opt name="itemContentTpl" >html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem</opt>
+        <opt name="headTemplate">html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconHead</opt>
+        <opt name="itemContentTpl">html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconItem</opt>
         <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
     </component>
     <component id="dropdownList7" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">

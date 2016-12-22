@@ -36,6 +36,10 @@ define('js!SBIS3.CONTROLS.Image',
           *
           * @ignoreOptions validators
           *
+          * @demo SBIS3.CONTROLS.DEMO.IntImage <b>Пример 1.</b> Разные типы изображения + плагин.
+          * @demo SBIS3.CONTROLS.DEMO.IntImage2 <b>Пример 2.</b> Базовая линия.
+          * @demo SBIS3.CONTROLS.DEMO.IntImage3 <b>Пример 3.</b> Редактирование изображения при загрузке.
+          *
           * @public
           * @control
           * @category Decorate

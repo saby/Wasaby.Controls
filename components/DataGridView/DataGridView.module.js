@@ -742,7 +742,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
-
+         this._containerOffsetWidth = this.getContainer().outerWidth();
          if(this._isPartScrollVisible) {
             this._updatePartScrollWidth();
          }
@@ -895,6 +895,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var cols = this._colgroup.find('col'),
             columns = this.getColumns(),
             columnsWidth = 0,
+            containerWidth,
             colIndex,
             minWidth;
 
@@ -908,8 +909,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
             columnsWidth += (columns[i].width && parseInt(columns[i].width)) || (columns[i].minWidth && parseInt(columns[i].minWidth)) || 0;
          }
 
+         //TODO Баг. ie неправильно рендерит таблицу, если мы обращаемся к дом элементу в этом месте
+         //В чем причина не разобрались, в 220 для ie вынес получение ширины контейнера в onResizeHandler
+         if (constants.browser.isIE && this._containerOffsetWidth){
+            containerWidth = this._containerOffsetWidth;
+         }
+         else{
+            containerWidth = this._container[0].offsetWidth;
+         }
+
          /* Проставим ширину колонкам, если нужно */
-         if(columnsWidth > this._container[0].offsetWidth) {
+         if(columnsWidth > containerWidth) {
             for (var j = 0; j < columns.length; j++) {
                colIndex = this._options.multiselect ? j + 1 : j;
                minWidth = columns[j].minWidth && parseInt(columns[j].minWidth, 10);
@@ -1050,7 +1060,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
              scrollContainer = this._getPartScrollContainer(),
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
-             notScrolledCells;
+             lastRightStop = this._stopMovingCords.right,
+             notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
@@ -1069,6 +1080,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._stopMovingCords = {
             right: scrollContainer[0].offsetWidth - thumbWidth - 40,
             left: correctMargin
+         };
+
+         /* Скролл мог выехать за правую/левую границу,
+            если например меняли размеры окна, надо это проверить */
+         thumbPos = this._checkThumbPosition({left: this._currentScrollPosition});
+
+         if(this._currentScrollPosition !== thumbPos || lastRightStop < this._stopMovingCords.right) {
+            this._currentScrollPosition = thumbPos;
+            this.updateScrollAndColumns();
          }
       },
 
@@ -1190,7 +1210,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
          if (this._options.emptyHTML && this._options.allowToggleHead) {
-            this._thead.toggleClass('ws-hidden', !!show);
+            if (this._thead) {
+               this._thead.toggleClass('ws-hidden', !!show);
+            }
             this._notify('onChangeHeadVisibility');
          }
       },

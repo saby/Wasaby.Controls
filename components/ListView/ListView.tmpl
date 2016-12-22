@@ -14,7 +14,7 @@
         </ws:if>
     </div>
     <div class="controls-ListView__results-bottom"></div>
-    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length) ? 'ws-hidden'}}">{{emptyHTML}}</div>
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !it.emptyHTML) ? 'ws-hidden'}}">{{emptyHTML}}</div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />

@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterView',
         'css!SBIS3.CONTROLS.Demo.MyFilterView',
         'js!SBIS3.CONTROLS.FilterPanelChooser.List',
         'js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList',
-        'js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList'
+        'js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
+        'js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup'
     ],
     function(CompoundControl, dotTplFn, RecordSet) {
         var moduleClass = CompoundControl.extend({

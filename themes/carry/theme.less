@@ -21,6 +21,7 @@
    }
 }
 
+
 .controls-ItemsToolbar__editActions {
    .icon-size {
       font-size: 32px !important;
@@ -66,6 +67,11 @@
          height: 40px;
       }
    }
+}
+
+// баг оффлайн розницы, когда placeholder неправильно позиционируется
+.controls-TextBox__field::-webkit-input-placeholder{
+   line-height: normal !important;
 }
 
 .controls-InformationPopup {
@@ -190,9 +196,9 @@
 }
 .ws-window-titlebar {
    .ws-float-area-title {
-      top: @float-area-top-offset !important;
+      line-height: @carry-big-height !important;
       font-size: 32px !important;
-      position: relative;
+      position: initial;
    }
 }
 
@@ -286,18 +292,33 @@
    }
 }
 
-.ws-field-button {
-   &.ws-button-classic {
-      &.sbisname-window-title-close{
-         &.ws-enabled {
-            &.ws-button-classic {
-               top: @float-area-top-offset !important;
+.ws-float-area-stack-panel-overflow {
+   .ws-field-button {
+      &.ws-button-classic {
+         &.sbisname-window-title-close {
+            &.ws-enabled {
+               &.ws-button-classic {
+                  top: @float-area-top-offset !important;
+               }
             }
          }
       }
    }
 }
 
+.ws-float-area-nostack-panel-overflow {
+   .ws-field-button {
+      &.ws-button-classic {
+         &.sbisname-window-title-close {
+            &.ws-enabled {
+               &.ws-button-classic {
+                  top: @float-area-top-offset + 2px !important;
+               }
+            }
+         }
+      }
+   }
+}
 .controls-FloatArea {
    &.controls__filterButton__picker {
       .controls-PopupMixin__closeButton {
