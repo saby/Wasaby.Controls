@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             return this._getItemsContainer();
          }
          else {
-            var parId = this.getParentKey(this._items, item);
+            var parId = item.get(this._options.parentProperty);
             if (parId === null || parId === undefined) {
                return this._getItemsContainer();
             }
