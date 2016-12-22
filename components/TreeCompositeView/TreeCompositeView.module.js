@@ -311,6 +311,33 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
          TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
+
+      _calculateDataBeforeRedraw: function(data, projItem) {
+         function dataCalc(dataArg, fieldsArr) {
+            dataArg.itemTpl = dataArg[fieldsArr[0]];
+            dataArg.itemContent = dataArg[fieldsArr[1]];
+            dataArg.defaultItemTpl = dataArg[fieldsArr[2]];
+         }
+         var dataClone = cFunctions.clone(data);
+         if (this._options.viewMode == 'tile') {
+            if (projItem.isNode()) {
+               dataCalc(['folderTpl', 'folderContent', 'defaultFolderTpl']);
+            }
+            else {
+               dataCalc(['tileTpl', 'tileContent', 'defaultTileTpl']);
+            }
+         }
+         if (this._options.viewMode == 'list') {
+            if (projItem.isNode()) {
+               dataCalc(['listFolderTpl', 'listFolderContent', 'defaultListFolderTpl']);
+            }
+            else {
+               dataCalc(['listTpl', 'listContent', 'defaultListTpl']);
+            }
+         }
+         return dataClone;
+      },
+
       /*
        TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!
        Метод для частичной перезагрузки (обработка только переданных элементов).

@@ -895,7 +895,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = data.defaultItemTpl;
             }
 
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
+            var calcData = this._calculateDataBeforeRedraw(data, item);
+
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(calcData)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
@@ -912,6 +914,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             result = true;
          }
          return result;
+      },
+
+      _calculateDataBeforeRedraw: function(data) {
+         return data;
       },
 
       _removeItems: function (items, groupId) {
