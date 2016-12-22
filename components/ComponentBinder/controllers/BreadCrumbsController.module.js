@@ -71,11 +71,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                var lastHierElem = hierClone[hierClone.length - 1];
                //Если пришла иерархия, которая не является продолжением уже установленной заменим ее целиком 
                if ((self._currentRoot && hierClone.length && lastHierElem.parent != self._currentRoot.id)){
-                  //При подгрузке по скролу придет тот же элемент что уже установлен, тогда не нужно ничего делать
-                  if (hierClone.length > 1 || lastHierElem.id != self._currentRoot.id){
-                     self._currentRoot = hierClone[0];
-                     self._path = hierClone.reverse();
-                  }
+                  self._currentRoot = hierClone[0];
+                  self._path = hierClone.reverse();
                } else {
                   /* Если root не установлен, и переданный id === null, то считаем, что мы в корне */
                   if ( (id === view._options.root) || (!view._options.root && id === null) ){
