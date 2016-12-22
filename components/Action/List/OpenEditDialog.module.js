@@ -1,4 +1,3 @@
-/*global define, require, $ws*/
 define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'js!SBIS3.CONTROLS.Action.OpenDialog',
       'Core/core-instance',
@@ -97,7 +96,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
              * @variant remote
              * @variant delayedRemote
              */
-            initializingWay: 'remote'
+            initializingWay: 'remote',
+            /**
+             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             */
+            urlProperty: ''
          },
          /**
           * Ключ модели из связного списка
@@ -105,7 +108,12 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         _showedLoading: false
+         _showedLoading: false,
+         _openInNewTab: false
+      },
+      init: function () {
+         OpenDialogAction.superclass.init.apply(this, arguments);
+         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -120,20 +128,27 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _getEditKey: function(item){
       },
+      _setOpeningMode: function(event){
+         this._openInNewTab = event.ctrlKey;
+      },
+      _needOpenInNewTab: function(){
+         return this._openInNewTab;
+      },
 
       _openComponent:function(meta, dialogComponent, mode) {
-         var def;
-         if (this._isNeedToRedrawDialog()){
-            def = this._saveRecord(meta, dialogComponent, mode)
+         var openUrl = meta.item && meta.item.get(this._options.urlProperty);
+         if (this._needOpenInNewTab() && openUrl) {
+            window.open(openUrl);
+            return;
          }
-         if (def instanceof Deferred) {
-            def.addCallback(function(){
+         if (this._isNeedToRedrawDialog()) {
+            this._saveRecord().addCallback(function () {
                OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
             });
-         } else {
+         }
+         else {
             OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
          }
-
       },
       /**
       @deprecated
@@ -143,20 +158,35 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          this._openComponent.call(this, meta, dialogComponent, mode);
       },
 
-      _saveRecord: function(meta, dialogComponent, mode){
-         var args = arguments,
-            self = this,
-            templateComponent,
-            currentRecord;
+      _saveRecord: function(){
+         var resultDeferred = new Deferred(),
+             templateComponent,
+             currentRecord;
 
          templateComponent = this._dialog._getTemplateComponent();
-         currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
+         currentRecord = templateComponent ? templateComponent.getRecord() : null;
          if (currentRecord && currentRecord.isChanged()){
-            return fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
-               if (result === true){
-                  return templateComponent.update({hideQuestion: true});
-               }
+            InformationPopupManager.showConfirmDialog({
+                  message: rk('Сохранить изменения?')
+               },
+               this._confirmDialogHandler.bind(this, true, resultDeferred, templateComponent),
+               this._confirmDialogHandler.bind(this, false, resultDeferred, templateComponent)
+            );
+            return resultDeferred;
+         }
+         else{
+            return resultDeferred.callback();
+         }
+      },
+
+      _confirmDialogHandler: function(result, resultDeferred, templateComponent){
+         if (result){
+            templateComponent.update({hideQuestion: true}).addCallback(function(){
+               resultDeferred.callback();
             });
+         }
+         else {
+            resultDeferred.callback();
          }
       },
 
@@ -174,14 +204,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       _createComponent: function(config, meta, mode){
          var initializingWay = config.componentOptions.initializingWay,
             dialogComponent = config.template;
-         //TODO Выпилить в 200+
-         if (meta.controllerSource){
-            initializingWay = OpenEditDialog.INITIALIZING_WAY_REMOTE;
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenEditDialog.INITIALIZING_WAY_REMOTE instead.');
-         }
 
          if (initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
-            //todo удалить когда INITIALIZING_WAY_REMOTE окончательно устареет.
             this._showLoadingIndicator();
             require([dialogComponent], function(templateComponent){
                this._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function(){
@@ -235,10 +259,13 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   config.componentOptions.key = record.getId();
                }
             }).addErrback(function(error){
-               InformationPopupManager.showMessageDialog({
-                  message: error.message,
-                  status: 'error'
-               })
+               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+               if (!error._isOfflineMode){
+                  InformationPopupManager.showMessageDialog({
+                     message: error.message,
+                     status: 'error'
+                  })
+               }
             });
             return def;
          }
@@ -249,6 +276,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _showLoadingIndicator: function(){
          this._showedLoading = true;
+         this._toggleOverlay(true);
          window.setTimeout(function(){
             if (this._showedLoading){
                cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
@@ -258,7 +286,28 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _hideLoadingIndicator: function(){
          this._showedLoading = false;
+         this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _toggleOverlay: function(show){
+         //При вызове execute, во время начала асинхронных операций при выставленной опции initializingWay = 'remote' || 'delayedRemote',
+         //закрываем оверлеем весь боди, чтобы пользователь не мог взаимодействовать с интерфейсом, пока не загрузится диалог редактирования,
+         //иначе пока не загрузилась одна панель, мы можем позвать открытие другой, что приведет к ошибкам.
+         if (!this._overlay) {
+            this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
+            this._overlay.css({
+               position: 'absolute',
+               top: 0,
+               left: 0,
+               right: 0,
+               bottom: 0,
+               'z-index': 9999,
+               opacity: 0
+            });
+            this._overlay.appendTo('body');
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _isNeedToRedrawDialog: function(){
@@ -266,6 +315,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _setNewDialogConfig: function(config){
+         //Актуальные опции для FC содержатся в config.componentOptions, то что уже содержится в this._dialog._options нам не нужно
+         this._dialog._options.componentOptions = {};
          cMerge(this._dialog._options, config);
          this._dialog.reload();
       },
