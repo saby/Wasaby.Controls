@@ -6,9 +6,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.CompositeViewMixin",
    "html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/TreeCompositeItemsTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
    "Core/helpers/collection-helpers",
-   "Core/helpers/fast-control-helpers"
-], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, colHelpers, fcHelpers) {
+   "Core/helpers/fast-control-helpers",
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'Core/core-merge'
+], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
 
@@ -40,12 +46,88 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     *    </options>
     * </component>
     */
+   var
+   buildTplArgs = function(cfg) {
+      var parentOptions = cfg._buildTplArgsTDG(cfg), folderContentTpl, folderTpl, listFolderTpl, listFolderContentTpl;
+      var myOptions = cfg._buildTplArgsComposite(cfg);
+      cMerge(parentOptions, myOptions);
+      if (cfg.folderContentTpl) {
+         folderContentTpl = cfg.folderContentTpl;
+      }
+      else {
+         folderContentTpl = cfg._defaultFolderContentTemplate;
+      }
+      parentOptions.folderContent = TemplateUtil.prepareTemplate(folderContentTpl);
+      if (cfg.folderTpl) {
+         folderTpl = cfg.folderTpl;
+      }
+      else {
+         folderTpl = cfg._defaultFolderTemplate;
+      }
+      parentOptions.folderTpl = TemplateUtil.prepareTemplate(folderTpl);
+      parentOptions.defaultFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultFolderTemplate);
+
+
+      if (cfg.listFolderContentTpl) {
+         listFolderContentTpl = cfg.listFolderContentTpl;
+      }
+      else {
+         if (cfg.folderContentTpl) {
+            listFolderContentTpl = cfg.folderContentTpl;
+         }
+         else {
+            listFolderContentTpl = cfg._defaultFolderContentTemplate;
+         }
+      }
+      parentOptions.listFolderContent = TemplateUtil.prepareTemplate(listFolderContentTpl);
+      if (cfg.listFolderTpl) {
+         listFolderTpl = cfg.listFolderTpl;
+      }
+      else {
+         if (cfg.folderTpl) {
+            listFolderTpl = cfg.folderTpl;
+         }
+         else {
+            listFolderTpl = cfg._defaultListFolderTemplate;
+         }
+
+      }
+      parentOptions.listFolderTpl = TemplateUtil.prepareTemplate(listFolderTpl);
+      parentOptions.defaultlistFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultListFolderTemplate);
+      return parentOptions;
+   },
+   getRecordsForRedraw = function(projection, cfg, isOld) {
+      if (cfg.viewMode == 'table' || isOld) {
+         return cfg._getRecordsForRedrawTree.call(this, projection, cfg)
+      }
+      else {
+         var
+            records = {
+               folders : [],
+               leafs : []
+            };
+         projection.each(function (item, index, group) {
+            if (item.isNode()) {
+               records.folders.push(item);
+            }
+            else {
+               records.leafs.push(item);
+            }
+         });
+         return records;
+      }
+   },
+   canServerRenderOther = function(cfg) {
+      return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate || cfg.folderTemplate || cfg.listFolderTemplate)
+   };
 
    var TreeCompositeView = TreeDataGridView.extend([CompositeViewMixin],/** @lends SBIS3.CONTROLS.TreeCompositeView.prototype*/ {
 
       $protected: {
          _prevMode: null,
          _options: {
+            _buildTplArgs : buildTplArgs,
+            _getRecordsForRedraw: getRecordsForRedraw,
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
              * @remark
@@ -66,6 +148,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              * </pre>
              */
             folderTemplate: undefined,
+            folderTpl: null,
+            folderContentTpl: null,
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
              * @remark
@@ -84,7 +168,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
              *    </div>
              * </pre>
              */
-            listFolderTemplate: undefined
+            listFolderTemplate: undefined,
+            listFolderTpl: null,
+            listFolderContentTpl: null,
+            _defaultFolderTemplate: FolderTemplate,
+            _defaultFolderContentTemplate: FolderContentTemplate,
+            _defaultListFolderTemplate: ListFolderTemplate,
+            _compositeItemsTemplate : TreeCompositeItemsTemplate,
+            _canServerRenderOther : canServerRenderOther
          }
       },
 

@@ -107,6 +107,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
+            _buildTplArgsTDG: buildTplArgsTDG,
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
