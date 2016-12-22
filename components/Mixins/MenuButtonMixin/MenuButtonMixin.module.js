@@ -1,7 +1,7 @@
 /**
  * Created by iv.cheremushkin on 23.01.2015.
  */
-define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'Core/helpers/collection-helpers'], function(ContextMenu, colHelpers) {
+define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'Core/helpers/collection-helpers', 'Core/IoC'], function(ContextMenu, colHelpers, IoC) {
    /**
     * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
