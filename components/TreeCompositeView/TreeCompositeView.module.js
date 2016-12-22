@@ -312,6 +312,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
 
+
+      //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
+      //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=
+
       _calculateDataBeforeRedraw: function(data, projItem) {
          function dataCalc(dataArg, fieldsArr) {
             dataArg.itemTpl = dataArg[fieldsArr[0]];
@@ -321,18 +325,18 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          var dataClone = cFunctions.clone(data);
          if (this._options.viewMode == 'tile') {
             if (projItem.isNode()) {
-               dataCalc(['folderTpl', 'folderContent', 'defaultFolderTpl']);
+               dataCalc(dataClone, ['folderTpl', 'folderContent', 'defaultFolderTpl']);
             }
             else {
-               dataCalc(['tileTpl', 'tileContent', 'defaultTileTpl']);
+               dataCalc(dataClone, ['tileTpl', 'tileContent', 'defaultTileTpl']);
             }
          }
          if (this._options.viewMode == 'list') {
             if (projItem.isNode()) {
-               dataCalc(['listFolderTpl', 'listFolderContent', 'defaultListFolderTpl']);
+               dataCalc(dataClone, ['listFolderTpl', 'listFolderContent', 'defaultListFolderTpl']);
             }
             else {
-               dataCalc(['listTpl', 'listContent', 'defaultListTpl']);
+               dataCalc(dataClone, ['listTpl', 'listContent', 'defaultListTpl']);
             }
          }
          return dataClone;

@@ -887,15 +887,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                data.decorators.ladder.setRecord(data['item']);
             }
 
-            var dot;
-            if (data.itemTpl) {
-               dot = data.itemTpl;
-            }
-            else {
-               dot = data.defaultItemTpl;
-            }
+            //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
+            //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=
 
             var calcData = this._calculateDataBeforeRedraw(data, item);
+            var dot;
+            if (data.itemTpl) {
+               dot = calcData.itemTpl;
+            }
+            else {
+               dot = calcData.defaultItemTpl;
+            }
 
             markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(calcData)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
