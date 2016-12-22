@@ -1031,9 +1031,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
-            /*TODO onSetRoot стреляет при каждой перезагрузке, чтоб корректно рисовать хлебные крошки в биндере*/
-            this._notify('onSetRoot', this._options._curRoot, hierarchy);
             if (this._previousRoot !== this._options._curRoot) {
+               this._notify('onSetRoot', this._options._curRoot, hierarchy);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
