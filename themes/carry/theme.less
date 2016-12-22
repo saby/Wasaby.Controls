@@ -21,6 +21,7 @@
    }
 }
 
+
 .controls-ItemsToolbar__editActions {
    .icon-size {
       font-size: 32px !important;
@@ -66,6 +67,11 @@
          height: 40px;
       }
    }
+}
+
+// баг оффлайн розницы, когда placeholder неправильно позиционируется
+.controls-TextBox__field::-webkit-input-placeholder{
+   line-height: normal !important;
 }
 
 .controls-InformationPopup {

@@ -161,6 +161,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       return tplOptions;
    },
+   canServerRenderOther = function(cfg) {
+      return !cfg.itemTemplate;
+   },
    findKeyField  = function(json){
       var itemFirst = json[0];
       if (itemFirst) {
@@ -270,7 +273,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _propertyValueGetter: getPropertyValue,
          _groupCollapsing: {},
          _options: {
+            _itemsTemplate: ItemsTemplate,
             _canServerRender: false,
+            _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
@@ -570,7 +575,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       around: {
          _modifyOptions : function(parentFnc, cfg, parsedCfg) {
             var newCfg = parentFnc.call(this, cfg), proj, items;
-            newCfg._itemsTemplate = ItemsTemplate;
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;
@@ -596,7 +600,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   parsedCfg._itemsProjection = proj;
                }
 
-               if (cfg._canServerRender && !cfg.itemTemplate) {
+               if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
                      newCfg._itemData = cfg._buildTplArgs(cfg);
@@ -636,6 +640,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
          }
 
+      },
+
+      _getItemsTemplate: function() {
+         return this._options._itemsTemplate;
       },
 
       _prepareItemsConfig: function() {
@@ -790,7 +798,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          };
 
          data.itemTemplate = TemplateUtil.prepareTemplate(itemTpl);
-         data.itemsTemplate = this._options._itemsTemplate;
+         data.itemsTemplate = this._getItemsTemplate();
          return data;
       },
 
@@ -825,7 +833,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
@@ -908,7 +916,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _removeItems: function (items, groupId) {
-         var removedElements = $([]);
+         var removedElements = $([]), prev;
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -925,11 +933,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      }
                   }
                   else {
-                     var prev = targetElement.prev();
+                     if (!prev)
+                        prev = targetElement.prev();
                      if (prev.length && prev.hasClass('controls-GroupBy')) {
                         var next = targetElement.next();
                         if (!next.length || next.hasClass('controls-GroupBy')) {
                            prev.remove();
+                           prev = undefined;
                         }
                      }
                   }
@@ -1006,7 +1016,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate(data)), this._options);
+                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._reviveItems();
                }
@@ -1065,9 +1075,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _reviveItems : function(lightVer) {
-         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this, lightVer)).addErrback(function(e){
+         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer)).addErrback(function(e){
             throw e;
          });
+      },
+
+      _onReviveItems: function(lightVer){
+         this._notifyOnDrawItems(lightVer);
       },
 
       _notifyOnDrawItems: function(lightVer) {
@@ -1129,7 +1143,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
-                  inst.destroy();
+                  // true - не завершать пакет (ControlBatchUpdater) на дестрой. Иначе сработает onBringToFront и переведет активность раньше времени
+                  // https://inside.tensor.ru/opendoc.html?guid=ec5c1d84-a09c-49b2-991a-779a7004a15b&des=
+                  inst.destroy(true);
                }
                else {
                   compsArray.push(inst);
@@ -1938,7 +1954,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options._items) {
             this._clearItems();
             this._needToRedraw = false;
-            records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options);
+            records = this._options._getRecordsForRedraw.call(this, this._options._itemsProjection, this._options, true);
             this._toggleEmptyData(!records.length);
             this._drawItems(records);
          }

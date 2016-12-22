@@ -140,6 +140,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              */
             key: null,
             /**
+             * @cfg {String} Поле записи, которое является идентификатором записи
+             */
+            idProperty: undefined,
+            /**
              * @cfg {WS.Data/Entity/Model} Устанавливает запись, по которой произведена инициализация данных диалога.
              * @see setRecord
              * @see getRecord
@@ -283,7 +287,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          var self = this._getTemplateComponent(),
-             record = self._options.record,
+             record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
          //Если нет записи или она была удалена, то закрываем панель
          if (!record || (record.getState() === Record.RecordState.DELETED)){
@@ -299,7 +303,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
             //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-            if (self.isNewRecord() && record.getId() && (!closeAfterConfirmDialogHandler && !record.isChanged() || result === false)){
+            if (self.isNewRecord() && self._getRecordId() && (!closeAfterConfirmDialogHandler && !record.isChanged() || result === false)){
                self._destroyModel().addBoth(function(){
                   self._closePanel(result);
                });
@@ -525,7 +529,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._options.record = record;
          this._setPanelRecord(record);
          if (updateKey){
-            newKey = record.getId();
+            newKey = this._getRecordId();
             this._options.key = newKey;
             this._newRecord = true;
          }
@@ -551,6 +555,14 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       getRecord: function(){
         return this._options.record;
+      },
+
+
+      _getRecordId: function(){
+         if (this._options.idProperty) {
+            return this.getRecord().get(this._options.idProperty);
+         }
+         return this.getRecord().getId();
       },
 
       _getRecordFromSource: function(config) {
@@ -620,7 +632,7 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onDestroyModel',
                hideErrorDialog: true
             },
-            def = this._dataSource.destroy(record.getId());
+            def = this._dataSource.destroy(this._getRecordId());
 
          return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
             self._newRecord = false;
@@ -723,7 +735,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._confirmDialog = InformationPopupManager.showConfirmDialog({
                message: rk('Сохранить изменения?'),
                details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-               hasCancelButton: true
+               hasCancelButton: true,
+               opener: this._panel
             },
             this._confirmDialogHandler.bind(this, true),
             this._confirmDialogHandler.bind(this, false),
@@ -837,8 +850,13 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (!config.hideIndicator){
             this._showLoadingIndicator(config.indicatorText);
          }
+         if (!config.additionalData){
+            config.additionalData = {};
+         }
+         config.additionalData.idProperty = self._options.idProperty;
          this._toggleOverlay(true);
          this._addSyncOperationPending();
+
          operation.addCallback(function(data){
             self._notify(config.eventName, self._options.record, config.additionalData);
             return data;
@@ -887,6 +905,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see destroy
        */
       _actionNotify: function(eventName, additionalData){
+         additionalData = additionalData || {};
          this._notify(eventName, this._options.record, additionalData);
       },
       /**
@@ -930,14 +949,9 @@ define('js!SBIS3.CONTROLS.FormController', [
    });
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
-         var prototypeProtectedData = {},
+         var options = this.getComponentOptions(opt),
              dataSource,
-             options,
              result;
-
-         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         options = prototypeProtectedData._options;
-         cMerge(options, opt);
 
          //TODO в рамках совместимости
          if (Object.isEmpty(options.dataSource) && !options.source){
@@ -961,6 +975,17 @@ define('js!SBIS3.CONTROLS.FormController', [
             return new SbisService(options.dataSource);
          }
          return options.source;
+      };
+
+      FormController.prototype.getComponentOptions = function(mergeOptions){
+         var prototypeProtectedData = {},
+             options;
+
+         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
+         options = prototypeProtectedData._options;
+         cMerge(options, mergeOptions);
+
+         return options;
       };
    return FormController;
 

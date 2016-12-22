@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
     [
    "Core/core-extend",
    "Core/helpers/string-helpers",
+   "Core/core-functions",
    "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
 ],
-    function ( cExtend, strHelpers, KbLayoutRevertUtil) {
+    function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil) {
    'use strict';
 
    var KbLayoutRevertObserver = cExtend({}, {
@@ -57,7 +58,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
       _onViewDataLoad: function(event, data) {
          var view = this._options.view,
-             viewFilter = view.getFilter(),
+             viewFilter = cFunctions.clone(view.getFilter()),
              searchValue = viewFilter[this.getParam()],
              viewItems = view.getItems(),
              revertedSearchValue, symbolsDifference;
