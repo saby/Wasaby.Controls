@@ -121,10 +121,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             if (id === null){
                self._path = [];
             }
-            this.setItems(self._path);
             view.setCurrentRoot(id);
             view.reload();
-            this._toggleHomeIcon(!self._path.length);
          });
 
          backButton.subscribe('onActivated', function(){
