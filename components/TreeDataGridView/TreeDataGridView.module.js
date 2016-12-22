@@ -107,6 +107,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
+            _buildTplArgsTDG: buildTplArgsTDG,
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -239,9 +240,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditorOffset: function(model) {
          var
              treeLevel = 0,
-             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
-         if (parentProj) {
-            treeLevel = parentProj.getLevel();
+             parentProj;
+         // Если мы в режиме поиска, то уровень иерархии редактируемой записи всегда равен единице
+         if (this._isSearchMode()) {
+            treeLevel = 1;
+         } else {
+            parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
+            if (parentProj) {
+               treeLevel = parentProj.getLevel();
+            }
          }
          return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
       },

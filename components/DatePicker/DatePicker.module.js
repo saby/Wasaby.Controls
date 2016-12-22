@@ -195,6 +195,14 @@ define(
       },
 
       _onChooserChange: function(event, date) {
+         // DateRangeBigChoose не поддерживает ввод времени, по этому сохраняем время из даты текущего контрола
+         if (date && this._lastDate) {
+            date = new Date(date);
+            date.setHours(this._lastDate.getHours());
+            date.setMinutes(this._lastDate.getMinutes());
+            date.setSeconds(this._lastDate.getSeconds());
+            date.setMilliseconds(this._lastDate.getMilliseconds());
+         }
          this.setDate(date);
          this.hidePicker();
       },

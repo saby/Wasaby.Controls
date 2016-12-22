@@ -68,14 +68,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){
-               var i;
-               /*
-                TODO: Хак для того перерисовки хлебных крошек при переносе из папки в папку
-                Проверить совпадение родительского id и текущего единственный способ понять,
-                что в папку не провалились, а попали через перенос.
-                От этого нужно избавиться как только будут новые датасорсы и не нужно будет считать пути для крошек
-                */
-               if (self._currentRoot && hierClone.length && hierClone[hierClone.length - 1].parent != self._currentRoot.id){
+               var lastHierElem = hierClone[hierClone.length - 1];
+               //Если пришла иерархия, которая не является продолжением уже установленной заменим ее целиком 
+               if ((self._currentRoot && hierClone.length && lastHierElem.parent != self._currentRoot.id)){
                   self._currentRoot = hierClone[0];
                   self._path = hierClone.reverse();
                } else {
@@ -123,10 +118,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             if (id === null){
                self._path = [];
             }
-            this.setItems(self._path);
             view.setCurrentRoot(id);
             view.reload();
-            this._toggleHomeIcon(!self._path.length);
          });
 
          backButton.subscribe('onActivated', function(){

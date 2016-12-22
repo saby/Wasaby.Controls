@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       }
       if(value && newStandtart && decimals){
          dotPos = value.indexOf('.');
-         if (parsedVal == "." || parsedVal == 0) {
+         if (parsedVal == "." || parsedVal === '0') {
             value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
          } else {
             decimalsPart = decimals == -1 ? parsedVal : parsedVal.substr(0, decimals + 1);

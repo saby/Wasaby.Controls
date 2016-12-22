@@ -271,7 +271,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @remark
                 * По значениям поля иерархии иерархические отношения между элементами коллекции выпадающего списка.
                 */
-               hierField: null,
+               parentProperty: null,
                allowEmptyMultiSelection: false,
                /**
                 * @cfg {Boolean} Добавить пустое значение в выпадающий список с текстом "Не выбрано"
@@ -305,6 +305,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _modifyOptions: function(cfg, parsedCfg) {
+            if (cfg.hierField) {
+               IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
+               cfg.parentProperty = cfg.hierField;
+            }
             cfg.pickerClassName += ' controls-DropdownList__picker';
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
             return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
@@ -342,17 +346,33 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return cMerge(defaultArgs, {
                item: item,
                defaultId: this._defaultId,
-               hierField: this._options.hierField,
+               hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
                multiselect: this._options.multiselect
             });
          },
-         setItems: function () {
-            /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
-             * onDrawItems, подписвашись на которое люди устанавливают ключ, а сброс после родительского
-             * этот ключ затирает*/
-            this._options.selectedKeys = [];
-            DropdownList.superclass.setItems.apply(this, arguments)
+
+         _removeOldKeys: function(){
+            var keys = this.getSelectedKeys(),
+                items = this.getItems();
+            if (!this._isEnumTypeData()) {
+               for (var i = 0, l = keys.length; i < l; i++) {
+                  if (!items.getRecordById(keys[i])) {
+                     keys.splice(i, 1);
+                  }
+               }
+               if (!keys.length){
+                  this._setFirstItemAsSelected();
+               }
+            }
          },
+
+         _onReviveItems: function(){
+            //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
+            this._removeOldKeys();
+            DropdownList.superclass._onReviveItems.apply(this, arguments);
+         },
+
          setSelectedKeys: function(idArray){
             if (this._options.emptyValue && idArray[0] == this._defaultId){
                this._setSelectedEmptyRecord();
@@ -598,7 +618,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          },
          _isEmptyValueSelected: function(){
-            return this._options.emptyValue && this.getSelectedKeys[0] == null;
+            return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
@@ -635,6 +655,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
             if (this._isEnumTypeData()){
                id = items.get();
+            }
+            else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
+               id = null;
             }
             else{
                id = items && items.at(0) && items.at(0).getId();
@@ -708,6 +731,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.hidePicker();
             }
          },
+         removeItemsSelectionAll: function(){
+            //в multiselectableMixin при вызове removeItemsSelectionAll выбранной становится первая запись
+            //для DDL эта логика не подходит, по кнопке "Еще" могут выбрать запись, которой на текущий момент нет в наборе данных, и вставить ее на первое место в рекордсете
+            //При нажатии на крест, нам нужно выбрать дефолтный id, который был, а не новую запись, которая встала на первое место
+            //выписал задачу, чтобы обобщить эту логику https://inside.tensor.ru/opendoc.html?guid=bf8da125-b41a-47d9-aa1a-2f2ba2f309f4&des=
+            if (this._defaultId !== undefined){
+               this.setSelectedKeys([this._defaultId]);
+            }
+            else{
+               DropdownList.superclass.removeItemsSelectionAll.apply(this, arguments);
+            }
+         },
          _addItemAttributes: function (container, item) {
             /*implemented from DSMixin*/
             var addClass = 'controls-DropdownList__item';
@@ -740,7 +775,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
-                        var parentId = rec.get(self._options.hierField),
+                        var parentId = rec.get(self._options.parentProperty),
                             parentRecord,
                             text;
                         if (parentId !== undefined){

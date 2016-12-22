@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
+       "js!SBIS3.CONTROLS.MenuIcon",
        "i18n!SBIS3.CONTROLS.FieldLink"
 
     ],
@@ -138,6 +139,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
         * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
+        * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
         * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
@@ -305,7 +307,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @noshow
                  * @depreacted
                  */
-                saveParentRecordChanges: false
+                saveParentRecordChanges: false,
+                /**
+                 * @noshow
+                 * @depreacted
+                 */
+                menuSelector: false
              }
           },
 
@@ -395,6 +402,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    }.bind(this)
                 );
              }
+
+             if(this._options.menuSelector) {
+                this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+             }
           },
 
           _getSelectorAction: function() {
@@ -460,6 +471,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           setDictionaries: function(dictionaries) {
              this._options.dictionaries = dictionaries;
+             if(this._options.menuSelector) {
+                this.getChildControlByName('fieldLinkMenu').setItems(dictionaries);
+             }
              this._notifyOnPropertyChanged('dictionaries');
           },
 
@@ -552,6 +566,46 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.setMultiselect.apply(this, arguments);
              this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
           },
+
+          /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
+
+          /**
+           * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+           * @example
+           * <pre class="brush:xml">
+           *     <option name="keyField">Идентификатор</option>
+           * </pre>
+           * @see items
+           * @see displayField
+           * @see setDataSource
+           * @param {String} keyField
+           */
+          setKeyField: function(keyField) {
+             this._options.keyField = keyField;
+             this._getLinkCollection().setProperty('keyField', keyField);
+          },
+
+          /**
+           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * @example
+           * <pre class="brush:xml">
+           *     <option name="displayField">Название</option>
+           * </pre>
+           * @remark
+           * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+           * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+           * которого нужно отобразить.
+           * @see keyField
+           * @see items
+           * @see setDataSource
+           * @param {String} displayField
+           */
+          setDisplayField: function(displayField) {
+             this._options.displayField = displayField;
+             this._getLinkCollection().setProperty('displayField', displayField);
+          },
+
+          /**********************************************************************************************/
 
           _getAdditionalChooserConfig: function () {
              var oldRecArray = [],

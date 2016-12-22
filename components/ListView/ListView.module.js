@@ -648,7 +648,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                editMode: '',
                /**
-                * @cfg {String} Устанавливает шаблон строки редактирования по месту.
+                * @cfg {Content} Устанавливает шаблон строки редактирования по месту.
                 * @remark
                 * Шаблон строки редактирования по месту используется для удобного представления редактируемой записи.
                 * Такой шаблон отрисовывается поверх редактируемой строки с прозрачным фоном.
@@ -737,7 +737,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                partialPaging: true,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
-               scrollPagingUseClientRect: false,
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
                 * @see DragEntityOptions
@@ -900,7 +899,7 @@ define('js!SBIS3.CONTROLS.ListView',
                view: this,
                paging: this._scrollPager
             });
-            this._scrollBinder.bindScrollPaging(this._scrollPager, this._options.scrollPagingUseClientRect);
+            this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
          },
 
@@ -1476,6 +1475,8 @@ define('js!SBIS3.CONTROLS.ListView',
          reload: function () {
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
+            // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
+            this._hoveredItem = {};
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
             this._observeResultsRecord(false);
@@ -1677,6 +1678,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
             if (this._hasEditInPlace()) {
+               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
                this._getEditInPlace()._destroyEip();
             }
             //TODO: Перевести строку итогов на верстку через шаблон по задаче https://inside.tensor.ru/opendoc.html?guid=19ba61d7-ce74-4567-90c9-e5f3565e30b7&description=
@@ -2158,7 +2160,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                if (this._needScrollCompensation) {
                   this._moveTopScroll();
-                  this._needScrollCompensation = false;
                }
             }
          },
@@ -2189,11 +2190,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          
          _addItems: function(newItems, newItemsIndex, groupId){
-            // Если при подгрузке по скроллу приходит больше чем одна группа, то drawItemsCallback
-            // стреляет для каждой группы по отдельности, поэтому компенсация срабатывает только один раз.
-            // Будем переставлять флаг о необходимости компенсации каждый раз при добавлении элементов
-            this._needScrollCompensation = this._infiniteScrollState.mode == 'up' ||
-                                           this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse;
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -2347,7 +2343,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
 
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && scrollDown) || !this._scrollWatcher.hasScroll()) {
+            if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
             }
          },
@@ -2434,9 +2430,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
             }, this)).addErrback(function (error) {
+               this._hideLoadingIndicator();
                //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                return error;
-            });
+               }.bind(this));
          },
 
          _getNextOffset: function(){
@@ -2465,6 +2462,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
+            
+            this._needScrollCompensation = false;
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
@@ -2855,7 +2854,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setLastPage: function(){
-            var more = this.getItems().getMetaData().more,
+            var more = this.getItems() ? this.getItems().getMetaData().more : false,
                pageNumber;
             if (typeof more == 'number'){
                pageNumber = more / this._options.pageSize;

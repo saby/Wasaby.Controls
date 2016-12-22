@@ -64,6 +64,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @see getContent
                 */
                content: '',
+
+               /**
+                * @cfg {Boolean} Включает фиксацию заголовоков в рамках контенера ScrollContainer
+                */
+               stickyContainer: false,
+
                activableByClick: false
             },
             _content: null
@@ -83,10 +89,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
             //Под android оставляем нативный скролл
-            if (!cDetection.isMobileAndroid){
-               this._initScrollbar = this._initScrollbar.bind(this)
-               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               this._container[0].addEventListener('mousemove', this._initScrollbar, true);
+            if (!cDetection.isMobileSafari && !cDetection.isMobileAndroid){
+               this._initScrollbar = this._initScrollbar.bind(this);
+               if (!cDetection.isIE8){
+                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               }
+               this._container.one('mousemove', this._initScrollbar);
                this._hideScrollbar();
                this._subscribeOnScroll();
             }
@@ -96,7 +104,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer();
+            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
          },
 
          _subscribeOnScroll: function(){
@@ -161,22 +169,32 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
-            this._container[0].removeEventListener('touchstart', this._initScrollbar, true);
-            this._container[0].removeEventListener('mousemove', this._initScrollbar, true);
+            if (!cDetection.isIE8){
+               this._container[0].removeEventListener('touchstart', this._initScrollbar);
+            }
             this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
          _getScrollHeight: function(){
             // Баг в IE версии старше 10, если повесить стиль overflow-y:scroll, то scrollHeight увеличивается на 1px,
             // поэтому мы вычтем его.
+            var height;
             if (cDetection.IEVersion > 10) {
-               return this._content[0].scrollHeight - 1;
+               height = this._content[0].scrollHeight - 1;
             }
-            return this._content[0].scrollHeight;
+            height = this._content[0].scrollHeight;
+            // TODO: придрот для правильного рассчета с модификатором __withHead
+            // он меняет высоту скроллабара - из за этого получаются неверные рассчеты
+            // убрать вместе с этим модификатором, когда будет шаблон страницы со ScrollContainer и фиксированой шапкой
+            if (this.getContainer().hasClass('controls-ScrollContainer__withHead')){
+               height -= 24;
+            }
+            return height;
          },
 
          destroy: function(){
             this._content.off('scroll', this._onScroll);
+            this._container.off('mousemove', this._initScrollbar);
             ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
