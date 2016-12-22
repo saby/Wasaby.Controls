@@ -339,6 +339,18 @@ define('js!SBIS3.CONTROLS.TextBox', [
          }
       },
 
+      setActive: function(active) {
+         /* Хак, который чинит баг firefox с невидимым курсором в input'e.
+            Это довольно старая и распростронённая проблема в firefox'e,
+            повторяется с разными сценариями и с разными способомами почи)нки.
+            В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a). */
+         if(active && this.isActive() && constants.browser.firefox && !this.getText()) {
+            this._getElementToFocus().blur().focus();
+         }
+
+         TextBox.superclass.setActive.apply(this, arguments);
+      },
+
       _keyDownBind: function(){
 
       },
