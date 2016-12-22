@@ -1123,7 +1123,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
-                  inst.destroy();
+                  // true - не завершать пакет (ControlBatchUpdater) на дестрой. Иначе сработает onBringToFront и переведет активность раньше времени
+                  // https://inside.tensor.ru/opendoc.html?guid=ec5c1d84-a09c-49b2-991a-779a7004a15b&des=
+                  inst.destroy(true);
                }
                else {
                   compsArray.push(inst);
