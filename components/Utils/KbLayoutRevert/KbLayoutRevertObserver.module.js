@@ -179,6 +179,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._textBeforeTranslate = searchValue;
                viewFilter[this.getParam()] = revertedSearchValue;
                toggleItemsEventRaising(false);
+               /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                if(this._getTimer().getTime() > ListView.INDICATOR_DELAY) {
                   view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
                }
