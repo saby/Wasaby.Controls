@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
     'js!SBIS3.CORE.CompoundControl',
     'js!SBIS3.CONTROLS.IFilterItem',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.Base',
+    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
     'Core/IoC',
     'js!WS.Data/Collection/RecordSet'
-], function(CompoundControl, IFilterItem, dotTplFn, IoC, RecordSet) {
+], function(CompoundControl, IFilterItem, dotTplFn, TemplateUtil, IoC, RecordSet) {
 
     'use strict';
 
@@ -32,6 +33,16 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
+                _defaultTemplate: '',
+                /**
+                 * @cfg {String} Шаблон компонента, используемого для выборки данных.
+                 */
+                template: '',
+                /**
+                 * @cfg {Object} Конфигурация компонента, используемого для выборки данных
+                 */
+                properties: {
+                },
                 /**
                  * @cfg {WS.Data/Collection/RecordSet} Устанавливает набор элементов, из которых будет производиться выбор.
                  * @remark
@@ -74,6 +85,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                     idProperty: opts.keyField
                 });
             }
+            opts._template = opts.template ? TemplateUtil.prepareTemplate(opts.template) : opts._defaultTemplate;
             return opts;
         },
 
