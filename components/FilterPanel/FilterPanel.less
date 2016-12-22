@@ -1,6 +1,5 @@
 @FilterPanelBackgroundColor: rgb(249, 249, 249);
 @FilterPanelBorderStyle: solid 1px #E4E4E4;
-@FilterPanelResetFilterButtonColor: #999999;
 
 .controls-FilterPanel {
    box-sizing: border-box;
@@ -37,10 +36,6 @@
          position: absolute;
       }
       .controls-FilterPanel__resetFilter {
-         color: @FilterPanelResetFilterButtonColor;
-         &.ws-disabled {
-            color: #ccc;
-         }
          right: 8px;
          top: 12px;
          position: absolute;
@@ -69,7 +64,7 @@
          }
          .controls-Spoiler__resetFilterField {
             float: left;
-            padding: 6px 4px 0 0;
+            padding: 6px 4px 0 4px;
          }
       }
    }
