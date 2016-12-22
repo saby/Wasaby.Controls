@@ -1696,8 +1696,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
-         this._oldRedrawItemInner(item, projItem);
-         this._reviveItems(item.getId() != this._options.selectedKey);
+         if (!this._isSlowDrawing(this._options.easyGroup)) {
+            projItem = projItem || this._getItemProjectionByItemId(item.getId());
+            this._redrawItem(projItem);
+         }
+         else {
+            this._oldRedrawItemInner(item, projItem);
+            this._reviveItems(item.getId() != this._options.selectedKey);
+         }
       },
 
       _oldRedrawItemInner: function(item, projItem, callback) {
