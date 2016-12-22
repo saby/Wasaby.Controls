@@ -33,10 +33,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       };
    }
    var createDefaultProjection = function(items, cfg) {
-      var proj = Projection.getDefaultDisplay(items);
+      var proj, projCfg = {};
       if (cfg.itemsSortMethod) {
-         proj.setSort(cfg.itemsSortMethod);
+         projCfg.sort = cfg.itemsSortMethod;
       }
+      proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
    },
 
@@ -603,8 +604,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
-                     newCfg._itemData = cfg._buildTplArgs(cfg);
                      newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                     newCfg._itemData = cfg._buildTplArgs(cfg);
                   }
                }
             }
