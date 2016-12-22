@@ -220,7 +220,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
 
          _openStylesPanel: function(button){
             var
-               stylesPanel = this._getStylesPanel(button);
+               stylesPanel = this.getStylesPanel(button);
             stylesPanel.setStylesFromObject({
                fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
                color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)],
@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             stylesPanel.show();
          },
 
-         _getStylesPanel: function(button){
+         getStylesPanel: function(button){
             var
                self = this;
             if (!this._stylesPanel) {
