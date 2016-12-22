@@ -102,6 +102,17 @@ define('js!SBIS3.CONTROLS.Menu', [
          }
       },
 
+      _modifyOptions: function (cfg) {
+         if (cfg.hierField) {
+            IoC.resolve('ILogger').log('Menu', 'Опция hierField является устаревшей, используйте parentProperty');
+            cfg.parentProperty = cfg.hierField;
+         }
+         if (cfg.parentProperty && !cfg.nodeProperty) {
+            cfg.nodeProperty = cfg.parentProperty + '@';
+         }
+         return Menu.superclass._modifyOptions.apply(this, arguments);
+      },
+
       $constructor: function() {
          this._publish('onMenuItemActivate');
       },
@@ -148,7 +159,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getTargetContainer : function(item) {
-         if (!this._options.hierField) {
+         if (!this._options.parentProperty) {
             return this._getItemsContainer();
          }
          else {
@@ -183,11 +194,12 @@ define('js!SBIS3.CONTROLS.Menu', [
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
       _checkIcons: function() {
-         var hierField = this._options.hierField,
+         var parentProperty = this._options.parentProperty,
+            nodeProperty = this._options.nodeProperty,
             hierarchy = new Hierarchy({
                idProperty: this._items.getIdProperty(),
-               parentProperty: hierField,
-               nodeProperty: hierField + '@'
+               parentProperty: parentProperty,
+               nodeProperty: nodeProperty
             }),
             parents = {},
             children,
@@ -199,7 +211,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          this._items.each(function(item) {
             icon = item.get('icon');
             if (icon) {
-               pid = item.get(hierField);
+               pid = item.get(parentProperty);
                if (!parents.hasOwnProperty(pid)) {
                   parents[pid] = [pid, icon.indexOf('icon-16') === -1 ? 'sprite:icon-24' : 'sprite:icon-16'];
                }
@@ -246,7 +258,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                      item = self._items.getRecordById(id),
                      parId = null,
                      parent;
-                  if (self._options.hierField) {
+                  if (self._options.parentProperty) {
                      parId = self.getParentKey(self._items, item);
                   }
                   if (parId) {
