@@ -1,9 +1,10 @@
 /**
  * Created by gersa_000 on 30.10.2016.
  */
-define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
+define('js!SBIS3.CONTROLS.HistoryList',
    [
       'js!SBIS3.CONTROLS.HistoryController',
+      'js!WS.Data/Collection/IList',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Entity/Model',
       'Core/Serializer',
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
       'Core/core-functions'
    ],
 
-   function(HistoryController, RecordSet, Model, Serializer, genHelpers, cFunctions) {
+   function(HistoryController, IList, RecordSet, Model, Serializer, genHelpers, cFunctions) {
 
       'use strict';
 
@@ -27,7 +28,26 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
          return new RecordSet({format: FORMAT, idProperty: ID_FIELD});
       }
 
-      var FilterHistoryControllerNew = HistoryController.extend({
+      function prepareData(data) {
+         if(!Object.isValid(data)) {
+            throw new Error ('data must be instance of Object');
+         }
+
+         var model = new Model({
+                idProperty: ID_FIELD,
+                format: FORMAT
+             }),
+             rawData = {};
+
+         rawData[DATA_FIELD] = data;
+         rawData[ID_FIELD] = genHelpers.randomId();
+
+         model.set(rawData);
+
+         return model;
+      }
+
+      var FilterHistoryControllerNew = HistoryController.extend([IList], {
          $protected: {
             _options: {
                serialize: function (serialize, value) {
@@ -43,29 +63,16 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
             }
          },
 
-         addFilterToHistory: function (filerObj) {
-            if(!Object.isValid(filerObj)) {
-               throw new Error ('filter must be instance of Object');
-            }
-
+         prepend: function (filerObj) {
             var historyList = this.getHistory(),
-                toSave = new Model({
-                   idProperty: ID_FIELD,
-                   format: FORMAT
-                }),
-                rawData = {},
-                hasEqualFilter = false;
-
-            rawData[DATA_FIELD] = filerObj;
-            rawData[ID_FIELD] = genHelpers.randomId();
-
-            toSave.set(rawData);
+                newData = prepareData(filerObj),
+                hasEqual = false;
 
             historyList.each(function (val, index) {
-               if(!hasEqualFilter && val.get(DATA_FIELD).isEqual(toSave.get(DATA_FIELD))) {
+               if(!hasEqual && val.get(DATA_FIELD).isEqual(newData.get(DATA_FIELD))) {
                   historyList.add(val, 0);
                   historyList.removeAt(index + 1);
-                  hasEqualFilter = true;
+                  hasEqual = true;
                }
             });
 
@@ -78,6 +85,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerNew',
             }
 
             this.saveHistory();
+         },
+
+         append: function() {
+
          }
       });
 

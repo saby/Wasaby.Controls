@@ -22,10 +22,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
           },
 
           $constructor: function() {
-             this.subscribe('onItemActivate', function(event, data) {
-                this.sendCommand('setFilter', data.item.get('data').get('items'))
-             });
-
              this.subscribe('onDrawItems', function() {
                 this.getChildControlByName('toggle').toggle(Boolean(this.getItems().getCount() > 5));
              });
@@ -58,5 +54,4 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
        });
 
        return FilterHistoryView;
-
     });
