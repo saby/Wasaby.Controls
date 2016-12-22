@@ -334,7 +334,7 @@ define('js!SBIS3.CONTROLS.Image',
                this._setImage = this._setImage.debounce(0);
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
-               CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
+               CommandDispatcher.declareCommand(this, 'resetImage', this.resetImage);
                if (this._options.imageBar) {
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
@@ -647,10 +647,10 @@ define('js!SBIS3.CONTROLS.Image',
               * @see uploadImage
               * @see editImage
               */
-            _resetImage: function() {
+            resetImage: function(onlyClient) {
                var
                   self = this,
-                  imageResetResult = this._notify('onResetImage'),
+                  imageResetResult,
                   callDestroy = function(filter) {
                      var
                         dataSource = self.getDataSource(),
@@ -664,15 +664,23 @@ define('js!SBIS3.CONTROLS.Image',
                            }
                         });
                   };
-               if (imageResetResult !== false) {
-                  if (imageResetResult instanceof Deferred) {
-                     imageResetResult.addCallback(function(result) {
-                        if (result !== false) {
-                           callDestroy(result);
-                        }
-                     }.bind(this));
-                  } else {
-                     callDestroy(imageResetResult);
+               if (onlyClient) {
+                  self._setImage(self._options.defaultImage);
+                  if (self._options.defaultImage === '') {
+                     self.reload();
+                  }
+               } else {
+                  imageResetResult = this._notify('onResetImage');
+                  if (imageResetResult !== false) {
+                     if (imageResetResult instanceof Deferred) {
+                        imageResetResult.addCallback(function(result) {
+                           if (result !== false) {
+                              callDestroy(result);
+                           }
+                        }.bind(this));
+                     } else {
+                        callDestroy(imageResetResult);
+                     }
                   }
                }
             },
