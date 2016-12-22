@@ -311,6 +311,37 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
          TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
+
+
+      //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
+      //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=
+
+      _calculateDataBeforeRedraw: function(data, projItem) {
+         function dataCalc(dataArg, fieldsArr) {
+            dataArg.itemTpl = dataArg[fieldsArr[0]];
+            dataArg.itemContent = dataArg[fieldsArr[1]];
+            dataArg.defaultItemTpl = dataArg[fieldsArr[2]];
+         }
+         var dataClone = cFunctions.clone(data);
+         if (this._options.viewMode == 'tile') {
+            if (projItem.isNode()) {
+               dataCalc(dataClone, ['folderTpl', 'folderContent', 'defaultFolderTpl']);
+            }
+            else {
+               dataCalc(dataClone, ['tileTpl', 'tileContent', 'defaultTileTpl']);
+            }
+         }
+         if (this._options.viewMode == 'list') {
+            if (projItem.isNode()) {
+               dataCalc(dataClone, ['listFolderTpl', 'listFolderContent', 'defaultListFolderTpl']);
+            }
+            else {
+               dataCalc(dataClone, ['listTpl', 'listContent', 'defaultListTpl']);
+            }
+         }
+         return dataClone;
+      },
+
       /*
        TODO НЕ ИСПОЛЬЗОВАТЬ БЕЗ САМОЙ КРАЙНЕЙ НЕОБХОДИМОСТИ!
        Метод для частичной перезагрузки (обработка только переданных элементов).
