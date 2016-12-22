@@ -6,10 +6,31 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    "Core/core-extend",
    "Core/helpers/string-helpers",
    "Core/core-functions",
-   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
+   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
+   "js!SBIS3.CONTROLS.ListView"
 ],
-    function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil) {
+    function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, ListView) {
    'use strict';
+
+   /* Вспомогательный класс, для посчёта времени запроса.
+      Нужен, чтобы понять, требуется ли скрывать/отображать индикатор  */
+   function Timer(){
+      this.now = null;
+      this.stared = false;
+
+      this.start = function() {
+         this.now = new Date();
+         this.stared = true;
+      };
+      this.end = function() {
+         this.now = null;
+         this.stared = false;
+      };
+      this.getTime = function() {
+         /* Возвращаем время в мс */
+         return new Date().getTime() - this.now.getTime();
+      };
+   }
 
    var KbLayoutRevertObserver = cExtend({}, {
       $protected: {
@@ -33,16 +54,19 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          _textBeforeTranslate: null,
          _onViewDataLoadHandler: null,
          _observed: false,
-         _oldSearchValue: ''
+         _oldSearchValue: '',
+         _timer: null
       },
 
       $constructor: function() {
          this._onViewDataLoadHandler = this._onViewDataLoad.bind(this);
+         this._onBeforeDataLoadHandler = this._onBeforeDataLoad.bind(this);
       },
 
       startObserve: function() {
          if(!this._observed) {
             this._options.view.subscribe('onDataLoad', this._onViewDataLoadHandler);
+            this._options.view.subscribe('onBeforeDataLoad', this._onBeforeDataLoadHandler);
             this._observed = true;
          }
       },
@@ -50,10 +74,26 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       stopObserve: function() {
          if(this._observed) {
             this._options.view.unsubscribe('onDataLoad', this._onViewDataLoadHandler);
+            this._options.view.unsubscribe('onBeforeDataLoad', this._onBeforeDataLoadHandler);
             this._textBeforeTranslate = null;
             this._observed = false;
             this._oldSearchValue = '';
          }
+      },
+
+      _onBeforeDataLoad: function() {
+         var timer = this._getTimer();
+
+         if(!timer.stared) {
+            timer.start();
+         }
+      },
+
+      _getTimer: function() {
+          if(!this._timer) {
+             this._timer = new Timer();
+          }
+          return this._timer;
       },
 
       _onViewDataLoad: function(event, data) {
@@ -61,7 +101,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
              viewFilter = cFunctions.clone(view.getFilter()),
              searchValue = viewFilter[this.getParam()],
              viewItems = view.getItems(),
-             revertedSearchValue, symbolsDifference;
+             revertedSearchValue, symbolsDifference, timer;
          /* Не производим смену раскладки если:
             1) Нет поискового значения.
             2) После смены раскладки поисковое значения не меняется. */
@@ -139,6 +179,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._textBeforeTranslate = searchValue;
                viewFilter[this.getParam()] = revertedSearchValue;
                toggleItemsEventRaising(false);
+               if(this._getTimer().getTime() > ListView.INDICATOR_DELAY) {
+                  view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
+               }
+               this._getTimer().end();
                view.setFilter(viewFilter);
             }
          }
@@ -153,7 +197,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       },
 
       destroy: function() {
+         this._timer.end();
+         this._timer = null;
          this._onViewDataLoadHandler = null;
+         this._onBeforeDataLoadHandler = null;
          KbLayoutRevertObserver.superclass.destroy.call(this);
       }
    });
