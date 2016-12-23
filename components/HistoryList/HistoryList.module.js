@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
 
          _addItemWithMethod: function(method, item) {
             var historyList = this.getHistory(),
-               hasEqual = true;
+                hasEqual = false;
 
             item = prepareItem(item);
 
