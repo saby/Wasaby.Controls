@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/detection"
+   "Core/detection",
+   "Core/helpers/functional-helpers"
 ], function(
     constants,
     TextBoxBase,
@@ -13,7 +14,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TemplateUtil,
     Sanitize,
     dcHelpers,
-    cDetection) {
+    cDetection,
+    fHelpers) {
 
    'use strict';
 
@@ -337,6 +339,25 @@ define('js!SBIS3.CONTROLS.TextBox', [
                this._inputField.removeClass('controls-TextBox__field-uppercase')
                   .removeClass('controls-TextBox__field-lowercase');
          }
+      },
+
+      setActive: function(active) {
+         /* Хак, который чинит баг firefox с невидимым курсором в input'e.
+            Это довольно старая и распростронённая проблема в firefox'e,
+            повторяется с разными сценариями и с разными способомами почи)нки.
+            В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
+            Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
+         if(constants.browser.firefox && active && this.isActive() && !this.getText()) {
+            var elemToFocus = this._getElementToFocus();
+
+            setTimeout(fHelpers.forAliveOnly(function () {
+               if(elemToFocus[0] === document.activeElement){
+                  elemToFocus.blur().focus();
+               }
+            }, this));
+         }
+
+         TextBox.superclass.setActive.apply(this, arguments);
       },
 
       _keyDownBind: function(){
