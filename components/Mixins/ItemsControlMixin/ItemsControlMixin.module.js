@@ -33,10 +33,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       };
    }
    var createDefaultProjection = function(items, cfg) {
-      var proj = Projection.getDefaultDisplay(items);
+      var proj, projCfg = {};
       if (cfg.itemsSortMethod) {
-         proj.setSort(cfg.itemsSortMethod);
+         projCfg.sort = cfg.itemsSortMethod;
       }
+      proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
    },
 
@@ -603,8 +604,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
-                     newCfg._itemData = cfg._buildTplArgs(cfg);
                      newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                     newCfg._itemData = cfg._buildTplArgs(cfg);
                   }
                }
             }
@@ -888,15 +889,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                data.decorators.ladder.setRecord(data['item']);
             }
 
+            //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
+            //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=
+
+            var calcData = this._calculateDataBeforeRedraw(data, item);
             var dot;
             if (data.itemTpl) {
-               dot = data.itemTpl;
+               dot = calcData.itemTpl;
             }
             else {
-               dot = data.defaultItemTpl;
+               dot = calcData.defaultItemTpl;
             }
 
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
+            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(calcData)), this._options);
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
@@ -913,6 +918,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             result = true;
          }
          return result;
+      },
+
+      _calculateDataBeforeRedraw: function(data) {
+         return data;
       },
 
       _removeItems: function (items, groupId) {
@@ -1699,8 +1708,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
-         this._oldRedrawItemInner(item, projItem);
-         this._reviveItems(item.getId() != this._options.selectedKey);
+         if (!this._isSlowDrawing(this._options.easyGroup)) {
+            projItem = projItem || this._getItemProjectionByItemId(item.getId());
+            this._redrawItem(projItem);
+         }
+         else {
+            this._oldRedrawItemInner(item, projItem);
+            this._reviveItems(item.getId() != this._options.selectedKey);
+         }
       },
 
       _oldRedrawItemInner: function(item, projItem, callback) {
