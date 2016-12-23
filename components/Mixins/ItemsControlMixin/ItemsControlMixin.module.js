@@ -1025,7 +1025,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
-                  if (markupExt.hasComponents()) {
+                  if (markupExt.hasComponents) {
                      this._reviveItems();
                   }
                   else {
