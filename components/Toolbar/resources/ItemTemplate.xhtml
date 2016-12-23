@@ -6,7 +6,7 @@
     itemKey = item.get(it.keyField),
     isToolbarItem = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
     if (isToolbarItem) {
-        subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.hierField);
+        subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.parentProperty);
         subItems = $ws.core.clone(subItems);
         for (var i = 0; i < subItems.length; i++) {
             if (subItems[i].parent == itemKey ) {
@@ -14,7 +14,7 @@
             }
             if (subItems.length) {
                 options.items = subItems;
-                options.hierField = it.hierField;
+                options.parentProperty = it.parentProperty;
                 options.displayField = it.displayField;
             }
         }

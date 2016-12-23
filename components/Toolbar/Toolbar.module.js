@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             //отображать только в списке, не в меню
             TOOLBAR: 2
          },
-         getSubItems = function(key, arrKeys, itemsCollection, keyField, hierField) {
+         getSubItems = function(key, arrKeys, itemsCollection, keyField, parentProperty) {
             if (!key) {
                return [];
             }
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
             arrKeys.push(key);
             if (!itemsToSubItems) {
-               collectSubItems(itemsCollection, hierField);
+               collectSubItems(itemsCollection, parentProperty);
             }
             var items = [],
                subItems = [],
@@ -46,14 +46,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
             return items;
          },
-         collectSubItems = function(items, hierField) {
+         collectSubItems = function(items, parentProperty) {
             itemsToSubItems = {};
 
             var rawData = getArrayItems(items),
                subItems;
             for (var i = 0; i < rawData.length; i++) {
                var curItem = rawData[i];
-               var parentKey = curItem[hierField] ;
+               var parentKey = curItem[parentProperty] ;
                if (!parentKey) {
                   continue;
                }
@@ -81,7 +81,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.getSubItems = getSubItems;
             tplOptions.showType = showType;
-            tplOptions.hierField = cfg.hierField;
+            tplOptions.hierField = cfg.parentProperty;
+            tplOptions.parentProperty = cfg.parentProperty;
             tplOptions.items = cfg.items;
             tplOptions.keyField = cfg.keyField;
 
@@ -107,6 +108,17 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             _buildTplArgs: buildTplArgs,
             _defaultItemTemplate: ItemTemplate
          }
+      },
+
+      _modifyOptions: function (cfg) {
+         if (cfg.hierField) {
+            IoC.resolve('ILogger').log('Toolbar', 'Опция hierField является устаревшей, используйте parentProperty');
+            cfg.parentProperty = cfg.hierField;
+         }
+         if (cfg.parentProperty && !cfg.nodeProperty) {
+            cfg.nodeProperty = cfg.parentProperty + '@';
+         }
+         return Toolbar.superclass._modifyOptions.apply(this, arguments);
       },
 
       $constructor: function() {

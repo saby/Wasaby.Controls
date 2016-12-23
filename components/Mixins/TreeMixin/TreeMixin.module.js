@@ -581,7 +581,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see getHierField
        */
       setHierField: function (hierField) {
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
          this.setParentProperty(hierField);
       },
       /**
@@ -591,7 +591,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see setHierField
        */
       getHierField : function(){
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
          return this.getParentProperty();
       },
       /**
