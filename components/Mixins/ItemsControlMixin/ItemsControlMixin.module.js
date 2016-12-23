@@ -176,6 +176,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          rawData : json,
          idProperty : keyField
       })
+   },
+   extendedMarkupCalculate = function(markup, cfg) {
+      return ParserUtilities.buildInnerComponentsExtended(MarkupTransformer(markup, cfg));
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -830,11 +833,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var
                itemsContainer = $itemsContainer.get(0),
                data = this._prepareItemsData(),
-               markup;
+               markup, extMarkup;
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
+            extMarkup = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+            markup = extMarkup.markup;
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
@@ -867,16 +871,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _redrawItem: function(item) {
-         var result = this._redrawItemInner(item);
-         if (result) {
+         var needToRevive = this._redrawItemInner(item);
+         if (needToRevive) {
             this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
 
       _redrawItemInner: function(item) {
          var
-            result = false,
-            markup,
+            needToRevive = false,
+            markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             data;
          if (targetElement.length) {
@@ -901,7 +905,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                dot = calcData.defaultItemTpl;
             }
 
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(calcData)), this._options);
+            markupExt = extendedMarkupCalculate(dot(calcData), this._options);
+            markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
@@ -915,9 +920,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   comps[i].destroy();
                }
             }
-            result = true;
+            needToRevive = markupExt.hasComponents;
          }
-         return result;
+         return needToRevive;
       },
 
       _calculateDataBeforeRedraw: function(data) {
@@ -1016,7 +1021,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                var
                   data,
-                  markup,
+                  markup, markupExt,
                   itemsToDraw;
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
@@ -1025,9 +1030,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
-                  this._reviveItems();
+                  if (markupExt.hasComponents) {
+                     this._reviveItems();
+                  }
+                  else {
+                     this._notifyOnDrawItems();
+                  }
                }
             }
          }
@@ -1726,6 +1737,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
+         return true;
       },
 
       _getElementByModel: function(item) {
@@ -1945,10 +1957,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing(this._options.easyGroup)) {
-            this._oldRedrawItemInner(item.getContents(), item);
+            return this._oldRedrawItemInner(item.getContents(), item);
          }
          else {
-            this._redrawItemInner(item);
+            return this._redrawItemInner(item);
          }
       },
 
@@ -2159,11 +2171,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _onCollectionReplace: function(items) {
-         var i;
+         var i, needToRevive = false;
          for (i = 0; i < items.length; i++) {
-            this._changeItemProperties(items[i]);
+            needToRevive = needToRevive || this._changeItemProperties(items[i]);
          }
-         this._reviveItems();
+         if (needToRevive) {
+            this._reviveItems();
+         }
+         else {
+            this._notifyOnDrawItems();
+         }
       },
       _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
@@ -2207,9 +2224,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _onUpdateItemProperty: function(item, property) {
+         var needToRevive;
          if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            needToRevive = this._changeItemProperties(item, property);
+            if (needToRevive) {
+               this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            }
+            else {
+               this._notifyOnDrawItems(item.getContents().getId() != this._options.selectedKey);
+            }
          }
       }
    };
