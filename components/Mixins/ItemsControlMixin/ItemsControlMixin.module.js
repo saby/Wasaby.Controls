@@ -869,15 +869,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _redrawItem: function(item) {
-         var result = this._redrawItemInner(item);
-         if (result) {
+         var needToRevive = this._redrawItemInner(item);
+         if (needToRevive) {
             this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
 
       _redrawItemInner: function(item) {
          var
-            result = false,
+            needToRevive = false,
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             data;
@@ -918,9 +918,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   comps[i].destroy();
                }
             }
-            result = markupExt.hasComponents;
+            needToRevive = markupExt.hasComponents;
          }
-         return result;
+         return needToRevive;
       },
 
       _calculateDataBeforeRedraw: function(data) {
@@ -2157,11 +2157,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _onCollectionReplace: function(items) {
-         var i;
+         var i, needToRevive = false;
          for (i = 0; i < items.length; i++) {
-            this._changeItemProperties(items[i]);
+            needToRevive = needToRevive || this._changeItemProperties(items[i]);
          }
-         this._reviveItems();
+         if (needToRevive) {
+            this._reviveItems();
+         }
+         else {
+            this._notifyOnDrawItems();
+         }
       },
       _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
@@ -2205,9 +2210,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _onUpdateItemProperty: function(item, property) {
+         var needToRevive;
          if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            needToRevive = this._changeItemProperties(item, property);
+            if (needToRevive) {
+               this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            }
+            else {
+               this._notifyOnDrawItems(item.getContents().getId() != this._options.selectedKey);
+            }
          }
       }
    };
