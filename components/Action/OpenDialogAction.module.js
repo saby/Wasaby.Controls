@@ -196,12 +196,6 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          var initializingWay = config.componentOptions.initializingWay,
              dialogComponent = config.template;
 
-         //TODO Выпилить в 200+
-         if (meta.controllerSource){
-            initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE;
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.');
-         }
-
          if (initializingWay == OpenDialogAction.INITIALIZING_WAY_REMOTE) {
             this._showLoadingIndicator();
             require([dialogComponent], this._initTemplateComponentCallback.bind(this, config, meta, mode));
@@ -346,6 +340,10 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          //Делам так, чтобы отслеживать изменения записи только в момент работы FC.
          if (record) {
             record.acceptChanges();
+         }
+
+         if (meta.source){
+            IoC.resolve('ILogger').error('OpenDialogAction', 'Источник данных нужно задавать через опцию dataSource. Опция source в версии 3.7.5 будет удалена');
          }
          //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
          //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
