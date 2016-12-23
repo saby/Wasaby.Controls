@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.SliderInput',
    [
       'js!SBIS3.CONTROLS.Slider',
       'html!SBIS3.CONTROLS.SliderInput',
+      'Core/constants',
       'js!SBIS3.CONTROLS.NumberTextBox'
-   ], function(Slider, dotTplFn) {
+   ], function(Slider, dotTplFn, cConstants) {
       'use strict';
       var
          /**
@@ -53,6 +54,8 @@ define('js!SBIS3.CONTROLS.SliderInput',
                this._startTextBox.subscribe('onFocusOut', this._textBoxStartFocusOut.bind(this));
                this._endTextBox.subscribe('onFocusOut', this._textBoxEndFocusOut.bind(this));
                this.subscribe('onDrawValueChange', this._sliderDrawChange.bind(this));
+               this._startTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
+               this._endTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
             },
 
             setStartValue: function(value) {
@@ -104,6 +107,12 @@ define('js!SBIS3.CONTROLS.SliderInput',
             _setPreparedValue : function(value, side){
                value = value || value === 0 ? this._prepareValue(value, side) : value;
                side === 'start' ? this.setStartValue(value) : this.setEndValue(value);
+            },
+
+            _textBoxKeyDown: function(descriptor, event) {
+               if (event.which == cConstants.key.enter) {
+                  this. _endTextBox.setActive(true);
+               }
             }
          });
       return SliderInput;
