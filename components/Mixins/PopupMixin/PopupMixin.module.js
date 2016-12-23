@@ -1060,7 +1060,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                 },
                 deactivateWindow = function() {
                    if (this._options.opener) {
-                      if (this._options.opener instanceof $ws.proto.AreaAbstract) {
+                      if (coreHelpers.instanceOfModule(this._options.opener, 'SBIS3.CORE.AreaAbstract')) {
                          this._options.opener.onBringToFront();
                       } else {
                          this._options.opener.setActive(true);
