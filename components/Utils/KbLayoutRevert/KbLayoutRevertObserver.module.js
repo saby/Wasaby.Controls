@@ -15,20 +15,20 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    /* Вспомогательный класс, для посчёта времени запроса.
       Нужен, чтобы понять, требуется ли скрывать/отображать индикатор  */
    function Timer(){
-      this.now = null;
+      this.startTime = null;
       this.stared = false;
 
       this.start = function() {
-         this.now = new Date();
+         this.startTime = new Date();
          this.stared = true;
       };
-      this.end = function() {
-         this.now = null;
+      this.stop = function() {
+         this.startTime = null;
          this.stared = false;
       };
       this.getTime = function() {
          /* Возвращаем время в мс */
-         return new Date().getTime() - this.now.getTime();
+         return new Date().getTime() - this.startTime.getTime();
       };
    }
 
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                if(this._getTimer().getTime() > ListView.INDICATOR_DELAY) {
                   view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
                }
-               this._getTimer().end();
+               this._getTimer().stop();
                view.setFilter(viewFilter);
             }
          }
@@ -198,8 +198,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       },
 
       destroy: function() {
-         this._timer.end();
-         this._timer = null;
+         if(this._timer) {
+            this._timer.stop();
+            this._timer = null;
+         }
          this._onViewDataLoadHandler = null;
          this._onBeforeDataLoadHandler = null;
          KbLayoutRevertObserver.superclass.destroy.call(this);
