@@ -736,8 +736,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._confirmDialog = InformationPopupManager.showConfirmDialog({
                message: rk('Сохранить изменения?'),
                details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-               hasCancelButton: true,
-               opener: this._panel
+               hasCancelButton: true
             },
             this._confirmDialogHandler.bind(this, true),
             this._confirmDialogHandler.bind(this, false),
