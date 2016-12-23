@@ -3,12 +3,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
        'js!SBIS3.CONTROLS.ListView',
        'html!SBIS3.CONTROLS.FilterHistoryView/footerTpl',
        'html!SBIS3.CONTROLS.FilterHistoryView/itemTpl',
-       'js!SBIS3.CONTROLS.FilterHistoryControllerNew',
+       'js!SBIS3.CONTROLS.HistoryList',
        'Core/CommandDispatcher',
        'js!SBIS3.CONTROLS.ToggleButton'
     ],
 
-    function(ListView, footerTpl, itemTpl, FilterHistoryControllerNew, CommandDispatcher) {
+    function(ListView, footerTpl, itemTpl, HistoryList, CommandDispatcher) {
 
        'use strict';
 
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
           init: function() {
              FilterHistoryView.superclass.init.apply(this, arguments);
 
-             var historyController = new FilterHistoryControllerNew({historyId: this.getProperty('historyId')});
+             var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
              historyController.subscribe('onHistoryUpdate', function(event, history) {
                 this.setItems(history);

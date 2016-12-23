@@ -5,17 +5,19 @@ define('js!SBIS3.CONTROLS.HistoryList',
    [
       'js!SBIS3.CONTROLS.HistoryController',
       'js!WS.Data/Collection/IList',
+      'js!WS.Data/Collection/IEnumerable',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Entity/Model',
       'Core/Serializer',
-      'Core/helpers/generate-helpers'
+      'Core/helpers/generate-helpers',
+      'Core/helpers/collection-helpers'
    ],
 
-   function(HistoryController, IList, RecordSet, Model, Serializer, genHelpers) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Model, Serializer, genHelpers, colHelpers) {
 
       'use strict';
 
-      var MAX_FILTERS_AMOUNT = 10;
+      var MAX_LENGTH = 10;
       var DATA_FIELD = 'data';
       var ID_FIELD = 'id';
       var FORMAT = [ {name: DATA_FIELD, type: 'record'},  {name: ID_FIELD, type: 'string'} ];
@@ -25,10 +27,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       }
 
       function prepareItem(item) {
-         var model = new Model({
-                idProperty: ID_FIELD,
-                format: FORMAT
-             }),
+         var model = new Model({ idProperty: ID_FIELD, format: FORMAT }),
              rawData = {};
 
          rawData[DATA_FIELD] = item;
@@ -39,7 +38,17 @@ define('js!SBIS3.CONTROLS.HistoryList',
          return model;
       }
 
-      var HistoryList = HistoryController.extend([IList], {
+      /**
+      * Список - коллекция истории c доступом по индексу.
+      * @extends Core/Abstract
+      * @mixes WS.Data/Collection/IList
+      * @mixes WS.Data/Collection/IIndexedCollection
+      * @mixesWS.Data/Collection/IEnumerable
+      * @public
+      * @author Герасимов Александр
+      */
+
+      var HistoryList = HistoryController.extend([IList, IEnumerable], {
          $protected: {
             _options: {
                serialize: function (serialize, value) {
@@ -51,9 +60,12 @@ define('js!SBIS3.CONTROLS.HistoryList',
                      return value ? JSON.parse(value, serializer.deserialize) : getEmptyRecordSet();
                   }
                },
-               emptyValue: getEmptyRecordSet()
+               emptyValue: getEmptyRecordSet(),
+               maxLength: MAX_LENGTH
             }
          },
+
+         //region WS.Data/Collection/IList
 
          prepend: function (item) {
             this._addItemWithMethod('prepend', item);
@@ -80,12 +92,8 @@ define('js!SBIS3.CONTROLS.HistoryList',
             this.saveHistory();
          },
 
-         at: function(index) {
-            return this.getHistory().at(index);
-         },
-
          remove: function(item) {
-            var result = this.getHistory().remove(item);
+            var result = this.getHistory().removeAt(this._getIndex(item));
 
             if(result) {
                this.saveHistory();
@@ -102,37 +110,82 @@ define('js!SBIS3.CONTROLS.HistoryList',
             return result;
          },
 
+         at: function(index) {
+            return this.getHistory().at(index);
+         },
+
          getIndex: function(item) {
-            return this.getHistory().getIndex(item);
+            return this._getIndex(item);
          },
 
          getCount : function() {
             return this.getHistory().getCount();
          },
 
+         //endregion WS.Data/Collection/IList
 
-         _addItemWithMethod: function(method, item) {
-            var historyList = this.getHistory(),
-                hasEqual = false;
+         //region WS.Data/Collection/IEnumerable
 
+         each: function(callback, context) {
+            this.getHistory().each(callback, context);
+         },
+
+         getEnumerator: function() {
+            return this.getHistory().getEnumerator();
+         },
+
+         //endregion WS.Data/Collection/IEnumerable
+
+         //region Protected methods
+
+         /**
+          * Т.к. данные записываются как :
+          * data: данные
+          * id: randomId
+          * то индекс надо искать именно по data, поэтому нужна своя реализация метода getIndex.
+          * @private
+          */
+         _getIndex: function(item) {
             item = prepareItem(item);
 
-            historyList.each(function (val, index) {
-               if(!hasEqual && val.get(DATA_FIELD).isEqual(item.get(DATA_FIELD))) {
-                  historyList.add(val, 0);
-                  historyList.removeAt(index + 1);
-                  hasEqual = true;
+            var data = item.get(DATA_FIELD),
+                index = -1;
+
+            this.each(function(rec, i) {
+               if(index === -1 && rec.get(DATA_FIELD).isEqual(data)) {
+                  index = i;
                }
             });
 
-            if(!hasEqual) {
-               if (historyList >= MAX_FILTERS_AMOUNT) {
-                  historyList.removeAt(MAX_FILTERS_AMOUNT - 1);
-               }
+            return index;
+         },
 
+         /**
+          * Особая логика сохранение данных в историю:
+          * 1) Не больше 10
+          * 2) При добавлении одинаковых записей они всплывают вверх по стэку
+          * @private
+          */
+         _addItemWithMethod: function(method, item) {
+            var historyList = this.getHistory(),
+                index = this._getIndex(item);
+
+            item = prepareItem(item);
+
+            if(index !== -1) {
+               historyList.prepend(historyList.at(index));
+               historyList.removeAt(index + 1);
+            }
+
+            if(index === -1) {
+               if (historyList.getCount() >= this._options.maxLength) {
+                  historyList.removeAt(this._options.maxLength - 1);
+               }
                historyList[method]([item]);
             }
          }
+
+         //endregion Protected methods
       });
 
       return HistoryList;
