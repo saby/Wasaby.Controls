@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          var tileContentTpl, tileTpl, listContentTpl, listTpl;
 
          parentOptions.image = cfg.imageField;
-         parentOptions.description = cfg.displayField;
+         parentOptions.description = cfg.displayProperty;
          parentOptions.viewMode = cfg.viewMode;
          parentOptions._itemsTemplate = cfg._itemsTemplate;
          parentOptions.resourceRoot = constants.resourceRoot;
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * Файловое поле используется в шаблоне для построения отображения элементов коллекции.
              * Использование опции актуально для режимов отображения "Список" и "Плитка".
              * Если для этих режимов используется пользовательский шаблон (задаётся опциями {@link listTemplate} и {@link tileTemplate}), то опция также неактуальна.
-             * @see SBIS3.CONTROLS.DSMixin#displayField
+             * @see SBIS3.CONTROLS.DSMixin#displayProperty
              * @see tileTemplate
              * @see listTemplate
              */
@@ -337,7 +337,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             var parentOptions = parentFnc.call(this, item);
             if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
                parentOptions.image = this._options.imageField;
-               parentOptions.description = this._options.displayField;
+               parentOptions.description = this._options.displayProperty;
             }
             return parentOptions;
          },

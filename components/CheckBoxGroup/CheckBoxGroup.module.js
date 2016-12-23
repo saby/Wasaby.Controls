@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     *       </options>
     *    </options>
     *    <option name="keyField">id</option>
-    *    <option name="displayField">caption</option>
+    *    <option name="displayProperty">caption</option>
     * </component>
     */
 

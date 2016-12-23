@@ -159,10 +159,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
            * @remark
-           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
            * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
            * @see getTexValue
-           * @see displayField
+           * @see displayProperty
            * @see itemTemplate
            */
           /**
@@ -576,7 +576,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            *     <option name="keyField">Идентификатор</option>
            * </pre>
            * @see items
-           * @see displayField
+           * @see displayProperty
            * @see setDataSource
            * @param {String} keyField
            */
@@ -587,9 +587,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /**
            * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * @deprecated
+           */
+          setDisplayField: function(displayField) {
+             this._options.displayProperty = displayField;
+             this._getLinkCollection().setProperty('displayProperty', displayField);
+          },
+
+          /**
+           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
            * @example
            * <pre class="brush:xml">
-           *     <option name="displayField">Название</option>
+           *     <option name="displayProperty">Название</option>
            * </pre>
            * @remark
            * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
@@ -598,11 +607,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see keyField
            * @see items
            * @see setDataSource
-           * @param {String} displayField
+           * @param {String} displayProperty
            */
-          setDisplayField: function(displayField) {
-             this._options.displayField = displayField;
-             this._getLinkCollection().setProperty('displayField', displayField);
+          setDisplayProperty: function(displayProperty) {
+             this._options.displayProperty = displayProperty;
+             this._getLinkCollection().setProperty('displayProperty', displayProperty);
           },
 
           /**********************************************************************************************/
@@ -801,10 +810,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
             * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
-            * Отображаемые значения определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+            * Отображаемые значения определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
             * @see texValue
-            * @see displayField
+            * @see displayProperty
             * @see itemTemplate
             */
           getTextValue: function() {
@@ -814,7 +823,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayField) || ''));
+                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayProperty) || ''));
                  });
               }
 
