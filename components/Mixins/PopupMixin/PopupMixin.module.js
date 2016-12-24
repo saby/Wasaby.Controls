@@ -1059,14 +1059,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                    self._zIndex = null;
                 },
                 deactivateWindow = function() {
-                   if (this._options.opener) {
-                      if (coreHelpers.instanceOfModule(this._options.opener, 'SBIS3.CORE.AreaAbstract')) {
-                         this._options.opener.onBringToFront();
-                      } else {
-                         this._options.opener.setActive(true);
-                      }
-                   }
-
                    cWindowManager.deactivateWindow(this, function () {
                       // Убираем оверлей
                       this._unsubscribeTargetMove();
