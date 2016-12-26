@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 *        <div class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></div>
                 *        {{?}}
                 *        <div class="controls-DropdownList__itemTextWrapper controls-DropdownList__itemTextWrapper-height">
-                *            <div class="controls-DropdownList__item-text" title="{{=it.getPropertyValue(it.item, it.displayProperty)}}">{{=it.getPropertyValue(it.item, it.displayField)}}</div>
+                *            <div class="controls-DropdownList__item-text" title="{{=it.getPropertyValue(it.item, it.displayProperty)}}">{{=it.getPropertyValue(it.item, it.displayProperty)}}</div>
                 *            <div class="controls-DropdownList__item-text-shadow"></div>
                 *        </div>
                 *    </div>

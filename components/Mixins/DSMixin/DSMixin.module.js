@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *     });
         * </pre>
         * @see items
-        * @see displayField
+        * @see displayProperty
         */
        /**
         * @event onDataLoad Происходит после загрузки данных.
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *     <option name="keyField">@Идентификатор</option>
              * </pre>
              * @see items
-             * @see displayField
+             * @see displayProperty
              * @see setDataSource
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
@@ -140,18 +140,23 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             keyField : null,
             /**
              * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
+             * @deprecated
+             */
+            displayField: null,
+            /**
+             * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
              * @remark file DSMixin-displayField.md
              * @example
              * Отображение в поле связи значений поля "ФИО" выбранных элементов коллекции:
              * ![](/DSMixin01.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <option name="displayField">НазваниеПоля</option>
+             *     <option name="displayProperty">НазваниеПоля</option>
              * </pre>
              * @see keyField
              * @see items
              */
-            displayField: null,
+            displayProperty: null,
              /**
               * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
@@ -171,8 +176,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * фрагмент верстки:
               * <pre class="brush:xml">
               *     <option name="keyField">id</option>
-              *     <option name="displayField">title</option>
-              *     <option name="hierField" value="parent"></option>
+              *     <option name="displayProperty">title</option>
+              *     <option name="parentProperty" value="parent"></option>
+              *     <option name="nodeProperty" value="parent@"></option>
               *     <options name="items" type="array">
               *        <options>
               *           <option name="id">I</option>
@@ -196,7 +202,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * </pre>
               * @see setItems
               * @see keyField
-              * @see displayField
+              * @see displayProperty
               * @see setDataSource
               * @see SBIS3.CONTROLS.TreeMixin#hierField
               */
@@ -555,6 +561,14 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
                this._notify('onItemsReady');
+            }
+         }
+      },
+      before : {
+         _modifyOptions: function(cfg) {
+            if (cfg.displayField) {
+               IoC.resolve('ILogger').log('DSMixin', 'Опция displayField является устаревшей, используйте displayProperty');
+               cfg.displayProperty = cfg.displayField;
             }
          }
       },

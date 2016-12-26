@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
        *       <option name="content">
        *          <component data-component="SBIS3.CONTROLS.ListView">
-       *             <option name="displayField">title</option>
+       *             <option name="displayProperty">title</option>
        *             <option name="keyField">id</option>
        *             <option name="infiniteScroll">down</option>
        *             <option name="infiniteScrollContainer">.myScrollContainer</option>
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * <pre class="brush: html">
                 *    <option name="content">
                 *       <component data-component="SBIS3.CONTROLS.ListView">
-                *          <option name="displayField">title</option>
+                *          <option name="displayProperty">title</option>
                 *          <option name="keyField">id</option>
                 *          <option name="infiniteScroll">down</option>
                 *          <option name="infiniteScrollContainer">.controls-Scroll__container</option>

@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
        if(items.length) {
           colHelpers.forEach(items, function(item) {
-             res.push(item.get(opts.displayField));
+             res.push(item.get(opts.displayProperty));
           })
        }
 
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
             this.getSelectedItems(true).addCallback(function(list){
                list.each(function(item) {
-                  linkTextArray.push(item.get(self._options.displayField));
+                  linkTextArray.push(item.get(self._options.displayProperty));
                });
                self._setCaption(linkTextArray.join(', '));
                return list;

@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.TabControl',
+   "Core/IoC",
    'js!SBIS3.CONTROLS.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons'
-], function(CompoundControl, dotTplFn) {
+], function(CompoundControl, dotTplFn, IoC) {
 
    'use strict';
 
@@ -44,8 +45,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
             /**
              * @cfg {Item[]} Устанавливает набор элементов, который описывает закладки и связанные с ними области.
              * @remark
-             * Для настройки содержимого вкладок и областей нужно учитывать, что задано в опциях {@link tabsDisplayField} и {@link selectedKey}.
-             * Например, если задали &lt;opt name=&quot;tabsDisplayField&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
+             * Для настройки содержимого вкладок и областей нужно учитывать, что задано в опциях {@link tabsDisplayProperty} и {@link selectedKey}.
+             * Например, если задали &lt;opt name=&quot;tabsDisplayProperty&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
              * Если задали &lt;opt name=&quot;keyField&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
              */
             items: null,
@@ -58,14 +59,19 @@ define('js!SBIS3.CONTROLS.TabControl', [
             selectedKey: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
+             * @deprecated
+             */
+            tabsDisplayField: null,
+            /**
+             * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
              * @example
              * <pre class="brush:xml">
-             *     <option name="tabsDisplayField">caption</option>
+             *     <option name="tabsDisplayProperty">caption</option>
              * </pre>
              * @see keyField
              * @see items
              */
-            tabsDisplayField: null,
+            tabsDisplayProperty: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
              * @remark
@@ -117,6 +123,14 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             tabButtonsExtraClass: ''
          }
+      },
+
+      _modifyOptions: function(){
+         if (cfg.tabsDisplayField) {
+            IoC.resolve('ILogger').log('TabControl', 'Опция tabsDisplayField является устаревшей, используйте tabsDisplayProperty');
+            cfg.tabsDisplayProperty = cfg.tabsDisplayField;
+         }
+         return TabControl.superclass._modifyOptions.apply(this, arguments);
       },
 
       $constructor: function() {

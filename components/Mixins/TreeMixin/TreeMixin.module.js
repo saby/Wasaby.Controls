@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    getSearchCfg = function(cfg) {
       return {
          keyField: cfg.keyField,
-         displayField: cfg.displayField,
+         displayProperty: cfg.displayProperty,
          highlightEnabled: cfg.highlightEnabled,
          highlightText: cfg.highlightText,
          colorMarkEnabled: cfg.colorMarkEnabled,
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             curParentContents = item.getContents();
             pathElem = {};
             pathElem[cfg.keyField] = curParentContents.getId();
-            pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
+            pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
             curPath.push(pathElem);
             lastNode = item;
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
-       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
        *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
        * </ul>
@@ -1173,7 +1173,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   hierarchy.push({
                      'id': key || null,
                      'parent' : parentKey,
-                     'title' : record.get(this._options.displayField),
+                     'title' : record.get(this._options.displayProperty),
                      'color' : this._options.colorField ? record.get(this._options.colorField) : '',
                      'data' : record
                   });
