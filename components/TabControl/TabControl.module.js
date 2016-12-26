@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
          }
       },
 
-      _modifyOptions: function(){
+      _modifyOptions: function(cfg){
          if (cfg.tabsDisplayField) {
             IoC.resolve('ILogger').log('TabControl', 'Опция tabsDisplayField является устаревшей, используйте tabsDisplayProperty');
             cfg.tabsDisplayProperty = cfg.tabsDisplayField;
