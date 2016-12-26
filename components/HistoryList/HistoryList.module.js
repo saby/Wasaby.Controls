@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'Core/helpers/collection-helpers'
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Model, Serializer, genHelpers, colHelpers) {
+   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, genHelpers) {
 
       'use strict';
 
@@ -27,13 +27,13 @@ define('js!SBIS3.CONTROLS.HistoryList',
       }
 
       function prepareItem(item) {
-         var model = new Model({ idProperty: ID_FIELD, format: FORMAT }),
+         var model = new Record({ idProperty: ID_FIELD, format: FORMAT }),
              rawData = {};
 
          rawData[DATA_FIELD] = item;
          rawData[ID_FIELD] = genHelpers.randomId();
 
-         model[item instanceof Model ? 'set' : 'setRawData'](rawData);
+         model[item instanceof Record ? 'set' : 'setRawData'](rawData);
 
          return model;
       }
