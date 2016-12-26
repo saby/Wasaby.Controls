@@ -1675,7 +1675,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Метод перерисвоки списка без повторного получения данных
        */
-      redraw: function() {
+      redraw: function(notRevive) {
+         /*notRevive - врмеенный параметр для внутренних механизмов*/
          this._itemData = null;
          if (this._isSlowDrawing(this._options.easyGroup)) {
             this._oldRedraw();
@@ -1685,7 +1686,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._redrawItems();
             }
          }
-         this._reviveItems();
+         if (!notRevive) {
+            this._reviveItems();
+         }
       },
       _redraw: function () {
          this.redraw();
@@ -2180,17 +2183,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
       },
-      _onCollectionReset: function() {
-         this._itemData = null;
-         if (this._isSlowDrawing(this._options.easyGroup)) {
-            this._oldRedraw();
-         }
-         else {
-            if (this._getItemsProjection()) {
-               this._redrawItems();
-            }
-         }
-      },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
        * @param {Function} sort функция сортировка элементов, если передать undefined сортировка сбросится
@@ -2268,7 +2260,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-	               this._onCollectionReset();
+                  this.redraw(true);
 	               break;
 	         }
       	}
