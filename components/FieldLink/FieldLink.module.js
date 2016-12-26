@@ -566,7 +566,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this.hidePicker();
                       }
                    }
-                }, this), 0);
+                }, this), 30);
              }
 
              FieldLink.superclass.setActive.apply(this, arguments);
