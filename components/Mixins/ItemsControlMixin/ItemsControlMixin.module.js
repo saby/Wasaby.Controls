@@ -619,8 +619,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          this._revivePackageParams = {
-            revive: true,
-            light: false
+            revive: false,
+            light: true
          };
 
          var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
@@ -867,17 +867,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             }
             this._toggleEmptyData(!(data.records && data.records.length));
-
+            this._revivePackageParams.revive = true;
+            this._revivePackageParams.light = false;
          }
-         this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _redrawItem: function(item) {
          var needToRevive = this._redrawItemInner(item);
-         if (needToRevive) {
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
-         }
+         this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
+         this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
       },
 
       _redrawItemInner: function(item) {
@@ -1030,12 +1029,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
-                  if (markupExt.hasComponents) {
-                     this._reviveItems();
-                  }
-                  else {
-                     this._notifyOnDrawItems();
-                  }
+                  this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
+                  this._revivePackageParams.light = false;
                }
             }
          }
@@ -1690,6 +1685,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._redrawItems();
             }
          }
+         this._reviveItems();
       },
       _redraw: function () {
          this.redraw();
@@ -2169,16 +2165,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          for (i = 0; i < items.length; i++) {
             needToRevive = needToRevive || this._changeItemProperties(items[i]);
          }
-         if (needToRevive) {
-            this._reviveItems();
-         }
-         else {
-            this._notifyOnDrawItems();
-         }
+         this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
+         this._revivePackageParams.light = false;
       },
       _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
-            this._removeItems(items, groupId)
+            this._removeItems(items, groupId);
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
@@ -2187,9 +2179,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._addItems(newItems, newItemsIndex, groupId)
          }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
-         //this._view.checkEmpty(); toggleEmtyData
-         this.reviveComponents(); //надо?
-         this._drawItemsCallbackDebounce();
+      },
+      _onCollectionReset: function() {
+         this._itemData = null;
+         if (this._isSlowDrawing(this._options.easyGroup)) {
+            this._oldRedraw();
+         }
+         else {
+            if (this._getItemsProjection()) {
+               this._redrawItems();
+            }
+         }
       },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
@@ -2221,12 +2221,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var needToRevive;
          if (this._isNeedToRedraw()) {
             needToRevive = this._changeItemProperties(item, property);
-            if (needToRevive) {
-               this._reviveItems(item.getContents().getId() != this._options.selectedKey);
-            }
-            else {
-               this._notifyOnDrawItems(item.getContents().getId() != this._options.selectedKey);
-            }
+            this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
+            this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
          }
       }
    };
@@ -2234,8 +2230,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    var
       onCollectionItemChange = function(eventObject, item, index, property) {
          this._revivePackageParams = {
-            light: false,
-            revive: true
+            light: true,
+            revive: false
          };
          //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
          this._onUpdateItemProperty(item, property);
@@ -2252,8 +2248,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          this._revivePackageParams = {
-            light: false,
-            revive: true
+            light: true,
+            revive: false
          };
          if (this._isNeedToRedraw()) {
 	         switch (action) {
@@ -2272,7 +2268,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-	               this.redraw();
+	               this._onCollectionReset();
 	               break;
 	         }
       	}
