@@ -105,14 +105,17 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
 
       prepareNewStructure: function(currentStructure, newStructure) {
          var toDelete = [],
-             hasStructureElem = false;
+             hasStructureElem = false,
+             log = function() {
+                IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
+             }.once(); //Чтобы не писать кучу раз в консоль предупреждение
 
          colHelpers.forEach(newStructure, function(newStructureElem, key) {
             var elemFromCurrentStructure = colHelpers.find(currentStructure, function(elem) {
                /* По неустановленной причине, в структуре из истории могут появляться null'ы,
                 скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
                if(!newStructureElem) {
-                  IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
+                  log();
                   return false;
                } else {
                   hasStructureElem = newStructureElem.internalValueField === elem.internalValueField;
