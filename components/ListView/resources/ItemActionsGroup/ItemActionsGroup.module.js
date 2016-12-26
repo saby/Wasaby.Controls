@@ -268,6 +268,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsButtons ={};
             this._itemActionsMenu && this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
+            if(this.isVisible()) {
+               this.applyItemActions();
+            }
             if(this.isItemActionsMenuVisible()){
                this._onBeforeMenuShowHandler();
             }
