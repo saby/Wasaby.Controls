@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/detection"
+   "Core/detection",
+   "Core/helpers/functional-helpers"
 ], function(
     constants,
     TextBoxBase,
@@ -13,7 +14,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TemplateUtil,
     Sanitize,
     dcHelpers,
-    cDetection) {
+    cDetection,
+    fHelpers) {
 
    'use strict';
 

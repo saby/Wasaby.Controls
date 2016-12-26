@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.keyField);
       }
 
+      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -44,11 +45,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          loadedProperty: cfg.hierField + '$',
          unique: true,
          root: root,
-         rootEnumerable: rootAsNode
+         rootEnumerable: rootAsNode,
+         filter: filterCallBack,
+         sort: cfg.itemsSortMethod
       });
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
-      projection.setFilter(filterCallBack);
-      projection.setSort(cfg.itemsSortMethod);
+
       return projection;
    },
    _defaultItemsSortMethod = function(itemA, itemB) {
@@ -580,7 +581,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see getHierField
        */
       setHierField: function (hierField) {
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
          this.setParentProperty(hierField);
       },
       /**
@@ -590,7 +591,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see setHierField
        */
       getHierField : function(){
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
          return this.getParentProperty();
       },
       /**

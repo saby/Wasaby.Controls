@@ -33,10 +33,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       };
    }
    var createDefaultProjection = function(items, cfg) {
-      var proj = Projection.getDefaultDisplay(items);
+      var proj, projCfg = {};
       if (cfg.itemsSortMethod) {
-         proj.setSort(cfg.itemsSortMethod);
+         projCfg.sort = cfg.itemsSortMethod;
       }
+      proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
    },
 
@@ -175,6 +176,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          rawData : json,
          idProperty : keyField
       })
+   },
+   extendedMarkupCalculate = function(markup, cfg) {
+      return ParserUtilities.buildInnerComponentsExtended(MarkupTransformer(markup, cfg));
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -603,8 +607,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
-                     newCfg._itemData = cfg._buildTplArgs(cfg);
                      newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                     newCfg._itemData = cfg._buildTplArgs(cfg);
                   }
                }
             }
@@ -829,11 +833,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var
                itemsContainer = $itemsContainer.get(0),
                data = this._prepareItemsData(),
-               markup;
+               markup, extMarkup;
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
+            extMarkup = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+            markup = extMarkup.markup;
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
@@ -866,16 +871,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _redrawItem: function(item) {
-         var result = this._redrawItemInner(item);
-         if (result) {
+         var needToRevive = this._redrawItemInner(item);
+         if (needToRevive) {
             this._reviveItems(item.getContents().getId() != this._options.selectedKey);
          }
       },
 
       _redrawItemInner: function(item) {
          var
-            result = false,
-            markup,
+            needToRevive = false,
+            markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             data;
          if (targetElement.length) {
@@ -888,15 +893,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                data.decorators.ladder.setRecord(data['item']);
             }
 
+            //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
+            //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=
+
+            var calcData = this._calculateDataBeforeRedraw(data, item);
             var dot;
             if (data.itemTpl) {
-               dot = data.itemTpl;
+               dot = calcData.itemTpl;
             }
             else {
-               dot = data.defaultItemTpl;
+               dot = calcData.defaultItemTpl;
             }
 
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
+            markupExt = extendedMarkupCalculate(dot(calcData), this._options);
+            markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
@@ -910,9 +920,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   comps[i].destroy();
                }
             }
-            result = true;
+            needToRevive = markupExt.hasComponents;
          }
-         return result;
+         return needToRevive;
+      },
+
+      _calculateDataBeforeRedraw: function(data) {
+         return data;
       },
 
       _removeItems: function (items, groupId) {
@@ -1007,7 +1021,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                var
                   data,
-                  markup,
+                  markup, markupExt,
                   itemsToDraw;
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
@@ -1016,9 +1030,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
-                  this._reviveItems();
+                  if (markupExt.hasComponents) {
+                     this._reviveItems();
+                  }
+                  else {
+                     this._notifyOnDrawItems();
+                  }
                }
             }
          }
@@ -1699,8 +1719,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
-         this._oldRedrawItemInner(item, projItem);
-         this._reviveItems(item.getId() != this._options.selectedKey);
+         if (!this._isSlowDrawing(this._options.easyGroup)) {
+            projItem = projItem || this._getItemProjectionByItemId(item.getId());
+            this._redrawItem(projItem);
+         }
+         else {
+            this._oldRedrawItemInner(item, projItem);
+            this._reviveItems(item.getId() != this._options.selectedKey);
+         }
       },
 
       _oldRedrawItemInner: function(item, projItem, callback) {
@@ -1711,6 +1737,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
+         return true;
       },
 
       _getElementByModel: function(item) {
@@ -1907,6 +1934,55 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       getDataSource: function(){
          return this._dataSource;
       },
+      /**
+       * Устанавливает шаблон для каждого элемента коллекции.
+       * @param {String} tpl Шаблон отображения каждого элемента коллекции
+       * @example
+       * <pre>
+       *    <div class="listViewItem" style="height: 30px;">\
+       *       {{=it.item.get("title")}}\
+       *    </div>
+       * </pre>
+       */
+      setItemTpl: function(tpl) {
+         this._options.itemTpl = tpl;
+      },
+
+
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="keyField">Идентификатор</option>
+       * </pre>
+       * @see items
+       * @see displayField
+       * @see setDataSource
+       * @param {String} keyField
+       */
+      setKeyField: function(keyField) {
+         this._options.keyField = keyField;
+      },
+
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="displayField">Название</option>
+       * </pre>
+       * @remark
+       * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+       * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+       * которого нужно отобразить.
+       * @see keyField
+       * @see items
+       * @see setDataSource
+       * @param {String} displayField
+       */
+      setDisplayField: function(displayField) {
+         this._options.displayField = displayField;
+      },
+
 
       _getScrollContainer: function() {
 
@@ -1930,10 +2006,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing(this._options.easyGroup)) {
-            this._oldRedrawItemInner(item.getContents(), item);
+            return this._oldRedrawItemInner(item.getContents(), item);
          }
          else {
-            this._redrawItemInner(item);
+            return this._redrawItemInner(item);
          }
       },
 
@@ -2144,11 +2220,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _onCollectionReplace: function(items) {
-         var i;
+         var i, needToRevive = false;
          for (i = 0; i < items.length; i++) {
-            this._changeItemProperties(items[i]);
+            needToRevive = needToRevive || this._changeItemProperties(items[i]);
          }
-         this._reviveItems();
+         if (needToRevive) {
+            this._reviveItems();
+         }
+         else {
+            this._notifyOnDrawItems();
+         }
       },
       _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
@@ -2192,9 +2273,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _onUpdateItemProperty: function(item, property) {
+         var needToRevive;
          if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            needToRevive = this._changeItemProperties(item, property);
+            if (needToRevive) {
+               this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            }
+            else {
+               this._notifyOnDrawItems(item.getContents().getId() != this._options.selectedKey);
+            }
          }
       }
    };

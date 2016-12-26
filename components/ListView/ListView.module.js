@@ -2689,6 +2689,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
+            this._needScrollCompensation = false;
          },
          _toggleIndicator: function(show){
             var self = this,

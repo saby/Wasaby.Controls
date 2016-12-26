@@ -732,6 +732,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _showConfirmDialog: function(){
+         this._panel.onBringToFront();
          this._confirmDialog = InformationPopupManager.showConfirmDialog({
                message: rk('Сохранить изменения?'),
                details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
@@ -952,6 +953,9 @@ define('js!SBIS3.CONTROLS.FormController', [
              dataSource,
              result;
 
+         if (options.source){
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Источник данных нужно задавать через опцию dataSource. Опция source в версии 3.7.5 будет удалена');
+         }
          //TODO в рамках совместимости
          if (Object.isEmpty(options.dataSource) && !options.source){
             IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Необходимо задать опцию dataSource');
