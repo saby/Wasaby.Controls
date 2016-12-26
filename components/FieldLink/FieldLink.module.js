@@ -554,7 +554,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
               повторяется с разными сценариями и с разными способомами почи)нки.
               В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
               Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(constants.browser.firefox && active && wasActive && !this.getText() && this._isEmptySelection()) {
+             if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(fHelpers.forAliveOnly(function () {
@@ -566,7 +566,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this.hidePicker();
                       }
                    }
-                }, this), 0);
+                }, this), 30);
              }
 
              FieldLink.superclass.setActive.apply(this, arguments);
