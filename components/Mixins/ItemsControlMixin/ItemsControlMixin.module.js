@@ -271,6 +271,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _groupCollapsing: {},
+         _revivePackageParams: {},
          _options: {
             _itemsTemplate: ItemsTemplate,
             _canServerRender: false,
@@ -614,6 +615,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
+         this._revivePackageParams = {
+            revive: true,
+            light: false
+         };
 
          var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
@@ -1242,17 +1247,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
          this._onCollectionItemChange = onCollectionItemChange.bind(this);
+         this._onAfterCollectionChange = onAfterCollectionChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.subscribeTo(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.subscribeTo(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
        /**
         * Устанавливает источник данных.
@@ -2202,6 +2210,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    var
       onCollectionItemChange = function(eventObject, item, index, property) {
+         this._revivePackageParams = {
+            light: false,
+            revive: true
+         };
          //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
          this._onUpdateItemProperty(item, property);
       },
@@ -2216,6 +2228,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+         this._revivePackageParams = {
+            light: false,
+            revive: true
+         };
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
@@ -2237,6 +2253,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 	         }
       	}
+      },
+      onAfterCollectionChange = function() {
+         if (this._revivePackageParams.revive !== false) {
+            this._reviveItems(this._revivePackageParams.light)
+         }
+         else {
+            this._notifyOnDrawItems(this._revivePackageParams.light);
+         }
       };
    return ItemsControlMixin;
 
