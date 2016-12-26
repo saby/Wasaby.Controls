@@ -39,7 +39,9 @@ define('js!SBIS3.CONTROLS.HistoryList',
       }
 
       /**
-      * Список - коллекция истории c доступом по индексу.
+      * Список - коллекция истории c доступом по индексу. Данные хронятся в определённом формате, всего два поля
+      * 1) id - уникальный идентификатор записи в истории
+      * 2) data - данные, которые сохраняются в список истории, сохраняются в виде записи WS.Data/Entity/Record
       * @extends Core/Abstract
       * @mixes WS.Data/Collection/IList
       * @mixes WS.Data/Collection/IIndexedCollection
