@@ -694,6 +694,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          if (this._options.stickyHeader !== isSticky){
             this._options.stickyHeader = isSticky;
+            // Если заголовок не отображается(он есть в верстке, но скрыт), то не фиксируем его.
+            if (isSticky && !this._options.showHead) {
+               return;
+            }
             this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
          }
       },
