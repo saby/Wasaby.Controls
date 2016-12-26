@@ -43,13 +43,15 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
           init: function() {
              FilterHistoryView.superclass.init.apply(this, arguments);
 
-             var historyController = new HistoryList({historyId: this.getProperty('historyId')});
+             if(this._options.historyId) {
+                var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
-             historyController.subscribe('onHistoryUpdate', function(event, history) {
-                this.setItems(history);
-             }.bind(this));
+                historyController.subscribe('onHistoryUpdate', function (event, history) {
+                   this.setItems(history);
+                }.bind(this));
 
-             this.setItems(historyController.getHistory());
+                this.setItems(historyController.getHistory());
+             }
           }
        });
 
