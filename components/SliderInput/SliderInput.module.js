@@ -111,7 +111,10 @@ define('js!SBIS3.CONTROLS.SliderInput',
 
             _textBoxKeyDown: function(descriptor, event) {
                if (event.which == cConstants.key.enter) {
-                  this. _endTextBox.setActive(true);
+                  if (descriptor._target.getName() == 'EndTextBox') {
+                     this._endTextBox.setActive(false);
+                  }
+                  this._endTextBox.setActive(true);
                }
             }
          });
