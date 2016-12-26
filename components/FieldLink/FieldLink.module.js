@@ -589,40 +589,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
 
-          /**
-           * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
-           * @example
-           * <pre class="brush:xml">
-           *     <option name="keyField">Идентификатор</option>
-           * </pre>
-           * @see items
-           * @see displayField
-           * @see setDataSource
-           * @param {String} keyField
-           */
           setKeyField: function(keyField) {
-             this._options.keyField = keyField;
-             this._getLinkCollection().setProperty('keyField', keyField);
+             FieldLink.superclass.setKeyField.call(this, keyField);
+             this._getLinkCollection().setKeyField(keyField);
           },
 
-          /**
-           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
-           * @example
-           * <pre class="brush:xml">
-           *     <option name="displayField">Название</option>
-           * </pre>
-           * @remark
-           * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
-           * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
-           * которого нужно отобразить.
-           * @see keyField
-           * @see items
-           * @see setDataSource
-           * @param {String} displayField
-           */
           setDisplayField: function(displayField) {
-             this._options.displayField = displayField;
-             this._getLinkCollection().setProperty('displayField', displayField);
+             FieldLink.superclass.setDisplayField.call(this, displayField);
+             this._getLinkCollection().setDisplayField(displayField);
+          },
+
+          setItemTpl: function(itemTpl) {
+             FieldLink.superclass.setItemTpl.call(this, itemTpl);
+             this._getLinkCollection().setItemTpl(itemTpl);
           },
 
           /**********************************************************************************************/

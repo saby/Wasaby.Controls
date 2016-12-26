@@ -1934,6 +1934,55 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       getDataSource: function(){
          return this._dataSource;
       },
+      /**
+       * Устанавливает шаблон для каждого элемента коллекции.
+       * @param {String} tpl Шаблон отображения каждого элемента коллекции
+       * @example
+       * <pre>
+       *    <div class="listViewItem" style="height: 30px;">\
+       *       {{=it.item.get("title")}}\
+       *    </div>
+       * </pre>
+       */
+      setItemTpl: function(tpl) {
+         this._options.itemTpl = tpl;
+      },
+
+
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="keyField">Идентификатор</option>
+       * </pre>
+       * @see items
+       * @see displayField
+       * @see setDataSource
+       * @param {String} keyField
+       */
+      setKeyField: function(keyField) {
+         this._options.keyField = keyField;
+      },
+
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="displayField">Название</option>
+       * </pre>
+       * @remark
+       * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+       * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+       * которого нужно отобразить.
+       * @see keyField
+       * @see items
+       * @see setDataSource
+       * @param {String} displayField
+       */
+      setDisplayField: function(displayField) {
+         this._options.displayField = displayField;
+      },
+
 
       _getScrollContainer: function() {
 
