@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.Menu', [
                      parId = null,
                      parent;
                   if (self._options.parentProperty) {
-                     parId = self.getParentKey(self._items, item);
+                     parId = item.get(self._options.parentProperty);
                   }
                   if (parId) {
                      parent = self._subMenus[parId];
@@ -304,7 +304,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             verticalAlign : {
                side : 'top'
             },
-            horizontalAlign : {
+            horizontalAlign : {  
                side : 'left'
             },
             allowOverlapTarget: true,
