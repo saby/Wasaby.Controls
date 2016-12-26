@@ -243,7 +243,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
       },
 
       setDisplayField: function(prop) {
-         this._options.displayField = prop;
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this._options.displayProperty = prop;
+      },
+
+      setDisplayProperty: function(prop) {
+         this._options.displayProperty = prop;
       },
 
       setHierField: function(prop) {
