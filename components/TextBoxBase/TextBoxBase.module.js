@@ -229,6 +229,10 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._options.maxLength = num;
       },
 
+      isChanged: function() {
+         return this._textChanged
+      },
+
       _formatText : function(text) {
          return text || ''; // так как есть датабиндинг может прийти undefined
       },

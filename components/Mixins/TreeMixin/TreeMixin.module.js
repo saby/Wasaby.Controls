@@ -170,6 +170,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       else {
          projection.each(function(item, index, group) {
+            if (item.isNode()){
+               cfg.hasNodes = true;
+            }
             if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
@@ -264,6 +267,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
       tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
+      tplOptions.hasNodes = cfg.hasNodes;
       tplOptions.hierarchy = new HierarchyRelation({
          idProperty: cfg.keyField,
          parentProperty: cfg.parentProperty
@@ -581,7 +585,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see getHierField
        */
       setHierField: function (hierField) {
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
          this.setParentProperty(hierField);
       },
       /**
@@ -591,7 +595,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see setHierField
        */
       getHierField : function(){
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
          return this.getParentProperty();
       },
       /**

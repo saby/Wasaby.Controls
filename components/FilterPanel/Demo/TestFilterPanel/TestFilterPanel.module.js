@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Demo.TestFilterPanel',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'html!CONTROLS.Demo.TestFilterPanel',
+      'html!SBIS3.CONTROLS.Demo.TestFilterPanel',
       'js!SBIS3.CONTROLS.Demo.MyFilterPanel'
    ],
    function(CompoundControl, dotTplFn){
