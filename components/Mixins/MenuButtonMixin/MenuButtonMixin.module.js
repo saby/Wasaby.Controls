@@ -235,6 +235,27 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
          var items = this.getItems() || [];
          items.push(item);
          this.setItems(items);
+      },
+
+      /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
+      setKeyField: function(prop) {
+         this._options.keyField = prop;
+      },
+
+      setDisplayField: function(prop) {
+         this._options.displayField = prop;
+      },
+
+      setHierField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         this.setParentProperty(prop);
+      },
+
+      setParentProperty: function(prop) {
+         this._options.parentProperty = prop;
+      },
+      setNodeProperty: function(prop) {
+         this._options.nodeProperty = prop;
       }
    };
 
