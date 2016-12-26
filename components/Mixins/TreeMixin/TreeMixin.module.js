@@ -36,6 +36,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.keyField);
       }
 
+      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection = new TreeProjection({
          collection: items,
          idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -44,11 +45,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          loadedProperty: cfg.hierField + '$',
          unique: true,
          root: root,
-         rootEnumerable: rootAsNode
+         rootEnumerable: rootAsNode,
+         filter: filterCallBack,
+         sort: cfg.itemsSortMethod
       });
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
-      projection.setFilter(filterCallBack);
-      projection.setSort(cfg.itemsSortMethod);
+
       return projection;
    },
    _defaultItemsSortMethod = function(itemA, itemB) {
@@ -374,6 +375,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _getRecordsForRedrawTree: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
@@ -579,7 +581,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see getHierField
        */
       setHierField: function (hierField) {
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
          this.setParentProperty(hierField);
       },
       /**
@@ -589,7 +591,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see setHierField
        */
       getHierField : function(){
-         IoC.resolve('ILogger').error('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
          return this.getParentProperty();
       },
       /**
@@ -1030,9 +1032,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
-            /*TODO onSetRoot стреляет при каждой перезагрузке, чтоб корректно рисовать хлебные крошки в биндере*/
-            this._notify('onSetRoot', this._options._curRoot, hierarchy);
             if (this._previousRoot !== this._options._curRoot) {
+               this._notify('onSetRoot', this._options._curRoot, hierarchy);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор

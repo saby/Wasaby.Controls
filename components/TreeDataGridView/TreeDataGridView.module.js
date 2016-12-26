@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          tplOptions.foldersColspan = cfg.foldersColspan;
+         tplOptions.cellData.isSearch = tvOptions.isSearch;
          return tplOptions;
       },
       getSearchCfg = function(cfg) {
@@ -107,6 +108,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
+            _buildTplArgsTDG: buildTplArgsTDG,
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,

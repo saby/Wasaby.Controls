@@ -1,3 +1,5 @@
 <div>
-    <component data-component="{{=it.component.replace('js!', '')}}"></component>
+    <component data-component="{{=it.component.replace('js!', '')}}">
+        <option spreadOptions="true" type="ref">{{@it.componentOptions}}</option>
+    </component>
 </div>

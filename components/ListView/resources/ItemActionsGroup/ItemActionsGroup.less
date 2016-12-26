@@ -135,8 +135,7 @@
 .controls-ItemActions__menu-container {
    &.controls-Menu__Popup{
       padding: @list-view-actions-menu-padding;
-      margin-top: 3px;
-      margin-left: 6px;
+      margin: @list-view-actions-menu-margin;
    }
 
    .controls-MenuItem {
@@ -166,9 +165,8 @@
    }
    &.controls-popup-revert-vertical {
       .controls-PopupMixin__closeButton {
-         right: auto;
-         left: @list-view-actions-menu-close-right;
-         .transform(rotate(@suggest-picker-invertVal));
+         top: auto;
+         bottom: 8px;
       }
    }
 }

@@ -2343,7 +2343,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
 
             // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
-            if ((this.isScrollOnBottom() && scrollDown) || !this._scrollWatcher.hasScroll()) {
+            if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
             }
          },
@@ -2689,6 +2689,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._onMetaDataResultsChange = this._drawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
+            this._needScrollCompensation = false;
          },
          _toggleIndicator: function(show){
             var self = this,
