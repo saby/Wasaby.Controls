@@ -2,6 +2,7 @@
    <div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">
             Введите должность
             <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
@@ -51,6 +52,7 @@
    <div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect1"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">
             Введите должность
             <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
@@ -98,6 +100,7 @@
       </component>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect2" style="margin-left: 10px; width: 360px;"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">Введите должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
          <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
          <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
@@ -147,6 +150,7 @@
       </div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect3" style="margin: 0"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">false</option>
          <option name="placeholder">Введите должность сотрудника</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
          <option name="showEmptyList">false</option>
          <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
@@ -190,6 +194,7 @@
    <div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect4"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">
             Выберите
             <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
@@ -237,6 +242,11 @@
          <options name="listFilter"> <!-- Параметры фильтрации автодополнения -->
             <option name="Название" bind="myTextField" oneWay="true"></option> <!-- Фильтрация происходит по полю Название, значение для фильтрации берётся из контекста - поле myTextField. С ним же связано значение опции text -->
          </options>
+      </component>
+   </div>
+   <div>
+      <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="SelectorAction">
+         <option name="mode">floatArea</option>
       </component>
    </div>
    <div class="demo-FieldLink__note">

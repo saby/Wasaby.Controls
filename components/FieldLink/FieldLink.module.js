@@ -550,6 +550,26 @@ define('js!SBIS3.CONTROLS.FieldLink',
           setActive: function(active) {
              var wasActive = this.isActive();
 
+             /* Хак, который чинит баг firefox с невидимым курсором в input'e.
+              Это довольно старая и распростронённая проблема в firefox'e,
+              повторяется с разными сценариями и с разными способомами почи)нки.
+              В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
+              Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
+             if(constants.browser.firefox && active && wasActive && !this.getText() && this._isEmptySelection()) {
+                var elemToFocus = this._getElementToFocus();
+
+                setTimeout(fHelpers.forAliveOnly(function () {
+                   if(elemToFocus[0] === document.activeElement){
+                      var suggestShowed = this.isPickerVisible();
+                      elemToFocus.blur().focus();
+
+                      if(!suggestShowed) {
+                         this.hidePicker();
+                      }
+                   }
+                }, this), 0);
+             }
+
              FieldLink.superclass.setActive.apply(this, arguments);
 
              /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
@@ -581,17 +601,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {String} keyField
            */
           setKeyField: function(keyField) {
-             this._options.keyField = keyField;
-             this._getLinkCollection().setProperty('keyField', keyField);
+             FieldLink.superclass.setKeyField.call(this, keyField);
+             this._getLinkCollection().setKeyField(keyField);
           },
 
           /**
            * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
            * @deprecated
            */
-          setDisplayField: function(displayField) {
-             this._options.displayProperty = displayField;
-             this._getLinkCollection().setProperty('displayProperty', displayField);
+          setDisplayField: function(displayProperty) {
+             IoC.resolve('ILogger').log('FieldLink', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+             this.setDisplayProperty(displayProperty);
           },
 
           /**
@@ -610,8 +630,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {String} displayProperty
            */
           setDisplayProperty: function(displayProperty) {
-             this._options.displayProperty = displayProperty;
+             FieldLink.superclass.setDisplayProperty.call(this, displayProperty);
              this._getLinkCollection().setProperty('displayProperty', displayProperty);
+          },
+
+          setItemTpl: function(itemTpl) {
+             FieldLink.superclass.setItemTpl.call(this, itemTpl);
+             this._getLinkCollection().setItemTpl(itemTpl);
           },
 
           /**********************************************************************************************/
