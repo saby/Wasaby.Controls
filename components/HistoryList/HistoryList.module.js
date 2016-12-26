@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'js!WS.Data/Collection/IList',
       'js!WS.Data/Collection/IEnumerable',
       'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Entity/Model',
+      'js!WS.Data/Entity/Record',
       'Core/Serializer',
       'Core/helpers/generate-helpers',
       'Core/helpers/collection-helpers'
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
          rawData[DATA_FIELD] = item;
          rawData[ID_FIELD] = genHelpers.randomId();
 
-         model.set(rawData);
+         model[item instanceof Model ? 'set' : 'setRawData'](rawData);
 
          return model;
       }
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
             item = prepareItem(item);
 
             if(index !== -1) {
-               historyList.prepend(historyList.at(index));
+               historyList.prepend([item]);
                historyList.removeAt(index + 1);
             }
 
