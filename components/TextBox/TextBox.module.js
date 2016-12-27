@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      }
                      text = newText;
                   }
-                  self._inputField.val(text);
+                  self._drawText(text);
                   /* Событие paste может срабатывать:
                      1) При нажатии горячих клавиш
                      2) При вставке из котекстного меню.
