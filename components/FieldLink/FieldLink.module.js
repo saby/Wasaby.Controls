@@ -159,10 +159,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
            * @remark
-           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
            * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
            * @see getTexValue
-           * @see displayField
+           * @see displayProperty
            * @see itemTemplate
            */
           /**
@@ -589,14 +589,49 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
 
+          /**
+           * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+           * @example
+           * <pre class="brush:xml">
+           *     <option name="keyField">Идентификатор</option>
+           * </pre>
+           * @see items
+           * @see displayProperty
+           * @see setDataSource
+           * @param {String} keyField
+           */
           setKeyField: function(keyField) {
              FieldLink.superclass.setKeyField.call(this, keyField);
              this._getLinkCollection().setKeyField(keyField);
           },
 
-          setDisplayField: function(displayField) {
-             FieldLink.superclass.setDisplayField.call(this, displayField);
-             this._getLinkCollection().setDisplayField(displayField);
+          /**
+           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * @deprecated
+           */
+          setDisplayField: function(displayProperty) {
+             IoC.resolve('ILogger').log('FieldLink', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+             this.setDisplayProperty(displayProperty);
+          },
+
+          /**
+           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * @example
+           * <pre class="brush:xml">
+           *     <option name="displayProperty">Название</option>
+           * </pre>
+           * @remark
+           * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+           * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+           * которого нужно отобразить.
+           * @see keyField
+           * @see items
+           * @see setDataSource
+           * @param {String} displayProperty
+           */
+          setDisplayProperty: function(displayProperty) {
+             FieldLink.superclass.setDisplayProperty.call(this, displayProperty);
+             this._getLinkCollection().setProperty('displayProperty', displayProperty);
           },
 
           setItemTpl: function(itemTpl) {
@@ -800,10 +835,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
             * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
-            * Отображаемые значения определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+            * Отображаемые значения определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
             * @see texValue
-            * @see displayField
+            * @see displayProperty
             * @see itemTemplate
             */
           getTextValue: function() {
@@ -813,7 +848,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayField) || ''));
+                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayProperty) || ''));
                  });
               }
 

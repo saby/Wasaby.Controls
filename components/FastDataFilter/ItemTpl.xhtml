@@ -2,7 +2,7 @@
     <option name="items" type="ref">{{@it.item.get('values')}}</option>
     <option name="keyField" value="{{=it.item.get('keyField')}}"></option>
     <option name="multiselect" value="{{=it.item.get('multiselect')}}"></option>
-    <option name="displayField" value="{{=it.item.get('displayField')}}"></option>
+    <option name="displayProperty" value="{{=(it.item.get('displayProperty') || it.item.get('displayField'))}}"></option>
     <option name="parentProperty" value="{{=it.item.get('hierField')}}"></option>
     <option name="className" value="{{=('controls-ListView__item ' + it.item.get('className'))}}"></option>
     <option name="pickerClassName" value="{{=(it.item.get('pickerClassName') + ' controls-DropdownList__picker')}}"></option>

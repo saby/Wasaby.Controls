@@ -83,7 +83,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
                decorators : tplOptions.decorators,
-               displayField : tplOptions.displayField
+               displayField : tplOptions.displayProperty,
+               displayProperty: tplOptions.displayProperty
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
             buildTplArgsLadder(tplOptions.cellData, cfg);
@@ -586,7 +587,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             nodeProperty: cfg.nodeProperty,
             getColumnVal: getColumnVal,
             decorators : args.decorators,
-            displayField : args.displayField,
+            displayField : args.displayProperty,
+            displayProperty : args.displayProperty,
             isSearch : args.isSearch
          };
          args.startScrollColumn = cfg.startScrollColumn;

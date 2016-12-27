@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      tabindex: -1,
                      caption: '',
                      keyField: 'key',
-                     displayField: 'title'
+                     displayProperty: 'title'
                   }, items[i]);
                }
             }
