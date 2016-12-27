@@ -122,6 +122,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             if (cfg.parentProperty && !cfg.nodeProperty) {
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
+            if (cfg.componentOptions && cfg.componentOptions.displayField) {
+               IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.displayField является устаревшей, используйте componentOptions.displayProperty');
+               cfg.componentOptions.displayProperty = cfg.componentOptions.displayField;
+            }
             return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
@@ -175,7 +179,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             });
          },
          _getComponentOptions: function() {
-            var options = ['displayField', 'partialyReload', 'keyField', 'hierField'],
+            var options = ['displayField', 'partialyReload', 'keyField', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {

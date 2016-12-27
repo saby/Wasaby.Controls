@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 dataSource: undefined,
                 parentProperty: undefined,
                 nodeProperty: undefined,
-                displayField: undefined,
+                displayProperty: undefined,
                 titleCellTemplate: undefined
             },
             _treeView: undefined,

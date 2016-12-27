@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                   case 'selectedItem':
                       /* При синхронизации selectedItem -> selectedItems, так же проверяем наличие ключевых поле у selectedItem */
                      if(cInstace.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
-                        !isEmptyItem(propValue, this._options.displayField, this._options.keyField)) {
+                        !isEmptyItem(propValue, this._options.displayProperty, this._options.keyField)) {
                         this.setSelectedItems([propValue]);
                      } else {
                         this.clearSelectedItems();
@@ -108,11 +108,11 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                 isModel = item && cInstace.instanceOfModule(item, 'WS.Data/Entity/Model'),
                 currentSelItem = this._options.selectedItem,
                 keyField = this._options.keyField,
-                displayField = this._options.displayField;
+               displayProperty = this._options.displayProperty;
 
             if (isModel) {
                /* Проверяем запись на наличие ключевых полей */
-               hasRequiredFields = !isEmptyItem(item, displayField, keyField);
+               hasRequiredFields = !isEmptyItem(item, displayProperty, keyField);
 
                if (hasRequiredFields) {
                   /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                      item.setIdProperty(this._options.keyField);
                   }
                   /* Если передали пустую запись и текущая запись тоже пустая, то не устанавливаем её */
-               } else if(currentSelItem && isEmptyItem(currentSelItem, displayField, keyField) && this._isEmptySelection()) {
+               } else if(currentSelItem && isEmptyItem(currentSelItem, displayProperty, keyField) && this._isEmptySelection()) {
                   return false;
                }
             }
@@ -139,12 +139,12 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
       }
    };
 
-   function isEmptyItem(item, keyField, displayField) {
+   function isEmptyItem(item, keyField, displayProperty) {
       var isEmpty = function(val) {
          return val === null || val === undefined;
       };
 
-      return isEmpty(item.get(displayField)) || isEmpty(item.get(keyField));
+      return isEmpty(item.get(displayProperty)) || isEmpty(item.get(keyField));
    }
 
    return SyncSelectionMixin;

@@ -722,7 +722,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             parentID = pathRecords[i].get(this._options.hierField);
             dsItems.push({
                id: pathRecords[i].getId(),
-               title: pathRecords[i].get(this._options.displayField),
+               title: pathRecords[i].get(this._options.displayProperty),
                parentId: parentID instanceof Array ? parentID[0] : parentID,
                data: pathRecords[i]
             });

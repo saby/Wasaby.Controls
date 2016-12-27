@@ -6,7 +6,7 @@
         <option name="showPaging" type="boolean">false</option>
         <option name="allowEmptySelection" type="boolean">true</option>
         <option name="itemTpl">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl</option>
-        <option name="displayField">{{=it.displayField}}</option>
+        <option name="displayProperty">{{=it.displayProperty}}</option>
         <option name="parentProperty">{{=it.parentProperty}}</option>
         <option name="nodeProperty">{{=it.nodeProperty}}</option>
         <option name="keyField">{{=it.keyField}}</option>
@@ -20,7 +20,7 @@
             <options>
                 <option name="title">Наименование</option>
                 <option name="width">400</option>
-                <option name="field">{{=it.displayField}}</option>
+                <option name="field">{{=it.displayProperty}}</option>
                 <option name="cellTemplate">
                 {{?it.titleCellTemplate}}
                     {{=it.titleCellTemplate}}

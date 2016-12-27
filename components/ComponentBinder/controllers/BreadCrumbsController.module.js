@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
       _createBreadCrumb: function(data) {
          var point = {},
             breadCrumbs = this._options.breadCrumbs;
-         point[breadCrumbs._options.displayField] = data.title;
+         point[breadCrumbs._options.displayProperty] = data.title;
          point[breadCrumbs._options.keyField] = data.id;
          point[breadCrumbs._options.colorField] = data.color;
          point.data = data.data;
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
 
          function createBreadCrumb(data){
             var point = {};
-            point[breadCrumbs._options.displayField] = data.title;
+            point[breadCrumbs._options.displayProperty] = data.title;
             point[breadCrumbs._options.keyField] = data.id;
             point[breadCrumbs._options.colorField] = data.color;
             point.data = data.data;

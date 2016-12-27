@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
 
         _getItemTextByItemId: function(items, id) {
             var item = items.getRecordById(id) || this._options.favorites.getRecordById(id);
-            return item.get(this._options.displayField);
+            return item.get(this._options.displayProperty);
         },
 
         _clickFavoritesHandler: function(e) {

@@ -46,9 +46,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 /**
                  * @cfg {WS.Data/Collection/RecordSet} Устанавливает набор элементов, из которых будет производиться выбор.
                  * @remark
-                 * Обязательны для конфигурации опции {@link keyField} и {@link displayField}.
+                 * Обязательны для конфигурации опции {@link keyField} и {@link displayProperty}.
                  * @see keyField
-                 * @see displayField
+                 * @see displayProperty
                  **/
                 items: [],
                 /**
@@ -59,14 +59,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 value: [],
                 /**
                  * @cfg {String} Устанавливает поле первичного ключа (см. {@link items}).
-                 * @see displayField
+                 * @see displayProperty
                  */
                 keyField: 'id',
                 /**
                  * @cfg {String} Устанавливает поле отображения (см. {@link items}).
                  * @see keyField
                  */
-                displayField: 'title',
+                displayProperty: 'title',
                 /**
                  * @cfg {String} Устанавливает шаблон редактора.
                  * @remark
@@ -86,6 +86,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 });
             }
             opts._template = opts.template ? TemplateUtil.prepareTemplate(opts.template) : opts._defaultTemplate;
+            if (opts.displayField) {
+                IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция displayField является устаревшей, используйте displayProperty');
+                opts.displayProperty = opts.displayField;
+            }
             return opts;
         },
 

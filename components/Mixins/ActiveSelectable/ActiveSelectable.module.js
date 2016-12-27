@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
             /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
                требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
-            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.keyField] && opts.selectedItem[opts.displayField]) {
+            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.keyField] && opts.selectedItem[opts.displayProperty]) {
                opts.selectedItem = new Model({
                   idProperty: opts.keyField,
                   rawData: opts.selectedItem
