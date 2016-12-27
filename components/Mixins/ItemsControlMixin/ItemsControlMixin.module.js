@@ -839,7 +839,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._itemData;
       },
 
-      _redrawItems : function() {
+      _redrawItems : function(notRevive) {
          this._groupHash = {};
          var
             $itemsContainer = this._getItemsContainer();
@@ -879,8 +879,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             }
             this._toggleEmptyData(!(data.records && data.records.length));
+
+         }
+         if (notRevive) {
             this._revivePackageParams.revive = true;
             this._revivePackageParams.light = false;
+         }
+         else {
+            this._reviveItems();
          }
          this._container.addClass('controls-ListView__dataLoaded');
       },
@@ -1705,11 +1711,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          else {
             if (this._getItemsProjection()) {
-               this._redrawItems();
+               this._redrawItems(notRevive);
             }
-         }
-         if (!notRevive) {
-            this._reviveItems();
          }
       },
       _redraw: function () {
