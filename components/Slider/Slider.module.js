@@ -197,6 +197,13 @@ define('js!SBIS3.CONTROLS.Slider',
                return this._options.maxValue;
             },
 
+            setMinMaxValue: function(min, max) {
+               this._options.minValue = min;
+               this._options.maxValue = max;
+               this.setMinValue(min);
+               this.setMaxValue(max);
+            },
+
             _prepareValue: function(value, side) {
                value = value || value === 0 ? value : side === 'start'? this._options.minValue : this._options.maxValue;
                if (value > this._options.maxValue) {
@@ -239,12 +246,15 @@ define('js!SBIS3.CONTROLS.Slider',
                if (validation) {
                   IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное конечное значение');
                } else {
-                  side === 'min' ?  this._options.minValue = value : this._options.maxValue = value;
-                  this._drawValue(this.options.startValue, 'start');
-                  this._drawValue(this.options.endValue, 'end');
+                  this._updateMinMaxValue(value, side);
                }
             },
 
+            _updateMinMaxValue: function(value, side){
+               side === 'min' ?  this._options.minValue = value : this._options.maxValue = value;
+               this._drawValue(this._options.startValue, 'start');
+               this._drawValue(this._options.endValue, 'end');
+            },
             //DragNDropMixin методы
             _initDrag: function(event) {
                event.preventDefault();
