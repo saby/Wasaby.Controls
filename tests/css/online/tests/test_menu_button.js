@@ -178,7 +178,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
         test.setUrl('/regression_menu_button_online.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuButton 1"]', 40000);
+                actions.waitForElementToShow('[name="MenuButton 13"]', 40000);
                 this.button = find('[name="MenuButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 actions.executeJS(function (window) {
@@ -278,7 +278,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
         test.setUrl('/regression_menu_button_online_7.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[name="MenuButton 1"]', 40000);
+                actions.waitForElementToShow('[name="MenuButton 21"]', 40000);
                 this.button = find('[name="MenuButton 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 actions.executeJS(function (window) {
