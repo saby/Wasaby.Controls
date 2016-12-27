@@ -64,7 +64,7 @@ gemini.suite('SBIS3.CONTROLS.CheckBox Online', function () {
         test.setUrl('/regression_check_box_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[name="CheckBox 13"]', 40000);
+                actions.waitForElementToShow('[name="CheckBox 1"]', 40000);
                 this.box = find('[name="CheckBox 1"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[sbisname="TextBox 1"] input');
