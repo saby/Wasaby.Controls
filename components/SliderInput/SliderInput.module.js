@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.SliderInput',
             },
 
             _textBoxEndFocusOut: function () {
-               this._textBoxFocusOut(this._endTextBox, 'end')
+               this._textBoxFocusOut(this._endTextBox, 'end');
             },
 
             _sliderDrawChange: function(event, start, end) {
@@ -112,9 +112,10 @@ define('js!SBIS3.CONTROLS.SliderInput',
             _textBoxKeyDown: function(descriptor, event) {
                if (event.which == cConstants.key.enter) {
                   if (descriptor._target.getName() == 'EndTextBox') {
-                     this._endTextBox.setActive(false);
+                     this._textBoxFocusOut(this._endTextBox, 'end');
+                  } else {
+                     this._endTextBox.setActive(true);
                   }
-                  this._endTextBox.setActive(true);
                }
             }
          });
