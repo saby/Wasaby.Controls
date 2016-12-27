@@ -27,6 +27,7 @@
     <option name="visible" type="boolean">{{=(isToolbarItem && item.get('visible'))}}</option>
     <option name="keyField">{{=it.keyField}}</option>
     {{?item.get('icon')}}<option name="icon">{{=item.get('icon')}}</option>{{?}}
+    {{?item.get('name')}}<option name="name">{{=item.get('name')}}</option>{{?}}
     {{?item.get('caption')}}<option name="caption">{{=item.get('caption')}}</option>{{?}}
     {{?item.get('command')}}<option name="command">{{=item.get('command')}}</option>{{?}}
 </component>
