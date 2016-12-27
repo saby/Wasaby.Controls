@@ -47,9 +47,9 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              var commandDispatcher = CommandDispatcher;
              this._publish('onSelectComplete');
 
-             commandDispatcher.declareCommand(this, 'selectorWrapperSelectionChanged', this._chooserWrapperSelectionChanged);
-             commandDispatcher.declareCommand(this, 'selectorWrapperInitialized', this._chooserWrapperInitialized);
-             commandDispatcher.declareCommand(this, 'selectComplete', this._chooseComplete);
+             commandDispatcher.declareCommand(this, 'selectorWrapperSelectionChanged', this._selectorWrapperSelectionChanged);
+             commandDispatcher.declareCommand(this, 'selectorWrapperInitialized', this._selectorWrapperInitialized);
+             commandDispatcher.declareCommand(this, 'selectComplete', this._selectComplete);
 
              if(this._options.selectedItems) {
                 if(Array.isArray(this._options.selectedItems)) {
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            * @param chooserWrapper
            * @private
            */
-          _chooserWrapperInitialized: function(chooserWrapper) {
+          _selectorWrapperInitialized: function(chooserWrapper) {
              chooserWrapper.setProperties({
                 multiselect: this._options.multiselect,
                 selectedItems: this._options.selectedItems,
@@ -89,12 +89,12 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            * @param keyField
            * @private
            */
-          _chooserWrapperSelectionChanged: function(difference, keyField) {
+          _selectorWrapperSelectionChanged: function(difference, keyField) {
              var currentItems = this._options.selectedItems,
                  self = this;
 
              function onChangeSelection() {
-                if(self._selectButton) {
+                if(self._selectButton && self._options.multiselect) {
                    self._selectButton.show();
                 }
              }
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
           },
 
-          _chooseComplete: function() {
+          _selectComplete: function() {
              this._notify('onSelectComplete', this._options.selectedItems.clone());
           }
        });

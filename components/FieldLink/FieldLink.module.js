@@ -541,7 +541,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(config) {
-                this.showSelector(config.template, config.componentOptions);
+                this.showSelector(config.template, config.componentOptions, config.selectionType);
                 /* Чтобы остановить всплытие комманды */
                 return true;
              }
