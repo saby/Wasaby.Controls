@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.FontStyle',
    'js!SBIS3.CONTROLS.ColorStyle',
-   'js!SBIS3.CONTROLS.IconButton'
+   'js!SBIS3.CONTROLS.IconButton',
+   'js!SBIS3.CONTROLS.CheckBox'
 ], function(CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
 
    'use strict';
@@ -89,7 +90,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              * @cfg {Object}
              * Предустановленные наборы форматирования текст
              */
-            presets: null
+            presets: null,
+            allowAutoColor: false
          },
          /* При нажатии на крестик, вернем стиль из backup-a */
          _backup: null,
@@ -171,6 +173,21 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          StylesPanel.superclass.init.call(this);
 
          self._palette = self.getChildControlByName('Pallete');
+         self._checkBox = self.getChildControlByName('CheckBox');
+
+         self._checkBox.subscribe('onCheckedChange', function(e, checked) {
+            if (checked) {
+               self._palette.setSelectedKey("auto");
+               self._palette.redraw();
+            } else if (self._palette.getSelectedIndex() == -1) {
+               self._palette.setSelectedIndex(0);
+            }
+         });
+         self._palette.subscribe('onSelectedItemChange', function(e, item) {
+            if (item) {
+               self._checkBox.setChecked(false);
+            }
+         });
 
          if (self._options.paletteRenderStyle) {
             /* В случае палитру нужно подписаться на смену цвета, т.к. выбор происходит без подтверждения*/
@@ -247,7 +264,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             }
          } else {
             style['font-size'] = this._size.getSelectedKey() + 'px';
-            style['color'] = this._palette.getSelectedKey();
+            style['color'] = this._palette.getSelectedKey() || 'auto';
             this._bold.isChecked() && (style['font-weight'] = 'bold');
             this._italic.isChecked() && (style['font-style'] = 'italic');
             this._underline.isChecked() && (style['text-decoration'] = 'underline');
