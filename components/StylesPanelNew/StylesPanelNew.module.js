@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          _bold: null,
          _italic: null,
          _underline: null,
-         _strikethrought: null
+         _strikethrough: null
       },
 
       $constructor: function() {
@@ -199,7 +199,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             this._bold = this.getChildControlByName('Bold');
             this._italic = this.getChildControlByName('Italic');
             this._underline = this.getChildControlByName('Underline');
-            this._strikethrought = this.getChildControlByName('Strikethrough');
+            this._strikethrough = this.getChildControlByName('Strikethrough');
             if (self._options.historyId || self._options.presets) {
                self._presetView = this.getChildControlByName('presetView');
 
@@ -224,7 +224,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             this._bold.subscribe('onActivated', handler);
             this._italic.subscribe('onActivated', handler);
             this._underline.subscribe('onActivated', handler);
-            this._strikethrought.subscribe('onActivated', handler);
+            this._strikethrough.subscribe('onActivated', handler);
          }
 
          this.subscribe('onClose', this.onClose.bind(this));
@@ -268,7 +268,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             this._bold.isChecked() && (style['font-weight'] = 'bold');
             this._italic.isChecked() && (style['font-style'] = 'italic');
             this._underline.isChecked() && (style['text-decoration'] = 'underline');
-            if (this._strikethrought.isChecked()) {
+            if (this._strikethrough.isChecked()) {
                style['text-decoration'] = this._underline.isChecked() ? style['text-decoration'] + ' line-through' : 'line-through';
             }
          }
@@ -346,13 +346,13 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                this._underline.setChecked(false);
             }
             if (styles['text-decoration'].indexOf('line-through') >= 0) {
-               this._strikethrought.setChecked(true);
+               this._strikethrough.setChecked(true);
             } else {
-               this._strikethrought.setChecked(false);
+               this._strikethrough.setChecked(false);
             }
          } else {
             this._underline.setChecked(false);
-            this._strikethrought.setChecked(false);
+            this._strikethrough.setChecked(false);
          }
 
          this.saveHandler();
@@ -429,6 +429,37 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          this._history.unshift(historyFormat);
          this._historyController.setHistory(this._history, true);
          this._presetView.setItems(this._prepareItems(this._history));
+      },
+
+      getStylesObject: function() {
+         var
+            styles = {};
+         if (this._options.paletteRenderStyle) {
+            styles = {
+               'color': this._palette.getSelectedKey()
+            }
+         } else {
+            styles = {
+               fontsize: this._size.getSelectedKey(),
+               color: this._palette.getSelectedKey(),
+               bold: this._bold.isChecked(),
+               italic: this._italic.isChecked(),
+               underline: this._underline.isChecked(),
+               strikethrough: this._strikethrough.isChecked()
+            }
+         }
+         return styles;
+      },
+
+      setStylesFromObject: function(styles) {
+         this._palette.setSelectedKey(styles.color);
+         if (!this._options.paletteRenderStyle) {
+               this._size.setSelectedKey(styles.fontsize);
+               this._bold.setChecked(styles.bold);
+               this._italic.setChecked(styles.italic);
+               this._underline.setChecked(styles.underline);
+               this._strikethrough.setChecked(styles.strikethrough);
+         }
       }
 
    });
