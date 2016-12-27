@@ -22,7 +22,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
       $protected: {
          _options: {
-            chooserTemplate: chooserTpl
+            chooserTemplate: chooserTpl,
+            /**
+             * @cfg {String} Устанавливает идентификатор элемента, который будет выбран для фильтра.
+             * @see setValue
+             * @see getValue
+             */
+            value: undefined
          },
          _radioGroup: undefined
       },

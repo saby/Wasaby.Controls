@@ -76,19 +76,11 @@ define('js!SBIS3.CONTROLS.SliderInput',
             },
 
             _textBoxStartFocusOut: function () {
-               if (this._startTextBox._textChanged) {
-                  this._setPreparedStartVale(this._startTextBox.getNumericValue());
-                  this._pointsContainers.right.removeClass('lastActivePoint');
-                  this._pointsContainers.left.addClass('lastActivePoint');
-               }
+               this._textBoxFocusOut(this._startTextBox, 'start');
             },
 
             _textBoxEndFocusOut: function () {
-               if (this._endTextBox._textChanged) {
-                  this._setPreparedEndVale(this._endTextBox.getNumericValue());
-                  this._pointsContainers.left.removeClass('lastActivePoint');
-                  this._pointsContainers.right.addClass('lastActivePoint');
-               }
+               this._textBoxFocusOut(this._endTextBox, 'end')
             },
 
             _sliderDrawChange: function(event, start, end) {
@@ -100,14 +92,18 @@ define('js!SBIS3.CONTROLS.SliderInput',
                }
             },
 
-            _setPreparedStartVale : function(value){
-               value = value || value === 0 ? this._prepareValue(value, 'left') : value;
-               this.setStartValue(value);
+            _textBoxFocusOut: function(input, side) {
+               if (input.isChanged()) {
+                  this._setPreparedValue(input.getNumericValue(), side);
+                  this._pointsContainers.start.removeClass('lastActivePoint');
+                  this._pointsContainers.end.removeClass('lastActivePoint');
+                  this._pointsContainers[side].addClass('lastActivePoint');
+               }
             },
 
-            _setPreparedEndVale : function(value){
-               value = value || value === 0 ? this._prepareValue(value, 'right') : value
-               this.setEndValue(value);
+            _setPreparedValue : function(value, side){
+               value = value || value === 0 ? this._prepareValue(value, side) : value;
+               side === 'start' ? this.setStartValue(value) : this.setEndValue(value);
             }
          });
       return SliderInput;

@@ -268,8 +268,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _keyUpBind: function(event) {
          var
             newText = this._inputField.val(),
-            key = event.which || event.keyCode;
-         if (newText != this._options.text) {
+            key = event.which || event.keyCode,
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (newText != this._options.text && !textsEmpty) {
             this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||

@@ -31,7 +31,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -683,7 +682,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                });
                if (typeof smile === 'object') {
-                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
+                  this.insertHtml(this._smileHtml(smile));
                }
             }
          },
@@ -956,7 +955,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _smileHtml: function(smile, name, alt) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
+            return '<span class="ws-smile controls-RichEditor__noneditable">&#' + smile.code + ';</span>';
          },
 
          /**
@@ -1101,6 +1100,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
 
+               //при вставке смайлов их надо оборачивать в специальные блоки
+               event.node.innerHTML = self._replaceSmiles(event.node.innerHTML);
             }.bind(this));
 
             editor.on('drop', function() {
@@ -1383,6 +1384,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
                endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
                regResult;
+            text = this._removeEmptyTags(text);
             while ((regResult = beginReg.exec(text)) !== null)
             {
                text = text.substr(regResult[0].length + 1);
@@ -1391,7 +1393,26 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             {
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
+            text = this._replaceSmiles(text);
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+         },
+         /**
+          * Проблема:
+          *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
+          *          опция text при этом перестает быть пустой
+          * Решение:
+          *          убирать пустые теги перед тем как отдать значение опции text
+          * @param text
+          * @returns {String}
+          * @private
+          */
+         _removeEmptyTags: function(text) {
+            var
+               temp = $(text);
+            while ( temp.find(':empty:not(img, iframe)').length) {
+               temp.find(':empty:not(img, iframe)').remove();
+            }
+            return $('<div></div>').append(temp).html();
          },
 
          /**
@@ -1592,6 +1613,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
+            text = this._replaceSmiles(text);
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
@@ -1662,6 +1684,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
+         },
+
+         _replaceSmiles: function(html) {
+            var
+               self = this;
+            $.each(smiles, function(i, obj) {
+               html =  html.replace(new RegExp(String.fromCodePoint(obj.code), 'gi'),function (code, pos) {
+                  if ( (pos !== 0 && html[pos - 1] != '>') || pos === 0) {
+                     return self._smileHtml(obj);
+                  }
+                  return code;
+               });
+            });
+            return html;
+         },
+
+         _getSmileByCode: function(code) {
+            var
+               smile = false;
+            $.each(smiles, function(i, obj) {
+               if (obj.code == code) {
+                  smile = obj;
+               }
+            });
+            return smile;
          }
       });
 

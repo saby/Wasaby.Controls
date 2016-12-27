@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      }
                      text = newText;
                   }
-                  self._inputField.val(text);
+                  self._drawText(text);
                   /* Событие paste может срабатывать:
                      1) При нажатии горячих клавиш
                      2) При вставке из котекстного меню.
@@ -348,8 +348,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyUpBind: function(event) {
-         var newText = this._inputField.val();
-         if (this._options.text !== newText){
+         var newText = this._inputField.val(),
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (this._options.text !== newText && !textsEmpty){
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
