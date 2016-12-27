@@ -111,6 +111,10 @@ define('js!SBIS3.CONTROLS.MergeAction', [
             IoC.resolve('ILogger').log('MergeAction', 'Опция displayField является устаревшей, используйте displayProperty');
             cfg.displayProperty = cfg.displayField;
          }
+         if (cfg.keyField) {
+            IoC.resolve('ILogger').log('MergeAction', 'Опция keyField является устаревшей, используйте idProperty');
+            cfg.idProperty = cfg.keyField;
+         }
          return MergeAction.superclass._modifyOptions.apply(this, arguments);
       },
 
@@ -136,6 +140,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
             nodeProperty: this._options.nodeProperty,
             dataSource: this._options.dataSource,
             keyField: this._options.dataSource.getIdProperty(),
+            idProperty: this._options.dataSource.getIdProperty(),
             testMergeMethodName: this._options.testMergeMethodName,
             titleCellTemplate: this._options.titleCellTemplate
          });

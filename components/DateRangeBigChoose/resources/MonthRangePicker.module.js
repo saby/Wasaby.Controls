@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          _options: {
             // x: monthSource,
             // dataSource: monthSource,
-            keyField: 'id',
+            idProperty: 'id',
             /**
              * @cfg {Number} отображаемый год
              */

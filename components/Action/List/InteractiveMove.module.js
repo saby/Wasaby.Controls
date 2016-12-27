@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             });
          },
          _getComponentOptions: function() {
-            var options = ['displayField', 'partialyReload', 'keyField', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
+            var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {
