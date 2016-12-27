@@ -44,5 +44,5 @@ if __name__ == '__main__':
     css_data = f.read()
     f.close()
     f = open(css, mode='w')
-    f.write(css_data.replace('color: #c00;', 'color: #0000066;'))
+    f.write(css_data.replace('color: #c00;', 'color: blue;'))
     f.close()
