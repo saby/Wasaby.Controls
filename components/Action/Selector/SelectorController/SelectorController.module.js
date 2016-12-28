@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              if(difference.added.length) {
                 collectionHelpers.forEach(difference.added, function(item) {
-                   var index = currentItems.getIndexByValue(idProperty, item.get(keyField));
+                   var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
 
                    if(index === -1) {
                       currentItems.add(item);
