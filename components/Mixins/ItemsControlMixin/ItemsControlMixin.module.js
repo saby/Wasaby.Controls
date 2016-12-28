@@ -594,7 +594,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                IoC.resolve('ILogger').log('ItemsControl', 'Опция displayField является устаревшей, используйте displayProperty');
                cfg.displayProperty = cfg.displayField;
             }
-            if (cfg.displayField) {
+            if (cfg.keyField) {
                IoC.resolve('ILogger').log('ItemsControl', 'Опция keyField является устаревшей, используйте idProperty');
                cfg.idProperty = cfg.keyField;
             }

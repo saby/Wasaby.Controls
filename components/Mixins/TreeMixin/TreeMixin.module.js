@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.parentProperty,
          nodeProperty: cfg.nodeProperty,
-         loadedProperty: cfg.hierField + '$',
+         loadedProperty: cfg.parentProperty + '$',
          unique: true,
          root: root,
          rootEnumerable: rootAsNode,
