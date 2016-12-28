@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
             var hasRequiredFields,
                 isModel = item && cInstace.instanceOfModule(item, 'WS.Data/Entity/Model'),
                 currentSelItem = this._options.selectedItem,
-                keyField = this._options.idProperty,
+               idProperty = this._options.idProperty,
                displayProperty = this._options.displayProperty;
 
             if (isModel) {
