@@ -2188,6 +2188,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._group(projItem, {at: at});
             this._previousGroupBy = previousGroupBy;
          }
+         //для старой отрисовки всегда оживляем компоненты в конце отрисовки
+         this._revivePackageParams.revive = true;
+         this._revivePackageParams.light = false;
          if (!withoutNotify) {
             this._notifyOnDrawItems();
          }
