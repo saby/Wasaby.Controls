@@ -13,6 +13,21 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
    var TPL_FIELD = 'itemTemplate';
    var HISTORY_TPL_FIELD = 'historyItemTemplate';
 
+   /* Сбрасывает поле в структуре к reset значению,
+      или удаляет, если нет reset значения */
+   function resetField(fieldName, structElem) {
+      var resetFieldName = 'reset' + fieldName.ucFirst(),
+          resVal = structElem[resetFieldName];
+
+      if(structElem.hasOwnProperty(fieldName)) {
+         if(structElem.hasOwnProperty(resetFieldName) && !colHelpers.isEqualObject(structElem[fieldName], resVal)) {
+            structElem[fieldName] = resVal;
+         } else {
+            delete structElem[fieldName];
+         }
+      }
+   }
+
    return {
       prepareStructureToSave: function(structure) {
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
@@ -49,21 +64,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          var currentStructureCopy = cFunctions.clone(currentStructure);
 
          this.prepareNewStructure(currentStructureCopy, structure);
-
-         /* Сбрасывает поле в структуре к reset значению,
-            или удаляет, если нет reset значения */
-         function resetField(fieldName, structElem) {
-            var resetFieldName = 'reset' + fieldName.ucFirst(),
-                resVal = structElem[resetFieldName];
-
-            if(structElem.hasOwnProperty(fieldName)) {
-               if(structElem.hasOwnProperty(resetFieldName) && !colHelpers.isEqualObject(structElem[fieldName], resVal)) {
-                  structElem[fieldName] = resVal;
-               } else {
-                  delete structElem[fieldName];
-               }
-            }
-         }
 
          /* Алгоритм следующий:
           1) Пробегаемся по структуре (она первична, в ней можно менять только фильтры, саму струкруту менять нельзя!!) и ищем
@@ -140,6 +140,53 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          colHelpers.forEach(toDelete, function(elem) {
             delete newStructure[elem];
          });
+      },
+
+      /* Нечестный способ удалить значения структуры по ключам фильтра.
+         Из биндов определяет, какой элемент структуры на какое поле фильтра забинден,
+         и если это поле есть в переданном массиве сбрасывает элемент структуры к resetValue.
+         Почему это требуется: люди используют историю фильтрации, но не хотят сохранять фильтр полностью,
+         т.к. некоторые фильтры могут зависеть от определённых условий. Полностью заменять фильтр нельзя, там могут
+         быть уже проставленные фильтр из контекста или прикладным программистом. */
+      resetStructureElementsByFilterKeys: function(filterButton, structure, keys) {
+         var filterStructure = structure || cFunctions.clone(filterButton.getFilterStructure()),
+             bindings = colHelpers.find(filterButton.getProperty('bindings'), function(binding) {
+                return binding.propName === 'filterStructure'
+             }),
+             valueBind;
+
+         /* Возвращает поле фильтра по бинду */
+         function getFilterName(fullName) {
+            var arr = fullName.split('/');
+            return arr[arr.length - 1];
+         }
+
+         /* Получает среди биндингов объект, в котором описан бинд value */
+         function getValueBind(bindObj) {
+            var subBind = bindObj.subBindings;
+            for (var i = 0, len = subBind.length; i < len; i++) {
+               if(subBind[i].propName === 'value') {
+                  return subBind[i];
+               }
+            }
+         }
+
+         /* Если вдруг биндов нет */
+         if(!bindings || !bindings.subBindings || !bindings.subBindings.length) {
+            return;
+         }
+
+         bindings = bindings.subBindings;
+
+         for(var i = 0, len = bindings.length; i < len; i++) {
+            valueBind = getValueBind(bindings[i]);
+
+            if(valueBind) {
+               if (Array.indexOf(keys, getFilterName(valueBind.fieldName)) !== -1) {
+                  resetField('value', filterStructure[bindings[i].index]);
+               }
+            }
+         }
       }
    };
 });
