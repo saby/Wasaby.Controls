@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
       if (cfg.pagesCount && !cfg.items) {
          cfg.items = [];
          cfg.keyField = 'id';
-         cfg.displayField = 'text';
+         cfg.displayProperty = 'text';
          for (var i = 1; i <= cfg.pagesCount; i++) {
             cfg.items.push({
                id : i,

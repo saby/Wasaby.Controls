@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       getSearchCfg = function(cfg) {
          return {
             keyField: cfg.keyField,
-            displayField: cfg.displayField,
+            displayProperty: cfg.displayProperty,
             highlightEnabled: cfg.highlightEnabled,
             highlightText: cfg.highlightText,
             colorMarkEnabled: cfg.colorMarkEnabled,

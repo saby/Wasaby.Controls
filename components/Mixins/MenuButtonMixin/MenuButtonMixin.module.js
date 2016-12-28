@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
             keyField: this._options.keyField,
             allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
-            displayField: this._options.displayField || 'title',
+            displayProperty: this._options.displayProperty || 'title',
             verticalAlign: {
                side: 'top'
             },
@@ -243,7 +243,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
       },
 
       setDisplayField: function(prop) {
-         this._options.displayField = prop;
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this._options.displayProperty = prop;
+      },
+
+      setDisplayProperty: function(prop) {
+         this._options.displayProperty = prop;
       },
 
       setHierField: function(prop) {

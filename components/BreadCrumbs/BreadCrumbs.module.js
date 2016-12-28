@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.DecorableMixin',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
    'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl',
-   'Core/helpers/string-helpers'
-], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers) {
+   'Core/helpers/string-helpers',
+   "Core/IoC"
+], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers, IoC) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
@@ -46,7 +47,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _margins: undefined,
          _options: {
             keyField: 'id',
-            displayField: 'title',
+            displayField: '',
+            displayProperty: 'title',
             /**
              * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
              * @remark
@@ -95,6 +97,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          var newCfg = BreadCrumbs.superclass._modifyOptions.apply(this, arguments);
          if (!cfg.items || cfg.length !== 0) {
             newCfg.visible = false;
+         }
+         if (cfg.displayField) {
+            IoC.resolve('ILogger').log('BreadCrumbs', 'Опция displayField является устаревшей, используйте displayProperty');
+            cfg.displayProperty = cfg.displayField;
          }
          return newCfg;
       },
@@ -202,7 +208,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                if (record.get(self._options.keyField)){
                   var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
                      point.html(self._options._decorators.apply(
-                           strHelpers.escapeHtml(record.get(self._options.displayField))
+                           strHelpers.escapeHtml(record.get(self._options.displayProperty))
                      ))
                      .attr('style', self._options._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'
@@ -244,11 +250,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                dots: true,
                get: function(field) {return this[field];}
             };
-            item[this._options.displayField] = '...';
+            item[this._options.displayProperty] = '...';
             dots = $(pointTpl({
                   item: item,
                   decorators: this._options._decorators,
-                  displayField: this._options.displayField
+                  displayField: this._options.displayProperty,
+                  displayProperty: this._options.displayProperty
                }));
          }
 
@@ -341,7 +348,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          return {
             item: item,
-            displayField: this._options.displayField,
+            displayField: this._options.displayProperty,
+            displayProperty: this._options.displayProperty,
             decorators: this._options._decorators
          };
       },

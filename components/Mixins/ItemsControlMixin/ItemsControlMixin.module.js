@@ -131,7 +131,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var tplOptions = {}, itemTpl, itemContentTpl;
 
       tplOptions.Sanitize = Sanitize;
-      tplOptions.displayField = cfg.displayField;
+      tplOptions.displayField = cfg.displayProperty;
+      tplOptions.displayProperty = cfg.displayProperty
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = getPropertyValue;
 
@@ -199,7 +200,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *     });
         * </pre>
         * @see items
-        * @see displayField
+        * @see displayProperty
         */
        /**
         * @event onDataLoad При загрузке данных
@@ -304,7 +305,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *     <option name="keyField">Идентификатор</option>
              * </pre>
              * @see items
-             * @see displayField
+             * @see displayProperty
              * @see setDataSource
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
@@ -313,9 +314,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             keyField : null,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
+             * @deprecated
+             */
+            displayField: null,
+            /**
+             * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
              * <pre class="brush:xml">
-             *     <option name="displayField">Название</option>
+             *     <option name="displayProperty">Название</option>
              * </pre>
              * @remark
              * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
@@ -325,7 +331,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see items
              * @see setDataSource
              */
-            displayField: null,
+            displayProperty: null,
              /**
               * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
@@ -354,8 +360,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               * @see setItems
               * @see getDataSet
               * @see keyField
-              * @see displayField
-              * @see hierField
+              * @see displayProperty
+              * @see parentProperty
               * @see dataSource
               */
             items: null,
@@ -579,6 +585,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       around: {
          _modifyOptions : function(parentFnc, cfg, parsedCfg) {
+            if (cfg.displayField) {
+               IoC.resolve('ILogger').log('ItemsControl', 'Опция displayField является устаревшей, используйте displayProperty');
+               cfg.displayProperty = cfg.displayField;
+            }
             var newCfg = parentFnc.call(this, cfg), proj, items;
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
@@ -829,7 +839,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._itemData;
       },
 
-      _redrawItems : function() {
+      _redrawItems : function(notRevive) {
          this._groupHash = {};
          var
             $itemsContainer = this._getItemsContainer();
@@ -869,8 +879,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             }
             this._toggleEmptyData(!(data.records && data.records.length));
+
+         }
+         if (notRevive) {
             this._revivePackageParams.revive = true;
             this._revivePackageParams.light = false;
+         }
+         else {
+            this._reviveItems();
          }
          this._container.addClass('controls-ListView__dataLoaded');
       },
@@ -1695,11 +1711,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          else {
             if (this._getItemsProjection()) {
-               this._redrawItems();
+               this._redrawItems(notRevive);
             }
-         }
-         if (!notRevive) {
-            this._reviveItems();
          }
       },
       _redraw: function () {
@@ -1963,7 +1976,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        *     <option name="keyField">Идентификатор</option>
        * </pre>
        * @see items
-       * @see displayField
+       * @see displayProperty
        * @see setDataSource
        * @param {String} keyField
        */
@@ -1973,9 +1986,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /**
        * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @deprecated
+       */
+      setDisplayField: function(displayField) {
+         IoC.resolve('ILogger').log('ItemsControl', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this._options.displayProperty = displayField;
+      },
+
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
        * @example
        * <pre class="brush:xml">
-       *     <option name="displayField">Название</option>
+       *     <option name="displayProperty">Название</option>
        * </pre>
        * @remark
        * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
@@ -1984,10 +2006,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @see keyField
        * @see items
        * @see setDataSource
-       * @param {String} displayField
+       * @param {String} displayProperty
        */
-      setDisplayField: function(displayField) {
-         this._options.displayField = displayField;
+      setDisplayProperty: function(displayProperty) {
+         this._options.displayProperty = displayProperty;
       },
 
 

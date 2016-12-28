@@ -344,6 +344,7 @@ define('js!SBIS3.CONTROLS.ListView',
                top: null,
                bottom: null
             },
+            _setScrollPagerPositionThrottled: null,
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -761,13 +762,15 @@ define('js!SBIS3.CONTROLS.ListView',
             _componentBinder: null,
             _touchSupport: false,
             _editByTouch: false,
-            _dragInitHandler: undefined //метод который инициализирует dragNdrop
+            _dragInitHandler: undefined, //метод который инициализирует dragNdrop
+            _inScrollContainerControl: false
          },
 
          $constructor: function () {
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
+            this._setScrollPagerPositionThrottled = this._setScrollPagerPosition.throttle(100, true).bind(this);
             this._bindEventHandlers(this._container);
 
             this.initEditInPlace();
@@ -880,6 +883,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createScrollPager: function(){
+            var scrollContainer = this._scrollWatcher.getScrollContainer();
             this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
                element: $('> .controls-ListView__scrollPager', this._container),
@@ -888,9 +892,13 @@ define('js!SBIS3.CONTROLS.ListView',
                keyField: 'id',
                parent: this
             });
-            if (constants.browser.isMobilePlatform){
+            // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
+            // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
+            // работы с пэйджером что бы избавится от этого.
+            if (this._inScrollContainerControl) {
+              $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
+            } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
-               var scrollContainer = this._scrollWatcher.getScrollContainer();
                scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
                $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
@@ -901,6 +909,13 @@ define('js!SBIS3.CONTROLS.ListView',
             });
             this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
+
+            if (!this._inScrollContainerControl) {
+               // Отлавливаем изменение масштаба
+               // Когда страница увеличена на мобильных платформах или если на десктопе установить ширину браузера меньше 1024рх,
+               // то горизонтальный скрол(и иногда вертикальный) происходит внутри window.
+               $(window).on('resize scroll', this._setScrollPagerPositionThrottled);
+            }
          },
 
          _onVisibleChange: function(event, visible){
@@ -919,8 +934,16 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
-            var right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
-            this._scrollPager.getContainer().css('right', right);
+            var right;
+            // Если таблица находится в SBIS3.CONTROLS.ScrollContainer, то пейджер находится в его скролируемом
+            // контенере и спозиционирован абсолютно и пересчет позиции не требуется.
+            if (!this._inScrollContainerControl) {
+               // На ios на маленьком зуме все нормально. На большом - элементы немного смещаются,
+               // и смещение зависит от положения скрола и от зума. Это не ошибка расчета, а баг(фича?) ipad.
+               // Смещены элементы со стилем right: 0 и bottom: 0. На небольшом зуме этого смещения нет.
+               right = window.innerWidth - this.getContainer().get(0).getBoundingClientRect().right;
+               this._scrollPager.getContainer().css('right', right);
+            }
          },
          _keyboardHover: function (e) {
             var
@@ -2174,7 +2197,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._scrollPager){
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
-                  this._setScrollPagerPosition();
+                  this._setScrollPagerPositionThrottled();
                }
             }
          },
@@ -2315,6 +2338,7 @@ define('js!SBIS3.CONTROLS.ListView',
                initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
+            this._inScrollContainerControl = this._scrollWatcher.getScrollContainer().hasClass('controls-ScrollContainer__content')
          },
 
          _onTotalScrollHandler: function(event, type){
@@ -3077,6 +3101,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollBinder = null;
             }
             if (this._scrollPager){
+               if (!this._inScrollContainerControl) {
+                  $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
+               }
                dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }

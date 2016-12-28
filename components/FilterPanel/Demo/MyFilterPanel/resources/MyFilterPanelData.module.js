@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/RecordSet'], function(RecordSet) {
+define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/RecordSet', 'js!WS.Data/Source/Memory'], function(RecordSet, Memory) {
    var
       data = [
          {
@@ -29,22 +29,71 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             }
          },
          {
-            caption: 'Поставщики',
+            caption: 'Покупатель',
             expanded: true,
-            id: 'Поставщики',
+            id: 'Покупатель',
             value: [1],
             resetValue: [],
             template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
             properties: {
-               items: new RecordSet({
-                  rawData:[
-                     { id: 1, title: 'ВТБ Капитал, АО', count: 10 },
-                     { id: 2, title: 'НК "Роснефть", ОАО', count: 39 }
+               editor: 'fieldLink',
+               // template: 'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FieldLink/resources/FilterPanelChooserFieldLinkTpl',
+               properties: {
+                  keyField: 'книга',
+                  placeholder: 'Укажите контрагента',
+                  displayField: 'автор',
+                  multiselect: false,
+                  dataSource: new Memory({
+                     data: [
+                        {'книга': 1, 'автор': 'Сергей Лукьяненко', 'Раздел': null, 'Раздел@': true},
+                        {'книга': 1.0, 'автор': 'Сергей Лукьяненко', 'произведение': 'Джамп', 'Раздел': '1', 'Раздел@': null},
+                        {'книга': 1.1, 'автор': 'Сергей Лукьяненко', 'произведение': 'Рыцари сорока островов', 'Раздел': '1', 'Раздел@': null},
+                        {'книга': 1.3, 'автор': 'Сергей Лукьяненко', 'произведение': 'Лабиринт отражений', 'Раздел': '1', 'Раздел@': null},
+                        {'книга': 1.4, 'автор': 'Сергей Лукьяненко', 'произведение': 'Фальшивые зеркала', 'Раздел': '1', 'Раздел@': null},
+                        {'книга': 1.5, 'автор': 'Сергей Лукьяненко', 'произведение': 'Прозрачные витражи', 'Раздел': '1', 'Раздел@': null},
+                        {'книга': 1.6, 'автор': 'Сергей Лукьяненко', 'произведение': 'Спектр', 'Раздел': '1', 'Раздел@': null},
+                        {'книга': 2, 'автор': 'Аркадий и Борис Стругацкие', 'Раздел': null, 'Раздел@': true},
+                        {'книга': 2.0, 'автор': 'Аркадий и Борис Стругацкие', 'произведение': 'Жук в муравейнике', 'Раздел': '2', 'Раздел@': null},
+                        {'книга': 2.1, 'автор': 'Аркадий и Борис Стругацкие', 'произведение': 'Улитка на склоне', 'Раздел': '2', 'Раздел@': null},
+                        {'книга': 2.2, 'автор': 'Аркадий и Борис Стругацкие', 'произведение': 'Трудно быть богом', 'Раздел': '2', 'Раздел@': null},
+                        {'книга': 3, 'автор': 'Стивен Кинг', 'Раздел': null, 'Раздел@': true},
+                        {'книга': 3.0, 'автор': 'Стивен Кинг', 'произведение': 'Лангольеры', 'Раздел': '3', 'Раздел@': null},
+                        {'книга': 3.1, 'автор': 'Стивен Кинг', 'произведение': 'Мобильник', 'Раздел': '3', 'Раздел@': null},
+                        {'книга': 3.2, 'автор': 'Стивен Кинг', 'произведение': 'Сияние', 'Раздел': '3', 'Раздел@': null},
+                        {'книга': 4, 'автор': 'Андрей Белянин', 'произведение': 'Меч без имени', 'Раздел': null, 'Раздел@': null},
+                        {'книга': 5, 'автор': 'Джордж Мартин', 'произведение': 'Песнь льда и пламени', 'Раздел': null, 'Раздел@': null},
+                        {'книга': 6, 'автор': 'Евгений Гуляковский', 'произведение': 'Обратная сторона времени', 'Раздел': null, 'Раздел@': null},
+                        {'книга': 7, 'автор': 'Сергей Волков', 'произведение': 'Стража последнего рубежа', 'Раздел': null, 'Раздел@': null},
+                        {'книга': 8, 'автор': 'Сергей Бадей', 'произведение': 'Свободный полет', 'Раздел': null, 'Раздел@': null},
+                        {'книга': 9, 'автор': 'Андрей Ливадный', 'произведение': 'Грань реальности', 'Раздел': null, 'Раздел@': null},
+                        {'книга': 10, 'автор': 'Джордж Оруэлл', 'произведение': '1984', 'Раздел': null, 'Раздел@': null}
+                     ],
+                     idProperty: 'книга'
+                  }),
+                  dictionaries: [
+                     {
+                        name: 'SelectorDataFieldLink',
+                        template: 'js!SBIS3.CONTROLS.Demo.SelectorDataFieldLink'
+                     }
                   ],
-                  idProperty: 'id'
-               }),
-               editor: 'dictionary',
-               dictionaryTemplate: 'js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate'
+                  dictionaryTemplate: 'js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
+                  list: {
+                     component: 'js!SBIS3.CONTROLS.TreeDataGridView',
+                     options: {
+                        columns: [
+                           { title: 'id', field: 'книга' },
+                           { title: 'ФИО', field: 'автор' },
+                           { title: 'Произведение', field: 'произведение' }
+                        ],
+                        keyField: 'книга',
+                        displayField: 'автор',
+                        hierField: 'Раздел',
+                        itemsActions: [],
+                        footerTpl: '<component data-component="SBIS3.CONTROLS.Link" name="showAllButton"><option name="caption">Показать все</option></component>'
+                     }
+                  },
+                  searchParam: 'автор'
+               }
             }
          },
          {
@@ -113,14 +162,19 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             resetValue: null,
             template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
             properties: {
-               items: new RecordSet({
-                  rawData:[
-                     { id: 'yes', title: 'Оплачено' },
-                     { id: 'no', title: 'Не оплачено' }
-                  ],
-                  idProperty: 'id'
-               }),
-               editor: 'radio'
+               editor: 'radio',
+               properties: {
+                  keyField: 'id',
+                  allowEmptySelection: true,
+                  displayField: 'title',
+                  items: new RecordSet({
+                     rawData: [
+                        {id: 'yes', title: 'Оплачено'},
+                        {id: 'no', title: 'Не оплачено'}
+                     ],
+                     idProperty: 'id'
+                  })
+               }
             }
          }
       ];

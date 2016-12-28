@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
             _options: {
                data: [{
                   keyField : 'key',
-                  displayField: 'title',
+                  displayProperty: 'title',
                   name: 'first',
                   multiselect : false,
                   className: 'controls-DropdownList__withoutCross',
@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   keyField : 'secondKey',
                   multiselect : true,
                   name: 'second',
-                  displayField: 'user',
+                  displayProperty: 'user',
                   dataSource: {
                      module: 'js!WS.Data/Source/Memory',
                      options: {
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                },
                {
                   keyField: 'key',
-                  displayField: 'title',
+                  displayProperty: 'title',
                   name: 'selling',
                   multiselect: false,
                   dataSource: {
