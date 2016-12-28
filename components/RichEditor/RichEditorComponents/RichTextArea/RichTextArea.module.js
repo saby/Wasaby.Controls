@@ -1405,11 +1405,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          _removeEmptyTags: function(text) {
             var
-               temp = $(text);
+               temp = $('<div>' + text + '</div>');
             while ( temp.find(':empty:not(img, iframe)').length) {
                temp.find(':empty:not(img, iframe)').remove();
             }
-            return $('<div></div>').append(temp).html();
+            return temp.html();
          },
 
          /**
