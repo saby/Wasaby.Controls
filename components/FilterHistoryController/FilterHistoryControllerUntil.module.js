@@ -147,7 +147,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          и если это поле есть в переданном массиве сбрасывает элемент структуры к resetValue.
          Почему это требуется: люди используют историю фильтрации, но не хотят сохранять фильтр полностью,
          т.к. некоторые фильтры могут зависеть от определённых условий. Полностью заменять фильтр нельзя, там могут
-         быть уже проставленные фильтр из контекста или прикладным программистом. */
+         быть уже проставленные фильтр из контекста или прикладным программистом.
+         Другого способо до серверной отрисовки пока нет. */
       resetStructureElementsByFilterKeys: function(filterButton, structure, keys) {
          var filterStructure = structure || cFunctions.clone(filterButton.getFilterStructure()),
              bindings = colHelpers.find(filterButton.getProperty('bindings'), function(binding) {
