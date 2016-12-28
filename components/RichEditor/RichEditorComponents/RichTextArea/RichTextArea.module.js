@@ -357,9 +357,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @see getText
           */
          setText: function(text) {
-            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
-            }
             if (text !== this._curValue()) {
                this._drawText(text);
             }
@@ -1614,6 +1611,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                autoFormat = true;
             text =  this._prepareContent(text);
             text = this._replaceSmiles(text);
+            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
+            }
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
