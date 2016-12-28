@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
 
       isScrollOnTop: function(){
          var element = this.getScrollContainer();
-         return element.scrollTop() === 0;
+         return element.scrollTop() <= this._options.totalScrollOffset;
       },
 
       /**

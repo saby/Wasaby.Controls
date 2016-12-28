@@ -2473,7 +2473,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
                this._needScrollCompensation = true;
-               this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
+               this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
             }
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
