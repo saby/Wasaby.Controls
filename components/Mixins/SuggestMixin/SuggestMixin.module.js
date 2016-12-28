@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *     <options name="list">
              *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
              *        <options name="options">
-             *           <option name="keyField" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
+             *           <option name="idProperty" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
              *           <options name="columns" type="array"> <!-- Производим настройку колонок -->
              *              <options>
              *                 <option name="title">№</option>
@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @see listFilter
              * @see getList
              * @see startChar
-             * @see SBIS3.CONTROLS.DSMixin#keyField
+             * @see SBIS3.CONTROLS.DSMixin#idProperty
              * @see SBIS3.CORE.FieldLink/Columns.typedef
              * @see SBIS3.CONTROLS.DataGridView#showHead
              */

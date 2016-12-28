@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
                 captionFullList: 'Все',
                 /**
                  * @cfg {String} Устанавливает поле, в котором лежит количественное значения наименования.
-                 * @see keyField
+                 * @see idProperty
                  * @see displayProperty
                  */
                 countField: 'count'

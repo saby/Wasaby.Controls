@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: this.getItems(),
-               keyField: this._options.keyField,
+               idProperty: this._options.idProperty,
                allowChangeEnable: false,
                displayProperty: 'caption',
                parentProperty: 'parent',

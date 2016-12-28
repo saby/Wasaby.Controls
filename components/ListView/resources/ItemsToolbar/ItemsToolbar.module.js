@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._itemsActions = new ItemActionsGroup({
                 items: this._options.itemsActions,
                 element: $('<div class="controls-ListView__itemActions-container"></div>').prependTo(this._getToolbarContent()),
-                keyField: 'name',
+                idProperty: 'name',
                 parent: this,
                 linkedControl: this.getParent(),
                 touchMode: this._options.touchMode,

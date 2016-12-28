@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.FilterSelect',
              }
              var target = $(e.target).closest('[data-hash]'),
                  model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
-             this._setFilterValue(model.get(this._options.keyField));
+             this._setFilterValue(model.get(this._options.idProperty));
           },
 
           _setFilterValue: function(value) {

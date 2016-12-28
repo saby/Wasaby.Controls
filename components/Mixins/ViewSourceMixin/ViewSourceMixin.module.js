@@ -94,11 +94,11 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             view.setFilter(queryFilter, true);
 
             queryDef.addCallback(function(dataSet) {
-               var keyField = view.getProperty('keyField'),
+               var idProperty = view.getProperty('idProperty'),
                    recordSet;
 
-               if (keyField && keyField !== dataSet.getIdProperty()) {
-                  dataSet.setIdProperty(keyField);
+               if (idProperty && idProperty !== dataSet.getIdProperty()) {
+                  dataSet.setIdProperty(idProperty);
                }
 
                recordSet = dataSet.getAll();

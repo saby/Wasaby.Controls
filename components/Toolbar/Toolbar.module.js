@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             //отображать только в списке, не в меню
             TOOLBAR: 2
          },
-         getSubItems = function(key, arrKeys, itemsCollection, keyField, parentProperty) {
+         getSubItems = function(key, arrKeys, itemsCollection, idProperty, parentProperty) {
             if (!key) {
                return [];
             }
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             if (itemsToSubItems.hasOwnProperty(key)) {
                items = itemsToSubItems[key];
                for (var i = 0; i < items.length; i++) {
-                  curItems = getSubItems(items[i][keyField], arrKeys);
+                  curItems = getSubItems(items[i][idProperty], arrKeys);
                   subItems.push.apply(subItems, curItems);
                }
                //добавляем к элементам полученные подпункты
@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             tplOptions.hierField = cfg.parentProperty;
             tplOptions.parentProperty = cfg.parentProperty;
             tplOptions.items = cfg.items;
-            tplOptions.keyField = cfg.keyField;
+            tplOptions.keyField = cfg.idProperty;
+            tplOptions.idProperty = cfg.idProperty;
 
             return tplOptions;
          };
