@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemo', // Устанавливаем и�
       'js!SBIS3.CONTROLS.FieldLink.Link',
       'js!SBIS3.CONTROLS.Link',
       'js!SBIS3.CONTROLS.Action.SelectorAction'
+      'js!SBIS3.CONTROLS.SuggestView'
    ],
    function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
       CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js

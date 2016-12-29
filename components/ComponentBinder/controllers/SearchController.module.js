@@ -302,6 +302,14 @@ define('js!SBIS3.CONTROLS.SearchController',
                event.preventDefault();
             }
          });
+      },
+
+      /**
+       * Устанавливает имя параметра поиска
+       * @param {String} name имя параметра поиска
+       */
+      setSearchParamName: function(name) {
+         this._options.searchParamName = name;
       }
 
    });
