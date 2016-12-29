@@ -952,7 +952,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _smileHtml: function(smile, name, alt) {
-            return '<span class="ws-smile controls-RichEditor__noneditable">&#' + smile.code + ';</span>';
+            return '<span class="ws-smile controls-RichEditor__noneditable">&#' + smile.code + ';</span>&shy;';
          },
 
          /**
