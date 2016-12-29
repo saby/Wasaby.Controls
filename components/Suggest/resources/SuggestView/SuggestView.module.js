@@ -118,17 +118,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
           },
 
           $constructor: function() {
-             var self = this;
              /* Метод, прокидывающий события из view */
              this._notifyDelegatedEvents = this._notifyDelegatedEvents.bind(this);
-
-             /* Чтобы просто не дублировать каждый метод интерфейса,
-                просто пробежимся по списку методов, и создадим их */
-             cHelpers.forEach(DELEGATED_METHODS, function(key) {
-                self[key] = function() {
-                   return self._activeView[key].apply(self._activeView, arguments);
-                }
-             })
           },
 
           init: function() {
@@ -212,7 +203,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           _modifyOptions: function() {
              var opts = SuggestView.superclass._modifyOptions.apply(this, arguments);
-             if(opts.tabControlItems.length === 1) {
+             if(opts.items.length === 1) {
                 opts.className += ' controls-suggestView__singleTab';
              }
              return opts;
@@ -240,7 +231,71 @@ define('js!SBIS3.CONTROLS.SuggestView',
            */
           getTabControl: function() {
              return this._tabControl;
+          },
+
+          //region SBIS3.CONTROLS.IItemsControl
+
+          getItems: function() {
+             return this.getActiveView().getItems();
+          },
+
+          setItems: function(items) {
+             this.getActiveView().setItems(items);
+          },
+
+          setFilter: function(filter, noLoad) {
+             this.getActiveView().setFilter(filter, noLoad);
+          },
+
+          getFilter: function(filter, noLoad) {
+             this.getActiveView().getFilter();
+          },
+
+          setSorting: function(sorting, noLoad) {
+             this.getActiveView().setSorting(sorting, noLoad);
+          },
+
+          getSorting: function() {
+             return this.getActiveView().getSorting();
+          },
+
+          reload: function() {
+             this.getActiveView().reload();
+          },
+
+          setDataSource: function(dataSource, noLoad) {
+             this.getActiveView().getDataSource(dataSource, noLoad);
+          },
+
+          getDataSource: function() {
+             return this.getActiveView().getDataSource();
+          },
+
+          _hasNextPage: function(hasMore, offset) {
+             return this.getActiveView()._hasNextPage(hasMore, offset);
+          },
+
+          //endregion SBIS3.CONTROLS.IItemsControl
+
+          //region SBIS3.CONTROLS.DecorableMixin
+
+          setHighlightText: function(text) {
+             this.getActiveView().setHighlightText(text);
+          },
+
+          setHighlightEnabled: function(enabled) {
+             this.getActiveView().setHighlightEnabled(enabled);
+          },
+
+          //endregion SBIS3.CONTROLS.DecorableMixin
+
+          //region SBIS3.CONTROLS.ListView
+
+          setInfiniteScroll: function(type, noLoad) {
+             this.getActiveView().setInfiniteScroll(type, noLoad);
           }
+
+          //endregion SBIS3.CONTROLS.ListView
        });
 
        return SuggestView;
