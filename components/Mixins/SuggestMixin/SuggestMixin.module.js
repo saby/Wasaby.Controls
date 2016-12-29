@@ -547,7 +547,15 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          this.subscribeTo(this._list, 'onDataLoad', this._onListDataLoad.bind(this))
              .subscribeTo(this._list, 'onItemsReady', this._onListDataLoad.bind(this))
-             .subscribeTo(this._list, 'onDataLoadError', this._hideLoadingIndicator.bind(this))
+             .subscribeTo(this._list, 'onDataLoadError', function() {
+                self._hideLoadingIndicator();
+                /* https://inside.tensor.ru/opendoc.html?guid=700c5bec-d003-4489-ab94-e14df6ee16fb&des=
+                   Ошибка в разработку 27.12.2016 Не закрывается сообщение "о недоступном сервисе сообщений" в реестре Мои/Общие, если открыть…
+
+                   При возниконовении ошибки отключаем отображение автодополнения по приходу фокуса,
+                   иначе будет зацикливание и интерфейс заблокируется.*/
+                self.setAutoShow(false);
+             })
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
                 self.setActive(true);
