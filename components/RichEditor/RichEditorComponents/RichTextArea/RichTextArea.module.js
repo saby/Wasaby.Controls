@@ -357,9 +357,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @see getText
           */
          setText: function(text) {
-            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
-            }
             if (text !== this._curValue()) {
                this._drawText(text);
             }
@@ -1408,11 +1405,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          _removeEmptyTags: function(text) {
             var
-               temp = $(text);
+               temp = $('<div>' + text + '</div>');
             while ( temp.find(':empty:not(img, iframe)').length) {
                temp.find(':empty:not(img, iframe)').remove();
             }
-            return $('<div></div>').append(temp).html();
+            return temp.html();
          },
 
          /**
@@ -1614,6 +1611,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                autoFormat = true;
             text =  this._prepareContent(text);
             text = this._replaceSmiles(text);
+            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
+            }
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
