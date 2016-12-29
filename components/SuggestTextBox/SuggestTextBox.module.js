@@ -106,6 +106,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                 list = this.getList(),
                 listItems = list.getItems();
 
+            self.hidePicker();
             /* В событии onDataLoad момент нельзя показывать пикер т.к. :
              1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
              2) Данных в рекордсете ещё нет.
