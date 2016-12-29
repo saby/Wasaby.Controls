@@ -348,9 +348,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyUpBind: function(event) {
-         var newText = this._inputField.val(),
-            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
-         if (this._options.text !== newText && !textsEmpty){
+         var newText = this._inputField.val();
+         if (this._options.text !== newText){
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
