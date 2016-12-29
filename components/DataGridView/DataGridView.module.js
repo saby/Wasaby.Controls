@@ -548,18 +548,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   trs.push(this.getTHead()[0].children[0]);
                }
 
-               if(this._checkResults()) {
-                  /* Т.к. в момент синхронизации состояния и реального дома (а эта фаза может быть асинхронной),
-                     может сработать обработчик ховера, надо дополнительно проверить наличие элемента в доме.
-                     В vDom мы будем манипулировать состоянием, которое уже будет проецироваться на дом, так
-                     что там такой проблемы не будет. */
-                  resultTr = this._getResultsContainer().find('.controls-DataGridView__results')[0];
-
-                  if(resultTr) {
-                     trs.push(resultTr);
-                  }
-               }
-
                for(var i = 0, len = trs.length; i < len; i++) {
                   cell = trs[i].children[index];
                   if(cell) {
@@ -1275,8 +1263,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _getGroupTpl : function(){
          return this._options.groupBy.template || groupByTpl;
       },
-      _drawResults: function() {
-        //Заглушка, в DataGridView строка итогов отрисовывается вместе с данными
+      _redrawResults: function() {
+        if (this._options.resultsPosition !== 'none'){
+           this._redrawTheadAndTfoot();
+        }
       },
       destroy: function() {
          if (this.hasPartScroll()) {
