@@ -370,7 +370,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                id: id,
                item: item,
                hierField : this._options.parentProperty,
-               parentProperty: this._options.parentProperty
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             };
 
          this._notify('onItemActivate', meta);
