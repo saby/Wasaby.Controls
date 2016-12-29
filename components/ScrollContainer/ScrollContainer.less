@@ -21,7 +21,7 @@
 
 .controls-ScrollContainer__content {
    position: relative;
-   overflow-y: auto;
+   overflow-y: scroll;
    height: 100%;
    max-height: inherit;
    min-width: inherit;
@@ -54,6 +54,12 @@
       &::-webkit-scrollbar {
          width: auto!important;
       }
+   }
+}
+
+.ws-is-ie {
+   .controls-ScrollContainer__content {
+      overflow-y: auto;
    }
 }
 
