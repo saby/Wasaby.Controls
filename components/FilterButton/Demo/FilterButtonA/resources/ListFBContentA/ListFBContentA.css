@@ -1,0 +1,31 @@
+.docs-ListFBContentA {
+  width: 300px;
+}
+
+.docs-ListFBContentA__span {
+  float: left;
+  width: 130px;
+  color: #2f4073;
+  font-style: normal;
+  font-weight: bold;
+}
+
+.docs-ListFBContentA__text {
+  width: 100px;
+  float: left;
+}
+
+.docs-ListFBContentA__text-box {
+  width: 250px;
+  float: left;
+  text-align: left;
+  color: black;
+}
+
+.docs-ListFBContentA__filterGenreName {
+  width: 300px;
+  height: 25px;
+  float: left;
+  text-align: left;
+  color: black;
+}
