@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
                  * Например, если задали &lt;opt name=&quot;tabsDisplayField&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
                  * Если задали &lt;opt name=&quot;keyField&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
                  */
-                tabControlItems: [],
+                items: [],
                 /**
                  * @cfg {String} Устанавливает идентификатор выбранной вкладки.
                  * @remark
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
                  * @see keyField
                  * @see items
                  */
-                tabsDisplayField: null,
+                displayField: null,
                 /**
                  * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
                  * @remark
