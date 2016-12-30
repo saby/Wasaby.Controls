@@ -12,6 +12,26 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/helpers/functional-helpers"
 ], function( ParallelDeferred, cHelpers, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
 
+   var EMPTY_SELECTION = [null],
+       onCollectionItemChangeSelected = function(eventObject, item, index, property) {},
+       convertToKeys = function(list, keyField) {
+          var keys = [],
+             key;
+
+          if (list) {
+             list.each(function (rec) {
+                key = rec.get(keyField || this._options.keyField);
+
+                if (key === undefined) {
+                   throw new Error(this._moduleName + ': record key is undefined.')
+                }
+
+                keys.push(key);
+             }.bind(this));
+          }
+
+          return keys;
+       };
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MultiSelectable
@@ -195,9 +215,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                this._checkNewItemsFormat(this.getItems());
             })
          },
-         init: function() {
-            if (this._options.selectedItems) {
-               this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
+         _modifyOptions: function(opts) {
+            if (opts.selectedItems) {
+               opts.selectedKeys = convertToKeys(opts.selectedItems, opts.keyField);
             }
          }
       },
@@ -914,32 +934,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @returns {Array}
        * @private
        */
-      _convertToKeys: function(list) {
-         var keys = [],
-             key;
-
-         if (list) {
-            list.each(function (rec) {
-               key = rec.get(this._options.idProperty);
-
-               if (key === undefined) {
-                  throw new Error(this._moduleName + ': record id is undefined.')
-               }
-
-               keys.push(key);
-            }.bind(this));
-         }
-
-         return keys;
-      }
+      _convertToKeys: convertToKeys
    };
 
-   var EMPTY_SELECTION = [null];
-
-   var
-      onCollectionItemChangeSelected = function(eventObject, item, index, property) {
-
-      };
    return MultiSelectable;
 
 });
