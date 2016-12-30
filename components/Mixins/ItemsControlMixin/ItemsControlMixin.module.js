@@ -2109,9 +2109,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   projItem = this._options._itemsProjection.getItemBySourceItem(items[i]);
                }
 
-               this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
-               if (curAt && curAt.at) {
-                  curAt.at++;
+               //старая отрисовка, если не нашли элемент в проекции, то и не надо его рисовать
+               if (projItem) {
+                  this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
+                  if (curAt && curAt.at) {
+                     curAt.at++;
+                  }
                }
             }
             this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
