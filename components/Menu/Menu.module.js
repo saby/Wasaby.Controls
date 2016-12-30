@@ -75,8 +75,8 @@ define('js!SBIS3.CONTROLS.Menu', [
         *      </options>
         * </pre>
         * @see displayProperty
-        * @see keyField
-        * @see hierField
+        * @see idProperty
+        * @see parentRproperty
         * @see onMenuItemActivate
         */
 

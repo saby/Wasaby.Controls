@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 * @example
                 * <pre>
                 *    items: [{
-                *       keyField : 'key',    //Имя поля с ключом из списка значений values
+                *       idProperty : 'key',    //Имя поля с ключом из списка значений values
                 *       displayProperty: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 *    ]
                 *  }]
                 * </pre>
-                * @see keyField
+                * @see idProperty
                 * @see displayProperty
                 * @see setDataSource
                 * @see getDataSet
