@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
           if (list) {
              list.each(function (rec) {
-                key = rec.get(keyField || this._options.keyField);
+                key = rec.get(keyField || this._options.idProperty);
 
                 if (key === undefined) {
                    throw new Error(this._moduleName + ': record key is undefined.')
