@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          }
          this._itemsProjection = new TreeProjection({
             collection: items,
-            idProperty: this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+            idProperty: this._options.idProperty || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
             unique: true,
@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
 
       //Рекурсивно удаляем из индекса открытых узлов все дочерние узлы закрываемого узла
       _collapseChilds: function(key){
-         var idProperty =  this._options.keyField || (this._dataSource ? this._dataSource.getIdProperty() : ''),
+         var idProperty =  this._options.idProperty || (this._dataSource ? this._dataSource.getIdProperty() : ''),
             hierarchy = this._getHierarchyRelation(idProperty),
             children = hierarchy.getChildren(key, this._items),
             childId;

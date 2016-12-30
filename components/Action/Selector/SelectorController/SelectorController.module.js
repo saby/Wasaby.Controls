@@ -86,10 +86,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           /**
            * Обрабатываем изменение выделения
            * @param difference
-           * @param keyField
+           * @param idProperty
            * @private
            */
-          _selectorWrapperSelectionChanged: function(difference, keyField) {
+          _selectorWrapperSelectionChanged: function(difference, idProperty) {
              var currentItems = this._options.selectedItems,
                  self = this;
 
@@ -101,14 +101,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              if(difference.removed.length) {
                 collectionHelpers.forEach(difference.removed, function (removedKey) {
-                   currentItems.removeAt(currentItems.getIndexByValue(keyField, removedKey));
+                   currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
                 });
                 onChangeSelection();
              }
 
              if(difference.added.length) {
                 collectionHelpers.forEach(difference.added, function(item) {
-                   var index = currentItems.getIndexByValue(keyField, item.get(keyField));
+                   var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
 
                    if(index === -1) {
                       currentItems.add(item);

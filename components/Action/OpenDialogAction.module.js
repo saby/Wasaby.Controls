@@ -260,6 +260,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
             }).addErrback(function(error){
                //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
                if (!error._isOfflineMode){
+                  //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
+                  error.processed = true;
                   InformationPopupManager.showMessageDialog({
                      message: error.message,
                      status: 'error'

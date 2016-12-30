@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
     * @public
     */
 
-   var FilterDropdown = DropdownList.extend([], {
+   var FilterDropdown = DropdownList.extend([],/** @lends SBIS3.CONTROLS.FilterDropdown.prototype */ {
       $protected: {
          _options: {
             /**

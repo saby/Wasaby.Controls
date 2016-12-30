@@ -96,6 +96,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._savingDeferred = Deferred.success();
             },
 
+            /**
+             * Возвращает признак валидности данных изменяемой записи
+             * @returns {boolean|*}
+             */
+            isValidChanges: function() {
+               // Данные считаются валидными, если изменений не было (на это указывает признак наличия операции ожидания) или валидация вернула true
+               return !this._pendingOperation || this.validate();
+            },
+
             isEdit: function() {
                return this._eip && this._eip.isEdit();
             },

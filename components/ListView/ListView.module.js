@@ -889,7 +889,7 @@ define('js!SBIS3.CONTROLS.ListView',
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
                showPages: false,
-               keyField: 'id',
+               idProperty: 'id',
                parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
@@ -1734,7 +1734,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
          validate: function() {
-            var editingIsValid = !(this.isEdit() && !this._getEditInPlace().validate());
+            var editingIsValid = !this.isEdit() || this._getEditInPlace().isValidChanges();
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
@@ -2473,7 +2473,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
                this._needScrollCompensation = true;
-               this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
+               this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
             }
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
@@ -2854,49 +2854,56 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if(pageNumber == -1){
-               this._setLastPage();
-               return;
-            }
-            if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
-               if (this._getItemsProjection() && this._getItemsProjection().getCount()){
-                  var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                     itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
-                     item = this.getItems().getRecordById(itemId);
-                  this.scrollToItem(item);
-               }
+               this._setLastPage(noLoad);
             } else {
-               this._offset = this._options.pageSize * pageNumber;
-               this._scrollOffset.top = this._offset;
-               this._scrollOffset.bottom = this._offset;
-               if (!noLoad && this._offset !== offset) {
-                  /* При смене страницы (не через подгрузку по скролу),
-                     надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
-                  this.setSelectedIndex(-1);
-                  this.reload();
+               if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
+                  if (this._getItemsProjection() && this._getItemsProjection().getCount()){
+                     var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
+                        itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
+                        item = this.getItems().getRecordById(itemId);
+                     this.scrollToItem(item);
+                  }
+               } else {
+                  this._offset = this._options.pageSize * pageNumber;
+                  this._scrollOffset.top = this._offset;
+                  this._scrollOffset.bottom = this._offset;
+                  if (!noLoad && this._offset !== offset) {
+                     /* При смене страницы (не через подгрузку по скролу),
+                        надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
+                     this.setSelectedIndex(-1);
+                     this.reload();
+                  }
                }
             }
             this._notify('onPageChange', pageNumber);
          },
 
-         _setLastPage: function(){
+         _setLastPage: function(noLoad){
             var more = this.getItems() ? this.getItems().getMetaData().more : false,
                pageNumber;
-            if (typeof more == 'number'){
-               pageNumber = more / this._options.pageSize;
-            } else {
+            this._setInfiniteScrollState('up');
+
+            var onLastPageSet = function(items){
+               more = items.getMetaData().more;
                this._lastPageLoaded = true;
-               this._setInfiniteScrollState('up');
-               this.reload(undefined, undefined, -1).addCallback(function(items){
-                  more = items.getMetaData().more;
-                  if (typeof more == 'number'){
-                     pageNumber = Math.floor(more / this._options.pageSize);
-                     this._scrollOffset.bottom = more;
-                     this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
-                     this._scrollOffset.top = more - items.getCount();
-                     this.setPage(pageNumber, true);
-                     this._scrollWatcher.scrollTo('bottom');
-                  }
-               }.bind(this));
+               if (typeof more == 'number'){
+                  pageNumber = Math.floor(more / this._options.pageSize);
+                  this._scrollOffset.bottom = more;
+                  // TODO: зачем это?
+                  this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
+                  this._scrollOffset.top = more - items.getCount();
+                  this.setPage(pageNumber, true);
+                  this._scrollWatcher.scrollTo('bottom');
+               }
+            }.bind(this);
+
+            if (noLoad){
+               this._offset = -1;
+               this.once('onDataLoad', function(event, items){
+                  onLastPageSet(items);
+               });
+            } else {
+               this.reload(undefined, undefined, -1).addCallback(onLastPageSet);
             }
          },
 

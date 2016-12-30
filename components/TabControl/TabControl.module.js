@@ -47,14 +47,14 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @remark
              * Для настройки содержимого вкладок и областей нужно учитывать, что задано в опциях {@link tabsDisplayProperty} и {@link selectedKey}.
              * Например, если задали &lt;opt name=&quot;tabsDisplayProperty&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
-             * Если задали &lt;opt name=&quot;keyField&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
+             * Если задали &lt;opt name=&quot;idProperty&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
              */
             items: null,
             /**
              * @cfg {String} Устанавливает идентификатор выбранного элемента.
              * @remark
-             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
-             * @see SBIS3.CONTROLS.DSMixin#keyField
+             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля} элемента коллекции.
+             * @see SBIS3.CONTROLS.DSMixin#idProperty
              */
             selectedKey: null,
             /**
@@ -68,22 +68,27 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * <pre class="brush:xml">
              *     <option name="tabsDisplayProperty">caption</option>
              * </pre>
-             * @see keyField
+             * @see idProperty
              * @see items
              */
             tabsDisplayProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
+             * @deprecated
+             */
+            keyField: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента {@link selectedKey}.
              * @example
              * <pre class="brush:xml">
-             *     <option name="keyField">id</option>
+             *     <option name="idProperty">id</option>
              * </pre>
              * @see items
-             * @see displayField
+             * @see displayProperty
              */
-            keyField: null,
+            idProperty: null,
             /**
              * @cfg {Content} Устанавливает содержимое между вкладками.
              * @example
@@ -126,6 +131,10 @@ define('js!SBIS3.CONTROLS.TabControl', [
       },
 
       _modifyOptions: function(cfg){
+         if (cfg.keyField) {
+            IoC.resolve('ILogger').log('TabControl', 'Опция keyField является устаревшей, используйте idProperty');
+            cfg.idProperty = cfg.keyField;
+         }
          if (cfg.tabsDisplayField) {
             IoC.resolve('ILogger').log('TabControl', 'Опция tabsDisplayField является устаревшей, используйте tabsDisplayProperty');
             cfg.tabsDisplayProperty = cfg.tabsDisplayField;

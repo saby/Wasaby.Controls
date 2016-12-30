@@ -70,13 +70,15 @@ define('js!SBIS3.CONTROLS.HistoryList',
          //region WS.Data/Collection/IList
 
          prepend: function (item) {
-            this._addItemWithMethod('prepend', item);
-            this.saveHistory();
+            if(this._addItemWithMethod('prepend', item)) {
+               this.saveHistory();
+            }
          },
 
          append: function(item) {
-            this._addItemWithMethod('append', item);
-            this.saveHistory();
+            if(this._addItemWithMethod('append', item)) {
+               this.saveHistory();
+            }
          },
 
          assign: function(items) {
@@ -90,8 +92,10 @@ define('js!SBIS3.CONTROLS.HistoryList',
          },
 
          clear: function() {
-            this.getHistory().clear();
-            this.saveHistory();
+            if(this.getCount()) {
+               this.getHistory().clear();
+               this.saveHistory();
+            }
          },
 
          remove: function(item) {
@@ -170,13 +174,15 @@ define('js!SBIS3.CONTROLS.HistoryList',
           */
          _addItemWithMethod: function(method, item) {
             var historyList = this.getHistory(),
-                index = this._getIndex(item);
+                index = this._getIndex(item),
+                changed = false;
 
             item = prepareItem(item);
 
-            if(index !== -1) {
+            if(index !== -1 && index !== 0) {
                historyList.prepend([item]);
                historyList.removeAt(index + 1);
+               changed = true;
             }
 
             if(index === -1) {
@@ -184,7 +190,10 @@ define('js!SBIS3.CONTROLS.HistoryList',
                   historyList.removeAt(this._options.maxLength - 1);
                }
                historyList[method]([item]);
+               changed = true;
             }
+
+            return changed;
          }
 
          //endregion Protected methods

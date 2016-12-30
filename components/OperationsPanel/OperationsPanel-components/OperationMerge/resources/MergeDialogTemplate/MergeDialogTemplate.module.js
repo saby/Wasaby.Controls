@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self = this,
                 isAvailable,
                 showMergeButton,
-                keyField = this._options.keyField,
+               idProperty = this._options.idProperty,
                 items = this._treeView.getItems();
             this._treeView._toggleIndicator(true);
             this._options.dataSource.call(this._options.testMergeMethodName, {
@@ -153,8 +153,8 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 'merged': this._getMergedKeys(key)
             }).addCallback(function (data) {
                 data.getAll().each(function(rec) {
-                    record = items.getRecordById(rec.get(keyField));
-                    if (rec.get(keyField) == key) {
+                    record = items.getRecordById(rec.get(idProperty));
+                    if (rec.get(idProperty) == key) {
                         isAvailable = true;
                     } else {
                         isAvailable = rec.get(AVAILABLE_FIELD_NAME);

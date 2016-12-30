@@ -39,9 +39,9 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
                editor: 'fieldLink',
                // template: 'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FieldLink/resources/FilterPanelChooserFieldLinkTpl',
                properties: {
-                  keyField: 'книга',
+                  idProperty: 'книга',
                   placeholder: 'Укажите контрагента',
-                  displayField: 'автор',
+                  displayProperty: 'автор',
                   multiselect: false,
                   dataSource: new Memory({
                      data: [
@@ -85,8 +85,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
                            { title: 'ФИО', field: 'автор' },
                            { title: 'Произведение', field: 'произведение' }
                         ],
-                        keyField: 'книга',
-                        displayField: 'автор',
+                        idProperty: 'книга',
+                        displayProperty: 'автор',
                         hierField: 'Раздел',
                         itemsActions: [],
                         footerTpl: '<component data-component="SBIS3.CONTROLS.Link" name="showAllButton"><option name="caption">Показать все</option></component>'
@@ -164,9 +164,9 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             properties: {
                editor: 'radio',
                properties: {
-                  keyField: 'id',
+                  idProperty: 'id',
                   allowEmptySelection: true,
-                  displayField: 'title',
+                  displayProperty: 'title',
                   items: new RecordSet({
                      rawData: [
                         {id: 'yes', title: 'Оплачено'},

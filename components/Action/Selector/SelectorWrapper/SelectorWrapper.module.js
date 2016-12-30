@@ -77,14 +77,14 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          function onSelectionChanged() {
             var selectedItems = linkedObject.getSelectedItems(),
-                keyField = linkedObject.getProperty('keyField'),
+               idProperty = linkedObject.getProperty('idProperty'),
                 index;
 
             if(diff.added.length) {
                collectionHelpers.forEach(diff.added, function(addedKey) {
                   /* Записи с выделенным ключём может не быть в recordSet'e
                    (например это запись внутри папки или на другой странице) */
-                  index = selectedItems.getIndexByValue(keyField, addedKey);
+                  index = selectedItems.getIndexByValue(idProperty, addedKey);
 
                   if(index !== -1) {
                      result.added.push(selectedItems.at(index));
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                result.removed = diff.removed;
             }
 
-            self.sendCommand('selectorWrapperSelectionChanged', result, keyField);
+            self.sendCommand('selectorWrapperSelectionChanged', result, idProperty);
          }
 
          if(linkedObject.getItems()) {
@@ -189,11 +189,11 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          var self = this,
              keys = [],
              linkedObject = this._getLinkedObject(),
-             keyField = linkedObject.getProperty('keyField');
+            idProperty = linkedObject.getProperty('idProperty');
 
          items.each(function(rec) {
             if(self._options.selectedFilter(rec)) {
-               keys.push(rec.get(keyField));
+               keys.push(rec.get(idProperty));
             }
          });
 

@@ -166,16 +166,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    canServerRenderOther = function(cfg) {
       return !cfg.itemTemplate;
    },
-   findKeyField  = function(json){
+   findIdProperty  = function(json){
       var itemFirst = json[0];
       if (itemFirst) {
          return Object.keys(json[0])[0];
       }
    },
-   JSONToRecordset  = function(json, keyField) {
+   JSONToRecordset  = function(json, idProperty) {
       return new RecordSet({
          rawData : json,
-         idProperty : keyField
+         idProperty : idProperty
       })
    },
    extendedMarkupCalculate = function(markup, cfg) {
@@ -298,11 +298,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
+             * @deprecated
+             */
+            keyField : null,
+            /**
+             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента.
              * @example
              * <pre class="brush:xml">
-             *     <option name="keyField">Идентификатор</option>
+             *     <option name="idProperty">Идентификатор</option>
              * </pre>
              * @see items
              * @see displayProperty
@@ -311,7 +316,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
-            keyField : null,
+            idProperty : null,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @deprecated
@@ -327,7 +332,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
              * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
              * которого нужно отобразить в выпадающем списке.
-             * @see keyField
+             * @see idProperty
              * @see items
              * @see setDataSource
              */
@@ -359,7 +364,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               * </pre>
               * @see setItems
               * @see getDataSet
-              * @see keyField
+              * @see idProperty
               * @see displayProperty
               * @see parentProperty
               * @see dataSource
@@ -589,6 +594,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                IoC.resolve('ILogger').log('ItemsControl', 'Опция displayField является устаревшей, используйте displayProperty');
                cfg.displayProperty = cfg.displayField;
             }
+            if (cfg.keyField) {
+               IoC.resolve('ILogger').log('ItemsControl', 'Опция keyField является устаревшей, используйте idProperty');
+               cfg.idProperty = cfg.keyField;
+            }
             var newCfg = parentFnc.call(this, cfg), proj, items;
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
@@ -596,12 +605,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   newCfg._items = parsedCfg._items;
                } else {
                   if (newCfg.items instanceof Array) {
-                     if (!newCfg.keyField) {
-                        var key = findKeyField(newCfg.items);
-                        newCfg.keyField = key;
-                        parsedCfg.keyField = key;
+                     if (!newCfg.idProperty) {
+                        var key = findIdProperty(newCfg.items);
+                        newCfg.idProperty = key;
+                        parsedCfg.idProperty = key;
                      }
-                     items = JSONToRecordset(cfg.items, newCfg.keyField);
+                     items = JSONToRecordset(cfg.items, newCfg.idProperty);
                      newCfg._items = items;
                      parsedCfg._items = items;
                   }
@@ -645,7 +654,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
-         this._checkKeyField();
+         this._checkIdProperty();
          this._bindHandlers();
          this._prepareItemsConfig();
 
@@ -681,14 +690,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
                IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
             }
-            if (!this._options.keyField) {
-               this._options.keyField = findKeyField(this._options.items)
+            if (!this._options.idProperty) {
+               this._options.idProperty = findIdProperty(this._options.items)
             }
 
             /*TODO опасная правка. Суть: Некоторые вместе с массивом задают сорс, а мы затираем переданный сорс
             * смотрим если сорс уже задан, то итемы просто превращаем в рекордсет, а сорс оставляем*/
             if (this._dataSource) {
-               this._options._items = JSONToRecordset(this._options.items, this._options.keyField);
+               this._options._items = JSONToRecordset(this._options.items, this._options.idProperty);
                this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
                this._setItemsEventHandlers();
@@ -698,7 +707,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._dataSource = new MemorySource({
                   data: this._options.items,
-                  idProperty: this._options.keyField
+                  idProperty: this._options.idProperty
                });
             }
          }
@@ -712,10 +721,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if (itemsOpt) {
             if (itemsOpt instanceof Array) {
-               if (!this._options.keyField) {
-                  this._options.keyField = findKeyField(itemsOpt);
+               if (!this._options.idProperty) {
+                  this._options.idProperty = findIdProperty(itemsOpt);
                }
-               this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
+               this._options._items = JSONToRecordset(itemsOpt, this._options.idProperty);
             }
             else {
                this._options._items = itemsOpt;
@@ -731,17 +740,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._itemsReadyCallback();
          }
 
-         this._checkKeyField();
+         this._checkIdProperty();
       },
 
-      _checkKeyField: function() {
-         if (this._options.keyField) {
+      _checkIdProperty: function() {
+         if (this._options.idProperty) {
             return;
          }
 
          var items = this.getItems();
          if (items && items.getIdProperty) {
-            IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
+            IoC.resolve('ILogger').info('ItemsControl', 'Option idProperty is undefined in control ' + this.getName());
          }
       },
 
@@ -1454,7 +1463,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self.redraw();
                    }
 
-                   self._checkKeyField();
+                   self._checkIdProperty();
 
                    this._dataLoadedCallback();
                    //self._notify('onBeforeRedraw');
@@ -1499,8 +1508,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var query = this._getQueryForCall(filter, sorting, offset, limit);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
-            if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
-               dataSet.setIdProperty(this._options.keyField);
+            if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(this._options.idProperty);
             }
             return dataSet.getAll();
          }).bind(this));
@@ -1647,7 +1656,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * Устанавливает новый набор элементов коллекции.
         * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
-        * Для списка устанавливаем набор данных из трёх записей. Опция keyField установлена в значение id, а hierField - parent.
+        * Для списка устанавливаем набор данных из трёх записей. Опция idProperty установлена в значение id, а parentProperty - parent.
         * <pre>
         *     myView.setItems([
         *        {
@@ -1682,12 +1691,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              if (this._options.pageSize && (items.length > this._options.pageSize)) {
                 IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
              }
-             if (!this._options.keyField) {
-                this._options.keyField = findKeyField(this._options.items)
+             if (!this._options.idProperty) {
+                this._options.idProperty = findIdProperty(this._options.items)
              }
              this._dataSource = new MemorySource({
                 data: this._options.items,
-                idProperty: this._options.keyField
+                idProperty: this._options.idProperty
              });
           }
           this.redraw();
@@ -1971,17 +1980,26 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /**
        * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @deprecated
+       */
+      setKeyField: function(keyField) {
+         IoC.resolve('ILogger').log('ItemsControl', 'Метод setKeyField устарел, используйте setIdProperty');
+         this.setIdProperty(keyField);
+      },
+
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @example
        * <pre class="brush:xml">
-       *     <option name="keyField">Идентификатор</option>
+       *     <option name="idProperty">Идентификатор</option>
        * </pre>
        * @see items
        * @see displayProperty
        * @see setDataSource
-       * @param {String} keyField
+       * @param {String} idProperty
        */
-      setKeyField: function(keyField) {
-         this._options.keyField = keyField;
+      setIdProperty: function(idProperty) {
+         this._options.idProperty = idProperty;
       },
 
       /**
@@ -2003,7 +2021,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
        * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
        * которого нужно отобразить.
-       * @see keyField
+       * @see idProperty
        * @see items
        * @see setDataSource
        * @param {String} displayProperty
@@ -2109,9 +2127,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   projItem = this._options._itemsProjection.getItemBySourceItem(items[i]);
                }
 
-               this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
-               if (curAt && curAt.at) {
-                  curAt.at++;
+               //старая отрисовка, если не нашли элемент в проекции, то и не надо его рисовать
+               if (projItem) {
+                  this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
+                  if (curAt && curAt.at) {
+                     curAt.at++;
+                  }
                }
             }
             this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
