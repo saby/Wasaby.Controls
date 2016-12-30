@@ -725,7 +725,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var self = this;
          if (self._picker._options.target){
             this._picker.getContainer().css({
-               'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+               'min-width': self._picker._options.target.outerWidth()
             });
          }
       },
