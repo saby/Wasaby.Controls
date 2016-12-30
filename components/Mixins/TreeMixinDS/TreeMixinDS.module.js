@@ -148,8 +148,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          this._itemsProjection = new TreeProjection({
             collection: items,
             idProperty: this._options.idProperty || (this._dataSource ? this._dataSource.getIdProperty() : ''),
-            parentProperty: this._options.hierField,
-            nodeProperty: this._options.hierField + '@',
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty,
             unique: true,
             root: root
          });
@@ -158,8 +158,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
       _getHierarchyRelation: function(idProperty) {
          return new HierarchyRelation({
             idProperty: idProperty || (this._items ? this._items.getIdProperty() : ''),
-            parentProperty: this._options.hierField,
-            nodeProperty: this._options.hierField + '@'
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty
          });
       },
 
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          if (this._options.expand) {
             this.hierIterate(this._items, function (record) {
                if (self._options.displayType == 'folders') {
-                  if (record.get(self._options.hierField + '@')) {
+                  if (record.get(self._options.nodeProperty)) {
                      records.push(record);
                   }
                }
@@ -256,7 +256,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             filter['ВидДерева'] = 'Узлы и листья';
          }
          this.setFilter(cFunctions.clone(filter), true);
-         filter[this._options.hierField] = key;
+         filter[this._options.parentProperty] = key;
          return filter;
       },
 
@@ -313,7 +313,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             var targetContainer = this._getTargetContainer(record);
             if (targetContainer) {
                if (this._options.displayType == 'folders') {
-                  if (record.get(this._options.hierField + '@')) {
+                  if (record.get(this._options.nodeProperty)) {
                      this._drawAndAppendItem(record, targetContainer);
                   }
                }
@@ -345,7 +345,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
       around : {
          _addItem: function (parentFnc, item, at) {
             //TODO придрот, чтоб не отрисовывались данные в дереве при первом открытии узла
-            var parent = item.getContents().get(this._options.hierField);
+            var parent = item.getContents().get(this._options.parentProperty);
             if (this._options.openedPath[parent] || (parent == this._curRoot)) {
                parentFnc.call(this, item, at);
             }
@@ -560,7 +560,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             this.toggleNode(nodeID);
          }
          else {
-            if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
+            if ((this._options.allowEnterToFolder) && ((data.get(this._options.nodeProperty)))){
                this.setCurrentRoot(nodeID);
                this.reload();
             }
@@ -595,12 +595,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             this._lastParent = this._curRoot;
          }
          key = record.getId();
-         curRecRoot = record.get(this._options.hierField);
+         curRecRoot = record.get(this._options.parentProperty);
          //TODO для SBISServiceSource в ключе находится массив, а теперь он еще и к строке приводится...
          curRecRoot = curRecRoot instanceof Array ? curRecRoot[0] : curRecRoot;
          if (curRecRoot == this._lastParent){
             //Лист
-            if (record.get(this._options.hierField + '@') !== true){
+            if (record.get(this._options.nodeProperty) !== true){
                //Нарисуем путь до листа, если пришли из папки
                if (this._lastDrawn !== 'leaf' && this._lastPath.length) {
                   this._drawGroup(record, at);
@@ -634,7 +634,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             this._lastDrawn = undefined;
             this._lastPath = kInd >= 0 ? this._lastPath.slice(0, kInd + 1) : [];
             //Лист
-            if (record.get(this._options.hierField + '@') !== true){
+            if (record.get(this._options.nodeProperty) !== true){
                if ( this._lastPath.length) {
                   this._drawGroup(record, at);
                }
@@ -719,7 +719,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             parentID;
          for (var i = 0; i < pathRecords.length; i++){
             //TODO для SBISServiceSource в ключе находится массив
-            parentID = pathRecords[i].get(this._options.hierField);
+            parentID = pathRecords[i].get(this._options.parentProperty);
             dsItems.push({
                id: pathRecords[i].getId(),
                title: pathRecords[i].get(this._options.displayProperty),
