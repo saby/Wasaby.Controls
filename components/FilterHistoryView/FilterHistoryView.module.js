@@ -1,8 +1,8 @@
 define('js!SBIS3.CONTROLS.FilterHistoryView',
     [
        'js!SBIS3.CONTROLS.ListView',
-       'html!SBIS3.CONTROLS.FilterHistoryView/footerTpl',
-       'html!SBIS3.CONTROLS.FilterHistoryView/itemTpl',
+       'tmpl!SBIS3.CONTROLS.FilterHistoryView/footerTpl',
+       'tmpl!SBIS3.CONTROLS.FilterHistoryView/itemTpl',
        'js!SBIS3.CONTROLS.HistoryList',
        'Core/CommandDispatcher',
        'js!SBIS3.CONTROLS.ToggleButton'
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
                 var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
                 historyController.subscribe('onHistoryUpdate', function (event, history) {
-                   this.setItems(history);
+                   this.setItems(history.clone());
                 }.bind(this));
 
                 this.setItems(historyController.getHistory());
