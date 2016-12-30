@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
-      tplOptions.displayProperty = cfg.displayProperty
+      tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = getPropertyValue;
 
