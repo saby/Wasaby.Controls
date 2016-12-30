@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
     'js!SBIS3.CORE.CompoundControl',
     'js!SBIS3.CONTROLS.IFilterItem',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.Base',
+    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
     'Core/IoC',
     'js!WS.Data/Collection/RecordSet'
-], function(CompoundControl, IFilterItem, dotTplFn, IoC, RecordSet) {
+], function(CompoundControl, IFilterItem, dotTplFn, TemplateUtil, IoC, RecordSet) {
 
     'use strict';
 
@@ -32,12 +33,22 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
+                _defaultTemplate: '',
+                /**
+                 * @cfg {String} Шаблон компонента, используемого для выборки данных.
+                 */
+                template: '',
+                /**
+                 * @cfg {Object} Конфигурация компонента, используемого для выборки данных
+                 */
+                properties: {
+                },
                 /**
                  * @cfg {WS.Data/Collection/RecordSet} Устанавливает набор элементов, из которых будет производиться выбор.
                  * @remark
-                 * Обязательны для конфигурации опции {@link keyField} и {@link displayField}.
-                 * @see keyField
-                 * @see displayField
+                 * Обязательны для конфигурации опции {@link idProperty} и {@link displayProperty}.
+                 * @see idProperty
+                 * @see displayProperty
                  **/
                 items: [],
                 /**
@@ -48,14 +59,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 value: [],
                 /**
                  * @cfg {String} Устанавливает поле первичного ключа (см. {@link items}).
-                 * @see displayField
+                 * @see displayProperty
                  */
-                keyField: 'id',
+                idProperty: 'id',
                 /**
                  * @cfg {String} Устанавливает поле отображения (см. {@link items}).
-                 * @see keyField
+                 * @see idProperty
                  */
-                displayField: 'title',
+                displayProperty: 'title',
                 /**
                  * @cfg {String} Устанавливает шаблон редактора.
                  * @remark
@@ -71,8 +82,17 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 IoC.resolve('ILogger').log('items', 'Array type option is deprecated. Use WS.Data/Collection/RecordSet.');
                 opts.items = new RecordSet({
                     rawData: opts.items,
-                    idProperty: opts.keyField
+                    idProperty: opts.idProperty
                 });
+            }
+            opts._template = opts.template ? TemplateUtil.prepareTemplate(opts.template) : opts._defaultTemplate;
+           if (opts.keyField) {
+              IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция keyField является устаревшей, используйте idProperty');
+              opts.idProperty = opts.keyField;
+           }
+            if (opts.displayField) {
+                IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция displayField является устаревшей, используйте displayProperty');
+                opts.displayProperty = opts.displayField;
             }
             return opts;
         },

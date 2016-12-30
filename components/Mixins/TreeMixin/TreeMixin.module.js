@@ -33,16 +33,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       rootAsNode = isPlainObject(root);
       if (rootAsNode) {
          root = Model.fromObject(root, 'adapter.sbis');
-         root.setIdProperty(cfg.keyField);
+         root.setIdProperty(cfg.idProperty);
       }
 
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection = new TreeProjection({
          collection: items,
-         idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
+         idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.parentProperty,
          nodeProperty: cfg.nodeProperty,
-         loadedProperty: cfg.hierField + '$',
+         loadedProperty: cfg.parentProperty + '$',
          unique: true,
          root: root,
          rootEnumerable: rootAsNode,
@@ -65,8 +65,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    getSearchCfg = function(cfg) {
       return {
-         keyField: cfg.keyField,
-         displayField: cfg.displayField,
+         idProperty: cfg.idProperty,
+         displayProperty: cfg.displayProperty,
          highlightEnabled: cfg.highlightEnabled,
          highlightText: cfg.highlightText,
          colorMarkEnabled: cfg.colorMarkEnabled,
@@ -119,8 +119,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (item.isNode()) {
             curParentContents = item.getContents();
             pathElem = {};
-            pathElem[cfg.keyField] = curParentContents.getId();
-            pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
+            pathElem[cfg.idProperty] = curParentContents.getId();
+            pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
             curPath.push(pathElem);
             lastNode = item;
@@ -170,6 +170,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       else {
          projection.each(function(item, index, group) {
+            if (item.isNode()){
+               cfg.hasNodes = true;
+            }
             if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
@@ -264,8 +267,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
       tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
+      tplOptions.hasNodes = cfg.hasNodes;
       tplOptions.hierarchy = new HierarchyRelation({
-         idProperty: cfg.keyField,
+         idProperty: cfg.idProperty,
          parentProperty: cfg.parentProperty
       });
 
@@ -321,7 +325,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
-       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
        *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
        * </ul>
@@ -1173,7 +1177,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   hierarchy.push({
                      'id': key || null,
                      'parent' : parentKey,
-                     'title' : record.get(this._options.displayField),
+                     'title' : record.get(this._options.displayProperty),
                      'color' : this._options.colorField ? record.get(this._options.colorField) : '',
                      'data' : record
                   });

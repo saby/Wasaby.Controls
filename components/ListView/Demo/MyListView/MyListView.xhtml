@@ -1,6 +1,7 @@
 <div>
    <component data-component="SBIS3.CONTROLS.ListView" name="ListView" style="width:300px;" class="control-MyListView__ListView__position">
-      <option name="keyField">id</option>
+      <option name="idProperty">id</option>
+      <option name="displayProperty">title</option>
       <options name="items" type="array">
          <options>
             <option name="id">1</option>
@@ -36,5 +37,7 @@
          </options>
       </options>
       <option name="multiselect">true</option>
+      <option name="resultsPosition">none</option>
+      <option name="resultsTpl" type="ref">{{@it.resultsTpl}}</option>
    </component>
 </div>

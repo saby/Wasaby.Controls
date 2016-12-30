@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * Особенности работы с контролом:
     * <ul>
     *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
-    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link idProperty}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
     *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
     *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
     *    <li>По стандарту максимальная высота выпадающего списка 400px. В некоторых случаях может возникнуть необходимость её изменить.
@@ -36,8 +36,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * <pre>
     *    <component data-component="SBIS3.CONTROLS.ComboBox">
     *       <options name="items" type="array" bind="record/MyEnumField"></options>
-    *       <option name="keyField">@Идентификатор</option>
-    *       <option name="displayField">Описание</option>
+    *       <option name="idProperty">@Идентификатор</option>
+    *       <option name="displayProperty">Описание</option>
     *    </component>
     * </pre>
     *
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *            <option name="title">Пункт2</option>
     *         </options>
     *      </options>
-    *      <option name="keyField">key</option>
+    *      <option name="idProperty">key</option>
     * </component>
     */
 
@@ -91,13 +91,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       var rawData = {},
          emptyItemProjection,
          rs;
-      rawData[cfg.keyField] = null;
-      rawData[cfg.displayField] = 'Не выбрано';
+      rawData[cfg.idProperty] = null;
+      rawData[cfg.displayProperty] = 'Не выбрано';
       rawData.isEmptyValue = true;
 
       rs = new RecordSet({
          rawData: [rawData],
-         idProperty: cfg.keyField
+         idProperty: cfg.idProperty
       });
 
       emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
@@ -133,10 +133,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *         </options>
        *      </options>
        *      <!--необходимо указать какое из наших полей является ключевым-->
-       *      <option name="keyField">key</option>
+       *      <option name="idProperty">key</option>
        * </pre>
-       * @see keyField
-       * @see displayField
+       * @see idProperty
+       * @see displayProperty
        * @see setDataSource
        * @see getDataSet
        */
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *     <option name="itemTemplate">
              *         <div data-key="{{=it.item.getId()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
              *             <div class="genie-colorComboBox__itemTitle">
-             *                 {{=it.displayField}}
+             *                 {{=it.displayProperty}}
              *             </div>
              *         </div>
              *     </option>
@@ -211,9 +211,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       $constructor: function () {
          var self = this;
          self.getContainer().addClass('controls-ComboBox');
-         if (!this._options.displayField) {
+         if (!this._options.displayProperty) {
             //TODO по умолчанию поле title???
-            this._options.displayField = 'title';
+            this._options.displayProperty = 'title';
          }
 
          if (this._options.autocomplete){
@@ -250,7 +250,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _searchFilter: function(model){
          //TODO: Обобщить поиск с автодополнением и строкой поиска
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
-         var itemText = model.get(this._options.displayField).toLowerCase(),
+         var itemText = model.get(this._options.displayProperty).toLowerCase(),
              text = this.getText().toLowerCase();
          if (itemText.match(text)){
             return true;
@@ -399,7 +399,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItemText: function(key, item){
          if (item) {
-            var newText = this._propertyValueGetter(item, this._options.displayField);
+            var newText = this._propertyValueGetter(item, this._options.displayProperty);
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
@@ -504,10 +504,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getItemTemplate: function (projItem) {
          var
             item = projItem.getContents(),
-            title = item.get(this._options.displayField);
+            title = item.get(this._options.displayProperty);
 
          if (this._options.itemTemplate) {
-            return doT.template(this._options.itemTemplate)({item : item, displayField : title})
+            return doT.template(this._options.itemTemplate)({item : item, displayProperty : title, displayField: title})
          }
          else {
             return '<div>' + title + '</div>';
@@ -561,7 +561,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             filterFieldObj = {};
 
          if (this._dataSource) {
-            filterFieldObj[this._options.displayField] = self._options.text;
+            filterFieldObj[this._options.displayProperty] = self._options.text;
 
             self._callQuery(filterFieldObj).addCallback(function (DataSet) {
                self._findItemByKey(DataSet);
@@ -586,7 +586,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self = this;
          items.each(function (item) {
             noItems = false;
-            if (self._propertyValueGetter(item, self._options.displayField) == self._options.text) {
+            if (self._propertyValueGetter(item, self._options.displayProperty) == self._options.text) {
                //для рекордов и перечисляемого чуть разный механизм
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
                   selKey = item.getId();
@@ -725,7 +725,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var self = this;
          if (self._picker._options.target){
             this._picker.getContainer().css({
-               'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+               'min-width': self._picker._options.target.outerWidth()
             });
          }
       },

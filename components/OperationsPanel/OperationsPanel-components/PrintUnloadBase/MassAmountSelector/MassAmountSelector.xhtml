@@ -6,7 +6,7 @@
          <option name="primary" type="boolean" value="true"></option>
       </component>
    </div>
-   <component data-component="SBIS3.CONTROLS.RadioGroup" data-bind="{SelectedKey: controls-RadioButtons}" class="controls-ButtonGroup__vertical">
+   <component data-component="SBIS3.CONTROLS.RadioGroup" class="controls-ButtonGroup__vertical">
       <options name="items" type="array">
          <options>
             <option name="id" value="current"></option>
@@ -21,9 +21,10 @@
             <option name="title">Количество записей</option>
          </options>
       </options>
-      <option name="displayField" value="title"></option>
+      <option name="selectedKey" bind="controls-RadioButtons"></option>
+      <option name="displayProperty" value="title"></option>
       <option name="name" value="controls-RadioButtons"></option>
-      <option name="keyField" value="id"></option>
+      <option name="idProperty" value="id"></option>
       <option name="allowEmptySelection" value="false" type="boolean"></option>
    </component>
 
@@ -36,6 +37,7 @@
          <option name="onlyPositive" type="boolean" value="true"></option>
          <option name="integers" value="5"></option>
          <option name="maxLength" value="5"></option>
+         <option name="text" bind="NumOfRecords"></option>
       </component>
    </div>
    <br/>

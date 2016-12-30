@@ -37,12 +37,12 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              * Опция актуальна для использования, когда источник данных имеет иерархическую структуру.
              * @see parentProperty
              */
-            displayField: undefined,
+            displayProperty: undefined,
             /**
              * @cfg {String} Устанавливает поле иерархии данных.
              * @remark
              * Опция актуальная для использования, когда источник данных имеет иерархическую структуру.
-             * @see displayField
+             * @see displayProperty
              */
             parentProperty: undefined,
             /**
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              * Метод возвращает recordSet, который содержит следующие поля:
              * <ul>
              *   <li>{String} поле, которое является keyField в источнике данных;</li>
-             *   <li>{String} поле, которое является displayField в источнике данных;</li>
+             *   <li>{String} поле, которое является displayProperty в источнике данных;</li>
              *   <li>поля иерархии;</li>
              *   <li>{String} поле 'Comment', в котором находится резюме операции;</li>
              *   <li>{Boolean} поле 'Available', которое содержит признак возможности объединения данной записи.<li>
@@ -107,6 +107,14 @@ define('js!SBIS3.CONTROLS.MergeAction', [
          if (cfg.parentProperty && !cfg.nodeProperty) {
             cfg.nodeProperty = cfg.parentProperty + '@';
          }
+         if (cfg.displayField) {
+            IoC.resolve('ILogger').log('MergeAction', 'Опция displayField является устаревшей, используйте displayProperty');
+            cfg.displayProperty = cfg.displayField;
+         }
+         if (cfg.keyField) {
+            IoC.resolve('ILogger').log('MergeAction', 'Опция keyField является устаревшей, используйте idProperty');
+            cfg.idProperty = cfg.keyField;
+         }
          return MergeAction.superclass._modifyOptions.apply(this, arguments);
       },
 
@@ -125,11 +133,14 @@ define('js!SBIS3.CONTROLS.MergeAction', [
          return cMerge(meta, {
             //Прокидываем необходимые опции в шаблон
             displayField: this._options.displayField,
+            displayProperty: this._options.displayProperty,
             queryMethodName: this._options.queryMethodName,
+            hierField: this._options.parentProperty,
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
             dataSource: this._options.dataSource,
             keyField: this._options.dataSource.getIdProperty(),
+            idProperty: this._options.dataSource.getIdProperty(),
             testMergeMethodName: this._options.testMergeMethodName,
             titleCellTemplate: this._options.titleCellTemplate
          });

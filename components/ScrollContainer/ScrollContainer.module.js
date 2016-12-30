@@ -24,8 +24,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
        *       <option name="content">
        *          <component data-component="SBIS3.CONTROLS.ListView">
-       *             <option name="displayField">title</option>
-       *             <option name="keyField">id</option>
+       *             <option name="displayProperty">title</option>
+       *             <option name="idProperty">id</option>
        *             <option name="infiniteScroll">down</option>
        *             <option name="infiniteScrollContainer">.myScrollContainer</option>
        *             <option name="pageSize">7</option>
@@ -53,8 +53,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * <pre class="brush: html">
                 *    <option name="content">
                 *       <component data-component="SBIS3.CONTROLS.ListView">
-                *          <option name="displayField">title</option>
-                *          <option name="keyField">id</option>
+                *          <option name="displayProperty">title</option>
+                *          <option name="idProperty">id</option>
                 *          <option name="infiniteScroll">down</option>
                 *          <option name="infiniteScrollContainer">.controls-Scroll__container</option>
                 *          <option name="pageSize">7</option>
@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          $constructor: function() {
             // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
+            this._craftedContext = false;
             this._context = this._context.getPrevious();
          },
 
@@ -176,13 +177,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _getScrollHeight: function(){
-            // Баг в IE версии старше 10, если повесить стиль overflow-y:scroll, то scrollHeight увеличивается на 1px,
-            // поэтому мы вычтем его.
             var height;
-            if (cDetection.IEVersion > 10) {
-               height = this._content[0].scrollHeight - 1;
-            }
             height = this._content[0].scrollHeight;
+            // Баг в IE версии 10 и старше, если повесить стиль overflow-y:scroll, то scrollHeight увеличивается на 1px,
+            // поэтому мы вычтем его.
+            if (cDetection.IEVersion >= 10) {
+               height -= 1;
+            }
             // TODO: придрот для правильного рассчета с модификатором __withHead
             // он меняет высоту скроллабара - из за этого получаются неверные рассчеты
             // убрать вместе с этим модификатором, когда будет шаблон страницы со ScrollContainer и фиксированой шапкой

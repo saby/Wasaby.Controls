@@ -8,10 +8,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'js!SBIS3.CONTROLS.FilterPanelBoolean'
 ], function(FilterPanelChooserDictionary, cFunctions, IoC, RecordSet, ArraySimpleUtil, headerTpl) {
 
-    var favoritesIsChecked = function(value, favorites, keyField) {
+    var favoritesIsChecked = function(value, favorites, idProperty) {
         var result = true;
         favorites.each(function(item) {
-            if (!ArraySimpleUtil.hasInArray(value, item.get(keyField))) {
+            if (!ArraySimpleUtil.hasInArray(value, item.get(idProperty))) {
                 result = false;
             }
         });
@@ -72,21 +72,21 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
                 IoC.resolve('ILogger').log('items', 'Array type option is deprecated. Use WS.Data/Collection/RecordSet.');
                 opts.favorites = new RecordSet({
                     rawData: opts.favorites,
-                    idProperty: opts.keyField
+                    idProperty: opts.idProperty
                 });
             }
-            opts.favoritesIsChecked = favoritesIsChecked(opts.value, opts.favorites, opts.keyField);
+            opts.favoritesIsChecked = favoritesIsChecked(opts.value, opts.favorites, opts.idProperty);
             return opts;
         },
 
         _updateView: function() {
             FilterPanelChooserFavorites.superclass._updateView.apply(this, arguments);
-            this._getFavoritesCheckBox().setValue(favoritesIsChecked(this._options.value, this._options.favorites, this._options.keyField));
+            this._getFavoritesCheckBox().setValue(favoritesIsChecked(this._options.value, this._options.favorites, this._options.idProperty));
         },
 
         _getItemTextByItemId: function(items, id) {
             var item = items.getRecordById(id) || this._options.favorites.getRecordById(id);
-            return item.get(this._options.displayField);
+            return item.get(this._options.displayProperty);
         },
 
         _clickFavoritesHandler: function(e) {
@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
                 value = cFunctions.clone(this._getListView().getSelectedKeys());
             if (this._getFavoritesCheckBox().getValue()) {
                 this._options.favorites.each(function(item) {
-                    favoriteId = item.get(this._options.keyField);
+                    favoriteId = item.get(this._options.idProperty);
                     if (!ArraySimpleUtil.hasInArray(value, favoriteId)) {
                         value.push(favoriteId);
                     }

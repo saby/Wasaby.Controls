@@ -35631,7 +35631,9 @@
             dom = editor.dom, state = {};
 
          function isDraggable(elm) {
-            return isContentEditableFalse(elm);
+            //Проблема: при перетаскивании contenteditable=false элемента рядом с мышью создается элемент, из-за которого появляется скролл
+            return false;
+            //return isContentEditableFalse(elm);
          }
 
          function setBodyCursor(cursor) {

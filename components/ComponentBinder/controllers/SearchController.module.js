@@ -148,8 +148,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
          view.once('onDataLoad', function() {
             view._container.removeClass('controls-GridView__searchMode');
-            view._options._curRoot = self._lastRoot || null;
-            view._getItemsProjection().setRoot(self._lastRoot || null);
+            view.setCurrentRoot(self._lastRoot || null);
          });
          this._searchMode = false;
          view._options.hierarchyViewMode = false;
@@ -303,6 +302,14 @@ define('js!SBIS3.CONTROLS.SearchController',
                event.preventDefault();
             }
          });
+      },
+
+      /**
+       * Устанавливает имя параметра поиска
+       * @param {String} name имя параметра поиска
+       */
+      setSearchParamName: function(name) {
+         this._options.searchParamName = name;
       }
 
    });

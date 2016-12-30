@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    "js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList",
    "js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList",
    "js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup",
+   "js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink",
    "js!SBIS3.CONTROLS.FilterPanelDataRange",
    "js!SBIS3.CONTROLS.FilterPanelBoolean",
    "js!SBIS3.CONTROLS.IconButton",

@@ -233,7 +233,7 @@
   }
 }
 
-.controls-DataGridView__results{
+.controls-ListView__results{
   background: #FFF;
   font-weight: bold;
   font-size: 14px;
@@ -261,6 +261,18 @@
       display: none;
    }
 }
+.controls-ScrollContainer {
+   > .controls-ListView__scrollPager{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      height: 32px;
+      background: white;
+      border-top: 1px solid @default-color;
+      z-index: 10;
+   }
+}
+
 .controls-GroupBy__separator {
    height: @list-view-separator-height / 2;
    margin-bottom: @list-view-separator-height / 2;

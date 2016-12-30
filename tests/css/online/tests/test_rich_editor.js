@@ -36,7 +36,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			
 			.capture('with_smile', function (actions) {
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.click(this.input2);
 			})
@@ -685,11 +685,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.sendKeys(this.input, ' смайлик ');
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.click(this.toolbar);
 				actions.sendKeys(this.input, gemini.TAB);
@@ -727,7 +727,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.sendKeys(this.input, gemini.ARROW_UP);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);

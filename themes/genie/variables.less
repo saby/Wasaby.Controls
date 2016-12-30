@@ -395,14 +395,14 @@
 @tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
+@tab-button-large-firstAddText-color-hover:     #313E78;
 @tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-firstAddText-font-weight:     normal;
-@tab-button-large-firstAddText-hover-color:     #FF7030;
 
 @tab-button-large-secondAddText-color:          #999999;
+@tab-button-large-secondAddText-text-decor:     underline;
 @tab-button-large-secondAddText-font-size:      13px;
 @tab-button-large-secondAddText-font-weight:    normal;
-@tab-button-large-secondAddText-hover-color:    #FF7030;
 
 @tab-button-inner-padding:                      0px 8px 0 8px;
 @tab-button-inner-line-height:                  30px;
@@ -1131,10 +1131,8 @@
 @combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
 @combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
-@combo-box-picker-border:                       1px solid @gray-ccc-color;
+@combo-box-picker-border:                       1px solid @primary-color;
 @combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-margin:                       -2px;
-@combo-box-picker-padding:                      1px 2px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
 @combo-box-picker-item-padding:                 7px 4px 6px 4px;
@@ -1148,10 +1146,11 @@
 @combo-box-picker-item-selected-text-color:     @gray-color;
 @combo-box-picker-item-selected-bg:             @white-color;
 
-@compo-box-fieldWrapper-margin-right:                 16px;
+@compo-box-fieldWrapper-margin-right:           16px;
 @combo-box-after-width:                         @text-box-after-width;
 
 @compo-box-picker-show-color:                   @text-color;
+@combo-box-picker-show-border-color:            @primary-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 
 // TODO: check whether it's required
@@ -1612,7 +1611,7 @@
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
 @list-view-items-toolbar-bottom:                     3px;
-@list-view-items-toolbar-right:                      0;
+@list-view-items-toolbar-right:                      8px;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
@@ -2062,10 +2061,11 @@
 //FilterButton
 @controls-filterButton-picker-bg:                 #F9F9F9;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       1px 3px 3px 3px;
+@controls-filterButton-picker-border-width:       3px;
 @controls-filterButton-picker-border-style:       solid;
 @controls-filterButton-picker-border-color:       @gray-light-color;
-@controls-filterButton-picker-border-radius:      0 0 4px 4px;
+@controls-filterButton-picker-border-radius:      6px;
+@controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  12px;
 @controls-Popup-closeButton-right:                0;
 

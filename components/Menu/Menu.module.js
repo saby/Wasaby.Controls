@@ -74,9 +74,9 @@ define('js!SBIS3.CONTROLS.Menu', [
         *         </options>
         *      </options>
         * </pre>
-        * @see displayField
-        * @see keyField
-        * @see hierField
+        * @see displayProperty
+        * @see idProperty
+        * @see parentRproperty
         * @see onMenuItemActivate
         */
 
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.Menu', [
              * @cfg {String} Поле отображается как название
              * @noShow
              */
-            displayField : 'title',
+            displayProperty : 'title',
             expand: true
          }
       },
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          var
              isEnabled = item.get('enabled'),
              visible = item.get('visible'),
-             caption = Sanitize(item.get(this._options.displayField), {validNodes: {component: true}}),
+             caption = Sanitize(item.get(this._options.displayProperty), {validNodes: {component: true}}),
              options = {
                className: item.get('className'),
                activableByClick: false,

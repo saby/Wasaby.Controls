@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'js!SBIS3.CONTROLS.RadioGroup',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroup',
+   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
    'Core/core-functions'
-], function(FilterPanelChooserBase, RadioGroup, chooserTpl , cFunctions) {
+], function(FilterPanelChooserBase, RadioGroup, chooserTpl, FilterPanelChooserRadioGroupTpl, cFunctions) {
    'use strict';
    /**
     * Класс редактора "Набор радиокнопок".
@@ -22,7 +23,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
       $protected: {
          _options: {
-            chooserTemplate: chooserTpl
+            _defaultTemplate: FilterPanelChooserRadioGroupTpl,
+            chooserTemplate: chooserTpl,
+            /**
+             * @cfg {String} Устанавливает идентификатор элемента, который будет выбран для фильтра.
+             * @see setValue
+             * @see getValue
+             */
+            value: undefined
          },
          _radioGroup: undefined
       },

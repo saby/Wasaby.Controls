@@ -6,8 +6,8 @@
         </component>
     </div>
     <component data-component="SBIS3.CONTROLS.TabControl" name="TabControl" class="TabControl">
-        <option name="tabsDisplayField" value="title"></option>
-        <option name="keyField" value="id"></option>
+        <option name="tabsDisplayProperty" value="title"></option>
+        <option name="idProperty" value="id"></option>
         <option name="selectedKey">{{=(it.isFavorites ? 2 : 1)}}</option>
         <option name="loadType" value="cached"></option>
         <opts name="items" type="Array">
@@ -22,7 +22,7 @@
                 <option name="title">Избранные</option>
                 <option name="content">
                     <component data-component="SBIS3.CONTROLS.DataGridView" class="dialog-FieldLink__tableView" config="{{=$ws.helpers.encodeCfgAttr({items: it.favorites})}}">
-                        <option name="keyField">id</option>
+                        <option name="idProperty">id</option>
                         <option name="itemsDragNDrop">false</option>
                         <options name="columns" type="array">
                             <options>

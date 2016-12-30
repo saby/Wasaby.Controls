@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             _dotTplFn: dotTplFn,
             _options: {
                itemTpl: ItemTpl,
-               displayField: '',
+               displayProperty: '',
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
                 * @remark
@@ -55,8 +55,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 * @example
                 * <pre>
                 *    items: [{
-                *       keyField : 'key',    //Имя поля с ключом из списка значений values
-                *       displayField: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
+                *       idProperty : 'key',    //Имя поля с ключом из списка значений values
+                *       displayProperty: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
                 *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
@@ -88,8 +88,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 *    ]
                 *  }]
                 * </pre>
-                * @see keyField
-                * @see displayField
+                * @see idProperty
+                * @see displayProperty
                 * @see setDataSource
                 * @see getDataSet
                 */
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      self._filterStructure[idx].value = filterValue;
 
                      list.each(function (rec) {
-                        text.push(rec.get(this._options.displayField));
+                        text.push(rec.get(this._options.displayProperty));
                      }.bind(this));
 
                      self._filterStructure[idx].caption = self._filterStructure[idx].value === undefined

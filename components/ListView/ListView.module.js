@@ -344,6 +344,7 @@ define('js!SBIS3.CONTROLS.ListView',
                top: null,
                bottom: null
             },
+            _setScrollPagerPositionThrottled: null,
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -761,13 +762,15 @@ define('js!SBIS3.CONTROLS.ListView',
             _componentBinder: null,
             _touchSupport: false,
             _editByTouch: false,
-            _dragInitHandler: undefined //метод который инициализирует dragNdrop
+            _dragInitHandler: undefined, //метод который инициализирует dragNdrop
+            _inScrollContainerControl: false
          },
 
          $constructor: function () {
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
+            this._setScrollPagerPositionThrottled = this._setScrollPagerPosition.throttle(100, true).bind(this);
             this._bindEventHandlers(this._container);
 
             this.initEditInPlace();
@@ -880,17 +883,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createScrollPager: function(){
+            var scrollContainer = this._scrollWatcher.getScrollContainer();
             this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
                showPages: false,
-               keyField: 'id',
+               idProperty: 'id',
                parent: this
             });
-            if (constants.browser.isMobilePlatform){
+            // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
+            // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
+            // работы с пэйджером что бы избавится от этого.
+            if (this._inScrollContainerControl) {
+              $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
+            } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
-               var scrollContainer = this._scrollWatcher.getScrollContainer();
                scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
                $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
@@ -901,6 +909,13 @@ define('js!SBIS3.CONTROLS.ListView',
             });
             this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
+
+            if (!this._inScrollContainerControl) {
+               // Отлавливаем изменение масштаба
+               // Когда страница увеличена на мобильных платформах или если на десктопе установить ширину браузера меньше 1024рх,
+               // то горизонтальный скрол(и иногда вертикальный) происходит внутри window.
+               $(window).on('resize scroll', this._setScrollPagerPositionThrottled);
+            }
          },
 
          _onVisibleChange: function(event, visible){
@@ -919,8 +934,16 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
-            var right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
-            this._scrollPager.getContainer().css('right', right);
+            var right;
+            // Если таблица находится в SBIS3.CONTROLS.ScrollContainer, то пейджер находится в его скролируемом
+            // контенере и спозиционирован абсолютно и пересчет позиции не требуется.
+            if (!this._inScrollContainerControl) {
+               // На ios на маленьком зуме все нормально. На большом - элементы немного смещаются,
+               // и смещение зависит от положения скрола и от зума. Это не ошибка расчета, а баг(фича?) ipad.
+               // Смещены элементы со стилем right: 0 и bottom: 0. На небольшом зуме этого смещения нет.
+               right = window.innerWidth - this.getContainer().get(0).getBoundingClientRect().right;
+               this._scrollPager.getContainer().css('right', right);
+            }
          },
          _keyboardHover: function (e) {
             var
@@ -1681,7 +1704,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
                this._getEditInPlace()._destroyEip();
             }
-            //TODO: Перевести строку итогов на верстку через шаблон по задаче https://inside.tensor.ru/opendoc.html?guid=19ba61d7-ce74-4567-90c9-e5f3565e30b7&description=
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
@@ -1711,7 +1733,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
          validate: function() {
-            var editingIsValid = !(this.isEdit() && !this._getEditInPlace().validate());
+            var editingIsValid = !this.isEdit() || this._getEditInPlace().isValidChanges();
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
@@ -2174,7 +2196,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._scrollPager){
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
-                  this._setScrollPagerPosition();
+                  this._setScrollPagerPositionThrottled();
                }
             }
          },
@@ -2315,6 +2337,7 @@ define('js!SBIS3.CONTROLS.ListView',
                initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
+            this._inScrollContainerControl = this._scrollWatcher.getScrollContainer().hasClass('controls-ScrollContainer__content')
          },
 
          _onTotalScrollHandler: function(event, type){
@@ -2449,7 +2472,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
                this._needScrollCompensation = true;
-               this._containerScrollHeight = this._scrollWatcher.getScrollHeight();
+               this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
             }
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
@@ -2686,7 +2709,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = this._drawResults.bind(this);
+            this._onMetaDataResultsChange = this._redrawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -2830,49 +2853,56 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if(pageNumber == -1){
-               this._setLastPage();
-               return;
-            }
-            if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
-               if (this._getItemsProjection() && this._getItemsProjection().getCount()){
-                  var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                     itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
-                     item = this.getItems().getRecordById(itemId);
-                  this.scrollToItem(item);
-               }
+               this._setLastPage(noLoad);
             } else {
-               this._offset = this._options.pageSize * pageNumber;
-               this._scrollOffset.top = this._offset;
-               this._scrollOffset.bottom = this._offset;
-               if (!noLoad && this._offset !== offset) {
-                  /* При смене страницы (не через подгрузку по скролу),
-                     надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
-                  this.setSelectedIndex(-1);
-                  this.reload();
+               if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
+                  if (this._getItemsProjection() && this._getItemsProjection().getCount()){
+                     var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
+                        itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
+                        item = this.getItems().getRecordById(itemId);
+                     this.scrollToItem(item);
+                  }
+               } else {
+                  this._offset = this._options.pageSize * pageNumber;
+                  this._scrollOffset.top = this._offset;
+                  this._scrollOffset.bottom = this._offset;
+                  if (!noLoad && this._offset !== offset) {
+                     /* При смене страницы (не через подгрузку по скролу),
+                        надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
+                     this.setSelectedIndex(-1);
+                     this.reload();
+                  }
                }
             }
             this._notify('onPageChange', pageNumber);
          },
 
-         _setLastPage: function(){
+         _setLastPage: function(noLoad){
             var more = this.getItems() ? this.getItems().getMetaData().more : false,
                pageNumber;
-            if (typeof more == 'number'){
-               pageNumber = more / this._options.pageSize;
-            } else {
+            this._setInfiniteScrollState('up');
+
+            var onLastPageSet = function(items){
+               more = items.getMetaData().more;
                this._lastPageLoaded = true;
-               this._setInfiniteScrollState('up');
-               this.reload(undefined, undefined, -1).addCallback(function(items){
-                  more = items.getMetaData().more;
-                  if (typeof more == 'number'){
-                     pageNumber = Math.floor(more / this._options.pageSize);
-                     this._scrollOffset.bottom = more;
-                     this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
-                     this._scrollOffset.top = more - items.getCount();
-                     this.setPage(pageNumber, true);
-                     this._scrollWatcher.scrollTo('bottom');
-                  }
-               }.bind(this));
+               if (typeof more == 'number'){
+                  pageNumber = Math.floor(more / this._options.pageSize);
+                  this._scrollOffset.bottom = more;
+                  // TODO: зачем это?
+                  this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
+                  this._scrollOffset.top = more - items.getCount();
+                  this.setPage(pageNumber, true);
+                  this._scrollWatcher.scrollTo('bottom');
+               }
+            }.bind(this);
+
+            if (noLoad){
+               this._offset = -1;
+               this.once('onDataLoad', function(event, items){
+                  onLastPageSet(items);
+               });
+            } else {
+               this.reload(undefined, undefined, -1).addCallback(onLastPageSet);
             }
          },
 
@@ -3077,6 +3107,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollBinder = null;
             }
             if (this._scrollPager){
+               if (!this._inScrollContainerControl) {
+                  $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
+               }
                dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
@@ -3490,69 +3523,28 @@ define('js!SBIS3.CONTROLS.ListView',
            this._options.resultsPosition = position;
          },
 
-         _redrawResults: function(){
-           this._drawResults();
-         },
-
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                resultsRecord = this._getResultsRecord();
+                resultsRecord = this.getItems() && this.getItems().getMetaData().results;
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
             }
          },
 
-         _drawResults: function(){
-            if (!this._checkResults()){
-               this._removeDrawnResults();
-               return;
+         _redrawResults: function(){
+            var resultsRow = $('.controls-ListView__results', this.getContainer()),
+                insertMethod = this._options.resultsPosition == 'top' ? 'before' : 'after',
+                resultsRecord = this.getItems() && this.getItems().getMetaData().results,
+                markup;
+            if (resultsRow.length){
+               this._destroyControls(resultsRow);
+               resultsRow.remove();
             }
-            var resultRow = this._makeResultsTemplate(this._getResultsData());
-            if (resultRow){
-               this._appendResultsContainer(this._getResultsContainer(), resultRow);
-            }
-         },
-         _checkResults: function(){
-            return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
-         },
-         _getResultsContainer: function(){
-            var resultsSelector = '.controls-ListView__results-' + this._options.resultsPosition;
-            return $(resultsSelector, this.getContainer());
-         },
-         _makeResultsTemplate: function(resultsData){
-            if (!resultsData) {
-               return;
+            if (resultsRecord && this._options.resultsTpl && this._options.resultsPosition !== 'none'){
+               markup = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({item: resultsRecord, multiselect: this._options.multiselect}));
+               this._getItemsContainer()[insertMethod](markup);
             }
 
-            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)(this._getResultsTplCfg(resultsData)));
-         },
-         _getResultsTplCfg: function(resultsData) {
-            return {
-               results: resultsData,
-               item: this._getResultsRecord(),
-               columns: cFunctions.clone(this._options.columns),
-               multiselect: this._options.multiselect
-            }
-         },
-         _getResultsData: function(){
-            return this._getResultsRecord();
-         },
-         _getResultsRecord: function(){
-            return this.getItems() && this.getItems().getMetaData().results;
-         },
-         _appendResultsContainer: function(container, resultRow){
-            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append');
-            this._removeDrawnResults(container);
-            $(container)[position](resultRow);
-            this.reviveComponents(container);
-         },
-         _removeDrawnResults: function(container){
-            var resContainer = container || this._getResultsContainer();
-            var resultRow = $('.controls-DataGridView__results', resContainer);
-            if (resultRow.length){
-               this._destroyControls(resultRow);
-               resultRow.remove();
-            }
          },
          /**
           * //todo коcтыль нужно разобраться почему долго работает

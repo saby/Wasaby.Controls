@@ -128,14 +128,14 @@ define('js!SBIS3.CONTROLS.Slider',
                this._publish('onDrawValueChange');
                this._fullLine = this._container.find('.controls-Slider__line__full');
                this._wrapper = this._container.find('.controls-Slider__wrapper');
-               this._endValue = this._prepareValue(this._options.endValue ? this._options.endValue : this._options.maxValue, 'right');
-               this._startValue = this._prepareValue(this._options.startValue, 'left');
+               this._endValue = this._prepareValue(this._options.endValue ? this._options.endValue : this._options.maxValue, 'end');
+               this._startValue = this._prepareValue(this._options.startValue, 'start');
                this._pointsContainers = {
-                  left: this._container.find('.controls-Slider__point__left'),
-                  right: this._container.find('.controls-Slider__point__right')
+                  start: this._container.find('.controls-Slider__point__start'),
+                  end: this._container.find('.controls-Slider__point__end')
                };
-               this._pointsContainers.left.on('mousedown', this._initDrag.bind(this));
-               this._pointsContainers.right.on('mousedown', this._initDrag.bind(this));
+               this._pointsContainers.start.on('mousedown', this._initDrag.bind(this));
+               this._pointsContainers.end.on('mousedown', this._initDrag.bind(this));
                //если заданы начальные и конечные значения то необходимо их отрисовать и нотифицировать об этом
                //если значения не заданы то точки встанут в начало и конец а start/endValue будут пустыми
                if (this._options.startValue || this._options.endValue) {
@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.Slider',
               * @see startValue
               */
             setStartValue: function(value) {
-               this._drawStartValue(value);
+               this._drawValue(value, 'start');
                Slider.superclass.setStartValue.apply(this, [value]);
             },
              /**
@@ -157,23 +157,17 @@ define('js!SBIS3.CONTROLS.Slider',
               * @see endValue
               */
             setEndValue: function(value) {
-               this._drawEndValue(value);
+               this._drawValue(value, 'end');
                Slider.superclass.setEndValue.apply(this, [value]);
             },
-             /**
-              * Устанавливает минимальное значение слайдера.
-              * @param {Number} minValue
-              * @see getMinValue
-              * @see minValue
-              */
-            setMinValue: function(minValue){
-               if (minValue >= this._options.maxValue) {
-                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное минимальное значение');
-               } else {
-                  this._options.minValue = minValue;
-                  this._drawStartValue(this._options.startValue);
-                  this._drawEndValue(this._options.endValue);
-               }
+            /**
+             * Устанавливает минимальное значение слайдера.
+             * @param {Number} minValue
+             * @see getMinValue
+             * @see minValue
+             */
+            setMinValue: function(value){
+               this._setMinMaxValue(value, 'min');
             },
              /**
               * Возвращает минимальное значение слайдера.
@@ -184,20 +178,14 @@ define('js!SBIS3.CONTROLS.Slider',
             getMinValue: function(){
                return this._options.minValue;
             },
-             /**
-              * Устанавливает максимальное значение слайдера.
-              * @param {Number} maxValue
-              * @see maxValue
-              * @see getMaxValue
-              */
-            setMaxValue: function(maxValue) {
-               if (maxValue <= this._options.minValue) {
-                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное максимальное значение');
-               } else {
-                  this._options.maxValue = maxValue;
-                  this._drawStartValue(this._options.startValue);
-                  this._drawEndValue(this._options.endValue);
-               }
+            /**
+             * Устанавливает максимальное значение слайдера.
+             * @param {Number} maxValue
+             * @see maxValue
+             * @see getMaxValue
+             */
+            setMaxValue: function(value) {
+               this._setMinMaxValue(value, 'max');
             },
              /**
               * Возвращает максимальное значение слайдера.
@@ -209,22 +197,29 @@ define('js!SBIS3.CONTROLS.Slider',
                return this._options.maxValue;
             },
 
+            setMinMaxValue: function(min, max) {
+               this._options.minValue = min;
+               this._options.maxValue = max;
+               this.setMinValue(min);
+               this.setMaxValue(max);
+            },
+
             _prepareValue: function(value, side) {
-               value = value || value === 0 ? value : side === 'left'? this._options.minValue : this._options.maxValue;
+               value = value || value === 0 ? value : side === 'start'? this._options.minValue : this._options.maxValue;
                if (value > this._options.maxValue) {
                   value = this._options.maxValue;
                }
                if (value < this._options.minValue ) {
                   value = this._options.minValue;
                }
-               if (side === 'left' && value > this._endValue) {
+               if (side === 'start' && value > this._endValue) {
                   value = this._endValue;
                }
-               if (side === 'right' && value < this._startValue) {
+               if (side === 'end' && value < this._startValue) {
                   value = this._startValue;
                }
-               value = +value;
-               return +value.toFixed(this._options.decimals);
+               value = + value;
+               return + value.toFixed(this._options.decimals);
             },
 
             _redraw: function() {
@@ -233,24 +228,33 @@ define('js!SBIS3.CONTROLS.Slider',
                   left = (this._startValue - this._options.minValue) / rangeLength * 100,
                   right = (this._endValue - this._options.minValue) / rangeLength * 100,
                   width = right - left;
-               this._pointsContainers.right.css('left', right  + '%');
-               this._pointsContainers.left.css('left', left + '%');
+               this._pointsContainers.end.css('left', right  + '%');
+               this._pointsContainers.start.css('left', left + '%');
                this._fullLine.css('left',  left + '%');
                this._fullLine.css('width', width + '%');
             },
 
-            _drawStartValue: function(value){
-               value = this._prepareValue(value, 'left');
-               this._startValue = value;
+            _drawValue: function(value, side){
+               value = this._prepareValue(value, side);
+               side === 'start' ? this._startValue = value : this._endValue = value;
                this._redraw();
             },
 
-            _drawEndValue: function(value){
-               value = this._prepareValue(value, 'right');
-               this._endValue = value;
-               this._redraw();
+            _setMinMaxValue: function(value, side){
+               var
+                  validation = side === 'min' ? value >= this._options.maxValue : value <= this._options.minValue;
+               if (validation) {
+                  IoC.resolve('ILogger').error('CONTROLS.Slider', 'Попытка установить некорректное конечное значение');
+               } else {
+                  this._updateMinMaxValue(value, side);
+               }
             },
 
+            _updateMinMaxValue: function(value, side){
+               side === 'min' ?  this._options.minValue = value : this._options.maxValue = value;
+               this._drawValue(this._options.startValue, 'start');
+               this._drawValue(this._options.endValue, 'end');
+            },
             //DragNDropMixin методы
             _initDrag: function(event) {
                event.preventDefault();
@@ -276,21 +280,21 @@ define('js!SBIS3.CONTROLS.Slider',
                      width = this._container.width(),
                      instance = DragObject.getOwner(),
                      rangeLength = instance._options.maxValue - instance._options.minValue,
-                     side = $(DragObject.getTarget()).hasClass('controls-Slider__point__left') ? 'left' : 'right',
+                     side = $(DragObject.getTarget()).hasClass('controls-Slider__point__start') ? 'start' : 'end',
                      percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
                      value = instance._options.minValue + percent * rangeLength;
                   if (instance._dragInProcess && instance.isEnabled()) {
-                     instance[side === 'left' ? '_drawStartValue' : '_drawEndValue'](value);
+                     instance._drawValue(value, side);
                      this._notify('onDrawValueChange', this._startValue, this._endValue)
                   }
                }
             },
 
-            _endDragHandler: function(DragObject, event) {
+            _endDragHandler: function(DragObject) {
                var
                   instance = DragObject.getOwner();
                if (instance.isEnabled()) {
-                  if ($(DragObject.getTarget()).hasClass('controls-Slider__point__left')) {
+                  if ($(DragObject.getTarget()).hasClass('controls-Slider__point__start')) {
                      instance.setStartValue(instance._startValue);
                   } else {
                      instance.setEndValue(instance._endValue);

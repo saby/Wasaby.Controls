@@ -391,14 +391,14 @@
 @tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
+@tab-button-large-firstAddText-color-hover:     #313E78;
 @tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-firstAddText-font-weight:     normal;
-@tab-button-large-firstAddText-hover-color:     #FF7030;
 
 @tab-button-large-secondAddText-color:          #999999;
+@tab-button-large-secondAddText-text-decor:     underline;
 @tab-button-large-secondAddText-font-size:      12px;
 @tab-button-large-secondAddText-font-weight:    normal;
-@tab-button-large-secondAddText-hover-color:    #FF7030;
 
 @tab-button-inner-padding:                      0px 8px 0 8px;
 @tab-button-inner-line-height:                  30px;
@@ -1058,8 +1058,6 @@
 
 @combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0;
-@combo-box-picker-margin:                       -1px;
-@combo-box-picker-padding:                      1px 1px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
 @combo-box-picker-item-padding:                 7px 4px 6px 4px;
@@ -1077,6 +1075,7 @@
 @combo-box-after-width:                         @text-box-after-width;
 
 @compo-box-picker-show-color:                   @text-color;
+@combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 
 // TODO: check whether it's required
@@ -1605,7 +1604,7 @@
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
 @list-view-items-toolbar-bottom:                     3px;
-@list-view-items-toolbar-right:                      0;
+@list-view-items-toolbar-right:                      8px;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
@@ -2055,10 +2054,11 @@
 //FilterButton
 @controls-filterButton-picker-bg:                 #F9F9F9;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       1px 3px 3px 3px;
+@controls-filterButton-picker-border-width:       3px;
 @controls-filterButton-picker-border-style:       solid;
 @controls-filterButton-picker-border-color:       @gray-light-color;
-@controls-filterButton-picker-border-radius:      0 0 4px 4px;
+@controls-filterButton-picker-border-radius:      6px;
+@controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  12px;
 @controls-Popup-closeButton-right:                0;
 
@@ -2405,3 +2405,38 @@
 @toggle-header-hover-count-color:                  @toggle-header-hover-color;
 
 @toggle-header-checked-before-content:             '\E000';
+
+//----------------//
+//  moneyDecorator  //
+//----------------//
+
+@money-decorator-integer-font-size:                        14px;
+@money-decorator-integer-font-color:                       #000000;
+
+@money-decorator-integer-accent-results-font-size:         15px;
+@money-decorator-integer-accent-results-font-color:        @blue-dark-color;
+@money-decorator-integer-accent-results-font-weight:       bold;
+
+@money-decorator-integer-no-accent-results-font-size:      15px;
+@money-decorator-integer-no-accent-results-font-color:     #999999;
+@money-decorator-integer-no-accent-results-font-weight:    bold;
+
+@money-decorator-integer-group-font-size:                  14px;
+@money-decorator-integer-group-font-color:                 @gray-ccc-color;
+
+@money-decorator-integer-basic-registry-font-size:         14px;
+@money-decorator-integer-basic-registry-font-color:        #000000;
+
+@money-decorator-integer-no-basic-registry-font-size:      14px;
+@money-decorator-integer-no-basic-registry-font-color:     #999999;
+
+@money-decorator-integer-accent-registry-font-size:        15px;
+@money-decorator-integer-accent-registry-font-color:       @blue-dark-color;
+@money-decorator-integer-accent-registry-font-weight:      bold;
+
+@money-decorator-integer-no-accent-registry-font-size:     15px;
+@money-decorator-integer-no-accent-registry-font-color:    #999999;
+@money-decorator-integer-no-accent-registry-font-weight:   bold;
+
+@money-decorator-fraction-font-size:                       12px;
+@money-decorator-fraction-font-color:                      @gray-ccc-color;

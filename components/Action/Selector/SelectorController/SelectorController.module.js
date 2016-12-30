@@ -47,9 +47,9 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              var commandDispatcher = CommandDispatcher;
              this._publish('onSelectComplete');
 
-             commandDispatcher.declareCommand(this, 'selectorWrapperSelectionChanged', this._chooserWrapperSelectionChanged);
-             commandDispatcher.declareCommand(this, 'selectorWrapperInitialized', this._chooserWrapperInitialized);
-             commandDispatcher.declareCommand(this, 'selectComplete', this._chooseComplete);
+             commandDispatcher.declareCommand(this, 'selectorWrapperSelectionChanged', this._selectorWrapperSelectionChanged);
+             commandDispatcher.declareCommand(this, 'selectorWrapperInitialized', this._selectorWrapperInitialized);
+             commandDispatcher.declareCommand(this, 'selectComplete', this._selectComplete);
 
              if(this._options.selectedItems) {
                 if(Array.isArray(this._options.selectedItems)) {
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            * @param chooserWrapper
            * @private
            */
-          _chooserWrapperInitialized: function(chooserWrapper) {
+          _selectorWrapperInitialized: function(chooserWrapper) {
              chooserWrapper.setProperties({
                 multiselect: this._options.multiselect,
                 selectedItems: this._options.selectedItems,
@@ -86,29 +86,29 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           /**
            * Обрабатываем изменение выделения
            * @param difference
-           * @param keyField
+           * @param idProperty
            * @private
            */
-          _chooserWrapperSelectionChanged: function(difference, keyField) {
+          _selectorWrapperSelectionChanged: function(difference, idProperty) {
              var currentItems = this._options.selectedItems,
                  self = this;
 
              function onChangeSelection() {
-                if(self._selectButton) {
+                if(self._selectButton && self._options.multiselect) {
                    self._selectButton.show();
                 }
              }
 
              if(difference.removed.length) {
                 collectionHelpers.forEach(difference.removed, function (removedKey) {
-                   currentItems.removeAt(currentItems.getIndexByValue(keyField, removedKey));
+                   currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
                 });
                 onChangeSelection();
              }
 
              if(difference.added.length) {
                 collectionHelpers.forEach(difference.added, function(item) {
-                   var index = currentItems.getIndexByValue(keyField, item.get(keyField));
+                   var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
 
                    if(index === -1) {
                       currentItems.add(item);
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
           },
 
-          _chooseComplete: function() {
+          _selectComplete: function() {
              this._notify('onSelectComplete', this._options.selectedItems.clone());
           }
        });

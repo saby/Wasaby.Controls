@@ -184,16 +184,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
                      self._cachedH = h;
                      self._autosizeTextArea(true);
                   }
-                  /* при использовании плагина для авторасчета высоты - высота текстареи считается js-ом динамически
-                   * при этом если контента много, то див, который реализует задизабленный режим, может иметь вертикальный скролл
-                   * и даже после выставления нужной высоты, которой хватает для текстареи, из за вертикального скролла в диве
-                   * может не хватать ширины => строки переносятся и высоты тоже не хватает - появляется скролл
-                   * если добавить и убрать стиль overflow-y то все пересчитывается правильно*/
-                  var wrapper = $('.controls-TextArea__disabled-wrapper', self._container.get(0));
-                  wrapper.css('overflow', 'visible');
-                  setTimeout(function(){
-                     wrapper.css('overflow', 'auto');
-                  }, 50)
                }
             });
 
@@ -268,8 +258,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _keyUpBind: function(event) {
          var
             newText = this._inputField.val(),
-            key = event.which || event.keyCode;
-         if (newText != this._options.text) {
+            key = event.which || event.keyCode,
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (newText != this._options.text && !textsEmpty) {
             this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||

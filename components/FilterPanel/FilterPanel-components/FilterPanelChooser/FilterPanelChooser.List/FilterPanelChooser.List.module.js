@@ -70,8 +70,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
                 captionFullList: 'Все',
                 /**
                  * @cfg {String} Устанавливает поле, в котором лежит количественное значения наименования.
-                 * @see keyField
-                 * @see displayField
+                 * @see idProperty
+                 * @see displayProperty
                  */
                 countField: 'count'
             },
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         },
 
         _getItemTextByItemId: function(items, id) {
-            return items.getRecordById(id).get(this._options.displayField);
+            return items.getRecordById(id).get(this._options.displayProperty);
         },
 
         _elemClickHandler: function(e, id) {

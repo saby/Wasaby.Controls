@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       _needCreateFolderFooter: function(item) {
          var
              model = item.getContents(),
-             id = model && model.get(this._options.keyField);
+             id = model && model.get(this._options.idProperty);
          return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
@@ -370,7 +370,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                id: id,
                item: item,
                hierField : this._options.parentProperty,
-               parentProperty: this._options.parentProperty
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             };
 
          this._notify('onItemActivate', meta);
