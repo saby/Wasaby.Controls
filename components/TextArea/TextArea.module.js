@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.TextArea', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.TextArea",
+   "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin"
