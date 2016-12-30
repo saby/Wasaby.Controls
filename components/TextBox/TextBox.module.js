@@ -439,6 +439,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
          });
       },
 
+      _getInputValue: function() {
+         return this._inputField.val();
+      },
+
+      _setInputValue: function(value) {
+         this._inputField.val(value);
+      },
+
       _getAfterFieldWrapper: function() {
          if(!this._afterFieldWrapper) {
             this._afterFieldWrapper = this.getContainer().find('.controls-TextBox__afterFieldWrapper');
