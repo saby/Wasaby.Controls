@@ -1,7 +1,11 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], function(fHelpers) {
+define('js!SBIS3.CONTROLS.SearchMixin',
+    [
+       'Core/helpers/functional-helpers',
+       'Core/CommandDispatcher'
+    ], function(fHelpers, CommandDispatcher) {
 
    /**
     * Миксин, добавляющий иконку
@@ -42,6 +46,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], fun
 
       $constructor: function() {
          this._publish('onSearch','onReset');
+         CommandDispatcher.declareCommand(this, 'applySearch', this.applySearch);
       },
 
       before: {
