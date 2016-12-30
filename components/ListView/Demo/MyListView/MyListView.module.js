@@ -3,10 +3,11 @@ define('js!SBIS3.CONTROLS.Demo.MyListView',
    "Core/core-functions",
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.Demo.MyListView",
+   "html!SBIS3.CONTROLS.Demo.MyListView/resources/ResultsTemplate",
    "css!SBIS3.CONTROLS.Demo.MyListView",
    "js!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.TreeView"
-], function( cFunctions,CompoundControl, dotTplFn) {
+], function( cFunctions,CompoundControl, dotTplFn, resultsTpl) {
    /**
     * SBIS3.CONTROLS.Demo.MyListView
     * @class SBIS3.CONTROLS.Demo.MyListView
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.Demo.MyListView',
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-
+            resultsTpl: resultsTpl
          }
       },
       $constructor: function() {

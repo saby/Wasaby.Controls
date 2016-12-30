@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
-      tplOptions.displayProperty = cfg.displayProperty
+      tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = getPropertyValue;
 
@@ -628,6 +628,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
                      newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                     newCfg._resultsRecord = cfg._items && cfg._items.getMetaData().results;
                      newCfg._itemData = cfg._buildTplArgs(cfg);
                   }
                }
