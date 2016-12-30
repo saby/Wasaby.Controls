@@ -35,9 +35,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
             /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
                требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
-            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.keyField] && opts.selectedItem[opts.displayProperty]) {
+            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.idProperty] && opts.selectedItem[opts.displayProperty]) {
                opts.selectedItem = new Model({
-                  idProperty: opts.keyField,
+                  idProperty: opts.idProperty,
                   rawData: opts.selectedItem
                });
                opts.selectedKey = opts.selectedItem.getId();
@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
          this._options.selectedItem = isModel ? item : null;
 
-         key = isModel ? item.get(this._options.keyField) : null;
+         key = isModel ? item.get(this._options.idProperty) : null;
 
          if(key === undefined) {
             throw new Error(this._moduleName + ': record key is undefined.');
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
       },
 
       initializeSelectedItem: function() {
-         this._options.selectedItem = new Model({idProperty: this._options.keyField});
+         this._options.selectedItem = new Model({idProperty: this._options.idProperty});
       },
 
       /**
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
              key;
 
          if(selItem) {
-            key = selItem.get(this._options.keyField);
+            key = selItem.get(this._options.idProperty);
          }
 
          /* При синхронизации запись без ключа считаем невыбранной, т.к. с помощью метода set такую запись установить нельзя,

@@ -889,7 +889,7 @@ define('js!SBIS3.CONTROLS.ListView',
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
                showPages: false,
-               keyField: 'id',
+               idProperty: 'id',
                parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои

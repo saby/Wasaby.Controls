@@ -591,18 +591,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /**
            * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+           * @deprecated
+           */
+          setKeyField: function(keyField) {
+             IoC.resolve('ILogger').log('FieldLink', 'Метод setKeyField устарел, используйте setIdProperty');
+             this.setIdProperty(keyField);
+          },
+
+          /**
+           * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
            * @example
            * <pre class="brush:xml">
-           *     <option name="keyField">Идентификатор</option>
+           *     <option name="idProperty">Идентификатор</option>
            * </pre>
            * @see items
            * @see displayProperty
            * @see setDataSource
-           * @param {String} keyField
+           * @param {String} idProperty
            */
-          setKeyField: function(keyField) {
-             FieldLink.superclass.setKeyField.call(this, keyField);
-             this._getLinkCollection().setKeyField(keyField);
+          setIdProperty: function(idProperty) {
+             FieldLink.superclass.setIdProperty.call(this, idProperty);
+             this._getLinkCollection().setIdProperty(idProperty);
           },
 
           /**
@@ -624,7 +633,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
            * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
            * которого нужно отобразить.
-           * @see keyField
+           * @see idProperty
            * @see items
            * @see setDataSource
            * @param {String} displayProperty
@@ -1007,8 +1016,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
                    и не обязательному по первичному ключу у записей в списке. */
                 items.each(function(rec) {
-                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
-                      rec.setIdProperty(self._options.keyField);
+                   if(rec.getIdProperty() !== self._options.idProperty && rec.get(self._options.idProperty) !== undefined) {
+                      rec.setIdProperty(self._options.idProperty);
                    }
                 });
              }
