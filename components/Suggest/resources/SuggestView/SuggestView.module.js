@@ -13,22 +13,6 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
        'use strict';
 
-       var DELEGATED_METHODS = [
-          'getItems',
-          'setItems',
-          'setFilter',
-          'getFilter',
-          'setSorting',
-          'getSorting',
-          'reload',
-          'setHighlightText',
-          'setHighlightEnabled',
-          'setInfiniteScroll',
-          'setDataSource',
-          'getDataSource',
-          '_hasNextPage'
-       ];
-
        var DELEGATED_EVENTS = [
           'onDrawItems',
           'onDataLoad',
