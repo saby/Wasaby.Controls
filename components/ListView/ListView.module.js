@@ -1734,7 +1734,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
          validate: function() {
-            var editingIsValid = !(this.isEdit() && !this._getEditInPlace().validate());
+            var editingIsValid = !this.isEdit() || this._getEditInPlace().isValidChanges();
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
