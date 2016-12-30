@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.SliderInput',
             _drawValue: function(value, side) {
                var
                   input = side === 'start' ? this._startTextBox : this._endTextBox;
-               SliderInput.superclass._drawEndValue.apply(this, arguments);
+               SliderInput.superclass._drawValue.apply(this, arguments);
                value = value || value === 0 ? this._prepareValue(value, side) : value;
                input.setText(value);
             },
