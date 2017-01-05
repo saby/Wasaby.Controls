@@ -264,12 +264,25 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return $('.controls-CompositeView__foldersContainer', this._container);
       },
 
-      //Пеереопределяем метод добавления элемента в DOM т.к. в TreeCompositeView в режиме table для папок есть отдельный
-      //контейнер который лежит перед всем листьями, и если происходит добавление элемента на 0 позицую, он вставляется
-      //перед контейнером для папок, чего быть не должно. Для этого посмотрим, если вставляется лист в 0 позицую, вставим
-      //его сразу после контейнера для папок, иначе выполняем штатную логику, которая в остальных случаях отрабатывает верно.
+      //Режим старой отрисовки
+      //Переопределяем метод добавления элемента в DOM т.к. в TreeCompositeView в режиме не table для папок есть отдельный
+      //контейнер который лежит перед всем листьями, и если происходит добавление элемента на позицую между последней папкой и первым листом,
+      //он должен вставляться корректно, в данном случае просто после контейнера всех папок
       _insertItemContainer: function(item, itemContainer, target, at, currentItemAt, flagAfter) {
-         if (at === 0 && this.getViewMode() != 'table' && !item.get(this._options.nodeProperty)) {
+         var customCompositeInsert = false;
+         if (this.getViewMode() != 'table' && !flagAfter && !item.get(this._options.nodeProperty)) {
+            if (at === 0) {
+               customCompositeInsert = true;
+            }
+            else {
+               var prevItem = this._getItemsProjection().at(at - 1);
+               if (prevItem.isNode()) {
+                  customCompositeInsert = true;
+               }
+            }
+         }
+
+         if (customCompositeInsert) {
             this._previousGroupBy = undefined;
             itemContainer.insertAfter(this._getFoldersContainer());
          } else {
