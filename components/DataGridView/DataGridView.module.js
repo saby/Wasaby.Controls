@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   multiselect : cfg.multiselect,
                   startScrollColumn: cfg.startScrollColumn,
                   resultsPosition: cfg.resultsPosition,
-                  resultsTpl: cfg.resultsTpl,
+                  resultsTpl: TemplateUtil.prepareTemplate(cfg.resultsTpl),
                   showHead: cfg.showHead
                },
                value,
