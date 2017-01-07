@@ -46,6 +46,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
       },
 
+      before: {
+         _setTextByKeyboard: function () {
+            /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
+               чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
+            this._changedByKeyboard = true;
+         }
+      },
+
 
       after: {
          _keyDownBind: function(e) {
@@ -53,8 +61,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                т.к. Area тоже его слушает и закрывает floatArea */
             if((e.which === constants.key.enter || e.which === constants.key.esc) && this.isPickerVisible()) {
                stopEvent(e);
-            } else {
-               this._changedByKeyboard = true;
             }
          },
 
