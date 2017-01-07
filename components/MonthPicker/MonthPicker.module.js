@@ -27,6 +27,7 @@ define(
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
+    * @deprecated используйте SBIS3.CONTROLS.DateRangeSlider
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment
