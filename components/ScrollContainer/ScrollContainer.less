@@ -2,7 +2,10 @@
    overflow: hidden;
    position: relative;
    outline: none;
-   .controls-Scrollbar{
+   .controls-ScrollContainer__scrollbar{
+      position: absolute;
+      right: 0;
+      top: 0;
       opacity: 0;
       transition: opacity 0.1s ease;
       padding: 4px 2px;
@@ -62,11 +65,13 @@
       overflow-y: auto;
    }
 }
-
-.controls-ScrollContainer .controls-ScrollContainer__scrollbar {
+.controls-ScrollContainer__top-gradient{
    position: absolute;
-   right: 0;
    top: 0;
+   width: 100%;
+   height: 13px;
+   background: 0 0;
+   background: linear-gradient(to bottom, #fff, rgba(255, 255, 255, 0));
 }
 /*TODO временный фикс для выпуска*/
 .controls-ScrollContainer{
