@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       init :function(){
          TextArea.superclass.init.call(this);
          var self = this;
-         if (this._options.placeholder && !constants.compatibility.placeholder) {
+         if (this._options.placeholder) {
             this._createCompatPlaceholder();
          }
          if (this._options.autoResize.state) {
@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _autosizeTextArea: function(hard){
-         var self = this;
+         /*var self = this;
          this._inputField.autosize({
             callback: self._notifyOnSizeChanged(self, self),
             hard: hard
@@ -220,7 +220,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
 
          this._removeAutoSizeDognail();
-         this._container.addClass('controls-TextArea__heightInit');
+         this._container.addClass('controls-TextArea__heightInit');*/
       },
 
       _getElementToFocus: function() {
@@ -281,15 +281,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
         * @see placeholder
         */
       setPlaceholder: function(text){
-          if (!constants.compatibility.placeholder) {
-             if (!this._compatPlaceholder) {
-                this._createCompatPlaceholder();
-             }
-             this._compatPlaceholder.text(text || '');
+          if (!this._compatPlaceholder) {
+             this._createCompatPlaceholder();
           }
-          else {
-             this._inputField.attr('placeholder', text);
-          }
+          this._compatPlaceholder.text(text || '');
       },
       _createCompatPlaceholder : function() {
          var self = this;

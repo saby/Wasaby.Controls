@@ -11,11 +11,6 @@
    .box-sizing(border-box);
 
    .controls-TextArea__inputField {
-      top: @text-area-top-padding;
-      left: @text-area-left-padding;
-      right: @text-area-right-padding;
-      bottom: @text-area-bottom-padding;
-      position: absolute;
       overflow: auto;
       font: @text-area-field-font;
       color: @text-area-field-text-color;
@@ -24,7 +19,6 @@
       height: 100%;
       line-height: @text-area-field-line-height;
       //padding отсюда перенесен выше, чтобы autosize рассчитывался корректно
-      resize: none;
       border: none;
       padding: 0;
       background: transparent;
@@ -79,20 +73,7 @@
    &.controls-TextArea__autoheight {
       height: auto !important;
    }
-   .controls-TextArea__disabled-wrapper{
-      top: @text-area-top-padding;
-      left: @text-area-left-padding;
-      right: @text-area-right-padding;
-      bottom: @text-area-bottom-padding;
-      background: @text-area-bg;
-      padding: 0;
-      box-sizing: border-box;
-      overflow: auto;
-      white-space: pre-line;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      min-height: @text-box-height - @text-area-top-padding - @text-area-bottom-padding - (@text-area-disabled-border-width * 2);
-   }
+
   .controls-TextArea__placeholder {
     position: absolute;
     top: 0;
@@ -102,13 +83,4 @@
     padding: @text-area-compat-placeholder-padding;
     text-align: @text-area-compat-placeholder-alignment;
   }
-}
-.controls-TextArea__heightInit {
-   .controls-TextArea__disabled-wrapper {
-      position: absolute;
-      min-height: 0;
-   }
-   .controls-TextArea__inputField {
-      position: static;
-   }
 }
