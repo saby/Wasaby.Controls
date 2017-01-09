@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name',
+             idProperty: 'name',
             /**
              * @cfg {Boolean} Флаг наличия блока с операциями отметки
              */

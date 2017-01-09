@@ -33,16 +33,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       rootAsNode = isPlainObject(root);
       if (rootAsNode) {
          root = Model.fromObject(root, 'adapter.sbis');
-         root.setIdProperty(cfg.keyField);
+         root.setIdProperty(cfg.idProperty);
       }
 
       var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection = new TreeProjection({
          collection: items,
-         idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
+         idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
          parentProperty: cfg.parentProperty,
          nodeProperty: cfg.nodeProperty,
-         loadedProperty: cfg.hierField + '$',
+         loadedProperty: cfg.parentProperty + '$',
          unique: true,
          root: root,
          rootEnumerable: rootAsNode,
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    getSearchCfg = function(cfg) {
       return {
-         keyField: cfg.keyField,
+         idProperty: cfg.idProperty,
          displayProperty: cfg.displayProperty,
          highlightEnabled: cfg.highlightEnabled,
          highlightText: cfg.highlightText,
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (item.isNode()) {
             curParentContents = item.getContents();
             pathElem = {};
-            pathElem[cfg.keyField] = curParentContents.getId();
+            pathElem[cfg.idProperty] = curParentContents.getId();
             pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
             curPath.push(pathElem);
@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hasNodes = cfg.hasNodes;
       tplOptions.hierarchy = new HierarchyRelation({
-         idProperty: cfg.keyField,
+         idProperty: cfg.idProperty,
          parentProperty: cfg.parentProperty
       });
 

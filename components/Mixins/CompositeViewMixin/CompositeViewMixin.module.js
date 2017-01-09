@@ -209,7 +209,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       },
       _updateHeadAfterInit: function() {
          if (this._options.viewMode == 'table') {
-            this._redrawHead();
+            this._redrawTheadAndTfoot();
          }
       },
       /**

@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser) {
          var noSaveFilters = ['Разворот', 'ВидДерева'],
             view = browser.getView(),
-            filter;
+            filter, preparedStructure;
 
          if(searchParam) {
             noSaveFilters.push(searchParam);
@@ -244,10 +244,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
             if(filter) {
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure()));
-               /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
-                  и надо, чтобы это отразилось в структуре */
-               view.setFilter(filter.viewFilter, true);
+               preparedStructure = FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure());
+
+               if(ignoreFiltersList && ignoreFiltersList.length) {
+                  FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(filterButton, preparedStructure, ignoreFiltersList);
+               }
+
+               filterButton.setFilterStructure(preparedStructure);
             }
          }
          setTimeout(fHelpers.forAliveOnly(function() {

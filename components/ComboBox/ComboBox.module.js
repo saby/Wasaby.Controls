@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * Особенности работы с контролом:
     * <ul>
     *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
-    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
+    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link idProperty}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
     *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
     *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
     *    <li>По стандарту максимальная высота выпадающего списка 400px. В некоторых случаях может возникнуть необходимость её изменить.
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * <pre>
     *    <component data-component="SBIS3.CONTROLS.ComboBox">
     *       <options name="items" type="array" bind="record/MyEnumField"></options>
-    *       <option name="keyField">@Идентификатор</option>
+    *       <option name="idProperty">@Идентификатор</option>
     *       <option name="displayProperty">Описание</option>
     *    </component>
     * </pre>
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *            <option name="title">Пункт2</option>
     *         </options>
     *      </options>
-    *      <option name="keyField">key</option>
+    *      <option name="idProperty">key</option>
     * </component>
     */
 
@@ -91,13 +91,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       var rawData = {},
          emptyItemProjection,
          rs;
-      rawData[cfg.keyField] = null;
+      rawData[cfg.idProperty] = null;
       rawData[cfg.displayProperty] = 'Не выбрано';
       rawData.isEmptyValue = true;
 
       rs = new RecordSet({
          rawData: [rawData],
-         idProperty: cfg.keyField
+         idProperty: cfg.idProperty
       });
 
       emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
@@ -133,9 +133,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *         </options>
        *      </options>
        *      <!--необходимо указать какое из наших полей является ключевым-->
-       *      <option name="keyField">key</option>
+       *      <option name="idProperty">key</option>
        * </pre>
-       * @see keyField
+       * @see idProperty
        * @see displayProperty
        * @see setDataSource
        * @see getDataSet

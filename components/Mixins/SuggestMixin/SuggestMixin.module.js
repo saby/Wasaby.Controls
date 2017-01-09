@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *     <options name="list">
              *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
              *        <options name="options">
-             *           <option name="keyField" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
+             *           <option name="idProperty" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
              *           <options name="columns" type="array"> <!-- Производим настройку колонок -->
              *              <options>
              *                 <option name="title">№</option>
@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @see listFilter
              * @see getList
              * @see startChar
-             * @see SBIS3.CONTROLS.DSMixin#keyField
+             * @see SBIS3.CONTROLS.DSMixin#idProperty
              * @see SBIS3.CORE.FieldLink/Columns.typedef
              * @see SBIS3.CONTROLS.DataGridView#showHead
              */
@@ -279,8 +279,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          this._publish('onFilterBuild', 'onListReady', 'onListItemSelect');
 
-         this.getContainer().addClass('controls-Suggest');
-
+         this._showAllButtonHandler = this._showAllButtonHandler.bind(this);
          this._initBindingRules();
       },
 
@@ -291,10 +290,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          destroy: function () {
             this._clearDelayTimer();
             this._loadingIndicator = undefined;
-            this._showAllButton = undefined;
             if (this._list) {
                this._list.destroy();
             }
+         }
+      },
+
+      around: {
+         _modifyOptions: function(parentFnc, opts) {
+            var options = parentFnc.call(this, opts);
+            options.className += ' controls-Suggest';
+            return options;
          }
       },
 
@@ -575,23 +581,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             }));
 
-         /* Найдём и подпишемся на клик кнопки показа всех записей (если она есть) */
-         if(this._list.hasChildControlByName('showAllButton')) {
-            this._showAllButton = this._list.getChildControlByName('showAllButton');
-
-            this.subscribeTo(this._showAllButton, 'onActivated', function() {
-               var showAllConfig;
-
-               showAllConfig = self._getShowAllConfig();
-
-
-               //FIXME и ещё один костыль до перевода пикера на фокусную систему
-               self.hidePicker();
-
-               self._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
-            });
-         }
-
          this._notify('onListReady', this._list);
       },
 
@@ -633,12 +622,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _onListDataLoad: function(e, dataSet) {
+         var list = this.getList();
+
          this._hideLoadingIndicator();
          this._listReversed = false;
 
-         if(this._showAllButton) {
-            var list = this.getList(),
-                items = dataSet || list.getItems(),
+         if(list.hasChildControlByName('showAllButton')) {
+            var items = dataSet || list.getItems(),
+                button = list.getChildControlByName('showAllButton'),
                 showButton;
 
             /* Изменяем видимость кнопки в зависимости от:
@@ -650,8 +641,24 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                showButton = list._hasNextPage(items.getMetaData().more);
             }
 
-            this._showAllButton.getContainer().toggleClass('ws-hidden', !showButton);
+            if(showButton) {
+               /* Чтобы не подписываться лишний раз */
+               if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
+                  this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
+               }
+               button.show();
+            } else {
+               this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
+               button.hide();
+            }
          }
+      },
+
+      _showAllButtonHandler: function() {
+         var showAllConfig = this._getShowAllConfig();
+
+         this.hidePicker();
+         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
       },
 
       /**

@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
             enabled: this.isEnabled(),
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
-            keyField: this._options.keyField,
+            idProperty: this._options.idProperty,
             allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
             displayProperty: this._options.displayProperty || 'title',
@@ -126,7 +126,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
          header.bind('click', function(){
             self._onHeaderClick();
          });
-         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems().toArray());
+         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems());
          this._picker.getContainer().prepend(header);
       },
 
@@ -239,12 +239,17 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
 
       /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
       setKeyField: function(prop) {
-         this._options.keyField = prop;
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setKeyField устарел, используйте setIdProperty');
+         this.setIdProperty(prop);
+      },
+
+      setIdProperty: function(prop) {
+         this._options.idProperty = prop;
       },
 
       setDisplayField: function(prop) {
          IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
-         this._options.displayProperty = prop;
+         this.setDisplayProperty(prop);
       },
 
       setDisplayProperty: function(prop) {

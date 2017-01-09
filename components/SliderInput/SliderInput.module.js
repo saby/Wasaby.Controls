@@ -68,16 +68,6 @@ define('js!SBIS3.CONTROLS.SliderInput',
                this._endTextBox.setText(value);
             },
 
-            setMaxValue: function(value) {
-               SliderInput.superclass.setMaxValue.apply(this, [value]);
-               this._endTextBox.setPlaceholder(value);
-            },
-
-            setMinValue: function(value) {
-               SliderInput.superclass.setMinValue.apply(this, [value]);
-               this._startTextBox.setPlaceholder(value);
-            },
-
             _textBoxStartFocusOut: function () {
                this._textBoxFocusOut(this._startTextBox, 'start');
             },
@@ -112,7 +102,7 @@ define('js!SBIS3.CONTROLS.SliderInput',
             _drawValue: function(value, side) {
                var
                   input = side === 'start' ? this._startTextBox : this._endTextBox;
-               SliderInput.superclass._drawEndValue.apply(this, arguments);
+               SliderInput.superclass._drawValue.apply(this, arguments);
                value = value || value === 0 ? this._prepareValue(value, side) : value;
                input.setText(value);
             },
@@ -125,6 +115,13 @@ define('js!SBIS3.CONTROLS.SliderInput',
                      this._endTextBox.setActive(true);
                   }
                }
+            },
+
+            _updateMinMaxValue: function(value, side){
+               var
+                  input = side === 'min' ?  this._startTextBox : this._endTextBox;
+               SliderInput.superclass._updateMinMaxValue.apply(this, arguments);
+               input.setPlaceholder(value);
             }
          });
       return SliderInput;

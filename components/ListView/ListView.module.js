@@ -889,7 +889,7 @@ define('js!SBIS3.CONTROLS.ListView',
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
                showPages: false,
-               keyField: 'id',
+               idProperty: 'id',
                parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
@@ -1704,7 +1704,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
                this._getEditInPlace()._destroyEip();
             }
-            //TODO: Перевести строку итогов на верстку через шаблон по задаче https://inside.tensor.ru/opendoc.html?guid=19ba61d7-ce74-4567-90c9-e5f3565e30b7&description=
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
@@ -1734,7 +1733,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
          validate: function() {
-            var editingIsValid = !(this.isEdit() && !this._getEditInPlace().validate());
+            var editingIsValid = !this.isEdit() || this._getEditInPlace().isValidChanges();
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
@@ -2710,7 +2709,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = this._drawResults.bind(this);
+            this._onMetaDataResultsChange = this._redrawResults.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -3524,69 +3523,28 @@ define('js!SBIS3.CONTROLS.ListView',
            this._options.resultsPosition = position;
          },
 
-         _redrawResults: function(){
-           this._drawResults();
-         },
-
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                resultsRecord = this._getResultsRecord();
+                resultsRecord = this.getItems() && this.getItems().getMetaData().results;
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
             }
          },
 
-         _drawResults: function(){
-            if (!this._checkResults()){
-               this._removeDrawnResults();
-               return;
+         _redrawResults: function(){
+            var resultsRow = $('.controls-ListView__results', this.getContainer()),
+                insertMethod = this._options.resultsPosition == 'top' ? 'before' : 'after',
+                resultsRecord = this.getItems() && this.getItems().getMetaData().results,
+                markup;
+            if (resultsRow.length){
+               this._destroyControls(resultsRow);
+               resultsRow.remove();
             }
-            var resultRow = this._makeResultsTemplate(this._getResultsData());
-            if (resultRow){
-               this._appendResultsContainer(this._getResultsContainer(), resultRow);
-            }
-         },
-         _checkResults: function(){
-            return this._options.resultsPosition !== 'none' && this._getResultsRecord() && this._options.resultsTpl;
-         },
-         _getResultsContainer: function(){
-            var resultsSelector = '.controls-ListView__results-' + this._options.resultsPosition;
-            return $(resultsSelector, this.getContainer());
-         },
-         _makeResultsTemplate: function(resultsData){
-            if (!resultsData) {
-               return;
+            if (resultsRecord && this._options.resultsTpl && this._options.resultsPosition !== 'none'){
+               markup = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({item: resultsRecord, multiselect: this._options.multiselect}));
+               this._getItemsContainer()[insertMethod](markup);
             }
 
-            return MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)(this._getResultsTplCfg(resultsData)));
-         },
-         _getResultsTplCfg: function(resultsData) {
-            return {
-               results: resultsData,
-               item: this._getResultsRecord(),
-               columns: cFunctions.clone(this._options.columns),
-               multiselect: this._options.multiselect
-            }
-         },
-         _getResultsData: function(){
-            return this._getResultsRecord();
-         },
-         _getResultsRecord: function(){
-            return this.getItems() && this.getItems().getMetaData().results;
-         },
-         _appendResultsContainer: function(container, resultRow){
-            var position = this._addResultsMethod || (this._options.resultsPosition == 'top' ? 'prepend' : 'append');
-            this._removeDrawnResults(container);
-            $(container)[position](resultRow);
-            this.reviveComponents(container);
-         },
-         _removeDrawnResults: function(container){
-            var resContainer = container || this._getResultsContainer();
-            var resultRow = $('.controls-DataGridView__results', resContainer);
-            if (resultRow.length){
-               this._destroyControls(resultRow);
-               resultRow.remove();
-            }
          },
          /**
           * //todo коcтыль нужно разобраться почему долго работает
