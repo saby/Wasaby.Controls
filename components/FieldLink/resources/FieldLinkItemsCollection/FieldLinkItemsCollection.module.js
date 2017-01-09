@@ -170,7 +170,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          _initFocusCatch: fHelpers.nop,
          canAcceptFocus: fHelpers.nop,
 
-         _drawItemsCallback: function() {
+         /* Скрываем именно в синхронном drawItemsCallback'e,
+            иначе пикер скрывается асинхронно и моргает */
+         _drawItemsCallbackSync: function() {
             if(this.isPickerVisible() && !this.getItems().getCount()) {
                this.hidePicker();
             }
