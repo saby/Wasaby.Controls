@@ -132,11 +132,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
                else {
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
                }
-               if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle.length == 2) && (curColSplitTitle[0] == nextColSplitTitle[0])){
+               if (curColSplitTitle.length == 2){
                   supportDouble.value = supportDouble.title = curColSplitTitle[0];
-                  supportDouble.colspan = ++supportDouble.colspan || 2;
+                  supportDouble.colspan = supportDouble.colspan || 1;
                   curCol.title = curColSplitTitle[1];
-                  nextCol.title = nextColSplitTitle[1];
+                  if (nextCol && (curColSplitTitle.length == nextColSplitTitle.length) && (curColSplitTitle[0] == nextColSplitTitle[0])){
+                     nextCol.title = nextColSplitTitle[1];
+                     supportDouble.colspan++;
+                  }
+                  else{
+                     rowData.content[1].push(supportDouble);
+                     supportDouble = null;
+                  }
                   rowData.countRows = 2;
                }
                else{
