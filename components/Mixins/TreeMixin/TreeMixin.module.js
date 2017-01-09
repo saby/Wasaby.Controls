@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var lastFolder = path[path.length - 1];
             defaultCfg.projItem = lastFolder.projItem;
             defaultCfg.item = defaultCfg.projItem.getContents();
+            defaultCfg.className = 'controls-HierarchyDataGridView__path'
             cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
             $ws.core.merge(defaultCfg, {
