@@ -67,6 +67,13 @@
             lessManager = new LessManager('online', data);
             console.log(lessManager.getPropValue('white-color'))
 
+        }).then(setInitialValues)
+    };
+
+    function setInitialValues() {
+        let lessdata = lessManager.lessdata;
+        lessdata.forEach(function(rule) {
+            $(`#${rule.title}`).attr('value', rule.value)
         })
     }
 
@@ -107,12 +114,12 @@
 
             new Button({
                 element: 'normalDefaultButton',
-                caption: 'Default button'
+                caption: 'Кнопка'
             });
 
             new Button({
                 element: 'normalDisabledDefaultButton',
-                caption: 'Default button',
+                caption: 'Кнопка',
                 enabled: false
             });
 
@@ -123,40 +130,40 @@
 
             new Button({
                 element: 'normalEllipsisDefaultButton',
-                caption: 'Default button'
+                caption: 'Кнопка'
             });
 
             new Button({
                 element: 'normalMultilineDefaultButton',
-                caption: 'Default button with long text'
+                caption: 'Кнопка with long text'
             });
 
             new Button({
                 element: 'normalMultilineDefaultButton16',
-                caption: 'Default button with long text',
+                caption: 'Кнопка with long text',
                 icon: 'sprite:icon-16 icon-Alert icon-primary'
             });
 
             new Button({
                 element: 'normalDefaultButton16',
-                caption: 'Default button 16x16',
+                caption: 'Кнопка 16x16',
                 icon: 'sprite:icon-16 icon-Alert icon-primary'
             });
 
             new Button({
                 element: 'normalDefaultButton24',
-                caption: 'Default button 24x24',
+                caption: 'Кнопка 24x24',
                 icon: 'sprite:icon-24 icon-Alert icon-primary'
             });
 
             new Button({
                 element: 'bigDefaultButton',
-                caption: 'Default button'
+                caption: 'Кнопка'
             });
 
             new Button({
                 element: 'bigDisabledDefaultButton',
-                caption: 'Default button',
+                caption: 'Кнопка',
                 enabled: false
             });
 
@@ -180,18 +187,18 @@
 
             new Button({
                 element: 'bigEllipsisDefaultButton',
-                caption: 'Default button'
+                caption: 'Кнопка'
             });
 
             new Button({
                 element: 'bigDefaultButton16',
-                caption: 'Default button 16x16',
+                caption: 'Кнопка 16x16',
                 icon: 'sprite:icon-16 icon-Alert icon-primary'
             });
 
             new Button({
                 element: 'bigDefaultButton24',
-                caption: 'Default button 24x24',
+                caption: 'Кнопка 24x24',
                 icon: 'sprite:icon-24 icon-Alert icon-primary'
             });
 

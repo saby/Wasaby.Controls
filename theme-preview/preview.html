@@ -31,13 +31,19 @@
    <script src="/theme-preview/preview.js"></script>
    <style>
       html, body {
-         font-family: PT Sans !important;
+         font-family: 'TensorFont' !important;
          font-size: 13px;
          margin: 0 !important;
          height: 100%;
       }
 
-    
+    @font-face {
+        font-family: 'TensorFont';
+        src: url('/sbis3-ws/ws/css/themes/webfonts/TensorFont/TensorFont.eot');
+        src: url('/sbis3-ws/ws/css/themes/webfonts/TensorFont/TensorFont.eot?#iefix') format('embedded-opentype'), url('/sbis3-ws/ws/css/themes/webfonts/TensorFont/TensorFont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
 
       .zButton {
          width: 100%;
@@ -57,6 +63,29 @@
          padding-top: 5px;
          padding-right: 20px;
       }
+      .myButton {
+   -moz-box-shadow:inset 0px 34px 0px -15px #b54b3a;
+   -webkit-box-shadow:inset 0px 34px 0px -15px #b54b3a;
+   box-shadow:inset 0px 34px 0px -15px #b54b3a;
+   background-color:#a73f2d;
+   border:1px solid #a73f2d;
+   display:inline-block;
+   cursor:pointer;
+   color:#ffffff;
+
+   font-weight:bold;
+   padding:9px 23px;
+   text-decoration:none;
+   text-shadow:0px -1px 0px #7a2a1d;
+}
+.myButton:hover {
+   background-color:#b34332;
+}
+.myButton:active {
+   position:relative;
+   top:1px;
+}
+
       #container {
   display: flex; 
     flex-flow: row wrap;
@@ -68,7 +97,7 @@
    margin: 24px;
 }
 #sidemenu {
-   width: 20%;
+   width: 14%;
    padding:8px;
    height: auto;
    background: rgba(0,0,0,.7);
@@ -91,36 +120,17 @@
 <div id="container">
 <div id="sidemenu">
    <h3>Theme settings</h3>
+   <button class="myButton" style="float: right;margin-top: -44px;" id="apply">apply</button>
    <br>
    <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
+      <span class="menu_title">default-color</span>
+      <input type="text" id="default-color">
    </div>
-      <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
+   <div class="menu_item">
+      <span class="menu_title">primary-color</span>
+      <input type="text" id="primary-color">
    </div>
-      <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
-   </div>
-      <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
-   </div>
-      <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
-   </div>
-      <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
-   </div>
-      <div class="menu_item">
-      <span class="menu_title">text primary color</span>
-      <input type="text">
-   </div>
-   
+  
 </div>
    <div id="content">
 
