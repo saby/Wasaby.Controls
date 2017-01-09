@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            var text = self._inputField.html();
+            var text = self._inputField.get(0).innerText;
             if (self._options.trim) {
                text = String.trim(text);
             }
@@ -155,8 +155,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText.call(self, self._formatText(self._inputField.html()));
-                  self._inputField.html(self._options.text);
+                  self.setText.call(self, self._formatText(self._inputField.get(0).innerText));
+                  self._inputField.get(0).innerText = self._options.text;
                }
             }, 100)
          });
@@ -181,8 +181,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
-         if (this._inputField.html() != text) {
-            this._inputField.html(text || '');
+         if (this._inputField.get(0).innerText != text) {
+            this._inputField.get(0).innerText = text || '';
          }
       },
 
@@ -199,7 +199,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _keyUpBind: function(event) {
          var
-            newText = this._inputField.html(),
+            newText = this._inputField.get(0).innerText,
             key = event.which || event.keyCode,
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
          if (!textsEmpty) {
@@ -267,14 +267,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
          this._inputField.attr('maxlength',num);
-      },
-
-      destroy: function() {
-         if (this._options.autoResize.state) {
-            this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
-         }
-         TextArea.superclass.destroy.apply(this, arguments);
       }
+
    });
 
    return TextArea;
