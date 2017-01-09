@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            var text = self._inputField.val();
+            var text = self._inputField.html();
             if (self._options.trim) {
                text = String.trim(text);
             }
@@ -155,8 +155,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText.call(self, self._formatText(self._inputField.val()));
-                  self._inputField.val(self._options.text);
+                  self.setText.call(self, self._formatText(self._inputField.html()));
+                  self._inputField.html(self._options.text);
                }
             }, 100)
          });
@@ -167,23 +167,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
          var self = this;
          if (this._options.placeholder) {
             this._createCompatPlaceholder();
-         }
-         if (this._options.autoResize.state) {
-            this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
-            if (!this._options.autoResize.maxLinesCount) {
-               this._options.autoResize.maxLinesCount = 100500;
-            }
-            this._options.autoResize.maxLinesCount = parseInt(this._options.autoResize.maxLinesCount, 10);
-            if (this._options.minLinesCount > this._options.autoResize.maxLinesCount) {
-               this._options.autoResize.maxLinesCount = this._options.minLinesCount;
-            }
-            this._inputField.data('minLinesCount', this._options.minLinesCount);
-            this._inputField.data('maxLinesCount', this._options.autoResize.maxLinesCount);
-
-
-
-         } else {
-
          }
       },
 
@@ -196,10 +179,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._inputField.attr('contenteditable', !!state);
       },
 
-      setText: function(text){
-         TextArea.superclass.setText.call(this, text);
-         var newText = strHelpers.escapeHtml(text);
-         this._disabledWrapper.html(strHelpers.wrapURLs(newText));
+      _drawText: function(text) {
+         this._updateCompatPlaceholderVisibility();
+         if (this._inputField.html() != text) {
+            this._inputField.html(text || '');
+         }
       },
 
       _processNewLine: function(event) {
@@ -215,10 +199,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _keyUpBind: function(event) {
          var
-            newText = this._inputField.val(),
+            newText = this._inputField.html(),
             key = event.which || event.keyCode,
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
-         if (newText != this._options.text && !textsEmpty) {
+         if (!textsEmpty) {
             this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||
@@ -278,19 +262,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
       setMinLinesCount: function(count) {
          var cnt = parseInt(count, 10);
          this._options.minLinesCount = cnt;
-         this._inputField.attr('rows', cnt);
-         this._inputField.data('minLinesCount', count);
-         this._inputField.trigger('autosize.resize');
-      },
-
-      _drawText: function(text) {
-         this._updateCompatPlaceholderVisibility();
-         if (this._inputField.val() != text) {
-            this._inputField.val(text || '');
-         }
-         if (this._options.autoResize.state) {
-            this._inputField.trigger('autosize.resize');
-         }
       },
 
       setMaxLength: function(num) {
