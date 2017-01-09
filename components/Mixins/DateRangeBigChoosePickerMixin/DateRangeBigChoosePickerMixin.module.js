@@ -16,11 +16,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
       $protected: {
          _options: {
             /**
-             * Режим выбора одной даты или диапазона дат
-             * @cfg {Boolean} Если true, то включена возможность выделения диапазона,
-             * иначе можно выделить только 1 дату.
+             * @cfg {String} Режим выбора одной даты или диапазона дат
+             * @variant range Режим выбора периода
+             * @variant single Режим выбора одной даты
              */
-            rangeselect: true,
+            selectionMode: 'range',
 
             pickerConfig: {
                corner: 'tl',
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
          showPicker: function () {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
-               if (this._options.rangeselect) {
+               if (this._options.selectionMode === 'range') {
                   this._chooserControl.applyYearState();
                }
             }
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
                element: element,
                startValue: this.getStartValue(),
                endValue: this.getEndValue(),
-               rangeselect: this._options.rangeselect
+               rangeselect: this._options.selectionMode === 'range'
             });
 
             // Добавляем в пикер
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
       },
 
       _onChooserRangeChange: function (e, start, end) {
-         if (!this._options.rangeselect) {
+         if (this._options.selectionMode === 'single') {
             end = start;
          }
          this.setRange(start, end);
