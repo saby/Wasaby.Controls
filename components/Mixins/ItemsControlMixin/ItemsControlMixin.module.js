@@ -913,7 +913,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             data;
-         if (targetElement.length) {
+
+         //TODO в 3.7.5 избавиться от проверки на _path
+         if (targetElement.length && !targetElement.hasClass('controls-HierarchyDataGridView__path')) {
             data = this._prepareItemData();
             data.projItem = item;
             data.item = item.getContents();
