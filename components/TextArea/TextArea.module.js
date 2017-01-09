@@ -9,6 +9,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
    'use strict';
 
+   function generateClassesName(min, max) {
+      if (!max) {
+         max = min;
+      }
+      return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
+   }
    /**
     * Многострочное поле ввода - это текстовое поле с автовысотой.
     * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
@@ -109,6 +115,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
          }
       },
 
+      _modifyOptions: function(cfg) {
+         var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
+         newCfg.heightclassName = generateClassesName(this._options.minLinesCount, this._options.autoResize.maxLinesCount);
+         return newCfg;
+      },
+
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
@@ -168,59 +180,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._inputField.data('minLinesCount', this._options.minLinesCount);
             this._inputField.data('maxLinesCount', this._options.autoResize.maxLinesCount);
 
-            this._cachedW = this._inputField.width();
-            this._cachedH = this._inputField.height();
 
-            var trg = dcHelpers.trackElement(this._container, true);
-
-            this._autosizeTextArea();
-
-            trg.subscribe('onVisible', function (event, visible) {
-               if (visible) {
-                  var w = self._inputField.width();
-                  var h = self._inputField.height();
-                  if (w != self._cachedW || h != self._cachedH) {
-                     self._cachedW = w;
-                     self._cachedH = h;
-                     self._autosizeTextArea(true);
-                  }
-               }
-            });
 
          } else {
-            if (this._options.minLinesCount){
-               this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
-            }
-            this._removeAutoSizeDognail();
+
          }
-      },
-
-      _removeAutoSizeDognail: function() {
-         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
-         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
-         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
-
-         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
-         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
-         if (!this.isEnabled()) {
-            this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
-         }
-         else {
-            $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
-            this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
-         }
-      },
-
-      _autosizeTextArea: function(hard){
-         /*var self = this;
-         this._inputField.autosize({
-            callback: self._notifyOnSizeChanged(self, self),
-            hard: hard
-         });
-
-
-         this._removeAutoSizeDognail();
-         this._container.addClass('controls-TextArea__heightInit');*/
       },
 
       _getElementToFocus: function() {
@@ -229,13 +193,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
-         this._inputField.toggleClass('ws-invisible', !state);
-         this._disabledWrapper.toggleClass('ws-hidden', state);
-         if (!state){
-            this._inputField.attr('readonly', 'readonly')
-         } else {
-            this._inputField.removeAttr('readonly');
-         }
+         this._inputField.attr('contenteditable', !!state);
       },
 
       setText: function(text){

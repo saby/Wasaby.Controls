@@ -26,6 +26,7 @@
       // Internet Explorer 10+ placeholder
       .placeholder();
    }
+
    &.ws-has-focus {
       border-width: @text-area-focus-border-width;
       border-style: @text-area-focus-border-style;
@@ -70,9 +71,6 @@
       }
    }
 
-   &.controls-TextArea__autoheight {
-      height: auto !important;
-   }
 
   .controls-TextArea__placeholder {
     position: absolute;
@@ -84,3 +82,18 @@
     text-align: @text-area-compat-placeholder-alignment;
   }
 }
+
+@height-count: 10;  // Количество классов
+
+.generate-height(@i: 1) when (@i =< @height-count) {
+   .controls-TextArea__inputField__maxheight-@{i} {
+      max-height: @i * @text-area-field-line-height;
+   }
+   .controls-TextArea__inputField__minheight-@{i} {
+      min-height: @i * @text-area-field-line-height;
+   }
+
+   .generate-height(@i + 1);
+}
+
+.generate-height();
