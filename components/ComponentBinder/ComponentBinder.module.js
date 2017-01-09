@@ -215,8 +215,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        */
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser) {
          var noSaveFilters = ['Разворот', 'ВидДерева'],
-            view = browser.getView(),
-            filter, preparedStructure;
+            view, filter, preparedStructure;
+
+         if(browser) {
+            view = browser.getView();
+         }
 
          if(searchParam) {
             noSaveFilters.push(searchParam);
@@ -253,10 +256,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                filterButton.setFilterStructure(preparedStructure);
             }
          }
-         setTimeout(fHelpers.forAliveOnly(function() {
-            // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
-            browser._notifyOnFiltersReady();
-         }, view), 0);
+
+         if(browser) {
+            setTimeout(fHelpers.forAliveOnly(function () {
+               // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
+               browser._notifyOnFiltersReady();
+            }, view), 0);
+         }
       },
 
       bindPagingHistory: function(view, id) {

@@ -9,6 +9,8 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
    var RangeSelectableViewMixin = /**@lends SBIS3.CONTROLS.RangeSelectableViewMixin.prototype  */{
       $protected: {
          _options: {
+            // TODO: переименовать в selectionMode {'range', 'single'}. см SBIS3.CONTROLS.DateRangeBigChoosePickerMixin.
+            // Возможно стоит сделать синонимы для констатнт {'range'->'date', 'single'->'period'} для контролов работы с датами
             /**
              * Режим выбора диапазона
              * @cfg {Boolean} Если true, то включена возможность выделения диапазона,
