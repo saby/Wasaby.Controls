@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this._subscribeToEventBus();
+         this._subscribeToGlobalEvents();
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
@@ -221,9 +221,11 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _subscribeToEventBus: function(){
+      _subscribeToGlobalEvents: function(){
          this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
+         this._onBeforeUnloadHandler = this._onBeforeUnload.bind(this);
          this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         window.addEventListener("beforeunload", this._onBeforeUnloadHandler);
       },
 
       _declareCommands: function(){
@@ -248,6 +250,18 @@ define('js!SBIS3.CONTROLS.FormController', [
                self._actionNotify(eventName);
             });
          }
+      },
+
+      _onBeforeUnload: function(e){
+         //Если рекорд был изменен и пытаются уйти со страницы - задаем вопрос, чтобы пользователь мог сохранить отредактированные данные.
+         if (this.getRecord().isChanged()){
+            //Почти во всех браузер была убрана возможность настраивать кастомный текст для диалогового окна https://www.chromestatus.com/feature/5349061406228480
+            //Для того чтобы показать вопрос - из события нужно вернуть строку. Содержание строки будет проигнорировано https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
+            var message = "Редактируемая запись была изменена";
+            e.returnValue = message;
+            return message;
+         }
+         return null;
       },
 
       _onAfterShowHandler: function(){
@@ -944,6 +958,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
