@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var lastFolder = path[path.length - 1];
             defaultCfg.projItem = lastFolder.projItem;
             defaultCfg.item = defaultCfg.projItem.getContents();
+            cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
             $ws.core.merge(defaultCfg, {
                path: cFunctions.clone(path),
@@ -174,6 +175,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       restoreFilterAndRunEventRaising(projection, projectionFilter, analyzeChanges);
 
+      cfg._searchFolders = {};
       if (cfg.hierarchyViewMode) {
          records = searchProcessing(projection, cfg);
       }
@@ -385,6 +387,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _defaultSearchRender: searchRender,
             _getSearchCfgTv: getSearchCfg,
             _getSearchCfg: getSearchCfg,
+            _searchFolders: {},
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
@@ -913,12 +916,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          //В режиме поиска в дереве, при выборе всех записей, выбираем только листья, т.к. папки в этом режиме не видны.
          setSelectedItemsAll: function(parentFn) {
             var
-                keys = [],
-                items = this.getItems(),
+               self = this,
+               keys = [],
+               items = this.getItems(),
                nodeProperty = this._options.nodeProperty;
             if (items && this._isSearchMode && this._isSearchMode()) {
                items.each(function(rec){
-                  if (rec.get(nodeProperty) !== true) {
+                  if ((rec.get(nodeProperty) !== true) || (self._options._searchFolders[rec.get(self._options.idProperty)])) {
                      keys.push(rec.getId())
                   }
                });
