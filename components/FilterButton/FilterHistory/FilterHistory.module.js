@@ -45,9 +45,6 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          this._historyView = this.getChildControlByName('historyView');
          this._toggleHistoryButton = this.getChildControlByName('toggleHistory');
 
-         ///* При нажатии развернём/свернём список истории */
-         //this.subscribeTo(this._toggleHistoryButton, 'onActivated', this.toggleHistoryBlock.bind(this));
-
          /* Проинициализируем список: подпишемся на события, проставим операции над записью */
          this._initHistoryView();
       },
@@ -82,7 +79,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          });
 
          self.subscribeTo(self._historyView, 'onDrawItems', function(e) {
-            var dsCount = self._historyView.getDataSet().getCount();
+            var dsCount = self._historyView.getItems().getCount();
 
             /* Если записей в истории нет - скроем историю */
             self._container.toggleClass('ws-hidden', !dsCount);
@@ -114,6 +111,8 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          if(isBooleanArg) {
             this._toggleHistoryButton.setChecked(!closed);
          }
+
+         this._notifyOnSizeChanged(this, this);
       },
 
       /**

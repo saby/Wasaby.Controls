@@ -14,7 +14,7 @@
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
-      width: calc(50% ~'-' 2px);
+      width: ~'calc(50% - 2px)';
       display: inline-flex;
       align-items: center;
       margin: 0;
@@ -112,6 +112,22 @@
       border-color: @controls-FieldLink-border-color-focus-hover;
    }
 
+   &:not(.controls-FieldLink__multiselect) {
+      .controls-FieldLink__linksWrapper {
+         max-width: 100%;
+      }
+      .controls-FieldLink__item {
+         /* Учитываем отступ под крестик удаления */
+         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+      }
+
+      &.ws-disabled {
+         .controls-FieldLink__item {
+            max-width: 100%;
+         }
+      }
+   }
+
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
    }
@@ -120,15 +136,12 @@
       margin-right: @controls-FieldLink-fieldWrapper-margin;
       display: inline-block;
       order: 1;
-
-      .controls-TextBox__field {
-         width: 0;
-      }
    }
 
    .controls-TextBox__beforeFieldWrapper {
       order: 0;
-      max-width: calc(100% ~'-' 20px);
+      /* Учитываем ширину "гамбургера" в поле связи */
+      max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
 
       .controls-FieldLink__showAllLinks {
@@ -162,6 +175,17 @@
          background-color: @white-color;
          color: @link-text-color;
          padding: @controls-FieldLink-showAllLinks-padding;
+
+         &:after {
+            content: '';
+            position: absolute;
+            right: -@controls-FieldLink-showAll-shadow-width;
+            width: @controls-FieldLink-showAll-shadow-width;
+            top: 0;
+            bottom: 0;
+            .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
+            background-color: transparent;
+         }
       }
    }
 
@@ -205,15 +229,9 @@
       .controls-FieldLink__item {
          padding: @controls-FieldLink-disabled-item-padding;
       }
-   }
 
-   &.controls-FieldLink__dynamicInputWidth {
-      .controls-TextBox__fieldWrapper {
-         display: flex;
-
-         .controls-TextBox__field {
-            width: 100%;
-         }
+      .controls-FieldLink__showAllLinks:not(.controls-FieldLink__copyShowAll) {
+         display: none;
       }
    }
 
@@ -233,15 +251,58 @@
          color: @controls-FieldLink-link-color-hover;
       }
    }
-
-   &.controls-FieldLink-Link__filterButton {
-      color: #0055bb;
-      text-decoration: none;
-
-      &:hover {
+   &:not(.ws-disabled) {
+      &.controls-FieldLink-Link__filterButton {
          color: #0055bb;
-         text-decoration: underline;
+         text-decoration: none;
+
+         &.ws-enabled:hover {
+            color: #0055bb;
+            text-decoration: underline;
+         }
       }
+   }
+}
+
+.controls-FieldLink__copyShowAll {
+   float: left;
+   position: relative;
+   top: -22px;
+   width: 16px;
+   line-height: @controls-FieldLink-showAllLinks-lineHeight;
+   margin-right: -22px;
+   text-align: center;
+   background-color: @white-color;
+   color: @link-text-color;
+   padding: @controls-FieldLink-showAllLinks-padding;
+
+   &:after {
+      content: '';
+      position: absolute;
+      right: -@controls-FieldLink-showAll-shadow-width;
+      width: @controls-FieldLink-showAll-shadow-width;
+      top: 0;
+      bottom: 0;
+      .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
+      background-color: transparent;
+   }
+}
+
+.controls-FieldLink__dynamicInputWidth {
+   .controls-TextBox__fieldWrapper {
+      display: flex;
+
+      .controls-TextBox__field {
+         width: 100%;
+      }
+   }
+}
+
+/* Для того, чтобы при инициализации не прыгал placeholder +
+   в дальнейшем можно будет вообще не считать размеры поля, просто использовать этот класс*/
+.controls-FieldLink__selected {
+   .controls-TextBox__field {
+      width: 0;
    }
 }
 
@@ -253,7 +314,15 @@
       .controls-FieldLink__item-cross {
          top: -1px;
       }
+
+      .controls-FieldLink__copyShowAll {
+         margin-right: @controls-FieldLink-showAll-margin-right-ff;
+      }
    }
+}
+
+.controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
+   display: none;
 }
 
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {

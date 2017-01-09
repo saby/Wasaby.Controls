@@ -44,8 +44,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 testMergeMethodName: undefined,
                 queryMethodName: undefined,
                 dataSource: undefined,
-                hierField: undefined,
-                displayField: undefined,
+                parentProperty: undefined,
+                nodeProperty: undefined,
+                displayProperty: undefined,
                 titleCellTemplate: undefined
             },
             _treeView: undefined,
@@ -84,7 +85,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 //Получим ключи всех записей которые хотим объединять.
                 //Не берём папки, которые присутствуют в датасете для построения структуры.
                 recordSet.each(function(rec) {
-                    if (!rec.get(self._options.hierField + '@')) {
+                    if (!rec.get(self._options.parentProperty + '@')) {
                         self._treeViewKeys.push(rec.getId());
                     }
                 });
@@ -144,18 +145,21 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self = this,
                 isAvailable,
                 showMergeButton,
-                dataSet = this._treeView.getDataSet();
+               idProperty = this._options.idProperty,
+                items = this._treeView.getItems();
             this._treeView._toggleIndicator(true);
             this._options.dataSource.call(this._options.testMergeMethodName, {
                 'target': key,
                 'merged': this._getMergedKeys(key)
             }).addCallback(function (data) {
                 data.getAll().each(function(rec) {
-                    record = dataSet.getRecordById(rec.getId());
-                    //Для текущей выбранной записи выставим isAvailable = false, потому что с бл может придти true, а для всех остальных
-                    //записей false, тогда мы подумаем что есть записи, которые возможно слить и покажем кнопку подтверждения объединения
-                    isAvailable = rec.getId() != key ? rec.get(AVAILABLE_FIELD_NAME) : false;
-                    showMergeButton = showMergeButton || isAvailable;
+                    record = items.getRecordById(rec.get(idProperty));
+                    if (rec.get(idProperty) == key) {
+                        isAvailable = true;
+                    } else {
+                        isAvailable = rec.get(AVAILABLE_FIELD_NAME);
+                        showMergeButton = showMergeButton || isAvailable;
+                    }
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
                 }, self);

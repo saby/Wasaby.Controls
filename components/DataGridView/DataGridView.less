@@ -33,15 +33,21 @@
 
    &.controls-DataGridView__hasSeparator{
       .controls-DataGridView__table {
+        border-width: 0 0 1px 0;
+        border-color: @data-grid-edge-cell-separator-color;
+
         .controls-DataGridView__tr {
           .controls-DataGridView__td {
             border-top-color: @data-grid-cell-separator-color;
           }
         }
-      }
-      .controls-DataGridView__table .controls-DataGridView__tr:first-child {
-        .controls-DataGridView__td{
-          border-top-color: @data-grid-first-cell-separator-color;
+        .controls-DataGridView__tr:first-child {
+          .controls-DataGridView__td {
+            border-top-color: @data-grid-edge-cell-separator-color;
+          }
+        }
+        &.ws-sticky-header__table {
+          border-top-color: transparent;
         }
       }
    }
@@ -103,6 +109,13 @@
          }
       }
 
+      .controls-DataGridView__results .controls-DataGridView__td{
+         padding-top: 0px;
+         padding-bottom: 0px;
+         height: 24px;
+         cursor: default;
+      }
+
       .controls-DataGridView__tr {
          background: @data-grid-row-bg;
 
@@ -111,6 +124,7 @@
                background-color: @data-grid-row-selected-bg;
             }
             .controls-DataGridView__td {
+               background-color: @data-grid-row-selected-bg;
                color: @data-grid-row-selected-cell-text-color;
             }
          }
@@ -190,15 +204,15 @@
          }
          .controls-ListView__itemCheckBox{
             margin: -3px 0 0 4px;
-            background: @check-box-icon-bg;
+            background: @listView-check-box-icon-bg;
             &.controls-DataGridView__th__checkBox__checked{
-            	background: @check-box-icon-checked-bg;
+            	background: @listView-check-box-icon-checked-bg;
             	&:hover{
-            		background: @check-box-icon-checked-bg;
+            		background: @listView-check-box-icon-checked-bg;
             	}
          	}
             &:hover{
-            	background: @check-box-icon-hover-bg;
+            	background: @listView-check-box-icon-hover-bg;
             }
          }
          .controls-DataGridView__th-content{
@@ -237,23 +251,26 @@
           vertical-align: bottom;
         }
       }
+
+      .controls-DataGridView__td__checkBox {
+         width: @data-grid-td-checkbox-width;
+         padding: 0;
+         /*У колонки с чекбоксом, не должно быть левого и правого бордера, иначе при table-layout: auto;
+         ширина ячейки увеличивается на размер бордеров*/
+         border-left-width: 0;
+         border-right-width: 0;
+         vertical-align: @data-grid-cell-check-box-vertical-align;
+         overflow: hidden;
+         .controls-ListView__itemCheckBox {
+            top: @data-grid-check-box-top;
+            left: @data-grid-check-box-left;
+         }
+      }
    }
 
    &.controls-DataGridView__overflow-ellipsis{
       .controls-DataGridView__td{
          .column-ellipsis();
-      }
-   }
-
-   .controls-DataGridView__td__checkBox {
-      width: @data-grid-td-checkbox-width;
-      padding-right: 0!important;
-      vertical-align: @data-grid-cell-check-box-vertical-align;
-      overflow: hidden;
-      .controls-ListView__itemCheckBox {
-         margin: @data-grid-checkbox-margin;
-        //В FireFox все чекбоксы улетают в верхний левый угол из за position: absolute
-         position: static;
       }
    }
 
@@ -265,17 +282,27 @@
    }
 
   &.controls-ListView__multiselect {
-    > .controls-DataGridView__table {
-         >.controls-DataGridView__colgroup {
+     .controls-DataGridView__firstContentCell {
+        padding-left: @data-grid-ms-first-content-cell-padding-left;
+     }
+
+     > .controls-DataGridView__table {
+        > .controls-DataGridView__colgroup {
            col:first-child {
-            width: @data-grid-td-visible-checkbox-width;
-          }
+              width: @data-grid-td-visible-checkbox-width;
+           }
         }
-         .controls-DataGridView__td__checkBox {
-          width: @data-grid-td-visible-checkbox-width;
+        .controls-DataGridView__td__checkBox {
+           width: @data-grid-td-visible-checkbox-width;
         }
-      }
+     }
   }
+
+   &.controls-ListView__multiselect__off {
+      .controls-DataGridView__firstContentCell {
+         padding-left: @data-grid-first-content-cell-padding-left;
+      }
+   }
 
    &.controls-ListView__hideCheckBoxes {
       &.controls-ListView__multiselect {
@@ -307,5 +334,27 @@
             }
          }
       }
+   }
+}
+/*Для строк идущих после группировки не должно быть верхних бордеров*/
+.controls-DataGridView {
+   &.controls-DataGridView__hasSeparator {
+      .controls-DataGridView__table {
+         .controls-GroupBy {
+            +.controls-DataGridView__tr {
+               .controls-DataGridView__td {
+                  border-top-color: transparent
+               }
+            }
+         }
+      }
+   }
+}
+
+.ws-sticky-header__header-container {
+   >.controls-DataGridView__with-partScroll {
+      overflow-y: hidden;
+      padding-bottom: 7px;
+      background-clip: content-box;
    }
 }

@@ -60,61 +60,71 @@
    &.controls-Button {
       display: inline-block;
       overflow: hidden;
-      &.controls-ListView__item {
-         &.ws-disabled:hover .controls-Button__icon {
-            color: #ccc !important;
-         }
-         &:hover .controls-Button__icon {
-            color: #313E78 !important;
-         }
-      }
       .controls-Button__icon {
          position: relative;
          left: 0px;
          top: 1px;
       }
       padding: 0;
-      border:none !important;
+      border:none;
       outline: 0;
       border-radius: 0;
-      background: none !important;
       text-decoration: none;
       &.controls-Checked__checked {
-         background: @fieldRichEditorButtonsCheckedColor !important;
-         border:none !important;
+         background: @fieldRichEditorButtonsCheckedColor;
+         border:none;
 
          &.controls-MenuButton {
             padding-bottom: 2px;
          }
 
-         &.controls-Picker__show{
-            background: #ffffff !important;
-            border-top: 2px solid #e4e4e4 !important;
-            border-right: 2px solid #e4e4e4 !important;
-            border-left: 2px solid #e4e4e4 !important;
-            border-top-left-radius: 4px;
-            border-top-right-radius: 4px;
+         &.controls-Picker__show {
+            &,&:hover:not(.ws-disabled) {
+               background: @white-color;
+               border-top: 2px solid @gray-light-color;
+               border-right: 2px solid @gray-light-color;
+               border-left: 2px solid @gray-light-color;
+               border-top-left-radius: 4px;
+               border-top-right-radius: 4px;
+               &:not(.controls-Click__active) {
+                  background: @white-color;
+               }
+            }
          }
-
-         .custom-select-arrow{
+         .controls-RichEditorMenuButton__headArrow{
             top: -3px;
-            padding-right: 4px !important;//checked стрелочка смещается на 2 пикселя надо уменьшить padding
+            padding-right: 4px;
          }
       }
-      .custom-select-arrow{
+      .controls-RichEditorMenuButton__headArrow{
          top: -1px;
-         padding-right: 6px !important;
+         padding-right: 6px;
+         right: 0;
       }
       .controls-Button__emptyCaption{
          display:none;
       }
+      &:hover{
+         &:not(.ws-disabled){
+            &:not(.controls-Click__active) {
+               border: none;
+               background: none;
+               &.controls-Checked__checked {
+                  background: @fieldRichEditorButtonsCheckedColor;
+               }
+            }
+            &.controls-Checked__checked {
+               border: none;
+            }
+         }
+      }
    }
-   .custom-select-arrow {
-      background-image:@RichEditorDropdownArrow !important;
+   .controls-RichEditorMenuButton__headArrow {
+      background-image:@RichEditorDropdownArrow;
       width: 16px;
-      position: absolute !important;
-      right: 4px !important;
-      left: auto !important;
+      position: absolute;
+      right: 4px;
+      left: auto;
       top:-2px;
       &:before {
          content: none;
@@ -143,22 +153,23 @@
          }
       }
    }
-   .custom-select-arrow {
-      right: 0px !important;
-      padding-right: 2px;
-   }
 }
 
 /* Блок смайлов */
 .fre-smiles {
    &.controls-MenuButton__Menu {
-      width: 165px;
-      padding: 1px 0;
+      width: 196px;
+      padding: 1px 0 !important;
       .controls-ListView__item {
+         color: #587ab0;
+         font-size: 24px;
          display: inline-block;
-         height: 32px;
-         width: 32px;
+         padding: 2px 4px 0 4px;
+         height: 20px;
          vertical-align: bottom;
+         &:hover {
+            color: #313E78
+         }
       }
    }
    &.controls-MenuButton {
@@ -167,12 +178,13 @@
       }
    }
    .controls-MenuItem {
-      .controls-MenuItem__text{
-         margin: 0 !important;
-      }
       .ws-fre__smile {
          height: 24px;
       }
+   }
+   //необходимо сдвигать picker на 2px тк в тулбаре нестандартная menuButton
+   &.controls-popup-revert-vertical {
+      margin-top: 2px !important; //important тк margin 0 прописывается inline стилем при расчете picker`a
    }
 }
 /*Блок вставки удаления списка*/
@@ -255,7 +267,7 @@
 .ws-is-ie8 {
    .controls-RichEditorToolbar {
       .controls-RichEditorToolbar__item {
-         .custom-select-arrow {
+         .controls-RichEditorMenuButton__headArrow {
             top: -3px;
          }
       }
@@ -275,6 +287,18 @@
    .controls-RichEditorToolbar__toggleButton {
       &:hover {
          background-image: @freToolbarHideButtonHover;
+      }
+   }
+   .controls-RichEditorToolbar__item {
+      &.controls-Button {
+         &.controls-ListView__item {
+            &.ws-disabled:hover .controls-Button__icon {
+               color: @icon-color-disabled !important;
+            }
+            &:hover .controls-Button__icon {
+               color: @blue-dark-color !important;
+            }
+         }
       }
    }
 }

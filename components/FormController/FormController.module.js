@@ -121,14 +121,14 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        */
       $protected: {
-         _saving: false,
+         _updateDeferred: undefined,
          _loadingIndicator: undefined,
          _panel: undefined,
          _newRecord: false, //true - если запись создана, но еще не сохранена
          _activateChildControlDeferred: undefined,
          _previousDocumentTitle: undefined,
          _dataSource: null,
-         _isConfirmDialogShowed: false,
+         _confirmDialog: false,
          _syncOperationCallback: undefined,
          _panelReadyDeferred: undefined,
          _overlay: undefined,
@@ -139,6 +139,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              * @see dataSource
              */
             key: null,
+            /**
+             * @cfg {String} Поле записи, которое является идентификатором записи
+             */
+            idProperty: undefined,
             /**
              * @cfg {WS.Data/Entity/Model} Устанавливает запись, по которой произведена инициализация данных диалога.
              * @see setRecord
@@ -194,7 +198,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', fHelpers.forAliveOnly(this._onBeforeNavigate, this));
+         this._subscribeToEventBus();
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
@@ -215,6 +219,11 @@ define('js!SBIS3.CONTROLS.FormController', [
                this._getRecordFromSource({});
             }
          }
+      },
+
+      _subscribeToEventBus: function(){
+         this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
+         this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
       },
 
       _declareCommands: function(){
@@ -278,24 +287,28 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          var self = this._getTemplateComponent(),
-             record = self._options.record;
+             record = self.getRecord(),
+             closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
          //Если нет записи или она была удалена, то закрываем панель
          if (!record || (record.getState() === Record.RecordState.DELETED)){
             return;
          }
-         //Если попали сюда из метода _showConfirmDialog, то this._saving = true и мы просто закрываем панель
-         if (self._saving || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         //Если запись еще сохраняется, то отменяем закрытие (защита от множественного вызова закрытия панели)
+         if (self._isRecordSaving()){
+            event.setResult(false);
+            return;
+         }
+         if (closeAfterConfirmDialogHandler || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
             //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-            if (self._newRecord && record.getId() && (!self._saving && !record.isChanged() || result === false)){
+            if (self.isNewRecord() && self._getRecordId() && (!closeAfterConfirmDialogHandler && !record.isChanged() || result === false)){
                self._destroyModel().addBoth(function(){
                   self._closePanel(result);
                });
                event.setResult(false);
             }
-            self._saving = false;
             self._resetTitle();
             return;
          }
@@ -306,8 +319,16 @@ define('js!SBIS3.CONTROLS.FormController', [
       _onBeforeNavigate: function(event, activeElement, isIconClick){
          //Если показан диалог о сохранении, то не даем перейти в другой раздел аккордеона, пока его не закроют
          if (!isIconClick) {
-            event.setResult(!this._isConfirmDialogShowed);
+            event.setResult(!this._isConfirmDialogShowed());
          }
+      },
+
+      _isConfirmDialogShowed: function(){
+         return this._confirmDialog && this._confirmDialog.isVisible();
+      },
+
+      _isRecordSaving: function(){
+         return !!this._updateDeferred;
       },
 
       _setDefaultContextRecord: function(){
@@ -508,7 +529,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._options.record = record;
          this._setPanelRecord(record);
          if (updateKey){
-            newKey = record.getId();
+            newKey = this._getRecordId();
             this._options.key = newKey;
             this._newRecord = true;
          }
@@ -534,6 +555,14 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       getRecord: function(){
         return this._options.record;
+      },
+
+
+      _getRecordId: function(){
+         if (this._options.idProperty) {
+            return this.getRecord().get(this._options.idProperty);
+         }
+         return this.getRecord().getId();
       },
 
       _getRecordFromSource: function(config) {
@@ -603,7 +632,7 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onDestroyModel',
                hideErrorDialog: true
             },
-            def = this._dataSource.destroy(record.getId());
+            def = this._dataSource.destroy(this._getRecordId());
 
          return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
             self._newRecord = false;
@@ -703,24 +732,27 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _showConfirmDialog: function(){
-         this._saving = true;
-         this._isConfirmDialogShowed = true;
-         InformationPopupManager.showConfirmDialog({
+         this._panel.onBringToFront();
+         this._confirmDialog = InformationPopupManager.showConfirmDialog({
                message: rk('Сохранить изменения?'),
                details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
                hasCancelButton: true
             },
-            this._positiveConfirmDialogHandler.bind(this),
-            this._negativeConfirmDialogHandler.bind(this),
-            this._cancelConfirmDialogHandler.bind(this)
+            this._confirmDialogHandler.bind(this, true),
+            this._confirmDialogHandler.bind(this, false),
+            this._confirmDialogHandler.bind(this)
          );
       },
 
       _prepareUpdatingRecord: function(config){
-         var errorMessage = rk('Некорректно заполнены обязательные поля!'),
+         var error = new Error(rk('Некорректно заполнены обязательные поля!')),
              self = this,
              updateDeferred = new Deferred(),
              onBeforeUpdateData;
+
+         updateDeferred.addErrback(function (e) {
+            return e;
+         });
 
          if (this.validate()) {
             //Событие onBeforeUpdateModel необходимо для пользовательской валидации.
@@ -748,11 +780,9 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          //Если валидация не прошла
          if (!config.hideErrorDialog) {
-            var error = new Error(errorMessage);
             this._processError(error);
          }
-         this._saving = false;
-         return Deferred.fail(errorMessage);
+         return Deferred.fail(error);
       },
 
       _updateRecord: function(config){
@@ -764,49 +794,40 @@ define('js!SBIS3.CONTROLS.FormController', [
                   isNewRecord: this._newRecord
                }
             },
-            self = this,
-            updateDeferred;
+            self = this;
 
          if (this._options.record.isChanged() || self._newRecord) {
-            updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
+            this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
                updateConfig.additionalData.key = key;
                self._newRecord = false;
                return key;
             }).addErrback(function (error) {
-                  self._saving = false;
-                  return error;
-               });
-            dResult.dependOn(this._prepareSyncOperation(updateDeferred, config, updateConfig));
+               self._updateDeferred = false;
+               return error;
+            });
+            dResult.dependOn(this._prepareSyncOperation(this._updateDeferred, config, updateConfig));
          } else {
             dResult.callback();
          }
          dResult.addCallback(function (result) {
+            self._updateDeferred = false; //в 230+ версии можно перенести в колбэк самого _updateDeferred, когда выпилится опция source
             if (config.closePanelAfterSubmit) {
                self._closePanel(true);
-            }
-            else {
-               self._saving = false;
             }
             return result;
          });
          return dResult;
       },
 
-      _positiveConfirmDialogHandler: function(){
-         this._isConfirmDialogShowed = false;
-         this._prepareUpdatingRecord({
-            closePanelAfterSubmit: true
-         });
-      },
-
-      _negativeConfirmDialogHandler: function(){
-         this._isConfirmDialogShowed = false;
-         this._closePanel(false);
-      },
-
-      _cancelConfirmDialogHandler: function(){
-         this._isConfirmDialogShowed = false;
-         this._saving = false;
+      _confirmDialogHandler: function (result) {
+         if (result) {
+            this._prepareUpdatingRecord({
+               closePanelAfterSubmit: true
+            })
+         }
+         else if (result === false) {
+            this._closePanel(false);
+         }
       },
 
       _prepareOnBeforeUpdateResult: function(result){
@@ -829,13 +850,19 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (!config.hideIndicator){
             this._showLoadingIndicator(config.indicatorText);
          }
+         if (!config.additionalData){
+            config.additionalData = {};
+         }
+         config.additionalData.idProperty = self._options.idProperty;
          this._toggleOverlay(true);
          this._addSyncOperationPending();
+
          operation.addCallback(function(data){
             self._notify(config.eventName, self._options.record, config.additionalData);
             return data;
          }).addErrback(function(err){
-               if (!config.hideErrorDialog && (err instanceof Error)){
+               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+               if (!config.hideErrorDialog && (err instanceof Error) && !err._isOfflineMode){
                   self._processError(err);
                }
                return err;
@@ -878,6 +905,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see destroy
        */
       _actionNotify: function(eventName, additionalData){
+         additionalData = additionalData || {};
          this._notify(eventName, this._options.record, additionalData);
       },
       /**
@@ -915,20 +943,19 @@ define('js!SBIS3.CONTROLS.FormController', [
       destroy: function(){
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
+         this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
       //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
-         var prototypeProtectedData = {},
+         var options = this.getComponentOptions(opt),
              dataSource,
-             options,
              result;
 
-         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         options = prototypeProtectedData._options;
-         cMerge(options, opt);
-
+         if (options.source){
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Источник данных нужно задавать через опцию dataSource. Опция source в версии 3.7.5 будет удалена');
+         }
          //TODO в рамках совместимости
          if (Object.isEmpty(options.dataSource) && !options.source){
             IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Необходимо задать опцию dataSource');
@@ -951,6 +978,17 @@ define('js!SBIS3.CONTROLS.FormController', [
             return new SbisService(options.dataSource);
          }
          return options.source;
+      };
+
+      FormController.prototype.getComponentOptions = function(mergeOptions){
+         var prototypeProtectedData = {},
+             options;
+
+         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
+         options = prototypeProtectedData._options;
+         cMerge(options, mergeOptions);
+
+         return options;
       };
    return FormController;
 

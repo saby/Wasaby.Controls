@@ -31,7 +31,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -174,7 +173,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
             _clipboardText: undefined,
-            _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
+            _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
+            _lastReviewText: undefined
          },
 
          _modifyOptions: function(options) {
@@ -190,9 +190,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new Deferred().addCallback(function(){
+            this._readyContolDeffered = new Deferred().addCallbacks(function(){
                this._notify('onReady');
-            }.bind(this));
+            }.bind(this), function (e) {
+               return e;
+            });
             this._dChildReady.push(this._readyContolDeffered);
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new Deferred();
@@ -371,12 +373,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (cConstants.browser.isMobileAndroid) {
                      // на android устройствах не происходит подскролла нативного
                      // наш функционал тестируется на планшете фирмы MI на котором клавиатура появляется долго ввиду анимации =>
-                     // => сразу сделать подсролл нельзя
-                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подсролл до элемента ввода текста
+                     // => сразу сделать подскролл нельзя
+                     // появление клавиатуры стрельнет resize у window в этот момент можно осуществить подскролл до элемента ввода текста
                      var
                         resizeHandler = function(){
                            this._inputControl[0].scrollIntoView(false);
-                           $(window).off('resize', resizeHandler)
+                           $(window).off('resize', resizeHandler);
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
                   } else if (cConstants.browser.isMobileIOS) {
@@ -677,7 +679,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                });
                if (typeof smile === 'object') {
-                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
+                  this.insertHtml(this._smileHtml(smile));
                }
             }
          },
@@ -950,7 +952,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _smileHtml: function(smile, name, alt) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
+            return '<span class="ws-smile controls-RichEditor__noneditable">&#' + smile.code + ';</span>&shy;';
          },
 
          /**
@@ -970,7 +972,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                editor = this._tinyEditor;
 
             //По инициализации tinyMCE
-            editor.on('init', function(){
+            editor.on('initContentBody', function(){
                //По двойному клику на изображение внутри редактора - отображаем диалог редактирования размеров изображения
                this._inputControl.bind('dblclick', function(e) {
                   if (this._inputControl.attr('contenteditable') !== 'false') {
@@ -1095,6 +1097,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
 
+               //при вставке смайлов их надо оборачивать в специальные блоки
+               event.node.innerHTML = self._replaceSmiles(event.node.innerHTML);
             }.bind(this));
 
             editor.on('drop', function() {
@@ -1324,7 +1328,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                } else {
                   this._dataReview.height(this._container.height()  - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
-               this._updateDataReview(this.getText());
+               this._updateDataReview(this.getText() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
 
@@ -1377,6 +1381,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
                endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
                regResult;
+            text = this._removeEmptyTags(text);
             while ((regResult = beginReg.exec(text)) !== null)
             {
                text = text.substr(regResult[0].length + 1);
@@ -1385,7 +1390,26 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             {
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
+            text = this._replaceSmiles(text);
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+         },
+         /**
+          * Проблема:
+          *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
+          *          опция text при этом перестает быть пустой
+          * Решение:
+          *          убирать пустые теги перед тем как отдать значение опции text
+          * @param text
+          * @returns {String}
+          * @private
+          */
+         _removeEmptyTags: function(text) {
+            var
+               temp = $('<div>' + text + '</div>');
+            while ( temp.find(':empty:not(img, iframe)').length) {
+               temp.find(':empty:not(img, iframe)').remove();
+            }
+            return temp.html();
          },
 
          /**
@@ -1503,56 +1527,73 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curHeight,
                closestParagraph;
             if (this.isVisible()) {
-               if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
-                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
-                  if (closestParagraph  && cConstants.browser.isMobileIOS) {
-                     this._scrollToPrev(closestParagraph);//необходимо передавать абзац
-                  }
-               }
                curHeight = this._container.height();
+               //Производим подкрутку вверх если курсор провалился под клавиатуру на iPad
+               //Делаем проверку на ipad сразу тк на остальный устройствах приводит к тормозам getBoundingClientRect в методе _elementIsUnderKeyboard
+               if (cConstants.browser.isMobileIOS) {
+                  this._backspinForIpad();
+               }
                if (curHeight !== this._lastHeight) {
                   this._lastHeight = curHeight;
                   this._notifyOnSizeChanged();
                }
             }
          },
+         //Метод проверяет положение элемента отпосительно клавитуры на ipad (true - под клавитурой, false - над)
+         _elementIsUnderKeyboard: function(target, side){
+            var
+               targetOffset = target.getBoundingClientRect(),
+               keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
+            return cConstants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
+         },
 
-            _elementIsUnderKeyboard: function(target, side){
+         _scrollTo: function(target, side){
+            if (this._elementIsUnderKeyboard(target, side)) {
+               target.scrollIntoView(true);
+            }
+         },
+         //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
+         _backspinForIpad: function() {
+            if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
                var
-                  targetOffset = target.getBoundingClientRect(),
-                  keyboardCoef = (window.innerHeight > window.innerWidth) ? constants.ipadCoefficient[side].vertical : constants.ipadCoefficient[side].horizontal; //Для альбома и портрета коэффициенты разные.
-               return cConstants.browser.isMobileIOS && this.isEnabled() && targetOffset[side] > window.innerHeight * keyboardCoef;
-            },
-
-            _scrollTo: function(target, side){
-               if (this._elementIsUnderKeyboard(target, side)) {
-                  target.scrollIntoView(true);
+                  closestParagraph = $(this._tinyEditor.selection.getNode()).closest('p')[0];
+               if (closestParagraph) {
+                  //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
+                  if (closestParagraph.previousSibling && this._elementIsUnderKeyboard(closestParagraph, 'bottom')) {
+                     closestParagraph.previousSibling.scrollIntoView(true);
+                  }
+                  //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
+                  this._scrollTo(closestParagraph, 'bottom');
                }
-            },
-
-            _scrollToPrev: function(target){
-               //Необходимо осуществлять подскролл к предыдущему узлу если текущий под клавиатурой
-               if (target.previousSibling && this._elementIsUnderKeyboard(target, 'bottom')) {
-                  target.previousSibling.scrollIntoView(true);
-               }
-               //Если после подскрола к предыдущему узлу текущий узел всё еще под клавиатурой, то осуществляется подскролл к текущему
-               this._scrollTo(target, 'bottom');
-            },
+            }
+         },
 
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled()) {
+            if (this._dataReview && !this.isEnabled() && this._lastReviewText != text) {
                //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
-               if (this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                   var
                      self = this;
+                  //если в момент прихода текста в редакторе ничего не отображается
+                  //то необходимо показать пользователю неотдекорированный текст
+                  // тк декорация может занять много(30с) времени
+                  if (!self._dataReview.html()) {
+                     self._dataReview.html(text)
+                  }
                   Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
-                     self._dataReview.html(strHelpers.wrapFiles(text));
+                     //при открытии задачи в новой вкладке после поступления данных у areaAbstract зовут rebuildMarkup
+                     //необходимо проверять жив ли компонент  когда приходит ответ с сервера
+                     //TODO: переписать на parallelDeferred.kill
+                     if (!self.isDestroyed()) {
+                        self._dataReview.html(strHelpers.wrapFiles(text));
+                     }
                   });
                } else {
                   this._dataReview.html(this._prepareReviewContent(text));
                }
+               this._lastReviewText = text;
             }
          },
 
@@ -1569,6 +1610,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
+            text = this._replaceSmiles(text);
+            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
+            }
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
@@ -1639,6 +1684,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
+         },
+
+         _replaceSmiles: function(html) {
+            var
+               self = this;
+            $.each(smiles, function(i, obj) {
+               html =  html.replace(new RegExp(String.fromCodePoint(obj.code), 'gi'),function (code, pos) {
+                  if ( (pos !== 0 && html[pos - 1] != '>') || pos === 0) {
+                     return self._smileHtml(obj);
+                  }
+                  return code;
+               });
+            });
+            return html;
+         },
+
+         _getSmileByCode: function(code) {
+            var
+               smile = false;
+            $.each(smiles, function(i, obj) {
+               if (obj.code == code) {
+                  smile = obj;
+               }
+            });
+            return smile;
          }
       });
 

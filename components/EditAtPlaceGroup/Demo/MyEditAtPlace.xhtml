@@ -49,8 +49,8 @@
    </component>
 
    <component data-component="SBIS3.CONTROLS.TabControl" name="TabControl" class="TabControl" style="display: inline-block;">
-      <option name="tabsDisplayField" value="title"></option>
-      <option name="keyField" value="id"></option>
+      <option name="tabsDisplayProperty" value="title"></option>
+      <option name="idProperty" value="id"></option>
       <option name="selectedKey" value="a"></option>
       <option name="loadType" value="cached"></option>
       <opts name="items" type="Array">
@@ -65,7 +65,7 @@
                         <option name="placeholder">Фамилия</option>
                         <option name="tooltip">Фамилия</option>
                         <option name="editorTpl">
-                           <component data-component="SBIS3.CONTROLS.TextBox" style="width:100px;" tabindex=1>
+                           <component data-component="SBIS3.CONTROLS.TextBox" style="width:100px;" tabindex="1">
                               <option name="text" bind="tabs/fam"></option>
                               <option name="placeholder">Фамилия</option>
                            </component>
@@ -74,7 +74,7 @@
                      <component data-component="SBIS3.CONTROLS.EditAtPlace" name="name" class="controls-TabButton__mainText">
                         <option name="text" bind="tabs/name"></option>
                         <option name="editorTpl">
-                           <component data-component="SBIS3.CONTROLS.TextBox" style="width:100px;" tabindex=2>
+                           <component data-component="SBIS3.CONTROLS.TextBox" style="width:100px;" tabindex="2">
                               <option name="text" bind="tabs/name"></option>
                            </component>
                         </option>
@@ -82,7 +82,7 @@
                      <component data-component="SBIS3.CONTROLS.EditAtPlace" name="son" class="controls-TabButton__mainText">
                         <option name="text" bind="tabs/name2"></option>
                         <option name="editorTpl">
-                           <component data-component="SBIS3.CONTROLS.TextBox" style="width:100px;" tabindex=3>
+                           <component data-component="SBIS3.CONTROLS.TextBox" style="width:100px;" tabindex="3">
                               <option name="text" bind="tabs/name2"></option>
                            </component>
                         </option>
@@ -91,7 +91,7 @@
                         <component data-component="SBIS3.CONTROLS.EditAtPlace" name="pong">
                            <option name="text" bind="tabs/date"></option>
                            <option name="editorTpl" type="string">
-                           <component data-component="SBIS3.CONTROLS.DatePicker" tabindex=4>
+                           <component data-component="SBIS3.CONTROLS.DatePicker" tabindex="4">
                               <option name="date" bind="tabs/date"></option>
                            </component>
                         </option>
@@ -101,7 +101,7 @@
                         <component data-component="SBIS3.CONTROLS.EditAtPlace" name="num">
                            <option name="text" bind="tabs/number"></option>
                            <option name="editorTpl" type="string">
-                              <component data-component="SBIS3.CONTROLS.NumberTextBox" style="width:60px;" tabindex=5>
+                              <component data-component="SBIS3.CONTROLS.NumberTextBox" style="width:60px;" tabindex="5">
                                  <option name="text" bind="tabs/number"></option>
                               </component>
                            </option>

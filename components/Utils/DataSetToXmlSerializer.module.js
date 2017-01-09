@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       },
       /**
        * Сериализует контейнер в XML-документ
-       * @param {SBIS3.CONTROLS.DataSet} records набор сериализуемых записей
+       * @param {WS.Data/Collection/RecordSet} records набор сериализуемых записей
        * @return {Document}  результат сериализации
        */
       serialize: function(dataSet, columns){
@@ -141,6 +141,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          recordElement.appendChild(fieldElement = document.createElement('Field'));
          fieldElement.setAttribute('Name', column.field);
          var fieldValue = record.get(column.field) === null ? "" : record.get(column.field),
+            fieldPrimitiveValue,
             format;
          if (cInstance.instanceOfMixin(record, 'WS.Data/Entity/FormattableMixin')) {
             var recordFormat = record.getFormat(),
@@ -165,7 +166,15 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                if(typeName === 'Время' || typeName === 'Time')
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
-            fieldValue = strHelpers.removeInvalidXMLChars(fieldValue + "");
+
+            if (fieldValue instanceof Object) {
+               fieldPrimitiveValue = fieldValue.valueOf();
+               if (fieldPrimitiveValue !== fieldValue) {
+                  element.setAttribute('Value', fieldPrimitiveValue);
+               }
+            }
+
+            fieldValue = strHelpers.removeInvalidXMLChars(''.concat(fieldValue));
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
          } else if(typeName == 'Связь'){

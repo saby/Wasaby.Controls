@@ -44,12 +44,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         *     });
         * </pre>
         * @see items
-        * @see displayField
+        * @see displayProperty
         */
        /**
         * @event onDataLoad Происходит после загрузки данных.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
+        * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -121,23 +121,33 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _options: {
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
+             * @deprecated
+             */
+            keyField : null,
+            /**
+             * @cfg {String} Устанавливает поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
              * @remark
              * Для данного поля справедливо ограничение уникальности. С помощью его значений можно однозначно
              * идентифицировать любой элемент коллекции.
              * Данные задаются либо с помощью опции {@link items}, либо методом {@link setDataSource}.
              * @example
              * <pre class="brush:xml">
-             *     <option name="keyField">@Идентификатор</option>
+             *     <option name="idProperty">@Идентификатор</option>
              * </pre>
              * @see items
-             * @see displayField
+             * @see displayProperty
              * @see setDataSource
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              * @see SBIS3.CONTROLS.SuggestMixin#list
              */
-            keyField : null,
+            idProperty : null,
+            /**
+             * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
+             * @deprecated
+             */
+            displayField: null,
             /**
              * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
              * @remark file DSMixin-displayField.md
@@ -146,12 +156,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * ![](/DSMixin01.png)
              * фрагмент верстки:
              * <pre class="brush:xml">
-             *     <option name="displayField">НазваниеПоля</option>
+             *     <option name="displayProperty">НазваниеПоля</option>
              * </pre>
-             * @see keyField
+             * @see idProperty
              * @see items
              */
-            displayField: null,
+            displayProperty: null,
              /**
               * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
@@ -170,9 +180,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               * ![](/DSMixin01.png)
               * фрагмент верстки:
               * <pre class="brush:xml">
-              *     <option name="keyField">id</option>
-              *     <option name="displayField">title</option>
-              *     <option name="hierField" value="parent"></option>
+              *     <option name="idProperty">id</option>
+              *     <option name="displayProperty">title</option>
+              *     <option name="parentProperty" value="parent"></option>
+              *     <option name="nodeProperty" value="parent@"></option>
               *     <options name="items" type="array">
               *        <options>
               *           <option name="id">I</option>
@@ -195,8 +206,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
               *     </options>
               * </pre>
               * @see setItems
-              * @see keyField
-              * @see displayField
+              * @see idProperty
+              * @see displayProperty
               * @see setDataSource
               * @see SBIS3.CONTROLS.TreeMixin#hierField
               */
@@ -453,7 +464,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *     <options name="list">
              *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option>
              *        <options name="options">
-             *           <option name="keyField" value="@Пользователь"></option>
+             *           <option name="idProperty" value="@Пользователь"></option>
              *           <options name="sorting" type="array">
              *              <options>
              *                 <option name="ФИО">ASC</option>
@@ -517,10 +528,10 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
-         var keyField = this._options.keyField;
+         var idProperty = this._options.idProperty;
 
-         if (!keyField) {
-            IoC.resolve('ILogger').log('ListView', 'Option keyField is required');
+         if (!idProperty) {
+            IoC.resolve('ILogger').log('ListView', 'Option idProperty is required');
          }
 
          if (sourceOpt) {
@@ -537,17 +548,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
-               if (!this._options.keyField) {
+               if (!this._options.idProperty) {
                   var itemFirst = itemsOpt[0];
                   if (itemFirst) {
-                     this._options.keyField = Object.keys(itemFirst)[0];
+                     this._options.idProperty = Object.keys(itemFirst)[0];
                   }
                }
 
                /*TODO для совеместимости пока создадим сорс*/
                this._dataSource = new MemorySource({
                   data: itemsOpt,
-                  idProperty: this._options.keyField
+                  idProperty: this._options.idProperty
                });
             } else {
                this._items = itemsOpt;
@@ -555,6 +566,18 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._createDefaultProjection(this._items);
                this._itemsReadyCallback();
                this._notify('onItemsReady');
+            }
+         }
+      },
+      before : {
+         _modifyOptions: function(cfg) {
+            if (cfg.keyField) {
+               IoC.resolve('ILogger').log('DSMixin', 'Опция keyField является устаревшей, используйте idProperty');
+               cfg.idProperty = cfg.keyField;
+            }
+            if (cfg.displayField) {
+               IoC.resolve('ILogger').log('DSMixin', 'Опция displayField является устаревшей, используйте displayProperty');
+               cfg.displayProperty = cfg.displayField;
             }
          }
       },
@@ -843,8 +866,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             .orderBy(sorting);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
-            if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
-               dataSet.setIdProperty(this._options.keyField);
+            if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(this._options.idProperty);
             }
             return dataSet.getAll();
          }).bind(this));

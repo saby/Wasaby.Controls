@@ -42,7 +42,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              * Диалог редактирования устанавливают с помощью опции {@link template}.
              * @see template
              */
-            mode: 'dialog'
+            mode: 'dialog',
+            /**
+             * @cfg {object} Объект содержащий опции компонента.
+             */
+            componentOptions: null
 
          },
          _dialog: undefined,
@@ -139,6 +143,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             cMerge(config, floatAreaCfg);
          } else if (mode == 'dialog') {
             Component = Dialog;
+            cMerge(config, meta);
          }
 
          if (this._dialog && !this._dialog.isAutoHide()){

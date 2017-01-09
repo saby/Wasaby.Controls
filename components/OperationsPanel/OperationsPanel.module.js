@@ -41,7 +41,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
-    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
+    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
+    *
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
     *
@@ -98,7 +101,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name',
+             idProperty: 'name',
             /**
              * @cfg {Boolean} Флаг наличия блока с операциями отметки
              */

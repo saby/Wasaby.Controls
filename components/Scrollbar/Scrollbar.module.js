@@ -9,20 +9,34 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
       var BROWSER_SCROLLBAR_MIN_HEIGHT = 50;
 
+      /**
+       * Тонкий скролл.
+       * @class SBIS3.CONTROLS.Scrollbar
+       * @extends SBIS3.CONTROLS.CompoundControl
+       *
+       * @mixin SBIS3.CONTROLS.DragNDropMixinNew
+       *
+       * @control
+       * @private
+       * @autor Крайнов Дмитрий Олегович
+       */
       var Scrollbar = CompoundControl.extend([DragNDropMixinNew], {
          _dotTplFn: dotTplFn,
 
          $protected: {
             _options: {
                position: 0,
-               contentHeight: 1
+               contentHeight: 1,
+               tabindex: 0
             },
             _thumb: undefined,
             _beginClient: undefined,
             _thumbPosition: 0,
             _viewportRatio: undefined,
+            _scrollRatio: undefined,
             _thumbHeight: undefined,
-            _containerHeight: undefined
+            _containerHeight: undefined,
+            _containerOuterHeight: undefined
          },
 
          $constructor: function() {
@@ -35,9 +49,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
-            this._containerHeight = this._container.outerHeight(true);
+            this._containerHeight = this._container.height();
+            this._containerOuterHeight = this._container.outerHeight(true);
             this._setViewportRatio();
-            this._calcThumbHeight();
+            this._setThumbHeight();
          },
 
          getPosition: function() {
@@ -45,7 +60,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setPosition: function(position) {
-            var maxPosition = this.getContentHeight() - this._containerHeight;
+            var maxPosition = this.getContentHeight() - this._containerOuterHeight;
 
             position = this._calcPosition(position, 0, maxPosition);
             this._options.position = position;
@@ -57,10 +72,11 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setContentHeight: function(contentHeight) {
-            this._containerHeight = this._container.outerHeight(true);
+            this._containerHeight = this._container.height();
+            this._containerOuterHeight = this._container.outerHeight(true);
             this._options.contentHeight = contentHeight;
             this._setViewportRatio();
-            this._calcThumbHeight();
+            this._setThumbHeight();
          },
 
          /**
@@ -96,25 +112,31 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Сдвигаем ползунок на нужную позицию
          _setThumbPosition: function() {
-            this._thumbPosition = this.getPosition() * this._viewportRatio
+            this._thumbPosition = this._calcProjectionSize(this.getPosition(), this._scrollRatio);
             this._thumb.get(0).style.top = this._thumbPosition + 'px';
          },
 
          //Высчитываем и задаём высоту ползунка
-         _calcThumbHeight: function(){
+         _setThumbHeight: function(){
             this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
-            this._thumbHeight = this._containerHeight * this._viewportRatio;
+            this._thumbHeight = this._calcProjectionSize(this._containerHeight, this._viewportRatio);
             this._thumb.height(this._thumbHeight);
          },
 
+         _calcProjectionSize: function(size, ratio) {
+            return size * ratio;
+         },
+
          _onResizeHandler: function() {
-            this._containerHeight = this._container.outerHeight(true);
-            this._calcThumbHeight();
+            this._containerHeight = this._container.height();
+            this._containerOuterHeight = this._container.outerHeight(true);
+            this._setThumbHeight();
          },
 
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function(){
-            this._viewportRatio = this._containerHeight / this.getContentHeight();
+            this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            this._scrollRatio = this.getContainer().height() / this.getContentHeight();
          },
 
          _beginDragHandler: function(dragObject, e) {

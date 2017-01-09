@@ -1,7 +1,7 @@
 /**
  * Created by iv.cheremushkin on 23.01.2015.
  */
-define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'Core/helpers/collection-helpers'], function(ContextMenu, colHelpers) {
+define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'Core/helpers/collection-helpers', 'Core/IoC'], function(ContextMenu, colHelpers, IoC) {
    /**
     * Миксин, добавляющий поведение работы с выподающим меню
     * @mixin SBIS3.CONTROLS.MenuButtonMixin
@@ -25,9 +25,27 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
       $protected: {
          _options: {
             /**
-             * @cfg {String} Поле иерархии
+             * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
+             * @remark
+             * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
+             * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел</option>
+             * </pre>
              */
-            hierField : null
+            parentProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
+             * @remark
+             * null - лист, false - скрытый узел, true - узел
+             *
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел@</option>
+             * </pre>
+             */
+            nodeProperty: null
          }
       },
 
@@ -70,11 +88,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
             corner : 'tl',
             filter: this._options.filter,
             enabled: this.isEnabled(),
-            hierField: this._options.hierField,
-            keyField: this._options.keyField,
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty,
+            idProperty: this._options.idProperty,
             allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
-            displayField: this._options.displayField || 'title',
+            displayProperty: this._options.displayProperty || 'title',
             verticalAlign: {
                side: 'top'
             },
@@ -107,7 +126,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
          header.bind('click', function(){
             self._onHeaderClick();
          });
-         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems().toArray());
+         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems());
          this._picker.getContainer().prepend(header);
       },
 
@@ -154,6 +173,17 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
 
       _setWidth: function(){
          //Установить ширину меню
+      },
+      before : {
+         _modifyOptions: function (cfg) {
+            if (cfg.hierField) {
+               IoC.resolve('ILogger').log('MenuButton', 'Опция hierField является устаревшей, используйте parentProperty');
+               cfg.parentProperty = cfg.hierField;
+            }
+            if (cfg.parentProperty && !cfg.nodeProperty) {
+               cfg.nodeProperty = cfg.parentProperty + '@';
+            }
+         }
       },
       after : {
          _initializePicker : function() {
@@ -205,6 +235,37 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
          var items = this.getItems() || [];
          items.push(item);
          this.setItems(items);
+      },
+
+      /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
+      setKeyField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setKeyField устарел, используйте setIdProperty');
+         this.setIdProperty(prop);
+      },
+
+      setIdProperty: function(prop) {
+         this._options.idProperty = prop;
+      },
+
+      setDisplayField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this.setDisplayProperty(prop);
+      },
+
+      setDisplayProperty: function(prop) {
+         this._options.displayProperty = prop;
+      },
+
+      setHierField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         this.setParentProperty(prop);
+      },
+
+      setParentProperty: function(prop) {
+         this._options.parentProperty = prop;
+      },
+      setNodeProperty: function(prop) {
+         this._options.nodeProperty = prop;
       }
    };
 

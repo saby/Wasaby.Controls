@@ -4,16 +4,11 @@ define('js!SBIS3.CONTROLS.Demo.SliderDemo',
       'html!SBIS3.CONTROLS.Demo.SliderDemo',
       'js!SBIS3.CONTROLS.Slider',
       'js!SBIS3.CONTROLS.NumberTextBox'
-   ], function(CompoundControl, dotTplFn) {
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.DemoCode.Slider.prototype */{
-      _dotTplFn: dotTplFn,
-      $protected: {
-         _options: {
-         }
-      },
-      $constructor: function() {
-
-      }
-   });
-   return moduleClass;
-});
+   ],
+   function(CompoundControl, dotTplFn) {
+      var moduleClass = CompoundControl.extend({
+         _dotTplFn: dotTplFn
+      });
+      return moduleClass;
+   }
+);

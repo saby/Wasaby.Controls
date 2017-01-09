@@ -7,13 +7,14 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
+   'Core/Deferred',
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
    "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
    "Core/helpers/collection-helpers"
 ],
 
-   function( constants,CompoundControl, ItemsControlMixin, FilterMixin, DropdownList, dotTplFn, ItemTpl, colHelpers) {
+   function( constants,CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers) {
 
       'use strict';
       /**
@@ -35,14 +36,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          $protected: {
             _dotTplFn: dotTplFn,
             _options: {
-               _buildTplArgs: function(cfg){
-                  var tplOptions = cfg._buildTplArgsSt.apply(this, arguments);
-                  tplOptions.mode = cfg.mode;
-                  return tplOptions;
-               },
                itemTpl: ItemTpl,
-               mode: 'hover',
-               displayField: '',
+               displayProperty: '',
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
                 * @remark
@@ -60,8 +55,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 * @example
                 * <pre>
                 *    items: [{
-                *       keyField : 'key',    //Имя поля с ключом из списка значений values
-                *       displayField: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
+                *       idProperty : 'key',    //Имя поля с ключом из списка значений values
+                *       displayProperty: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
                 *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
@@ -93,8 +88,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 *    ]
                 *  }]
                 * </pre>
-                * @see keyField
-                * @see displayField
+                * @see idProperty
+                * @see displayProperty
                 * @see setDataSource
                 * @see getDataSet
                 */
@@ -105,6 +100,10 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             FastDataFilter.superclass.init.apply(this, arguments);
             this._container.removeClass('ws-area');
          },
+         _drawItemsCallbackSync: function(){
+            this._setSelectionToItemsInstances();
+         },
+
          _drawItemsCallback: function(){
             var instances = this.getItemsInstances();
             for (var i in instances) {
@@ -139,7 +138,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      self._filterStructure[idx].value = filterValue;
 
                      list.each(function (rec) {
-                        text.push(rec.get(this._options.displayField));
+                        text.push(rec.get(this._options.displayProperty));
                      }.bind(this));
 
                      self._filterStructure[idx].caption = self._filterStructure[idx].value === undefined
@@ -230,15 +229,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                filterChanged: changed,
                filterStructure: this._filterStructure
             });
-            //TODO Во-первых этого здесь бюыть не должно, но привязки не завелись из-за того, что dropDown не смог связаться по контексту и выставить свое значение
-            //TODO во-вторых возможнны проблемы с value array||number. Пока обратим внимание на instances.second._options.multiselect
-            var instances = this.getItemsInstances();
-            //Если компоненты еще не построились, подождем когда они будут готовы, чтобы поставить в соответсвие с фильтром
-            if (Object.isEmpty(instances)) {
-               this.once('onDrawItems', this._setSelectionToItemsInstances.bind(this));
-            } else {
-               this._setSelectionToItemsInstances();
-            }
+            this._setSelectionToItemsInstances();
          },
          _setSelectionToItemsInstances : function(){
             var instances = this.getItemsInstances();
@@ -246,17 +237,43 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                   if (instances.hasOwnProperty(i)){
                      var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
                            value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
-                     if (!this._isSimilarArrays(instances[i].getSelectedKeys(), value)) {
-                        if(instances[i].getItems()){
-                           instances[i].setSelectedKeys(value);
-                        }else {
-                           instances[i].once('onItemsReady', function () {
-                              instances[i].setSelectedKeys(value);
-                           });
+                     this._prepareValue(instances[i], value).addCallback(function(instance, value){
+                        if (!this._isSimilarArrays(instance.getSelectedKeys(), value) && !instance.isDestroyed()) {
+                           if(instance.getItems()){
+                              instance.setSelectedKeys(value);
+                           }else {
+                              instance.once('onItemsReady', function () {
+                                 instance.setSelectedKeys(value);
+                              });
+                           }
                         }
-                     }
+                     }.bind(this, instances[i]));
                   }
                }
+         },
+
+         _prepareValue: function(instance, newKeys){
+            //В структуре resetValue может содержать ключ, которого нет в выпадающем списке
+            //В этом случае мы должны выставить первую запись, которая содержится в наборе данных
+            var def = new cDeferred();
+            var items = instance.getItems();
+            if (items && items.getRecordById(newKeys[0])){
+               return def.callback(newKeys);
+            }
+            //Проверки на текущем наборе данных недостаточно, multiSelectable может пойти на БЛ за записью с указанным ключом.
+            //todo Нужно рассмотреть возможность отказаться от этого поведения, выписал задачу в 230 https://inside.tensor.ru/opendoc.html?guid=a40189c0-f472-46cf-bd3c-44e641d3ebb9&des=
+            if (instance.getDataSource() && newKeys[0] !== null){
+               instance.getDataSource().read(newKeys[0]).addCallbacks(
+                  function () {
+                     def.callback(newKeys);
+                  },
+                  function() {
+                     def.callback([instance._defaultId]);
+                  }
+               );
+               return def;
+            }
+            return def.callback([instance._defaultId]);
          },
          //TODO это дублЬ! нужно вынести в хелпер!!!
          _isSimilarArrays : function(arr1, arr2){

@@ -53,17 +53,18 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       },
 
       $constructor:function () {
-         var self = this;
+         var self = this,
+             afterFieldWrapper = this._getAfterFieldWrapper();
 
          this.subscribe('onTextChange', function(e, text) {
-            $('.js-controls-SearchForm__reset', self.getContainer().get(0)).toggleClass('ws-hidden', text == '');
+            $('.js-controls-SearchForm__reset', afterFieldWrapper).toggleClass('ws-hidden', text == '');
          });
 
-         $('.js-controls-SearchForm__reset', this.getContainer().get(0)).click(function() {
-            self.resetSearch();
+         afterFieldWrapper.on('click', '.js-controls-SearchForm__reset', function() {
+            self.resetSearch()
          });
 
-         $('.js-controls-SearchForm__search', this.getContainer().get(0)).click(function() {
+         afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
                self.applySearch(true);
             }
@@ -93,10 +94,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          this.applySearch(true);
       },
 
-      _startSearch: function() {
+      _startSearch: function(text) {
          // Если используем автодополнении, то поиск не должен отрабатывать на реестре при наборе с клавиатуры
          // но должен сбрасываться, если полностью удалили текст с помощью del и backspace
-         if (!this._options.usePicker || !this.getText()) {
+         if (!this._options.usePicker || !text) {
             SearchForm.superclass._startSearch.apply(this, arguments);
          }
       },

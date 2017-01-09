@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.FontStyle',
    'js!SBIS3.CONTROLS.ColorStyle',
-   'js!SBIS3.CONTROLS.IconButton'
+   'js!SBIS3.CONTROLS.IconButton',
+   'js!SBIS3.CONTROLS.CheckBox'
 ], function(CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
 
    'use strict';
@@ -26,8 +27,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
     * @public
     */
 
-   var StylesPanel = CompoundControl.extend([PopupMixin],/** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
-      _dotTplFn : dotTplFn,
+   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
             closeButton: true,
@@ -61,6 +62,16 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              */
             palleteRenderStyle: false,
             /**
+             * @cfg {Boolean}
+             * Оповещать об изменении сразу, не дожидаясь нажатия кнопки "Применить"
+             */
+            instantFireMode: false,
+            /**
+             * @cfg {Array of Number}
+             * Устанавливает доступные размеры шрифта
+             */
+            fontSizes: [8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 24, 26, 28, 36, 48, 72],
+            /**
              * @cfg {Object}
              * Устанавливает начальную настройку панели
              */
@@ -79,11 +90,17 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              * @cfg {Object}
              * Предустановленные наборы форматирования текст
              */
-            presets: null
+            presets: null,
+            allowAutoColor: false
          },
-         _currentStyle: null, /* текущий стиль форматирования текста */
-         _historyController: null, /* Контроллер для работы с историей */
-         _history: null, /* Набор элементов истории */
+         /* При нажатии на крестик, вернем стиль из backup-a */
+         _backup: null,
+         _currentStyle: null,
+         /* текущий стиль форматирования текста */
+         _historyController: null,
+         /* Контроллер для работы с историей */
+         _history: null,
+         /* Набор элементов истории */
          /* подготовленные для отображения наборы форматирования в виде
           * {
           *  id : 1,
@@ -94,16 +111,23 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
           * }
           */
          _presetItems: null,
-         _presetView: null, /* ListView отображающий историю и предвыбранные наборы форматирования */
-         _width: undefined, /* Ширина панели в режиме палитры */
-         _palette: null, /* Компонент палитры */
+         _presetView: null,
+         /* ListView отображающий историю и предвыбранные наборы форматирования */
+         _width: undefined,
+         /* Ширина панели в режиме палитры */
+         _palette: null,
+         /* Компонент палитры */
          /* Компоненты выбора формата начертания */
-         _size: null, _bold: null, _italic: null, _underline: null, _strikethrought: null
+         _size: null,
+         _bold: null,
+         _italic: null,
+         _underline: null,
+         _strikethrough: null
       },
 
-      $constructor: function () {
+      $constructor: function() {
          var container = this.getContainer(),
-             colorsCount, i;
+            colorsCount, i;
 
          this._publish('changeFormat');
          $ws.single.CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
@@ -114,10 +138,10 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              * по спецификации известно, что максимальное количество отображаемых цветов по высоте равно равно 6
              */
             colorsCount = this._options.colors.length;
-            if(colorsCount <= 6){
+            if (colorsCount <= 6) {
                /* Когда элементов меньше 6 отображаемых их в одну колонку */
                this._width = 32;
-            }else {
+            } else {
                /* Когда цветов больше 6 нужно искать прямоугольник с подходящими размерами
                 * По высоте/ширине может быть от 2 до 6 цветов, поэтому нужно перебрать длины и найти
                 * ту которая является делитем числа цветов, а частное меньше 6,
@@ -126,15 +150,15 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                 * нет подходящих делителей, например 27 = 3 * 9, добавляем к числу 1 и снова пытаемся найти
                 * прямоугольник, тогда количество пустот будет минимально
                 */
-               while(!this._width){
+               while (!this._width) {
                   i = 2;
-                  while( i <= 6 && !this._width){
-                     if(colorsCount % i === 0 && colorsCount / i <= 6){
+                  while (i <= 6 && !this._width) {
+                     if (colorsCount % i === 0 && colorsCount / i <= 6) {
                         this._width = i * 32;
                      }
                      i++;
                   }
-                  if(!this._width){
+                  if (!this._width) {
                      colorsCount++;
                   }
                }
@@ -143,66 +167,108 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          }
       },
 
-      init: function () {
+      init: function() {
          var self = this;
 
          StylesPanel.superclass.init.call(this);
 
          self._palette = self.getChildControlByName('Pallete');
+         self._checkBox = self.getChildControlByName('CheckBox');
 
-         if(self._options.paletteRenderStyle) {
+         self._checkBox.subscribe('onCheckedChange', function(e, checked) {
+            if (checked) {
+               self._palette.setSelectedKey("auto");
+               self._palette.redraw();
+            } else if (self._palette.getSelectedIndex() == -1) {
+               self._palette.setSelectedIndex(0);
+            }
+         });
+         self._palette.subscribe('onSelectedItemChange', function(e, item) {
+            if (item) {
+               self._checkBox.setChecked(false);
+            }
+         });
+
+         if (self._options.paletteRenderStyle) {
             /* В случае палитру нужно подписаться на смену цвета, т.к. выбор происходит без подтверждения*/
             self._palette.subscribe('onSelectedItemChange', this._paletteClickHandler.bind(self));
             self._palette.getContainer().width(self._width);
-         }else {
+         } else {
             /* находим контролы отвечающие за начертание шрифта */
             this._size = this.getChildControlByName('FontSize');
             this._bold = this.getChildControlByName('Bold');
             this._italic = this.getChildControlByName('Italic');
             this._underline = this.getChildControlByName('Underline');
-            this._strikethrought = this.getChildControlByName('Strikethrough');
-            if(self._options.historyId || self._options.presets) {
+            this._strikethrough = this.getChildControlByName('Strikethrough');
+            if (self._options.historyId || self._options.presets) {
                self._presetView = this.getChildControlByName('presetView');
 
-               self.subscribeTo(self._presetView, 'onItemActivate', function (e, itemObj) {
+               self.subscribeTo(self._presetView, 'onItemActivate', function(e, itemObj) {
                   self._activatePresetByKey(itemObj['id']);
                });
-               if(self._options.presets){
+               if (self._options.presets) {
                   /* т.к. предустановленные стили приходят в формате JSON, то нужно их подготовить для отображения в ListView */
                   self._preparePreset();
                   self._presetView.setItems(this._prepareItems(this._presetItems));
                }
-               if(self._options.historyId) {
+               if (self._options.historyId) {
                   self._historyInit();
                }
             }
          }
+
+         if (this._options.instantFireMode === true) {
+            var handler = this.saveHandlerForInstanceFireMode.bind(this);
+            this._palette.subscribe('onSelectedItemChange', handler);
+            this._size.subscribe('onSelectedItemChange', handler);
+            this._bold.subscribe('onActivated', handler);
+            this._italic.subscribe('onActivated', handler);
+            this._underline.subscribe('onActivated', handler);
+            this._strikethrough.subscribe('onActivated', handler);
+         }
+
+         this.subscribe('onClose', this.onClose.bind(this));
+
+         this._currentStyle = this._getStyle();
+         this._backup = this._getStyle();
       },
 
       // стреляет событием и прокидывает выбранный формат
-      saveHandler: function (format) {
+      saveHandler: function(format) {
          this._currentStyle = format ? format : this._getStyle();
+         this._backup = format ? format : this._getStyle();
          this._notify('changeFormat', this._getInlineStyle(this._currentStyle));
          this.hide();
-         if(this._options.historyId && !format) {
+         if (this._options.historyId && !format) {
             this._saveHistory();
          }
       },
 
-      _getStyle: function () {
+      saveHandlerForInstanceFireMode: function() {
+         this._currentStyle = this._getStyle();
+         this._notify('changeFormat', this._getInlineStyle(this._currentStyle));
+      },
+
+      onClose: function() {
+         if (this._options.instantFireMode === true && this._getInlineStyle(this._backup) !== this._getInlineStyle(this._currentStyle)) {
+            this.setInlineStyle(this._getInlineStyle(this._backup));
+         }
+      },
+
+      _getStyle: function() {
          var style = {};
 
-         if(this._options.paletteRenderStyle){
+         if (this._options.paletteRenderStyle) {
             style = {
                'color': this._palette.getSelectedKey()
             }
-         }else {
+         } else {
             style['font-size'] = this._size.getSelectedKey() + 'px';
-            style['color'] = this._palette.getSelectedKey();
+            style['color'] = this._palette.getSelectedKey() || 'auto';
             this._bold.isChecked() && (style['font-weight'] = 'bold');
             this._italic.isChecked() && (style['font-style'] = 'italic');
             this._underline.isChecked() && (style['text-decoration'] = 'underline');
-            if(this._strikethrought.isChecked()){
+            if (this._strikethrough.isChecked()) {
                style['text-decoration'] = this._underline.isChecked() ? style['text-decoration'] + ' line-through' : 'line-through';
             }
          }
@@ -210,9 +276,9 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       _preparePreset: function() {
-        var preparedPreset = [],
+         var preparedPreset = [],
             preparedItem;
-         colHelpers.forEach(this._options.presets, function(style){
+         colHelpers.forEach(this._options.presets, function(style) {
             preparedItem = {
                id: genHelpers.randomId(),
                json: style
@@ -222,15 +288,15 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          this._presetItems = preparedPreset;
       },
 
-       /* преобразует элементы для вставки */
+      /* преобразует элементы для вставки */
       _prepareItems: function(items) {
          var self = this,
-             preparedItems = [],
-             preparedItem;
-         colHelpers.forEach(items, function(item){
+            preparedItems = [],
+            preparedItem;
+         colHelpers.forEach(items, function(item) {
             preparedItem = {
-              id: item.id,
-              style: self._getInlineStyle(item.json)
+               id: item.id,
+               style: self._getInlineStyle(item.json)
             };
             preparedItems.push(preparedItem);
          });
@@ -238,11 +304,66 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       /**
+       * Десериализовать стили
+       *
+       * @param {String} - то что возвращает getInlineStyle
+       */
+      setInlineStyle: function(style) {
+         var jsonStyle = '{"' + style.split(';').filter(function(v) {
+            return v.length > 0;
+         }).join(';').replace(/;/gi, '","').replace(/:/gi, '":"') + '"}';
+
+         var styles = {};
+
+         try {
+            styles = JSON.parse(jsonStyle);
+         } catch (e) {}
+
+         if (styles.hasOwnProperty('font-size')) {
+            this._size.setSelectedKey(styles['font-size'].slice(0, -2));
+         }
+
+         if (styles.hasOwnProperty('color')) {
+            this._palette.setSelectedKey(styles['color']);
+         }
+
+         if (styles.hasOwnProperty('font-weight') && styles['font-weight'] === 'bold') {
+            this._bold.setChecked(true);
+         } else {
+            this._bold.setChecked(false);
+         }
+
+         if (styles.hasOwnProperty('font-style') && styles['font-style'] === 'italic') {
+            this._italic.setChecked(true);
+         } else {
+            this._italic.setChecked(false);
+         }
+
+         if (styles.hasOwnProperty('text-decoration')) {
+            if (styles['text-decoration'].indexOf('underline') >= 0) {
+               this._underline.setChecked(true);
+            } else {
+               this._underline.setChecked(false);
+            }
+            if (styles['text-decoration'].indexOf('line-through') >= 0) {
+               this._strikethrough.setChecked(true);
+            } else {
+               this._strikethrough.setChecked(false);
+            }
+         } else {
+            this._underline.setChecked(false);
+            this._strikethrough.setChecked(false);
+         }
+
+         this.saveHandler();
+      },
+
+      /**
        * Возвращает строчку содержащию текущее форматирование текста в css формате для вставки в style
        * @returns {String}
        * @see getJSONStyle
        */
-      getInlineStyle: function () {
+      getInlineStyle: function() {
          return this._getInlineStyle(this._currentStyle);
       },
       /**
@@ -250,35 +371,37 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
        * @returns {Object}
        * @see getJSONStyle
        */
-      getJSONStyle: function () {
-        return this._currentStyle;
+      getJSONStyle: function() {
+         return this._currentStyle;
       },
 
-      _historyInit:  function () {
-         this._historyController = new HistoryController({historyId: this._options.historyId});
+      _historyInit: function() {
+         this._historyController = new HistoryController({
+            historyId: this._options.historyId
+         });
          this._history = this._historyController.getHistory();
 
          if (this._history) {
             this._presetView.setItems(this._prepareItems(this._history));
-         }else {
+         } else {
             this._history = [];
             this._presetView.toggle();
          }
       },
 
-       /* собирает строку css стилей из текущего  */
-      _getInlineStyle : function (format) {
+      /* собирает строку css стилей из текущего  */
+      _getInlineStyle: function(format) {
          var css = '';
-         colHelpers.forEach(format, function(value, option){
-            css += option + ':' +  value + ';';
+         colHelpers.forEach(format, function(value, option) {
+            css += option + ':' + value + ';';
          });
          return css;
       },
 
-      _activatePresetByKey: function (key) {
+      _activatePresetByKey: function(key) {
          var preset;
 
-         preset = colHelpers.find(this._options.presets ? this._presetItems :this._history , function(item) {
+         preset = colHelpers.find(this._options.presets ? this._presetItems : this._history, function(item) {
             return item.id == key;
          }, this, false);
          this.saveHandler(preset.json);
@@ -286,11 +409,13 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
 
       /* выбор цвета в режиме палитры нужно передать лишь цвет */
       _paletteClickHandler: function(e, color) {
-         this.saveHandler({'color': color });
+         this.saveHandler({
+            'color': color
+         });
       },
 
-       /* сохраняет в историю не более 5 элементов */
-      _saveHistory: function () {
+      /* сохраняет в историю не более 5 элементов */
+      _saveHistory: function() {
          var historyFormat;
 
          !this._history.length && this._presetView.toggle();
@@ -304,6 +429,37 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          this._history.unshift(historyFormat);
          this._historyController.setHistory(this._history, true);
          this._presetView.setItems(this._prepareItems(this._history));
+      },
+
+      getStylesObject: function() {
+         var
+            styles = {};
+         if (this._options.paletteRenderStyle) {
+            styles = {
+               'color': this._palette.getSelectedKey()
+            }
+         } else {
+            styles = {
+               fontsize: this._size.getSelectedKey(),
+               color: this._palette.getSelectedKey(),
+               bold: this._bold.isChecked(),
+               italic: this._italic.isChecked(),
+               underline: this._underline.isChecked(),
+               strikethrough: this._strikethrough.isChecked()
+            }
+         }
+         return styles;
+      },
+
+      setStylesFromObject: function(styles) {
+         this._palette.setSelectedKey(styles.color);
+         if (!this._options.paletteRenderStyle) {
+               this._size.setSelectedKey(styles.fontsize);
+               this._bold.setChecked(styles.bold);
+               this._italic.setChecked(styles.italic);
+               this._underline.setChecked(styles.underline);
+               this._strikethrough.setChecked(styles.strikethrough);
+         }
       }
 
    });

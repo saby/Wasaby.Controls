@@ -26,6 +26,31 @@
             <opt type="boolean">true</opt>
         </opts>
     </component>
+    <component data-component="SBIS3.CONTROLS.FilterSelect">
+        <opt name="displayProperty">text</opt>
+        <opt name="idProperty">id</opt>
+        <opts name="items" type="array">
+            <opts>
+                <opt name="id">1</opt>
+                <opt name="text">Оплаченные</opt>
+            </opts>
+            <opts>
+                <opt name="id">3</opt>
+                <opt name="text">Нет</opt>
+            </opts>
+            <opts>
+                <opt name="id">2</opt>
+                <opt name="text">Частично</opt>
+            </opts>
+        </opts>
+        <opt name="invertedVisible" bind="filterSelectVisibility" oneWay="true" direction="fromContext"></opt>
+        <opt name="filterValue" bind="filterSelect"></opt>
+        <opt name="command">change-field-internal</opt>
+        <opts name="commandArgs" type="array">
+            <opt>filterSelectVisibility</opt>
+            <opt type="boolean">true</opt>
+        </opts>
+    </component>
     <component data-component="SBIS3.CONTROLS.FilterLink" class="myFilter-demoLink">
         <opt name="caption">По заголовку "Один"</opt>
         <opt name="invertedVisible" bind="titleVisibility" oneWay="true" direction="fromContext"></opt>

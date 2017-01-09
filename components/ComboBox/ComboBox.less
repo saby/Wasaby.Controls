@@ -16,6 +16,7 @@
 
    .controls-TextBox__fieldWrapper {
       position: relative;
+      white-space: nowrap;
       .controls-TextBox__field {
          &.controls-ComboBox__field {
             font: @combo-box-field-font;
@@ -106,6 +107,7 @@
    &.controls-Picker__show {
       background-color: @combo-box-picker-show-background-color;
       color: @compo-box-picker-show-color;
+      border: 1px solid @combo-box-picker-show-border-color;
 
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
@@ -137,15 +139,15 @@
 }
 
 .controls-ComboBox__picker {
-   padding: @combo-box-picker-padding;
+   overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
    .controls-ComboBox__body{
-     margin: @combo-box-picker-margin;
      border: @combo-box-picker-border;
      height: calc(~"100% - 10px"); /* отступ от края экрана*/
      .border-radius(@combo-box-picker-border-radius);
    }
    .controls-ComboBox__scrollContainer{
-     height: 100%;
+     max-height: 400px;
+     height: inherit;
    }
 
    .controls-ComboBox__itemRow {
@@ -169,4 +171,10 @@
 .controls-ComboBox__inputWrapper {
    height: 100%;
    margin-right: @combo-box-input-wrapper-right-offset;
+}
+
+.ws-is-ie10{
+   .controls-ComboBox__picker .controls-ComboBox__body{
+      height: 100%; //ie10 падает, если высота рассчитывается через calc. Теперь для ie10 выпадающий список прибит к краю экрана без отступа, если контейнер имеет достаточную высоту.
+   }
 }

@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._itemsActions = new ItemActionsGroup({
                 items: this._options.itemsActions,
                 element: $('<div class="controls-ListView__itemActions-container"></div>').prependTo(this._getToolbarContent()),
-                keyField: 'name',
+                idProperty: 'name',
                 parent: this,
                 linkedControl: this.getParent(),
                 touchMode: this._options.touchMode,
@@ -351,9 +351,19 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       this.getItemsActions().applyItemActions();
                    }
                 }
-                return;
+                /* При зафиксированном тулбаре может пропасть отслеживаемый элемент (например при перерисовке/удалении),
+                   если он пропал, то при вызове show, не смотрим на флаг lockingToolbar,
+                   ведь больше нет элемента у которого был зафиксирован тулбар, фиксируемся у нового переданного target'a */
+                if (!this._currentTarget || dcHelpers.contains(this.getParent().getContainer(), this._currentTarget.container)) {
+                   return;
+                }
              }
-             this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
+             /* Запоминаем таргет в качестве текущего */
+             this._currentTarget = target;
+
+             if(this._lockingToolbar) {
+                this._trackingTarget();
+             }
              /**
               * нужно следить за положением опций потому что в реестре высота строки может меняться динамически
               * например в сообщениях картинки прогружаются асинхронно и при подгрузке может измениться высота строки,

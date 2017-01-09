@@ -80,6 +80,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _onClickHandler: function(e) {
+            FieldLinkItemsCollection.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 deleteAction = false,
                 self = this,
@@ -124,6 +125,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
                поэтому добавляю проверку на видимость выпадающего списка */
             args.needSort = this.isPickerVisible();
+            /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
+               в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
+            args.needTitle = !this._options.itemContentTpl;
             return args;
          },
 
@@ -173,7 +177,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          showPicker: function() {
-            this._clearItems();
+            /* Чтобы не было перемаргивания в задизейбленом состоянии,
+               просто вешаем класс ws-invisible */
+            if(this.isEnabled()) {
+               this._clearItems();
+            } else {
+               this.getContainer().addClass('ws-invisible');
+            }
             FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
             this.redraw();
             this._picker.recalcPosition(true);
@@ -212,6 +222,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
                      self._notify('onClosePicker');
+                     if(!self.isEnabled()) {
+                        self.getContainer().removeClass('ws-invisible');
+                     }
                      setTimeout(self.redraw.bind(self), 0);
                   },
                   onShow: function() {

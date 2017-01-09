@@ -5,10 +5,21 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.ChooserMixin',
    'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
-   'js!SBIS3.CONTROLS.ComponentBinder',
+   'js!SBIS3.CONTROLS.SearchController',
    'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
-   'Core/core-functions'
-], function (TextBox, PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin, ComponentBinder, afterFieldWrapper, cFunctions) {
+   'Core/core-functions',
+   'Core/CommandDispatcher'
+], function (
+    TextBox,
+    PickerMixin,
+    SuggestMixin,
+    ChooserMixin,
+    SuggestTextBoxMixin,
+    SearchMixin,
+    SearchController,
+    afterFieldWrapper,
+    cFunctions,
+    CommandDispatcher) {
    'use strict';
 
    /**
@@ -35,13 +46,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
             searchParam : '',
             afterFieldWrapper: afterFieldWrapper
          },
-         _crossContainer: undefined
+         _crossContainer: null,
+         _searchController: null
       },
       $constructor: function() {
          var self = this;
 
          this.getContainer().addClass('controls-SuggestTextBox');
-         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', self.getContainer().get(0));
+         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._getAfterFieldWrapper());
 
 
          this.subscribe('onTextChange', function(e, text) {
@@ -54,42 +66,59 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
          /* Если передали параметр поиска, то поиск производим через ComponentBinder */
          if(this._options.searchParam) {
+            CommandDispatcher.declareCommand(this, 'changeSearchParam', function(paramName) {
+               if(this._searchController) {
+                  this._searchController.setSearchParamName(paramName);
+               } else {
+                  this._options.searchParam = paramName;
+               }
+            });
+
             this.subscribe('onSearch', function() {
                this._showLoadingIndicator();
-               this.hidePicker();
             });
 
             this.once('onSearch', function () {
-               var componentBinder = new ComponentBinder({
-                      view: this.getList(),
-                      searchForm: this
-                   }),
-                   undefinedArg;
-
-               /* Биндим suggestTextBox и список с помощью биндера,
-                  передаём параметр, чтобы биндер не реагировал на сброс,
-                  т.к. список просто скрывается по сбросу, и лишний запрос делать не надо */
-               componentBinder.bindSearchGrid(this._options.searchParam, undefinedArg, undefinedArg, undefinedArg, true);
+               this._searchController = new SearchController({
+                  view: this.getList(),
+                  searchForm: this,
+                  searchParamName: this._options.searchParam,
+                  doNotRespondOnReset: true
+               });
+               this._searchController.bindSearch();
             });
 
             this.subscribe('onReset', this._resetSearch.bind(this));
          }
       },
 
-      _onListDataLoad: function() {
+      _onListDataLoad: function(e, dataSet) {
+         var self = this;
+
          SuggestTextBox.superclass._onListDataLoad.apply(this, arguments);
 
          if(this._options.searchParam) {
+            var showPicker = function() {
+                   if(self._checkPickerState(!self._options.showEmptyList)) {
+                      self.showPicker();
+                   }
+                },
+                list = this.getList(),
+                listItems = list.getItems();
+
+            self.hidePicker();
             /* В событии onDataLoad момент нельзя показывать пикер т.к. :
-               1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
-               2) Данных в рекордсете ещё нет.
-               3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
-               Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
-            this.subscribeOnceTo(this.getList(), 'onDrawItems', function() {
-               if(this._checkPickerState(!this._options.showEmptyList)) {
-                  this.showPicker();
-               }
-            }.bind(this));
+             1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
+             2) Данных в рекордсете ещё нет.
+             3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
+             Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
+            if( (dataSet && !dataSet.getCount()) && (listItems && !listItems.getCount()) ) {
+               /* Если был пустой список и после загрузки пустой, то события onDrawItems не стрельнёт,
+                т.к. ничего не рисовалось */
+               showPicker();
+            } else {
+               this.subscribeOnceTo(list, 'onDrawItems', showPicker);
+            }
          }
       },
 

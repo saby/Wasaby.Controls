@@ -93,7 +93,13 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _isPageStartVisisble: function(page){
-         return page.element.offset().top + page.element.outerHeight(true) >= 0
+         var top;
+         if (this._options.view._getScrollWatcher().getScrollContainer()[0] == window) {
+            top = page.element[0].getBoundingClientRect().bottom;
+         } else {
+            top = page.element.offset().top + page.element.outerHeight(true);
+         }
+         return top >= 0;
       },
 
       _resizeHandler: function(){

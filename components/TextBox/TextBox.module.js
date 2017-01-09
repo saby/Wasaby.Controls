@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/detection"
+   "Core/detection",
+   "Core/helpers/functional-helpers"
 ], function(
     constants,
     TextBoxBase,
@@ -13,7 +14,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TemplateUtil,
     Sanitize,
     dcHelpers,
-    cDetection) {
+    cDetection,
+    fHelpers) {
 
    'use strict';
 
@@ -65,6 +67,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _compatPlaceholder: null,
          _tooltipText: null,
          _fromTab: true,
+         _beforeFieldWrapper: null,
+         _afterFieldWrapper: null,
          _options: {
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -169,7 +173,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      }
                      text = newText;
                   }
-                  self._inputField.val(text);
+                  self._drawText(text);
                   /* Событие paste может срабатывать:
                      1) При нажатии горячих клавиш
                      2) При вставке из котекстного меню.
@@ -199,6 +203,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
+            this._inputField.attr('placeholder', '');
             this._createCompatPlaceholder();
          }
 
@@ -338,13 +343,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
          }
       },
 
-      _keyDownBind: function(){
-
+      _keyDownBind: function(event){
+         if (event.which == 13){
+            this._checkInputVal();
+         }
       },
 
       _keyUpBind: function(event) {
-         var newText = this._inputField.val();
-         if (this._options.text !== newText){
+         var newText = this._inputField.val(),
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (this._options.text !== newText && !textsEmpty){
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
@@ -432,7 +440,23 @@ define('js!SBIS3.CONTROLS.TextBox', [
          });
       },
 
+      _getAfterFieldWrapper: function() {
+         if(!this._afterFieldWrapper) {
+            this._afterFieldWrapper = this.getContainer().find('.controls-TextBox__afterFieldWrapper');
+         }
+         return this._afterFieldWrapper;
+      },
+
+      _getBeforeFieldWrapper: function() {
+         if(!this._beforeFieldWrapper) {
+            this._beforeFieldWrapper = this.getContainer().find('.controls-TextBox__beforeFieldWrapper');
+         }
+         return this._beforeFieldWrapper;
+      },
+
       destroy: function() {
+         this._afterFieldWrapper = undefined;
+         this._beforeFieldWrapper = undefined;
          this._inputField.off('*');
          this._inputField = undefined;
          TextBox.superclass.destroy.apply(this, arguments);

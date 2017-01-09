@@ -4,16 +4,17 @@
     <meta charset="utf-8"/>
 </head>
 <body>
-<!-- Libs -->
-<script src="../../sbis3-ws/ws/ext/jquery-full.js" data-pack-name="ws"></script>
-<script src="../../sbis3-ws/ws/ext/jquery-cookie-min.js" data-pack-name="ws"></script>
-
 <!-- Mocha setup -->
 <link rel="stylesheet" href="../../node_modules/mocha/mocha.css"/>
 <div id="mocha"></div>
 <div id="component"></div>
 <script src="../../node_modules/mocha/mocha.js"></script>
 <script src="../../node_modules/chai/chai.js"></script>
+<!-- Libs -->
+<script src="../../sbis3-ws/ws/ext/requirejs/require.js"></script>
+<script src="../../sbis3-ws/ws/ext/requirejs/config.js"></script>
+<script src="../../sbis3-ws/ws/ext/jquery-full.js" data-pack-name="ws"></script>
+<script src="../../sbis3-ws/ws/ext/jquery-cookie-min.js" data-pack-name="ws"></script>
 <script>
     mocha.setup({
         ui: 'bdd',

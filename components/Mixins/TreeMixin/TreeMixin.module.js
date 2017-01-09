@@ -13,8 +13,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/functional-helpers",
+   "Core/IoC",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers) {
+], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -33,22 +34,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       rootAsNode = isPlainObject(root);
       if (rootAsNode) {
          root = Model.fromObject(root, 'adapter.sbis');
-         root.setIdProperty(cfg.keyField);
+         root.setIdProperty(cfg.idProperty);
       }
 
+      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
       projection = new TreeProjection({
          collection: items,
-         idProperty: cfg.keyField || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
-         parentProperty: cfg.hierField,
-         nodeProperty: cfg.hierField + '@',
-         loadedProperty: cfg.hierField + '$',
+         idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
+         parentProperty: cfg.parentProperty,
+         nodeProperty: cfg.nodeProperty,
+         loadedProperty: cfg.parentProperty + '$',
          unique: true,
          root: root,
-         rootEnumerable: rootAsNode
+         rootEnumerable: rootAsNode,
+         filter: filterCallBack,
+         sort: cfg.itemsSortMethod
       });
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
-      projection.setFilter(filterCallBack);
-      projection.setSort(cfg.itemsSortMethod);
+
       return projection;
    },
    _defaultItemsSortMethod = function(itemA, itemB) {
@@ -64,8 +66,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    getSearchCfg = function(cfg) {
       return {
-         keyField: cfg.keyField,
-         displayField: cfg.displayField,
+         idProperty: cfg.idProperty,
+         displayProperty: cfg.displayProperty,
          highlightEnabled: cfg.highlightEnabled,
          highlightText: cfg.highlightText,
          colorMarkEnabled: cfg.colorMarkEnabled,
@@ -126,8 +128,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (item.isNode()) {
             curParentContents = item.getContents();
             pathElem = {};
-            pathElem[cfg.keyField] = curParentContents.getId();
-            pathElem[cfg.displayField] = curParentContents.get(cfg.displayField);
+            pathElem[cfg.idProperty] = curParentContents.getId();
+            pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
             curPath.push(pathElem);
             lastNode = item;
@@ -177,6 +179,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       else {
          projection.each(function(item, index, group) {
+            if (item.isNode()){
+               cfg.hasNodes = true;
+            }
             if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
@@ -200,7 +205,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.hierField + '@') !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.nodeProperty) !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -245,27 +250,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    expandAllItems = function(projection) {
       var
-         enumerator = projection.getEnumerator(),
-         doNext = true,
+         recordSet = projection.getCollection(),
+         projItems = projection.getItems(),
+         hierarchy = new HierarchyRelation({
+            idProperty: recordSet.getIdProperty(),
+            parentProperty: projection.getParentProperty()
+         }),
          item;
-      while (doNext && (item = enumerator.getNext())) {
-         // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+      for (var i = 0; i < projItems.length; i++) {
+         item = projItems[i];
          if (item.isNode() && !item.isExpanded()) {
-            var items = projection.getCollection(),
-               hierarchy = new HierarchyRelation({
-                  idProperty: items.getIdProperty(),
-                  parentProperty: projection.getParentProperty()
-               }),
-               children = hierarchy.getChildren(
-                  item.getContents().getId(),
-                  projection.getCollection()
-               );
-
-            if (children.length) {
+            if (hierarchy.getChildren(item.getContents().getId(), recordSet).length) {
                item.setExpanded(true);
                item.setLoaded(true);
-               doNext = false;
-               expandAllItems(projection);
             }
          }
       }
@@ -274,12 +271,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var tplOptions = cfg._buildTplArgsLV.call(this, cfg);
       tplOptions.displayType = cfg.displayType;
       tplOptions.hierField = cfg.hierField;
+      tplOptions.parentProperty = cfg.parentProperty;
+      tplOptions.nodeProperty = cfg.nodeProperty;
       tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
-      tplOptions.originallPadding = cfg._originallPadding;
+      tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
+      tplOptions.hasNodes = cfg.hasNodes;
       tplOptions.hierarchy = new HierarchyRelation({
-         idProperty: cfg.keyField,
-         parentProperty: cfg.hierField
+         idProperty: cfg.idProperty,
+         parentProperty: cfg.parentProperty
       });
 
       return tplOptions;
@@ -334,7 +334,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
-       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
        *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
        * </ul>
@@ -388,6 +388,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _paddingSize: 16,
             _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _getRecordsForRedrawTree: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             /**
@@ -421,8 +422,31 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * </pre>
              * @see getHierarchy
              * @see setHierarchy
+             * @deprecated
              */
             hierField: null,
+            /**
+             * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
+             * @remark
+             * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
+             * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел</option>
+             * </pre>
+             */
+            parentProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
+             * @remark
+             * null - лист, false - скрытый узел, true - узел
+             *
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел@</option>
+             * </pre>
+             */
+            nodeProperty: null,
             /**
              * @cfg {String} Устанавливает режим отображения записей: отображать только записи типа "Узел" (папка) или любые типы записей.
              * @remark
@@ -553,7 +577,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
          this._options._curRoot = this._options.root;
          if (typeof this._options.root != 'undefined') {
-            filter[this._options.hierField] = this._options.root;
+            filter[this._options.parentProperty] = this._options.root;
          }
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
@@ -570,7 +594,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see getHierField
        */
       setHierField: function (hierField) {
-         this._options.hierField = hierField;
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         this.setParentProperty(hierField);
       },
       /**
        * Возвращает название поля иерархии.
@@ -579,7 +604,44 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see setHierField
        */
       getHierField : function(){
-         return this._options.hierField;
+         IoC.resolve('ILogger').log('TreeMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
+         return this.getParentProperty();
+      },
+      /**
+       * Устанавливает поле иерархии.
+       * @param {String }pp Название поля иерархии.
+       * @see parentProperty
+       * @see getParentProperty
+       */
+      setParentProperty: function (pp) {
+         this._options.parentProperty = pp;
+      },
+      /**
+       * Возвращает название поля иерархии.
+       * @return {String}
+       * @see parentProperty
+       * @see setParentProperty
+       */
+      getParentProperty : function(){
+         return this._options.parentProperty;
+      },
+      /**
+       * Устанавливает поле типа записи в иерархии.
+       * @param {String }np Название поля иерархии.
+       * @see nodeProperty
+       * @see getNodeProperty
+       */
+      setNodeProperty: function (np) {
+         this._options.nodeProperty = np;
+      },
+      /**
+       * Возвращает поле типа записи в иерархии.
+       * @return {String}
+       * @see nodeProperty
+       * @see setNodeProperty
+       */
+      getNodeProperty : function(){
+         return this._options.nodeProperty;
       },
       /**
        * Закрывает узел по переданному идентификатору.
@@ -635,9 +697,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                this._options.openedPath[id] = true;
                this._folderOffsets[id] = 0;
-               return this._loadNode(id).addCallback(function() {
+               return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
                   this._getItemProjectionByItemId(id).setExpanded(true);
-               }.bind(this));
+               }).bind(this));
             }
          } else {
             return Deferred.fail();
@@ -647,13 +709,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(function (list) {
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._options._items.merge(list, {remove: false});
-               this._toggleIndicator(false);
                this._getItemProjectionByItemId(id).setLoaded(true);
+            }).bind(this))
+            .addBoth(function(error){
+               this._toggleIndicator(false);
             }.bind(this));
          } else {
             return Deferred.success();
@@ -726,7 +790,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             filter['ВидДерева'] = 'Узлы и листья';
          }
          this.setFilter(cFunctions.clone(filter), true);
-         filter[this._options.hierField] = key;
+         filter[this._options.parentProperty] = key;
          return filter;
       },
       /**
@@ -851,10 +915,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var
                 keys = [],
                 items = this.getItems(),
-                hierField = this.getHierField();
+               nodeProperty = this._options.nodeProperty;
             if (items && this._isSearchMode && this._isSearchMode()) {
                items.each(function(rec){
-                  if (rec.get(hierField + '@') !== true) {
+                  if (rec.get(nodeProperty) !== true) {
                      keys.push(rec.getId())
                   }
                });
@@ -867,14 +931,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
          var
             filter = cFunctions.clone(this._options.filter),
-            hierField;
+            parentProperty;
          if ((this._options.deepReload || deepReload) && !Object.isEmpty(this._options.openedPath)) {
-            hierField = this._options.hierField;
-            if (!(filter[hierField] instanceof Array)) {
-               filter[hierField] = [];
+            parentProperty = this._options.parentProperty;
+            if (!(filter[parentProperty] instanceof Array)) {
+               filter[parentProperty] = [];
             }
-            filter[hierField].push(this.getCurrentRoot() || null);
-            filter[hierField] = filter[hierField].concat(Object.keys(this._options.openedPath));
+            filter[parentProperty].push(this.getCurrentRoot() || null);
+            filter[parentProperty] = filter[parentProperty].concat(Object.keys(this._options.openedPath));
          }
          return filter;
       },
@@ -929,12 +993,31 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var items = this.getItems();
          return new HierarchyRelation({
             idProperty: idProperty || (items ? items.getIdProperty() : ''),
-            parentProperty: this._options.hierField,
-            nodeProperty: this._options.hierField + '@'
+            parentProperty: this._options.parentProperty,
+            nodeProperty: this._options.nodeProperty
          });
       },
 
+      _getAdditionalOffset: function(items){
+         var currentRootItems = 0;
+         for (i = 0; i < items.length; i++){
+            if (items[i].getContents().get(this._options.hierField) == this.getCurrentRoot()){
+               currentRootItems++;
+            }
+         }
+         return currentRootItems;
+      },
+
       before: {
+         _modifyOptions: function(cfg) {
+            if (cfg.hierField) {
+               IoC.resolve('ILogger').log('TreeMixin', 'Опция hierField является устаревшей, используйте parentProperty');
+               cfg.parentProperty = cfg.hierField;
+            }
+            if (cfg.parentProperty && !cfg.nodeProperty) {
+               cfg.nodeProperty = cfg.parentProperty + '@';
+            }
+         },
          reload : function() {
             this._folderOffsets['null'] = 0;
             this._lastParent = undefined;
@@ -962,9 +1045,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }
-            /*TODO onSetRoot стреляет при каждой перезагрузке, чтоб корректно рисовать хлебные крошки в биндере*/
-            this._notify('onSetRoot', this._options._curRoot, hierarchy);
             if (this._previousRoot !== this._options._curRoot) {
+               this._notify('onSetRoot', this._options._curRoot, hierarchy);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
@@ -1016,7 +1098,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             //если hasItemInProjection = true - это значит что мы нашли запись, которая находится в раскрытом узле
             if (!hasItemInProjection){
                if (record){
-                  recordKey = record.get(this._options.hierField);
+                  recordKey = record.get(this._options.parentProperty);
                   nodes.push(recordKey);
                }
                else{
@@ -1072,17 +1154,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
          this._destroyEditInPlace();
          if (key !== undefined && key !== null) {
-            filter[this._options.hierField] = key;
+            filter[this._options.parentProperty] = key;
          } else {
             if (this._options.root){
-               filter[this._options.hierField] = this._options.root;
+               filter[this._options.parentProperty] = this._options.root;
             } else {
-               delete(filter[this._options.hierField]);
+               delete(filter[this._options.parentProperty]);
             }
          }
          this.setFilter(filter, true);
-         this._notify('onBeforeSetRoot');
-         this._hier = this._getHierarchy(this._options._items, key);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
@@ -1093,25 +1173,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
+         this._hier = this._getHierarchy(this.getItems(), key);
       },
-      _getHierarchy: function(dataSet, key){
+      _getHierarchy: function(items, key){
          var record, parentKey,
             hierarchy = [];
-         if (dataSet){
+         if (items && items.getCount()){
             do {
-               record = dataSet.getRecordById(key);
-               parentKey = record ? record.get(this._options.hierField) : null;
+               record = items.getRecordById(key);
+               parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
                   hierarchy.push({
                      'id': key || null,
                      'parent' : parentKey,
-                     'title' : record.get(this._options.displayField),
+                     'title' : record.get(this._options.displayProperty),
                      'color' : this._options.colorField ? record.get(this._options.colorField) : '',
                      'data' : record
                   });
                }
                key = parentKey;
-            } while (key);
+            // пока не дойдем до корня (корень может быть undefined)
+            } while (key && key != this.getRoot());
          }
          return hierarchy;
       },

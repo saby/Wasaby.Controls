@@ -10,9 +10,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
     * @mixin SBIS3.CONTROLS.TreeViewMixin
     * @public
     * @author Крайнов Дмитрий Олегович
+    *
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
-    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрыть чекбоксы у листьев.
-    * @cssModifier controls-ListView__hideCheckBoxes-node Скрыть чекбоксы у папок.
+    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
+    * @cssModifier controls-ListView__hideCheckBoxes-node Скрывает чекбоксы у папок (узлов и скрытых узлов). Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
@@ -239,7 +240,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       _needCreateFolderFooter: function(item) {
          var
              model = item.getContents(),
-             id = model && model.get(this._options.keyField);
+             id = model && model.get(this._options.idProperty);
          return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
@@ -351,7 +352,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             this.toggleNode(nodeID);
             /* Не вызываем активацию item'a при клике на чекбокс */
          } else if(!$target.hasClass('js-controls-ListView__itemCheckBox')) {
-            if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
+            if ((this._options.allowEnterToFolder) && ((data.get(this._options.nodeProperty)))){
                this.setCurrentRoot(nodeID);
                this.reload();
             }
@@ -364,11 +365,13 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._options._items.getRecordById(id),
+            item = this.getItems().getRecordById(id),
             meta = {
                id: id,
                item: item,
-               hierField : this._options.hierField
+               hierField : this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             };
 
          this._notify('onItemActivate', meta);

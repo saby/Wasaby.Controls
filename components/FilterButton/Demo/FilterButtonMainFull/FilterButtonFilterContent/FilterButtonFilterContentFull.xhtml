@@ -36,12 +36,43 @@
                     <option name="title">С НДС</option>
                 </options>
             </options>
-            <option name="keyField">key</option>
-            <option name="displayField">title</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
             <option name="selectedKey" value="1" bind="NDS" nonexistent="none"/>
             <option name="text" bind="NDSText" direction="fromProperty" oneWay="true"/>
+        </component>
+    </div>
+
+    <div>
+        <component data-component="SBIS3.CONTROLS.FilterDropdown" style="width:185px; margin:0 15px; vertical-align:text-top;">
+            <options name="items" type="array">
+                <options>
+                    <option name="key" value="1"/>
+                    <option name="title">Оплаченные</option>
+                </options>
+                <options>
+                    <option name="key" value="2"/>
+                    <option name="title">частично</option>
+                    <option name="hier">1</option>
+                </options>
+                <options>
+                    <option name="key" value="3"/>
+                    <option name="title">Неоплаченные</option>
+                </options>
+            </options>
+            <option name="multiselect">false</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
+            <option name="parentProperty">hier</option>
+            <option name="text" bind="filterSelectText"></option>
+            <option name="className" value="blue-color"></option>
+            <option name="resetKey" value="resetKeyStr"></option>
+            <options name="selectedKeys" type="array">
+                <option bind="filterSelect"></option>
+            </options>
+            <opt name="visible" bind="filterSelectVisibility" oneWay="true" direction="fromContext"></opt>
         </component>
     </div>
 
@@ -65,8 +96,8 @@
                     <option name="title">Для продажи</option>
                 </options>
             </options>
-            <option name="keyField">key</option>
-            <option name="displayField">title</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
 
@@ -95,8 +126,8 @@
                     <option name="title">Все (используемые и нет)</option>
                 </options>
             </options>
-            <option name="keyField">key</option>
-            <option name="displayField">title</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
 

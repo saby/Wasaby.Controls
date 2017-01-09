@@ -11,9 +11,9 @@
     <component data-component="SBIS3.CONTROLS.FieldLinkItemsCollection" class="controls-FieldLink__linksContainer">
         <option name="name">FieldLinkItemsCollection</option>
         <option name="tabindex">0</option>
-        <option name="displayField">{{=it.displayField}}</option>
+        <option name="displayProperty">{{=it.displayProperty}}</option>
         <option name="userItemAttributes">{{=it.userItemAttributes}}</option>
-        <option name="keyField">{{=it.keyField}}</option>
+        <option name="idProperty">{{=it.idProperty}}</option>
         <option name="itemTemplate" type="ref">{{@it.itemTemplate}}</option>
         <option name="itemContentTpl" type="ref">{{@it.itemContentTpl}}</option>
         <options name="_preRenderValues">
@@ -30,5 +30,10 @@
     </component>
 </div>
 {{? it.multiselect}}
-    <span class="controls-FieldLink__copyShowAll">...</span>
+    <component data-component="SBIS3.CONTROLS.Link" class="controls-FieldLink__copyShowAll">
+        <opt name="caption">&#133;</opt>
+        <opt name="allowChangeEnable" type="boolean">false</opt>
+        <opt name="tabindex">0</opt>
+        <opt name="command">showAllItems</opt>
+    </component>
 {{?}}

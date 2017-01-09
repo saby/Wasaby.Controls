@@ -1,12 +1,14 @@
 @FilterPanelBackgroundColor: rgb(249, 249, 249);
-@FilterPanelBorderStyle: solid 3px #E4E4E4;
-@FilterPanelResetFilterButtonColor: #999999;
+@FilterPanelBorderStyle: solid 1px #E4E4E4;
 
 .controls-FilterPanel {
    box-sizing: border-box;
    overflow: hidden;
    background-color: @FilterPanelBackgroundColor;
    border-right: @FilterPanelBorderStyle;
+   .controls-Accordion {
+      height: auto;
+   }
    .controls-FilterPanel__headContainer {
       .controls-FilterPanel__resetFilter {
          display: block;
@@ -34,10 +36,6 @@
          position: absolute;
       }
       .controls-FilterPanel__resetFilter {
-         color: @FilterPanelResetFilterButtonColor;
-         &.ws-disabled {
-            color: #ccc;
-         }
          right: 8px;
          top: 12px;
          position: absolute;
@@ -66,7 +64,7 @@
          }
          .controls-Spoiler__resetFilterField {
             float: left;
-            padding: 6px 4px 0 0;
+            padding: 6px 8px 0 4px;
          }
       }
    }

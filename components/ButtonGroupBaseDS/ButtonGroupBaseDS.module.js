@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
    var ButtonGroupBase = CompoundControl.extend([DSMixin, DataBindMixin], /** @lends SBIS3.CONTROLS.ButtonGroupBaseDS.prototype */ {
       $protected: {
          _options: {
-            captionField : ''
+            displayProperty : ''
          },
          /**
           * Элементы были заданы в верстке
@@ -39,9 +39,9 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
       $constructor: function() {
          this._container.removeClass('ws-area');
 
-         if (this._options.captionField) {
-            this._options.displayField = this._options.captionField;
-            IoC.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayField".');
+         if (this._options.displayField) {
+            this._options.displayProperty = this._options.displayField;
+            IoC.resolve('ILogger').log('ButtonGroupBase', 'Опция "captionField" устарела. Используйте опцию "displayProperty".');
          }
 
          this._hasItems = this._container.hasClass('hasItems');
