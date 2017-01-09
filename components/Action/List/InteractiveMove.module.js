@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!WS.Data/Di',
       'Core/Indicator',
       'Core/core-merge',
-      "Core/helpers/collection-helpers"
+      "Core/helpers/collection-helpers",
+      "Core/IoC"
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -105,11 +106,31 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             _options : {
                template : 'js!SBIS3.CONTROLS.MoveDialogTemplate',
                parentProperty: undefined,
+               nodeProperty: undefined,
                /**
                 * @cfg {componentOptions} Набор опций для компонента отображающего список.
                 */
                componentOptions: null
             }
+         },
+
+         _modifyOptions: function (cfg) {
+            if (cfg.hierField) {
+               IoC.resolve('ILogger').log('InteractiveMove', 'Опция hierField является устаревшей, используйте parentProperty');
+               cfg.parentProperty = cfg.hierField;
+            }
+            if (cfg.parentProperty && !cfg.nodeProperty) {
+               cfg.nodeProperty = cfg.parentProperty + '@';
+            }
+            if (cfg.componentOptions && cfg.componentOptions.keyField) {
+               IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.keyField является устаревшей, используйте componentOptions.idProperty');
+               cfg.componentOptions.idProperty = cfg.componentOptions.keyField;
+            }
+            if (cfg.componentOptions && cfg.componentOptions.displayField) {
+               IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.displayField является устаревшей, используйте componentOptions.displayProperty');
+               cfg.componentOptions.displayProperty = cfg.componentOptions.displayField;
+            }
+            return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
          _doExecute: function(meta) {
@@ -121,7 +142,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                cssClassName: 'controls-moveDialog',
                opener: this._getListView(),
                movedItems: movedItems,
-               componentOptions: meta.componentOptions
+               componentOptions: meta.componentOptions || {}
             }, this._options.template);
          },
 
@@ -131,7 +152,8 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             return cMerge(options, {
                linkedView: this._getListView(),
                dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
                records: meta.movedItems,
                handlers: {
                   onMove: function(e, movedItems, target) {
@@ -143,25 +165,30 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
-            this.getMoveStrategy().hierarhyMove(movedItems, target).addCallback(function(result){
+            var moveStrategy = this.getMoveStrategy(),
+               method =  moveStrategy.hierarchyMove ? 'hierarchyMove' : 'move'; //todo поддерживаем стратегию с двумя методами перемещения
+
+            moveStrategy[method](movedItems, target, 'on').addCallback(function (result) {
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
-            }.bind(this)).addBoth(function() {
+            }.bind(this)).addBoth(function () {
                Indicator.hide();
             });
+
          },
 
          _makeMoveStrategy: function () {
             return Di.resolve(this._options.moveStrategy, {
                dataSource: this.getDataSource(),
                hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
                listView: this._getListView()
             });
          },
-
          _getComponentOptions: function() {
-            var options = ['displayField', 'partialyReload', 'keyField', 'hierField'],
+            var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {
