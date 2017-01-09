@@ -48,6 +48,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
     *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+    *
     * @control
     * @public
     * @category Actions
