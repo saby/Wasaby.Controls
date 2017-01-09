@@ -74,7 +74,15 @@ define('js!SBIS3.CONTROLS.DateRange', [
              * @see setEndDate
              * @see getEndDate
              */
-            endDate: null
+            endDate: null,
+
+            /**
+             * @cfg {String} Режим уведомления о смене даты. Значение по умолчанию textChange.
+             * @variant 'complete' события onDateChange и onTextChange стреляют только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
+             * @variant 'dateChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
+             * @variant 'change' 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения даты.
+             */
+            notificationMode: 'textChange'
          },
          _datePickerStart: null,
          _datePickerEnd: null,
