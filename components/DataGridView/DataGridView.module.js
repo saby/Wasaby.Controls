@@ -217,6 +217,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                data.push(MarkupTransformer(TemplateUtil.prepareTemplate(column.resultTemplate)(column.resultTemplateData)));
             }
             headData.results = data;
+            headData.item = resultsRecord;//тоже в рамках совместимости для 230 версии, что с этим делать написано чуть выше
          },
          prepareColGroupData = function (cfg) {
             return {
