@@ -21,10 +21,13 @@
    {{
 }
 }}
+{{?}}
+
 {{?it.hasResults && it.resultsPosition === 'top'}}
    {{=it.resultsTpl(it)}}
 {{?}}
-{{? hasScroll }}
+
+{{? it.showHead && hasScroll }}
 <tr>
     <th class="controls-DataGridView__PartScroll__row ws-hidden" colspan="{{=it.columns.length}}">
         <div class="controls-DataGridView__PartScroll__container">
@@ -34,6 +37,5 @@
         </div>
     </th>
 </tr>
-{{?}}
 {{?}}
 </thead>
