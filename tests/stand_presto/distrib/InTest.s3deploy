@@ -7,8 +7,8 @@
         <service id="5f3a1a42-e328-4b40-8cea-4cf9d54b14e7"/>
       </services>
     </application>
-    <business_logic leave_extra_files="0" target_path="C:/inetpub/InTestControls374120"/>
-    <static_content leave_extra_files="0" target_path="C:/inetpub/InTestControls374120"/>
+    <business_logic leave_extra_files="0" target_path="{site_root}"/>
+    <static_content leave_extra_files="0" target_path="{site_root}"/>
   </site>
 
 </distribution_deploy_schema>
