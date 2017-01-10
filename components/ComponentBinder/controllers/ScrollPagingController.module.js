@@ -129,7 +129,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       updateScrollPages: function(reset){
          var view = this._options.view;
          var viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
-            pageHeight = 0,
+            pageOffset = 0,
+            prevPageOffset = 0,
             lastPageStart = 0,
             self = this,
             //Учитываем все что есть в itemsContainer (группировка и тд)
@@ -167,18 +168,23 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
             var $this = $(this),
-               nextHeight = $this.next('.controls-ListView__item').outerHeight(true);
-            pageHeight += $this.outerHeight(true);
+               $next = $this.next('.controls-ListView__item'),
+               // Считаем через position, так как для плитки не подходит сложение высот
+               curBottom = $this.position().top + $this.outerHeight(true),
+               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0;
+            curBottom = curBottom > pageOffset ? curBottom : pageOffset;
+            nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
+            pageOffset = curBottom;
             // Если набралось записей на выстору viewport'a добавим еще страницу
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
             var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
-            if (pageHeight + nextHeight > viewportHeight - offsetTop) {
-               self._pageOffset += pageHeight;
+            if (nextBottom - prevPageOffset > viewportHeight - offsetTop) {
+               self._pageOffset = pageOffset;
+               prevPageOffset = pageOffset;
                self._scrollPages.push({
                   element: $this,
                   offset: self._pageOffset - stickyHeaderHeight
                });
-               pageHeight = 0;
             }
          });
 
