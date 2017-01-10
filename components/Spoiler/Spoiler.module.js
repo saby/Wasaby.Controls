@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate',
    'Core/helpers/collection-helpers',
-   'Core/helpers/dom&controls-helpers'
+   'Core/helpers/dom&controls-helpers',
+   'css!SBIS3.CONTROLS.Spoiler'
 ], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
 
    'use strict';

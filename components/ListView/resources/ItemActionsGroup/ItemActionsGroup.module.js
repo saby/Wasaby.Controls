@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "html!SBIS3.CONTROLS.ItemActionsGroup",
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/collection-helpers",
-   "Core/helpers/markup-helpers"
+   "Core/helpers/markup-helpers",
+   'css!SBIS3.CONTROLS.ItemActionsGroup'
 ],
    function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
 

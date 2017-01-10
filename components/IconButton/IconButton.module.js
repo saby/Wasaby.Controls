@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton'], function(ButtonBase, IconMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.IconButton'], function(ButtonBase, IconMixin, dotTplFn) {
 
    'use strict';
 

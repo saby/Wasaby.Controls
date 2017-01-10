@@ -24,7 +24,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
-   "Core/helpers/string-helpers"
+   "Core/helpers/string-helpers",
+   'css!SBIS3.CONTROLS.DataGridView'
 ],
    function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, footTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemResultTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';

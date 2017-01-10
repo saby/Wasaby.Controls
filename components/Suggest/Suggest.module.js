@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.Suggest', [
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.SuggestMixin',
-   'Core/helpers/generate-helpers'
+   'Core/helpers/generate-helpers',
+   'css!SBIS3.CONTROLS.Suggest'
 ], function (Control, DataBindMixin, PickerMixin, SuggestMixin, genHelpers) {
    'use strict';
 

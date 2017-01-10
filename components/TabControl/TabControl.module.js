@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
    'html!SBIS3.CONTROLS.TabControl',
    "Core/IoC",
    'js!SBIS3.CONTROLS.SwitchableArea',
-   'js!SBIS3.CONTROLS.TabButtons'
+   'js!SBIS3.CONTROLS.TabButtons',
+   'css!SBIS3.CONTROLS.TabControl'
 ], function(CompoundControl, dotTplFn, IoC) {
 
    'use strict';

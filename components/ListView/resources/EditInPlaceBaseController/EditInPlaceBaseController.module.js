@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
    function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 

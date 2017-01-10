@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
    'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DateBox',
-   'js!SBIS3.CONTROLS.IconButton'
+   'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.DateRange'
 ], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose) {
    'use strict';
    /**

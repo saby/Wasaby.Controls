@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.SumDialogTemplate', [
     'js!SBIS3.CORE.CompoundControl',
     'html!SBIS3.CONTROLS.SumDialogTemplate',
     'js!SBIS3.CONTROLS.Button',
-    'i18n!SBIS3.CONTROLS.SumDialogTemplate'
+    'i18n!SBIS3.CONTROLS.SumDialogTemplate',
+    'css!SBIS3.CONTROLS.SumDialogTemplate'
 ], function(Control, dotTplFn, Button) {
 
     var SumDialogTemplate = Control.extend({

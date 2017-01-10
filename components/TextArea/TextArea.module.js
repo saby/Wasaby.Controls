@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "html!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
-   "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin"
+   "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
+   'css!SBIS3.CONTROLS.TextArea'
 ], function( constants,TextBoxBase, dotTplFn, strHelpers, dcHelpers) {
 
    'use strict';

@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
-   "Core/core-instance"
+   "Core/core-instance",
+   'css!SBIS3.CONTROLS.ComboBox'
 ], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**

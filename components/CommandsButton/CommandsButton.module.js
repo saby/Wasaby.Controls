@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.CommandsButton', [
    'js!SBIS3.CONTROLS.MenuIcon',
-   'js!SBIS3.CONTROLS.ContextMenu'
+   'js!SBIS3.CONTROLS.ContextMenu',
+   'css!SBIS3.CONTROLS.CommandsButton'
 ], function(MenuIcon){
 
    'use strict';

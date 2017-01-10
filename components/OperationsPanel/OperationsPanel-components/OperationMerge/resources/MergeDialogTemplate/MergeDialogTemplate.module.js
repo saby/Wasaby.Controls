@@ -18,8 +18,10 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl",
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl",
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl",
-   "i18n!!SBIS3.CONTROLS.MergeDialogTemplate"
+   "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
+   'css!SBIS3.CONTROLS.MergeDialogTemplate'
 ], function( CommandDispatcher,Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, Query, RecordSet, fcHelpers) {
+
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';

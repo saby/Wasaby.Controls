@@ -7,8 +7,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    "Core/defaultRenders",
    "js!SBIS3.CONTROLS.TextBox",
    "js!SBIS3.CONTROLS.NumberTextBoxMixin",
-   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
+   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows",
+   'css!SBIS3.CONTROLS.NumberTextBox'
 ], function (constants, cDefaultRenders, TextBox, NumberTextBoxMixin, arrowTpl) {
+
 
    'use strict';
    /**
