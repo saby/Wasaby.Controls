@@ -2308,7 +2308,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _setInfiniteScrollState: function(mode, reverse){
             if (mode) {
                this._infiniteScrollState.mode = mode;
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', mode == 'up');
             }
             if (reverse){
                this._infiniteScrollState.reverse = reverse;
@@ -2361,6 +2360,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
           * @private
+          *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
@@ -2386,10 +2386,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Подгрузить еще данные
-          * направление задается через _setInfiniteScrollState
+          * Подгрузить еще данные вверх или вниз
+          * @param  {String} direction в какую сторону грузим
           */
-         _scrollLoadNextPage: function () {
+         _scrollLoadNextPage: function (direction) {
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
@@ -2631,6 +2631,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._allowInfiniteScroll = type;
             } else {
                if (type) {
+                  this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
                }
