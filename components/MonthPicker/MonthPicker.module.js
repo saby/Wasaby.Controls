@@ -15,7 +15,7 @@ define(
       'html!SBIS3.CONTROLS.MonthPicker',
       'i18n!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
+   function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn) {
 
    'use strict';
 
