@@ -33,31 +33,4 @@
          }
       }
    }
-
-   /* стили для кнопки вправо-влево */
-   &.controls-OperationsPanelButton__horizontal {
-      width: @controls-OperationsPanelButton-width;
-      height: @controls-OperationsPanelButton-hor-height;
-      line-height: @controls-OperationsPanelButton-hor-line-height;
-
-      &.controls-Checked__checked {
-         background-color: @controls-OperationsPanel-bg;
-         .controls-OperationsPanelButton__icon {
-            color: @controls-OperationsPanelButton-active-icon-color;
-            &:before {
-               content: "\e008";
-            }
-         }
-      }
-      .controls-OperationsPanelButton__icon {
-         top: @controls-OperationsPanelButton-horizontal-icon-top;
-         &:before {
-            content: "\e007";
-         }
-      }
-
-      &:hover {
-         color: @controls-OperationsPanelButton-active-icon-color;
-      }
-   }
 }
