@@ -653,7 +653,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 id;
 
             if (this._isEnumTypeData()){
-               id = items.get();
+               id = 0; //Берем первую запись из enum, она под индексом 0
             }
             else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
                id = null;
