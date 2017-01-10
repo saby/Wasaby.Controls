@@ -6,7 +6,7 @@
     itemKey = item.get(it.idProperty),
     isToolbarItem = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
     if (isToolbarItem) {
-        subItems = it.getSubItems(itemKey, null, it.items, it.idProperty, it.parentProperty);
+        subItems = it.getSubItems(itemKey, it.items, it.idProperty, it.parentProperty, it.itemsToSubItems);
         subItems = $ws.core.clone(subItems);
         for (var i = 0; i < subItems.length; i++) {
             if (subItems[i].parent == itemKey ) {
