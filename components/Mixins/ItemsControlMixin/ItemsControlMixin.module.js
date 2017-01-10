@@ -628,7 +628,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
                      newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
-                     newCfg._resultsRecord = cfg._items && cfg._items.getMetaData().results;
+                     if (cfg._items && cInstance.instanceOfModule(cfg._items, 'WS.Data/Collection/RecordSet')) {
+                        newCfg._resultsRecord = cfg._items.getMetaData().results;
+                     }
                      newCfg._itemData = cfg._buildTplArgs(cfg);
                   }
                }
