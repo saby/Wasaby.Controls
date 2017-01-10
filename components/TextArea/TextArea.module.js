@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
    'use strict';
 
    function generateClassesName(min, max) {
-      if (!max) {
+      if (!max || max < min) {
          max = min;
       }
       return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
@@ -259,10 +259,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
         * </pre>
         * @see minLinesCount
         */
-      setMinLinesCount: function(count) {
-         var cnt = parseInt(count, 10);
-         this._options.minLinesCount = cnt;
-      },
+       setMinLinesCount: function (count) {
+          this._options.minLinesCount = parseInt(count, 10);
+          var hClasses = generateClassesName(this._options.minLinesCount, this._options.autoResize.maxLinesCount);
+          this._inputField.get(0).className = 'controls-TextArea__inputField ' + hClasses;
+       },
 
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
