@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.Demo.TestFilterPanel',
       'html!SBIS3.CONTROLS.Demo.TestFilterPanel',
       'js!SBIS3.CONTROLS.Demo.MyFilterPanel'
    ],
-   function(CompoundControl, dotTplFn){
+   function(CompoundControl, dotTplFn) {
       var moduleClass = CompoundControl.extend({
          _dotTplFn: dotTplFn,
          init: function() {

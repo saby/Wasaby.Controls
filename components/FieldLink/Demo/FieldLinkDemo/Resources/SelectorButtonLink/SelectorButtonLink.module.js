@@ -9,7 +9,7 @@ define('js!SBIS3.DOCS.SelectorButtonLink',
       'css!SBIS3.DOCS.SelectorButtonLink',
       'js!SBIS3.CONTROLS.SelectorButton' // Подключаем контрол Кнопка выбора
    ],
-   function(CompoundControl, dotTplFn){
+   function(CompoundControl, dotTplFn) {
       var moduleClass = CompoundControl.extend({
          _dotTplFn: dotTplFn,
          init: function() {
