@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _modifyOptions: function(cfg) {
          var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
-         newCfg.heightclassName = generateClassesName(this._options.minLinesCount, this._options.autoResize.maxLinesCount);
+         newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.autoResize.maxLinesCount);
          return newCfg;
       },
 
