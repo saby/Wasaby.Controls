@@ -77,7 +77,16 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         },
 
         _modifyOptions: function() {
-            var opts = FilterPanelChooserBase.superclass._modifyOptions.apply(this, arguments);
+            var
+               opts = FilterPanelChooserBase.superclass._modifyOptions.apply(this, arguments);
+            if (opts.keyField) {
+                IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция keyField является устаревшей, используйте idProperty');
+                opts.idProperty = opts.keyField;
+            }
+            if (opts.displayField) {
+                IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция displayField является устаревшей, используйте displayProperty');
+                opts.displayProperty = opts.displayField;
+            }
             if (Array.isArray(opts.items)) {
                 IoC.resolve('ILogger').log('items', 'Array type option is deprecated. Use WS.Data/Collection/RecordSet.');
                 opts.items = new RecordSet({
@@ -86,14 +95,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
                 });
             }
             opts._template = opts.template ? TemplateUtil.prepareTemplate(opts.template) : opts._defaultTemplate;
-           if (opts.keyField) {
-              IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция keyField является устаревшей, используйте idProperty');
-              opts.idProperty = opts.keyField;
-           }
-            if (opts.displayField) {
-                IoC.resolve('ILogger').log('FilterPanelChooserBase', 'Опция displayField является устаревшей, используйте displayProperty');
-                opts.displayProperty = opts.displayField;
-            }
             return opts;
         },
 
