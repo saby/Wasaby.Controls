@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin'], function(DataGridView, CompositeViewMixin) {
+define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'css!SBIS3.CONTROLS.CompositeView'], function(DataGridView, CompositeViewMixin) {
    'use strict';
 
       /**

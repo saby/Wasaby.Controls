@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    "js!SBIS3.CONTROLS.FilterPanelDataRange",
    "js!SBIS3.CONTROLS.FilterPanelBoolean",
    "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.ScrollContainer"
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   'css!SBIS3.CONTROLS.FilterPanel'
 ], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, RecordSet, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';

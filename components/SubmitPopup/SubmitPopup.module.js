@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
    "js!SBIS3.CONTROLS.InformationPopup",
    "html!SBIS3.CONTROLS.SubmitPopup/resources/template",
    "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.Link"
+   "js!SBIS3.CONTROLS.Link",
+   'css!SBIS3.CONTROLS.SubmitPopup'
 ],
 
    /**

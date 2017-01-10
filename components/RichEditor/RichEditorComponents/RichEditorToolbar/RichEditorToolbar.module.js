@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown"
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   'css!SBIS3.CONTROLS.RichEditorToolbar'
 ], function( cMerge,RichEditorToolbarBase, dotTplFn, defaultConfig) {
 
    'use strict';

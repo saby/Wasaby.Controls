@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.BackButton','js!SBIS3.CONTROLS.Link'], function(CompoundControl, dotTpl) {
+define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.BackButton','js!SBIS3.CONTROLS.Link', 'css!SBIS3.CONTROLS.BackButton'], function(CompoundControl, dotTpl) {
    'use strict';
    /**
     * Кнопка для реализации поведения возврата назад по истории.

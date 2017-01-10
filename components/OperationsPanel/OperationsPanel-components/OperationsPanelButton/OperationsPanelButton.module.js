@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
    'js!SBIS3.CONTROLS.Clickable',
    'js!SBIS3.CONTROLS.Checkable',
    'html!SBIS3.CONTROLS.OperationsPanelButton',
-   'Core/core-instance'
+   'Core/core-instance',
+   'css!SBIS3.CONTROLS.OperationsPanelButton'
 ], function(Control, Clickable, Checkable, dotTplFn, cInstance) {
 
    /**

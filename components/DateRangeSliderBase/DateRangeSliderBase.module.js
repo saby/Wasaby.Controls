@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'Core/helpers/date-helpers',
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.Link',
+   'css!SBIS3.CONTROLS.DateRangeSliderBase'
 ], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, PickerMixin, dateHelpers) {
    'use strict';
 

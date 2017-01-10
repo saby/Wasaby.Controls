@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove',
-   'js!SBIS3.CONTROLS.MenuIcon'
+   'js!SBIS3.CONTROLS.MenuIcon',
+   'css!SBIS3.CONTROLS.OperationsPanel'
 ], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),

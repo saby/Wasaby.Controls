@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.UnitEditor',
      ['js!SBIS3.CONTROLS.NumberTextBox',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.FloatArea',
-      'html!SBIS3.CONTROLS.UnitEditor'], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
+      'html!SBIS3.CONTROLS.UnitEditor',
+      'css!SBIS3.CONTROLS.UnitEditor'], function (NumberTextBox, PickerMixin, FloatArea, dotTplFn) {
 
       'use strict';
 

@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'js!SBIS3.CORE.MarkupTransformer',
        'Core/helpers/dom&controls-helpers',
-       'i18n!SBIS3.CONTROLS.ItemsToolbar'
+       'i18n!SBIS3.CONTROLS.ItemsToolbar',
+       'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers) {
 

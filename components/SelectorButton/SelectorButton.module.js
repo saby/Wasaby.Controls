@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/Sanitize",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   'css!SBIS3.CONTROLS.SelectorButton'
 ],
     function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers) {
 

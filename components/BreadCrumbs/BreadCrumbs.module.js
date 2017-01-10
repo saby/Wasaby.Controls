@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
    'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl',
    'Core/helpers/string-helpers',
-   "Core/IoC"
+   "Core/IoC",
+   'css!SBIS3.CONTROLS.BreadCrumbs'
 ], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers, IoC) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.

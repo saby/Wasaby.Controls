@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
        'tmpl!SBIS3.CONTROLS.FilterHistoryView/itemTpl',
        'js!SBIS3.CONTROLS.HistoryList',
        'Core/CommandDispatcher',
-       'js!SBIS3.CONTROLS.ToggleButton'
+       'js!SBIS3.CONTROLS.ToggleButton',
+       'css!SBIS3.CONTROLS.FilterHistoryView'
     ],
 
     function(ListView, footerTpl, itemTpl, HistoryList, CommandDispatcher) {

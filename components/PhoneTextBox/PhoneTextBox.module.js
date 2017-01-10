@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl) {
+define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox', 'css!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl) {
 
    'use strict';
 

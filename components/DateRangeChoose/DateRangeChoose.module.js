@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    "Core/helpers/event-helpers",
    "Core/helpers/date-helpers",
    "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link"
+   "js!SBIS3.CONTROLS.Link",
+   'css!SBIS3.CONTROLS.DateRangeChoose'
 ], function ( Deferred, IoC, ConsoleLogger,CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil, cInstance, eHelpers, dateHelpers) {
    'use strict';
 

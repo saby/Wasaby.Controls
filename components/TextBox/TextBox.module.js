@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
    "Core/detection",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   'css!SBIS3.CONTROLS.TextBox'
 ], function(
     constants,
     TextBoxBase,
