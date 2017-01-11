@@ -249,6 +249,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    * @cssModifier controls-DataGridView__sidePadding-12 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 12px.
+    * @cssModifier controls-DataGridView__sidePadding-16 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 16px.
+    * @cssModifier controls-DataGridView__sidePadding-20 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 20px.
+    * @cssModifier controls-DataGridView__sidePadding-24 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 24px.
     *
     * @control
     * @public
