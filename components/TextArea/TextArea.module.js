@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       if (needToWrap) {
          dispText = strHelpers.wrapURLs(dispText);
       }
+      dispText = dispText.replace(/\n/g, '<br/>');
       return dispText;
    }
    /**
