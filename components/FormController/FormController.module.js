@@ -297,7 +297,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             event.setResult(false);
             return;
          }
-         if (closeAfterConfirmDialogHandler || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -312,7 +312,9 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          event.setResult(false);
-         self._showConfirmDialog();
+         if (!closeAfterConfirmDialogHandler) {
+            self._showConfirmDialog();
+         }
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
@@ -686,7 +688,6 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _showConfirmDialog: function(){
-         this._panel.onBringToFront();
          this._confirmDialog = InformationPopupManager.showConfirmDialog({
                message: rk('Сохранить изменения?'),
                details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
@@ -781,6 +782,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
          else if (result === false) {
             this._closePanel(false);
+         } else {
+            this._panel.onBringToFront();
          }
       },
 
