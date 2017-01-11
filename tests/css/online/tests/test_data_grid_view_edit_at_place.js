@@ -48,12 +48,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
-				this.editor_input = find('[sbisname="Data_bind"] textarea')
+				this.editor_input = find('[sbisname="Data_bind"] .controls-TextArea__inputField')
             })
 
             .capture('opened_editor', function (actions) {
                 actions.click(this.item3);
-				actions.waitForElementToShow('[sbisname="Data_bind"] textarea', 2000);
+				actions.waitForElementToShow('[sbisname="Data_bind"] .controls-TextArea__inputField', 2000);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
