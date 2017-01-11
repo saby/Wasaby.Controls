@@ -16,7 +16,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
       return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
    }
 
-   function prepareTextForDisplay(text, needToWrap) {
+   function prepareTextForDisplay(text, needToWrap, maxLength) {
+      if (maxLength) {
+         text = text.substr(0, maxLength);
+      }
       var dispText = strHelpers.escapeHtml(text);
       if (needToWrap) {
          dispText = strHelpers.wrapURLs(dispText);
@@ -127,7 +130,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _modifyOptions: function(cfg) {
          var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
          newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.autoResize.maxLinesCount);
-         newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled);
+         newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled, cfg.maxLength);
          return newCfg;
       },
 
@@ -198,7 +201,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _insertTextToMarkup: function(text) {
-         var dispText = prepareTextForDisplay(text, !this._options.enabled);
+         var dispText = prepareTextForDisplay(text, !this._options.enabled, this._options.maxLength);
          this._inputField.get(0).innerHTML = dispText || '';
       },
 
