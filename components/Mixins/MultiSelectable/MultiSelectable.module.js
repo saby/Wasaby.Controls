@@ -217,7 +217,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          },
          _modifyOptions: function(opts) {
             if (opts.selectedItems) {
-               opts.selectedKeys = convertToKeys(opts.selectedItems, opts.keyField);
+               opts.selectedKeys = convertToKeys(opts.selectedItems, opts.idProperty);
             }
          }
       },
