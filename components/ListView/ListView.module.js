@@ -113,7 +113,8 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
-       * @ignoreEvents onAfterLoad
+       * @ignoreEvents onAfterLoad onChange onStateChange
+       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
        *
        * @control
        * @public

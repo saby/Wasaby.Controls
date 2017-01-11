@@ -28,6 +28,9 @@ define('js!SBIS3.CONTROLS.FormController', [
     * @extends $ws.proto.CompoundControl
     * @public
     * @author Красильников Андрей Сергеевич
+    *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    'use strict';
 
