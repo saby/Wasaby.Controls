@@ -15,6 +15,14 @@ define('js!SBIS3.CONTROLS.TextArea', [
       }
       return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
    }
+
+   function prepareTextForDisplay(text, needToWrap) {
+      var dispText = strHelpers.escapeHtml(text);
+      if (needToWrap) {
+         dispText = strHelpers.wrapURLs(dispText);
+      }
+      return dispText;
+   }
    /**
     * Многострочное поле ввода - это текстовое поле с автовысотой.
     * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
@@ -118,6 +126,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _modifyOptions: function(cfg) {
          var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
          newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.autoResize.maxLinesCount);
+         newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled);
          return newCfg;
       },
 
@@ -182,7 +191,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
          if (this._inputField.get(0).innerText != text) {
-            this._inputField.get(0).innerText = text || '';
+            var dispText = prepareTextForDisplay(text, !this._options.enabled);
+            this._inputField.get(0).innerHTML = dispText || '';
          }
       },
 
