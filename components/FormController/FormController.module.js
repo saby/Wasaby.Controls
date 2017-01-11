@@ -252,9 +252,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _onBeforeUnload: function(e){
+      _onBeforeUnload: function(e) {
          //Если рекорд был изменен и пытаются уйти со страницы - задаем вопрос, чтобы пользователь мог сохранить отредактированные данные.
-         if (this.getRecord().isChanged()){
+         if (this.getRecord().isChanged()) {
             //Почти во всех браузер была убрана возможность настраивать кастомный текст для диалогового окна https://www.chromestatus.com/feature/5349061406228480
             //Для того чтобы показать вопрос - из события нужно вернуть строку. Содержание строки будет проигнорировано https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
             var message = "Редактируемая запись была изменена";
@@ -264,9 +264,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          return null;
       },
 
-      _onAfterShowHandler: function(){
+      _onAfterShowHandler: function() {
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)){
+         if (isOpenedFromNewTab.call(this)) {
             this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
             return;
          }
