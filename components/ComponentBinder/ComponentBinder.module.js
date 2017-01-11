@@ -282,22 +282,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       //TODO: избавиться - зовется из ListView
       _updateScrollPages: function(reset){
          if (this._scrollPagingController){
-            this._scrollPagingController.updateScrollPages(reset);
+            this._scrollPagingController.updateScrollPaging(reset);
          }
       },
 
-      //TODO: избавиться - зовется из ListView
-      _getScrollPage: function(){
-         if (this._scrollPagingController){
-            return this._scrollPagingController.getScrollPage();
-         }
-      },
-
-      bindScrollPaging: function(paging) {
+      bindScrollPaging: function(paging, viewportController) {
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
-               paging: paging || this._options.paging
+               paging: paging || this._options.paging,
+               viewportController: viewportController
             })
          }
          this._scrollPagingController.bindScrollPaging();

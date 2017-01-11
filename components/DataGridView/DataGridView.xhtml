@@ -9,6 +9,7 @@
          </div>
       </div>
    </div>
+   <div class="controls-ListView__virtualScrollTop"></div>
    <table class="controls-DataGridView__table {{?it.stickyHeader && it.showHead}}ws-sticky-header__table{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
       {{=it._headTpl(it._headData)}}
@@ -20,6 +21,7 @@
       <tfoot class="controls-DataGridView__tfoot">
       </tfoot>
    </table>
+   <div class="controls-ListView__virtualScrollBottom"></div>
    <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>

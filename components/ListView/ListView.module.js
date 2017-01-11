@@ -48,6 +48,8 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
+   'js!SBIS3.CONTROLS.VirtualScrollController',
+   'js!SBIS3.CONTROLS.ViewportController',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
@@ -60,7 +62,7 @@ define('js!SBIS3.CONTROLS.ListView',
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, VirtualScrollController, ViewportController) {
 
      'use strict';
 
@@ -754,7 +756,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base'
+               moveStrategy: 'movestrategy.base',
+               virtualScrolling: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -787,6 +790,17 @@ define('js!SBIS3.CONTROLS.ListView',
                this.setGroupBy(this._options.groupBy, false);
             }
             this._prepareInfiniteScroll();
+            if (this._options.scrollPaging || this._options.virtualScrolling){
+               this._viewportController = new ViewportController({
+                  view: this
+               });
+            }
+            if (this._options.virtualScrolling){
+               this._virtualScrollController = new VirtualScrollController({
+                  view: this,
+                  viewportController: this._viewportController
+               });
+            }
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
@@ -899,7 +913,7 @@ define('js!SBIS3.CONTROLS.ListView',
                view: this,
                paging: this._scrollPager
             });
-            this._scrollBinder.bindScrollPaging();
+            this._scrollBinder.bindScrollPaging(null, this._viewportController);
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
          },
 
@@ -910,13 +924,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
-                itemActions = this.getItemsActions();
-
+            var itemActions = this.getItemsActions();
             if(itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
-            this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
             var right = $(window).width() - this.getContainer().get(0).getBoundingClientRect().right;
@@ -2147,7 +2158,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(true);
+               this._scrollBinder._updateScrollPages();
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
