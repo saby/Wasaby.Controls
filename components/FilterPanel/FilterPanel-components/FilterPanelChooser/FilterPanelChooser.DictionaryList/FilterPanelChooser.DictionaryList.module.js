@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
      * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
      * @extends SBIS3.CONTROLS.FilterPanelChooser.List
      * @author Сухоручкин Андрей Сергеевич
+     * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */

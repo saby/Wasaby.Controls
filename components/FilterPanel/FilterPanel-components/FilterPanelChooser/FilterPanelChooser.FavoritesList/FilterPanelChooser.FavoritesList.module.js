@@ -34,6 +34,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
      * @class SBIS3.CONTROLS.FilterPanelChooser.FavoritesList
      * @extends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
      * @author Сухоручкин Андрей Сергеевич
+     * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
