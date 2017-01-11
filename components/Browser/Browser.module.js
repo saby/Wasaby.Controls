@@ -15,6 +15,9 @@ define('js!SBIS3.CONTROLS.Browser', [
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+    *
     * @control
     * @public
     * @category Lists
