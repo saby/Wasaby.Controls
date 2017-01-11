@@ -2367,16 +2367,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
+          * Функция догрузки данных пока не появится скролл
           * @private
           *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
-
-            // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
+            // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
+            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху 
             if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
+            } else {
+               if (this._options.infiniteScroll == 'both' && this.isScrollOnTop()){
+                  this._setInfiniteScrollState('up');
+                  this._scrollLoadNextPage();
+               }
+                
             }
          },
 
