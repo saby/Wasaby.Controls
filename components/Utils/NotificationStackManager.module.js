@@ -30,7 +30,8 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             },
             _items: [],
-            _hiddenItems: []
+            _hiddenItems: [],
+            _windowsIdWithLifeTime: []
          },
          $constructor : function(){
          },
@@ -105,7 +106,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             if(!notHide){
                setTimeout(function(){
                   self._deleteNotification(instId);
+                  self._windowsIdWithLifeTime.splice(self._windowsIdWithLifeTime.indexOf(inst.getId()), 1);
                }, LIFE_TIME);
+               this._windowsIdWithLifeTime.push(inst.getId());
             }
 
             this._updatePositions();
@@ -182,11 +185,8 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
                var controlContainer = this._items[i].getContainer();
                var zIndex = this._zIndex;
 
-               /*TODO На inside изобрабражение можно открыть на весь экран в модальном вьевере, в таком случае, при
-                  клике на кнопку скопировать ссылку, нотификационнное окно показывается под модальностью, а нужно бы показать над.
-                  Для этой специальной ситуации дадим прикладникам опцию overModalWindows, которая увеличит zIndex
-                  В будущем неплохо было бы подумать и сделать, возможно, так, чтобы стек нотификационных окон зависил от своего контекста*/
-               if(this._items[i]._options.overModalWindows){
+               /*Самозакрывающиеся окна показываем выше всех модальных*/
+               if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId() !== -1)){
                   zIndex = 1000000;
                }
 
