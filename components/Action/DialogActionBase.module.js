@@ -160,7 +160,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                autoCloseOnHide: true,
                border: true,
                target: '',
-               title: '',
                side: 'left',
                animation: 'slide'
                /* временнное решение проблемы описанной в надзадаче */
@@ -169,6 +168,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
             floatAreaCfg = {};
          if (!meta.dialogOptions){
             meta.dialogOptions = {};
+         }
+
+         //FloatArea и Dialog позволяют задать title прямо на опциях шаблона-компонента.
+         //Поэтому, если при вызове execute, нам явно не говорят, какой должен быть title, то не перебиваем его
+         if (meta.dialogOptions.title){
+            defaultConfig.title = meta.dialogOptions.title;
          }
 
          colHelpers.forEach(defaultConfig, function(defaultValue, key){
