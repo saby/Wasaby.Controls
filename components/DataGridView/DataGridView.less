@@ -47,7 +47,11 @@
           }
         }
         &.ws-sticky-header__table {
-          border-top-color: transparent;
+          .controls-DataGridView__tr:first-child {
+            .controls-DataGridView__td {
+              border-top-color: transparent;
+            }
+          }
         }
       }
    }

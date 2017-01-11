@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.DecorableMixin",
    "js!SBIS3.CONTROLS.DragNDropMixinNew",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CONTROLS.BreakClickBySelectMixin",
+   "js!SBIS3.CORE.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
    "js!SBIS3.CORE.MarkupTransformer",
    "tmpl!SBIS3.CONTROLS.ListView",
@@ -1419,22 +1419,31 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItems: function (idArray, changes) {
+            function findElements(ids, itemsContainer) {
+               var elements = $([]), elem;
+               for (i = 0; i < ids.length; i++) {
+                  //сначала ищем непосредственно в контейнере, чтоб не найти вложенные списки
+                  elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                  if (elem.length) {
+                     elements.push(elem.get(0));
+                  }
+                  else {
+                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах                      
+                     elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                     if (elem.length) {
+                        elements.push(elem.get(0));
+                     }
+                  }
+               }
+               return elements;
+            }
+
             var i, itemsContainer = this._getItemsContainer();
             //Если точно знаем что изменилось, можем оптимизировать отрисовку
             if (changes && !Object.isEmpty(changes)) {
-               var rmKeyItems = $([]), addKeyItems = $([]), elem;
-               for (i = 0; i < changes.added.length; i++) {
-                  elem = itemsContainer.find('.controls-ListView__item[data-id="' + changes.added[i] + '"]');
-                  if (elem.length) {
-                     addKeyItems.push(elem.get(0));
-                  }
-               }
-               for (i = 0; i < changes.removed.length; i++) {
-                  elem = itemsContainer.find('.controls-ListView__item[data-id="' + changes.removed[i] + '"]');
-                  if (elem.length) {
-                     rmKeyItems.push(elem.get(0));
-                  }
-               }
+               var rmKeyItems, addKeyItems;
+               addKeyItems = findElements(changes.added, itemsContainer);
+               rmKeyItems = findElements(changes.removed, itemsContainer);
                addKeyItems.addClass('controls-ListView__item__multiSelected');
                rmKeyItems.removeClass('controls-ListView__item__multiSelected');
             }
