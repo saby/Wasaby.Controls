@@ -186,14 +186,19 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
          this._inputField.attr('contenteditable', !!state);
+         this._insertTextToMarkup(this._options.text);
       },
 
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
          if (this._inputField.get(0).innerText != text) {
-            var dispText = prepareTextForDisplay(text, !this._options.enabled);
-            this._inputField.get(0).innerHTML = dispText || '';
+            this._insertTextToMarkup(text);
          }
+      },
+
+      _insertTextToMarkup: function(text) {
+         var dispText = prepareTextForDisplay(text, !this._options.enabled);
+         this._inputField.get(0).innerHTML = dispText || '';
       },
 
       _processNewLine: function(event) {
@@ -277,7 +282,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
-         this._inputField.attr('maxlength',num);
       }
 
    });
