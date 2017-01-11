@@ -180,14 +180,23 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             var bottom = BOTTOM;
             for(var i = 0, l = this._items.length; i < l; i++){
                var controlContainer = this._items[i].getContainer();
+               var zIndex = this._zIndex;
+
+               /*TODO На inside изобрабражение можно открыть на весь экран в модальном вьевере, в таком случае, при
+                  клике на кнопку скопировать ссылку, нотификационнное окно показывается под модальностью, а нужно бы показать над.
+                  Для этой специальной ситуации дадим прикладникам опцию overModalWindows, которая увеличит zIndex
+                  В будущем неплохо было бы подумать и сделать, возможно, так, чтобы стек нотификационных окон зависил от своего контекста*/
+               if(this._items[i]._options.overModalWindows){
+                  zIndex = 1000000;
+               }
 
                controlContainer.css({
                   bottom: bottom,
                   right: RIGHT,
-                  'z-index': this._zIndex
+                  'z-index': zIndex
                });
 
-               this._items[i]._zIndex = this._zIndex;
+               this._items[i]._zIndex = zIndex;
 
                bottom += controlContainer.height() + BLOCK_MARGIN;
             }
