@@ -18,6 +18,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
     * @class SBIS3.CONTROLS.FilterPanelChooser.RadioGroup
     * @extends SBIS3.CONTROLS.FilterPanelChooserBase
     * @author Борисов Петр Сергеевич
+    * @public
+    *
     * @demo SBIS3.CONTROLS.Demo.MyFilterView
     */
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {

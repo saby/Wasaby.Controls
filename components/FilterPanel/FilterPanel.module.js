@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
              * @property {Object} properties Опции, передаваемые в редактор.
-             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser". Возможные значения:
+             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser" (см. опцию *template*). Возможные значения:
              * <ul>
              *     <li>list - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.List}.</li>
              *     <li>dictionary - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList}.</li>

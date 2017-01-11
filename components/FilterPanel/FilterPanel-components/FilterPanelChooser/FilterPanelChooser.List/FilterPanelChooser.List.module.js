@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
      * @extends SBIS3.CONTROLS.FilterPanelChooserBase
      * @author Сухоручкин Андрей Сергеевич
+     * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
