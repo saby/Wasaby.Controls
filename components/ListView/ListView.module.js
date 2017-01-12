@@ -2308,7 +2308,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _setInfiniteScrollState: function(mode, reverse){
             if (mode) {
                this._infiniteScrollState.mode = mode;
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', mode == 'up');
             }
             if (reverse){
                this._infiniteScrollState.reverse = reverse;
@@ -2418,6 +2417,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._infiniteScrollState.mode == 'up');
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
