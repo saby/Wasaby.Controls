@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstract"], function(constants, cAbstract) {
+define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstract", "Core/core-functions"], function(constants, cAbstract, cFunctions) {
 
    var BreadCrumbsController = cAbstract.extend({
       $protected: {
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
 
          view.subscribe('onSetRoot', function(event, id, hier){
             //Этот массив могут использовать другие подписанты, а мы его модифицируем
-            var hierClone = $ws.core.clone(hier);
+            var hierClone = cFunctions.clone(hier);
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){

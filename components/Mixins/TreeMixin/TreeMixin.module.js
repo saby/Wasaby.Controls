@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             defaultCfg.className = 'controls-HierarchyDataGridView__path'
             cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
-            $ws.core.merge(defaultCfg, {
+            cMerge(defaultCfg, {
                path: cFunctions.clone(path),
                viewCfg: cfg._getSearchCfg(cfg)
             });
@@ -1228,7 +1228,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemProjection = this._options._itemsProjection.getItemBySourceItem(item);
          if( itemProjection !== undefined ) {
             var itemParent = itemProjection.getParent().getContents();
-            return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+            return cInstance.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
          }
          return undefined;
       },

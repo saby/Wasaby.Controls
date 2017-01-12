@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.FieldLink',
     [
+       "Core/helpers/collection-helpers",
        "Core/CommandDispatcher",
        "Core/constants",
        "Core/IoC",
@@ -31,6 +32,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
     ],
     function (
+        colHelpers,
         CommandDispatcher,
         constants,
         IoC,
@@ -533,7 +535,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = $ws.helpers.find(this._options.dictionaries, function (elem) {
+                config = colHelpers.find(this._options.dictionaries, function (elem) {
                    return elem.name === key;
                 });
              } else {

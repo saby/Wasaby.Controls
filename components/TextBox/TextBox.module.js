@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.TextBox', [
+   'Core/EventBus',
    'Core/constants',
    'js!SBIS3.CONTROLS.TextBoxBase',
    'html!SBIS3.CONTROLS.TextBox',
@@ -8,6 +9,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    "Core/detection",
    "Core/helpers/functional-helpers"
 ], function(
+    EventBus,
     constants,
     TextBoxBase,
     dotTplFn,
@@ -401,14 +403,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _inputFocusOutHandler: function(e) {
          if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+            EventBus.globalChannel().notify('MobileInputFocusOut');
          }
          this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
          if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+            EventBus.globalChannel().notify('MobileInputFocus');
          }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
