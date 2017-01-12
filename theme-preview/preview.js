@@ -14,6 +14,7 @@
         });
     });
     class LessManager {
+        
         constructor(name, rawdata) {
             let lessStoragedata = rawdata.split('\n').filter(n => !!n && !~n.indexOf('//'));
 
@@ -38,6 +39,15 @@
                 return rule.title === prop
             })[0].value
         }
+        setPropValue(prop, value) {
+            this.lessdata = this.lessdata.map(rule => {
+                if (rule.title === prop) {
+                    rule.value = value;
+                }
+                return rule;
+
+            });
+        }
     }
     let lessManager = null;
 
@@ -45,7 +55,7 @@
         var data = new FormData();
         data.append("json", JSON.stringify(params));
 
-       let  fetchPromise = new Promise((resolve, reject) => {
+        let fetchPromise = new Promise((resolve, reject) => {
             fetch(path, {
                 method: "POST",
                 headers: {
