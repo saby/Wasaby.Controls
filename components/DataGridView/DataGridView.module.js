@@ -688,9 +688,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _bindHead: function() {
          if (!this._thead) {
             // при фиксации заголовка таблицы в шапке реальный thead перемещён в шапку, а в контроле лежит заглушка
-            this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+            this._thead = $('>.controls-DataGridView__table>.controls-DataGridView__thead', this._container.get(0));
          }
-         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
+         this._colgroup = $('>.controls-DataGridView__table>.controls-DataGridView__colgroup', this._container.get(0));
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
          }
