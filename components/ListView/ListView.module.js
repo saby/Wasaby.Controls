@@ -2426,6 +2426,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._infiniteScrollState.mode == 'up'){
                return this._scrollOffset.top > 0;
             } else {
+               // Если загружена последняя страница, то вниз грузить больше не нужно
+               // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
                return !this._lastPageLoaded && ListView.superclass._hasNextPage.call(this, more, offset);
             }
          },
@@ -2889,6 +2891,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this.reload();
                   }
                }
+               this._lastPageLoaded = false;
             }
             this._notify('onPageChange', pageNumber);
          },
@@ -2900,7 +2903,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
             var onLastPageSet = function(items){
                more = items.getMetaData().more;
-               this._lastPageLoaded = true;
                if (typeof more == 'number'){
                   pageNumber = Math.floor(more / this._options.pageSize);
                   this._scrollOffset.bottom = more;
@@ -2910,8 +2912,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setPage(pageNumber, true);
                   this._scrollWatcher.scrollTo('bottom');
                }
+               this._lastPageLoaded = true;
             }.bind(this);
-
             if (noLoad){
                this._offset = -1;
                this.once('onDataLoad', function(event, items){
