@@ -114,7 +114,8 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
-       * @ignoreEvents onAfterLoad
+       * @ignoreEvents onAfterLoad onChange onStateChange
+       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
        *
        * @control
        * @public
@@ -2368,16 +2369,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
+          * Функция догрузки данных пока не появится скролл
           * @private
           *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
-
-            // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
+            // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
+            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху 
             if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
+            } else {
+               if (this._options.infiniteScroll == 'both' && this.isScrollOnTop()){
+                  this._setInfiniteScrollState('up');
+                  this._scrollLoadNextPage();
+               }
+                
             }
          },
 
@@ -2420,6 +2427,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._infiniteScrollState.mode == 'up'){
                return this._scrollOffset.top > 0;
             } else {
+               // Если загружена последняя страница, то вниз грузить больше не нужно
+               // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
                return !this._lastPageLoaded && ListView.superclass._hasNextPage.call(this, more, offset);
             }
          },
@@ -2883,6 +2892,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this.reload();
                   }
                }
+               this._lastPageLoaded = false;
             }
             this._notify('onPageChange', pageNumber);
          },
@@ -2894,7 +2904,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
             var onLastPageSet = function(items){
                more = items.getMetaData().more;
-               this._lastPageLoaded = true;
                if (typeof more == 'number'){
                   pageNumber = Math.floor(more / this._options.pageSize);
                   this._scrollOffset.bottom = more;
@@ -2904,8 +2913,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setPage(pageNumber, true);
                   this._scrollWatcher.scrollTo('bottom');
                }
+               this._lastPageLoaded = true;
             }.bind(this);
-
             if (noLoad){
                this._offset = -1;
                this.once('onDataLoad', function(event, items){

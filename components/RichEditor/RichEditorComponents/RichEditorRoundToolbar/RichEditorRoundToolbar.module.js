@@ -12,7 +12,9 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.StylesPanel',
-   'css!SBIS3.CONTROLS.RichEditorRoundToolbar'
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
+   'js!SBIS3.CONTROLS.IconButton'
+
 ], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
 
    'use strict';
@@ -241,6 +243,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                   parent: button,
                   target: button.getContainer(),
                   corner: 'tl',
+                  verticalAlign: {
+                     side: 'top',
+                     offset: -4
+                  },
                   element: $('<div></div>'),
                   fontSizes: [12, 14, 15, 18],
                   colors: [

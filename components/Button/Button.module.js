@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Button', [
     * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
-	 * @demo SBIS3.CONTROLS.Demo.MyButton
+	* @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Крайнов Дмитрий Олегович
     *

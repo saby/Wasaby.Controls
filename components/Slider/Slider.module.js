@@ -31,6 +31,9 @@ define('js!SBIS3.CONTROLS.Slider',
           *
           * @author Борисов Петр Сергеевич
           *
+          * @ignoreEvents onAfterLoad onChange onStateChange
+          * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+          *
           * @css controls-Slider__withBorder Устанавливает отображение границы вокруг слайдера.
           *
           * @demo SBIS3.CONTROLS.Demo.SliderDemo

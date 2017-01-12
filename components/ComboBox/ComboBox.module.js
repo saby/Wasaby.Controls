@@ -211,7 +211,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       $constructor: function () {
          var self = this;
-         self.getContainer().addClass('controls-ComboBox');
          if (!this._options.displayProperty) {
             //TODO по умолчанию поле title???
             this._options.displayProperty = 'title';
