@@ -1394,12 +1394,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
 
-                        var windowOptions = ($ws._const.defaultOptions || {})['SBIS3.CORE.Window'] || {};
+                        var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
                         //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
                         //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
                         //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
                         if(windowOptions.animatedWindows){
-                           $ws.helpers.message(message);
+                           fcHelpers.message(message);
                         }
                         else {
                            InformationPopupManager.showMessageDialog({
@@ -2254,7 +2254,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if(itemsActions) {
                   target = self.getItemsActions().getTarget();
                   targetHash = target.container.data('hash');
-                  $ws.helpers.forEach(items, function (item) {
+                  colHelpers.forEach(items, function (item) {
                      if (item.getHash() == targetHash) {
                         self._itemsToolbar.unlockToolbar();
                         self._itemsToolbar.hide();
@@ -3403,7 +3403,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems();
-               $ws.helpers.forEach(movedItems, function(item, i) {
+               colHelpers.forEach(movedItems, function(item, i) {
                   if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
                      movedItems[i] = items.getRecordById(item);
                   }
