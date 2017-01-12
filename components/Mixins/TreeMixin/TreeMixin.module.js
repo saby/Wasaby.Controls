@@ -649,7 +649,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       /**
        * Закрывает узел по переданному идентификатору.
-       * @param {String, Number} id Идентификатор закрываемого узла.
+       * @param {String|Number} id Идентификатор закрываемого узла.
        * @remark
        * Метод используют для программного управления видимостью содержимого узла в общей иерархии.
        * Чтобы раскрыть узел по переданному идентификатору, используйте метод {@link expandNode}.
@@ -669,7 +669,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       /**
        * Закрыть или открыть узел.
-       * @param {String, Number} id Идентификатор переключаемого узла.
+       * @param {String|Number} id Идентификатор переключаемого узла.
        * @see collapseNode
        * @see expandNode
        */
@@ -684,7 +684,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       /**
        * Раскрывает узел.
-       * @param {String, Number} id Идентификатор раскрываемого узла
+       * @param {String|Number} id Идентификатор раскрываемого узла
        * @returns {Deferred}
        * @see collapseNode
        * @see toggleNode
