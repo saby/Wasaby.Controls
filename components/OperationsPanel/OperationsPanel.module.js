@@ -226,17 +226,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
          if (this.isVisible() !== show) {
             this._isVisible = show;
-            show && this._container.removeClass('ws-hidden');
-            var animateObj = {'margin-top': show ? 0 : '-30px'};
-            this._blocks.wrapper.animate(animateObj, {
-               duration: 150,
-               easing: 'linear',
-               queue: false,
-               complete: function () {
-                  self._container.toggleClass('ws-hidden', !show);
-                  self._notify('onToggle');
-               }
-            });
+            // убрал анимацию т.к. в Engine браузере панель находится в фиксированном заголовке и при анимации перекрывает контент
+            // TODO вернуть анимацию, так чтобы контент в Engine браузере также был анимирован
+            this._container.toggleClass('ws-hidden', !show);
+            this._notify('onToggle');
          }
       },
       _initBlocks: function() {
