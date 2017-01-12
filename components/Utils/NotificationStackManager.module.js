@@ -30,7 +30,8 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
 
             },
             _items: [],
-            _hiddenItems: []
+            _hiddenItems: [],
+            _windowsIdWithLifeTime: []
          },
          $constructor : function(){
          },
@@ -105,7 +106,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             if(!notHide){
                setTimeout(function(){
                   self._deleteNotification(instId);
+                  self._windowsIdWithLifeTime.splice(self._windowsIdWithLifeTime.indexOf(inst.getId()), 1);
                }, LIFE_TIME);
+               this._windowsIdWithLifeTime.push(inst.getId());
             }
 
             this._updatePositions();
@@ -180,14 +183,20 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             var bottom = BOTTOM;
             for(var i = 0, l = this._items.length; i < l; i++){
                var controlContainer = this._items[i].getContainer();
+               var zIndex = this._zIndex;
+
+               /*Самозакрывающиеся окна показываем выше всех модальных*/
+               if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId() !== -1)){
+                  zIndex = 1000000;
+               }
 
                controlContainer.css({
                   bottom: bottom,
                   right: RIGHT,
-                  'z-index': this._zIndex
+                  'z-index': zIndex
                });
 
-               this._items[i]._zIndex = this._zIndex;
+               this._items[i]._zIndex = zIndex;
 
                bottom += controlContainer.height() + BLOCK_MARGIN;
             }
