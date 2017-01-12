@@ -3371,10 +3371,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //region moveMethods
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
-          * @param {Array} MovedItems Массив перемещаемых записей
+          * @param {Array} idArray Массив перемещаемых записей
           * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
           */
-         moveRecordsWithDialog: function(movedItems) {
+         moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
                Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
                var
@@ -3384,10 +3384,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      nodeProperty: this._options.nodeProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
-                  items = this.getItems();
-               $ws.helpers.forEach(movedItems, function(item, i) {
+                  items = this.getItems(),
+                  movedItems = [];
+               $ws.helpers.forEach(idArray, function(item, i) {
                   if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                     movedItems[i] = items.getRecordById(item);
+                     movedItems.push(items.getRecordById(item));
+                  } else {
+                     movedItems.push(item);
                   }
                }, this);
 
