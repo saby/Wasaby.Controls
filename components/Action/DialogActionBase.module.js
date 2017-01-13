@@ -172,12 +172,12 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
 
          //FloatArea и Dialog позволяют задать title прямо на опциях шаблона-компонента.
          //Поэтому, если при вызове execute, нам явно не говорят, какой должен быть title, то не перебиваем его
-         if (meta.dialogOptions.title){
+         if (meta.dialogOptions.title) {
             defaultConfig.title = meta.dialogOptions.title;
          }
 
-         colHelpers.forEach(defaultConfig, function(defaultValue, key){
-            if (meta.hasOwnProperty(key)){
+         colHelpers.forEach(defaultConfig, function(defaultValue, key) {
+            if (meta.hasOwnProperty(key)) {
                IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.dialogOptions');
                floatAreaCfg[key] = meta[key];
             }
