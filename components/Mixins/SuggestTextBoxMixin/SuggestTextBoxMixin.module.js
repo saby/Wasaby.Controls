@@ -110,14 +110,26 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
           надо, чтобы правильно запускалась валидация */
          // FIXME костыль до перехода на пикера по фокусную систему
          _focusOutHandler: function(parentFunc, event, isDestroyed, focusedControl) {
-            var isChildControl = false;
+            var isChildControl = false,
+                list = this._list;
+
+            /* Рекурсивный поиск списка, чтобы автодополнение не закрывалось,
+               когда фокус уходит на компонент, который был открыт из автодополнения. */
+            function isSuggestParent(target) {
+               do {
+                  target = target.getParent() || target.getOpener();
+               }
+               while (target && target !== list);
+
+               return target === list;
+            }
 
             /* focusedControl может не приходить при разрушении контрола */
-            if(this._list && focusedControl) {
-               isChildControl = (this._list === focusedControl) || (!isDestroyed && focusedControl.getOpener && this._list === focusedControl.getOpener());
+            if(list && focusedControl) {
+               isChildControl = isSuggestParent(focusedControl);
 
                if(!isChildControl) {
-                  isChildControl = this._list.getChildControls(false, true, function(ctrl) {
+                  isChildControl = list.getChildControls(false, true, function(ctrl) {
                      return focusedControl === ctrl;
                   }).length;
                }
