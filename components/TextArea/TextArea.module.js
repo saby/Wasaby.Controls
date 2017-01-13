@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _keyDownBind: function(event) {
          //TODO опасная проверка, ноя пока не нашел случаев чтоб она не сработала
-         if (this.getText() && this.getText().length >= this._options.maxLength && event.key && event.key.length == 1) {
+         if (this.getText() && this._options.maxLength && this.getText().length >= this._options.maxLength && event.key && event.key.length == 1) {
             event.preventDefault();
          }
       },
