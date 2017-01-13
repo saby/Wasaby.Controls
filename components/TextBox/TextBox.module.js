@@ -198,13 +198,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
          this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
-         
+
          this._container.on('touchstart', function(){
             this._fromTouch = true;
-         }.bind(this));
-
-         this._container.on('touchend', function(){
-         	this._fromTouch = false;
          }.bind(this));
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
@@ -408,6 +404,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       _inputFocusOutHandler: function(e) {
          if (this._fromTouch){
             $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+            this._fromTouch = false;
          }
          this._checkInputVal();
       },
