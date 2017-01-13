@@ -3405,7 +3405,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   movedItems;
                if (idArray) {
                   movedItems = [];
-                  colHelpers(idArray, function (item, i) {
+                  colHelpers.forEach(idArray, function (item, i) {
                      if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
                         movedItems.push(items.getRecordById(item));
                      } else {
