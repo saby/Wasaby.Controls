@@ -15,14 +15,16 @@ define('js!SBIS3.CONTROLS.ViewportController',
 
       init: function(){
          ViewportController.superclass.init.call(this);
-         this._options.view._scrollWatcher.subscribe('onScroll', function(e, scrollTop){
-            var page = this.getScrollPage();
-               newKey = page + 1;
-            if (page >= 0 && this._currentScrollPage != newKey) {
-               this._currentScrollPage = newKey;
-               this._notify('onScrollPageChange', page);
-            }
-         }.bind(this));
+         if (this._options.view._scrollWatcher) {
+            this._options.view._scrollWatcher.subscribe('onScroll', function(e, scrollTop){
+               var page = this.getScrollPage();
+                  newKey = page + 1;
+               if (page >= 0 && this._currentScrollPage != newKey) {
+                  this._currentScrollPage = newKey;
+                  this._notify('onScrollPageChange', page);
+               }
+            }.bind(this));
+         }
       },
 
       getScrollPages: function(){

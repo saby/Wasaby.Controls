@@ -758,7 +758,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
                moveStrategy: 'movestrategy.base',
-               virtualScrolling: false
+               virtualScrolling: true
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
