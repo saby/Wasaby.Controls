@@ -263,8 +263,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           //region SBIS3.CONTROLS.DecorableMixin
 
-          setHighlightText: function(text) {
-             this.getActiveView().setHighlightText(text);
+          setHighlightText: function(text, redraw) {
+             this.getActiveView().setHighlightText(text, redraw);
           },
 
           setHighlightEnabled: function(enabled) {
