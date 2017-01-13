@@ -16,10 +16,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
    }
 
-   function prepareTextForDisplay(text, needToWrap, maxLength) {
-      if (maxLength) {
-         text = text.substr(0, maxLength);
-      }
+   function prepareTextForDisplay(text, needToWrap) {
       var dispText = strHelpers.escapeHtml(text);
       if (needToWrap) {
          dispText = strHelpers.wrapURLs(dispText);
@@ -130,7 +127,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _modifyOptions: function(cfg) {
          var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
          newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.autoResize.maxLinesCount);
-         newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled, cfg.maxLength);
+         newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled);
          return newCfg;
       },
 
@@ -161,6 +158,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== constants.key.esc && event.which !== constants.key.tab) {
                event.stopPropagation();
             }
+            self._keyDownBind(event)
          });
 
          this._inputField.bind('paste', function(){
@@ -201,7 +199,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _insertTextToMarkup: function(text) {
-         var dispText = prepareTextForDisplay(text, !this._options.enabled, this._options.maxLength);
+         var dispText = prepareTextForDisplay(text, !this._options.enabled);
          this._inputField.get(0).innerHTML = dispText || '';
       },
 
@@ -213,6 +211,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
                event.preventDefault();
             }
             return true;
+         }
+      },
+
+      _keyDownBind: function(event) {
+         //TODO опасная проверка, ноя пока не нашел случаев чтоб она не сработала
+         if (this.getText() && this.getText().length >= this._options.maxLength && event.key && event.key.length == 1) {
+            event.preventDefault();
          }
       },
 
@@ -282,12 +287,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
           this._options.minLinesCount = parseInt(count, 10);
           var hClasses = generateClassesName(this._options.minLinesCount, this._options.autoResize.maxLinesCount);
           this._inputField.get(0).className = 'controls-TextArea__inputField ' + hClasses;
-       },
-
-      setMaxLength: function(num) {
-         TextArea.superclass.setMaxLength.call(this, num);
-      }
-
+       }
    });
 
    return TextArea;
