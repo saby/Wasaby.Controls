@@ -450,31 +450,70 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             pageSize: undefined,
             /**
              * @typedef {Object} GroupBy
-             * @property {String} field Поле записи
-             * @property {Function} method Метод группировки
-             * @property {String} template Шаблон вёрстки (устаревший)
-             * @property {String} contentTpl Шаблон вёрстки
-             * @property {Function} render Функция визуализации
-             */
+             *
+             * @property {String} field Поле группировки.
+             * Необязательная для использования опция.
+             * Когда значение опции *field* не установлено, обязательна для конфигурации опция *method*.
+             *
+             * @property {Function} method Метод группировки элементов коллекции.
+             * Необязательная для использования опция.
+             * <br/>
+             * Аргументы функции:
+             * <ul>
+             *    <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link WS.Data/Entity/Model}.</li>
+             *    <li>index - порядковый номер элемента коллекции.</li>
+             * </ul>
+             * Из функции возвращают уникальный идентификатор группы.
+             * По нему определяется: нужно ли создавать заголовок перед элементом коллекции.
+             * Заголовок создаётся в случае, когда идентификатор заголовка отличен от идентификатора заголовка предыдущего элемента коллекции.
+             * <br/>
+             * Когда опция *method* не установлена, обязательная для конфигурации опция *field*.
+             * В этом случае будет использован стандартный платформенный метод, который в качестве идентификатора группы возвращает значение поля группировки (см. *field*).
+             *
+             * @property {String} template Устаревшая опция шаблона, используйте *contentTemplate*.
+             *
+             * @property {String} contentTemplate Шаблон содержимого заголовка группы.
+             * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
+             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * В объекте *it* шаблонизатора доступны для использования два свойства:
+             * <ul>
+             *     <li>groupId - идентификатор группы (см. *method*).</li>
+             *     <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link WS.Data/Entity/Model}.</li>
+             * </ul>
+             * Порядок использования шаблона (при конфигурации через XTHML):
+             * <ol>
+             *     <li>Подключите файл шаблона в массив зависимостей компонента, импортируйте его в переменную.</li>
+             *     <li>В компоненте в секции *_options* создайте переменную, в значение которой передайте импортированный шаблон.</li>
+             *     <li>Передайте значение опции в конфигурацию *groupBy* в опцию *contentTemplate*.</li>
+             * </ol>
             /**
-             * @cfg {GroupBy} Настройка группировки записей
-             * @remark
-             * Если задать только поле записи(field), то будет группировать по типу лесенки (Пример 1).
-             * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
-             * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
+             * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
+             * @remark file ItemsControlMixin-groupBy.md
              * @example
-             * 1:
-             * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *    </options>
+             * 1. Подключение шаблона группировки:
+             * <pre>
+             *    define('js!SBIS3.MyArea.MyComponent',
+             *       [
+             *          ...,
+             *          "html!MyArea.MyComponent/resources/myTpl"
+             *       ],
+             *       function( ..., myTpl) {
+             *          ...
+             *          $protected: {
+             *             _options: {
+             *                myGroupTemplate: myTpl
+             *             }
+             *          }
+             *          ...
+             *    );
              * </pre>
-             * Пример с указанием метода группировки:
-             * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
-             *    </options>
+             * 2. Настройка группировки и передача шаблона:
+             * <pre>
+             *     <options name="groupBy">
+             *         <option name="field">ДатаВходаСотрудника</option> <!-- Так будет использована стандартная функция группировки элементов коллекции -->
+             *         <option name="contentTemplate">{{@ it.myGroupTemplate}}</option>
+             *     </options>
+             *     <option name="easyGroup">true</option> <!-- Временная обязательная опция для быстрой отрисовки списков с группировкой -->
              * </pre>
              */
             groupBy : {},

@@ -953,7 +953,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _smileHtml: function(smile, name, alt) {
-            return '<span class="ws-smile controls-RichEditor__noneditable">&#' + smile.code + ';</span>&shy;';
+            return '&#' + smile.code + ';';
          },
 
          /**
@@ -1098,8 +1098,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
 
-               //при вставке смайлов их надо оборачивать в специальные блоки
-               event.node.innerHTML = self._replaceSmiles(event.node.innerHTML);
             }.bind(this));
 
             editor.on('drop', function() {
@@ -1391,7 +1389,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             {
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
-            text = this._replaceSmiles(text);
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
          },
          /**
@@ -1407,7 +1404,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _removeEmptyTags: function(text) {
             var
                temp = $('<div>' + text + '</div>');
-            while ( temp.find(':empty:not(img, iframe)').length) {
+            while ( temp.find(':empty:not(img, iframe, br)').length) {
                temp.find(':empty:not(img, iframe)').remove();
             }
             return temp.html();
@@ -1611,7 +1608,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
-            text = this._replaceSmiles(text);
             if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
                text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
             }
@@ -1685,31 +1681,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
-         },
-
-         _replaceSmiles: function(html) {
-            var
-               self = this;
-            $.each(smiles, function(i, obj) {
-               html =  html.replace(new RegExp(String.fromCodePoint(obj.code), 'gi'),function (code, pos) {
-                  if ( (pos !== 0 && html[pos - 1] != '>') || pos === 0) {
-                     return self._smileHtml(obj);
-                  }
-                  return code;
-               });
-            });
-            return html;
-         },
-
-         _getSmileByCode: function(code) {
-            var
-               smile = false;
-            $.each(smiles, function(i, obj) {
-               if (obj.code == code) {
-                  smile = obj;
-               }
-            });
-            return smile;
          }
       });
 

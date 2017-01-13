@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.StylesPanelNew', [
+   'Core/CommandDispatcher',
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.PopupMixin',
    'js!SBIS3.CONTROLS.HistoryController',
@@ -13,7 +14,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
    'css!SBIS3.CONTROLS.StylesPanelNew'
-], function(CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+
 
    'use strict';
 
@@ -131,7 +133,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             colorsCount, i;
 
          this._publish('changeFormat');
-         $ws.single.CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.

@@ -11,10 +11,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'js!SBIS3.CORE.MarkupTransformer',
        'Core/helpers/dom&controls-helpers',
+       'Core/helpers/collection-helpers',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
        'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers, colHelpers) {
 
        'use strict';
        /**
@@ -193,7 +194,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _bigIconsFix: function(items) {
-             $ws.helpers.forEach(
+             colHelpers.forEach(
                  items,
                  function(item){
                     if(item.hasOwnProperty('icon') && item.icon){

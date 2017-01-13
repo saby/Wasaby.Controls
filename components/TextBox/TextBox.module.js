@@ -1,21 +1,24 @@
 define('js!SBIS3.CONTROLS.TextBox', [
+   'Core/EventBus',
    'Core/constants',
    'js!SBIS3.CONTROLS.TextBoxBase',
    'html!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/detection",
    "Core/helpers/functional-helpers",
+   "Core/detection",
    'css!SBIS3.CONTROLS.TextBox'
+
+>>>>>>> rc-3.7.5
 ], function(
+    EventBus,
     constants,
     TextBoxBase,
     dotTplFn,
     TemplateUtil,
     Sanitize,
     dcHelpers,
-    cDetection,
     fHelpers) {
 
    'use strict';
@@ -63,6 +66,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+      	_fromTouch: false,
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
@@ -202,6 +206,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
          this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
+
+         this._container.on('touchstart', function(){
+            this._fromTouch = true;
+         }.bind(this));
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
             this._inputField.attr('placeholder', '');
@@ -401,15 +409,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _inputFocusOutHandler: function(e) {
-         if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocusOut');
+            this._fromTouch = false;
          }
          this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
-         if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocus');
          }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();

@@ -374,8 +374,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              needShowArrow, hiContainer, editArrowPosition;
 
          hiContainer = hoveredItem.container;
-         /* Если иконку скрыли или не папка - показывать не будем */
-         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible();
+         /* Не показываем если:
+            1) Иконку скрыли
+            2) Не папка
+            3) Режим поиска (по стандарту) */
+         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible() && !this._isSearchMode();
 
          if(hiContainer && needShowArrow) {
             editArrowPosition = this._getEditArrowPosition(hoveredItem);

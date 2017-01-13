@@ -1395,12 +1395,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
 
-                        var windowOptions = ($ws._const.defaultOptions || {})['SBIS3.CORE.Window'] || {};
+                        var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
                         //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
                         //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
                         //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
                         if(windowOptions.animatedWindows){
-                           $ws.helpers.message(message);
+                           fcHelpers.message(message);
                         }
                         else {
                            InformationPopupManager.showMessageDialog({
@@ -1535,7 +1535,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.redrawItem.apply(this, arguments);
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
             this._drawSelectedItems(this.getSelectedKeys());
-            this._drawSelectedItem(this.getSelectedKey());
+            this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
@@ -2255,7 +2255,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if(itemsActions) {
                   target = self.getItemsActions().getTarget();
                   targetHash = target.container.data('hash');
-                  $ws.helpers.forEach(items, function (item) {
+                  colHelpers.forEach(items, function (item) {
                      if (item.getHash() == targetHash) {
                         self._itemsToolbar.unlockToolbar();
                         self._itemsToolbar.hide();
@@ -2371,7 +2371,6 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Функция догрузки данных пока не появится скролл
           * @private
-          *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
@@ -2403,10 +2402,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Подгрузить еще данные вверх или вниз
-          * @param  {String} direction в какую сторону грузим
+          * Подгрузить еще данные
+          * направление задается через _setInfiniteScrollState
           */
-         _scrollLoadNextPage: function (direction) {
+         _scrollLoadNextPage: function () {
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
@@ -2437,6 +2436,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._infiniteScrollState.mode == 'up');
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -2650,7 +2650,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._allowInfiniteScroll = type;
             } else {
                if (type) {
-                  this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
                }
@@ -3348,11 +3347,12 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false;
+                  dropBySelf = false,
+                  source = dragObject.getSource();
 
-               if (target) {
+               if (target && source) {
                   var  targetsModel = target.getModel();
-                  dragObject.getSource().each(function(item) {
+                  source.each(function(item) {
                      var model = item.getModel();
                      models.push(model);
                      if (targetsModel == model) {
@@ -3404,7 +3404,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems();
-               $ws.helpers.forEach(movedItems, function(item, i) {
+               colHelpers.forEach(movedItems, function(item, i) {
                   if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
                      movedItems[i] = items.getRecordById(item);
                   }
@@ -3435,7 +3435,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
-            });
+            }.bind(this));
          },
          /**
           * Переместить на одну запись ввниз.

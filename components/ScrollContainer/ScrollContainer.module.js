@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            delete $ws.single.FloatAreaManager._scrollableContainers[ this.getId() ];
+            delete FloatAreaManager._scrollableContainers[ this.getId() ];
          }
       });
 
