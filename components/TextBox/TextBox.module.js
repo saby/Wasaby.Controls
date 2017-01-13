@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
    "Core/detection",
    'css!SBIS3.CONTROLS.TextBox'
 
->>>>>>> rc-3.7.5
 ], function(
     EventBus,
     constants,
