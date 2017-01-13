@@ -129,6 +129,13 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             var index = this._getItemIndexById(instId);
             if(index !== -1){
 
+               for(var i = 0, l = this._hiddenItems.length; i < l; i++){
+                  if(this._hiddenItems[i].getId() === this._items[index].getId()){
+                     this._hiddenItems.splice(i, 1);
+                     break;
+                  }
+               }
+
                this._items[index].destroy();
                this._items.splice(index, 1);
 
