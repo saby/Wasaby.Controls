@@ -1,6 +1,7 @@
 const express = require('express'),
     path = require('path'),
     fs = require('fs'),
+    spawn = require('child_process').spawn,
     bodyParser = require('body-parser'),
     app = express();
 
@@ -40,14 +41,33 @@ app.post('/theme-preview/apply-theme/', (req, res) => {
         fs.readFile(`${process.cwd()}/themes/${themeName}/variables.less`, (err, data) => {
             let stringData = data.toString();
 
-            newRules.forEach(rule => {
-                let reg = new RegExp(`(\@${rule.title}):\s+\w+\;*`);
-                stringData = stringData.replace(reg, `@${rule.title}:      ${rule.value};`);
-                fs.writeFile()
+            for (let i in newRules) {
+                console.log(newRules)
+                let reg = new RegExp(`@${i}:\\s+\\S+`);
+                stringData = stringData.replace(reg, `@${i}:      ${newRules[i]};`);
+               
+            };
+            fs.writeFile(`${process.cwd()}/themes/${themeName}/variables.less`, stringData, function(err) {
+                if (err) {
+                    console.error(err);
+                }
+                const grunt = spawn('grunt',['css']);
+                    
+                grunt.stdout.pipe(process.stdout);
+
+                 grunt.stderr.pipe(process.stderr);
+
+                 grunt.on('close', (code) => {
+                   console.log(`child process exited with code ${code}`);
+                    res.send('фсё')
+                });
+               
             })
 
         });
 
-        //(\@data-grid-cell-height):\s+\w+\;*
+        //(\@data-grid-cell-height):\s+\w+\;* 
+
+        //@white-color:\s+\S+
     })
 })

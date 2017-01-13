@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ws="ws-component">
 <head>
-   <title>Theme:Online.sbis.ru</title>
+   <title>Theme-preview</title>
    <script type="text/javascript">
       window.wsConfig = {
          WSRootPath: '/sbis3-ws/ws/',
@@ -19,6 +19,8 @@
          window.wsConfig.nostyle = false;
       })();
    </script>
+
+   <link rel="icon" type="image/png" href="https://github.com/cmoneverybody/git-merge-request/blob/master/git.png?raw=true" />
    <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
@@ -26,10 +28,14 @@
    <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
    <link rel="stylesheet" type="text/css" href="/sbis3-ws/ws/css/core.css"/>
    <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
-   <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
+
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    <script src="/theme-preview/preview.js"></script>
+
    <style>
+   div#content {
+      width: 80%;
+   }
       html, body {
          font-family: 'TensorFont' !important;
          font-size: 13px;
@@ -55,6 +61,14 @@
             min-width: 100%;
          }
       }
+      #sidemenu span {
+         display: inline-block;
+         width: 40%;
+      }
+      #sidemenu input {
+          display: inline-block;
+    width: 54%;
+ }
       #TextBox2 {
          width: 100px;
       }
@@ -95,6 +109,7 @@
 }
 .row {
    margin: 24px;
+   display: inline-block;
 }
 #sidemenu {
    width: 14%;

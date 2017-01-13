@@ -7,14 +7,12 @@
             initSwitchers();
             initMenus();
             initInputFields();
-            initViews();
-            initThemeSelector();
-            initBackButton();
             loadTheme();
+            subscribeApplyBtn();
         });
     });
     class LessManager {
-        
+
         constructor(name, rawdata) {
             let lessStoragedata = rawdata.split('\n').filter(n => !!n && !~n.indexOf('//'));
 
@@ -43,13 +41,50 @@
             this.lessdata = this.lessdata.map(rule => {
                 if (rule.title === prop) {
                     rule.value = value;
+                    rule.changed = true;
                 }
                 return rule;
 
             });
         }
+        commit() {
+            let reqData = {};
+            let changedRules = this.lessdata.filter(rule => {
+                return rule.changed
+            });
+            changedRules.forEach(rule => {
+                reqData[rule.title] = rule.value;
+            })
+            callSmth('apply-theme', {
+                "themeName": 'online',
+                "rules": reqData
+            }).then(function() {
+                location.reload();
+
+
+            })
+        }
+
     }
     let lessManager = null;
+
+    function subscribeApplyBtn() {
+        let $applyBtn = $('#apply');
+
+        $applyBtn.on('click', function(e) {
+            // протекция от повторного нажатия
+            $(this).attr('disabled', 'disabled')
+
+            let $inputs = $('#sidemenu').find('input');
+
+            $inputs.each(function(idx, input) {
+                lessManager.setPropValue($(input).attr('id'), $(input).val())
+            });
+
+            lessManager.commit();
+        })
+    }
+
 
     function callSmth(path, params) {
         var data = new FormData();
@@ -864,261 +899,10 @@
                 enabled: false
             });
 
-            var editAtPlaceAreas = [];
-            for (var i = 0; i < 5; i += 1) {
-                editAtPlaceAreas.push(new AreaAbstract({
-                    element: 'editAtPlaceArea' + (i + 1),
-                    isRelativeTemplate: true
-                }));
-            }
+     
+    });
 
-            new EditAtPlace({
-                parent: editAtPlaceAreas[0],
-                context: editAtPlaceAreas[0].getLinkedContext(),
-                element: 'editAtPlace1'
-            });
-
-            new EditAtPlace({
-                parent: editAtPlaceAreas[1],
-                context: editAtPlaceAreas[1].getLinkedContext(),
-                element: 'editAtPlace2',
-                editInPopup: true
-            });
-
-            new EditAtPlace({
-                parent: editAtPlaceAreas[2],
-                context: editAtPlaceAreas[2].getLinkedContext(),
-                element: 'editAtPlace3',
-                editorTpl: '<component data-component="SBIS3.CONTROLS.TextArea"><options name="autoResize"><option name="state">true</option></options></component>',
-                multiline: true
-            });
-
-            new EditAtPlace({
-                parent: editAtPlaceAreas[3],
-                context: editAtPlaceAreas[3].getLinkedContext(),
-                element: 'editAtPlace4',
-                editorTpl: '<component data-component="SBIS3.CONTROLS.TextArea"><options name="autoResize"><option name="state">true</option></options></component>',
-                multiline: true,
-                editInPopup: true
-            });
-
-            new EditAtPlace({
-                parent: editAtPlaceAreas[4],
-                context: editAtPlaceAreas[4].getLinkedContext(),
-                element: 'editAtPlace5',
-                enabled: false
-            });
-
-            editAtPlaceAreas[0].getLinkedContext().setValue('field1', 'Edit at place');
-            editAtPlaceAreas[1].getLinkedContext().setValue('field2', 'Edit at place in popup');
-            editAtPlaceAreas[2].getLinkedContext().setValue('field3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel tincidunt magna, iaculis accumsan mi. Cras lorem arcu, bibendum sed augue eget, dictum posuere ante. Aenean at cursus nunc. Etiam.');
-            editAtPlaceAreas[3].getLinkedContext().setValue('field4', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vel tincidunt magna, iaculis accumsan mi. Cras lorem arcu, bibendum sed augue eget, dictum posuere ante. Aenean at cursus nunc. Etiam.');
-            editAtPlaceAreas[4].getLinkedContext().setValue('field5', 'Disabled edit at place');
+}
 
 
-            var editAtPlaceGroupArea = new AreaAbstract({
-                element: 'editAtPlaceGroupArea',
-                isRelativeTemplate: true
-            });
-
-            var editAtPlaceGroup = new EditAtPlaceGroup({
-                parent: editAtPlaceGroupArea,
-                context: editAtPlaceGroupArea.getLinkedContext(),
-                element: "editAtPlaceGroup",
-                displayAsEditor: false,
-                editInPopup: true,
-                template: '\
-            <div class="inline-group">\
-               <div>\
-                  Edit at place\
-                  <component data-component="SBIS3.CONTROLS.EditAtPlace" data-bind="{Text: field1}" style="width: 85px">\
-                     <option name="editorTpl">\
-                        <component data-component="SBIS3.CONTROLS.TextBox" data-bind="{Text: field1}">\
-                           <option name="maxLength">13</option>\
-                        </component>\
-                     </option>\
-                  </component>\
-                  Group\
-                  <component data-component="SBIS3.CONTROLS.EditAtPlace" data-bind="{Text: field2}" style="width: 80px">\
-                     <option name="editorTpl">\
-                        <component data-component="SBIS3.CONTROLS.TextBox" data-bind="{Text: field2}">\
-                        </component>\
-                     </option>\
-                  </component>\
-               </div>\
-            </div>'
-            });
-
-            editAtPlaceGroupArea.getLinkedContext().setValue('field1', '7703585780');
-            editAtPlaceGroupArea.getLinkedContext().setValue('field2', '997150001');
-        });
-    }
-
-    function initViews() {
-        require([
-            'js!SBIS3.CONTROLS.Collection',
-            'js!SBIS3.CONTROLS.AdapterJSON',
-            'js!SBIS3.CONTROLS.ListViewOld',
-            'js!SBIS3.CONTROLS.TreeView',
-            'js!SBIS3.CONTROLS.DataGridView'
-        ], function(
-            Collection,
-            AdapterJSON,
-            ListView,
-            TreeView,
-            DataGridView
-        ) {
-
-            var items = [{
-                id: 1,
-                title: 'Title 1',
-                flag: true,
-                par: null
-            }, {
-                id: 2,
-                title: 'Title 2',
-                flag: false,
-                par: null
-            }, {
-                id: 3,
-                title: 'Title 3',
-                flag: true,
-                par: 1
-            }, {
-                id: 4,
-                title: 'Title 4',
-                flag: true,
-                par: 3
-            }];
-
-            var listItemTemplate = '\
-            <div class="list-view-item">\
-               <div class="id">{{= it.id }}</div>\
-               <div class="{{? it.flag }}flag{{??}}no-flag{{?}}">{{= it.title }}</div>\
-            </div>\
-         ';
-
-            new ListView({
-                element: 'listView',
-                items: items,
-                itemTemplate: listItemTemplate,
-                itemsActions: [{
-                    icon: 'sprite:icon-16 icon-AddButton icon-primary'
-                }]
-            });
-
-            new TreeView({
-                element: 'treeView',
-                hierField: 'par',
-                items: items,
-                itemTemplate: listItemTemplate,
-                itemsActions: [{
-                    icon: 'sprite:icon-16 icon-AddButton icon-primary'
-                }]
-            });
-
-            new DataGridView({
-                element: 'DataGridView',
-                items: items,
-                itemSelect: true,
-                columns: [{
-                    title: 'Ид',
-                    field: 'id',
-                    width: 50
-                }, {
-                    title: 'Имя',
-                    field: 'title'
-                }, {
-                    title: 'Флаг',
-                    field: 'flag',
-                    width: 70
-                }],
-                itemsActions: [{
-                    icon: 'sprite:icon-16 icon-AddButton icon-primary'
-                }]
-            });
-        });
-    }
-
-    function initThemeSelector() {
-        var themes = [{
-            key: 'online',
-            title: 'Online'
-        }, {
-            key: 'demo',
-            title: 'Demo'
-        }, {
-            key: 'genie',
-            title: 'Genie'
-        }, {
-            key: 'presto',
-            title: 'Presto'
-        }];
-
-        require([
-            'js!SBIS3.CONTROLS.ComboBox'
-        ], function(ComboBox) {
-            var selectedTheme = 'online';
-            var themeIdMatch = location.search.match(/(\?|&)id=([a-z0-9-]+)(&.+)?$/);
-            if (themeIdMatch) {
-                for (var i = 0; i < themes.length; i += 1) {
-                    if (themes[i].key === themeIdMatch[2]) {
-                        selectedTheme = themeIdMatch[2];
-                        break;
-                    }
-                }
-            }
-
-            var loadTheme = function(themeName) {
-                var that = this;
-                var url = themeName + '/' + themeName + '.css';
-                $.ajax({
-                    url: url,
-                    beforeSend: function() {
-                        that.setEnabled(false);
-                    }
-                }).then(function(data) {
-                    var head = $('head');
-                    var themeCssLink = head.find('link.theme-css');
-                    if (themeCssLink.length === 0) {
-                        themeCssLink = $('<link />')
-                            .attr('rel', 'stylesheet')
-                            .attr('type', 'text/css')
-                            .attr('href', url)
-                            .addClass('theme-css');
-                        themeCssLink.appendTo(head);
-                    } else {
-                        themeCssLink.attr('href', url);
-                    }
-                }).always(function() {
-                    that.setEnabled(true);
-                });
-            };
-
-            var themeSelector = new ComboBox({
-                element: 'themeSelector',
-                items: themes,
-                editable: false,
-                selectedItem: selectedTheme,
-                handlers: {
-                    onSelectedItemChange: function(e, themeName) {
-                        loadTheme.bind(this)(themeName);
-                    }
-                }
-            });
-
-            loadTheme.bind(themeSelector)(selectedTheme);
-        });
-    }
-
-    function initBackButton() {
-        require(['js!SBIS3.CONTROLS.Link'], function(Link) {
-            new Link({
-                element: 'back',
-                caption: 'Назад',
-                href: '../../',
-                icon: 'sprite:icon-16 icon-DayBackward icon-primary'
-            });
-        });
-    }
 })(jQuery);
