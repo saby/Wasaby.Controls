@@ -328,7 +328,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload();
             this._bindItemSelect();
 
             if(this._isHoverMode()) {
