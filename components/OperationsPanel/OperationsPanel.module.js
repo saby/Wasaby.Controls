@@ -7,12 +7,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/collection-helpers',
    'Core/helpers/markup-helpers',
+   'Core/core-instance',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove',
    'js!SBIS3.CONTROLS.MenuIcon'
-], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers) {
+], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers, cInstance) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
@@ -139,7 +140,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                this.getItems().each(function(item){
                   if(item.get('id') === id){
                      var instance = item.get('instance');
-                     if($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
                      }
                      else {
