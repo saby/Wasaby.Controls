@@ -3385,15 +3385,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      moveStrategy: this.getMoveStrategy()
                   }),
                   items = this.getItems(),
+                  movedItems;
+               if (idArray) {
                   movedItems = [];
-               $ws.helpers.forEach(idArray, function(item, i) {
-                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                     movedItems.push(items.getRecordById(item));
-                  } else {
-                     movedItems.push(item);
-                  }
-               }, this);
-
+                  $ws.helpers.forEach(idArray, function (item, i) {
+                     if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                        movedItems.push(items.getRecordById(item));
+                     } else {
+                        movedItems.push(item);
+                     }
+                  }, this);
+               }
                var  filter = this._notify('onPrepareFilterOnMove', {});
                action.execute({
                   movedItems: movedItems,
