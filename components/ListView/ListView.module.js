@@ -1534,7 +1534,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.redrawItem.apply(this, arguments);
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
             this._drawSelectedItems(this.getSelectedKeys());
-            this._drawSelectedItem(this.getSelectedKey());
+            this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
