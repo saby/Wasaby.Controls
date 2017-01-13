@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             /* Есть данные и раскладка менялась - > просто меняем текст в строке поиска */
             if(this._textBeforeTranslate) {
                this._options.textBox.setText(searchValue);
+               view.setHighlightText(searchValue, false);
                this._textBeforeTranslate = null;
                toggleItemsEventRaising(true);
             }
