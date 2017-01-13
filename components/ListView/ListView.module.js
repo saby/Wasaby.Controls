@@ -3434,7 +3434,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
-            });
+            }.bind(this));
          },
          /**
           * Переместить на одну запись ввниз.
