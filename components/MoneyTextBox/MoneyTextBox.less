@@ -1,26 +1,18 @@
 .controls-MoneyTextBox {
-  position: relative;
-  display: inline-block;
-  line-height: 24px;
-  min-width: 92px;
+  min-width: @money-text-box-min-width;
   text-align: right;
-  padding-right: 4px;
-
-  .controls-MoneyTextBox__input {
-    outline: none;
-  }
 
   .controls-MoneyTextBox__decimals {
-    display: none;
-    margin-left: -4px;
-    padding: 2px 0;
-    font-size: 12px;
+    margin-left: @money-text-box-decimals-margin-left;
+    padding: @money-text-box-decimals-padding;
+    font-size: @money-text-box-decimals-font-size;
     color: @gray-ccc-color;
     background-color: @white-color;
   }
-  &.ws-disabled {
-    .controls-MoneyTextBox__decimals {
-      display: inline;
-    }
+
+  .controls-MoneyTextBox__input {
+    outline: none;
+    display: inline-block;
+    width: 100%;
   }
 }

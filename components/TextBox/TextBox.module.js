@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'Core/constants',
    'js!SBIS3.CONTROLS.TextBoxBase',
    'html!SBIS3.CONTROLS.TextBox',
+   'html!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     constants,
     TextBoxBase,
     dotTplFn,
+    textFieldWrapper,
     TemplateUtil,
     Sanitize,
     dcHelpers,
@@ -70,7 +72,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _fromTab: true,
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
+         _textFieldWrapper: null,
          _options: {
+            textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
@@ -153,7 +157,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
+         this._inputField = this._getInputField();
          this._container.bind('keypress', this._keyPressBind.bind(this))
                         .bind('keydown', this._keyDownBind.bind(this))
                         .bind('keyup', this._keyUpBind.bind(this));
@@ -163,7 +167,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  var text = self._inputField.val(),
+                  var text = self._getInputValue(),
                      newText = '';
                   if (self._options.inputRegExp){
                      var regExp = new RegExp(self._options.inputRegExp);
@@ -237,7 +241,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _checkInputVal: function() {
-         var text = this._inputField.val();
+         var text = this._getInputValue();
 
          if (this._options.trim) {
             text = String.trim(text);
@@ -281,8 +285,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
-         if (this._inputField.val() != text) {
-            this._inputField.val(text || '');
+         if (this._getInputValue() != text) {
+            this._setInputValue(text || '');
          }
       },
 
@@ -355,8 +359,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyUpBind: function(event) {
-         var newText = this._inputField.val();
-         if (this._options.text !== newText){
+         var newText = this._getInputValue(),
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (this._options.text !== newText && !textsEmpty){
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
@@ -367,6 +372,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setTextByKeyboard: function(newText){
          this.setText(newText);
+      },
+
+      _getInputValue: function() {
+         return this._inputField.val();
+      },
+      _setInputValue: function(value) {
+         this._inputField.val(value);
+      },
+      _getInputField: function() {
+         return $('.js-controls-TextBox__field', this.getContainer().get(0));
       },
 
       _keyPressBind: function(event) {
@@ -443,14 +458,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
                self._inputField.get(0).focus();
             }
          });
-      },
-
-      _getInputValue: function() {
-         return this._inputField.val();
-      },
-
-      _setInputValue: function(value) {
-         this._inputField.val(value);
       },
 
       _getAfterFieldWrapper: function() {
