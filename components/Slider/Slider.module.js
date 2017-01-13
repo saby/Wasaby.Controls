@@ -294,16 +294,18 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _endDragHandler: function(DragObject) {
-               var
-                  instance = DragObject.getOwner();
-               if (instance.isEnabled()) {
-                  if ($(DragObject.getTarget()).hasClass('controls-Slider__point__start')) {
-                     instance.setStartValue(instance._startValue);
-                  } else {
-                     instance.setEndValue(instance._endValue);
+               if (DragObject.getOwner() === this) {
+                  var
+                     instance = DragObject.getOwner();
+                  if (instance.isEnabled()) {
+                     if ($(DragObject.getTarget()).hasClass('controls-Slider__point__start')) {
+                        instance.setStartValue(instance._startValue);
+                     } else {
+                        instance.setEndValue(instance._endValue);
+                     }
                   }
+                  instance._dragInProcess = false;
                }
-               instance._dragInProcess = false;
             }
          });
       return Slider;
