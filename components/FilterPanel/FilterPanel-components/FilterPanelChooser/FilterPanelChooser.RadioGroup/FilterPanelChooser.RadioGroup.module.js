@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
             this._radioGroup = this.getChildControlByName('controls-FilterPanelChooser__RadioGroup');
          }
          return this._radioGroup;
+      },
+      _updateTextValue: function() {
+         this.setTextValue(this._getRadioGroup().getTextValue());
       }
    });
    return FilterPanelChooserRadioGroup;
