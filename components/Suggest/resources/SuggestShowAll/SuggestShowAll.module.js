@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.Button'
     ], function (CompoundControl, dotTplFn, colHelpers) {
 
-       var optionsToSet = ['columns', 'itemTemplate', 'keyField', 'filter'];
+       var optionsToSet = ['columns', 'itemTemplate', 'idProperty', 'filter'];
        /**
         * SBIS3.CORE.SuggestShowAll
         * @extends $ws.proto.CompoundControl

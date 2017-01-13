@@ -101,17 +101,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name',
+             idProperty: 'name',
             /**
              * @cfg {Boolean} Флаг наличия блока с операциями отметки
              */
             hasMarkBlock: true,
-            /**
-             * @cfg {String} Направление выезжания панели массовых операций
-             * @variant vertical ПМО выезжает сверху вниз
-             * @variant horizontal ПМО выехжает слева направо
-             */
-            panelFloatDirection: 'vertical',
             visible: false,
             /**
              * @cfg {Boolean} Показывать ли кнопку с операциями, если операции не помещаются
@@ -230,14 +224,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (this.isVisible() !== show) {
             this._isVisible = show;
             show && this._container.removeClass('ws-hidden');
-            var animateObj;
-            if (this._options.panelFloatDirection === 'vertical'){
-               animateObj = {'margin-top': show ? 0 : '-30px'};
-            }
-            else if (this._options.panelFloatDirection === 'horizontal'){
-               var width = this._blocks.wrapper.width();
-               animateObj = {'margin-left': show ? 0 : -width + 'px'};
-            }
+            var animateObj = {'margin-top': show ? 0 : '-30px'};
             this._blocks.wrapper.animate(animateObj, {
                duration: 150,
                easing: 'linear',
@@ -310,24 +297,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       _checkCapacity: function(){
          this._itemsMenu.getContainer().toggleClass('ws-hidden', !(this._blocks.wrapper.height() < this._blocks.wrapper.children().height()));
-      },
-      /**
-       * @cfg {String} Установка направления выезжания панели массовых операций
-       * @variant vertical панель выезжает сверху вниз
-       * @variant horizontal панель выезжает слева направо
-       */
-      setPanelFloatDirection: function(panelFloatDirection){
-         if (panelFloatDirection && this._options.panelFloatDirection !== panelFloatDirection && (panelFloatDirection === 'vertical' || panelFloatDirection === 'horizontal')){
-            this._options.panelFloatDirection = panelFloatDirection;
-            if (!this.isVisible() && this._blocks && this._blocks.wrapper){
-               var width = this._blocks.wrapper.width();
-               this._blocks.wrapper.stop(); // stop animation
-               this._blocks.wrapper.css({
-                  'margin-top': panelFloatDirection === 'vertical' ? '-30px' : '',
-                  'margin-left': panelFloatDirection === 'horizontal' ? -width + 'px' : ''
-               });
-            }
-         }
       },
       destroy: function() {
          this._blocks = null;

@@ -7,7 +7,9 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanel',
         "tmpl!SBIS3.CONTROLS.Demo.MyFilterPanel",
         "css!SBIS3.CONTROLS.Demo.MyFilterPanel",
         "js!SBIS3.CONTROLS.FilterPanel",
-        "js!SBIS3.CONTROLS.Link"
+        "js!SBIS3.CONTROLS.Link",
+        "js!SBIS3.CONTROLS.TreeDataGridView",
+        "js!SBIS3.CONTROLS.Demo.SelectorDataFieldLink"
     ],
     function( CommandDispatcher,CompoundControl, Memory, MyFilterPanelData, dotTplFn) {
        var moduleClass = CompoundControl.extend({

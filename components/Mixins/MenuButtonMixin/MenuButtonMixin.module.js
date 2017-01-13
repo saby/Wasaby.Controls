@@ -12,13 +12,16 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
 
    var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
        /**
-        * @event onMenuItemActivate При активации пункта меню
+        * @event onMenuItemActivate Происходит при активации пункта меню.
+        * @remark
+        * Например, при клике по пункту меню.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {String} id Идентификатор пункта меню.
         * @example
         * <pre>
-        *     MenuIcon.subscribe('onMenuItemActivate', function(e, id) {
-        *        alert('Вы нажали на ' + this._items.getItem(id).title)
+        *     MenuIcon.subscribe('onMenuItemActivate', function(eventObject, id) {
+        *        // getItems() - возвращает экземпляр класса WS.Data/Collection/RecordSet
+        *        alert('Вы нажали на ' + MenuIcon.getItems().at(1).get('title'));
         *     })
         * </pre>
         */
@@ -90,10 +93,10 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
             enabled: this.isEnabled(),
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
-            keyField: this._options.keyField,
+            idProperty: this._options.idProperty,
             allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
-            displayField: this._options.displayField || 'title',
+            displayProperty: this._options.displayProperty || 'title',
             verticalAlign: {
                side: 'top'
             },
@@ -126,7 +129,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
          header.bind('click', function(){
             self._onHeaderClick();
          });
-         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems().toArray());
+         this._picker.getItems() && this._checkItemsIcons(this._picker.getItems());
          this._picker.getContainer().prepend(header);
       },
 
@@ -235,6 +238,37 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
          var items = this.getItems() || [];
          items.push(item);
          this.setItems(items);
+      },
+
+      /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
+      setKeyField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setKeyField устарел, используйте setIdProperty');
+         this.setIdProperty(prop);
+      },
+
+      setIdProperty: function(prop) {
+         this._options.idProperty = prop;
+      },
+
+      setDisplayField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this.setDisplayProperty(prop);
+      },
+
+      setDisplayProperty: function(prop) {
+         this._options.displayProperty = prop;
+      },
+
+      setHierField: function(prop) {
+         IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         this.setParentProperty(prop);
+      },
+
+      setParentProperty: function(prop) {
+         this._options.parentProperty = prop;
+      },
+      setNodeProperty: function(prop) {
+         this._options.nodeProperty = prop;
       }
    };
 

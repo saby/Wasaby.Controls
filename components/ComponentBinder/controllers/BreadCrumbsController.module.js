@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
       _createBreadCrumb: function(data) {
          var point = {},
             breadCrumbs = this._options.breadCrumbs;
-         point[breadCrumbs._options.displayField] = data.title;
-         point[breadCrumbs._options.keyField] = data.id;
+         point[breadCrumbs._options.displayProperty] = data.title;
+         point[breadCrumbs._options.idProperty] = data.id;
          point[breadCrumbs._options.colorField] = data.color;
          point.data = data.data;
          return point;
@@ -25,12 +25,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
       _setPreviousRoot: function() {
          var previousRoot = this._path[this._path.length - 1],
             view = this._options.view,
-            keyField = this._options.breadCrumbs.getItems().getIdProperty();
+            idProperty = this._options.breadCrumbs.getItems().getIdProperty();
 
          if (this._currentRoot !== null) {
             this._currentRoot = previousRoot;
             if (this._path.length) this._path.splice(this._path.length - 1);
-            view.setCurrentRoot(previousRoot ? previousRoot[keyField] : null);
+            view.setCurrentRoot(previousRoot ? previousRoot[idProperty] : null);
          }
          view.reload();
       },
@@ -44,8 +44,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
 
          function createBreadCrumb(data){
             var point = {};
-            point[breadCrumbs._options.displayField] = data.title;
-            point[breadCrumbs._options.keyField] = data.id;
+            point[breadCrumbs._options.displayProperty] = data.title;
+            point[breadCrumbs._options.idProperty] = data.id;
             point[breadCrumbs._options.colorField] = data.color;
             point.data = data.data;
             return point;
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             if(self._currentRoot !== null) {
                self._currentRoot = previousRoot;
                if (self._path.length) self._path.splice(self._path.length - 1);
-               view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.keyField] : null);
+               view.setCurrentRoot(previousRoot ? previousRoot[breadCrumbs._options.idProperty] : null);
             }
             view.reload();
          }

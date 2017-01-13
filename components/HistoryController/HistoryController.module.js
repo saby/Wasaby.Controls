@@ -44,15 +44,30 @@ define('js!SBIS3.CONTROLS.HistoryController', [
              *    }
              * </pre>
              */
-            serialize: serializeFnc
+            serialize: serializeFnc,
+            /**
+             * Значение истории, которое устанвится при сбросе
+             * @cfg {*}
+             */
+            emptyValue: null
          },
          _saveParamsDeferred: undefined,     /* Деферед сохранения истории */
-         _history: undefined                 /* История */
+         _history: undefined                 /* История */,
+         _historyChannel: null
       },
 
       $constructor: function() {
+         var self = this;
+         
+         this._publish('onHistoryUpdate');
          this._history = this._getParam(this._options.historyId, this._options.serialize);
          this._getLocalStorage();
+   
+         this._historyChannel = $ws.single.EventBus.channel('HistoryChannel' + this._options.historyId);
+         this._historyChannel.subscribe('onHistoryUpdate', function(event, history) {
+            self._history = history;
+            self._notify('onHistoryUpdate', history);
+         });
       },
 
       _setParam: function(value) {
@@ -143,6 +158,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
             this._setParam(this._history).addCallback(fHelpers.forAliveOnly(function() {
                self._saveParamsDeferred.callback();
             }, self));
+            this._historyChannel.notify('onHistoryUpdate', this._history);
          }
 
          return this._saveParamsDeferred;
@@ -153,7 +169,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
        * Очищает историю
        */
       clearHistory: function() {
-         this.setHistory(null, true);
+         this.setHistory(this._options.emptyValue, true);
       },
 
       /**

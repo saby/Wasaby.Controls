@@ -9,7 +9,7 @@ var
          projection.getCollection()
       ),
       hasLoadedChild = children.length > 0,
-      loadedWithoutChilds = it.projItem.isLoaded() && !hasLoadedChild && hierField$ != null,
+      loadedWithoutChilds = !(it.projItem.isLoaded() || hasLoadedChild) && hierField$ != null,
       classNodeType = ' controls-ListView__item-type-' + (hierField == null ? 'leaf' : hierField == true ? 'node' : 'hidden'),
       classNodeState = hierField !== null ? (' controls-TreeView__item-' + (it.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '',
       classPresenceLoadedNodes = loadedWithoutChilds ? ' controls-ListView__item-without-child' : '',

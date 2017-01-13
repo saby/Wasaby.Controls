@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.Demo.SelectorActionButton',
              
              var currentMultiselect = true;
              var currentSelectionType = 'all';
+             var currentSelectedItems;
 
 
              buttonLnk.subscribe('onActivated', function() {
@@ -49,12 +50,13 @@ define('js!SBIS3.CONTROLS.Demo.SelectorActionButton',
                 var def  = action.execute( {
                    template: 'js!SBIS3.CONTROLS.Demo.SelectorActionDataB',
                    selectionType: currentSelectionType,
-                   multiselect: currentMultiselect
+                   multiselect: currentMultiselect,
+                   selectedItems: currentSelectedItems
                 } );
                 action.once('onExecuted', function(event, meta, result) {
                    var resText="";
                    var resStr="";
-                   
+
                    if(result) {
                       result.each(function(rec) {
                          resStr = rec.get('книга');
@@ -63,7 +65,8 @@ define('js!SBIS3.CONTROLS.Demo.SelectorActionButton',
                          }
                          resText = resText + resStr;
                       });
-                  selectTxt.setText(resText);
+                     selectTxt.setText(resText);
+                     currentSelectedItems = result;                
                    }
                 });
              });
@@ -73,7 +76,7 @@ define('js!SBIS3.CONTROLS.Demo.SelectorActionButton',
       }
    });
    
-  
+   
 
    return SelectorActionButton;
 });

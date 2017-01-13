@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
        * <ul>
        *    <li>id - идентификатор текущего узла иерархии;</li>
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
-       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayField});</li>
+       *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
        *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
@@ -52,10 +52,21 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
              * @remark
              * Полем иерархии называют поле записи, по значениям которой устанавливаются иерархические отношения между записями набора данных.
              * Для таблиц БД, для которых установлен <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">тип отношений Иерархия</a>, по умолчанию поле иерархии называется "Раздел".
-             * @see setHierField
-             * @see getHierField
+             * @see setParentProperty
+             * @see getParentProperty
              */
-            hierField: null,
+            parentProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
+             * @remark
+             * null - лист, false - скрытый узел, true - узел
+             *
+             * @example
+             * <pre>
+             *    <option name="parentProperty">Раздел@</option>
+             * </pre>
+             */
+            nodeProperty: null,
             /**
              * @cfg {String} Устанавливает режим отображения данных, имеющих иерархическую структуру.
              * @remark
@@ -87,34 +98,73 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
          this._publish('onSetRoot', 'onBeforeSetRoot');
          if (typeof this._options.root != 'undefined') {
             this._curRoot = this._options.root;
-            filter[this._options.hierField] = this._options.root;
+            filter[this._options.parentProperty] = this._options.root;
          }
          this._previousRoot = this._curRoot;
          this.setFilter(filter, true);
       },
       /**
-       * Устанавливает поле иерархии для набора данных.
-       * @param {String} hierField Имя поля иерархии.
+       * Устанавливает поле иерархии.
+       * @param {String }hierField Название поля иерархии.
        * @see hierField
        * @see getHierField
        */
       setHierField: function (hierField) {
-         this._options.hierField = hierField;
+         IoC.resolve('ILogger').log('hierarchyMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+         this.setParentProperty(hierField);
       },
       /**
-       * Возвращает поле иерархии набора данных.
+       * Возвращает название поля иерархии.
+       * @return {String}
        * @see hierField
        * @see setHierField
        */
       getHierField : function(){
-         return this._options.hierField;
+         IoC.resolve('ILogger').log('hierarchyMixin', 'Метод getHierField устарел, используйте getParentProperty/getNodeProperty');
+         return this.getParentProperty();
+      },
+      /**
+       * Устанавливает поле иерархии.
+       * @param {String }pp Название поля иерархии.
+       * @see parentProperty
+       * @see getParentProperty
+       */
+      setParentProperty: function (pp) {
+         this._options.parentProperty = pp;
+      },
+      /**
+       * Возвращает название поля иерархии.
+       * @return {String}
+       * @see parentProperty
+       * @see setParentProperty
+       */
+      getParentProperty : function(){
+         return this._options.parentProperty;
+      },
+      /**
+       * Устанавливает поле типа записи в иерархии.
+       * @param {String }np Название поля иерархии.
+       * @see nodeProperty
+       * @see getNodeProperty
+       */
+      setNodeProperty: function (np) {
+         this._options.nodeProperty = np;
+      },
+      /**
+       * Возвращает поле типа записи в иерархии.
+       * @return {String}
+       * @see nodeProperty
+       * @see setNodeProperty
+       */
+      getNodeProperty : function(){
+         return this._options.nodeProperty;
       },
       hierIterate: function (DataSet, iterateCallback, status) {
-         var hierField = this._options.hierField,
+         var
             hierarchy = new Hierarchy({
                idProperty: DataSet.getIdProperty(),
-               parentProperty: hierField,
-               nodeProperty: hierField + '@'
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             });
 
          var
@@ -152,10 +202,10 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
          var path = this._options.openedPath;
          this.hierIterate(this._items , function(record) {
             //Рисуем рекорд если он принадлежит текущей папке или если его родитель есть в openedPath
-            var parentKey = record.get(self._options.hierField);
+            var parentKey = record.get(self._options.parentProperty);
             if (parentKey == self._curRoot || path[parentKey]) {
                if (self._options.displayType == 'folders') {
-                  if (record.get(self._options.hierField + '@')) {
+                  if (record.get(self._options.nodeProperty)) {
                      records.push(record);
                   }
                } else {
@@ -173,7 +223,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
        * @returns {*|{d: Array, s: Array}|String|Number}
        */
       getParentKey: function (DataSet, record) {
-         return record.get(this._options.hierField);
+         return record.get(this._options.parentProperty);
       },
       /**
        * Установить корень выборки.
@@ -204,13 +254,13 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
          var
             filter = this.getFilter() || {};
          if (key) {
-            filter[this._options.hierField] = key;
+            filter[this._options.parentProperty] = key;
          }
          else {
             if (this._options.root){
-               filter[this._options.hierField] = this._options.root;
+               filter[this._options.parentProperty] = this._options.root;
             } else {
-               delete(filter[this._options.hierField]);
+               delete(filter[this._options.parentProperty]);
             }
          }
          this.setFilter(filter, true);
@@ -266,12 +316,12 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
          if (dataSet){
             do {
                record = dataSet.getRecordById(key);
-               parentKey = record ? record.get(this._options.hierField) : null;
+               parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
                   hierarchy.push({
                      'id': key || null,
                      'parent' : parentKey,
-                     'title' : record.get(this._options.displayField),
+                     'title' : record.get(this._options.displayProperty),
                      'color' : this._options.colorField ? record.get(this._options.colorField) : '',
                      'data' : record
                   });
@@ -295,7 +345,9 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
             meta = {
                id: id,
                item: item,
-               hierField : this._options.hierField
+               hierField : this._options.parentProperty,
+               parentProperty : this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             };
 
          this._notify('onItemActivate', meta);

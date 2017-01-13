@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             cssClassName: 'controls-MoveDialog',
             dataSource: undefined,
             partialyReload: undefined,
-            displayField: undefined,
+            displayProperty: undefined,
             filter: undefined
          },
          treeView: undefined

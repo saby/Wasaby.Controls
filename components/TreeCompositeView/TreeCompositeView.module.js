@@ -131,11 +131,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список" и "Плитка"
              * @remark
-             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayField}.
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayProperty}.
              * Для режима отображения "Список" можно переопределить шаблон папки с помощью опции {@link listFolderTemplate}.
              * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
              * @see listFolderTemplate
-             * SBIS3.CONTROLS.DSMixin#displayField
+             * SBIS3.CONTROLS.DSMixin#displayProperty
              * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
@@ -153,11 +153,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             /**
              * @cfg {String} Устанавливает шаблон, который используется для отрисовки папки в режимах "Список"
              * @remark
-             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayField}.
+             * Когда опция не задана, используется стандартный шаблон. Для его работы требуется установить опцию {@link SBIS3.CONTROLS.DSMixin#displayProperty}.
              * Для режима отображения "Плитка" можно переопределить шаблон папки с помощью опции {@link folderTemplate}.
              * Кроме шаблона папки, можно установить шаблон отображения элементов коллекции с помощью опций {@link SBIS3.CONTROLS.DataGridView/Columns.typedef cellTemplate}, {@link SBIS3.CONTROLS.ListView#itemTemplate}, {@link SBIS3.CONTROLS.CompositeViewMixin#listTemplate} и {@link SBIS3.CONTROLS.CompositeViewMixin#tileTemplate}.
              * @see folderTemplate
-             * SBIS3.CONTROLS.DSMixin#displayField
+             * SBIS3.CONTROLS.DSMixin#displayProperty
              * @see SBIS3.CONTROLS.DataGridView/Columns.typedef
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              * @see SBIS3.CONTROLS.CompositeViewMixin#listTemplate
@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          var parentOptions = TreeCompositeView.superclass._buildTplArgs.call(this, item);
          if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
             parentOptions.image = this._options.imageField;
-            parentOptions.description = this._options.displayField;
+            parentOptions.description = this._options.displayProperty;
             parentOptions.color = this._options.colorField ? item.get(this._options.colorField) : '';
          }
          return parentOptions;
@@ -264,12 +264,25 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return $('.controls-CompositeView__foldersContainer', this._container);
       },
 
-      //Пеереопределяем метод добавления элемента в DOM т.к. в TreeCompositeView в режиме table для папок есть отдельный
-      //контейнер который лежит перед всем листьями, и если происходит добавление элемента на 0 позицую, он вставляется
-      //перед контейнером для папок, чего быть не должно. Для этого посмотрим, если вставляется лист в 0 позицую, вставим
-      //его сразу после контейнера для папок, иначе выполняем штатную логику, которая в остальных случаях отрабатывает верно.
+      //Режим старой отрисовки
+      //Переопределяем метод добавления элемента в DOM т.к. в TreeCompositeView в режиме не table для папок есть отдельный
+      //контейнер который лежит перед всем листьями, и если происходит добавление элемента на позицую между последней папкой и первым листом,
+      //он должен вставляться корректно, в данном случае просто после контейнера всех папок
       _insertItemContainer: function(item, itemContainer, target, at, currentItemAt, flagAfter) {
-         if (at === 0 && this.getViewMode() != 'table' && !item.get(this._options.nodeProperty)) {
+         var customCompositeInsert = false;
+         if (this.getViewMode() != 'table' && !flagAfter && !item.get(this._options.nodeProperty)) {
+            if (at === 0) {
+               customCompositeInsert = true;
+            }
+            else {
+               var prevItem = this._getItemsProjection().at(at - 1);
+               if (prevItem.isNode()) {
+                  customCompositeInsert = true;
+               }
+            }
+         }
+
+         if (customCompositeInsert) {
             this._previousGroupBy = undefined;
             itemContainer.insertAfter(this._getFoldersContainer());
          } else {

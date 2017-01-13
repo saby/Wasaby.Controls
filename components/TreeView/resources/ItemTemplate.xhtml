@@ -6,7 +6,7 @@
          projection.getCollection()
       ),
       hasLoadedChild = children.length > 0,
-      loadedWithoutChilds = it.projItem.isLoaded() && !hasLoadedChild && nodePropertyValue != null,
+      loadedWithoutChilds = (it.projItem.isLoaded() || !hasLoadedChild) && nodePropertyValue != null,
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding,
       drawExpandIcon = !!nodePropertyValue;
       classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue == null ? 'leaf' : nodePropertyValue == true ? 'node' : 'hidden'),

@@ -32,14 +32,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       getSearchCfg = function(cfg) {
          return {
-            keyField: cfg.keyField,
-            displayField: cfg.displayField,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
             highlightEnabled: cfg.highlightEnabled,
             highlightText: cfg.highlightText,
             colorMarkEnabled: cfg.colorMarkEnabled,
             colorField: cfg.colorField,
             allowEnterToFolder: cfg.allowEnterToFolder,
-            colspan: cfg.columns.length + (cfg.multiselect ? 1 : 0)
+            colspan: cfg.columns.length,
+            multiselect: cfg.multiselect
          }
       };
 

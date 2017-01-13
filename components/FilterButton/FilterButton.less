@@ -2,10 +2,10 @@
    &.controls__filterButton__picker {
       overflow-y: hidden !important;
       background: @controls-filterButton-picker-bg;
-      border-color: @controls-filterButton-picker-border-color;
-      border-style: @controls-filterButton-picker-border-style;
-      border-width: @controls-filterButton-picker-border-width;
+      border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
       .border-radius(@controls-filterButton-picker-border-radius);
+      .box-shadow(@menu-shadow);
+      margin-top: -1px;
 
       .controls__filterButton__area-scrollContainer {
          height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);

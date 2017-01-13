@@ -159,10 +159,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
            * @remark
-           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
            * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
            * @see getTexValue
-           * @see displayField
+           * @see displayProperty
            * @see itemTemplate
            */
           /**
@@ -541,7 +541,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(config) {
-                this.showSelector(config.template, config.componentOptions);
+                this.showSelector(config.template, config.componentOptions, config.selectionType);
                 /* Чтобы остановить всплытие комманды */
                 return true;
              }
@@ -555,7 +555,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
               повторяется с разными сценариями и с разными способомами почи)нки.
               В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
               Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(constants.browser.firefox && active && wasActive && !this.getText() && this._isEmptySelection()) {
+             if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(fHelpers.forAliveOnly(function () {
@@ -567,7 +567,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this.hidePicker();
                       }
                    }
-                }, this), 0);
+                }, this), 30);
              }
 
              FieldLink.superclass.setActive.apply(this, arguments);
@@ -589,14 +589,58 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
 
+          /**
+           * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+           * @deprecated
+           */
           setKeyField: function(keyField) {
-             FieldLink.superclass.setKeyField.call(this, keyField);
-             this._getLinkCollection().setKeyField(keyField);
+             IoC.resolve('ILogger').log('FieldLink', 'Метод setKeyField устарел, используйте setIdProperty');
+             this.setIdProperty(keyField);
           },
 
-          setDisplayField: function(displayField) {
-             FieldLink.superclass.setDisplayField.call(this, displayField);
-             this._getLinkCollection().setDisplayField(displayField);
+          /**
+           * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+           * @example
+           * <pre class="brush:xml">
+           *     <option name="idProperty">Идентификатор</option>
+           * </pre>
+           * @see items
+           * @see displayProperty
+           * @see setDataSource
+           * @param {String} idProperty
+           */
+          setIdProperty: function(idProperty) {
+             FieldLink.superclass.setIdProperty.call(this, idProperty);
+             this._getLinkCollection().setIdProperty(idProperty);
+          },
+
+          /**
+           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * @deprecated
+           */
+          setDisplayField: function(displayProperty) {
+             IoC.resolve('ILogger').log('FieldLink', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+             this.setDisplayProperty(displayProperty);
+          },
+
+          /**
+           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * @example
+           * <pre class="brush:xml">
+           *     <option name="displayProperty">Название</option>
+           * </pre>
+           * @remark
+           * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+           * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+           * которого нужно отобразить.
+           * @see idProperty
+           * @see items
+           * @see setDataSource
+           * @param {String} displayProperty
+           */
+          setDisplayProperty: function(displayProperty) {
+             FieldLink.superclass.setDisplayProperty.call(this, displayProperty);
+             this._getLinkCollection().setProperty('displayProperty', displayProperty);
           },
 
           setItemTpl: function(itemTpl) {
@@ -800,10 +844,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
             * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
-            * Отображаемые значения определяются с помощью опции {@link displayField} или {@link itemTemplate}.
+            * Отображаемые значения определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
             * @see texValue
-            * @see displayField
+            * @see displayProperty
             * @see itemTemplate
             */
           getTextValue: function() {
@@ -813,7 +857,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayField) || ''));
+                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayProperty) || ''));
                  });
               }
 
@@ -972,8 +1016,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
                    и не обязательному по первичному ключу у записей в списке. */
                 items.each(function(rec) {
-                   if(rec.getIdProperty() !== self._options.keyField && rec.get(self._options.keyField) !== undefined) {
-                      rec.setIdProperty(self._options.keyField);
+                   if(rec.getIdProperty() !== self._options.idProperty && rec.get(self._options.idProperty) !== undefined) {
+                      rec.setIdProperty(self._options.idProperty);
                    }
                 });
              }
