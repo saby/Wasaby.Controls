@@ -28,6 +28,9 @@ define('js!SBIS3.CONTROLS.FormController', [
     * @extends $ws.proto.CompoundControl
     * @public
     * @author Красильников Андрей Сергеевич
+    *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    'use strict';
 
@@ -198,7 +201,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this._subscribeToEventBus();
+         this._subscribeToGlobalEvents();
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
@@ -221,9 +224,11 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _subscribeToEventBus: function(){
+      _subscribeToGlobalEvents: function(){
          this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
+         this._onBeforeUnloadHandler = this._onBeforeUnload.bind(this);
          this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         window.addEventListener("beforeunload", this._onBeforeUnloadHandler);
       },
 
       _declareCommands: function(){
@@ -250,9 +255,21 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _onAfterShowHandler: function(){
+      _onBeforeUnload: function(e) {
+         //Если рекорд был изменен и пытаются уйти со страницы - задаем вопрос, чтобы пользователь мог сохранить отредактированные данные.
+         if (this.getRecord().isChanged()) {
+            //Почти во всех браузер была убрана возможность настраивать кастомный текст для диалогового окна https://www.chromestatus.com/feature/5349061406228480
+            //Для того чтобы показать вопрос - из события нужно вернуть строку. Содержание строки будет проигнорировано https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
+            var message = "Редактируемая запись была изменена";
+            e.returnValue = message;
+            return message;
+         }
+         return null;
+      },
+
+      _onAfterShowHandler: function() {
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)){
+         if (isOpenedFromNewTab.call(this)) {
             this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
             return;
          }
@@ -298,7 +315,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             event.setResult(false);
             return;
          }
-         if (closeAfterConfirmDialogHandler || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -313,7 +330,9 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          event.setResult(false);
-         self._showConfirmDialog();
+         if (!closeAfterConfirmDialogHandler) {
+            self._showConfirmDialog();
+         }
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
@@ -732,7 +751,6 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _showConfirmDialog: function(){
-         this._panel.onBringToFront();
          this._confirmDialog = InformationPopupManager.showConfirmDialog({
                message: rk('Сохранить изменения?'),
                details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
@@ -827,6 +845,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
          else if (result === false) {
             this._closePanel(false);
+         } else {
+            this._panel.onBringToFront();
          }
       },
 
@@ -944,6 +964,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          FormController.superclass.destroy.apply(this, arguments);
       }
    });

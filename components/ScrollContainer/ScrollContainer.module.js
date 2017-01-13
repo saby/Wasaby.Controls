@@ -113,9 +113,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onScroll: function(){
+            var scrollTop = this._getScrollTop();
             if (this._scrollbar){
-               this._scrollbar.setPosition(this._getScrollTop());
+               this._scrollbar.setPosition(scrollTop);
             }
+            this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
          },
 
          _hideScrollbar: function(){
@@ -199,7 +201,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             ScrollContainer.superclass.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            delete $ws.single.FloatAreaManager._scrollableContainers[ this.getId() ];
+            delete FloatAreaManager._scrollableContainers[ this.getId() ];
          }
       });
 

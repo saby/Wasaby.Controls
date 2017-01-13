@@ -1,8 +1,4 @@
-.docs-ListFBContentA {
-  width: 300px;
-}
-
-.docs-ListFBContentA__span {
+.fb-FilterDropdownPanel__span {
   float: left;
   width: 130px;
   color: #2f4073;
@@ -10,19 +6,24 @@
   font-weight: bold;
 }
 
-.docs-ListFBContentA__text {
+.fb-FilterDropdownPanel {
+  width: 300px;
+}
+
+
+.fb-FilterDropdownPanel__text {
   width: 100px;
   float: left;
 }
 
-.docs-ListFBContentA__text-box {
+.fb-FilterDropdownPanel__text-box {
   width: 250px;
   float: left;
   text-align: left;
   color: black;
 }
 
-.docs-ListFBContentA__filterGenreName {
+.fb-FilterDropdownPanel__filterGenreName {
   width: 300px;
   height: 25px;
   float: left;

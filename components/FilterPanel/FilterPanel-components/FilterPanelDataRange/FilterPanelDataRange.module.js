@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.FilterPanelDataRange',
            * Класс контрола "Диапазон выбора дат", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel}.
            * @class SBIS3.CONTROLS.FilterPanelDataRange
            * @extends SBIS3.CONTROLS.CompoundControl
+           * @public
            *
            * @author Борисов Петр Сергеевич
            *

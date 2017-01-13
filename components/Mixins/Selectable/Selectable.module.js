@@ -166,10 +166,12 @@ define('js!SBIS3.CONTROLS.Selectable', [
                }
             }
 
+            //Если в результату вычисления параметров индекс поменялся, надо установить его в проекцию с сигнализированием изменений
+            var oldIndex = this._options.selectedIndex;
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
             //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
             if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
-               this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, true);
+               this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
             }
          }
       },

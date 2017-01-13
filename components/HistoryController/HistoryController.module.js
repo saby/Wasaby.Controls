@@ -2,6 +2,7 @@
  * Created by am.gerasimov on 12.01.2016.
  */
 define('js!SBIS3.CONTROLS.HistoryController', [
+   "Core/EventBus",
    "Core/SessionStorage",
    "Core/Abstract",
    "Core/UserConfig",
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
    "Core/ConsoleLogger",
    "Core/constants",
    "js!SBIS3.CORE.LocalStorage"
-], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger, constants, LocalStorage ) {
+], function( EventBus, cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger, constants, LocalStorage ) {
 
    'use strict';
 
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
          this._history = this._getParam(this._options.historyId, this._options.serialize);
          this._getLocalStorage();
    
-         this._historyChannel = $ws.single.EventBus.channel('HistoryChannel' + this._options.historyId);
+         this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
          this._historyChannel.subscribe('onHistoryUpdate', function(event, history) {
             self._history = history;
             self._notify('onHistoryUpdate', history);
