@@ -3329,11 +3329,12 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false;
+                  dropBySelf = false,
+                  source = dragObject.getSource();
 
-               if (target) {
+               if (target && source) {
                   var  targetsModel = target.getModel();
-                  dragObject.getSource().each(function(item) {
+                  source.each(function(item) {
                      var model = item.getModel();
                      models.push(model);
                      if (targetsModel == model) {
