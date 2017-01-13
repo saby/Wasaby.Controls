@@ -2370,7 +2370,6 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Функция догрузки данных пока не появится скролл
           * @private
-          *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
@@ -2402,10 +2401,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Подгрузить еще данные вверх или вниз
-          * @param  {String} direction в какую сторону грузим
+          * Подгрузить еще данные
+          * направление задается через _setInfiniteScrollState
           */
-         _scrollLoadNextPage: function (direction) {
+         _scrollLoadNextPage: function () {
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
@@ -2436,6 +2435,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._infiniteScrollState.mode == 'up');
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -2649,7 +2649,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._allowInfiniteScroll = type;
             } else {
                if (type) {
-                  this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
                }
