@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                                 return {value: currentVal, caretPosition: b};
                             }
                             (delimiters && integerCount % 3 == 0 && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
-                            currentVal = currentVal.substr(0, replaceFirstZero ? 0 : b) + symbol + currentVal.substr(e);
+                            currentVal = currentVal.substr(0, replaceFirstZero ? (this._isNumberPositive(currentVal) ? 0 : 1) : b) + symbol + currentVal.substr(e);
                         }
                     } else {
                         currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
@@ -135,6 +135,15 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                 currentVal = currentVal.replace(/\s/g, '');
 
                 return {value: currentVal, caretPosition: newCaretPosition, step: step};
+            },
+
+            _isNumberPositive: function(value) {
+                value  = value + '';
+
+                if(value[0] == '-'){
+                    return false;
+                }
+                return true;
             },
             
             _getZeroString: function(length){
