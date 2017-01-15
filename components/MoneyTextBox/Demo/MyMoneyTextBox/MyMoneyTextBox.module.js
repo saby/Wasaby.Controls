@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.Demo.MyMoneyTextBox',
     ['js!SBIS3.CORE.CompoundControl',
        'html!SBIS3.CONTROLS.Demo.MyMoneyTextBox',
-       'css!SBIS3.CONTROLS.Demo.MyMoneyTextBox',
        'js!SBIS3.CONTROLS.MoneyTextBox',
        'js!SBIS3.CONTROLS.IconButton'
     ],
