@@ -1429,7 +1429,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      elements.push(elem.get(0));
                   }
                   else {
-                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах                      
+                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
                      elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
                      if (elem.length) {
                         elements.push(elem.get(0));
@@ -2387,7 +2387,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
-            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху 
+            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
             } else {
@@ -2395,7 +2395,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setInfiniteScrollState('up');
                   this._scrollLoadNextPage();
                }
-                
+
             }
          },
 
@@ -3402,10 +3402,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //region moveMethods
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
-          * @param {Array} MovedItems Массив перемещаемых записей
+          * @param {Array} idArray Массив перемещаемых записей
           * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
           */
-         moveRecordsWithDialog: function(movedItems) {
+         moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
                Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
                var
@@ -3415,13 +3415,18 @@ define('js!SBIS3.CONTROLS.ListView',
                      nodeProperty: this._options.nodeProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
-                  items = this.getItems();
-               colHelpers.forEach(movedItems, function(item, i) {
-                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                     movedItems[i] = items.getRecordById(item);
-                  }
-               }, this);
-
+                  items = this.getItems(),
+                  movedItems;
+               if (idArray) {
+                  movedItems = [];
+                  colHelpers.forEach(idArray, function (item, i) {
+                     if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                        movedItems.push(items.getRecordById(item));
+                     } else {
+                        movedItems.push(item);
+                     }
+                  }, this);
+               }
                var  filter = this._notify('onPrepareFilterOnMove', {});
                action.execute({
                   movedItems: movedItems,
