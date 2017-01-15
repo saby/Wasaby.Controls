@@ -2,6 +2,7 @@
    border: none !important;
    background: transparent !important;
    cursor: auto;
+   color:  @date-box-color;
 
    .box-sizing(border-box);
 
@@ -12,6 +13,9 @@
       border-color: @date-box-wrapper-border-color;
       background: @date-box-wrapper-bg;
       margin: 0;
+      .controls-FormattedTextBox__field {
+         color: @date-box-field-text-color;
+      }
    }
 
    &.ws-has-focus {
@@ -51,32 +55,5 @@
          border-color: @date-box-wrapper-disabled-border-color;
          background: @date-box-wrapper-disabled-bg;
       }
-
-      //.controls-DatePicker__calendarIcon {
-      //   cursor: @date-picker-wrapper-disabled-cursor;
-      //}
    }
-
-   //.controls-DatePicker__calendarIcon {
-   //   position: absolute;
-   //   text-decoration: none;
-   //   cursor: @date-picker-calendar-icon-cursor;
-   //   width: @date-picker-calendar-icon-width;
-   //   height: @date-picker-calendar-icon-height;
-   //   top: @date-picker-calendar-icon-top-offset;
-   //   left: @date-picker-calendar-icon-left-offset;
-   //   background: @date-picker-calendar-icon-bg;
-   //
-   //   &:hover {
-   //      background: @date-picker-calendar-icon-hover-bg;
-   //   }
-   //
-   //   &.calendar-disabled {
-   //      background: @date-picker-calendar-icon-disabled-bg;
-   //   }
-   //}
-   //
-   //&__calendar {
-   //   .box-shadow(@date-picker-calendar-shadow);
-   //}
 }
