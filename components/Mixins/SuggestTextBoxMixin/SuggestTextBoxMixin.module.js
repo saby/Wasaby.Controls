@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                когда фокус уходит на компонент, который был открыт из автодополнения. */
             function isSuggestParent(target) {
                do {
-                  target = target.getParent() || target.getOpener();
+                  target = target.getParent() || (target.getOpener instanceof Function ? target.getOpener() : null);
                }
                while (target && target !== list);
 
