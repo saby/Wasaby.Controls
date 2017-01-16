@@ -44,15 +44,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * Особенности работы с контролом:
        * <ul>
        *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
-       *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+       *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link idProperty}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
        * </ul>
        * <br/>
        * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
        * <pre>
        *    <component data-component="SBIS3.CONTROLS.DropdownList">
        *       <options name="items" type="array" bind="record/MyEnumField"></options>
-       *       <option name="keyField">@Идентификатор</option>
-       *       <option name="displayField">Описание</option>
+       *       <option name="idProperty">@Идентификатор</option>
+       *       <option name="displayProperty">Описание</option>
        *    </component>
        * </pre>
        *
@@ -94,13 +94,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          var rawData = {},
              emptyItemProjection,
              rs;
-         rawData[cfg.keyField] = null;
-         rawData[cfg.displayField] = 'Не выбрано';
+         rawData[cfg.idProperty] = null;
+         rawData[cfg.displayProperty] = 'Не выбрано';
          rawData.isEmptyValue = true;
 
          rs = new RecordSet({
             rawData: [rawData],
-            idProperty: cfg.keyField
+            idProperty: cfg.idProperty
          });
 
          emptyItemProjection = Projection.getDefaultDisplay(rs);
@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 *        <div class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></div>
                 *        {{?}}
                 *        <div class="controls-DropdownList__itemTextWrapper controls-DropdownList__itemTextWrapper-height">
-                *            <div class="controls-DropdownList__item-text" title="{{=it.getPropertyValue(it.item, it.displayField)}}">{{=it.getPropertyValue(it.item, it.displayField)}}</div>
+                *            <div class="controls-DropdownList__item-text" title="{{=it.getPropertyValue(it.item, it.displayProperty)}}">{{=it.getPropertyValue(it.item, it.displayProperty)}}</div>
                 *            <div class="controls-DropdownList__item-text-shadow"></div>
                 *        </div>
                 *    </div>
@@ -263,7 +263,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @variant simple В выпадающем списке отображаются только элементы коллекции.
                 * @variant duplicateHeader В выпадающем списке выбранное значение дублируется в шапке.
                 * @variant titleHeader В шапке отображается текст, установленный в опции {@link title}.
-                * @variant filter Для выпадающих списков, располагающихся на панели фильтрации.
                 */
                type: 'simple',
                /**
@@ -329,7 +328,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload();
             this._bindItemSelect();
 
             if(this._isHoverMode()) {
@@ -351,13 +349,28 @@ define('js!SBIS3.CONTROLS.DropdownList',
                multiselect: this._options.multiselect
             });
          },
-         setItems: function () {
-            /* Сброс выделения надо делать до установки итемов, т.к. вызов родительского setItems по стеку генерирует
-             * onDrawItems, подписвашись на которое люди устанавливают ключ, а сброс после родительского
-             * этот ключ затирает*/
-            this._options.selectedKeys = [];
-            DropdownList.superclass.setItems.apply(this, arguments)
+
+         _removeOldKeys: function(){
+            var keys = this.getSelectedKeys(),
+                items = this.getItems();
+            if (!this._isEnumTypeData()) {
+               for (var i = 0, l = keys.length; i < l; i++) {
+                  if (!items.getRecordById(keys[i])) {
+                     keys.splice(i, 1);
+                  }
+               }
+               if (!keys.length){
+                  this._setFirstItemAsSelected();
+               }
+            }
          },
+
+         _onReviveItems: function(){
+            //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
+            this._removeOldKeys();
+            DropdownList.superclass._onReviveItems.apply(this, arguments);
+         },
+
          setSelectedKeys: function(idArray){
             if (this._options.emptyValue && idArray[0] == this._defaultId){
                this._setSelectedEmptyRecord();
@@ -617,8 +630,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (item) {
                if (!this._options.emptyValue){
                   this._defaultId = item.getId();
+                  this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                }
-               this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
             }
          },
          _setSelectedItems: function(){
@@ -639,7 +652,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 id;
 
             if (this._isEnumTypeData()){
-               id = items.get();
+               id = 0; //Берем первую запись из enum, она под индексом 0
             }
             else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
                id = null;
@@ -705,16 +718,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._pickerResetButton.bind('click', this._resetButtonClickHandler.bind(this));
          },
          _resetButtonClickHandler: function(){
-            if (this._options.type == 'filter'){
-               this._hideAllowed = true;
-               this._options.selectedKeys = [null];
-               this._notifyOnPropertyChanged('selectedKeys');
-               this.hide();
-            }
-            else{
-               this.removeItemsSelectionAll();
-               this.hidePicker();
-            }
+            this.removeItemsSelectionAll();
+            this.hidePicker();
          },
          removeItemsSelectionAll: function(){
             //в multiselectableMixin при вызове removeItemsSelectionAll выбранной становится первая запись
@@ -765,10 +770,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                             text;
                         if (parentId !== undefined){
                            parentRecord = self.getItems().getRecordById(parentId);
-                           text = RecordSetUtil.getRecordsValue([parentRecord, rec], self._options.displayField).join(' ');
+                           text = RecordSetUtil.getRecordsValue([parentRecord, rec], self._options.displayProperty).join(' ');
                         }
                         else{
-                           text = rec.get(self._options.displayField);
+                           text = rec.get(self._options.displayProperty);
                         }
                         textValues.push(text);
                      });
@@ -777,7 +782,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   if(!textValues.length && self._checkEmptySelection()) {
                      item = self.getItems() && self.getItems().at(0);
                      if(item) {
-                        textValues.push(item.get(self._options.displayField));
+                        textValues.push(item.get(self._options.displayProperty));
                      }
                   }
 

@@ -1,21 +1,30 @@
-<div class="dialog-FieldLink">
-    <div class="ws-window-titlebar-custom"> <!-- На данный элемент установлен служебный CSS-класс, который прижимает его к верхней части диалога выбора -->
-        <component data-component="SBIS3.CONTROLS.Button" name="SelectButton" class="controls-demo-FieldLinkDemoTemplate__SelectButton"> <!-- Конфигурация кнопки, используется для подтверждения выбранных значений -->
-            <option name="caption">Выбрать</option> <!-- Устанавливаем подпись на кнопке -->
+<div>
+    <div>
+        <component data-component="SBIS3.CONTROLS.Button" name="SelectorControllerButton">
+            <option name="caption">Выбрать</option>
+            <option name="primary">true</option>
+            <option name="visible">false</option>
         </component>
     </div>
-    <component data-component="SBIS3.CONTROLS.DataGridView" name="myView" class="dialog-FieldLink__tableView"> <!-- Конфигурация представления данных -->
-        <option name="keyField">Ид</option> <!-- Устанавливаем поле первичного ключа -->
-        <options name="columns" type="array"> <!-- Конфигурация колонок -->
-            <options>
-                <option name="title">№</option> <!-- Устанавливаем заголовок колонки -->
-                <option name="field">Ид</option> <!-- Устанавливаем поле источника данных, значения которого будут использованы для отображения в колонке -->
-            </options>
-            <options>
-                <option name="title">Название</option>
-                <option name="field">Название</option>
-            </options>
-        </options>
-        <option name="multiselect">true</option> <!-- Устанавливаем режим множественного выбора значений -->
+   <div>
+      <component data-component="SBIS3.CONTROLS.SelectorWrapper">
+         <option name="content">
+             <component data-component="SBIS3.CONTROLS.DataGridView" name="myView" class="dialog-FieldLink__tableView"> <!-- Конфигурация представления данных -->
+                 <option name="idProperty">Ид</option> <!-- Устанавливаем поле первичного ключа -->
+                 <options name="columns" type="array"> <!-- Конфигурация колонок -->
+                     <options>
+                         <option name="title">№</option> <!-- Устанавливаем заголовок колонки -->
+                         <option name="field">Ид</option> <!-- Устанавливаем поле источника данных, значения которого будут использованы для отображения в колонке -->
+                     </options>
+                     <options>
+                         <option name="title">Название</option>
+                         <option name="field">Название</option>
+                     </options>
+                 </options>
+                 <option name="multiselect">true</option> <!-- Устанавливаем режим множественного выбора значений -->
+             </component>
+         </option>
+         <option name="linkedObjectName">myView</option>
     </component>
+   </div>
 </div>

@@ -2,11 +2,27 @@
    overflow: hidden;
    position: relative;
    outline: none;
-   .controls-Scrollbar{
+   .controls-ScrollContainer__scrollbar{
+      position: absolute;
+      right: 0;
+      top: 0;
       opacity: 0;
       transition: opacity 0.1s ease;
       padding: 4px 2px;
       height: calc(~"100% - 8px");
+   }
+   &.controls-ScrollContainer__top-gradient {
+      &:before{
+         content: '';
+         position: absolute;
+         display: block;
+         z-index: 1;
+         height: 14px;
+         top: 0;
+         left: 0;
+         width: 100%;
+         box-shadow: inset 0px 7px 14px -7px rgba(255,255,255,0.8);
+      }
    }
 }
 
@@ -45,8 +61,14 @@
    }
 }
 
+.ws-is-mobile-android {
+   .controls-ScrollContainer__content {
+      overflow-y: auto;
+   }
+}
+
 // показываем нативный скролл только на android и ios
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-mobile-chrome-ios{
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
    .controls-ScrollContainer {
       overflow: auto;
    }
@@ -55,12 +77,6 @@
          width: auto!important;
       }
    }
-}
-
-.controls-ScrollContainer .controls-ScrollContainer__scrollbar {
-   position: absolute;
-   right: 0;
-   top: 0;
 }
 /*TODO временный фикс для выпуска*/
 .controls-ScrollContainer{

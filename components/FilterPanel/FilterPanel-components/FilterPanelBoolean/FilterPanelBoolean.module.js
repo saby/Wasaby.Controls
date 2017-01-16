@@ -10,6 +10,7 @@ var
      * Класс контрола "Чекбокс", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel}.
      * @class SBIS3.CONTROLS.FilterPanelBoolean
      * @extends SBIS3.CORE.CompoundControl
+     * @public
      *
      * @mixes SBIS3.CONTROLS.IFilterItem
      *

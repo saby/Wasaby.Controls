@@ -31,7 +31,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
       var
          constants = {
-            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -358,9 +357,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @see getText
           */
          setText: function(text) {
-            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
-            }
             if (text !== this._curValue()) {
                this._drawText(text);
             }
@@ -683,7 +679,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                });
                if (typeof smile === 'object') {
-                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
+                  this.insertHtml(this._smileHtml(smile));
                }
             }
          },
@@ -956,7 +952,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _smileHtml: function(smile, name, alt) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
+            return '&#' + smile.code + ';';
          },
 
          /**
@@ -1383,6 +1379,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
                endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
                regResult;
+            text = this._removeEmptyTags(text);
             while ((regResult = beginReg.exec(text)) !== null)
             {
                text = text.substr(regResult[0].length + 1);
@@ -1392,6 +1389,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+         },
+         /**
+          * Проблема:
+          *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
+          *          опция text при этом перестает быть пустой
+          * Решение:
+          *          убирать пустые теги перед тем как отдать значение опции text
+          * @param text
+          * @returns {String}
+          * @private
+          */
+         _removeEmptyTags: function(text) {
+            var
+               temp = $('<div>' + text + '</div>');
+            while ( temp.find(':empty:not(img, iframe, br)').length) {
+               temp.find(':empty:not(img, iframe)').remove();
+            }
+            return temp.html();
          },
 
          /**
@@ -1592,6 +1607,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
+            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
+            }
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {

@@ -24,8 +24,8 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeView'>
     *    <option name="idProperty">key</option>
-    *    <option name="keyField">key</option>
-    *    <option name="displayField">title</option>
+    *    <option name="idProperty">key</option>
+    *    <option name="displayProperty">title</option>
     *    <option name="emptyHTML">Нет записей</option>
     *    <option name="parentProperty">parent</option>
     * </component>

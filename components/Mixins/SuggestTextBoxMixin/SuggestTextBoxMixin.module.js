@@ -3,9 +3,17 @@
  */
 define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
-   "Core/core-instance"
-], function ( constants,KbLayoutRevertUtil, cInstace) {
+   'js!SBIS3.CONTROLS.SearchController',
+   "Core/core-instance",
+   "Core/CommandDispatcher",
+   "Core/core-functions"
+], function (
+   constants,
+   SearchController,
+   cInstance,
+   CommandDispatcher,
+   cFunctions ) {
+
    'use strict';
 
    function stopEvent(e) {
@@ -13,6 +21,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       e.preventDefault();
    }
 
+   /**
+    * Миксин, задающий любому полю ввода работу с автодополненем.
+    * @mixin SBIS3.CONTROLS.SuggestTextBoxMixin
+    * @public
+    * @author Крайнов Дмитрий Олегович
+    */
    var SuggestTextBoxMixin = {
       $protected: {
          _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
@@ -20,7 +34,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             то обрабатывать клавиатурные события надо на списке. Но надо учитывать,
             что список находится в body, а блокировать всплытие события надо на уровне поля ввода,
             поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
-         _selectedFromList: false
+         _selectedFromList: false,
+
+         _options: {
+            /**
+             * @cfg {String} Имя параметра фильтрации для поиска
+             */
+            searchParam : ''
+         }
       },
       $constructor: function () {
          var self = this;
@@ -34,15 +55,57 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                }
             });
          });
+
+         /* Если передали параметр поиска, то поиск производим через ComponentBinder */
+         if(this._options.searchParam) {
+            CommandDispatcher.declareCommand(this, 'changeSearchParam', this.setSearchParamName);
+
+            this.subscribe('onSearch', function() {
+               this._showLoadingIndicator();
+            });
+
+            this.once('onSearch', function () {
+               this._searchController = new SearchController({
+                  view: this.getList(),
+                  searchForm: this,
+                  searchParamName: this._options.searchParam,
+                  doNotRespondOnReset: true,
+                  searchFormWithSuggest: true
+               });
+               this._searchController.bindSearch();
+            });
+
+            this.subscribe('onReset', this._resetSearch.bind(this));
+         }
       },
+
+      /**
+       * Изменяет параметр поиска
+       * @param {String} paramName
+       */
+      setSearchParamName: function(paramName) {
+         if(this._searchController) {
+            this._searchController.setSearchParamName(paramName);
+         }
+         this._options.searchParam = paramName;
+      },
+
       _getLoadingContainer : function() {
          return this.getContainer().find('.controls-TextBox__fieldWrapper');
       },
 
       _chooseCallback: function(result) {
-         if(result && cInstace.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
+         if(result && cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
             var item = result[0];
             this._onListItemSelect(item.getId(), item);
+         }
+      },
+
+      before: {
+         _setTextByKeyboard: function () {
+            /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
+               чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
+            this._changedByKeyboard = true;
          }
       },
 
@@ -53,8 +116,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                т.к. Area тоже его слушает и закрывает floatArea */
             if((e.which === constants.key.enter || e.which === constants.key.esc) && this.isPickerVisible()) {
                stopEvent(e);
-            } else {
-               this._changedByKeyboard = true;
             }
          },
 
@@ -96,6 +157,44 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                   break;
             }
             this._changedByKeyboard = false;
+         },
+
+         _onListDataLoad: function(e, dataSet) {
+            var self = this;
+
+            if(this._options.searchParam) {
+               var showPicker = function() {
+                     if(self._checkPickerState(!self._options.showEmptyList)) {
+                        self.showPicker();
+                     }
+                  },
+                  list = this.getList(),
+                  listItems = list.getItems();
+
+               self.hidePicker();
+               /* В событии onDataLoad момент нельзя показывать пикер т.к. :
+                1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
+                2) Данных в рекордсете ещё нет.
+                3) В onDataLoad приклданые программисты могу менять загруженный рекордсет.
+                Поэтому в этом событии просто одинарно подпишемся на событие отрисовки данных и покажем автодополнение (если требуется). */
+               if( (dataSet && !dataSet.getCount()) && (listItems && !listItems.getCount()) ) {
+                  /* Если был пустой список и после загрузки пустой, то события onDrawItems не стрельнёт,
+                   т.к. ничего не рисовалось */
+                  showPicker();
+               } else {
+                  this.subscribeOnceTo(list, 'onDrawItems', showPicker);
+               }
+            }
+         },
+         _resetSearch: function() {
+            if(this._options.searchParam) {
+               /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
+                то просто удалим параметр поиска из фильтра */
+               var listFilter = cFunctions.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+
+               delete listFilter[this._options.searchParam];
+               this.setListFilter(listFilter, true);
+            }
          }
       },
       around: {
@@ -104,14 +203,26 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
           надо, чтобы правильно запускалась валидация */
          // FIXME костыль до перехода на пикера по фокусную систему
          _focusOutHandler: function(parentFunc, event, isDestroyed, focusedControl) {
-            var isChildControl = false;
+            var isChildControl = false,
+                list = this._list;
+
+            /* Рекурсивный поиск списка, чтобы автодополнение не закрывалось,
+               когда фокус уходит на компонент, который был открыт из автодополнения. */
+            function isSuggestParent(target) {
+               do {
+                  target = target.getParent() || target.getOpener();
+               }
+               while (target && target !== list);
+
+               return target === list;
+            }
 
             /* focusedControl может не приходить при разрушении контрола */
-            if(this._list && focusedControl) {
-               isChildControl = (this._list === focusedControl) || (!isDestroyed && focusedControl.getOpener && this._list === focusedControl.getOpener());
+            if(list && focusedControl) {
+               isChildControl = isSuggestParent(focusedControl);
 
                if(!isChildControl) {
-                  isChildControl = this._list.getChildControls(false, true, function(ctrl) {
+                  isChildControl = list.getChildControls(false, true, function(ctrl) {
                      return focusedControl === ctrl;
                   }).length;
                }
@@ -122,11 +233,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                parentFunc.apply(this, arguments);
             }
          },
+
          _setPickerConfig: function(parentFunc){
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             return parentConfig;
          },
+
          setListFilter: function(parentFunc, filter, silent) {
             parentFunc.call(this, filter, silent || !this._changedByKeyboard);
          }

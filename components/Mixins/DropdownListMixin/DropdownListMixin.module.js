@@ -29,14 +29,14 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [
             },
 
             $constructor: function () {
-                if (!this._options.displayField) {
+                if (!this._options.displayProperty) {
                      //По умолчанию отображаемое поле - 'title'
-                    this._options.displayField = 'title';
+                    this._options.displayProperty = 'title';
                 }
             },
 
             _getItemTemplate: function (item) {
-                var title = item.getContents().get(this._options.displayField);
+                var title = item.getContents().get(this._options.displayProperty);
                 if (this._options.itemTemplate) {
                     return TemplateUtil.prepareTemplate(this._options.itemTemplate).call(this, {
                        item: item.getContents(),
@@ -44,6 +44,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [
                        multiselect : this._options.multiselect,
                        hierField: this._options.parentProperty,
                        parentProperty: this._options.parentProperty,
+                       nodeProperty: this._options.nodeProperty,
                        included : this._buildIncluded()
                     })
                 }

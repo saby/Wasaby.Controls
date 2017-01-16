@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    "js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList",
    "js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList",
    "js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup",
+   "js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink",
    "js!SBIS3.CONTROLS.FilterPanelDataRange",
    "js!SBIS3.CONTROLS.FilterPanelBoolean",
    "js!SBIS3.CONTROLS.IconButton",
@@ -50,7 +51,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * @mixes SBIS3.CONTROLS.Expandable
     *
-    * @demo SBIS3.CONTROLS.Demo.MyFilterPanel
+    * @demo SBIS3.CONTROLS.Demo.TestFilterPanel Временный демонстрационный пример без возможности редактировать контрол SBIS3.CONTROLS.FilterPanel. Расширенная версия демонстрационного примера с возможностью редактирования будет доступна позже.
     */
    var
       ITEM_FILTER_ID          = 'id',
@@ -90,7 +91,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
              * @property {Object} properties Опции, передаваемые в редактор.
-             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser". Возможные значения:
+             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser" (см. опцию *template*). Возможные значения:
              * <ul>
              *     <li>list - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.List}.</li>
              *     <li>dictionary - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList}.</li>

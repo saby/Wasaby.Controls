@@ -33,10 +33,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       };
    }
    var createDefaultProjection = function(items, cfg) {
-      var proj = Projection.getDefaultDisplay(items);
+      var proj, projCfg = {};
       if (cfg.itemsSortMethod) {
-         proj.setSort(cfg.itemsSortMethod);
+         projCfg.sort = cfg.itemsSortMethod;
       }
+      proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
    },
 
@@ -130,7 +131,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var tplOptions = {}, itemTpl, itemContentTpl;
 
       tplOptions.Sanitize = Sanitize;
-      tplOptions.displayField = cfg.displayField;
+      tplOptions.displayField = cfg.displayProperty;
+      tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = getPropertyValue;
 
@@ -164,17 +166,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    canServerRenderOther = function(cfg) {
       return !cfg.itemTemplate;
    },
-   findKeyField  = function(json){
+   findIdProperty  = function(json){
       var itemFirst = json[0];
       if (itemFirst) {
          return Object.keys(json[0])[0];
       }
    },
-   JSONToRecordset  = function(json, keyField) {
+   JSONToRecordset  = function(json, idProperty) {
       return new RecordSet({
          rawData : json,
-         idProperty : keyField
+         idProperty : idProperty
       })
+   },
+   extendedMarkupCalculate = function(markup, cfg) {
+      return ParserUtilities.buildInnerComponentsExtended(MarkupTransformer(markup, cfg));
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -195,7 +200,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *     });
         * </pre>
         * @see items
-        * @see displayField
+        * @see displayProperty
         */
        /**
         * @event onDataLoad При загрузке данных
@@ -272,6 +277,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _groupCollapsing: {},
+         _revivePackageParams: {},
          _options: {
             _itemsTemplate: ItemsTemplate,
             _canServerRender: false,
@@ -292,35 +298,45 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             /**
              * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
+             * @deprecated
+             */
+            keyField : null,
+            /**
+             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента.
              * @example
              * <pre class="brush:xml">
-             *     <option name="keyField">Идентификатор</option>
+             *     <option name="idProperty">Идентификатор</option>
              * </pre>
              * @see items
-             * @see displayField
+             * @see displayProperty
              * @see setDataSource
              * @see SBIS3.CONTROLS.Selectable#selectedKey
              * @see SBIS3.CONTROLS.Selectable#setSelectedKey
              * @see SBIS3.CONTROLS.Selectable#getSelectedKey
              */
-            keyField : null,
+            idProperty : null,
+            /**
+             * @cfg {String} Поле элемента коллекции, из которого отображать данные
+             * @deprecated
+             */
+            displayField: null,
             /**
              * @cfg {String} Поле элемента коллекции, из которого отображать данные
              * @example
              * <pre class="brush:xml">
-             *     <option name="displayField">Название</option>
+             *     <option name="displayProperty">Название</option>
              * </pre>
              * @remark
              * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
              * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
              * которого нужно отобразить в выпадающем списке.
-             * @see keyField
+             * @see idProperty
              * @see items
              * @see setDataSource
              */
-            displayField: null,
+            displayProperty: null,
              /**
               * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
               * @remark
@@ -348,9 +364,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               * </pre>
               * @see setItems
               * @see getDataSet
-              * @see keyField
-              * @see displayField
-              * @see hierField
+              * @see idProperty
+              * @see displayProperty
+              * @see parentProperty
               * @see dataSource
               */
             items: null,
@@ -434,31 +450,70 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             pageSize: undefined,
             /**
              * @typedef {Object} GroupBy
-             * @property {String} field Поле записи
-             * @property {Function} method Метод группировки
-             * @property {String} template Шаблон вёрстки (устаревший)
-             * @property {String} contentTpl Шаблон вёрстки
-             * @property {Function} render Функция визуализации
-             */
+             *
+             * @property {String} field Поле группировки.
+             * Необязательная для использования опция.
+             * Когда значение опции *field* не установлено, обязательна для конфигурации опция *method*.
+             *
+             * @property {Function} method Метод группировки элементов коллекции.
+             * Необязательная для использования опция.
+             * <br/>
+             * Аргументы функции:
+             * <ul>
+             *    <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link WS.Data/Entity/Model}.</li>
+             *    <li>index - порядковый номер элемента коллекции.</li>
+             * </ul>
+             * Из функции возвращают уникальный идентификатор группы.
+             * По нему определяется: нужно ли создавать заголовок перед элементом коллекции.
+             * Заголовок создаётся в случае, когда идентификатор заголовка отличен от идентификатора заголовка предыдущего элемента коллекции.
+             * <br/>
+             * Когда опция *method* не установлена, обязательная для конфигурации опция *field*.
+             * В этом случае будет использован стандартный платформенный метод, который в качестве идентификатора группы возвращает значение поля группировки (см. *field*).
+             *
+             * @property {String} template Устаревшая опция шаблона, используйте *contentTemplate*.
+             *
+             * @property {String} contentTemplate Шаблон содержимого заголовка группы.
+             * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
+             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * В объекте *it* шаблонизатора доступны для использования два свойства:
+             * <ul>
+             *     <li>groupId - идентификатор группы (см. *method*).</li>
+             *     <li>item - обрабатываемый элемент коллекции, экземпляр класса {@link WS.Data/Entity/Model}.</li>
+             * </ul>
+             * Порядок использования шаблона (при конфигурации через XTHML):
+             * <ol>
+             *     <li>Подключите файл шаблона в массив зависимостей компонента, импортируйте его в переменную.</li>
+             *     <li>В компоненте в секции *_options* создайте переменную, в значение которой передайте импортированный шаблон.</li>
+             *     <li>Передайте значение опции в конфигурацию *groupBy* в опцию *contentTemplate*.</li>
+             * </ol>
             /**
-             * @cfg {GroupBy} Настройка группировки записей
-             * @remark
-             * Если задать только поле записи(field), то будет группировать по типу лесенки (Пример 1).
-             * Т.е. перед каждым блоком с одинаковыми данными будет создавать блок, для которого можно указать шаблон
-             * Внимание! Для правильной работы группировки данные уже должны прийти отсортированные!
+             * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
+             * @remark file ItemsControlMixin-groupBy.md
              * @example
-             * 1:
-             * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *    </options>
+             * 1. Подключение шаблона группировки:
+             * <pre>
+             *    define('js!SBIS3.MyArea.MyComponent',
+             *       [
+             *          ...,
+             *          "html!MyArea.MyComponent/resources/myTpl"
+             *       ],
+             *       function( ..., myTpl) {
+             *          ...
+             *          $protected: {
+             *             _options: {
+             *                myGroupTemplate: myTpl
+             *             }
+             *          }
+             *          ...
+             *    );
              * </pre>
-             * Пример с указанием метода группировки:
-             * <pre class="brush:xml">
-             *    <options name="groupBy">
-             *        <option name="field">ДатаВремя</option>
-             *         <option name="method" type="function">js!SBIS3.CONTROLS.Demo.MyListView:prototype.myGroupBy</option>
-             *    </options>
+             * 2. Настройка группировки и передача шаблона:
+             * <pre>
+             *     <options name="groupBy">
+             *         <option name="field">ДатаВходаСотрудника</option> <!-- Так будет использована стандартная функция группировки элементов коллекции -->
+             *         <option name="contentTemplate">{{@ it.myGroupTemplate}}</option>
+             *     </options>
+             *     <option name="easyGroup">true</option> <!-- Временная обязательная опция для быстрой отрисовки списков с группировкой -->
              * </pre>
              */
             groupBy : {},
@@ -574,6 +629,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       around: {
          _modifyOptions : function(parentFnc, cfg, parsedCfg) {
+            if (cfg.displayField) {
+               IoC.resolve('ILogger').log('ItemsControl', 'Опция displayField является устаревшей, используйте displayProperty');
+               cfg.displayProperty = cfg.displayField;
+            }
+            if (cfg.keyField) {
+               IoC.resolve('ILogger').log('ItemsControl', 'Опция keyField является устаревшей, используйте idProperty');
+               cfg.idProperty = cfg.keyField;
+            }
             var newCfg = parentFnc.call(this, cfg), proj, items;
             if (newCfg.items) {
                if (parsedCfg._itemsProjection) {
@@ -581,12 +644,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   newCfg._items = parsedCfg._items;
                } else {
                   if (newCfg.items instanceof Array) {
-                     if (!newCfg.keyField) {
-                        var key = findKeyField(newCfg.items);
-                        newCfg.keyField = key;
-                        parsedCfg.keyField = key;
+                     if (!newCfg.idProperty) {
+                        var key = findIdProperty(newCfg.items);
+                        newCfg.idProperty = key;
+                        parsedCfg.idProperty = key;
                      }
-                     items = JSONToRecordset(cfg.items, newCfg.keyField);
+                     items = JSONToRecordset(cfg.items, newCfg.idProperty);
                      newCfg._items = items;
                      parsedCfg._items = items;
                   }
@@ -603,8 +666,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (Object.isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
-                     newCfg._itemData = cfg._buildTplArgs(cfg);
                      newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                     if (cfg._items && cInstance.instanceOfModule(cfg._items, 'WS.Data/Collection/RecordSet')) {
+                        newCfg._resultsRecord = cfg._items.getMetaData().results;
+                     }
+                     newCfg._itemData = cfg._buildTplArgs(cfg);
                   }
                }
             }
@@ -615,6 +681,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       $constructor: function () {
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
+         this._revivePackageParams = {
+            revive: false,
+            light: true
+         };
 
          var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
@@ -626,7 +696,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
          }
-         this._checkKeyField();
+         this._checkIdProperty();
          this._bindHandlers();
          this._prepareItemsConfig();
 
@@ -662,14 +732,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (this._options.pageSize && (this._options.items.length > this._options.pageSize)) {
                IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
             }
-            if (!this._options.keyField) {
-               this._options.keyField = findKeyField(this._options.items)
+            if (!this._options.idProperty) {
+               this._options.idProperty = findIdProperty(this._options.items)
             }
 
             /*TODO опасная правка. Суть: Некоторые вместе с массивом задают сорс, а мы затираем переданный сорс
             * смотрим если сорс уже задан, то итемы просто превращаем в рекордсет, а сорс оставляем*/
             if (this._dataSource) {
-               this._options._items = JSONToRecordset(this._options.items, this._options.keyField);
+               this._options._items = JSONToRecordset(this._options.items, this._options.idProperty);
                this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
                this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
                this._setItemsEventHandlers();
@@ -679,7 +749,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                this._dataSource = new MemorySource({
                   data: this._options.items,
-                  idProperty: this._options.keyField
+                  idProperty: this._options.idProperty
                });
             }
          }
@@ -693,10 +763,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          if (itemsOpt) {
             if (itemsOpt instanceof Array) {
-               if (!this._options.keyField) {
-                  this._options.keyField = findKeyField(itemsOpt);
+               if (!this._options.idProperty) {
+                  this._options.idProperty = findIdProperty(itemsOpt);
                }
-               this._options._items = JSONToRecordset(itemsOpt, this._options.keyField);
+               this._options._items = JSONToRecordset(itemsOpt, this._options.idProperty);
             }
             else {
                this._options._items = itemsOpt;
@@ -712,17 +782,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._itemsReadyCallback();
          }
 
-         this._checkKeyField();
+         this._checkIdProperty();
       },
 
-      _checkKeyField: function() {
-         if (this._options.keyField) {
+      _checkIdProperty: function() {
+         if (this._options.idProperty) {
             return;
          }
 
          var items = this.getItems();
          if (items && items.getIdProperty) {
-            IoC.resolve('ILogger').info('ItemsControl', 'Option keyField is undefined in control ' + this.getName());
+            IoC.resolve('ILogger').info('ItemsControl', 'Option idProperty is undefined in control ' + this.getName());
          }
       },
 
@@ -820,7 +890,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._itemData;
       },
 
-      _redrawItems : function() {
+      _redrawItems : function(notRevive) {
          this._groupHash = {};
          var
             $itemsContainer = this._getItemsContainer();
@@ -829,11 +899,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var
                itemsContainer = $itemsContainer.get(0),
                data = this._prepareItemsData(),
-               markup;
+               markup, extMarkup;
 
             data.tplData = this._prepareItemData();
             //Отключаем придрот, который включается при добавлении записи в список, который здесь нам не нужен
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
+            extMarkup = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+            markup = extMarkup.markup;
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
@@ -861,24 +932,31 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._toggleEmptyData(!(data.records && data.records.length));
 
          }
-         this._reviveItems();
+         if (notRevive) {
+            this._revivePackageParams.revive = true;
+            this._revivePackageParams.light = false;
+         }
+         else {
+            this._reviveItems();
+         }
          this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _redrawItem: function(item) {
-         var result = this._redrawItemInner(item);
-         if (result) {
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
-         }
+         var needToRevive = this._redrawItemInner(item);
+         this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
+         this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
       },
 
       _redrawItemInner: function(item) {
          var
-            result = false,
-            markup,
+            needToRevive = false,
+            markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             data;
-         if (targetElement.length) {
+
+         //TODO в 3.7.5 избавиться от проверки на _path
+         if (targetElement.length && !targetElement.hasClass('controls-HierarchyDataGridView__path')) {
             data = this._prepareItemData();
             data.projItem = item;
             data.item = item.getContents();
@@ -888,15 +966,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                data.decorators.ladder.setRecord(data['item']);
             }
 
+            //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
+            //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=
+
+            var calcData = this._calculateDataBeforeRedraw(data, item);
             var dot;
             if (data.itemTpl) {
-               dot = data.itemTpl;
+               dot = calcData.itemTpl;
             }
             else {
-               dot = data.defaultItemTpl;
+               dot = calcData.defaultItemTpl;
             }
 
-            markup = ParserUtilities.buildInnerComponents(MarkupTransformer(dot(data)), this._options);
+            markupExt = extendedMarkupCalculate(dot(calcData), this._options);
+            markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
             if (constants.browser.isIE8 || constants.browser.isIE9) {
@@ -910,9 +993,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   comps[i].destroy();
                }
             }
-            result = true;
+            needToRevive = markupExt.hasComponents;
          }
-         return result;
+         return needToRevive;
+      },
+
+      _calculateDataBeforeRedraw: function(data) {
+         return data;
       },
 
       _removeItems: function (items, groupId) {
@@ -1007,7 +1094,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             else {
                var
                   data,
-                  markup,
+                  markup, markupExt,
                   itemsToDraw;
 
                itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
@@ -1016,9 +1103,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markup = ParserUtilities.buildInnerComponents(MarkupTransformer(this._getItemsTemplate()(data)), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
-                  this._reviveItems();
+                  this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
+                  this._revivePackageParams.light = false;
                }
             }
          }
@@ -1075,9 +1164,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _reviveItems : function(lightVer) {
-         this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this, lightVer)).addErrback(function(e){
+         this.reviveComponents().addCallback(this._onReviveItems.bind(this, lightVer)).addErrback(function(e){
             throw e;
          });
+      },
+
+      _onReviveItems: function(lightVer){
+         this._notifyOnDrawItems(lightVer);
       },
 
       _notifyOnDrawItems: function(lightVer) {
@@ -1139,7 +1232,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
-                  inst.destroy();
+                  // true - не завершать пакет (ControlBatchUpdater) на дестрой. Иначе сработает onBringToFront и переведет активность раньше времени
+                  // https://inside.tensor.ru/opendoc.html?guid=ec5c1d84-a09c-49b2-991a-779a7004a15b&des=
+                  inst.destroy(true);
                }
                else {
                   compsArray.push(inst);
@@ -1239,17 +1334,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
          this._onCollectionItemChange = onCollectionItemChange.bind(this);
+         this._onAfterCollectionChange = onAfterCollectionChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.subscribeTo(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.subscribeTo(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
        /**
         * Устанавливает источник данных.
@@ -1409,7 +1507,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       self.redraw();
                    }
 
-                   self._checkKeyField();
+                   self._checkIdProperty();
 
                    this._dataLoadedCallback();
                    //self._notify('onBeforeRedraw');
@@ -1454,8 +1552,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var query = this._getQueryForCall(filter, sorting, offset, limit);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
-            if (this._options.keyField && this._options.keyField !== dataSet.getIdProperty()) {
-               dataSet.setIdProperty(this._options.keyField);
+            if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(this._options.idProperty);
             }
             return dataSet.getAll();
          }).bind(this));
@@ -1602,7 +1700,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * Устанавливает новый набор элементов коллекции.
         * @param {Array.<Object>} items Набор новых данных, по которому строится отображение.
         * @example
-        * Для списка устанавливаем набор данных из трёх записей. Опция keyField установлена в значение id, а hierField - parent.
+        * Для списка устанавливаем набор данных из трёх записей. Опция idProperty установлена в значение id, а parentProperty - parent.
         * <pre>
         *     myView.setItems([
         *        {
@@ -1637,12 +1735,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              if (this._options.pageSize && (items.length > this._options.pageSize)) {
                 IoC.resolve('ILogger').log('ListView', 'Опция pageSize работает только при запросе данных через dataSource');
              }
-             if (!this._options.keyField) {
-                this._options.keyField = findKeyField(this._options.items)
+             if (!this._options.idProperty) {
+                this._options.idProperty = findIdProperty(this._options.items)
              }
              this._dataSource = new MemorySource({
                 data: this._options.items,
-                idProperty: this._options.keyField
+                idProperty: this._options.idProperty
              });
           }
           this.redraw();
@@ -1658,14 +1756,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Метод перерисвоки списка без повторного получения данных
        */
-      redraw: function() {
+      redraw: function(notRevive) {
+         /*notRevive - врмеенный параметр для внутренних механизмов*/
          this._itemData = null;
          if (this._isSlowDrawing(this._options.easyGroup)) {
             this._oldRedraw();
          }
          else {
             if (this._getItemsProjection()) {
-               this._redrawItems();
+               this._redrawItems(notRevive);
             }
          }
       },
@@ -1693,8 +1792,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Object} item Запись, которую необходимо перерисовать
        */
       redrawItem: function(item, projItem) {
-         this._oldRedrawItemInner(item, projItem);
-         this._reviveItems(item.getId() != this._options.selectedKey);
+         if (!this._isSlowDrawing(this._options.easyGroup)) {
+            projItem = projItem || this._getItemProjectionByItemId(item.getId());
+            this._redrawItem(projItem);
+         }
+         else {
+            this._oldRedrawItemInner(item, projItem);
+            this._reviveItems(item.getId() != this._options.selectedKey);
+         }
       },
 
       _oldRedrawItemInner: function(item, projItem, callback) {
@@ -1705,6 +1810,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._addItemAttributes(newElement, projItem);
          this._clearItems(targetElement);
          targetElement.after(newElement).remove();
+         return true;
       },
 
       _getElementByModel: function(item) {
@@ -1901,6 +2007,73 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       getDataSource: function(){
          return this._dataSource;
       },
+      /**
+       * Устанавливает шаблон для каждого элемента коллекции.
+       * @param {String} tpl Шаблон отображения каждого элемента коллекции
+       * @example
+       * <pre>
+       *    <div class="listViewItem" style="height: 30px;">\
+       *       {{=it.item.get("title")}}\
+       *    </div>
+       * </pre>
+       */
+      setItemTpl: function(tpl) {
+         this._options.itemTpl = tpl;
+      },
+
+
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @deprecated
+       */
+      setKeyField: function(keyField) {
+         IoC.resolve('ILogger').log('ItemsControl', 'Метод setKeyField устарел, используйте setIdProperty');
+         this.setIdProperty(keyField);
+      },
+
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="idProperty">Идентификатор</option>
+       * </pre>
+       * @see items
+       * @see displayProperty
+       * @see setDataSource
+       * @param {String} idProperty
+       */
+      setIdProperty: function(idProperty) {
+         this._options.idProperty = idProperty;
+      },
+
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @deprecated
+       */
+      setDisplayField: function(displayField) {
+         IoC.resolve('ILogger').log('ItemsControl', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+         this._options.displayProperty = displayField;
+      },
+
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="displayProperty">Название</option>
+       * </pre>
+       * @remark
+       * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+       * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+       * которого нужно отобразить.
+       * @see idProperty
+       * @see items
+       * @see setDataSource
+       * @param {String} displayProperty
+       */
+      setDisplayProperty: function(displayProperty) {
+         this._options.displayProperty = displayProperty;
+      },
+
 
       _getScrollContainer: function() {
 
@@ -1924,10 +2097,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _changeItemProperties: function(item, property) {
          if (this._isSlowDrawing(this._options.easyGroup)) {
-            this._oldRedrawItemInner(item.getContents(), item);
+            return this._oldRedrawItemInner(item.getContents(), item);
          }
          else {
-            this._redrawItemInner(item);
+            return this._redrawItemInner(item);
          }
       },
 
@@ -1998,9 +2171,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   projItem = this._options._itemsProjection.getItemBySourceItem(items[i]);
                }
 
-               this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
-               if (curAt && curAt.at) {
-                  curAt.at++;
+               //старая отрисовка, если не нашли элемент в проекции, то и не надо его рисовать
+               if (projItem) {
+                  this._drawAndAppendItem(projItem, curAt, i === items.length - 1);
+                  if (curAt && curAt.at) {
+                     curAt.at++;
+                  }
                }
             }
             this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
@@ -2077,6 +2253,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._group(projItem, {at: at});
             this._previousGroupBy = previousGroupBy;
          }
+         //для старой отрисовки всегда оживляем компоненты в конце отрисовки
+         this._revivePackageParams.revive = true;
+         this._revivePackageParams.light = false;
          if (!withoutNotify) {
             this._notifyOnDrawItems();
          }
@@ -2138,15 +2317,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       _onCollectionReplace: function(items) {
-         var i;
+         var i, needToRevive = false;
          for (i = 0; i < items.length; i++) {
-            this._changeItemProperties(items[i]);
+            needToRevive = needToRevive || this._changeItemProperties(items[i]);
          }
-         this._reviveItems();
+         this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
+         this._revivePackageParams.light = false;
       },
       _onCollectionRemove: function(items, notCollapsed, groupId) {
          if (items.length) {
-            this._removeItems(items, groupId)
+            this._removeItems(items, groupId);
          }
       },
       _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
@@ -2155,9 +2335,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._addItems(newItems, newItemsIndex, groupId)
          }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
-         //this._view.checkEmpty(); toggleEmtyData
-         this.reviveComponents(); //надо?
-         this._drawItemsCallbackDebounce();
       },
       /**
        * Устанавливает метод сортировки элементов на клиенте.
@@ -2186,15 +2363,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       _onUpdateItemProperty: function(item, property) {
+         var needToRevive;
          if (this._isNeedToRedraw()) {
-            this._changeItemProperties(item, property);
-            this._reviveItems(item.getContents().getId() != this._options.selectedKey);
+            needToRevive = this._changeItemProperties(item, property);
+            this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
+            this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
          }
       }
    };
 
    var
       onCollectionItemChange = function(eventObject, item, index, property) {
+         this._revivePackageParams = {
+            light: true,
+            revive: false
+         };
          //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
          this._onUpdateItemProperty(item, property);
       },
@@ -2209,6 +2392,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+         this._revivePackageParams = {
+            light: true,
+            revive: false
+         };
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
@@ -2226,10 +2413,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 	               break;
 
 	            case IBindCollection.ACTION_RESET:
-	               this.redraw();
+                  this.redraw(true);
 	               break;
 	         }
       	}
+      },
+      onAfterCollectionChange = function() {
+         if (this._revivePackageParams.revive !== false) {
+            this._reviveItems(this._revivePackageParams.light)
+         }
+         else {
+            this._notifyOnDrawItems(this._revivePackageParams.light);
+         }
       };
    return ItemsControlMixin;
 

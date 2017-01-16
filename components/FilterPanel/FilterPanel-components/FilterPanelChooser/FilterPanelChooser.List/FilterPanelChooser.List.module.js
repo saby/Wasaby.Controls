@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
      * @extends SBIS3.CONTROLS.FilterPanelChooserBase
      * @author Сухоручкин Андрей Сергеевич
+     * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
@@ -70,8 +71,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
                 captionFullList: 'Все',
                 /**
                  * @cfg {String} Устанавливает поле, в котором лежит количественное значения наименования.
-                 * @see keyField
-                 * @see displayField
+                 * @see idProperty
+                 * @see displayProperty
                  */
                 countField: 'count'
             },
@@ -104,6 +105,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
 
         _updateView: function(value) {
             this._getListView().setSelectedKeys(value);
+            this._toggleAllButton();
         },
 
         _updateTextValue: function() {
@@ -118,7 +120,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         },
 
         _getItemTextByItemId: function(items, id) {
-            return items.getRecordById(id).get(this._options.displayField);
+            return items.getRecordById(id).get(this._options.displayProperty);
         },
 
         _elemClickHandler: function(e, id) {
@@ -137,6 +139,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _toggleFullState: function(toggle) {
             this._getListView()._options._showFullList = toggle;
             this._getListView().redraw();
+            this._toggleAllButton(toggle);
+        },
+
+        _toggleAllButton: function(toggle) {
             //Скрываем кнопку если показываются все записи (toggle = true) или показываем не все записи, но их меньше 4
             this._getAllButton().toggle(!(toggle || this._options.items.getCount() < 4));
         },

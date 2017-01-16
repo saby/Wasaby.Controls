@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                _canServerRender: true,
                activableByClick: false,
                linkedEditor: undefined,
-               keyField: 'name', //по данному полю getItemInstance(keyField) обращаться к элементу тулбара
+               idProperty: 'name', //по данному полю getItemInstance(keyField) обращаться к элементу тулбара
                /**
                 * @cfg {Boolean} Открыт(true) или свёрнут(false) тулбар
                 */

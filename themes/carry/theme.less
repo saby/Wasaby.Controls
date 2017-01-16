@@ -21,6 +21,7 @@
    }
 }
 
+
 .controls-ItemsToolbar__editActions {
    .icon-size {
       font-size: 32px !important;
@@ -50,6 +51,21 @@
    }
 }
 
+// в оффлайн рознице поехало позиционирование хлебных крошек,
+// перевожу на флекс т.к. розницу не тестируют на ие8 и там уже используется es6 ( репозиторий warehouse)
+// TODO в .230 сверстать крошки без завязывание на том, что кнопка "назад" ломает базовую линию
+// код лежит здесь, т.к. Engine не поддерживает тематизацию
+.controls-Browser {
+   .engine-Browser__path {
+      display: flex;
+      justify-content: flex-start;
+
+      .controls-BreadCrumbs {
+         top: 0;
+      }
+   }
+}
+
 // поменял позиционирование Строки фильтров и иконки стрелки
 // чтобы онлайн и оффлайн версии Розницы отображались одинаково
 // это происходит потому что оффлайн версия собрана на движке WebKit
@@ -66,6 +82,17 @@
          height: 40px;
       }
    }
+}
+
+// баг оффлайн розницы, когда placeholder неправильно позиционируется
+.controls-TextBox__field::-webkit-input-placeholder{
+   line-height: normal !important;
+}
+
+.controls-TreePager {
+   font-size: 24px;
+   height: 44px;
+   line-height: 44px;
 }
 
 .controls-InformationPopup {

@@ -223,14 +223,24 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          return changed
       },
 
+      showPicker: function () {
+         if (this.isEnabled()) {
+            DateRangeSlider.superclass.showPicker.apply(this, arguments);
+         }
+      },
+
       _onPrevBtnClick: function () {
-         this.setPrev();
-         this._updateValueView();
+         if (this.isEnabled()) {
+            this.setPrev();
+            this._updateValueView();
+         }
       },
 
       _onNextBtnClick: function () {
-         this.setNext();
-          this._updateValueView();
+         if (this.isEnabled()) {
+            this.setNext();
+            this._updateValueView();
+         }
       },
 
       _updateValueView: function () {

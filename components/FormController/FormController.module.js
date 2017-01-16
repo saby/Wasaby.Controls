@@ -28,6 +28,9 @@ define('js!SBIS3.CONTROLS.FormController', [
     * @extends $ws.proto.CompoundControl
     * @public
     * @author Красильников Андрей Сергеевич
+    *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    'use strict';
 
@@ -140,6 +143,10 @@ define('js!SBIS3.CONTROLS.FormController', [
              */
             key: null,
             /**
+             * @cfg {String} Поле записи, которое является идентификатором записи
+             */
+            idProperty: undefined,
+            /**
              * @cfg {WS.Data/Entity/Model} Устанавливает запись, по которой произведена инициализация данных диалога.
              * @see setRecord
              * @see getRecord
@@ -193,7 +200,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this._subscribeToEventBus();
+         this._subscribeToGlobalEvents();
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
@@ -216,9 +223,11 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _subscribeToEventBus: function(){
+      _subscribeToGlobalEvents: function(){
          this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
+         this._onBeforeUnloadHandler = this._onBeforeUnload.bind(this);
          this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         window.addEventListener("beforeunload", this._onBeforeUnloadHandler);
       },
 
       _declareCommands: function(){
@@ -245,9 +254,21 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _onAfterShowHandler: function(){
+      _onBeforeUnload: function(e) {
+         //Если рекорд был изменен и пытаются уйти со страницы - задаем вопрос, чтобы пользователь мог сохранить отредактированные данные.
+         if (this.getRecord().isChanged()) {
+            //Почти во всех браузер была убрана возможность настраивать кастомный текст для диалогового окна https://www.chromestatus.com/feature/5349061406228480
+            //Для того чтобы показать вопрос - из события нужно вернуть строку. Содержание строки будет проигнорировано https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload
+            var message = "Редактируемая запись была изменена";
+            e.returnValue = message;
+            return message;
+         }
+         return null;
+      },
+
+      _onAfterShowHandler: function() {
          //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)){
+         if (isOpenedFromNewTab.call(this)) {
             this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
             return;
          }
@@ -282,7 +303,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          var self = this._getTemplateComponent(),
-             record = self._options.record,
+             record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
          //Если нет записи или она была удалена, то закрываем панель
          if (!record || (record.getState() === Record.RecordState.DELETED)){
@@ -293,12 +314,12 @@ define('js!SBIS3.CONTROLS.FormController', [
             event.setResult(false);
             return;
          }
-         if (closeAfterConfirmDialogHandler || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length){
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
             //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-            if (self.isNewRecord() && record.getId() && (!closeAfterConfirmDialogHandler && !record.isChanged() || result === false)){
+            if (self.isNewRecord() && self._getRecordId() && (!closeAfterConfirmDialogHandler && !record.isChanged() || result === false)){
                self._destroyModel().addBoth(function(){
                   self._closePanel(result);
                });
@@ -308,7 +329,9 @@ define('js!SBIS3.CONTROLS.FormController', [
             return;
          }
          event.setResult(false);
-         self._showConfirmDialog();
+         if (!closeAfterConfirmDialogHandler) {
+            self._showConfirmDialog();
+         }
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
@@ -495,7 +518,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._options.record = record;
          this._setPanelRecord(record);
          if (updateKey){
-            newKey = record.getId();
+            newKey = this._getRecordId();
             this._options.key = newKey;
             this._newRecord = true;
          }
@@ -521,6 +544,14 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       getRecord: function(){
         return this._options.record;
+      },
+
+
+      _getRecordId: function(){
+         if (this._options.idProperty) {
+            return this.getRecord().get(this._options.idProperty);
+         }
+         return this.getRecord().getId();
       },
 
       _getRecordFromSource: function(config) {
@@ -590,7 +621,7 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onDestroyModel',
                hideErrorDialog: true
             },
-            def = this._dataSource.destroy(record.getId());
+            def = this._dataSource.destroy(this._getRecordId());
 
          return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
             self._newRecord = false;
@@ -627,19 +658,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onReadModel'
             },
             self = this,
-            readDeferred,
-            key;
+            key = (config && config.key) || this._options.key,
+            readDeferred;
 
-         //TODO Выпилить в 200, все должны уже блыи перейти на объект
-         if (typeof(config) !== 'object'){
-            key = config;
-            config = {};
-            IoC.resolve('ILogger').log('FormController', 'команда read в качестве аргумента принимает объект');
-         }
-         else {
-            key = config.key;
-         }
-         key = key || this._options.key;
          readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
@@ -680,12 +701,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see dataSource
        */
       update: function(config){
-         if (typeof(config) !== 'object'){
-            config = {
-               closePanelAfterSubmit: config
-            };
-            IoC.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
-         }
          return this._prepareUpdatingRecord(config);
       },
 
@@ -784,6 +799,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
          else if (result === false) {
             this._closePanel(false);
+         } else {
+            this._panel.onBringToFront();
          }
       },
 
@@ -807,8 +824,13 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (!config.hideIndicator){
             this._showLoadingIndicator(config.indicatorText);
          }
+         if (!config.additionalData){
+            config.additionalData = {};
+         }
+         config.additionalData.idProperty = self._options.idProperty;
          this._toggleOverlay(true);
          this._addSyncOperationPending();
+
          operation.addCallback(function(data){
             self._notify(config.eventName, self._options.record, config.additionalData);
             return data;
@@ -857,6 +879,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see destroy
        */
       _actionNotify: function(eventName, additionalData){
+         additionalData = additionalData || {};
          this._notify(eventName, this._options.record, additionalData);
       },
       /**
@@ -895,20 +918,19 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.unsubscribe('onAfterShow', this._onAfterShowHandler);
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
+         window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
-      //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
+      //Функционал, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
-         var prototypeProtectedData = {},
+         var options = this.getComponentOptions(opt),
              dataSource,
-             options,
              result;
 
-         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         options = prototypeProtectedData._options;
-         cMerge(options, opt);
-
+         if (options.source){
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Источник данных нужно задавать через опцию dataSource. Опция source в версии 3.7.5 будет удалена');
+         }
          //TODO в рамках совместимости
          if (Object.isEmpty(options.dataSource) && !options.source){
             IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Необходимо задать опцию dataSource');
@@ -931,6 +953,17 @@ define('js!SBIS3.CONTROLS.FormController', [
             return new SbisService(options.dataSource);
          }
          return options.source;
+      };
+
+      FormController.prototype.getComponentOptions = function(mergeOptions){
+         var prototypeProtectedData = {},
+             options;
+
+         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
+         options = prototypeProtectedData._options;
+         cMerge(options, mergeOptions);
+
+         return options;
       };
    return FormController;
 

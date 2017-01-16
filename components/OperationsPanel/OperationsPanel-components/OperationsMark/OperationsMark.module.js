@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
              * @deprecated
              */
             deepReload: false,
-            keyField: 'name'
+            idProperty: 'name'
          },
          _markCheckBox: undefined
       },

@@ -22,12 +22,20 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterfast/">Быстрые фильтры</a>.
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends $ws.proto.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       *
+       * @author Герасимов Александр Максимович
+       *
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
+       *
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
        * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
+       *
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
+       *
+       * @ignoreEvents onAfterLoad onChange onStateChange
+       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+       *
        * @control
        * @public
        * @category Filtering
@@ -37,7 +45,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             _dotTplFn: dotTplFn,
             _options: {
                itemTpl: ItemTpl,
-               displayField: '',
+               displayProperty: '',
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
                 * @remark
@@ -55,8 +63,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 * @example
                 * <pre>
                 *    items: [{
-                *       keyField : 'key',    //Имя поля с ключом из списка значений values
-                *       displayField: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
+                *       idProperty : 'key',    //Имя поля с ключом из списка значений values
+                *       displayProperty: 'title',//Имя поля, в котором хранится текстовое отображение ключа из списка значений values
                 *       name: 'first',        //Имя фильтра
                 *       multiselect : false,  //Режим выпадающего списка
                 *       className: 'controls-DropdownList__withoutCross', //Строка с классами css-модификаторов для выпадающего списка
@@ -88,8 +96,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 *    ]
                 *  }]
                 * </pre>
-                * @see keyField
-                * @see displayField
+                * @see idProperty
+                * @see displayProperty
                 * @see setDataSource
                 * @see getDataSet
                 */
@@ -138,7 +146,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      self._filterStructure[idx].value = filterValue;
 
                      list.each(function (rec) {
-                        text.push(rec.get(this._options.displayField));
+                        text.push(rec.get(this._options.displayProperty));
                      }.bind(this));
 
                      self._filterStructure[idx].caption = self._filterStructure[idx].value === undefined

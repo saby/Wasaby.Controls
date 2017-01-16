@@ -5,9 +5,10 @@
 define('js!SBIS3.CONTROLS.NumberTextBox', [
    "Core/defaultRenders",
    "Core/constants",
+   "js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil",
    "js!SBIS3.CONTROLS.TextBox",
    "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
-], function ( cDefaultRenders, constants,TextBox, arrowTpl) {
+], function ( cDefaultRenders, constants, NumberTextBoxUtil, TextBox, arrowTpl) {
 
    'use strict';
    /**
@@ -49,7 +50,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </component>
     */
 
-   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, newStandtart){
+   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + "")).indexOf('.'),
           parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
@@ -72,9 +73,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       if(isDotLast){
          value = value ? value + '.' : '.';
       }
-      if(value && newStandtart && decimals){
+      if(value && decimals){
          dotPos = value.indexOf('.');
-         if (parsedVal == "." || parsedVal === '0') {
+         if (parsedVal === '0') {
             value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
          } else {
             decimalsPart = decimals == -1 ? parsedVal : parsedVal.substr(0, decimals + 1);
@@ -82,15 +83,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
       }
 
-      if(!checkMaxLength(value, maxLength)){
+      if(!NumberTextBoxUtil.checkMaxLength(value, maxLength)){
          return text;
       }
       return value || '';
-   }
-
-   function checkMaxLength(value, maxLength){
-      var length = value ? value.replace(/[\.\s-]/g,'').length : 0;
-      return !(maxLength && length > maxLength);
    }
 
    var NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
@@ -159,7 +155,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * <pre>
              * @see decimals
              */
-            hideEmptyDecimals: false,
+            hideEmptyDecimals: true,
             /**
              * @cfg {Boolean} Использовать ли кнопки для изменения значения
              * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
@@ -191,10 +187,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * </pre>
              * @see text
              */
-            numericValue: null,
-            // включает новый поведение Числового поля по стандарту,
-            // в .230 когда будут готово Денежное поле удалить опцию и включить поведение по умолчанию
-            newStandtart: false
+            numericValue: null
          }
       },
 
@@ -209,8 +202,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.integers, 
                options.delimiters, 
                options.onlyPositive, 
-               options.maxLength,
-               options.newStandtart
+               options.maxLength
             );
          }
          return options;
@@ -236,16 +228,12 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             self._hideEmptyDecimals();
          });
 
-         if(this._options.newStandtart){
-            this._options.hideEmptyDecimals = true;
-         }
-
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
             this._options.text = this._options.numericValue + '';
          }
          this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
          this._setNumericValue(this._options.text);
-         this._inputField.val(this._options.text);
+         this._setInputValue(this._options.text);
       },
 
       init: function() {
@@ -257,7 +245,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
          if (this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
-            this._inputField.val(this._options.text);
+            this._setInputValue(this._options.text);
          }
          NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
       },
@@ -266,13 +254,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if (text !== '-' && text !== '.' && text !== ''){
             text = this._formatText(text);
             if (text.indexOf('.') === text.length - 1) {
-               this._inputField.val(text);
+               this._setInputValue(text);
                this._setCaretPosition(this._caretPosition[0] + 1, this._caretPosition[1] + 1);
                return;
             }
          }
          this._setNumericValue(text);
-         this._inputField.val(text);
+         this._setInputValue(text);
          this._setCaretPosition(this._caretPosition[0], this._caretPosition[1]);
       },
 
@@ -286,7 +274,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _hideEmptyDecimals: function () {
-         var value = this._inputField.val();
+         var value = this._getInputValue();
          if(value) {
             if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)) {
                while (value[value.length - 1] == '0' || value[value.length - 1] == '.') {
@@ -296,10 +284,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                   }
                }
             }
-            if(this._options.newStandtart) {
-               this._options.text = value;
-            }
-            this._inputField.val(value);
+            this._options.text = value;
+            this._setInputValue(value);
          }
       },
 
@@ -346,6 +332,16 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
       },
 
+      /**
+       * Установить количество знаков после запятой
+       * @param decimals Количество знаков после запятой
+       */
+      setIntegers: function(integers) {
+         if (typeof integers === 'number') {
+            this._options.integers = integers;
+         }
+      },
+
       _updateCompatPlaceholderVisibility: function() {
          if (this._compatPlaceholder) {
             if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
@@ -372,8 +368,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._options.integers, 
             this._options.delimiters, 
             this._options.onlyPositive, 
-            this._options.maxLength,
-            this._options.newStandtart
+            this._options.maxLength
          );
       },
 
@@ -428,8 +423,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._numberPressHandler(keyCode);
             return true;
          }
-         if (this._inputField.val().indexOf('.') == 0){
-            this._setText('0' + this._inputField.val());
+         if (this._getInputValue().indexOf('.') == 0){
+            this._setText('0' + this._getInputValue());
             this._setCaretPosition(1)
          }
          if (this._CTRL_KEY){
@@ -440,144 +435,58 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _numberPressHandler: function (keyCode) {
          var b = this._caretPosition[0], //начало выделения
-            e = this._caretPosition[1],  //конец выделения
-            currentVal = this._inputField.val(),
-            dotPosition = currentVal.indexOf('.'),
-            symbol = String.fromCharCode(keyCode),
-            integerCount =  this._getIntegersCount(currentVal),
-            checkMaxLengthResult = checkMaxLength(currentVal, this._options.maxLength),
-            newCaretPosition = b;
-         if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
-            newCaretPosition--;
-         }
-         if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
-               if (b == e) {
-                  if (checkMaxLengthResult) {
-                     if (integerCount == this._options.integers) {
-                        return;
-                     }
-                     (this._options.delimiters && integerCount % 3 == 0 && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
-                     currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
-                  }
-               } else {
-                  currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
-                  newCaretPosition++;
-               }
-         } else
-         if (b > dotPosition && e > dotPosition){ // после точки
-               if (b == e) {
-                  if(checkMaxLengthResult || (e <= dotPosition + this._options.decimals)) {
-                     currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e + ((this._options.decimals !== 0) ? 1 : 0));
-                  }
-               } else {
-                  currentVal = currentVal.substr(0, b) + symbol + ((this._options.decimals > 0) ? this._getZeroString(e - b - 1) : '') + currentVal.substr(e);
-               }
-               newCaretPosition++;
-         } else { // точка в выделении
-            currentVal = currentVal.substr(0, b) + symbol + '.' + ((this._options.decimals > 0) ? this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-            newCaretPosition = currentVal.indexOf('.');
-         }
-         currentVal = currentVal.replace(/\s/g, '');
-         this._setText(currentVal);
-         this._setCaretPosition(newCaretPosition);
+             e = this._caretPosition[1],  //конец выделения
+             currentVal = this._getInputValue(),
+             newState = NumberTextBoxUtil.numberPress(
+                 b,
+                 e,
+                 currentVal,
+                 this._options.delimiters,
+                 this._options.integers,
+                 this._options.decimals,
+                 keyCode,
+                 this._options.maxLength
+             );
+
+         this._setText(newState.value);
+         this._setCaretPosition(newState.caretPosition);
       },
 
       _deleteHandler: function(){
          var b = this._caretPosition[0], //начало выделения
-            e = this._caretPosition[1],  //конец выделения
-            currentVal = this._inputField.val(),
-            dotPosition = currentVal.indexOf('.'),
-            newCaretPosition = e, step;
-         (currentVal[b] == ' ') ? step = 2 : step = 1;
-         if(b === 0 && e === currentVal.length){
-            currentVal = '';
-            newCaretPosition = b;
-         } else {
-            if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
-               if (b == e) {
-                  if (b == dotPosition) {
-                     newCaretPosition++;
-                  }
-                  if (!(this._options.decimals > 0) || (this._options.decimals && b != dotPosition)) {
-                     currentVal = currentVal.substr(0, b) + currentVal.substr(e + step);
-                  }
-               } else {
-                  currentVal = currentVal.substr(0, b) + currentVal.substr(e);
-               }
-               if (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) {
-                  newCaretPosition--;
-               }
-            } else if (b > dotPosition && e > dotPosition) { // после точки
-               if (b == e) {
-                  currentVal = currentVal.substr(0, b) + currentVal.substr(e + 1);
-               } else {
-                  currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
-               }
-            } else { // точка в выделении
-               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-               newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
-            }
-         }
-         currentVal = currentVal.replace(/\s/g, '');
-         this._setText(currentVal);
-         if (newCaretPosition == -1 && this._getIntegersCount(currentVal) == 0){ // если первый 0 перемещаем через него каретку
-            newCaretPosition+=2;
-         }
-         this._setCaretPosition(newCaretPosition + step - 1);
+             e = this._caretPosition[1],  //конец выделения
+             currentVal = this._getInputValue(),
+             newState = NumberTextBoxUtil.deletPressed(b,
+                 e,
+                 currentVal,
+                 this._options.delimiters,
+                 this._options.decimals
+             );
+
+         this._setText(newState.value);
+         this._setCaretPosition(newState.caretPosition + newState.step - 1);
       },
 
       _backspaceHandler: function(){
          var b = this._caretPosition[0], //начало выделения
-            e = this._caretPosition[1],  //конец выделения
-            currentVal = this._inputField.val(),
-            dotPosition = currentVal.indexOf('.'),
-            newCaretPosition = b, step;
-         (currentVal[b - 1] == ' ') ? step = 2 : step = 1;
-         if(b === 0 && e === currentVal.length){
-            currentVal = '';
-         } else {
-            if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
-               if (b == e) {
-                  currentVal = currentVal.substr(0, b - step) + currentVal.substr(e);
-               } else {
-                  currentVal = currentVal.substr(0, b) + currentVal.substr(e);
-               }
-               // При удалении последнего символа целой части дроби каретку нужно оставить после 0
-               // т.к. если каретку установить перед 0, то при вводе 0 не затрется; было |0.12 стало 0|.12
-               if(this._getIntegersCount(currentVal) !== 0 && !this._options.onlyInteger) {
-                  (this._options.delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition -= 2 : newCaretPosition--;
-               }
-            } else if (b > dotPosition && e > dotPosition) { // после точки
-               if (b == e) {
-                  if (!(b == dotPosition + 1 && this._options.decimals > 0)) {
-                     currentVal = currentVal.substr(0, b - 1) + currentVal.substr(e);
-                  }
-                  newCaretPosition = dotPosition === b - 2 ? newCaretPosition - 2 : newCaretPosition - 1;
-               } else {
-                  currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? this._getZeroString(e - b) : '') + currentVal.substr(e);
-               }
-            } else { // точка в выделении
-               currentVal = currentVal.substr(0, b) + (this._options.decimals > 0 ? '.' + this._getZeroString(e - dotPosition - 1) : '') + currentVal.substr(e);
-               newCaretPosition = (currentVal.indexOf('.') != -1) ? currentVal.indexOf('.') - 1 : currentVal.length;
-            }
-         }
-         currentVal = currentVal.replace(/\s/g, '');
-         this._setText(currentVal);
-         this._setCaretPosition(newCaretPosition - (step - 1));
-      },
+             e = this._caretPosition[1],  //конец выделения
+             currentVal = this._getInputValue(),
+             newState = NumberTextBoxUtil.backspacePressed(
+                 b,
+                 e,
+                 currentVal,
+                 this._options.delimiters,
+                 this._options.decimals,
+                 this._options.onlyInteger
+             );
 
-      _getZeroString: function(length){
-         return '000000000000000000000000000000000'.substr(0, length);
-      },
-
-      _getIntegersCount: function(value){
-        var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
-         return value.substr(0, dotPosition).replace(/\s|-/g, '').length;
+         this._setText(newState.value);
+         this._setCaretPosition(newState.caretPosition + newState.step - 1);
       },
 
       _dotHandler: function(event){
          if (!this._options.onlyInteger && this._options.decimals !== 0) {
-            var currentVal = this._inputField.val(),
+            var currentVal = this._getInputValue(),
                dotPosition = currentVal.indexOf('.');
             if (dotPosition != -1) {
                this._setCaretPosition(dotPosition + 1);
@@ -602,7 +511,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       _toggleMinus: function(){
          var value;
          if (!this._options.onlyPositive) {
-            value = this._inputField.val();
+            value = this._getInputValue();
 
             if(!value){
                value = '0';
@@ -614,7 +523,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                this._setText(value.substr(1));
                this._setCaretPosition(this._caretPosition[0] - 1);
             }
-            TextBox.superclass.setText.call(this, this._inputField.val());
+            TextBox.superclass.setText.call(this, this._getInputValue());
          }
       },
 
