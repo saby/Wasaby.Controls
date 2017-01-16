@@ -36,8 +36,10 @@ define(['js!SBIS3.CONTROLS.NumberTextBox'], function (NumberTextBox) {
             });
             it('should hide empty decimals part on blur', function (){
                 NTB.setText('123.100');
+                NTB.setProperty('hideEmptyDecimals', true);
                 inputField.trigger(eventBlur);
                 assert.equal(NTB._getInputValue(), '123.1');
+                NTB.setProperty('hideEmptyDecimals', false);
             });
             it('should divided into a triad', function (){
                 NTB.setProperty('delimiters', true);
