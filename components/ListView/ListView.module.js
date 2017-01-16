@@ -533,8 +533,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * <pre>
                 *     <option name="itemsDragNDrop" type="string" value="allow"></option> <!-- Первый способ передачи allow -->
                 *     <option name="itemsDragNDrop" type="string">allow</option>          <!-- Второй способ передачи allow -->
-                *     <option name="itemsDragNDrop" value="false"></option> <!-- Первый способ передачи true -->
-                *     <option name="itemsDragNDrop">false</option>          <!-- Второй способ передачи true -->
+                *     <option name="itemsDragNDrop" value="true"></option> <!-- Первый способ передачи true -->
+                *     <option name="itemsDragNDrop">true</option>          <!-- Второй способ передачи true -->
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
