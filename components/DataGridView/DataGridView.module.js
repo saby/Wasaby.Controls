@@ -141,12 +141,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
                      supportDouble.colspan++;
                   }
                   else{
+                     if (supportDouble.title){
+                        if (!supportDouble.className){
+                           supportDouble.className = '';
+                        }
+                        supportDouble.className += ' controls-DataGridView__th__topRow-has_text';
+                     }
                      rowData.content[1].push(supportDouble);
                      supportDouble = null;
                   }
                   rowData.countRows = 2;
                }
                else{
+                  supportDouble.rowspan = curCol.rowspan = 2;
                   rowData.content[1].push(supportDouble);
                   supportDouble = null;
                }
@@ -155,9 +162,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   supportUnion = cFunctions.clone(curCol);
                }
                if (nextCol && (supportUnion.title == nextCol.title)){
+                  if (curCol.rowspan){
+                     rowData.content[1].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
+                  }
                   supportUnion.colspan = ++supportUnion.colspan || 2;
                }
                else{
+                  if (curCol.rowspan){
+                     var topRow = rowData.content[1].pop();
+                     topRow.colspan = supportUnion.colspan;
+                     topRow.value = topRow.title = supportUnion.title;
+                     rowData.content[1].push(topRow);
+                     supportUnion.ignore = true; //Игнорируем колонку в случае, если в шапке 2 строки (от верхней строки установится rowspan).
+                  }
                   rowData.content[0].push(supportUnion);
                   supportUnion = null;
                }

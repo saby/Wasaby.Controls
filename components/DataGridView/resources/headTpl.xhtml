@@ -11,10 +11,12 @@
         {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
     </th>{{?}} {{~it.content[i] :column:index}}
     {{isColumnScrolling = it.startScrollColumn !== undefined && it.startScrollColumn <= index;}}
+    {{?!column.ignore || it.countRows == 1}}
     <th class="{{?index === 0}}controls-DataGridView__firstContentCell{{?}} controls-DataGridView__th{{? hasScroll}}{{? isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
         {{?i == 1}}controls-DataGridView__th__topRow{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}" {{?column.colspan}}colspan="{{=column.colspan}}"{{?}}
-        {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
+        {{?column.rowspan && it.countRows == 2}}rowspan="{{=column.rowspan}}"{{?}}{{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
     {{=column.value}}
+    {{?}}
     </th>
     {{~}}
     </tr>
