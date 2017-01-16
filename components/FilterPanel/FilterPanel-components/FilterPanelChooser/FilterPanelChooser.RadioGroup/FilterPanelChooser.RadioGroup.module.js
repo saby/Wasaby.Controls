@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
     * Реализует выборку идентификатора из списка {@link SBIS3.CONTROLS.Ragiogroup}.
     * <br/>
     * @class SBIS3.CONTROLS.FilterPanelChooser.RadioGroup
-    * @extends SBIS3.CONTROLS.FilterPanelChooserBase
+    * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
     * @author Борисов Петр Сергеевич
     * @public
     *

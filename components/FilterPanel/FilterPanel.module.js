@@ -100,7 +100,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *     <li>radio - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup}.</li>
              *     <li>fieldLink - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.</li>
              * </ul>
-             * @property {Object} properties.properties Объект, в который передают опции для конфигурация редактора {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
+             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола SBIS3.CONTROLS.FieldLink, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
+             * Описание контрола и список его опций вы можете найти <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/dictionary/'>здесь</a>.
              * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа {@link SBIS3.CONTROLS.FilterPanelChooser}.
              */
             /**
