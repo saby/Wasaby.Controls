@@ -1,9 +1,10 @@
 /*group*/
 /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
-.FilterButtonMain {
-  display: inline;
+.controls-EditAtPlaceGroup .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper.controls-EditAtPlace__textAreaWrapper {
+  padding: 4px 4px;
 }
-.controls-DropdownList.ws-area {
-  height: auto;
+.controls-EditAtPlaceGroup__controlPanel {
+  float: right;
+  line-height: 24px;
 }

@@ -11,10 +11,11 @@ app.use(express.static(path.resolve(__dirname)));
 app.listen(process.env.PORT || 666);
 
 console.log('app available on port 666');
-console.log(`current dir is  ${process.cwd()}`)
+console.log(`current dir is  ${process.cwd()}`);
+
 
 app.get('/cdn*', function(req, res) {
-    res.redirect(200, 'https://test-inside.tensor.ru/cdn/');
+  res.redirect(`https://test-inside.tensor.ru${req.url}`);
 });
 
 app.post('/theme-preview/get-theme/', (req, res) => {
