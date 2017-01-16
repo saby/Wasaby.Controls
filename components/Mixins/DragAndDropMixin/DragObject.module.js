@@ -231,8 +231,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
 
       _getTargetsControl: function() {
-         var container = $(this.getTargetsDomElemet()),
-            control = container.wsControl ? container.wsControl() : undefined,
+         var control = $(this.getTargetsDomElemet()).wsControl(),
             found = function(control) {
                //такой поиск нужен что бы в таргете всегда был контрол с dnd миксином, кроме того на ipade контрол находит себя по таргету
                //если внутри контрола будут вложенные контролы то там драгндроп работать не будет.
@@ -244,7 +243,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                }
             };
 
-         return control ? found(control)  : undefined;
+         return found(control);
       },
 
       onDragHandler: function (e) {
