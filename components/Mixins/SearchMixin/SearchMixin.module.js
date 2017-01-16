@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
        * @event onSearch При поиске
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
+       * @param {String} forced Срабатывание события было без задержки (searchDelay)
        */
       /**
        * @event onReset При нажатии кнопки отмена (крестик)
@@ -97,7 +98,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
             text = text.replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
             textTrimLength = String.trim(text).length;
             if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
-               this._notify('onSearch', text);
+               this._notify('onSearch', text, force);
                this._onResetIsFired = false;
             } else if (hasStartCharacter) {
                this._notifyOnReset();

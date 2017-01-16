@@ -328,7 +328,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload();
             this._bindItemSelect();
 
             if(this._isHoverMode()) {
@@ -631,8 +630,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (item) {
                if (!this._options.emptyValue){
                   this._defaultId = item.getId();
+                  this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                }
-               this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
             }
          },
          _setSelectedItems: function(){

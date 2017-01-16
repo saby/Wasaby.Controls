@@ -11,17 +11,12 @@
    .box-sizing(border-box);
 
    .controls-TextArea__inputField {
-      top: @text-area-top-padding;
-      left: @text-area-left-padding;
-      right: @text-area-right-padding;
-      bottom: @text-area-bottom-padding;
       position: absolute;
       overflow: auto;
       font: @text-area-field-font;
       color: @text-area-field-text-color;
       display: block;
       width: 100%;
-      height: 100%;
       line-height: @text-area-field-line-height;
       //padding отсюда перенесен выше, чтобы autosize рассчитывался корректно
       resize: none;
@@ -74,6 +69,18 @@
       .controls-TextArea__inputField {
          color: @text-area-field-disabled-text-color;
       }
+
+      //TODO временное решение для 230, в 240 будет автоматом
+      &.controls-TextArea__hiddenIfEmpty {
+         .controls-TextArea__inputField {
+            position: absolute;
+         }
+         .controls-TextArea__disabled-wrapper{
+            position: static;
+            height: auto !important;
+            min-height: 0 !important;
+         }
+      }
    }
 
    &.controls-TextArea__autoheight {
@@ -110,5 +117,6 @@
    }
    .controls-TextArea__inputField {
       position: static;
+      height: 100%;
    }
 }

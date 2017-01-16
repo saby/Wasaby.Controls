@@ -1,69 +1,111 @@
+/**
+ * Created by iv.cheremushkin on 28.08.2014.
+ */
+
 define('js!SBIS3.CONTROLS.MoneyTextBox', [
    "Core/defaultRenders",
    "Core/constants",
-   "js!SBIS3.CONTROLS.TextBox",
-   "js!SBIS3.CONTROLS.NumberTextBoxMixin",
-   "html!SBIS3.CONTROLS.MoneyTextBox"
-], function (cDefaultRenders, constants,TextBox, NumberTextBoxMixin, dotTplFn) {
+   "js!SBIS3.CONTROLS.NumberTextBox",
+   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper'
+], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
 
    'use strict';
-   /**
-    * Денежное поле ввода.
-    * @class SBIS3.CONTROLS.MoneyTextBox
-    * @extends SBIS3.CONTROLS.TextBox
-    * @author Крайнов Дмитрий Олегович
-    * @demo SBIS3.CONTROLS.Demo.MyMoneyTextBox
-    *
-    * @control
-    * @public
-    * @category Inputs
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.MoneyTextBox'>
-    *     <option name="text">0</option>
-    * </component>
-    */
 
-   var MoneyTextBox = TextBox.extend([NumberTextBoxMixin],/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
-      _dotTplFn: dotTplFn,
+   function formatText(value, integers, maxLength){
+      value = value + "";
+
+      value = cDefaultRenders.numeric(
+          value,
+          integers,
+          true,
+          2,
+          false,
+          maxLength,
+          true
+      );
+
+      return value;
+   }
+
+   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
       $protected: {
+         _decimalsContainer: null,
          _options: {
-            delimiters: true,
+            textFieldWrapper: textFieldWrapper,
+            /**
+             * @cfg {Number} Количество знаков после запятой
+             * Опция задаёт ограничение количества знаков дробной части числа.
+             * @example
+             * <pre>
+             *     <option name="decimals">3</option>
+             * </pre>
+             * @see integers
+             * @see hideEmptyDecimals
+             */
             decimals: 2,
-            money: ''
-         },
-         _decimalsContainer: null
+            hideEmptyDecimals: false,
+            /**
+             * @cfg {Boolean} Показать разделители триад
+             * @example
+             * <pre>
+             *     <option name="delimiters">true</option>
+             * </pre>
+             * @see integers
+             * @see onlyInteger
+             * @see decimals
+             */
+            delimiters: true,
+            /**
+             * @cfg {Number} Денежное значение контрола
+             * @example
+             * <pre>
+             *     <option name="numericValue">123.456</option>
+             * </pre>
+             * @see text
+             */
+             moneyValue: null,
+             className: 'controls-MoneyTextBox'
+         }
+      },
+
+      _modifyOptions: function(options){
+         options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
+         if (options.text){
+            options.text = formatText(
+                options.text,
+                options.integers,
+                options.maxLength
+            );
+         }
+         return options;
       },
 
       $constructor: function () {
-         var container = this.getContainer();
-         this._inputField = container.find('.controls-MoneyTextBox__input');
-         this._decimalsContainer = container.find('.controls-MoneyTextBox__decimals');
-         this.setText(this._options.text);
-      },
-
-      init: function() {
-         MoneyTextBox.superclass.init.apply(this, arguments);
+         this._decimalsContainer = $('.js-MoneyTextBox__decimals', this.getContainer().get(0));
       },
 
       setEnabled: function(enabled){
          var text = this._inputField.text();
          if(enabled !== this._options.enabled) {
             this._inputField[0].contentEditable = enabled;
-             if(!enabled) {
-                 this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
-                 this._setInputValue(this._getIntegerPart(this._getInputValue()));
-             }else{
-                this._setInputValue(this._options.text);
-             }
-             MoneyTextBox.superclass.setEnabled.apply(this, arguments);
+            if(!enabled) {
+               this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
+               this._setInputValue(this._getIntegerPart(this._getInputValue()));
+            }else{
+               this._setInputValue(this._options.text);
+            }
+            this._decimalsContainer.toggleClass('ws-hidden', enabled);
+            MoneyTextBox.superclass.setEnabled.apply(this, arguments);
          }
       },
 
-      _setBindValue: function(value){
+      _setNumericValue: function(value) {
          if (typeof(value) == 'string'){
             value = value.replace(/\s+/g,"");
          }
-         this._options.money = value;
+         this._options.numericValue = parseFloat(value);
+         this._options.moneyValue = value;
+
          this._notifyOnPropertyChanged('moneyValue');
       },
 
@@ -75,24 +117,22 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          this._inputField[0].innerHTML = value;
       },
 
-       _getIntegerPart: function(value) {
-           var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
-           return value.substr(0, dotPosition);
-       },
-
-      _formatText: function(value){
-         value = value + "";
-         var dotPos = value.indexOf('.'),
-             integerPart = (dotPos != -1 ? value.substring(0, dotPos) : value).replace(/\s/g,''),
-             newText = cDefaultRenders.integer(integerPart, false);
-         if( dotPos != -1) {
-            newText += (value + "00").substr(dotPos, 3);
-         }else {
-            newText += ".00";
-         }
-         return newText;
+      _getInputField: function() {
+         return $('.js-MoneyTextBox__input', this.getContainer().get(0));
       },
 
+      _getIntegerPart: function(value) {
+         var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
+         return value.substr(0, dotPosition);
+      },
+
+      _formatText: function(value){
+         return formatText(
+             value,
+             this._options.integers,
+             this._options.maxLength
+         );
+      },
       /**
        * Возвращает массив содержащий координаты выделения
        * @return {Array} массив содержащий координаты выделения
@@ -102,7 +142,6 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              b,
              e,
              l;
-
          if(window.getSelection){
             selection = window.getSelection().getRangeAt(0);
             b = selection.startOffset;
@@ -126,7 +165,6 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       _setCaretPosition : function(pos, pos2) {
          var input = this._inputField[0].firstChild,
              selection = window.getSelection();
-
          if(!input){
             return;
          }
@@ -138,4 +176,5 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    });
 
    return MoneyTextBox;
+
 });
