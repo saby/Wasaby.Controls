@@ -9,6 +9,7 @@ ref = '~ref'
 
 if __name__ == '__main__':
 
+    # создаем архив с упавшими скринами
     report_zip = 'report.zip'
     src = join(getcwd(), 'gemini-report', 'images')
     dst = src.replace('images', 'images-copy')
@@ -36,3 +37,12 @@ if __name__ == '__main__':
             archive_name = new_file_name.replace(dst, '')
             archive.write(new_file_name, archive_name)
     archive.close()
+
+    # правим стили, чтобы в отчете был синий на зеленом, а не красный
+    css = join(getcwd(), 'gemini-report', 'report.css')
+    f = open(css, mode='r')
+    css_data = f.read()
+    f.close()
+    f = open(css, mode='w')
+    f.write(css_data.replace('color: #c00;', 'color: blue;'))
+    f.close()

@@ -1,9 +1,10 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.TabControl',
+   "Core/IoC",
    'js!SBIS3.CONTROLS.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons'
-], function(CompoundControl, dotTplFn) {
+], function(CompoundControl, dotTplFn, IoC) {
 
    'use strict';
 
@@ -16,6 +17,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * @control
     * @author Красильников Андрей Сергеевич
     * @public
+    * @demo SBIS3.CONTROLS.Demo.MyTabControl
     */
 
    var TabControl = CompoundControl.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
@@ -43,40 +45,50 @@ define('js!SBIS3.CONTROLS.TabControl', [
             /**
              * @cfg {Item[]} Устанавливает набор элементов, который описывает закладки и связанные с ними области.
              * @remark
-             * Для настройки содержимого вкладок и областей нужно учитывать, что задано в опциях {@link tabsDisplayField} и {@link selectedKey}.
-             * Например, если задали &lt;opt name=&quot;tabsDisplayField&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
-             * Если задали &lt;opt name=&quot;keyField&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
+             * Для настройки содержимого вкладок и областей нужно учитывать, что задано в опциях {@link tabsDisplayProperty} и {@link selectedKey}.
+             * Например, если задали &lt;opt name=&quot;tabsDisplayProperty&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
+             * Если задали &lt;opt name=&quot;idProperty&quot;&gt;id&lt;/opt&gt;, то и для вкладки задаем ключ опцией &lt;opt name=&quot;id&quot;&gt;id1&lt;/opt&gt;
              */
             items: null,
             /**
              * @cfg {String} Устанавливает идентификатор выбранного элемента.
              * @remark
-             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
-             * @see SBIS3.CONTROLS.DSMixin#keyField
+             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля} элемента коллекции.
+             * @see SBIS3.CONTROLS.DSMixin#idProperty
              */
             selectedKey: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="tabsDisplayField">caption</option>
-             * </pre>
-             * @see keyField
-             * @see items
+             * @deprecated
              */
             tabsDisplayField: null,
+            /**
+             * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="tabsDisplayProperty">caption</option>
+             * </pre>
+             * @see idProperty
+             * @see items
+             */
+            tabsDisplayProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
+             * @deprecated
+             */
+            keyField: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента {@link selectedKey}.
              * @example
              * <pre class="brush:xml">
-             *     <option name="keyField">id</option>
+             *     <option name="idProperty">id</option>
              * </pre>
              * @see items
-             * @see displayField
+             * @see displayProperty
              */
-            keyField: null,
+            idProperty: null,
             /**
              * @cfg {Content} Устанавливает содержимое между вкладками.
              * @example
@@ -116,6 +128,18 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             tabButtonsExtraClass: ''
          }
+      },
+
+      _modifyOptions: function(cfg){
+         if (cfg.keyField) {
+            IoC.resolve('ILogger').log('TabControl', 'Опция keyField является устаревшей, используйте idProperty');
+            cfg.idProperty = cfg.keyField;
+         }
+         if (cfg.tabsDisplayField) {
+            IoC.resolve('ILogger').log('TabControl', 'Опция tabsDisplayField является устаревшей, используйте tabsDisplayProperty');
+            cfg.tabsDisplayProperty = cfg.tabsDisplayField;
+         }
+         return TabControl.superclass._modifyOptions.apply(this, arguments);
       },
 
       $constructor: function() {

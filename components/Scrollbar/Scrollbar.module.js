@@ -33,8 +33,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             _beginClient: undefined,
             _thumbPosition: 0,
             _viewportRatio: undefined,
+            _scrollRatio: undefined,
             _thumbHeight: undefined,
-            _containerHeight: undefined
+            _containerHeight: undefined,
+            _containerOuterHeight: undefined
          },
 
          $constructor: function() {
@@ -48,6 +50,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
             this._containerHeight = this._container.height();
+            this._containerOuterHeight = this._container.outerHeight(true);
             this._setViewportRatio();
             this._setThumbHeight();
          },
@@ -57,7 +60,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setPosition: function(position) {
-            var maxPosition = this.getContentHeight() - this._containerHeight;
+            var maxPosition = this.getContentHeight() - this._containerOuterHeight;
 
             position = this._calcPosition(position, 0, maxPosition);
             this._options.position = position;
@@ -70,6 +73,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          setContentHeight: function(contentHeight) {
             this._containerHeight = this._container.height();
+            this._containerOuterHeight = this._container.outerHeight(true);
             this._options.contentHeight = contentHeight;
             this._setViewportRatio();
             this._setThumbHeight();
@@ -108,7 +112,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Сдвигаем ползунок на нужную позицию
          _setThumbPosition: function() {
-            this._thumbPosition =this._calcProjectionSize(this.getPosition(), this._viewportRatio);
+            this._thumbPosition = this._calcProjectionSize(this.getPosition(), this._scrollRatio);
             this._thumb.get(0).style.top = this._thumbPosition + 'px';
          },
 
@@ -125,12 +129,14 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          _onResizeHandler: function() {
             this._containerHeight = this._container.height();
+            this._containerOuterHeight = this._container.outerHeight(true);
             this._setThumbHeight();
          },
 
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function(){
-            this._viewportRatio = this.getContainer().outerHeight(true) / this.getContentHeight();
+            this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            this._scrollRatio = this.getContainer().height() / this.getContentHeight();
          },
 
          _beginDragHandler: function(dragObject, e) {

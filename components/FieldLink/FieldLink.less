@@ -112,7 +112,8 @@
       border-color: @controls-FieldLink-border-color-focus-hover;
    }
 
-   &:not(.controls-FieldLink__multiselect) {
+   &:not(.controls-FieldLink__multiselect),
+   &.controls-FieldLink__selected-single {
       .controls-FieldLink__linksWrapper {
          max-width: 100%;
       }
@@ -144,14 +145,6 @@
       max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
 
-      .controls-FieldLink__showAllLinks {
-         position: relative;
-         width: 20px;
-         line-height: @controls-FieldLink-showAllLinks-lineHeight;
-         padding: @controls-FieldLink-showAllLinks-padding;
-         float: left;
-      }
-
       .controls-FieldLink__linksWrapper {
          height: 100%;
          display: inline-block;
@@ -161,30 +154,6 @@
             .controls-FieldLink__item {
                .text-overflow();
             }
-         }
-      }
-
-      .controls-FieldLink__copyShowAll {
-         float: left;
-         position: relative;
-         top: -22px;
-         width: 16px;
-         line-height: @controls-FieldLink-showAllLinks-lineHeight;
-         margin-right: -22px;
-         text-align: center;
-         background-color: @white-color;
-         color: @link-text-color;
-         padding: @controls-FieldLink-showAllLinks-padding;
-
-         &:after {
-            content: '';
-            position: absolute;
-            right: -@controls-FieldLink-showAll-shadow-width;
-            width: @controls-FieldLink-showAll-shadow-width;
-            top: 0;
-            bottom: 0;
-            .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
-            background-color: transparent;
          }
       }
    }
@@ -198,9 +167,6 @@
 
       > * {
          padding: @controls-FieldLink-afterField-padding;
-      }
-      .controls-FieldLink__dropAllLinks {
-         color: @controls-FieldLink-link-color;
       }
    }
    &.ws-validation-error {
@@ -235,16 +201,6 @@
       }
    }
 
-   &.controls-FieldLink__dynamicInputWidth {
-      .controls-TextBox__fieldWrapper {
-         display: flex;
-
-         .controls-TextBox__field {
-            width: 100%;
-         }
-      }
-   }
-
    .controls-FieldLink__Link {
       display: inline;
       line-height: 20px;
@@ -266,10 +222,80 @@
          color: #0055bb;
          text-decoration: none;
 
-         &:hover {
+         &.ws-enabled:hover {
             color: #0055bb;
             text-decoration: underline;
          }
+      }
+   }
+}
+
+.controls-FieldLink__showAllLinks {
+   position: relative;
+   width: 20px;
+   line-height: @controls-FieldLink-showAllLinks-lineHeight;
+   padding: @controls-FieldLink-showAllLinks-padding;
+   float: left;
+}
+
+.controls-FieldLink__copyShowAll {
+   float: left;
+   position: relative;
+   top: -22px;
+   width: 16px;
+   line-height: @controls-FieldLink-showAllLinks-lineHeight;
+   margin-right: -22px;
+   text-align: center;
+   background-color: @white-color;
+   color: @link-text-color;
+   padding: @controls-FieldLink-showAllLinks-padding;
+
+   &:after {
+      content: '';
+      position: absolute;
+      right: -@controls-FieldLink-showAll-shadow-width;
+      width: @controls-FieldLink-showAll-shadow-width;
+      top: 0;
+      bottom: 0;
+      .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
+      background-color: transparent;
+   }
+}
+
+.controls-FieldLink__dropAllLinks {
+   color: @controls-FieldLink-link-color;
+}
+
+.controls-FieldLink__copyShowAll {
+   float: left;
+   position: relative;
+   top: -22px;
+   width: 16px;
+   line-height: @controls-FieldLink-showAllLinks-lineHeight;
+   margin-right: -22px;
+   text-align: center;
+   background-color: @white-color;
+   color: @link-text-color;
+   padding: @controls-FieldLink-showAllLinks-padding;
+
+   &:after {
+      content: '';
+      position: absolute;
+      right: -@controls-FieldLink-showAll-shadow-width;
+      width: @controls-FieldLink-showAll-shadow-width;
+      top: 0;
+      bottom: 0;
+      .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
+      background-color: transparent;
+   }
+}
+
+.controls-FieldLink__dynamicInputWidth {
+   .controls-TextBox__fieldWrapper {
+      display: flex;
+
+      .controls-TextBox__field {
+         width: 100%;
       }
    }
 }
@@ -295,6 +321,10 @@
          margin-right: @controls-FieldLink-showAll-margin-right-ff;
       }
    }
+}
+
+.controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
+   display: none;
 }
 
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {

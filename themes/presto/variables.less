@@ -78,10 +78,9 @@
 @filter-panel-chooser-hovered-color:                              #EAECEE;
 @filter-panel-chooser-selected-color:                             #F3F3F3;
 @filter-panel-chooser-default-text-color:                         #8991A9;
-@filter-panel-chooser-list-view-count-box-shadow-pos:             -12px 0 5px;
 @filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
 @filter-panel-chooser-list-view-item-cursor:                      pointer;
-@filter-panel-chooser-list-view-item-padding:                     6px 30px 6px 24px;
+@filter-panel-chooser-list-view-item-padding:                     6px 0 6px 24px;
 @filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
@@ -89,11 +88,8 @@
 @filter-panel-chooser-list-view-check-box-left:                   4px;
 @filter-panel-chooser-list-view-count-top:                        6px;
 @filter-panel-chooser-list-view-count-right:                      0;
-@filter-panel-chooser-list-view-count-padding-right:              8px;
+@filter-panel-chooser-list-view-count-padding:                    0 8px;
 @filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
-@filter-panel-chooser-list-view-count-box-shadow:                 @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-default-color;
-@filter-panel-chooser-list-view-hovered-count-box-shadow:         @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-hovered-color;
-@filter-panel-chooser-list-view-selected-count-box-shadow:        @filter-panel-chooser-list-view-count-box-shadow-pos @filter-panel-chooser-selected-color;
 @filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-selected-title-color:             @black-color;
 @filter-panel-chooser-list-view-title-max-height:                 54px;
@@ -864,6 +860,8 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
+@tree-view-copy-arrow-background:               #202835;
+
 // --------- //
 // Data grid //
 // --------- //
@@ -921,8 +919,6 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        29px;
-@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -967,6 +963,7 @@
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       0;
 @controls-filterButton-picker-border-radius:      0;
+@controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  16px;
 
 @controls-filterButton-button-height:             24px;
@@ -1000,7 +997,7 @@
 @controls-filterLine-link-color:                  #0055bb;
 @controls-filterLine-link-hover-color:            @primary-color;
 
-@controls-filterLine-copyCross-top:               -20px;
+@controls-filterLine-copyCross-top:               -28px;
 @controls-filterLine-copyCross-margin:            -16px;
 @controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
@@ -1045,6 +1042,7 @@
 @editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
+@editdialog-applybutton-top:                       8px;
 
 //MoveDialog
 @controls-movedialog-activate-right:               38px;
@@ -1088,4 +1086,7 @@
 @controls-NotificationPopup-border-bottom:      @controls-InformationPopup-border;
 @controls-NotificationPopup-border-left:        @controls-InformationPopup-border;
 @controls-NotificationPopup-border-right:       @controls-InformationPopup-border;
+
+//TabButton
+@tab-buttons-border-bottom:                     1px solid #293543;
 

@@ -96,6 +96,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                this._savingDeferred = Deferred.success();
             },
 
+            /**
+             * Возвращает признак валидности данных изменяемой записи
+             * @returns {boolean|*}
+             */
+            isValidChanges: function() {
+               // Данные считаются валидными, если изменений не было (на это указывает признак наличия операции ожидания) или валидация вернула true
+               return !this._pendingOperation || this.validate();
+            },
+
             isEdit: function() {
                return this._eip && this._eip.isEdit();
             },
@@ -331,6 +340,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   opener = this.getOpener();
                if (opener && this._pendingOperation) {
                   this._unregisterPendingOperation(this._pendingOperation);
+                  this._pendingOperation = undefined;
                }
             },
             /**
@@ -453,7 +463,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
 
-               if(isAdd) {
+               if (isAdd) {
                   /* Почему делаеться destroy:
                    Добавление по месту как и редактирование, не пересоздаёт компоненты при повторном добавлении/редактировании,
                    поэтому у компонентов при переиспользовании могут появляться дефекты(текст, введённый в прошлый раз, который ни на что не завбиден /
@@ -585,12 +595,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _destroyEip: function() {
                if (this._eip) {
-                  this.endEdit();
                   this._eip.destroy();
                   this._eip = null;
                }
             },
             destroy: function() {
+               this.endEdit();
                this._destroyEip();
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }

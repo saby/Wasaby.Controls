@@ -184,16 +184,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
                      self._cachedH = h;
                      self._autosizeTextArea(true);
                   }
-                  /* при использовании плагина для авторасчета высоты - высота текстареи считается js-ом динамически
-                   * при этом если контента много, то див, который реализует задизабленный режим, может иметь вертикальный скролл
-                   * и даже после выставления нужной высоты, которой хватает для текстареи, из за вертикального скролла в диве
-                   * может не хватать ширины => строки переносятся и высоты тоже не хватает - появляется скролл
-                   * если добавить и убрать стиль overflow-y то все пересчитывается правильно*/
-                  var wrapper = $('.controls-TextArea__disabled-wrapper', self._container.get(0));
-                  wrapper.css('overflow', 'visible');
-                  setTimeout(function(){
-                     wrapper.css('overflow', 'auto');
-                  }, 50)
                }
             });
 
@@ -201,6 +191,23 @@ define('js!SBIS3.CONTROLS.TextArea', [
             if (this._options.minLinesCount){
                this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
             }
+            this._removeAutoSizeDognail();
+         }
+      },
+
+      _removeAutoSizeDognail: function() {
+         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
+         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
+         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
+
+         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
+         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
+         if (!this.isEnabled()) {
+            this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
+         }
+         else {
+            $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
+            this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
          }
       },
 
@@ -210,16 +217,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
             callback: self._notifyOnSizeChanged(self, self),
             hard: hard
          });
-         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
-         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
-         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
 
-         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
-         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
 
-         if (!this.isEnabled()) {
-            this._inputField.removeClass('ws-hidden').addClass('ws-invivsible');
-         }
+         this._removeAutoSizeDognail();
          this._container.addClass('controls-TextArea__heightInit');
       },
 
@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
-         this._inputField.toggleClass('ws-invisible', !state)
+         this._inputField.toggleClass('ws-invisible', !state);
          this._disabledWrapper.toggleClass('ws-hidden', state);
          if (!state){
             this._inputField.attr('readonly', 'readonly')
@@ -258,8 +258,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _keyUpBind: function(event) {
          var
             newText = this._inputField.val(),
-            key = event.which || event.keyCode;
-         if (newText != this._options.text) {
+            key = event.which || event.keyCode,
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (newText != this._options.text && !textsEmpty) {
             this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||

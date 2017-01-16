@@ -205,8 +205,9 @@ define(
             /**
              * @cfg {String} Режим уведомления о смене даты. Значение по умолчанию textChange.
              * @variant 'complete' события onDateChange и onTextChange стреляют только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
-             * @variant 'dateChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
-             * @variant 'change' 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения даты.
+             * @variant 'dateChange' события onDateChange и onTextChange стреляют при каждом изменении значения даты.
+             * @variant 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
+             * @variant 'change' тоже самое что и 'textChange' в будущем будет удалено
              */
             notificationMode: 'textChange'
          }
@@ -508,13 +509,22 @@ define(
          }
       },
       setActive: function(active, shiftKey, noFocus, focusedControl) {
-         var date;
+         var date,
+            oldText,
+            oldDate;
 
          if (!active) {
             if (!this._getFormatModel().isFilled()) {
+               oldText = this.getText();
+               oldDate = this.getDate();
                date = this._getDateByText(this._options.text, this._lastDate, true);
                if (date) {
                   this._setDate(date);
+               }
+               if ((this._options.notificationMode === 'textChange' && oldText !== this.getText()) ||
+                   (this._options.notificationMode === 'dateChange' && oldDate !== this.getDate())) {
+                  this._notifyOnTextChange();
+                  this._notifyOnDateChanged();
                }
             }
             if (this._options.notificationMode === 'complete') {
@@ -543,7 +553,8 @@ define(
             notFilled = [],
             now = new Date(),
             curYear = now.getFullYear(),
-            curCentury = (curYear - curYear % 100),
+            shortCurYear = curYear % 100,
+            curCentury = (curYear - shortCurYear),
             yyyy = date ? date.getFullYear() : 0,
             mm   = date ? date.getMonth() : 0,
             dd   = date ? date.getDate() : 1,
@@ -564,8 +575,8 @@ define(
                switch (item.mask) {
                   case 'YY' :
                      value = Number(value);
-                     //Если год задаётся двумя числами, то считаем что это текущий век если год меньше 90, если же год больше 90 то это прошлый век.
-                     yyyy = value + 10 < 100 ? curCentury + value : (curCentury - 100) + value;
+                     //Если год задаётся двумя числами, то считаем что это текущий век если год меньше текущего года + 10, иначе это прошлый век.
+                     yyyy = value < shortCurYear + 10 ? curCentury + value : (curCentury - 100) + value;
                      break;
                   case 'YYYY' :
                      yyyy = value;

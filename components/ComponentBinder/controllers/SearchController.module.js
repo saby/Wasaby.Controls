@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          _options: {
             view: null,
             searchForm: null,
+            searchFormWithSuggest: false,
             searchParamName: null,
             searchCrumbsTpl: null,
             searchMode: null,
@@ -148,8 +149,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
          view.once('onDataLoad', function() {
             view._container.removeClass('controls-GridView__searchMode');
-            view._options._curRoot = self._lastRoot || null;
-            view._getItemsProjection().setRoot(self._lastRoot || null);
+            view.setCurrentRoot(self._lastRoot || null);
          });
          this._searchMode = false;
          view._options.hierarchyViewMode = false;
@@ -254,7 +254,16 @@ define('js!SBIS3.CONTROLS.SearchController',
             });
          }
 
-         searchForm.subscribe('onSearch', function(event, text) {
+         searchForm.subscribe('onSearch', function(event, text, forced) {
+            /* Если у поля поиска есть автодополнение,
+               то поиск надо запускать только по enter'у / выбору из автодополнения. */
+            if(searchForm.getProperty('usePicker')) {
+               /* Если поиск происходит в автодополнении, то его надо разрешать */
+               if(!self._options.searchFormWithSuggest && text && !forced) {
+                  return;
+               }
+            }
+
             self._kbLayoutRevertObserver.startObserve();
             if (isTree) {
                self._startHierSearch(text);
@@ -303,6 +312,14 @@ define('js!SBIS3.CONTROLS.SearchController',
                event.preventDefault();
             }
          });
+      },
+
+      /**
+       * Устанавливает имя параметра поиска
+       * @param {String} name имя параметра поиска
+       */
+      setSearchParamName: function(name) {
+         this._options.searchParamName = name;
       }
 
    });

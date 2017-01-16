@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             records: undefined,
             dataSource: undefined,
             partialyReload: undefined,
-            displayField: undefined,
+            displayProperty: undefined,
             filter: undefined
          },
          treeView: undefined

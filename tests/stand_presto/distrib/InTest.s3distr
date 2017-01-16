@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8" ?>
-<distribution_schema build_date="17.07.2015" build_date_core="17.07.2015" build_number="1" build_number_core="1" build_time="11:42:44.854845" build_time_core="11:56:34" cloud="InTest" id="44948cc5-b4df-4f3e-966e-273e4df3cd7f" name="InTest" path="{path}" platform="4" version="1" version_core="$(PLATFORM_version)">
+<distribution_schema build_date="17.07.2015" build_date_core="17.07.2015" build_number="1" build_number_core="1" build_time="11:42:44.854845" build_time_core="11:56:34" cloud="InTest" id="44948cc5-b4df-4f3e-966e-273e4df3cd7f" name="InTest" path="{path}" platform="{platform}" version="1" version_core="$(PLATFORM_version)">
 
   <template name="Тестовый стенд" ws="{ws}"/>
-
-  <jinnee_version algorithm="3.7.3.1"/>
 
   <localization/>
 

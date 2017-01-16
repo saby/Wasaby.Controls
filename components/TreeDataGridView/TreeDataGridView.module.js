@@ -27,18 +27,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
          tplOptions.foldersColspan = cfg.foldersColspan;
+         tplOptions.cellData.isSearch = tvOptions.isSearch;
          return tplOptions;
       },
       getSearchCfg = function(cfg) {
          return {
-            keyField: cfg.keyField,
-            displayField: cfg.displayField,
+            idProperty: cfg.idProperty,
+            displayProperty: cfg.displayProperty,
             highlightEnabled: cfg.highlightEnabled,
             highlightText: cfg.highlightText,
             colorMarkEnabled: cfg.colorMarkEnabled,
             colorField: cfg.colorField,
             allowEnterToFolder: cfg.allowEnterToFolder,
-            colspan: cfg.columns.length + (cfg.multiselect ? 1 : 0)
+            colspan: cfg.columns.length,
+            multiselect: cfg.multiselect
          }
       };
 
@@ -107,6 +109,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
+            _buildTplArgsTDG: buildTplArgsTDG,
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -239,26 +242,29 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditorOffset: function(model) {
          var
              treeLevel = 0,
-             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
-         if (parentProj) {
-            treeLevel = parentProj.getLevel();
+             parentProj;
+         // Если мы в режиме поиска, то уровень иерархии редактируемой записи всегда равен единице
+         if (this._isSearchMode()) {
+            treeLevel = 1;
+         } else {
+            parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
+            if (parentProj) {
+               treeLevel = parentProj.getLevel();
+            }
          }
          return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
       },
 
       _keyboardHover: function(e) {
-         var parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
-             selectedKey = this.getSelectedKey(),
-             rec = this.getItems().getRecordById(selectedKey),
-             isBranch = rec && rec.get(this._options.nodeProperty);
-
-         switch(e.which) {
-            case constants.key.right:
-               isBranch && this.expandNode(selectedKey);
-               break;
-            case constants.key.left:
-               isBranch && this.collapseNode(selectedKey);
-               break;
+         var
+            parentResult = TreeDataGridView.superclass._keyboardHover.apply(this, arguments),
+            selectedKey, rec;
+         if (e.which === constants.key.right || e.which === constants.key.left) {
+            selectedKey = this.getSelectedKey();
+            rec = this.getItems().getRecordById(selectedKey);
+            if (rec && rec.get(this._options.nodeProperty)) {
+               this[e.which === constants.key.right ? 'expandNode' : 'collapseNode'](selectedKey);
+            }
          }
          return parentResult;
       },
@@ -364,8 +370,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              needShowArrow, hiContainer, editArrowPosition;
 
          hiContainer = hoveredItem.container;
-         /* Если иконку скрыли или не папка - показывать не будем */
-         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible();
+         /* Не показываем если:
+            1) Иконку скрыли
+            2) Не папка
+            3) Режим поиска (по стандарту) */
+         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible() && !this._isSearchMode();
 
          if(hiContainer && needShowArrow) {
             editArrowPosition = this._getEditArrowPosition(hoveredItem);

@@ -2,8 +2,8 @@
    <div class="controls-Slider">
       <div class="controls-Slider__wrapper">
          <div class="controls-Slider__mainSlider {{?it.bigPoint}} controls-Slider__big{{?}}">
-            <div class="controls-Slider__point controls-Slider__point__left{{?it.single}} ws-hidden{{?}}"></div>
-            <div class="controls-Slider__point controls-Slider__point__right"></div>
+            <div class="controls-Slider__point controls-Slider__point__start{{?it.single}} ws-hidden{{?}}"></div>
+            <div class="controls-Slider__point controls-Slider__point__end"></div>
             <div class="controls-Slider__line controls-Slider__line__empty"></div>
             <div class="controls-Slider__line controls-Slider__line__full"></div>
          </div>
@@ -17,6 +17,7 @@
          <option name="text">{{=it.startValue}}</option>
          <option name="startCharacter">0</option>
          <option name="placeholder" type="string">{{=it.minValue}}</option>
+         <option name="decimals">{{=it.decimals}}</option>
       </component>
       {{?it.middleLabel}}
          <span class="controls-SliderInput__label controls-SliderInput__label__middle"> {{=it.middleLabel}} </span>
@@ -25,6 +26,7 @@
          <option name="text">{{=it.endValue}}</option>
          <option name="startCharacter">0</option>
          <option name="placeholder" type="string">{{=it.maxValue}}</option>
+         <option name="decimals">{{=it.decimals}}</option>
       </component>
       {{?it.endLabel}}
          <span class="controls-SliderInput__label controls-SliderInput__label__end"> {{=it.endLabel}} </span>

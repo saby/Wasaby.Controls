@@ -74,7 +74,15 @@ define('js!SBIS3.CONTROLS.DateRange', [
              * @see setEndDate
              * @see getEndDate
              */
-            endDate: null
+            endDate: null,
+
+            /**
+             * @cfg {String} Режим уведомления о смене даты. Значение по умолчанию textChange.
+             * @variant 'complete' события onDateChange и onTextChange стреляют только при окончании работы с полем даты(уход фокуса, выбор даты из календаря или нажатие клавиши insert).
+             * @variant 'dateChange' события onDateChange и onTextChange стреляют при каждом изменении значения даты.
+             * @variant 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
+             */
+            notificationMode: 'textChange'
          },
          _datePickerStart: null,
          _datePickerEnd: null,
@@ -136,11 +144,13 @@ define('js!SBIS3.CONTROLS.DateRange', [
          });
 
          this._addDefaultValidator();
+         this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
       },
 
       _setPickerConfig: function() {
          return {
             corner: 'tl',
+            bodyBounds: true,
             horizontalAlign: {
                side: 'left',
                offset: -133
@@ -299,6 +309,10 @@ define('js!SBIS3.CONTROLS.DateRange', [
             date.setSQLSerializationMode(this._getSQLSerializationMode());
          }
          return date;
+      },
+
+      _focusOutHandler: function () {
+         this.validate()
       }
    });
    return DateRange;

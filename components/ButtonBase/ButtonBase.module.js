@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
     * @mixes SBIS3.CONTROLS.IconMixin
     * @author Крайнов Дмитрий Олегович
     *
+    *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
     * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark

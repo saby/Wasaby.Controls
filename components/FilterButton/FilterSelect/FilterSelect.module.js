@@ -28,16 +28,27 @@ define('js!SBIS3.CONTROLS.FilterSelect',
         * </pre>
         * @class SBIS3.CONTROLS.FilterSelect
         * @extends SBIS3.CORE.CompoundControl
+        * @mixes SBIS3.CORE.ItemsControlMixin
         * @control
         * @public
         */
 
-       var FilterSelect = CompoundControl.extend([ItemsControlMixin], {
+       var FilterSelect = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.FilterSelect.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
                 itemTpl: itemTpl,
+                /**
+                 * @cfg {boolean} Инвертированное значение опции visible.
+                 * Если значение false - компонент отображается, если значение true - компонент скрыт.
+                 * @see setInvertedVisible
+                 * @see getInvertedVisible
+                 */
                 invertedVisible: false,
+                /**
+                 * @cfg {*} Выбранное значение
+                 * @see getFilterValue
+                 */
                 filterValue: null
              }
           },
@@ -68,7 +79,7 @@ define('js!SBIS3.CONTROLS.FilterSelect',
              }
              var target = $(e.target).closest('[data-hash]'),
                  model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
-             this._setFilterValue(model.get(this._options.keyField));
+             this._setFilterValue(model.get(this._options.idProperty));
           },
 
           _setFilterValue: function(value) {

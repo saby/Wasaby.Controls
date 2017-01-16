@@ -5,9 +5,9 @@
          <component data-component="SBIS3.CONTROLS.FieldLink" class="controls-demo-FieldLinkWithEditInPlace__fieldLink">
             <opt name="text" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Дополнение" nonexistentType="undefined"></opt>
             <opt name="placeholder" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Описание" oneWay="true"></opt>
-            <opt name="displayField" value="Название"></opt>
+            <opt name="displayProperty" value="Название"></opt>
             <opt name="multiselect" value="{{= opt === 'selectedItems' }}" type="boolean"></opt>
-            <opt name="keyField" value="Ид"></opt>
+            <opt name="idProperty" value="Ид"></opt>
             <opts name="dictionaries" type="array">
                <opts>
                   <opt name="caption" bind="ИнформацияПоСотруднику/{{=index}}/ПолеИнформации/Описание" oneWay="true"></opt>
@@ -34,7 +34,7 @@
                         <opt name="field">Название</opt>
                      </opts>
                   </opts>
-                  <opt name="keyField" value="Ид"></opt>
+                  <opt name="idProperty" value="Ид"></opt>
                </opts>
             </opts>
             <opts name="listFilter">

@@ -7,14 +7,18 @@
             </div>
         </div>
     </div>
-    <div class="controls-ListView__results-top"></div>
+    <ws:if data="{{ _serverRender && _resultsRecord && resultsPosition == 'top' && resultsTpl}}">
+       <ws:partial template="{{resultsTpl}}" item="{{_resultsRecord}}" multiselect="{{multiselect}}" />
+    </ws:if>
     <div class="controls-ListView__itemsContainer">
         <ws:if data="{{ _serverRender }}">
             <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
         </ws:if>
     </div>
-    <div class="controls-ListView__results-bottom"></div>
-    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length) ? 'ws-hidden'}}">{{emptyHTML}}</div>
+    <ws:if data="{{ _serverRender && _resultsRecord && resultsPosition == 'bottom' && resultsTpl}}">
+       <ws:partial template="{{resultsTpl}}" item="{{_resultsRecord}}" multiselect="{{multiselect}}" />
+    </ws:if>
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !it.emptyHTML) ? 'ws-hidden'}}">{{emptyHTML}}</div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />

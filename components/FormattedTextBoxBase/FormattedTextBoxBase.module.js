@@ -735,7 +735,7 @@ define(
                 pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
             //Пропустим вставляемый текст через модель. Если setText модели вернет true - значит
             //вставляемый текст соответствует маске и мы его можем проставить в значение текстового поля
-            if (formatModel.setText(pasteValue, maskReplacer)) {
+            if (self.isEnabled() && formatModel.setText(pasteValue, maskReplacer)) {
                self.setText(formatModel.getText(maskReplacer));
             }
             e.preventDefault();
@@ -995,7 +995,8 @@ define(
 
       _updateTextFromModel: function() {
          var formatModel = this._getFormatModel();
-         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined") ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
+         //Если форматное поле не заполено, то в опцию text не нужно класть пустую маску.
+         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {

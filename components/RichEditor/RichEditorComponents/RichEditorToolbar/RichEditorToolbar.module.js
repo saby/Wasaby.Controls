@@ -223,8 +223,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      cssClassName: 'controls-RichEditorToolbar__item mce-',
                      tabindex: -1,
                      caption: '',
-                     keyField: 'key',
-                     displayField: 'title'
+                     idProperty: 'key',
+                     displayProperty: 'title'
                   }, items[i]);
                }
             }

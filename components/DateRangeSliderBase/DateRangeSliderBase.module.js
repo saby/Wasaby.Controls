@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
     * @author Миронов Александр Юрьевич
     *
     * @control
+    * @public
     * @category Date/Time
     */
    var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBase.prototype */{
