@@ -124,7 +124,9 @@
 
       &.ws-disabled {
          .controls-FieldLink__item {
-            max-width: 100%;
+            max-width: ~'calc(100% - '@controls-FieldLink-linkContainer-padding * 2~')';
+            padding: @controls-FieldLink-disabled-item-single-padding;
+            margin: @controls-FieldLink-disabled-item-single-margin;
          }
       }
    }
@@ -315,6 +317,10 @@
       }
       .controls-FieldLink__item-cross {
          top: -1px;
+      }
+
+      &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
+         display: none;
       }
 
       .controls-FieldLink__copyShowAll {
