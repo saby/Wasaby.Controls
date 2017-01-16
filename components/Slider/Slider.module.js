@@ -137,8 +137,8 @@ define('js!SBIS3.CONTROLS.Slider',
                   start: this._container.find('.controls-Slider__point__start'),
                   end: this._container.find('.controls-Slider__point__end')
                };
-               this._pointsContainers.start.on('mousedown, touchstart', this._initDrag.bind(this));
-               this._pointsContainers.end.on('mousedown, touchstart', this._initDrag.bind(this));
+               this._pointsContainers.start.on('mousedown touchstart', this._initDrag.bind(this));
+               this._pointsContainers.end.on('mousedown touchstart', this._initDrag.bind(this));
                //если заданы начальные и конечные значения то необходимо их отрисовать и нотифицировать об этом
                //если значения не заданы то точки встанут в начало и конец а start/endValue будут пустыми
                if (this._options.startValue || this._options.endValue) {
