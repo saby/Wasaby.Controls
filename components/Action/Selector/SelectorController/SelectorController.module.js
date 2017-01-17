@@ -16,30 +16,42 @@ define('js!SBIS3.CONTROLS.SelectorController', [
        var MULTISELECT_CLASS = 'controls-SelectorWrapper__multiselect';
 
        /**
-        * Описание логики выбора из диалога/панели.
+        * Класс компонента, который описывает логику выбора из диалога/панели.
+        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/selector-action/'>Окно выбора из справочника</a>.
+        *
         * @class SBIS3.CONTROLS.SelectorController
-        * @extends SBIS3.CORE.CompoundControl
+        * @extends $ws.proto.CompoundControl
         * @public
-        * @author Крайнов Дмитрий Олегович
+        * @author Герасимов Александр Максимович
         * @control
         */
        var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.SelectorController.prototype  */{
           $protected: {
              _options: {
                 /**
-                 * Набор выбранных элементов
+                 * @cfg {Array} Устанавливает набор выбранных элементов.
                  */
                 selectedItems: null,
                 /**
-                 * Разрешён ли множественный выбор
+                 * @cfg {Boolean} Устанавливает множественный выбор элементов.
                  */
                 multiselect: false,
                 /**
-                 * Тип выбираемых записей
+                 * @cfg {String} Устанавливает тип доступных для выбора элементов.
+                 * @remark
+                 * Опция актуальна для использования совместно с иерархическим списком.
+                 * <br/>
+                 * Возможные значения:
+                 * <ul>
+                 *     <li>all - для выбора доступны любые типы элементов;<li>
+                 *     <li>node - для выбора доступны только элементы типа "Узел" и "Скрытый узел";<li>
+                 *     <li>leaf - для выбора доступны только элементы типа "Лист".<li>
+                 * </ul>
+                 * Подробнее о каждом типе элементов читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
                  */
                 selectionType: 'all',
                 /**
-                 * Имя кнопки, клик по которой завершает выбор
+                 * @cfg {String} Устанавливает имя кнопки (см. {@link $ws.proto.Control#name}), клик по которой завершает выбор отмеченных элементов.
                  */
                 selectButton: 'SelectorControllerButton'
              },
@@ -82,9 +94,9 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           },
 
           /**
-           * Проставляет выбранные элементы, когда компонент выбора проинициализирован
-           * @param chooserWrapper
-           * @private
+           * Проставляет выбранные элементы, когда компонент выбора проинициализирован.
+           * @param {} chooserWrapper
+           * @command selectorWrapperInitialized
            */
           _selectorWrapperInitialized: function(chooserWrapper) {
              chooserWrapper.setProperties({
@@ -95,10 +107,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           },
 
           /**
-           * Обрабатываем изменение выделения
-           * @param difference
-           * @param idProperty
-           * @private
+           * Обрабатывает изменение выделения.
+           * @param {} difference
+           * @param {} idProperty
+           * @command selectorWrapperSelectionChanged
            */
           _selectorWrapperSelectionChanged: function(difference, idProperty) {
              var currentItems = this._options.selectedItems,
@@ -135,7 +147,12 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 onChangeSelection();
              }
           },
-
+           /**
+            *
+            * @remark
+            * При выполнении команды происходит событие {@link onSelectComplete}.
+            * @command selectComplete
+            */
           _selectComplete: function() {
              this._notify('onSelectComplete', this._options.selectedItems.clone());
           }
