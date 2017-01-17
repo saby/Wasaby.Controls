@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.FilterSelect',
         * @public
         */
 
-       var FilterSelect = CompoundControl.extend([ItemsControlMixin], {
+       var FilterSelect = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.FilterSelect.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {

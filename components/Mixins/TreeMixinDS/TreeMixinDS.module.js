@@ -260,6 +260,16 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          return filter;
       },
 
+       /**
+        * Раскрывает узел (папку) по переданному идентификатору
+        * @param {String} key Идентификатор раскрываемого узла
+        * @remark
+        * Метод используют для программного управления видимостью содержимого узла в общей иерархии.
+        * Чтобы закрыть узел по переданному идентификатору, используйте метод {@link collapseNode}.
+        * Чтобы изменять видимость содержимого узла в зависимости от его текущего состояния, используйте метод {@link toggleNode}.
+        * @see collapseNode
+        * @see toggleNode
+        */
       expandNode: function (key) {
 
          if(!this._options.openedPath[key]) {

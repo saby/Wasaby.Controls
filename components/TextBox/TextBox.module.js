@@ -1,20 +1,22 @@
 define('js!SBIS3.CONTROLS.TextBox', [
+   'Core/EventBus',
    'Core/constants',
    'js!SBIS3.CONTROLS.TextBoxBase',
    'html!SBIS3.CONTROLS.TextBox',
+   'html!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/detection",
    "Core/helpers/functional-helpers"
 ], function(
+    EventBus,
     constants,
     TextBoxBase,
     dotTplFn,
+    textFieldWrapper,
     TemplateUtil,
     Sanitize,
     dcHelpers,
-    cDetection,
     fHelpers) {
 
    'use strict';
@@ -62,6 +64,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+      	_fromTouch: false,
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
@@ -69,7 +72,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _fromTab: true,
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
+         _textFieldWrapper: null,
          _options: {
+            textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
@@ -152,7 +157,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
+         this._inputField = this._getInputField();
          this._container.bind('keypress', this._keyPressBind.bind(this))
                         .bind('keydown', this._keyDownBind.bind(this))
                         .bind('keyup', this._keyUpBind.bind(this));
@@ -162,7 +167,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  var text = self._inputField.val(),
+                  var text = self._getInputValue(),
                      newText = '';
                   if (self._options.inputRegExp){
                      var regExp = new RegExp(self._options.inputRegExp);
@@ -202,6 +207,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
+         this._container.on('touchstart', function(){
+            this._fromTouch = true;
+         }.bind(this));
+
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
             this._inputField.attr('placeholder', '');
             this._createCompatPlaceholder();
@@ -232,7 +241,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _checkInputVal: function() {
-         var text = this._inputField.val();
+         var text = this._getInputValue();
 
          if (this._options.trim) {
             text = String.trim(text);
@@ -276,8 +285,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
-         if (this._inputField.val() != text) {
-            this._inputField.val(text || '');
+         if (this._getInputValue() != text) {
+            this._setInputValue(text || '');
          }
       },
 
@@ -350,7 +359,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyUpBind: function(event) {
-         var newText = this._inputField.val(),
+         var newText = this._getInputValue(),
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
          if (this._options.text !== newText && !textsEmpty){
             this._setTextByKeyboard(newText);
@@ -363,6 +372,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setTextByKeyboard: function(newText){
          this.setText(newText);
+      },
+
+      _getInputValue: function() {
+         return this._inputField.val();
+      },
+      _setInputValue: function(value) {
+         this._inputField.val(value);
+      },
+      _getInputField: function() {
+         return $('.js-controls-TextBox__field', this.getContainer().get(0));
       },
 
       _keyPressBind: function(event) {
@@ -401,15 +420,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _inputFocusOutHandler: function(e) {
-         if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocusOut');
+            this._fromTouch = false;
          }
          this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
-         if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocus');
          }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();

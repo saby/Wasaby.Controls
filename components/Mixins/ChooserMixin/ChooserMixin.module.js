@@ -20,6 +20,8 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    function recordConverter(rec) {
       var idProp;
 
+      /** !ВНИМАНИЕ! rec - $ws.proto.Record **/
+
       if(rec.hasColumn(this._options.idProperty)) {
          idProp = this._options.idProperty;
       }
@@ -27,7 +29,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
       return new Model({
          rawData: rec.toJSON(),
          adapter: new SbisAdapter(),
-         idProperty: idProp ? idProp : rec.getIdProperty()
+         idProperty: idProp ? idProp : rec.getKeyField()
       })
    }
 

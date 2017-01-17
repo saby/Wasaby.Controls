@@ -995,7 +995,8 @@ define(
 
       _updateTextFromModel: function() {
          var formatModel = this._getFormatModel();
-         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined") ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
+         //Если форматное поле не заполено, то в опцию text не нужно класть пустую маску.
+         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {
