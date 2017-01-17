@@ -622,6 +622,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
+            //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
+            this._removeFormat('fontsize')
             this._tinyEditor.execCommand('FontSize',false,  size + 'px');
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change

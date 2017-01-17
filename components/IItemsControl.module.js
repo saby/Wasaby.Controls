@@ -50,20 +50,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        *    });
        * </pre>
        */
-      /**
-       * @event onBeforeDataLoad Перед загрузкой данных
-       * @remark
-       * Событие сработает перед запросом к источнику данных
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @example
-       * <pre>
-       *    myView.subscribe('onBeforeDataLoad', function(event, error){
-       *       var filter = this.getFilter();
-       *       filter['myParam'] = myValue;
-       *       this.setFilter(filter, true)
-       *    });
-       * </pre>
-       */
+
       /**
        * @event onItemsReady при готовности экземпляра коллекции iList
        * @remark
@@ -94,7 +81,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
        * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
        * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
-       * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
+       * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
        * @example
        * <pre>
        *     define( 'SBIS3.MyArea.MyComponent',
@@ -123,7 +110,6 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        * @see dataSource
        * @see getDataSource
        * @see items
-       * @see onBeforeDataLoad
        * @see onDataLoad
        * @see onDataLoadError
        * @see onItemsReady

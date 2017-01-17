@@ -1184,7 +1184,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var record, parentKey,
             hierarchy = [];
          if (items && items.getCount()){
-            do {
+            // пока не дойдем до корня (корень может быть undefined)
+            while (key && key != this.getRoot()) {
                record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
@@ -1197,8 +1198,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   });
                }
                key = parentKey;
-            // пока не дойдем до корня (корень может быть undefined)
-            } while (key && key != this.getRoot());
+            }
          }
          return hierarchy;
       },

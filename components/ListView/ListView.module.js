@@ -1495,7 +1495,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
           *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
           * </ol>
-          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
           * Если источник данных не установлен, производит перерисовку установленного набора данных.
           * @return {Deferred}
           * @example
@@ -2448,7 +2448,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._infiniteScrollState.mode == 'up');
+            //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+               this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
