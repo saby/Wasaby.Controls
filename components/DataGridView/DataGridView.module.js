@@ -296,7 +296,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _options: {
-            _headTpl: headTpl,
             _footTpl: footTpl,
             _colGroupTpl: colgroupTpl,
             _defaultCellTemplate: cellTemplate,
@@ -376,6 +375,34 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @see getColumns
              */
             columns: [],
+            /**
+             * @cfg {String} Устанавливает шаблон для шапки таблицы
+             * @remark
+             * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
+             * @example
+             * 1. Подключаем шаблон в массив зависимостей:
+             * <pre>
+             *     define('js!SBIS3.Demo.nDataGridView',
+             *        [
+             *           ...,
+             *           'html!SBIS3.Demo.nDataGridView/resources/headTpl'
+             *        ],
+             *        ...
+             *     );
+             * </pre>
+             * 2. Передаем шаблон в опцию:
+             * <pre class="brush: xml">
+             *     <option name="headTpl" value="html!SBIS3.Demo.nDataGridView/resources/headTpl"></option>
+             * </pre>
+             * 3. Содержимое шаблона должно начинаться с тега thead, для которого установлен атрибут class со значением "controls-DataGridView__thead".
+             * <pre>
+             *    <tr class="controls-DataGridView__thead">
+             *       ...
+             *    </tr>
+             * </pre>
+             * @see showHead
+             */
+            headTpl: headTpl,
             /**
              * @cfg {Boolean} Устанавливает отображение заголовков колонок списка.
              * @example
@@ -644,7 +671,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData = prepareHeadData(this._options);
          headData.columnsScrollPosition = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
-         headMarkup = MarkupTransformer(this._options._headTpl(headData));
+         headMarkup = MarkupTransformer(this._options.headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
@@ -1250,6 +1277,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
+         this.getContainer().toggleClass('controls-DataGridView__emptyTable', !!show);
          if (this._options.emptyHTML && this._options.allowToggleHead) {
             if (this._thead) {
                this._thead.toggleClass('ws-hidden', !!show);

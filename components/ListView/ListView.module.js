@@ -1430,7 +1430,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      elements.push(elem.get(0));
                   }
                   else {
-                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах                      
+                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
                      elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
                      if (elem.length) {
                         elements.push(elem.get(0));
@@ -1496,7 +1496,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
           *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
           * </ol>
-          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
           * Если источник данных не установлен, производит перерисовку установленного набора данных.
           * @return {Deferred}
           * @example
@@ -1737,6 +1737,18 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
+            this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+         },
+
+         _editInPlaceMouseDownHandler: function(event) {
+            // При редактировании по месту нужно делать preventDefault на mousedown, в таком случае фокусы отработают в нужном порядке.
+            // Нативно событийный порядок следующий: mousedown, focus, mouseup, click.
+            // Нам необходимо чтобы mousedown не приводил к focus, иначе ломается поведенчиская логика и при клике на другую запись
+            // редактирование по месту закрывается из-за потери фокуса, а не из-за клика.
+            // Из-за этого возникает следующая ошибка: mousedown был над одним элементом, а по потере фокуса этот элемент сместился и
+            // mousedown уже случился для другого элемента. В итоге click не случается и редактирование другой записи вообще не запускается.
+            // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
+            event.preventDefault();
          },
 
          //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
@@ -1750,6 +1762,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
+               this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
@@ -2375,7 +2388,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
-            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху 
+            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
             } else {
@@ -2383,7 +2396,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setInfiniteScrollState('up');
                   this._scrollLoadNextPage();
                }
-                
+
             }
          },
 
@@ -2436,7 +2449,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._infiniteScrollState.mode == 'up');
+            //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+               this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -3390,10 +3405,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //region moveMethods
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
-          * @param {Array} MovedItems Массив перемещаемых записей
+          * @param {Array} idArray Массив перемещаемых записей
           * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
           */
-         moveRecordsWithDialog: function(movedItems) {
+         moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
                Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
                var
@@ -3403,13 +3418,18 @@ define('js!SBIS3.CONTROLS.ListView',
                      nodeProperty: this._options.nodeProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
-                  items = this.getItems();
-               colHelpers.forEach(movedItems, function(item, i) {
-                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                     movedItems[i] = items.getRecordById(item);
-                  }
-               }, this);
-
+                  items = this.getItems(),
+                  movedItems;
+               if (idArray) {
+                  movedItems = [];
+                  colHelpers.forEach(idArray, function (item, i) {
+                     if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                        movedItems.push(items.getRecordById(item));
+                     } else {
+                        movedItems.push(item);
+                     }
+                  }, this);
+               }
                var  filter = this._notify('onPrepareFilterOnMove', {});
                action.execute({
                   movedItems: movedItems,

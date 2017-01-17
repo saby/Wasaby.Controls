@@ -95,14 +95,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          this.applySearch(true);
       },
 
-      _startSearch: function(text) {
-         // Если используем автодополнении, то поиск не должен отрабатывать на реестре при наборе с клавиатуры
-         // но должен сбрасываться, если полностью удалили текст с помощью del и backspace
-         if (!this._options.usePicker || !text) {
-            SearchForm.superclass._startSearch.apply(this, arguments);
-         }
-      },
-
       /**
        * Обработчик нажатия клавиши
        * @private

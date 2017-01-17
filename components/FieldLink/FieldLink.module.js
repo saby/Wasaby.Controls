@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        var classes = {
           MULTISELECT: 'controls-FieldLink__multiselect',
           SELECTED: 'controls-FieldLink__selected',
+          SELECTED_SINGLE: 'controls-FieldLink__selected-single',
           INVISIBLE: 'ws-invisible',
           HIDDEN: 'ws-hidden'
        };
@@ -682,14 +683,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
-                 classesToAdd = ['controls-FieldLink'];
+                 classesToAdd = ['controls-FieldLink'],
+                 selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
                 classesToAdd.push(classes.MULTISELECT);
              }
 
-             if(cfg.selectedKeys.length || cfg.selectedKey !== null) {
+             if(selectedKeysLength || cfg.selectedKey !== null) {
                 classesToAdd.push(classes.SELECTED);
+
+                if(selectedKeysLength === 1 || !selectedKeysLength) {
+                   classesToAdd.push(classes.SELECTED_SINGLE);
+                }
              }
 
              /* className вешаем через modifyOptions,
@@ -725,7 +731,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       2) Множественный выбор в задизейбленом состоянии с количеством элементов > 1,
                          сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
                          поэтому считать надо. */
-                   if (needResizeInput || (isEnabled && this._options.multiselect && itemsCount === 1)) {
+                   if (needResizeInput) {
                       additionalWidth = isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0;
 
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
@@ -790,10 +796,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**************************************************************/
 
           _observableControlFocusHandler: function() {
-             /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
-              элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
-              хотя ему отображаться не надо. */
-             if(!this._isInputVisible()) {
+             /* Не надо обрабатывать приход фокуса:
+                1) если у нас есть выбрынные элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
+                   хотя ему отображаться не надо.
+                2) Нативный фокус на кнопке открытия справочника (значит кликнули по кнопке, и сейчас откроется справочник)   */
+             if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
@@ -958,6 +965,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              this._toggleDropAll(keysArrLen > 1);
              this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys);
+             this.getContainer().toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
 
              if(!this._options.alwaysShowTextBox) {
 

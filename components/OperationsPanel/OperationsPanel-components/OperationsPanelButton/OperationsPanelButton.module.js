@@ -72,9 +72,11 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
       _changeCheckedByClick: function() {
          // check-аем кнопку сразу при нажатии
          // uncheck-аем когда панель анимирует своё закрыти, по событию от панели (см. метод _onTogglePanel)
-         if (!this.isChecked()) {
-            this.setChecked(true);
-         }
+         //Валера убрал анимацию. В operationsPanel в методе _setVisibility есть todo, по которому анимация должна вернуться. как вернется, нужно заюзать этот метод
+         //Выписал задачу https://inside.tensor.ru/opendoc.html?guid=cc3fc92b-c244-470b-8ccf-8d6651344e82&des=
+//         if (!this.isChecked()) {
+//            this.setChecked(true);
+//         }
       },
       /**
        * Метод установки или замены связанной панели массовых операций, установленной в опции {@link linkedPanel}.

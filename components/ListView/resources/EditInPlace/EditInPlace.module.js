@@ -51,9 +51,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown)
-                              .bind('keyup', this._onKeyUp.bind(this));
+                              .bind('keyup', this._onKeyUp.bind(this))
+                              .bind('mousedown', this._onMouseDown.bind(this));
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
                this._editors = this.getContainer().find('.controls-editInPlace__editor');
+            },
+
+            _onMouseDown: function(event) {
+               // Не даем всплывать событию mousedown выше контейнера редактирования.
+               // Это связано с особенностями обработки фокуса родительскими компонентами.
+               // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
+               event.stopPropagation();
             },
 
             _onChildControlFocusOut: function() {
@@ -275,7 +283,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             destroy: function() {
-               this._container.unbind('keypress keydown keyup');
+               this._container.unbind('keypress keydown keyup mousedown');
                EditInPlace.superclass.destroy.call(this);
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
