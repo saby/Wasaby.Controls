@@ -2175,7 +2175,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _onCollectionReplace: function(items) {
          var i, needToRevive = false;
          for (i = 0; i < items.length; i++) {
-            needToRevive = needToRevive || this._changeItemProperties(items[i]);
+            needToRevive = this._changeItemProperties(items[i]) || needToRevive;
          }
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;
