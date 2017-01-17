@@ -795,10 +795,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**************************************************************/
 
           _observableControlFocusHandler: function() {
-             /* Не надо обрабатывать приход фокуса, если у нас есть выбрынные
-              элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
-              хотя ему отображаться не надо. */
-             if(!this._isInputVisible()) {
+             /* Не надо обрабатывать приход фокуса:
+                1) если у нас есть выбрынные элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
+                   хотя ему отображаться не надо.
+                2) Нативный фокус на кнопке открытия справочника (значит кликнули по кнопке, и сейчас откроется справочник)   */
+             if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
