@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    "Core/ConsoleLogger",
    'js!SBIS3.CONTROLS.Link',
-   'css!SBIS3.CONTROLS.TreeDataGridView'
+   'css!SBIS3.CONTROLS.TreeDataGridView',
+   'css!SBIS3.CONTROLS.TreeView'
 ], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
