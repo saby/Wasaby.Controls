@@ -303,6 +303,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._initializePicker();
             }
          },
+         init: function(){
+            DropdownList.superclass.init.apply(this, arguments);
+            //Если установлен сорс - нужно сделать запрос на БЛ. Логика itemsControlMixin'a здесь не подходит, т.к. если были установлены итемы - то стрельнет redraw
+            if (this._dataSource){
+               this.reload();
+            }
+         },
          _modifyOptions: function(cfg, parsedCfg) {
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
