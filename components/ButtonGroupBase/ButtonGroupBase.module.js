@@ -17,6 +17,9 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
     *
     * @mixes SBIS3.CONTROLS.ItemsControlMixin
     *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+    *
     * @public
     * @author Крайнов Дмитрий Олегович
     */

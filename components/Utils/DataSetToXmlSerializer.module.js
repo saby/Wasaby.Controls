@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             object.each(function(record){
                self._serializeObject(record, currentElement, document, columns);
             });
-
+            self._serializeResults(object, currentElement, document);
          }
          else if (object && (typeof object.getRawData === 'function') && object.getRawData()){
             var key = object.getId();
@@ -128,6 +128,22 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             for (var k = 0, cnt = columns.length; k < cnt; k++) {
                this._serializeField(columns[k], object, recordElement, document);
             }
+         }
+      },
+      _serializeResults: function(object, recordSetElement, document){
+         var
+            self = this,
+            meta = object.getMetaData(),
+            results = meta ? meta.results : null;
+         if( results ) {
+            var currentElement;
+            recordSetElement.appendChild(currentElement = document.createElement('Results'));
+            results.each(function(field){
+               var column = {
+                  'field': field
+               };
+               self._serializeField(column, results, currentElement, document);
+            });
          }
       },
       _serializeField: function(column, record, recordElement, document){

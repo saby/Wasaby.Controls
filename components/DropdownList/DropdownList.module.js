@@ -303,6 +303,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._initializePicker();
             }
          },
+         init: function(){
+            DropdownList.superclass.init.apply(this, arguments);
+            //Если установлен сорс - нужно сделать запрос на БЛ. Логика itemsControlMixin'a здесь не подходит, т.к. если были установлены итемы - то стрельнет redraw
+            if (this._dataSource){
+               this.reload();
+            }
+         },
          _modifyOptions: function(cfg, parsedCfg) {
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
@@ -328,7 +335,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload();
             this._bindItemSelect();
 
             if(this._isHoverMode()) {
@@ -631,8 +637,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (item) {
                if (!this._options.emptyValue){
                   this._defaultId = item.getId();
+                  this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                }
-               this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
             }
          },
          _setSelectedItems: function(){
@@ -653,7 +659,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 id;
 
             if (this._isEnumTypeData()){
-               id = items.get();
+               id = 0; //Берем первую запись из enum, она под индексом 0
             }
             else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
                id = null;

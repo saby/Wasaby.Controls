@@ -30,6 +30,9 @@ define('js!SBIS3.CONTROLS.Slider',
           *
           * @author Борисов Петр Сергеевич
           *
+          * @ignoreEvents onAfterLoad onChange onStateChange
+          * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+          *
           * @css controls-Slider__withBorder Устанавливает отображение границы вокруг слайдера.
           *
           * @demo SBIS3.CONTROLS.Demo.SliderDemo
@@ -134,8 +137,8 @@ define('js!SBIS3.CONTROLS.Slider',
                   start: this._container.find('.controls-Slider__point__start'),
                   end: this._container.find('.controls-Slider__point__end')
                };
-               this._pointsContainers.start.on('mousedown', this._initDrag.bind(this));
-               this._pointsContainers.end.on('mousedown', this._initDrag.bind(this));
+               this._pointsContainers.start.on('mousedown touchstart', this._initDrag.bind(this));
+               this._pointsContainers.end.on('mousedown touchstart', this._initDrag.bind(this));
                //если заданы начальные и конечные значения то необходимо их отрисовать и нотифицировать об этом
                //если значения не заданы то точки встанут в начало и конец а start/endValue будут пустыми
                if (this._options.startValue || this._options.endValue) {
@@ -291,16 +294,18 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _endDragHandler: function(DragObject) {
-               var
-                  instance = DragObject.getOwner();
-               if (instance.isEnabled()) {
-                  if ($(DragObject.getTarget()).hasClass('controls-Slider__point__start')) {
-                     instance.setStartValue(instance._startValue);
-                  } else {
-                     instance.setEndValue(instance._endValue);
+               if (DragObject.getOwner() === this) {
+                  var
+                     instance = DragObject.getOwner();
+                  if (instance.isEnabled()) {
+                     if ($(DragObject.getTarget()).hasClass('controls-Slider__point__start')) {
+                        instance.setStartValue(instance._startValue);
+                     } else {
+                        instance.setEndValue(instance._endValue);
+                     }
                   }
+                  instance._dragInProcess = false;
                }
-               instance._dragInProcess = false;
             }
          });
       return Slider;

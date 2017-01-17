@@ -13,6 +13,8 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        'use strict';
 
+       var MULTISELECT_CLASS = 'controls-SelectorWrapper__multiselect';
+
        /**
         * Описание логики выбора из диалога/панели.
         * @class SBIS3.CONTROLS.SelectorController
@@ -70,6 +72,15 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
           },
 
+          _modifyOptions: function() {
+             var opts = SelectorController.superclass._modifyOptions.apply(this, arguments);
+             opts.className += ' controls-SelectorController';
+             if(opts.multiselect) {
+                opts.className += ' ' + MULTISELECT_CLASS;
+             }
+             return opts;
+          },
+
           /**
            * Проставляет выбранные элементы, когда компонент выбора проинициализирован
            * @param chooserWrapper
@@ -91,10 +102,11 @@ define('js!SBIS3.CONTROLS.SelectorController', [
            */
           _selectorWrapperSelectionChanged: function(difference, idProperty) {
              var currentItems = this._options.selectedItems,
+                 multiselect = this.getProperty('multiselect'),
                  self = this;
 
              function onChangeSelection() {
-                if(self._selectButton && self._options.multiselect) {
+                if(self._selectButton && multiselect) {
                    self._selectButton.show();
                 }
              }
@@ -109,6 +121,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              if(difference.added.length) {
                 collectionHelpers.forEach(difference.added, function(item) {
                    var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
+
+                   if(currentItems.getCount() && !multiselect && index === -1) {
+                      index = 0;
+                   }
 
                    if(index === -1) {
                       currentItems.add(item);
