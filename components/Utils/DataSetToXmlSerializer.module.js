@@ -68,9 +68,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          var
                self = this,
                rp = this._reportPrinter,
-               xslDoc = new $ws.proto.XMLDocument({ name: xsl }).getDocument(),
                xmlDoc = this.serialize(dataSet, rp.getColumns());
-         return rp.prepareReport(dataSet, xslDoc, undefined, xmlDoc).addErrback(function(error){
+         return rp.prepareReport(dataSet, xsl, undefined, xmlDoc).addErrback(function(error){
             fcHelpers.alert(error, { checkAlreadyProcessed: true }, self);
             return error;
          });
