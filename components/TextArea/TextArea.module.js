@@ -3,9 +3,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "js!SBIS3.CONTROLS.TextBoxBase",
    "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
-   "Core/helpers/dom&controls-helpers",
-   "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin"
-], function( constants,TextBoxBase, dotTplFn, strHelpers, dcHelpers) {
+   "Core/IoC"
+], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC) {
 
    'use strict';
 
@@ -88,28 +87,18 @@ define('js!SBIS3.CONTROLS.TextArea', [
              */
             minLinesCount: 0,
             /**
-             * @typedef {Object} AutoResize
-             * @property {Boolean} [state=false] Включёно/выключено автоматическое подстраивание по высоте.
-             * @property {Number} maxLinesCount Максимальное количество строк.
-             */
-            /**
-             * @cfg {AutoResize} Автоматическое подстраивание по высоте, если текст не помещается
+             * @cfg {Number} Максимальное количество строк
              * @example
              * <pre>
-             *    <options name="autoResize">
-             *        <option name="state">true</option>
-             *        <option name="maxLinesCount">10</option>
-             *    </options>
+             *     <option name="maxLinesCount">4</option>
              * </pre>
              * @remark
-             * В данной опции можно:
-             * <ul>
-             *    <li>включить автоматическое изменение высоты многострочного поля ввода, например, при нехватке строк;</li>
-             *    <li>задать максимальное количество строк.</li>
-             * </ul>
-             * По достижению максимального количества строк поле ввода больше не будет увеличиваться по высоте, и
-             * появится вертикальная полоса прокрутки.
+             * При несовпадении максимального и минимального количества строк у поля ввода включится автовысота
              * @see minLinesCount
+             */
+            maxLinesCount: 4,
+            /**
+             * @deprecated
              */
             autoResize: {},
             /**
@@ -126,7 +115,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _modifyOptions: function(cfg) {
          var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
-         newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.autoResize.maxLinesCount);
+         if (cfg.autoResize && cfg.autoResize.maxLinesCount) {
+            cfg.maxLinesCount = cfg.autoResize.maxLinesCount;
+            IoC.resolve('ILogger').log('TextArea', 'Опция cfg.autoResize устарела - используйте maxLinesCount');
+         }
+         newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.maxLinesCount);
          newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled);
          return newCfg;
       },
@@ -175,10 +168,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       init :function(){
          TextArea.superclass.init.call(this);
-         var self = this;
-         if (this._options.placeholder) {
-            this._createCompatPlaceholder();
-         }
+         this._initPlaceholder();
       },
 
       _getElementToFocus: function() {
@@ -248,20 +238,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
         * @see placeholder
         */
       setPlaceholder: function(text){
-          if (!this._compatPlaceholder) {
-             this._createCompatPlaceholder();
-          }
           this._compatPlaceholder.text(text || '');
       },
-      _createCompatPlaceholder : function() {
+      _initPlaceholder : function() {
          var self = this;
-         this._compatPlaceholder = $('<div class="controls-TextArea__placeholder">' + this._options.placeholder + '</div>');
-         this._updateCompatPlaceholderVisibility();
-         this._inputField.after(this._compatPlaceholder);
-         this._compatPlaceholder.css({
-            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
-            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
-         });
+         this._compatPlaceholder = $('.controls-TextArea__placeholder', this._container.get(0));
          this._compatPlaceholder.click(function(){
             if (self.isEnabled()) {
                self._inputField.get(0).focus();
@@ -269,9 +250,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          });
       },
       _updateCompatPlaceholderVisibility: function() {
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!this._options.text);
-         }
+         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text);
       },
        /**
         * Метод установки минимального количества строк.
@@ -286,7 +265,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
         */
        setMinLinesCount: function (count) {
           this._options.minLinesCount = parseInt(count, 10);
-          var hClasses = generateClassesName(this._options.minLinesCount, this._options.autoResize.maxLinesCount);
+          var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
           this._inputField.get(0).className = 'controls-TextArea__inputField ' + hClasses;
        }
    });

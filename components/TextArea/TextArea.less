@@ -11,7 +11,8 @@
    .box-sizing(border-box);
 
    .controls-TextArea__inputField {
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       font: @text-area-field-font;
       color: @text-area-field-text-color;
       display: block;
@@ -87,6 +88,8 @@
   .controls-TextArea__placeholder {
     position: absolute;
     top: 0;
+    left: @text-area-left-padding;
+    right: @text-area-right-padding;
     .text-overflow();
     color: @text-area-placeholder-color;
     font: @text-area-compat-placeholder-font;
