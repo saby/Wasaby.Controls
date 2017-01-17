@@ -169,6 +169,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
+      _getSearchBreadCrumbsWidth: function(){
+      	var firstCol = $('td:first', this._getItemsContainer()),
+      	firstColWidth = this._options.multiselect ? firstCol.width() : 0;
+      		secondCol = firstCol.next('td'),
+      		cellPadding = secondCol.outerWidth() - secondCol.width();
+      	return this.getContainer().width() - cellPadding - firstColWidth;
+      },
+
       redraw: function() {
          /* Перед перерисовкой скроем стрелки редактирования, иначе будет мограние,
             т.к. после отрисовки данные полностью могу измениться */
@@ -177,6 +185,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          /*redraw может позваться, когда данных еще нет*/
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
+         }
+         //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
+         if (this._options.startScrollColumn && this._isSearchMode()){
+         	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
          }
       },
 
