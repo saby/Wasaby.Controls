@@ -2448,7 +2448,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._infiniteScrollState.mode == 'up');
+            //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+               this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
