@@ -6,10 +6,9 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    "Core/core-extend",
    "Core/helpers/string-helpers",
    "Core/core-functions",
-   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
-   "js!SBIS3.CONTROLS.ListView"
+   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
 ],
-    function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, ListView) {
+    function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil) {
    'use strict';
 
    /* Вспомогательный класс, для посчёта времени запроса.
@@ -31,6 +30,11 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          return new Date().getTime() - this.startTime.getTime();
       };
    }
+
+   /* Обобщение механизма ожидания делается по задаче
+       https://inside.tensor.ru/opendoc.html?guid=7ef15c0d-c70e-4956-ba97-7f9e6d0d4f15&des=
+       Задача в разработку 25.03.2016 нужно обобщить появление ромашки ожидания. в FormController, в ListView логика ожидания должна быть … */
+   var INDICATOR_DELAY = 750;
 
    var KbLayoutRevertObserver = cExtend({}, {
       $protected: {
@@ -180,7 +184,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                viewFilter[this.getParam()] = revertedSearchValue;
                toggleItemsEventRaising(false);
                /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
-               if(this._getTimer().getTime() > ListView.INDICATOR_DELAY) {
+               if(this._getTimer().getTime() > INDICATOR_DELAY) {
                   view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
                }
                this._getTimer().stop();

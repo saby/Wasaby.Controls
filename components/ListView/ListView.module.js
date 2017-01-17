@@ -3689,6 +3689,5 @@ define('js!SBIS3.CONTROLS.ListView',
          }
       });
 
-      ListView.INDICATOR_DELAY = INDICATOR_DELAY;
       return ListView.mixin([BreakClickBySelectMixin]);
    });
