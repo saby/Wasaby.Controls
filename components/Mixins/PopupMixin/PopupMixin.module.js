@@ -170,7 +170,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
-            isHint: true
+
+            isHint: true,
+
+            /* task: 1173302106
+             im.dubrovin: временно добавлена возможнсть указывать родительский контейнер, в  последующем будет заменено на TargetRelativePosition */
+            /**
+             * @cfg jquery элемент в котором будет находиться всплывашка, если не указан то будет использоваться body
+             */
+            parentContainer: null
          }
       },
 
@@ -214,7 +222,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         container.appendTo('body');
+
+         /* task: 1173302106
+          im.dubrovin: временно добавлена возможнсть указывать родительский контейнер, в  последующем будет заменено на TargetRelativePosition */
+         if(this._options.parentContainer) {
+            container.appendTo(this._options.parentContainer);
+         }else{
+            container.appendTo('body');
+         }
 
          this._saveDefault();
          this._resetToDefault();
@@ -346,11 +361,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                this._notifyOnAlignmentChange();
 
-               this._container.css({
-                  'top': offset.top + 'px',
-                  'left': offset.left + 'px'
-               });
-            } else {
+               /* task: 1173302106
+                im.dubrovin: временно добавлена возможнсть указывать родительский контейнер, в  последующем будет заменено на TargetRelativePosition */
+               this._setCoordinates(offset);
+            } else { 
                if (!this._fixed){
                   var bodyOffset = this._bodyPositioning();
                   this._container.offset(bodyOffset);
@@ -967,6 +981,29 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       getZIndex : function() {
          return this._zIndex;
       },
+
+
+      /* task: 1173302106
+      im.dubrovin: временно добавлена возможнсть указывать родительский контейнер, в  последующем будет заменено на TargetRelativePosition */
+      _setCoordinates: function(offset){
+         if(this._options.parentContainer) {
+            var parentContainerOffset = this._options.parentContainer.offset(),
+               offsetInParent = {
+                  top: offset.top - parentContainerOffset.top,
+                  left: offset.left - parentContainerOffset.left
+               }
+            this._container.css({
+               'top': offsetInParent.top + 'px',
+               'left': offsetInParent.left + 'px'
+            });
+         } else {
+            this._container.css({
+               'top': offset.top + 'px',
+               'left': offset.left + 'px'
+            });
+         }
+      },
+
 
       after: {
          init: function () {
