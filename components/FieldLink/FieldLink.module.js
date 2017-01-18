@@ -515,9 +515,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions, selectionType) {
-             if(this.isPickerVisible()) {
-                this.hidePicker();
-             }
+             this.hidePicker();
+             this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute({
@@ -787,7 +786,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
           _onItemActivateItemsCollection: function(key) {
              this.getSelectedItems(false).each(function(item) {
-                if(item.getId() == key) {
+                if(item.get(this._options.idProperty) == key) {
                    this._notify('onItemActivate', {item: item, id: key});
                 }
              }, this)

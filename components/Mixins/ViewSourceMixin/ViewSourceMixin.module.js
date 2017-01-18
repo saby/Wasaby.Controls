@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
                /* Пока выполнялся запрос - view уже мог успеть уничтожиться или могли загружаться новые данные.
                   В таком случае не трогаем view. */
-               if (!view.isDestroyed() && !view.isLoading()) {
+               if (!view.isDestroyed() && !view.isLoading() && !view.getItems()) { /* Не устанавливаем данные, если они загружаются или уже есть */
                   view._toggleIndicator(false);
                   //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
                   view._notify('onDataLoad', recordSet);
