@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}. При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
      * <br/>
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooserBase
+     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
