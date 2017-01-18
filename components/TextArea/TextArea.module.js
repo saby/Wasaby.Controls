@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
              * При несовпадении максимального и минимального количества строк у поля ввода включится автовысота
              * @see minLinesCount
              */
-            maxLinesCount: 4,
+            maxLinesCount: 0,
             /**
              * @deprecated
              */
