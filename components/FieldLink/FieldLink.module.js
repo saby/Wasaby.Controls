@@ -379,6 +379,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           init: function() {
+             var self = this;
+
              FieldLink.superclass.init.apply(this, arguments);
 
              if(this._options.useSelectorAction) {
@@ -388,22 +390,28 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       последним активным компонентом была кнопка открытия справочника/ссылка открывающая справочник,
                       но по стандарту курсор должен проставиться в поле ввода поля связи после выбора из панели,
                       поэтому руками устанавливаем фокус в поле связи  */
-                   this.setActive(true);
+                   self.setActive(true);
 
                    if(result) {
-                      this.setSelectedItems(result);
+                      self.setSelectedItems(result);
                    }
-                }.bind(this));
+                });
              }
 
              if(this._options.multiselect) {
+                var showAllButton = this.getChildControlByName('showAllButton');
                 /* Открывать выпадашку со всеми выбранными записями надо по событию mousedown, т.к. это единственное событие
                    которое стреляет раньше фокуса. В противном случае автодополнение будет мограть, если включена опиция autoShow,
                    потому что оно показывается по фокусу. */
-                this.getChildControlByName('showAllButton').getContainer().on('mousedown', function () {
-                      this._showAllItems();
-                   }.bind(this)
+                showAllButton.getContainer().on('mousedown', function () {
+                      self._showAllItems();
+                   }
                 );
+
+                /* При клике на кнопку переводим нативный фокус обратно в поле ввода */
+                this.subscribeTo(showAllButton, 'onActivated', function() {
+                   self._getElementToFocus().focus();
+                });
              }
 
              if(this._options.menuSelector) {
