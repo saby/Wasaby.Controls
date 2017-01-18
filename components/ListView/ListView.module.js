@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
+            tplOptions.selectedKey = cfg.selectedKey;
 
             return tplOptions;
          },
