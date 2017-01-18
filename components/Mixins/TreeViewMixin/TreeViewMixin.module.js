@@ -388,6 +388,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          else {
             this._container.empty();
          }
+         this._container.toggleClass('ws-hidden', !more);
       }
    });
 
