@@ -50,7 +50,7 @@ app.post('/theme-preview/apply-theme/', (req, res) => {
                 if (err) {
                     console.error(err);
                 }
-                const grunt = spawn('grunt', ['css']);
+                const grunt = spawn('grunt', ['css', '--theme=online']);
                 grunt.stdout.pipe(process.stdout);
                 grunt.stderr.pipe(process.stderr);
                 grunt.on('close', (code) => {

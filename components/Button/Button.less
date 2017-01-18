@@ -19,19 +19,19 @@
    .box-sizing(border-box);
    .user-select();
 
-   font: @button-font;
-   color: @button-text-color;
-   text-align: @button-text-alignment;
-   min-width: @button-min-width;
-   height: @button-height;
-   line-height: @button-line-height;
+   font: @basic-font;
+   color: @accentual-text-color;
+   text-align: center;
+   min-width: @normal-size;
+   height: @normal-size;
    padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
-   margin: @button-margin;
+   margin: auto;
    overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
-   border: @button-border;
-   .border-radius(@button-border-radius);
-   .box-shadow(@button-shadow);
-   background: @button-bg;
+   border: @tiny-size solid @default-color;
+   .border-radius(@border-radius);
+
+
+   background: @secondary-bg-color;
 
    .controls-Button__text {
       &.controls-Button__emptyCaption {
@@ -39,9 +39,6 @@
       }
    }
 
-   &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
-      background-color: #ffffff;
-   }
 
    // Button's icon
    .controls-Button__icon {
@@ -62,10 +59,10 @@
 
    // Normal primary button
    &.controls-Button__primary {
-      color: @button-primary-text-color;
-      border: @button-primary-border;
-      .box-shadow(@button-primary-shadow);
-      background: @button-primary-bg;
+      color: @accentual-text-color;
+      border: @tiny-size solid @primary-color;
+
+      background: @accentual-bg-color;
 
       &.controls-Click__active {
          color: @button-primary-active-text-color;
@@ -85,7 +82,7 @@
    // Big default button
    &.controls-Button__big {
       font: @button-big-font;
-      color: @button-big-text-color;
+      color: @accentual-text-color;
       text-align: @button-big-text-alignment;
       min-width: @button-big-min-width;
       height: @button-big-height;
@@ -95,7 +92,7 @@
       border: @button-big-border;
       .border-radius(@button-big-border-radius);
       .box-shadow(@button-big-shadow);
-      background: @button-big-bg;
+      background: @secondary-bg-color;
 
       &.controls-Click__active {
          color: @button-big-active-text-color;
@@ -125,10 +122,10 @@
 
       // Big primary button
       &.controls-Button__primary {
-         color: @button-big-primary-text-color;
+         color: @accentual-text-color;
          border: @button-big-primary-border;
          .box-shadow(@button-big-primary-shadow);
-         background: @button-big-primary-bg;
+         background: @accentual-bg-color;
 
          &.controls-Click__active {
             color: @button-big-primary-active-text-color;
@@ -177,35 +174,35 @@
 .ws-is-desktop-platform {
    .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
       &:hover {
-         color: @button-hover-text-color;
+         color: @hovered-text-color;
          border: @button-hover-border;
          .box-shadow(@button-hover-shadow);
-         background: @button-hover-bg;
+         background: @hovered-bg-color;
       }
       // Normal primary button
       &.controls-Button__primary {
          &:hover {
-            color: @button-primary-hover-text-color;
+            color: @primary-hovered-text-color;
             border: @button-primary-hover-border;
             .box-shadow(@button-primary-hover-shadow);
-            background: @button-primary-hover-bg;
+            background: @primary-hovered-bg-color;
          }
       }
     
       &.controls-Button__big {
          &:hover {
-            color: @button-big-hover-text-color;
+            color: @hovered-text-color;
             border: @button-big-hover-border;
             .box-shadow(@button-big-hover-shadow);
-            background: @button-big-hover-bg;
+            background: @hovered-bg-color;
          }
 
          &.controls-Button__primary {
             &:hover {
-               color: @button-big-primary-hover-text-color;
+               color: @primary-hovered-text-color;
                border: @button-big-primary-hover-border;
                .box-shadow(@button-big-primary-hover-shadow);
-               background: @button-big-primary-hover-bg;
+               background: @primary-hovered-bg-color;
             }
          }
       }

@@ -168,10 +168,10 @@
                 enabled: false
             });
 
-            new ToggleButton({
-                element: 'normalDefaultToggleButton',
-                caption: 'Default toggle button'
-            });
+            // new ToggleButton({
+            //     element: 'normalDefaultToggleButton',
+            //     caption: 'Default toggle button'
+            // });
 
             new Button({
                 element: 'normalEllipsisDefaultButton',
@@ -212,23 +212,23 @@
                 enabled: false
             });
 
-            new ToggleButton({
-                element: 'bigDefaultToggleButton',
-                caption: 'Default toggle button'
-            });
+            // new ToggleButton({
+            //     element: 'bigDefaultToggleButton',
+            //     caption: 'Default toggle button'
+            // });
 
-            new ToggleButton({
-                element: 'bigToggleButton16',
-                caption: 'Toggle button icon 16',
-                icon: 'sprite:icon-16 icon-Alert icon-primary',
-                primary: true
-            });
+            // new ToggleButton({
+            //     element: 'bigToggleButton16',
+            //     caption: 'Toggle button icon 16',
+            //     icon: 'sprite:icon-16 icon-Alert icon-primary',
+            //     primary: true
+            // });
 
-            new ToggleButton({
-                element: 'bigToggleButton24',
-                caption: 'Toggle button icon 24',
-                icon: 'sprite:icon-24 icon-Alert icon-primary'
-            });
+            // new ToggleButton({
+            //     element: 'bigToggleButton24',
+            //     caption: 'Toggle button icon 24',
+            //     icon: 'sprite:icon-24 icon-Alert icon-primary'
+            // });
 
             new Button({
                 element: 'bigEllipsisDefaultButton',
@@ -260,25 +260,25 @@
                 enabled: false
             });
 
-            new ToggleButton({
-                element: 'normalPrimaryToggleButton',
-                caption: 'Primary toggle button',
-                primary: true
-            });
+            // new ToggleButton({
+            //     element: 'normalPrimaryToggleButton',
+            //     caption: 'Primary toggle button',
+            //     primary: true
+            // });
 
-            new ToggleButton({
-                element: 'normalTogglePrimaryButton16',
-                caption: 'Primary toggle button icon 16',
-                primary: true,
-                icon: 'sprite:icon-16 icon-Alert icon-attention'
-            });
+            // new ToggleButton({
+            //     element: 'normalTogglePrimaryButton16',
+            //     caption: 'Primary toggle button icon 16',
+            //     primary: true,
+            //     icon: 'sprite:icon-16 icon-Alert icon-attention'
+            // });
 
-            new ToggleButton({
-                element: 'normalTogglePrimaryButton24',
-                caption: 'Primary toggle button icon 24',
-                primary: true,
-                icon: 'sprite:icon-24 icon-Alert icon-attention'
-            });
+            // new ToggleButton({
+            //     element: 'normalTogglePrimaryButton24',
+            //     caption: 'Primary toggle button icon 24',
+            //     primary: true,
+            //     icon: 'sprite:icon-24 icon-Alert icon-attention'
+            // });
 
             new Button({
                 element: 'normalEllipsisPrimaryButton',
@@ -313,11 +313,11 @@
                 enabled: false
             });
 
-            new ToggleButton({
-                element: 'bigPrimaryToggleButton',
-                caption: 'Primary toggle button',
-                primary: true
-            });
+            // new ToggleButton({
+            //     element: 'bigPrimaryToggleButton',
+            //     caption: 'Primary toggle button',
+            //     primary: true
+            // });
 
             new Button({
                 element: 'bigEllipsisPrimaryButton',
@@ -344,29 +344,29 @@
                 icon: 'sprite:icon-24 icon-AddButton icon-primary action-hover'
             });
 
-            new TabButton({
-                element: 'tabButton1',
-                caption: 'Tab button'
-            });
+            // new TabButton({
+            //     element: 'tabButton1',
+            //     caption: 'Tab button'
+            // });
 
-            new TabButton({
-                element: 'tabButton2',
-                caption: 'Disabled tab button',
-                enabled: false
-            });
+            // new TabButton({
+            //     element: 'tabButton2',
+            //     caption: 'Disabled tab button',
+            //     enabled: false
+            // });
 
-            new TabButton({
-                element: 'tabButton3',
-                caption: 'Disabled checked tab button',
-                enabled: false,
-                checked: true
-            });
+            // new TabButton({
+            //     element: 'tabButton3',
+            //     caption: 'Disabled checked tab button',
+            //     enabled: false,
+            //     checked: true
+            // });
 
-            new TabButtons({
-                element: 'tabButtons',
-                items: items,
-                selectedItem: 1
-            });
+            // new TabButtons({
+            //     element: 'tabButtons',
+            //     items: items,
+            //     selectedItem: 1
+            // });
         });
     }
 

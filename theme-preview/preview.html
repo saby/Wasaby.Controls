@@ -19,7 +19,6 @@
          window.wsConfig.nostyle = false;
       })();
    </script>
-
    <link rel="icon" type="image/png" href="https://github.com/cmoneverybody/git-merge-request/blob/master/git.png?raw=true" />
    <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
@@ -34,7 +33,7 @@
 
    <style>
    div#content {
-      width: 80%;
+      width: 50%;
    }
       html, body {
          font-family: 'TensorFont' !important;
@@ -67,7 +66,18 @@
       }
       #sidemenu input {
           display: inline-block;
-    width: 54%;
+          width: 54%;
+          background-color: rgba(51, 51, 51, 0.58) !important;
+          color: #fff;
+          border: 1px solid #333;
+          line-height: 24px;
+          font-size: 1.12rem;
+          padding: 6px;
+          border-bottom-color: rgba(0, 255, 255, 0.62);
+ }
+ #sidemenu input:hover {
+   border: 1px solid #555;
+   border-bottom-color: cyan;
  }
       #TextBox2 {
          width: 100px;
@@ -112,7 +122,7 @@
    display: inline-block;
 }
 #sidemenu {
-   width: 14%;
+   width: 23%;
    padding:8px;
    height: auto;
    background: rgba(0,0,0,.8);
@@ -146,16 +156,50 @@
       <span class="menu_title">primary-color</span>
       <input type="text" id="primary-color">
    </div>
-   <br>
-   <div style="font-size:18px; color: red">Плохие переменные:</div>
    <div class="menu_item">
-      <span class="menu_title">button-hover-bg</span>
-      <input type="text" id="button-hover-bg">
+      <span class="menu_title">accentual-text-color</span>
+      <input type="text" id="accentual-text-color">
    </div>
    <div class="menu_item">
-      <span class="menu_title">button-text-color</span>
-      <input type="text" id="button-text-color">
+      <span class="menu_title">normal-size</span>
+      <input type="text" id="normal-size">
    </div>
+
+   <div class="menu_item">
+      <span class="menu_title">tiny-size</span>
+      <input type="text" id="tiny-size">
+   </div>
+
+   <div class="menu_item">
+      <span class="menu_title">secondary-bg-color</span>
+      <input type="text" id="secondary-bg-color">
+   </div>
+   <div class="menu_item">
+      <span class="menu_title">accentual-bg-color</span>
+      <input type="text" id="accentual-bg-color">
+   </div>
+   <div class="menu_item">
+      <span class="menu_title">hovered-text-color</span>
+      <input type="text" id="hovered-text-color">
+   </div>
+   <div class="menu_item">
+      <span class="menu_title">hovered-bg-color</span>
+      <input type="text" id="hovered-bg-color">
+   </div>
+   <div class="menu_item">
+      <span class="menu_title">border-radius</span>
+      <input type="text" id="border-radius">
+   </div>
+      <div class="menu_item">
+      <span class="menu_title">primary-hovered-text-color</span>
+      <input type="text" id="primary-hovered-bg-color">
+   </div>
+   <div class="menu_item">
+      <span class="menu_title">primary-hovered-text-color</span>
+      <input type="text" id="primary-hovered-text-color">
+   </div>
+
+  
   
 </div>
    <div id="content">
