@@ -79,6 +79,9 @@
             position: static;
             height: auto !important;
             min-height: 0 !important;
+            &.controls-TextArea__disabled-wrapper-empty {
+               height: 0 !important;
+            }
          }
       }
    }
@@ -99,6 +102,9 @@
       text-overflow: ellipsis;
       word-wrap: break-word;
       min-height: @text-box-height - @text-area-top-padding - @text-area-bottom-padding - (@text-area-disabled-border-width * 2);
+      &.controls-TextArea__disabled-wrapper-empty {
+         color: @text-area-placeholder-color;
+      }
    }
   .controls-TextArea__placeholder {
     position: absolute;
