@@ -515,9 +515,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions, selectionType) {
-             if(this.isPickerVisible()) {
-                this.hidePicker();
-             }
+             this.hidePicker();
+             this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute({
