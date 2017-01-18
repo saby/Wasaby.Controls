@@ -85,6 +85,8 @@ define('js!SBIS3.CONTROLS.ListView',
             before: 'before'
          };
 
+      var INDICATOR_DELAY = 750;
+
       /**
        * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
@@ -2771,7 +2773,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                      ajaxLoader.removeClass('ws-hidden');
                   }
-               }, 750);
+               }, INDICATOR_DELAY);
             }
             else {
                ajaxLoader.addClass('ws-hidden');
