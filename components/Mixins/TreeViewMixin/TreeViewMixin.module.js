@@ -280,16 +280,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             return parentFunc.call(this, items, notCollapsed, groupId);
          },
          /**
-          * Проверяет, является ли $-элемент визуальным отображением элемента коллекции
-          * @param parentFunc
-          * @param elem
-          * @returns {*|boolean}
-          * @private
-          */
-         _isViewElement: function(parentFunc, elem) {
-            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(cInstance.instanceOfModule(elem.wsControl(), 'SBIS3.CONTROLS.BreadCrumbs'));
-         },
-         /**
           * Обработка изменения item property
           * @param item
           * @param property

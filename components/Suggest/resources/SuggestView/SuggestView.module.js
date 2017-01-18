@@ -112,6 +112,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
              var tabControl = this.getChildControlByName('SuggestTabControl'),
                  tabButtons = this.getChildControlByName('TabButtons'),
                  switchableArea = this.getChildControlByName('SwitchableArea'),
+                 self = this,
                  searchParam, lastSearchParam, lastActiveView;
 
              function getActiveView() {
@@ -126,30 +127,29 @@ define('js!SBIS3.CONTROLS.SuggestView',
                 return tabControl.getSelectedKey();
              }
 
-             this._tabControl = tabControl;
-             this._activeView = getActiveView();
-             searchParam = getSearchParam();
+             function tabChange() {
+                self._activeView = getActiveView();
+                searchParam = getSearchParam();
+                self._toggleDelegateEvents(true);
+                self.sendCommand('changeSearchParam', searchParam);
+             }
 
-             this._toggleDelegateEvents(true);
+             this._tabControl = tabControl;
+             tabChange();
 
              tabControl.subscribe('onSelectedItemChange', function() {
                 lastSearchParam = searchParam;
-                lastActiveView = this._activeView;
+                lastActiveView = self._activeView;
 
-                this._toggleDelegateEvents(false);
+                self._toggleDelegateEvents(false);
 
-                this._activeView = getActiveView();
-                searchParam = getSearchParam();
-
-                this._toggleDelegateEvents(true);
-
-                this.sendCommand('changeSearchParam', searchParam);
+                tabChange();
 
                 /* Чтобы при смене вкладки не делать лишний запрос, если фильтр не поменялся */
-                if(lastActiveView.getFilter()[lastSearchParam] !== this._activeView.getFilter()[searchParam]) {
-                   this.sendCommand('applySearch', true);
+                if(lastActiveView.getFilter()[lastSearchParam] !== self._activeView.getFilter()[searchParam]) {
+                   self.sendCommand('applySearch', true);
                 }
-             }.bind(this));
+             });
           },
 
           /* Т.к. кнопка 'Показать всё' отображается для каждого списка отдельно,
@@ -231,8 +231,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
              this.getActiveView().setFilter(filter, noLoad);
           },
 
-          getFilter: function(filter, noLoad) {
-             this.getActiveView().getFilter();
+          getFilter: function() {
+             return this.getActiveView().getFilter();
           },
 
           setSorting: function(sorting, noLoad) {
@@ -244,7 +244,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
           },
 
           reload: function() {
-             this.getActiveView().reload();
+             return this.getActiveView().reload();
           },
 
           setDataSource: function(dataSource, noLoad) {
@@ -259,12 +259,32 @@ define('js!SBIS3.CONTROLS.SuggestView',
              return this.getActiveView()._hasNextPage(hasMore, offset);
           },
 
+          setItemTpl: function(itemTpl) {
+             this.getActiveView().setItemTpl(itemTpl);
+          },
+
+          getItemTpl: function() {
+             return this.getActiveView().getProperty('itemTpl');
+          },
+
+          setIdProperty: function() {
+             this.getActiveView().setIdProperty(idProperty);
+          },
+
+          getIdProperty: function() {
+             return this.getActiveView().getProperty('idProperty');
+          },
+
+          setDisplayProperty: function(displayProperty) {
+             this.getActiveView().setDisplayProperty(displayProperty);
+          },
+
           //endregion SBIS3.CONTROLS.IItemsControl
 
           //region SBIS3.CONTROLS.DecorableMixin
 
-          setHighlightText: function(text) {
-             this.getActiveView().setHighlightText(text);
+          setHighlightText: function(text, redraw) {
+             this.getActiveView().setHighlightText(text, redraw);
           },
 
           setHighlightEnabled: function(enabled) {
@@ -277,6 +297,14 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           setInfiniteScroll: function(type, noLoad) {
              this.getActiveView().setInfiniteScroll(type, noLoad);
+          },
+
+          getColumns: function() {
+             return this.getActiveView().getColumns();
+          },
+
+          setColumns: function(columns) {
+             this.getActiveView().setColumns(columns);
           }
 
           //endregion SBIS3.CONTROLS.ListView

@@ -1,0 +1,6 @@
+<input class="controls-TextBox__field js-controls-TextBox__field{{? it.textTransform == 'uppercase'}} controls-TextBox__field-uppercase {{?}}{{? it.textTransform == 'lowercase'}} controls-TextBox__field-lowercase {{?}}" type="text" autocomplete="off"
+        {{? it.text }} value="{{? it.numberFractDigits && !it.onlyInteger}}{{=parseFloat(it.text).toFixed(it.numberFractDigits)}}{{??}}{{!it.text}}{{?}}"{{?}}
+        {{? (it.placeholder || it.placeholder == 0) && it.enabled }} placeholder="{{=$ws.helpers.htmlToText(it.placeholder + '')}}"{{?}}
+        {{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}
+        {{? !it.enabled }} readonly="readonly"{{?}}
+        />

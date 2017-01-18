@@ -250,8 +250,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
     *
-    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
-    *
     * @control
     * @public
     * @category Lists
@@ -690,9 +688,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _bindHead: function() {
          if (!this._thead) {
             // при фиксации заголовка таблицы в шапке реальный thead перемещён в шапку, а в контроле лежит заглушка
-            this._thead = $('.controls-DataGridView__thead', this._container.get(0));
+            this._thead = $('>.controls-DataGridView__table>.controls-DataGridView__thead', this._container.get(0));
          }
-         this._colgroup = $('.controls-DataGridView__colgroup', this._container.get(0));
+         this._colgroup = $('>.controls-DataGridView__table>.controls-DataGridView__colgroup', this._container.get(0));
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
          }
@@ -1251,6 +1249,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
+         this.getContainer().toggleClass('controls-DataGridView__emptyTable', !!show);
          if (this._options.emptyHTML && this._options.allowToggleHead) {
             if (this._thead) {
                this._thead.toggleClass('ws-hidden', !!show);

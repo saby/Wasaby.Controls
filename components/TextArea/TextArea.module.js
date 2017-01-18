@@ -208,6 +208,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
          else {
             $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
             this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
+            if (!this._options.text) {
+               $('.controls-TextArea__disabled-wrapper', this._container.get(0)).empty();
+               $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('controls-TextArea__disabled-wrapper-empty');
+            }
          }
       },
 

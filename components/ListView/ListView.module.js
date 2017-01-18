@@ -87,6 +87,8 @@ define('js!SBIS3.CONTROLS.ListView',
             before: 'before'
          };
 
+      var INDICATOR_DELAY = 750;
+
       /**
        * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
        * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
@@ -115,7 +117,8 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        *
-       * @ignoreEvents onAfterLoad
+       * @ignoreEvents onAfterLoad onChange onStateChange
+       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
        *
        * @control
        * @public
@@ -1404,12 +1407,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
                         var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
 
-                        var windowOptions = ($ws._const.defaultOptions || {})['SBIS3.CORE.Window'] || {};
+                        var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
                         //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
                         //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
                         //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
                         if(windowOptions.animatedWindows){
-                           $ws.helpers.message(message);
+                           fcHelpers.message(message);
                         }
                         else {
                            InformationPopupManager.showMessageDialog({
@@ -1439,7 +1442,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      elements.push(elem.get(0));
                   }
                   else {
-                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах                      
+                     //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
                      elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
                      if (elem.length) {
                         elements.push(elem.get(0));
@@ -1544,7 +1547,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass.redrawItem.apply(this, arguments);
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
             this._drawSelectedItems(this.getSelectedKeys());
-            this._drawSelectedItem(this.getSelectedKey());
+            this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
@@ -1746,6 +1749,18 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
+            this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+         },
+
+         _editInPlaceMouseDownHandler: function(event) {
+            // При редактировании по месту нужно делать preventDefault на mousedown, в таком случае фокусы отработают в нужном порядке.
+            // Нативно событийный порядок следующий: mousedown, focus, mouseup, click.
+            // Нам необходимо чтобы mousedown не приводил к focus, иначе ломается поведенчиская логика и при клике на другую запись
+            // редактирование по месту закрывается из-за потери фокуса, а не из-за клика.
+            // Из-за этого возникает следующая ошибка: mousedown был над одним элементом, а по потере фокуса этот элемент сместился и
+            // mousedown уже случился для другого элемента. В итоге click не случается и редактирование другой записи вообще не запускается.
+            // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
+            event.preventDefault();
          },
 
          //TODO: Сейчас ListView не является родителем редактирования по месту, и при попытке отвалидировать
@@ -1759,6 +1774,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
+               this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
@@ -2264,7 +2280,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if(itemsActions) {
                   target = self.getItemsActions().getTarget();
                   targetHash = target.container.data('hash');
-                  $ws.helpers.forEach(items, function (item) {
+                  colHelpers.forEach(items, function (item) {
                      if (item.getHash() == targetHash) {
                         self._itemsToolbar.unlockToolbar();
                         self._itemsToolbar.hide();
@@ -2378,16 +2394,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Функция догрузки данных пока не появится скролл.Если появился и мы грузили и дорисовывали вверх, нужно поуправлять скроллом.
+          * Функция догрузки данных пока не появится скролл
           * @private
-          *
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
-
-            // Если нет скролла или скролл внизу (при загрузке вниз), значит нужно догружать еще записи
+            // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
+            // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
                this._scrollLoadNextPage();
+            } else {
+               if (this._options.infiniteScroll == 'both' && this.isScrollOnTop()){
+                  this._setInfiniteScrollState('up');
+                  this._scrollLoadNextPage();
+               }
+
             }
          },
 
@@ -2406,10 +2427,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Подгрузить еще данные вверх или вниз
-          * @param  {String} direction в какую сторону грузим
+          * Подгрузить еще данные
+          * направление задается через _setInfiniteScrollState
           */
-         _scrollLoadNextPage: function (direction) {
+         _scrollLoadNextPage: function () {
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
@@ -2430,6 +2451,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._infiniteScrollState.mode == 'up'){
                return this._scrollOffset.top > 0;
             } else {
+               // Если загружена последняя страница, то вниз грузить больше не нужно
+               // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
                return !this._lastPageLoaded && ListView.superclass._hasNextPage.call(this, more, offset);
             }
          },
@@ -2438,6 +2461,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var offset = this._getNextOffset();
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
+            //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+               this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -2651,7 +2677,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._allowInfiniteScroll = type;
             } else {
                if (type) {
-                  this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', type == 'up');
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
                }
@@ -2759,7 +2784,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                      ajaxLoader.removeClass('ws-hidden');
                   }
-               }, 750);
+               }, INDICATOR_DELAY);
             }
             else {
                ajaxLoader.addClass('ws-hidden');
@@ -2893,6 +2918,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this.reload();
                   }
                }
+               this._lastPageLoaded = false;
             }
             this._notify('onPageChange', pageNumber);
          },
@@ -2904,7 +2930,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
             var onLastPageSet = function(items){
                more = items.getMetaData().more;
-               this._lastPageLoaded = true;
                if (typeof more == 'number'){
                   pageNumber = Math.floor(more / this._options.pageSize);
                   this._scrollOffset.bottom = more;
@@ -2914,8 +2939,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setPage(pageNumber, true);
                   this._scrollWatcher.scrollTo('bottom');
                }
+               this._lastPageLoaded = true;
             }.bind(this);
-
             if (noLoad){
                this._offset = -1;
                this.once('onDataLoad', function(event, items){
@@ -3349,11 +3374,12 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false;
+                  dropBySelf = false,
+                  source = dragObject.getSource();
 
-               if (target) {
+               if (target && source) {
                   var  targetsModel = target.getModel();
-                  dragObject.getSource().each(function(item) {
+                  source.each(function(item) {
                      var model = item.getModel();
                      models.push(model);
                      if (targetsModel == model) {
@@ -3391,10 +3417,10 @@ define('js!SBIS3.CONTROLS.ListView',
          //region moveMethods
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
-          * @param {Array} MovedItems Массив перемещаемых записей
+          * @param {Array} idArray Массив перемещаемых записей
           * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
           */
-         moveRecordsWithDialog: function(movedItems) {
+         moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
                Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
                var
@@ -3404,13 +3430,18 @@ define('js!SBIS3.CONTROLS.ListView',
                      nodeProperty: this._options.nodeProperty,
                      moveStrategy: this.getMoveStrategy()
                   }),
-                  items = this.getItems();
-               $ws.helpers.forEach(movedItems, function(item, i) {
-                  if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                     movedItems[i] = items.getRecordById(item);
-                  }
-               }, this);
-
+                  items = this.getItems(),
+                  movedItems;
+               if (idArray) {
+                  movedItems = [];
+                  colHelpers.forEach(idArray, function (item, i) {
+                     if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                        movedItems.push(items.getRecordById(item));
+                     } else {
+                        movedItems.push(item);
+                     }
+                  }, this);
+               }
                var  filter = this._notify('onPrepareFilterOnMove', {});
                action.execute({
                   movedItems: movedItems,
@@ -3436,7 +3467,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
-            });
+            }.bind(this));
          },
          /**
           * Переместить на одну запись ввниз.

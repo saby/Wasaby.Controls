@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             defaultCfg.className = 'controls-HierarchyDataGridView__path'
             cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
-            $ws.core.merge(defaultCfg, {
+            cMerge(defaultCfg, {
                path: cFunctions.clone(path),
                viewCfg: cfg._getSearchCfg(cfg)
             });
@@ -649,7 +649,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       /**
        * Закрывает узел по переданному идентификатору.
-       * @param {String, Number} id Идентификатор закрываемого узла.
+       * @param {String|Number} id Идентификатор закрываемого узла.
        * @remark
        * Метод используют для программного управления видимостью содержимого узла в общей иерархии.
        * Чтобы раскрыть узел по переданному идентификатору, используйте метод {@link expandNode}.
@@ -669,7 +669,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       /**
        * Закрыть или открыть узел.
-       * @param {String, Number} id Идентификатор переключаемого узла.
+       * @param {String|Number} id Идентификатор переключаемого узла.
        * @see collapseNode
        * @see expandNode
        */
@@ -684,7 +684,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       /**
        * Раскрывает узел.
-       * @param {String, Number} id Идентификатор раскрываемого узла
+       * @param {String|Number} id Идентификатор раскрываемого узла
        * @returns {Deferred}
        * @see collapseNode
        * @see toggleNode
@@ -1184,7 +1184,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var record, parentKey,
             hierarchy = [];
          if (items && items.getCount()){
-            do {
+            // пока не дойдем до корня (корень может быть undefined)
+            while (key && key != this.getRoot()) {
                record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
@@ -1197,8 +1198,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   });
                }
                key = parentKey;
-            // пока не дойдем до корня (корень может быть undefined)
-            } while (key && key != this.getRoot());
+            }
          }
          return hierarchy;
       },
@@ -1228,7 +1228,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemProjection = this._options._itemsProjection.getItemBySourceItem(item);
          if( itemProjection !== undefined ) {
             var itemParent = itemProjection.getParent().getContents();
-            return $ws.helpers.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
+            return cInstance.instanceOfModule(itemParent, 'WS.Data/Entity/Record') ? itemParent.getId() : itemParent;
          }
          return undefined;
       },

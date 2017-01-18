@@ -47,13 +47,20 @@
           }
         }
         &.ws-sticky-header__table {
-          .controls-DataGridView__tr:first-child {
-            .controls-DataGridView__td {
-              border-top-color: transparent;
+          &.ws-sticky-header__fixed {
+            .controls-DataGridView__tr:first-child {
+              .controls-DataGridView__td {
+                border-top-color: transparent;
+              }
             }
           }
         }
       }
+     &.controls-DataGridView__emptyTable {
+       .controls-DataGridView__table {
+         border-color: transparent;
+       }
+     }
    }
 
    &.controls-DataGridView__markerRight{
@@ -88,7 +95,7 @@
       table-layout: @data-grid-table-layot;
 
       .controls-DataGridView__results {
-         background: #FFF;
+         background: @data-grid-row-bg;
          font-weight: bold;
          font-size: 14px;
          color: #313E78;
