@@ -20,8 +20,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
      * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
      * @author Авраменко Алексей Сергеевич
      * @public
-     *
-     * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
     var FilterPanelChooserFieldLink = FilterPanelChooserBase.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FieldLink.prototype */ {
