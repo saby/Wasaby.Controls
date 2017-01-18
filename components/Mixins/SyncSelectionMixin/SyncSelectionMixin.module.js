@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
 
                      if (item) {
                         this._options.selectedItem = item;
-                        this._options.selectedKey = item.getId();
+                        this._options.selectedKey = item.get(this._options.idProperty);
                      } else {
                         this._options.selectedItem = null;
                         this._options.selectedKey = null;
