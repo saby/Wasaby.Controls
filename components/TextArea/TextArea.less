@@ -71,18 +71,9 @@
          color: @text-area-field-disabled-text-color;
       }
 
-      //TODO временное решение для 230, в 240 будет автоматом
       &.controls-TextArea__hiddenIfEmpty {
          .controls-TextArea__inputField {
-            position: absolute;
-         }
-         .controls-TextArea__disabled-wrapper{
-            position: static;
-            height: auto !important;
-            min-height: 0 !important;
-            &.controls-TextArea__disabled-wrapper-empty {
-               height: 0 !important;
-            }
+            min-height: 0;
          }
       }
    }

@@ -178,6 +178,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
          this._inputField.attr('contenteditable', !!state);
+         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text || !state);
          this._insertTextToMarkup(this._options.text);
       },
 
