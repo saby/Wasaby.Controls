@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                   paging.setPagesCount(pageNumber);
                }
                this._currentScrollPage = pageNumber;
-               paging.setSelectedIndex(pageNumber);
+               paging.setSelectedKey(pageNumber + 1);
             }
          }.bind(this));
 
@@ -132,7 +132,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
             if (this._offsetTop == undefined){
-               var viewTop = self._options.view.getContainer().get(0).getBoundingClientRect().top,
+               var viewport = self._options.view._getScrollWatcher().getScrollContainer(),
+                  viewTop = self._options.view.getContainer().get(0).getBoundingClientRect().top,
                   viewportTop = viewport.get(0).getBoundingClientRect().top;
                this._offsetTop = viewTop - viewportTop;
             }
@@ -183,7 +184,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
-            this._options.paging.setSelectedIndex(pagesCount- 1);
+            this._options.paging.setSelectedKey(pagesCount);
          }
          this._options.paging.setPagesCount(pagesCount);
 
