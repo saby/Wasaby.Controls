@@ -101,12 +101,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         },
 
         setValue: function(value) {
+            this._updateTextValue(value);
             this._options.value = value;
-            this._updateTextValue();
             this._notifyOnPropertyChanged('value');
         },
 
-        _updateTextValue: function() {
+        _updateTextValue: function(newValue) {
         },
 
         getTextValue: function() {
