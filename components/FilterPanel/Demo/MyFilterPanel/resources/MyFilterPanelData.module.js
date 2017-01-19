@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
                }),
                editor: 'favorites',
                dictionaryTemplate: 'js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
-               favoritesCount: 10,
+               favoritesCount: 49,
                favorites: new RecordSet({
                   rawData:[
                      { id: 1, title: 'ВТБ Капитал, АО', count: 10 },
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             }
          },
          {
-            caption: 'ЖНВЛП',
+            caption: 'ЖНВЛП очень длинный текст очень длинный текст очень длинный текст',
             expanded: true,
             id: 'ЖНВЛП',
             value: true,

@@ -108,7 +108,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
              hasStructureElem = false,
              log = function() {
                 IoC.resolve('ILogger').log('FilterHistoryController', 'В стукрутре из истории присутствуют null элементы');
-             }.once(); //Чтобы не писать кучу раз в консоль предупреждение
+             }.once(), //Чтобы не писать кучу раз в консоль предупреждение
+             checkTpl = function (tplName, curStructure, newStructure) {
+                if(curStructure.hasOwnProperty(tplName)) {
+                   newStructure[tplName] = curStructure[tplName];
+                } else if (newStructure.hasOwnProperty(tplName)) {
+                   delete newStructure[tplName]
+                }
+             };
 
          colHelpers.forEach(newStructure, function(newStructureElem, key) {
             var elemFromCurrentStructure = colHelpers.find(currentStructure, function(elem) {
@@ -121,12 +128,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                   hasStructureElem = newStructureElem.internalValueField === elem.internalValueField;
 
                   if(hasStructureElem) {
-                     if(elem.hasOwnProperty(TPL_FIELD)) {
-                        newStructureElem[TPL_FIELD] = elem[TPL_FIELD];
-                     }
-                     if(elem.hasOwnProperty(HISTORY_TPL_FIELD)) {
-                        newStructureElem[HISTORY_TPL_FIELD] = elem[HISTORY_TPL_FIELD];
-                     }
+                     checkTpl(TPL_FIELD, elem, newStructureElem);
+                     checkTpl(HISTORY_TPL_FIELD, elem, newStructureElem);
                   }
                   return hasStructureElem;
                }

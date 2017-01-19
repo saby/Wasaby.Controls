@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
        * @remark
        * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
-       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link SBIS3.CONTROLS.Data.Collection.RecordSet#meta}).
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
@@ -339,7 +339,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
        *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
-       *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
        * @see onBeforeSetRoot
        */
@@ -1184,7 +1184,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var record, parentKey,
             hierarchy = [];
          if (items && items.getCount()){
-            do {
+            // пока не дойдем до корня (корень может быть undefined)
+            while (key && key != this.getRoot()) {
                record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {
@@ -1197,8 +1198,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   });
                }
                key = parentKey;
-            // пока не дойдем до корня (корень может быть undefined)
-            } while (key && key != this.getRoot());
+            }
          }
          return hierarchy;
       },

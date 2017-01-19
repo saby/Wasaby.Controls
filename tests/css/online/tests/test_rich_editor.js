@@ -773,7 +773,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
 			.capture('plain')
     });
-
+    /*
 	gemini.suite('decorate_link_then_disabled', function (test) {
 
         test.setUrl('/IntRichFieldEditor48.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
@@ -798,7 +798,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 });
 				actions.waitForElementToShow('.engine-DecoratedLink', 5000);
 			})	
-    });
+    });*/
 	
 	gemini.suite('rich_text_area', function (test) {
 

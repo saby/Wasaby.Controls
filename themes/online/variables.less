@@ -26,6 +26,9 @@
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
 
+@float-area-border-color:                 #bdbdbd;
+@float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
+
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
@@ -970,12 +973,14 @@
 // ----------- //
 // Date box    //
 // ----------- //
+@date-box-color:                             @text-box-color;
 @date-box-wrapper-border-radius:             @text-box-border-radius;
 
 @date-box-wrapper-border-width:              @text-box-border-width;
 @date-box-wrapper-border-style:              @text-box-border-style;
 @date-box-wrapper-border-color:              @text-box-border-color;
 @date-box-wrapper-bg:                        @text-box-bg;
+@date-box-field-text-color:                  @text-box-field-text-color;
 
 @date-box-wrapper-focus-border-width:        @date-box-wrapper-border-width;
 @date-box-wrapper-focus-border-style:        @date-box-wrapper-border-style;
@@ -1459,7 +1464,7 @@
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
-@date-range-big-choose-border-color:               @gray-light-color;
+@date-range-big-choose-border-color:               @float-area-border-color;
 @date-range-big-choose-border-hovered-color:       @darkcyan-color;
 @date-range-big-choose-border-selected-color:      @darkcyan-color;
 @date-range-big-choose-bg-hovered-color:           @default-itemHover-color;
@@ -1865,6 +1870,7 @@
 @data-grid-partScroll-thumb-margin:             20px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
+@data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-float:          left;
@@ -2001,7 +2007,7 @@
 // DropdownList//
 // --------------- //
 @DropdownList-cursor:                         pointer;
-@DropdownList-border-color:                   @gray-light-color;
+@DropdownList-border-color:                   @gray-ccc-color;
 
 @DropdownList-iconWidth:                      16px;
 @DropdownList-iconHeight:                     16px;
@@ -2016,7 +2022,7 @@
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
 @DropdownList-picker-offset:                          0;
 @DropdownList-picker-fastdatafilter-offset:           0;
-@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
@@ -2024,12 +2030,12 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-head-margin:                     0;
-@DropdownList-picker-border:                          2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              4px 4px 0 0;
+@DropdownList-picker-border:                          1px solid @DropdownList-border-color;
+@DropdownList-picker-head-border-radius:              0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
-@DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
+@DropdownList-picker-list-right-border-radius:        0;
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
-@DropdownList-picker-list-border-radius:              4px;
+@DropdownList-picker-list-border-radius:              0;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
@@ -2212,6 +2218,9 @@
 @controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
+@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-margin:   2px 4px;
+
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
@@ -2271,7 +2280,7 @@
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
-@controls-NotificationPopup-border:                                          1px solid #E4E4E4;
+@controls-NotificationPopup-border:                                          1px solid @float-area-border-color;
 @controls-NotificationPopup-border-top:                                      none;
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
