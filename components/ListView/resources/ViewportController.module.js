@@ -11,19 +11,27 @@ define('js!SBIS3.CONTROLS.ViewportController',
          _pageOffset: 0, // offset последней страницы
          _currentScrollPage: 1,
          _windowResizeTimeout: null,
+         _debug: true
       },
 
       init: function(){
          ViewportController.superclass.init.call(this);
          if (this._options.view._scrollWatcher) {
-            this._options.view._scrollWatcher.subscribe('onScroll', function(e, scrollTop){
-               var page = this.getScrollPage();
-                  newKey = page + 1;
-               if (page >= 0 && this._currentScrollPage != newKey) {
-                  this._currentScrollPage = newKey;
-                  this._notify('onScrollPageChange', page);
-               }
-            }.bind(this));
+            this._options.view._scrollWatcher.subscribe('onScroll', this._scrollHandler.bind(this));
+         }
+      },
+
+      _scrollHandler: function(e, scrollTop){
+         var page = this.getScrollPage();
+            newKey = page + 1;
+         if (this._debug){ 
+            console.log('ViewportController:scrollTop', scrollTop);
+         }
+         if (page >= 0 && this._currentScrollPage != newKey) {
+            if (this._debug){ 
+               console.log('ViewportController:scrollPage', page);
+            }
+            this._notify('onScrollPageChange', page);
          }
       },
 
