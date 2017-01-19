@@ -308,7 +308,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          }
 
          icons = iconsHandler.call(this, periods, pType);
-         if (!cInstance.instanceOfModule(Deferred)) {
+         if (!(icons && icons instanceof Deferred)) {
             icons = (new Deferred()).callback(icons);
          }
 
