@@ -234,19 +234,21 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyboardDispatcher: function(event){
-         fHelpers.forAliveOnly(function(){
-            switch(event.type) {
+         return fHelpers.forAliveOnly(function(event){
+            var result = true;
+            switch (event.type) {
                case 'keydown':
-                  this._keyDownBind.call(this, event);
+                  result = this._keyDownBind.call(this, event);
                   break;
                case 'keyup':
-                  this._keyUpBind.call(this, event);
+                  result = this._keyUpBind.call(this, event);
                   break;
                case 'keypress':
-                  this._keyPressBind.call(this, event);
+                  result = this._keyPressBind.call(this, event);
                   break;
             }
-         }).call(this);
+            return result;
+         }).call(this, event);
       },
 
       _useNativePlaceHolder: function() {
