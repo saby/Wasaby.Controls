@@ -998,8 +998,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
          _allowDelete: function() {
-            var itemActions = this.getItemsActions();
-            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
+            var
+                delInstance,
+                itemActions = this.getItemsActions();
+
+            if (itemActions) {
+               delInstance = itemActions.getItemInstance('delete');
+            }
+            return this.isEnabled() && !!delInstance && delInstance.isVisible();
          },
          /**
           * Возвращает следующий элемент
