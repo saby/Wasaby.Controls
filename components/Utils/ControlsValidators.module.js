@@ -133,7 +133,24 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
        * </ol>
        */
       inn12: checkInn.bind(undefined, 12),
-      
+      /**
+       * Проверяет значение поля ввода на соответствие значению из другого поля ввода.
+       * @param {String} name Имя поля ввода, со значением которого будет производиться сравнивание.
+       * @returns {Boolean|String}
+       * <ol>
+       *    <li>В случае прохождения валидации возвращает true.</li>
+       *    <li>В случае не прохождения валидации возвращает сообщение "Значение поля должно совпадать с полем ...".</li>
+       * </ol>
+       */
+      compare : function(name, currentValue) {
+         var compareValue;
+         try {
+            compareValue = this.getTopParent().getChildControlByName(name).getText() || '';
+         } catch(e) {
+            return false;
+         }
+         return (currentValue === compareValue) ? true : 'Значение поля должно совпадать с полем "' + name + '"';
+      },
       /**
        * Проверяет корректность введеного e-mail.
        * @remark Предпочтительно использовать с флагом noFailOnError, т.к. есть исключительный ситуации.
