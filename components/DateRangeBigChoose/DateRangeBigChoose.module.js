@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker",
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker",
    "js!SBIS3.CORE.CloseButton",
-   "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers"
+   "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
+   'i18n!SBIS3.CONTROLS.DateRangeBigChoose'
 ], function ( constants,CompoundControl, dotTplFn, RangeMixin, RangeSelectableViewMixin, DateUtil, eHelpers) {
    'use strict';
 
