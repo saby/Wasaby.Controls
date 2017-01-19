@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
+            tplOptions.selectedKey = cfg.selectedKey;
 
             return tplOptions;
          },
@@ -84,6 +85,8 @@ define('js!SBIS3.CONTROLS.ListView',
             after: 'after',
             before: 'before'
          };
+
+      var INDICATOR_DELAY = 750;
 
       /**
        * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
@@ -995,8 +998,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
          _allowDelete: function() {
-            var itemActions = this.getItemsActions();
-            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
+            var
+                delInstance,
+                itemActions = this.getItemsActions();
+
+            if (itemActions) {
+               delInstance = itemActions.getItemInstance('delete');
+            }
+            return this.isEnabled() && !!delInstance && delInstance.isVisible();
          },
          /**
           * Возвращает следующий элемент
@@ -2771,7 +2780,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                      ajaxLoader.removeClass('ws-hidden');
                   }
-               }, 750);
+               }, INDICATOR_DELAY);
             }
             else {
                ajaxLoader.addClass('ws-hidden');

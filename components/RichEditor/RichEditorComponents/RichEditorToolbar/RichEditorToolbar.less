@@ -143,7 +143,7 @@
 //Стили для элементов НА(!) тулбаре богатого редактора
 .controls-RichEditorToolbar__itemsContainer .controls-RichEditorToolbar__item {
    &.controls-MenuButton {
-      width:38px;
+      width:24px;
       margin: 0;
       text-align: left;
       .controls-Button__icon {
@@ -163,8 +163,8 @@
 /* Блок смайлов */
 .fre-smiles {
    &.controls-MenuButton__Menu {
-      width: 192px;
-      padding: 1px 0 !important;
+      width: 196px;
+      padding: 0 0 4px 0 !important;
       .controls-ListView__item {
          color: #587ab0;
          font-size: 24px;
@@ -203,16 +203,14 @@
    &.controls-RichEditorToolbar__menuButtonPicker {
       .controls-ListView__item {
          display: block;
-         height: 24px;
          width: 34px;
-         min-height: 24px;
          .controls-MenuItem__text {
-            margin: 0px;
+            margin: 0;
          }
          .controls-RichEditorToolbar__color {
             height: 16px;
             width: 16px;
-            margin: 4px 3px;
+            margin: 8px 3px;
             &Black {
                background-color: black;
             }
@@ -260,9 +258,12 @@
 }/*Блок выбора выравнивания*/
 .fre-align {
    .controls-RichEditorDropdown__head,{
-      width:38px;
+      width:22px;
       .controls-RichEditorDropdown__headArrow{
          right: 8px;
+      }
+      .controls-RichEditorDropdown__headIcon {
+         padding: 0px 0px 0px 2px;
       }
    }
    .controls-DropdownList__header, .controls-DropdownList__body{

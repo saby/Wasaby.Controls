@@ -25,8 +25,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
      * @author Сухоручкин Андрей Сергеевич
      *
      * @mixes SBIS3.CONTROLS.IFilterItem
-     *
-     * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
     var FilterPanelChooserBase = CompoundControl.extend([IFilterItem], /** @lends SBIS3.CONTROLS.FilterPanelChooser.Base.prototype */ {
@@ -103,12 +101,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         },
 
         setValue: function(value) {
+            this._updateTextValue(value);
             this._options.value = value;
-            this._updateTextValue();
             this._notifyOnPropertyChanged('value');
         },
 
-        _updateTextValue: function() {
+        _updateTextValue: function(newValue) {
         },
 
         getTextValue: function() {
