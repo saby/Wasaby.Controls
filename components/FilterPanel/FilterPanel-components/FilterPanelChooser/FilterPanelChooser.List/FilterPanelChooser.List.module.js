@@ -108,13 +108,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             this._toggleAllButton();
         },
 
-        _updateTextValue: function() {
+        _updateTextValue: function(newValue) {
             var
                 self = this,
                 textValue = '',
                 viewItems = this._getListView().getItems();
-            colHelpers.forEach(this._options.value, function(id, idx) {
-                textValue += self._getItemTextByItemId(viewItems, id) + (idx < self._options.value.length - 1 ? ', ' : '');
+            colHelpers.forEach(newValue, function(id, idx) {
+                textValue += self._getItemTextByItemId(viewItems, id) + (idx < newValue.length - 1 ? ', ' : '');
             });
             this.setTextValue(textValue);
         },
