@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/core-structure",
-   "Core/xslt",
+   "Core/xslt-async",
    "Transport/ReportPrinter",
    "Core/helpers/helpers",
    "Core/core-extend",
@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
-   "js!SBIS3.CORE.XSLT",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
 ], function( $ws, cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, fcHelpers, strHelpers) {
    return cExtend({}, {
@@ -69,9 +68,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          var
                self = this,
                rp = this._reportPrinter,
-               xslDoc = new $ws.proto.XMLDocument({ name: xsl }).getDocument(),
                xmlDoc = this.serialize(dataSet, rp.getColumns());
-         return rp.prepareReport(dataSet, xslDoc, undefined, xmlDoc).addErrback(function(error){
+         return rp.prepareReport(dataSet, xsl, undefined, xmlDoc).addErrback(function(error){
             fcHelpers.alert(error, { checkAlreadyProcessed: true }, self);
             return error;
          });
