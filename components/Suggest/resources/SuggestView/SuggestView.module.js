@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
        var DELEGATED_EVENTS = [
           'onDrawItems',
           'onDataLoad',
+          'onBeforeDataLoad',
           'onDataLoadError',
           'onItemActivate',
           'onItemsReady'
