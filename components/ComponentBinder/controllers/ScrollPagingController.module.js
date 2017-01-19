@@ -115,8 +115,9 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       updateScrollPages: function(reset){
-         var view = this._options.view;
-         var viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
+         var view = this._options.view,
+            viewport = $(view._scrollWatcher.getScrollContainer()),
+            viewportHeight = viewport.height(),
             pageOffset = 0,
             lastPageStart = 0,
             self = this,
@@ -132,8 +133,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
             if (this._offsetTop == undefined){
-               var viewport = self._options.view._getScrollWatcher().getScrollContainer(),
-                  viewTop = self._options.view.getContainer().get(0).getBoundingClientRect().top,
+               var viewTop = view.getContainer().get(0).getBoundingClientRect().top,
                   viewportTop = viewport.get(0).getBoundingClientRect().top;
                this._offsetTop = viewTop - viewportTop;
             }
