@@ -44,14 +44,22 @@ define('js!SBIS3.CONTROLS.OperationMove', [
              * </pre>
              * @translatable
              */
-            caption: rk('Перенести')
+            caption: rk('Перенести'),
+            /**
+             * @cfg {SBIS3.CONTROLS.Action.List.InteractiveMove} Экшен который будет перемещать записи
+             */
+            action: undefined
          }
       },
 
       $constructor: function() {
       },
       _clickHandler: function() {
-         this._options.linkedView.moveRecordsWithDialog();
+         if (this._options.action) {
+            this._options.action.execute();
+         } else {
+            this._options.linkedView.moveRecordsWithDialog();
+         }
       }
    });
 

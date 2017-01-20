@@ -8,7 +8,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    'use strict';
 
    var
-
+      /**
+       * @class SBIS3.CONTROLS.RichEditorToolbarBase
+       * @extends SBIS3.CONTROLS.ButtonGroupBase
+       * @author Борисов П.С.
+       * @public
+       * @control
+       */
       RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbarBase.prototype */{
          $protected : {
             _options : {
