@@ -1,0 +1,9 @@
+<ws:for data="index, column in columns">
+    <td class="controls-DataGridView__td {{column.editor ? 'controls-DataGridView__edited-td' : ''}} {{column.className|orEmpty}} {{index == 0 ? 'controls-DataGridView__firstContentCell' : ''}}
+           {{startScrollColumn !== undefined ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+        style="{{startScrollColumn <= index ? 'left:' + columnsScrollPosition + 'px;' : ''}}">
+        <div class="controls-DataGridView__columnValue">
+            <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" val="{{cellData.getCellValue(cellData.getColumnVal(item, column.field), column.field, item, cellData.ladder, cellData.ladderColumns)}}" />
+        </div>
+    </td>
+</ws:for>

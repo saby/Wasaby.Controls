@@ -1,0 +1,14 @@
+<tr class="controls-DataGridView__tr" style="{{decorators.apply(color, 'color') |trace}}">
+    <ws:if data="{{multiselect}}">
+        <td class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}">
+            <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+        </td>
+    </ws:if>
+
+
+    <ws:for data="index, column in columns">
+        <td class="controls-DataGridView__td {{column.editor ? 'controls-DataGridView__edited-td' : ''}} {{column.className}} {{startScrollColumn !== undefined ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}">
+            <div class="controls-DataGridView__columnValue">{{column.value |sanitize}}<div>
+        </td>
+    </ws:for>
+</tr>

@@ -5,24 +5,24 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.ListView",
-   "html!SBIS3.CONTROLS.DataGridView",
-   "html!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/footTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/headTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/footTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
    "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
-   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    'js!WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers"
 ],
@@ -71,6 +71,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             return value;
          },
+         getCellValue = function(currentValue, field, item, ladder, ladderColumns){
+            return Array.indexOf(ladderColumns, field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
+         },
          buildTplArgsLadder = function(args, cfg) {
             args.ladder = cfg._ladderInstance;
             args.ladderColumns = cfg.ladder || [];
@@ -84,6 +87,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
+               getCellValue: getCellValue,
                decorators : tplOptions.decorators,
                displayField : tplOptions.displayProperty,
                displayProperty: tplOptions.displayProperty
@@ -116,7 +120,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             rowData.content = [[], []];
 
             if (!cfg.transformHead){
-               rowData.content[0] = columns;
+               rowData.content[1] = columns;
                return rowData;
             }
 
@@ -141,13 +145,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
                      supportDouble.colspan++;
                   }
                   else{
-                     rowData.content[1].push(supportDouble);
+                     rowData.content[0].push(supportDouble);
                      supportDouble = null;
                   }
                   rowData.countRows = 2;
                }
                else{
-                  rowData.content[1].push(supportDouble);
+                  rowData.content[0].push(supportDouble);
                   supportDouble = null;
                }
 
@@ -158,7 +162,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   supportUnion.colspan = ++supportUnion.colspan || 2;
                }
                else{
-                  rowData.content[0].push(supportUnion);
+                  rowData.content[1].push(supportUnion);
                   supportUnion = null;
                }
             }
@@ -178,8 +182,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                column,
                headColumns = prepareHeadColumns(cfg);
             cMerge(headData, headColumns);
-            for (var i = 0; i < headData.content[0].length; i++) {
-               column = headData.content[0][i];
+            for (var i = 0; i < headData.content[1].length; i++) {
+               column = headData.content[1][i];
 
                if (column.headTemplate) {
                   value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
