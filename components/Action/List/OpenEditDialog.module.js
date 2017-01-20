@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          _openInNewTab: false
       },
       init: function () {
-         OpenDialogAction.superclass.init.apply(this, arguments);
+         OpenEditDialog.superclass.init.apply(this, arguments);
          $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
       },
       /**
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       @deprecated
       **/
       _opendEditComponent: function(meta, dialogComponent, mode){
-         IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenDialogAction', 'method _opendEditComponent was deprecated please use _openComponent instead.');
+         IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenEditDialog', 'method _opendEditComponent was deprecated please use _openComponent instead.');
          this._openComponent.call(this, meta, dialogComponent, mode);
       },
 
