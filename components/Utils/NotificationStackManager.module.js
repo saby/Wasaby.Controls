@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
                var zIndex = this._zIndex;
 
                /*Самозакрывающиеся окна показываем выше всех модальных*/
-               if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId() !== -1)){
+               if(this._windowsIdWithLifeTime.indexOf(this._items[i].getId()) !== -1){
                   zIndex = 1000000;
                }
 
