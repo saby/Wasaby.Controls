@@ -15,6 +15,10 @@
    -ms-user-select: none;
    user-select: none;
 
+   &.controls-Menu__breakWord {
+      word-break: break-word;
+   }
+
    .border-radius(@menu-border-radius);
    .box-shadow(@menu-shadow);
    .box-sizing(border-box);
@@ -64,12 +68,10 @@
    }
    &.controls-popup-revert-vertical {
       flex-direction: column-reverse;
+      padding: 0;
 
       .controls-Menu__header + .controls-Menu__itemsContainer {
          padding: @menu-link-menu-revert-item-container-padding;
-      }
-      &.controls-MenuLink__Menu {
-         padding: 0;
       }
    }
    &.controls-popup-revert-horizontal {
@@ -84,4 +86,5 @@
 }
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
+   padding: @menu-subpopup-padding;
 }

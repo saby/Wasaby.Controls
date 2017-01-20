@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
       $protected: {
          _options: {
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Source.ISource} Источник данных
+             * @cfg {WS.Data/Source/ISource} Источник данных
              * @example
              *   var dataSource = new SbisService({
              *       endpoint: 'СообщениеОтКлиента'
@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
              */
             observableFields: [],
             /**
-             * @cfg {SBIS3.CONTROLS.Data.Record} Запись, в которой отслеживается изменение полей.
+             * @cfg {WS.Data/Entity/Record} Запись, в которой отслеживается изменение полей.
              * @remark
              * Чтобы установить запись, используют метод {@link setRecord}.
              * @see setRecord
@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
 
       /**
        * Устанавливает запись в которой отслеживаются изменения полей.
-       * @param {SBIS3.CONTROLS.Data.Model} record Запись источника данных.
+       * @param {WS.Data/Entity/Model} record Запись источника данных.
        * @see record
        */
       setRecord: function(record) {
@@ -119,7 +119,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
 
       /**
        * Возвращает запись в которой отслеживаются изменения полей.
-       * @returns {SBIS3.CONTROLS.Data.Model|null}
+       * @returns {WS.Data/Entity/Model|null}
        * @see record
        */
       getRecord: function() {

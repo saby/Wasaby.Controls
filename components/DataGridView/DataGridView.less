@@ -12,25 +12,6 @@
       &:extend(.controls-ListView .controls-ListView__item all);
    }
 
-   &.controls-DataGridView__with-partScroll {
-      overflow-x: hidden;
-   }
-
-   &.controls-DataGridView__scrollingNow {
-      .controls-DataGridView__thead {
-         .controls-DataGridView__scrolledCell {
-            .closedHandCursor();
-         }
-      }
-   }
-
-   &.controls-DataGridView__PartScroll__animation {
-      .controls-DataGridView__PartScroll__thumb,
-      .controls-DataGridView__scrolledCell {
-         .transition(left 0.5s);
-      }
-   }
-
    &.controls-DataGridView__hasSeparator{
       .controls-DataGridView__table {
         border-width: 0 0 1px 0;
@@ -47,13 +28,20 @@
           }
         }
         &.ws-sticky-header__table {
-          .controls-DataGridView__tr:first-child {
-            .controls-DataGridView__td {
-              border-top-color: transparent;
+          &.ws-sticky-header__fixed {
+            .controls-DataGridView__tr:first-child {
+              .controls-DataGridView__td {
+                border-top-color: transparent;
+              }
             }
           }
         }
       }
+     &.controls-DataGridView__emptyTable {
+       .controls-DataGridView__table {
+         border-color: transparent;
+       }
+     }
    }
 
    &.controls-DataGridView__markerRight{
@@ -88,7 +76,7 @@
       table-layout: @data-grid-table-layot;
 
       .controls-DataGridView__results {
-         background: #FFF;
+         background: @data-grid-row-bg;
          font-weight: bold;
          font-size: 14px;
          color: #313E78;
@@ -154,43 +142,6 @@
          }
       }
 
-     .controls-DataGridView__PartScroll__container {
-       position: absolute;
-       height: @data-grid-partScroll-wrapper-height;
-
-       .controls-DataGridView__PartScroll__arrowLeft {
-         position: relative;
-         float: @data-grid-partScroll-arrowLeft-float;
-         top: @data-grid-partScroll-arrowLeft-top-shift;
-         z-index: @data-grid-partScroll-arrowLeft-zIndex;
-         cursor: @data-grid-partScroll-cursor;
-       }
-
-       .controls-DataGridView__PartScroll__arrowRight {
-         position: relative;
-         float: @data-grid-partScroll-arrowRight-float;
-         top: @data-grid-partScroll-arrowRight-top-shift;
-         z-index: @data-grid-partScroll-arrowLeft-zIndex;
-         left: @data-grid-partScroll-arrowRight-left-shift;
-         cursor: @data-grid-partScroll-cursor;
-       }
-
-       .controls-DataGridView__PartScroll__thumb {
-         height: @data-grid-partScroll-thumb-height;
-         width: @data-grid-partScroll-thumb-width;
-         margin-left: @data-grid-partScroll-thumb-margin;
-         z-index: @data-grid-partScroll-thumb-zIndex;
-         border-radius: @data-grid-partScroll-thumb-border-radius;
-         background-color: @data-grid-partScroll-thumb-color;
-         position: absolute;
-         cursor: @data-grid-partScroll-cursor;
-         &:hover, &.controls-DataGridView__PartScroll__thumb-clicked {
-           height: @data-grid-partScroll-thumb-height-hover;
-           top: @data-grid-partScroll-thumb-top-shift;
-         }
-       }
-     }
-
       .controls-DataGridView__th {
          position: relative;
          font-weight: normal;
@@ -229,6 +180,9 @@
          .controls-DataGridView__th-content{
             overflow: hidden;
             text-overflow: ellipsis;
+         }
+         &.controls-DataGrid__column__type-money {
+            padding-right:20px;
          }
       }
 
@@ -361,6 +315,65 @@
       }
    }
 }
+
+/* СТИЛИ ДЛЯ ЧАСТИЧНОГО СКРОЛА */
+.controls-DataGridView__PartScroll__container {
+  position: absolute;
+  height: @data-grid-partScroll-wrapper-height;
+}
+
+.controls-DataGridView__PartScroll__arrowLeft {
+  position: relative;
+  float: @data-grid-partScroll-arrowLeft-float;
+  top: @data-grid-partScroll-arrowLeft-top-shift;
+  z-index: @data-grid-partScroll-arrowLeft-zIndex;
+  cursor: @data-grid-partScroll-cursor;
+}
+
+.controls-DataGridView__PartScroll__arrowRight {
+  position: relative;
+  float: @data-grid-partScroll-arrowRight-float;
+  top: @data-grid-partScroll-arrowRight-top-shift;
+  z-index: @data-grid-partScroll-arrowLeft-zIndex;
+  left: @data-grid-partScroll-arrowRight-left-shift;
+  cursor: @data-grid-partScroll-cursor;
+}
+
+.controls-DataGridView__PartScroll__thumb {
+  height: @data-grid-partScroll-thumb-height;
+  width: @data-grid-partScroll-thumb-width;
+  margin-left: @data-grid-partScroll-thumb-margin;
+  z-index: @data-grid-partScroll-thumb-zIndex;
+  border-radius: @data-grid-partScroll-thumb-border-radius;
+  background-color: @data-grid-partScroll-thumb-color;
+  position: absolute;
+  cursor: @data-grid-partScroll-cursor;
+  top: @data-grid-partScroll-thumb-top-shift;
+  &:hover, &.controls-DataGridView__PartScroll__thumb-clicked {
+    height: @data-grid-partScroll-thumb-height-hover;
+    top: @data-grid-partScroll-thumb-clicked-top-shift;
+  }
+}
+
+.controls-DataGridView__with-partScroll {
+  overflow-x: hidden;
+}
+
+.controls-DataGridView__PartScroll__animation {
+  .controls-DataGridView__PartScroll__thumb,
+  .controls-DataGridView__scrolledCell {
+    .transition(left 0.5s);
+  }
+}
+
+.controls-DataGridView__scrollingNow {
+  .controls-DataGridView__thead {
+    .controls-DataGridView__scrolledCell {
+      .closedHandCursor();
+    }
+  }
+}
+/****************************************/
 
 .ws-sticky-header__header-container {
    >.controls-DataGridView__with-partScroll {

@@ -50,20 +50,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        *    });
        * </pre>
        */
-      /**
-       * @event onBeforeDataLoad Перед загрузкой данных
-       * @remark
-       * Событие сработает перед запросом к источнику данных
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @example
-       * <pre>
-       *    myView.subscribe('onBeforeDataLoad', function(event, error){
-       *       var filter = this.getFilter();
-       *       filter['myParam'] = myValue;
-       *       this.setFilter(filter, true)
-       *    });
-       * </pre>
-       */
+
       /**
        * @event onItemsReady при готовности экземпляра коллекции iList
        * @remark
@@ -94,7 +81,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
        * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
        * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
-       * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
+       * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
        * @example
        * <pre>
        *     define( 'SBIS3.MyArea.MyComponent',
@@ -123,7 +110,6 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        * @see dataSource
        * @see getDataSource
        * @see items
-       * @see onBeforeDataLoad
        * @see onDataLoad
        * @see onDataLoadError
        * @see onItemsReady
@@ -234,6 +220,51 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        */
       setFilter: function(filter, noLoad){
          throw new Error('Method must be implemented');
+      },
+      /**
+       * Устанавливает шаблон для каждого элемента коллекции.
+       * @param {String} tpl Шаблон отображения каждого элемента коллекции
+       * @example
+       * <pre>
+       *    <div class="listViewItem" style="height: 30px;">\
+       *       {{=it.item.get("title")}}\
+       *    </div>
+       * </pre>
+       */
+      setItemTpl: function() {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="idProperty">Идентификатор</option>
+       * </pre>
+       * @see items
+       * @see displayProperty
+       * @see setDataSource
+       * @param {String} idProperty
+       */
+      setIdProperty: function() {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="displayProperty">Название</option>
+       * </pre>
+       * @remark
+       * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+       * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+       * которого нужно отобразить.
+       * @see idProperty
+       * @see items
+       * @see setDataSource
+       * @param {String} displayProperty
+       */
+      setDisplayProperty: function() {
+
       }
    };
 

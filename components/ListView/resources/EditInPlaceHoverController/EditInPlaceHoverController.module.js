@@ -128,6 +128,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             _destroyEip: function() {
                EditInPlaceHoverController.superclass._destroyEip.apply(this);
+               //Очистим переменную, в которой хранится eip показанный по ховеру.
+               //Иначе он сохранится в переменной при разрушении,и мы продолжим с ним работать, что может привестьи к ошибкам.
+               this._hoveredEip = null;
                if (this._secondEip) {
                   this._secondEip.destroy();
                   this._secondEip = null;
