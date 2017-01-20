@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            mask: 'DD.MM.YY',
+            mask: 'DD.MM.YY'
          },
           _keysWeHandle: [
              constants.key.tab,
