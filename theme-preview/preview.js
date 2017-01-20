@@ -47,7 +47,7 @@
 
             });
         }
-        commit() {
+        commit($css) {
             let reqData = {};
             let changedRules = this.lessdata.filter(rule => {
                 return rule.changed
@@ -59,8 +59,8 @@
                 "themeName": 'online',
                 "rules": reqData
             }).then(function() {
-                location.reload();
-
+                $css.appendTo('head');
+                $('#apply').removeAttr('disabled')
 
             })
         }
@@ -72,6 +72,8 @@
         let $applyBtn = $('#apply');
 
         $applyBtn.on('click', function(e) {
+            let $themeCSS = $('#controls-theme');
+            $themeCSS.remove();
             // протекция от повторного нажатия
             $(this).attr('disabled', 'disabled')
 
@@ -81,7 +83,7 @@
                 lessManager.setPropValue($(input).attr('id'), $(input).val())
             });
 
-            lessManager.commit();
+            lessManager.commit($themeCSS);
         })
     }
 
@@ -110,7 +112,6 @@
             "name": 'online'
         }).then(function(data) {
             lessManager = new LessManager('online', data);
-            console.log(lessManager.getPropValue('white-color'))
 
         }).then(setInitialValues)
     };

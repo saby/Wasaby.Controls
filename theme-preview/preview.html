@@ -131,7 +131,7 @@
    color: #ddd !important;
 }
 .menu_item {
-   margin-top: 16px;
+   margin-top: 0px;
 }
 .menu_title {
    margin-right: 8px;
@@ -140,16 +140,34 @@
    <script type="text/javascript" id="ws-include-css"></script>
    <link rel="stylesheet" type="text/css" href="../fonts/index.css"/>
    <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
-   <link rel="stylesheet" type="text/css" href="../themes/online/online.css"/>
+   <link rel="stylesheet" id="controls-theme" type="text/css" href="../themes/online/online.css"/>
 </head>
 <body>
 <div id="container">
 <div id="sidemenu">
+<select>
+  <option value="Online">Online</option>
+  <option value="Presto">Presto</option>
+  <option value="Carry">Carry</option>
+
+</select>
    <h3>Colors</h3>
    <button class="myButton" style="float: right;margin-top: -44px;" id="apply">apply</button>
    <br>
-   <div class="menu_item">    <span class="menu_title">default-color</span>    <input type="text" id="default-color"> </div> <div class="menu_item">    <span class="menu_title">primary-color</span>    <input type="text" id="primary-color"> </div> <div class="menu_item">    <span class="menu_title">primary-text-color</span>    <input type="text" id="primary-text-color"> </div>  <div class="menu_item">    <span class="menu_title">secondary-bg-color</span>    <input type="text" id="default-bg-color"> </div> <div class="menu_item">    <span class="menu_title">primary-bg-color</span>    <input type="text" id="primary-bg-color"> </div> <div class="menu_item">    <span class="menu_title">hovered-text-color</span>    <input type="text" id="hovered-text-color"> </div>   <div class="menu_item">    <span class="menu_title">hovered-bg-color</span>    <input type="text" id="hovered-bg-color"> </div>  <div class="menu_item">    <span class="menu_title">primary-hovered-bg-color</span>    <input type="text" id="primary-hovered-bg-color"> </div>  <div class="menu_item">    <span class="menu_title">primary-hovered-text-color</span>    <input type="text" id="primary-hovered-text-color"> </div> <br/> <h3>Sizes</h3> <br/> <div class="menu_item">    <span class="menu_title">tiny-size</span>    <input type="text" id="tiny-size"> </div>  <div class="menu_item">    <span class="menu_title">border-radius</span>    <input type="text" id="border-radius"> </div>  <div class="menu_item">    <span class="menu_title">normal-size</span>    <input type="text" id="normal-size"> </div> 
+   <div class="menu_item">    <span class="menu_title">default-color</span>    <input type="text" id="default-color"> </div> <div class="menu_item">    <span class="menu_title">primary-color</span>    <input type="text" id="primary-color"> </div> <div class="menu_item">    <span class="menu_title">primary-text-color</span>    <input type="text" id="primary-text-color"> </div>  <div class="menu_item">    <span class="menu_title">secondary-bg-color</span>    <input type="text" id="default-bg-color"> </div> <div class="menu_item">    <span class="menu_title">primary-bg-color</span>    <input type="text" id="primary-bg-color"> </div> <div class="menu_item">    <span class="menu_title">hovered-text-color</span>    <input type="text" id="hovered-text-color"> </div>   <div class="menu_item">    <span class="menu_title">hovered-bg-color</span>    <input type="text" id="hovered-bg-color"> </div>  <div class="menu_item">    <span class="menu_title">primary-hovered-bg-color</span>    <input type="text" id="primary-hovered-bg-color"> </div>  <div class="menu_item">    <span class="menu_title">primary-hovered-text-color</span>    <input type="text" id="primary-hovered-text-color"> </div> <br/> <h3>Sizes</h3> <br/> <div class="menu_item">    <span class="menu_title">tiny-size</span>    <input type="text" id="tiny-size"> </div>  <div class="menu_item">    <span class="menu_title">border-radius</span>    <input type="text" id="border-radius"> </div>  <div class="menu_item">    <span class="menu_title">default-size</span>    <input type="text" id="default-size"> </div> 
 
+   <div class="menu_item"> 
+      <span class="menu_title">big-border-radius</span> 
+      <input type="text" id="big-border-radius"> 
+   </div>  
+   <div class="menu_item"> 
+      <span class="menu_title">default-font-size</span> 
+      <input type="text" id="default-font-size"> 
+   </div>  
+   <div class="menu_item"> 
+      <span class="menu_title">big-font-size</span> 
+      <input type="text" id="big-font-size"> 
+   </div>  
   
 </div>
    <div id="content">

@@ -19,16 +19,16 @@
    .box-sizing(border-box);
    .user-select();
 
-   font: @basic-font;
+   font: @default-font-size @default-font;
    color: @primary-text-color;
    text-align: center;
-   min-width: @normal-size;
-   height: @normal-size;
+   min-width: @default-size;
+   height: @default-size;
    padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
    margin: auto;
    overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
    border: @tiny-size solid @default-color;
-   .border-radius(@border-radius);
+   .border-radius(@default-border-radius);
 
 
    background: @default-bg-color;
@@ -81,7 +81,7 @@
 
    // Big default button
    &.controls-Button__big {
-      font: @button-big-font;
+      font: @big-font-size @default-font;
       color: @primary-text-color;
       text-align: @button-big-text-alignment;
       min-width: @button-big-min-width;
@@ -90,7 +90,7 @@
       padding: 0;   //FF ignore padding in button, therefore we use SPAN with margin
       margin: @button-big-margin;
       border: @tiny-size solid @default-color;
-      .border-radius(@button-big-border-radius);
+      .border-radius(@big-border-radius);
       .box-shadow(@button-big-shadow);
       background: @default-bg-color;
 
@@ -217,7 +217,7 @@
 
 .controls-Button__text {
    display: block;
-   margin: 0 @normal-size/2 0 @normal-size/2;
+   margin: 0 @default-size/2 0 @default-size/2;
 }
 
 // Normal offsets' override for Firefox
