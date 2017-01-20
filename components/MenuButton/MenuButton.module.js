@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.MenuButton', [
    'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.MenuButtonMixin',
    'Core/helpers/dom&controls-helpers',
-   'css!SBIS3.CONTROLS.MenuButton'
+   'css!SBIS3.CONTROLS.MenuButton',
+   'css!SBIS3.CONTROLS.MenuButtonMixin'
 ], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dcHelpers) {
 
    'use strict';
