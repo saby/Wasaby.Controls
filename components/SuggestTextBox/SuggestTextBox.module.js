@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
    'js!SBIS3.CONTROLS.SearchController',
-   'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper'
+   'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
+   'Core/core-instance'
 ], function (
     TextBox,
     PickerMixin,
@@ -15,7 +16,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     SuggestTextBoxMixin,
     SearchMixin,
     SearchController,
-    afterFieldWrapper ) {
+    afterFieldWrapper,
+    cInstance ) {
    'use strict';
 
    /**
