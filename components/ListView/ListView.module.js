@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DecorableMixin",
-   "js!SBIS3.CONTROLS.DragNDropMixinNew",
+   "js!SBIS3.CONTROLS.DragNDropMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CORE.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
@@ -71,6 +71,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
+            tplOptions.selectedKey = cfg.selectedKey;
 
             return tplOptions;
          },
@@ -85,6 +86,8 @@ define('js!SBIS3.CONTROLS.ListView',
             after: 'after',
             before: 'before'
          };
+
+      var INDICATOR_DELAY = 750;
 
       /**
        * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
@@ -101,7 +104,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
+       * @mixes SBIS3.CONTROLS.DragNDropMixin
        * @mixes SBIS3.CONTROLS.CommonHandlers
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
@@ -996,8 +999,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
          _allowDelete: function() {
-            var itemActions = this.getItemsActions();
-            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
+            var
+                delInstance,
+                itemActions = this.getItemsActions();
+
+            if (itemActions) {
+               delInstance = itemActions.getItemInstance('delete');
+            }
+            return this.isEnabled() && !!delInstance && delInstance.isVisible();
          },
          /**
           * Возвращает следующий элемент
@@ -2234,7 +2243,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
          },
-         
+
          _addItems: function(newItems, newItemsIndex, groupId){
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
@@ -2243,7 +2252,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
             return items.length;
          },
@@ -2772,7 +2781,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                      ajaxLoader.removeClass('ws-hidden');
                   }
-               }, 750);
+               }, INDICATOR_DELAY);
             }
             else {
                ajaxLoader.addClass('ws-hidden');

@@ -161,10 +161,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       $constructor: function() {
          var self = this;
          this._inputField = this._getInputField();
-         this._container.bind('keypress', this._keyPressBind.bind(this))
-                        .bind('keydown', this._keyDownBind.bind(this))
-                        .bind('keyup', this._keyUpBind.bind(this));
-
+         this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
          this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
@@ -237,6 +234,24 @@ define('js!SBIS3.CONTROLS.TextBox', [
          TextBox.superclass.init.apply(this, arguments);
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
          this._checkInputVal();
+      },
+
+      _keyboardDispatcher: function(event){
+         return fHelpers.forAliveOnly(function(event){
+            var result = true;
+            switch (event.type) {
+               case 'keydown':
+                  result = this._keyDownBind.call(this, event);
+                  break;
+               case 'keyup':
+                  result = this._keyUpBind.call(this, event);
+                  break;
+               case 'keypress':
+                  result = this._keyPressBind.call(this, event);
+                  break;
+            }
+            return result;
+         }).call(this, event);
       },
 
       _useNativePlaceHolder: function() {

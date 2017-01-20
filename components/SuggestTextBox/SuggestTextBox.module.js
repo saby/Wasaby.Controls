@@ -58,6 +58,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          });
       },
 
+      _chooseCallback: function(result) {
+         if(result && cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
+            var item = result[0];
+            this._onListItemSelect(item.getId(), item);
+         }
+      },
+
       _modifyOptions: function() {
          var opts = SuggestTextBox.superclass._modifyOptions.apply(this, arguments);
          opts.className += ' controls-SuggestTextBox';

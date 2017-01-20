@@ -14,7 +14,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker",
    "js!SBIS3.CORE.CloseButton",
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
+   'i18n!SBIS3.CONTROLS.DateRangeBigChoose',
    'css!SBIS3.CONTROLS.DateRangeBigChoose'
+
 ], function ( constants,CompoundControl, dotTplFn, RangeMixin, RangeSelectableViewMixin, DateUtil, eHelpers) {
    'use strict';
 
@@ -192,6 +194,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._monthRangePicker.setYear(now.getFullYear());
          this._dateRangePicker.setMonth(now);
          this._updateYearsRange(now.getFullYear());
+         now = new Date();
+         this.setRange(now, now);
       },
 
       _onApplyButtonClick: function () {

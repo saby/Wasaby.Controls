@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
                   idProperty: opts.idProperty,
                   rawData: opts.selectedItem
                });
-               opts.selectedKey = opts.selectedItem.getId();
+               opts.selectedKey = opts.selectedItem.get(opts.idProperty);
             }
 
             return opts;
