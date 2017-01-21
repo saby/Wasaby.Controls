@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
          if(this._options.selectedItem instanceof Model) {
             this.initializeSelectedItems();
             this._options.selectedItems.assign([this._options.selectedItem]);
+            this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
          }
 
          /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
