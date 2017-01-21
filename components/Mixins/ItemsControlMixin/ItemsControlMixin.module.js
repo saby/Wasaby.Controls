@@ -2074,6 +2074,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.displayProperty = displayProperty;
       },
 
+      /**
+       * Задаёт шаблон отображения содержимого каждого элемента коллекции
+       * @param {String} tpl Шаблон отображения содержимого каждого элемента коллекции
+       * @example
+       * <pre>
+       *    {{=it.item.get("title")}}
+       * </pre>
+       */
+      setItemContentTpl: function(tpl) {
+         this._options.itemContentTpl = tpl;
+      },
+
 
       _getScrollContainer: function() {
 
