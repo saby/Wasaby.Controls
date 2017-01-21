@@ -56,10 +56,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              */
             delimiters: true,
             /**
-             * @cfg {Number} Денежное значение контрола
+             * @cfg {String} Денежное значение контрола
              * @example
              * <pre>
-             *     <option name="numericValue">123.456</option>
+             *     <option name="moneyValue">123.456</option>
              * </pre>
              * @see text
              */
@@ -96,6 +96,23 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
             }
             this._decimalsContainer.toggleClass('ws-hidden', enabled);
             MoneyTextBox.superclass.setEnabled.apply(this, arguments);
+         }
+      },
+      /**
+       * Возвращает текущее значение денежного поля ввода.
+       * @returns {String} Текущее значение денежного поля ввода.
+       */
+      getMoneyValue: function(){
+         return this._options.moneyValue;
+      },
+      /**
+       * Устанавливает значение денежного поля ввода.
+       * @param value Новое значение поля ввода.
+       */
+      setMoneyValue: function(value){
+         if (value !== this._options.moneyValue){
+            this._setNumericValue(value);
+            this.setText(value + '');
          }
       },
 
