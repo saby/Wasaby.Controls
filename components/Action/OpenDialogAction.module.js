@@ -344,9 +344,6 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
             record.acceptChanges();
          }
 
-         if (meta.source){
-            IoC.resolve('ILogger').error('OpenDialogAction', 'Источник данных нужно задавать через опцию dataSource. Опция source в версии 3.7.5 будет удалена');
-         }
          //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
          //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
          if (meta.dataSource)
