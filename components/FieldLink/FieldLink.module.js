@@ -658,6 +658,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._getLinkCollection().setItemTpl(itemTpl);
           },
 
+          setItemContentTpl: function(itemTpl) {
+             FieldLink.superclass.setItemContentTpl.call(this, itemTpl);
+             this._getLinkCollection().setItemContentTpl(itemTpl);
+          },
+
           /**********************************************************************************************/
 
           _getAdditionalChooserConfig: function () {
