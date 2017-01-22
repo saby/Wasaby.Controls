@@ -140,7 +140,7 @@
       margin: @list-view-actions-menu-margin;
    }
 
-   .controls-MenuItem {
+   .controls-MenuItem.controls-ListView__item {
       white-space: nowrap;
       padding-right: @list-view-actions-menu-item-padding-right;
 
@@ -216,16 +216,14 @@
             bottom: @list-view-small-actions-menu-close-revVert-bottom;
          }
       }
-      &.controls-ListView__item {
-         .controls-MenuItem. {
-            padding-right: @list-view-small-actions-menu-item-padding-right;
-            .controls-MenuItem__icon {
-               top: @list-view-small-actions-menu-item-icon-top-offset;
-               left: @list-view-small-actions-menu-item-icon-left-offset;
-            }
-            .controls-MenuItem__text {
-               margin: @list-view-small-actions-menu-text-margin;
-            }
+      .controls-MenuItem {
+         padding-right: @list-view-small-actions-menu-item-padding-right;
+         .controls-MenuItem__icon {
+            top: @list-view-small-actions-menu-item-icon-top-offset;
+            left: @list-view-small-actions-menu-item-icon-left-offset;
+         }
+         .controls-MenuItem__text {
+            margin: @list-view-small-actions-menu-text-margin;
          }
       }
    }
