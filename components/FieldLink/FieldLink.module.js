@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        'js!SBIS3.CONTROLS.FieldLink.Link',
        "js!SBIS3.CONTROLS.MenuIcon",
        "i18n!SBIS3.CONTROLS.FieldLink",
-       'css!SBIS3.CONTROLS.FieldLink'
+       'css!SBIS3.CONTROLS.FieldLink',
+       'css!SBIS3.CONTROLS.Suggest'
 
     ],
     function (

@@ -55,7 +55,8 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.DragEntity.List",
    "js!WS.Data/MoveStrategy/Base",
    "js!SBIS3.CONTROLS.ListView.Mover",
-   'css!SBIS3.CONTROLS.ListView'
+   'css!SBIS3.CONTROLS.ListView',
+   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
