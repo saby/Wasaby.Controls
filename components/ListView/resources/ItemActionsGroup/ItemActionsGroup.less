@@ -218,13 +218,17 @@
       }
       .controls-MenuItem {
          padding-right: @list-view-small-actions-menu-item-padding-right;
-         .controls-MenuItem__icon {
-            top: @list-view-small-actions-menu-item-icon-top-offset;
-            left: @list-view-small-actions-menu-item-icon-left-offset;
-         }
+         
          .controls-MenuItem__text {
             margin: @list-view-small-actions-menu-text-margin;
          }
+         .controls-MenuItem__content {
+            .controls-MenuItem__icon {
+               top: @list-view-small-actions-menu-item-icon-top-offset;
+               left: @list-view-small-actions-menu-item-icon-left-offset;
+            }
+         }
+
       }
    }
 }

@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    "html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.CommandsButton",
-   'css!SBIS3.CONTROLS.Toolbar'
+   'css!SBIS3.CONTROLS.Toolbar',
+   'css!SBIS3.CONTROLS.MenuButtonMixin'
 ], function( IoC, ConsoleLogger,ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
