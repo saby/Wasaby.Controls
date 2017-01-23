@@ -11,20 +11,20 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
    'use strict';
 
    var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
-       /**
-        * @event onMenuItemActivate Происходит при активации пункта меню.
-        * @remark
-        * Например, при клике по пункту меню.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        * @param {String} id Идентификатор пункта меню.
-        * @example
-        * <pre>
-        *     MenuIcon.subscribe('onMenuItemActivate', function(eventObject, id) {
+      /**
+       * @event onMenuItemActivate Происходит при активации пункта меню.
+       * @remark
+       * Например, при клике по пункту меню.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} id Идентификатор пункта меню.
+       * @example
+       * <pre>
+       *     MenuIcon.subscribe('onMenuItemActivate', function(eventObject, id) {
         *        // getItems() - возвращает экземпляр класса WS.Data/Collection/RecordSet
         *        alert('Вы нажали на ' + MenuIcon.getItems().at(1).get('title'));
         *     })
-        * </pre>
-        */
+       * </pre>
+       */
       $protected: {
          _options: {
             /**
@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
 
       _getHeader: function(){
          var header = $('<div class="controls-Menu__header">'),
-             headerWrapper = $('<div class="controls-Menu-headWrapper">');
+            headerWrapper = $('<div class="controls-Menu-headWrapper">');
 
          if (this._options.icon) {
             headerWrapper.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
