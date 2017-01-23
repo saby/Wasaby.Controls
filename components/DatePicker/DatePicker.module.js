@@ -14,7 +14,8 @@ define(
       'i18n!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.IconButton',
       'css!SBIS3.CONTROLS.DatePicker',
-      'css!SBIS3.CONTROLS.FormattedTextBox'
+      'css!SBIS3.CONTROLS.FormattedTextBox',
+      'css!SBIS3.CONTROLS.DateBox'
    ],
    function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, dcHelpers) {
 
