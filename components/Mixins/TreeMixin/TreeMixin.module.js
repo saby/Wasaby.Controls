@@ -1062,15 +1062,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   if (!this._container.parents('.controls-ListView').length) {
                      this._scrollToItem(this._previousRoot);
                   }
-               }
-               else {
+               } else {
                   /*иначе вход в папку*/
-                  item = this.getItems() && this.getItems().at(0);
-                  if (item){
-                     this.setSelectedKey(item.getId());
+                  item = this._getItemsProjection() && this._getItemsProjection().at(0);
+                  if (item) {
+                     this.setSelectedKey(item.getContents().getId());
                      if (!this._container.parents('.controls-ListView').length) {
                         //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                        this._scrollToItem(item.getId());
+                        this._scrollToItem(item.getContents().getId());
                      }
                   }
                }
