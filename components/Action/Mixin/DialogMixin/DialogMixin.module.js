@@ -47,8 +47,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             /**
              * @cfg {object} Объект содержащий опции компонента.
              */
-            componentOptions: null
-
+            componentOptions: null,
+            /**
+             * @cfg {object} Объект содержащий опции компонента.
+             */
+            dialogOptions: null
          },
          _dialog: undefined,
          _executedDeferred: undefined
@@ -130,8 +133,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @private
        */
       _getDeafuiltDialogConfig: function(mode) {
+         var config = this._options.dialogOptions || {};
          if (mode == 'floatArea') {
-            return {
+            return cMerge({
                isStack: true,
                autoHide: true,
                buildMarkupWithContext: true,
@@ -144,9 +148,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                animation: 'slide'
                /* временнное решение проблемы описанной в надзадаче */
                , block_by_task_1173286428: false
-            };
+            }, config)
          } else {
-            return {};
+            return cMerge({}, config);
          }
       },
       /**
@@ -162,7 +166,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             compOptions = this._buildComponentConfig(meta);
 
          mode = mode || this._options.mode;
-         meta.componentOptions = meta.componentOptions  || meta.dialogOptions ||  {};
+         meta.componentOptions = meta.componentOptions  ||  {};
+         meta.dialogOptions = meta.dialogOptions  ||  {};
          colHelpers.forEach(config, function(defaultValue, key){
             if (meta.hasOwnProperty(key)){
                IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.componentOptions');
@@ -172,6 +177,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                config[key] = (meta.componentOptions[key] !== undefined) ? meta.componentOptions[key] : defaultValue;
             }
          });
+         cMerge(config, meta.dialogOptions);
 
          cMerge(config, {
             opener: this,
