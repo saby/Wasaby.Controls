@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
 
             _modifyOptions: function(options) {
                options = ImageOptionsPanel.superclass._modifyOptions.apply(this, arguments);
-               if (Di.isRegistered('imageEditor')) {
+               if (Di.isRegistered('ImageEditor')) {
                   options.richMode = true;
                }
                return options;
