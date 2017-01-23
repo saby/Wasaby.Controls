@@ -55,10 +55,10 @@
 
 //Стили для элементов тулбара богатого редактора
 .controls-RichEditorToolbar__item {
-   margin: 0 2px;
-   float: left;
+   margin: 0 2px !important;
+   float: left !important;
 
-   &.controls-Button {
+   &.controls-Button.controls-ListView__item {
       display: inline-block;
       overflow: hidden;
       .controls-Button__icon {
@@ -108,10 +108,10 @@
       &:hover{
          &:not(.ws-disabled){
             &:not(.controls-Click__active) {
-               border: none;
-               background: none;
+               border: none !important;
+               background: none !important;
                &.controls-Checked__checked {
-                  background: @fieldRichEditorButtonsCheckedColor;
+                  background: @fieldRichEditorButtonsCheckedColor !important;
                }
             }
             &.controls-Checked__checked {
