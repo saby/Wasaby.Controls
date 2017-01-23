@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _getTextFromMarkup: function() {
-         var text = this._inputField.get(0).innerHTML;
+         var text = this._inputField.get(0).innerText;
          text = this._prepareTextBecauseFFBug(text);
          return text;
       },
