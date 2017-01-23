@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
     * @singleton
     * @public
     * @author Крайнов Дмитрий Олегович
-    * @see SBIS3.CONTROLS.DragNDropMixinNew
+    * @see SBIS3.CONTROLS.DragNDropMixin
     * @example
     * Получим DragObject через require
     * <pre>
@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                //такой поиск нужен что бы в таргете всегда был контрол с dnd миксином, кроме того на ipade контрол находит себя по таргету
                //если внутри контрола будут вложенные контролы то там драгндроп работать не будет.
                if (control) {
-                  if (cInstance.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixinNew') && control.getItemsDragNDrop()) {
+                  if (cInstance.instanceOfMixin(control, 'SBIS3.CONTROLS.DragNDropMixin') && control.getItemsDragNDrop()) {
                      return control;
                   }
                   return found(control.getParent());
