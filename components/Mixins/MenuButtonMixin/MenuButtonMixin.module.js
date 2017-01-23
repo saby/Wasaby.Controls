@@ -12,19 +12,19 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
 
    var MenuButtonMixin = /**@lends SBIS3.CONTROLS.MenuButtonMixin.prototype  */{
       /**
-       * @event onMenuItemActivate Происходит при активации пункта меню.
-       * @remark
-       * Например, при клике по пункту меню.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} id Идентификатор пункта меню.
-       * @example
-       * <pre>
-       *     MenuIcon.subscribe('onMenuItemActivate', function(eventObject, id) {
+        * @event onMenuItemActivate Происходит при активации пункта меню.
+        * @remark
+        * Например, при клике по пункту меню.
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {String} id Идентификатор пункта меню.
+        * @example
+        * <pre>
+        *     MenuIcon.subscribe('onMenuItemActivate', function(eventObject, id) {
         *        // getItems() - возвращает экземпляр класса WS.Data/Collection/RecordSet
         *        alert('Вы нажали на ' + MenuIcon.getItems().at(1).get('title'));
         *     })
-       * </pre>
-       */
+        * </pre>
+        */
       $protected: {
          _options: {
             /**
