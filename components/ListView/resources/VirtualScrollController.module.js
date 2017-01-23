@@ -6,10 +6,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       $protected: {
          _options: {
             view: null,
-            viewportController: null
+            viewportController: null,
          },
-         _topDetachedItems: {},
-         _bottomDetachedItems: [],
+         _threshold: 100,
+         _batchSize: 20,
+         _topIndex: 0,
+         _bottomIndex: null,
          _topWrapper: null,
          _bottomWrapper: null
       },
@@ -17,10 +19,19 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       init: function(){
          var view = this._options.view;
          VirtualScrollController.superclass.init.call(this);
-         this._options.viewportController.subscribe('onScrollPageChange', this._onScrollPageChange.bind(this));
+         /*this._options.viewportController.subscribe('onScrollPageChange', this._onScrollPageChange.bind(this));
 
-         this._topWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer())
-         this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer())
+         this._topWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
+         this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());*/
+         view.subscribe('onDataLoad', function(event, items){
+            this._bottomIndex = items.getCount();
+         }.bind(this));
+
+         view.subscribe('onDataMerge', function(event, items){
+            this._bottomIndex += items.getCount();
+         }.bind(this));
+
+         this._options.viewportController.subscribe('onVirtualPageChange', this._onVirtualPageChange.bind(this));
       },
 
       _onScrollPageChange: function(event, pageNumber) {
@@ -28,22 +39,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             view = this._options.view,
             viewportController = this._options.viewportController,
             scrollPages = viewportController.getScrollPages(),
+            // strat removing from 3rd page
             pageToDetach = pageNumber - 3,
             pageToAttach = pageNumber - 2,
-            detached;
-         
-         if (!this._topDetachedItems[pageToDetach] && pageNumber > 2){
-            // strat removeing from 3rd page
-            detached = scrollPages[pageToDetach].elements.detach();
-            this._topDetachedItems[pageToDetach] = detached;
-            this._topWrapper.height(scrollPages[pageToDetach + 1].offset)
-         } else {
-            if (this._topDetachedItems[pageToAttach]) {
-               this._topDetachedItems[pageToAttach].prependTo(view._getItemsContainer());
-               delete this._topDetachedItems[pageToAttach];
-               this._topWrapper.height(scrollPages[pageToAttach].offset)
-            }
-         }
+            hashes;
+            
       }
 
    });

@@ -77,11 +77,11 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          cfg.items = [];
          cfg.idProperty = 'id';
          cfg.displayProperty = 'text';
-         for (var i = 1; i <= cfg.pagesCount; i++) {
+         for (var i = 0; i < cfg.pagesCount; i++) {
             cfg.items.push({
                id : i,
-               text : i.toString()
-            })
+               text : (i + 1).toString()
+            });
          }
       }
    };
@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
          if (!this._prevBtn) {
             this._bindControls();
          }
-         if (this.getSelectedKey() == 1) {
+         if (this.getSelectedKey() == 0) {
             this._prevBtn.setEnabled(false);
             this._beginBtn.setEnabled(false);
          }

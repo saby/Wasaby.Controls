@@ -45,20 +45,19 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
-         paging.subscribe('onSelectedItemChange', function(e, pageNumber){
-            viewportController.scrollToPage(pageNumber);
+         paging.subscribe('onSelectedItemChange', function(e, key, index){
+            if (!this._pagesCountChanged) {
+               viewportController.scrollToPage(key);
+            }
          }.bind(this));
 
-         viewportController.subscribe('onScrollPageChange', function(e, page){
-            var curKey, paging = this._options.paging;
+         viewportController.subscribe('onScrollPageChange', function(e, pageNumber){
+            var paging = this._options.paging;
             if (paging.getItems()) {
-               // selected key is string
-               if (+paging.getSelectedKey() != page) {
-                  if (newKey > paging.getItems().getCount()) {
-                     paging.setPagesCount(newKey);
-                  }
-                  paging.setSelectedKey(newKey);
+               if (pageNumber > paging.getPagesCount()) {
+                  paging.setPagesCount(pageNumber);
                }
+               paging.setSelectedKey(pageNumber);
             }
          }.bind(this));
 
@@ -95,10 +94,13 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                view.getContainer().css('padding-bottom', '32px');
             }
             if (paging.getSelectedKey() > pagesCount){
-               paging._options.selectedKey = pagesCount;
+               paging.setSelectedKey(pagesCount - 1);
             }
-            paging.setPagesCount(pagesCount);
 
+            // После setPagesCount стеляет ненужный onSelectedItemChange, этот флаг для того, что бы его не обрабатывать
+            this._pagesCountChanged = true;
+            paging.setPagesCount(pagesCount);
+            this._pagesCountChanged = false;
             //Если есть страницы - покажем paging
             paging.setVisible(pagesCount > 1);
          }
