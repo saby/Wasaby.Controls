@@ -3,7 +3,7 @@
            {{startScrollColumn !== undefined ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
         style="{{startScrollColumn <= index ? 'left:' + columnsScrollPosition + 'px;' : ''}}">
         <div class="controls-DataGridView__columnValue">
-            <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" val="{{cellData.getCellValue(cellData.getColumnVal(item, column.field), column.field, item, cellData.ladder, cellData.ladderColumns)}}" />
+            <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" Sanitize="{{Sanitize}}"/>
         </div>
     </td>
 </ws:for>

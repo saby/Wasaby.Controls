@@ -1,0 +1,8 @@
+<tr class="{{getItemTemplateData(...).addClasses}}" style="{{decorators.apply((colorField ? item.get(colorField) : ''), 'color')}}" data-parent-hash="{{projItem.getParent() ? projItem.getParent().getHash() : ''}}" data-hash="{{projItem.getHash()}}" data-id="{{item.getId()}}">
+    <ws:if data="{{multiselect}}">
+      <td style="{{getItemTemplateData(...).computedPadding}}" class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn!== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}">
+         <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+      </td>
+   </ws:if>
+   <ws:partial template="{{itemContent}}" scope="{{...}}" />
+</tr>

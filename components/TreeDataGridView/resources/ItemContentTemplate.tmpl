@@ -1,0 +1,43 @@
+<ws:for data="index, column in columns">
+    <ws:if data="{{(!foldersColspan || !getItemContentTplData(...).isNode || (getItemContentTplData(...).isNode && index < 1))}}">
+        <td colspan="{{(it.foldersColspan && getItemContentTplData(...).isNode) ? columns.length : ''}}"
+            class="controls-DataGridView__td {{column.editor ? 'controls-DataGridView__edited-td' : ''}} {{column.className|orEmpty}} {{getItemContentTplData(...).hasScroll ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{index == 0 ? 'controls-DataGridView__firstContentCell' : ''}}"
+            style="{{index == 0 && (getItemContentTplData(...).padding > originallPadding) ? 'padding-left:' + getItemContentTplData(...).padding + 'px;' : ''}} {{startScrollColumn <= index ? 'left:' + currentScrollPosition + 'px;'}}">
+            <ws:if data="{{index == 0}}">
+                <div class="lvl{{projItem.getLevel()}} controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open':''}} {{(getItemContentTplData(...).isNode === null || (getItemContentTplData(...).isNode === false && getItemContentTplData(...).hierField$ === false && !getItemContentTplData(...).hasChilds) || (displayType === 'folders' && getItemContentTplData(...).hierField$ === false && !getItemContentTplData(...).hasChilds)) ? 'controls-TreeView__expand__leaf' : 'has-child'}}"></div>
+                <ws:if data="{{projItem.isNode()}}">
+                    <ws:if data="{{arrowActivatedHandler || editArrow}}">
+                        <div class="controls-TreeView__ellipsis-wrapper">
+                            <div class="controls-TreeView__ellipsis-container">
+                                <div class="controls-TreeView__folderTitle">
+                                    <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" isNode="{{getItemContentTplData(...).isNode}}" Sanitize="{{Sanitize}}"/>
+                                </div>
+                                <div class="controls-TreeView__editArrow"></div>
+                            </div>
+                            <!-- Чтобы стрелка показывалась, даже когда название папки не влезает в колонку, добавим дополнительный блок со стрелкой,который сместится в крайнее правое положение и отобразит многоточие и стрелку, если название не поместлось -->
+                            <div class="controls-TreeView__ellipsis-copyArrow">
+                                <div class="controls-TreeView__editArrow"></div>
+                            </div>
+                        </div>
+                    </ws:if>
+                    <ws:else>
+                        <div class="controls-TreeView__folderTitle">
+                            <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" isNode="{{getItemContentTplData(...).isNode}}" Sanitize="{{Sanitize}}"/>
+                        </div>
+                    </ws:else>
+                </ws:if>
+                <ws:else>
+                    <div class="controls-DataGridView__columnValue">
+                        <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" isNode="{{getItemContentTplData(...).isNode}}" Sanitize="{{Sanitize}}"/>
+                    </div>
+                </ws:else>
+            </ws:if>
+            <ws:else>
+                <div class="controls-DataGridView__columnValue">
+                    <ws:partial template="{{column.contentTpl}}" scope="{{cellData}}" item="{{item}}" projItem="projItem" field="{{column.field}}" column="{{column}}" included="{{included}}" templateBinding="{{templateBinding}}" decorators="{{decorators}}" isNode="{{getItemContentTplData(...).isNode}}" Sanitize="{{Sanitize}}"/>
+                </div>
+            </ws:else>
+        </td>
+    </ws:if>
+</ws:for>
+

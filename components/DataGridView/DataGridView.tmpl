@@ -1,4 +1,4 @@
-<div class="controls-DataGridView controls-ListView {{ multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
+<div class="controls-DataGridView controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
             {{ startScrollColumn !== undefined ? ' controls-DataGridView__with-partScroll' : ''}}">
     <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
     <div class="controls-AjaxLoader ws-hidden">
@@ -8,7 +8,7 @@
             </div>
         </div>
     </div>
-    <table class="controls-DataGridView__table {{ (stickyHeader && showHead) ? 'ws-sticky-header__table' : '' }}">
+    <table class="controls-DataGridView__table {{(stickyHeader && showHead) ? 'ws-sticky-header__table' : ''}}">
         <ws:partial template="{{_colGroupTpl}}" scope="{{_colgroupData}}" />
         <ws:partial template="{{_headTpl}}" scope="{{_headData}}" />
         <tbody class="controls-DataGridView__tbody">
@@ -18,7 +18,7 @@
         </tbody>
         <ws:partial template="{{_footTpl}}" scope="{{...}}" />
     </table>
-    <div class="controls-ListView__EmptyData {{ (_serverRender || _records.length) ? 'ws-hidden' :''}}">{{emptyHTML}}</div>
+    <div class="controls-ListView__EmptyData {{(_serverRender || _records.length) ? 'ws-hidden' :''}}">{{emptyHTML}}</div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />
@@ -27,7 +27,7 @@
     <ws:if data="{{ showPaging }}">
         <div class="controls-Pager-container"></div>
     </ws:if>
-    <div class="controls-ListView-scrollIndicator ws-hidden {{infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up' : ''}}"></div>
+    <div class="controls-ListView-scrollIndicator ws-hidden {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
-    <div class="controls-ListView__scrollPager {{infiniteScroll ? 'ws-hidden' : ''}}"></div>
+    <div class="controls-ListView__scrollPager {{!infiniteScroll ? 'ws-hidden' : ''}}"></div>
 </div>

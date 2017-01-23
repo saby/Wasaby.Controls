@@ -2,12 +2,32 @@ define('js!SBIS3.CONTROLS.TreeView', [
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.TreeMixin',
    'js!SBIS3.CONTROLS.TreeViewMixin',
-   'html!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
-   'html!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
    'js!SBIS3.CORE.MarkupTransformer'
 ], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, MarkupTransformer) {
    'use strict';
+   var getItemTemplateData = function (cfg) {
+      var config = {
+         nodePropertyValue: cfg.item.get(cfg.nodeProperty),
+         projection: cfg.projItem.getOwner(),
+         padding: cfg.paddingSize * (cfg.projItem.getLevel() - 1) + cfg.originallPadding
+      };
+      config.children = cfg.hierarchy.getChildren(cfg.item,config.projection.getCollection());
+      config.hasLoadedChild = config.children.length > 0;
+      config.loadedWithoutChilds = (cfg.projItem.isLoaded() || !config.hasLoadedChild) && config.nodePropertyValue != null;
+      config.drawExpandIcon = !!config.nodePropertyValue;
+      config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
+      config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
+      config.classPresenceLoadedNodes = config.loadedWithoutChilds ? ' controls-ListView__item-without-child' : '';
+      config.classIsSelected = (cfg.selectedKey==cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
+      config.addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + config.classNodeType + config.classNodeState + config.classPresenceLoadedNodes + config.classIsSelected;
 
+      if (config.padding > cfg.originallPadding){
+         config.computedPadding = 'padding-left:' + config.padding + 'px;';
+      }
+      return config;
+   };
    /**
     * Контрол, отображающий данные имеющие иерархическую структуру. Позволяет отобразить данные в произвольном виде с возможностью открыть или закрыть отдельные узлы
     * @class SBIS3.CONTROLS.TreeView
@@ -39,6 +59,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
+            _getItemTemplateData: getItemTemplateData,
             //FixME: так как приходит набор от листвью. пока он не нужен
             itemsActions: []
          }

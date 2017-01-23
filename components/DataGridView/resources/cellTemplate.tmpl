@@ -1,3 +1,1 @@
-<ws:if data="{{val != null}}">
-    {{decorators.applyOnly(val, {'highlight': column.highlight}) |sanitize}}
-</ws:if>
+{{decorators.applyOnly(getCellValue(getColumnVal(item, field), column.field, item, ladder, ladderColumns), {'highlight': column.highlight}) |orEmpty|sanitize}}

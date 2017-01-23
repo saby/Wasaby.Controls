@@ -6,7 +6,7 @@
     </ws:if>
 
     <ws:for data="index, column in columns">
-        <td class="controls-DataGridView__td {{column.className}}{{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+        <td class="controls-DataGridView__td {{column.className}} {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
             style="left:{{(startScrollColumn !== undefined && startScrollColumn <= index) ? columnsScrollPosition + 'px;' : ''}}">
             <ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" />
         </td>

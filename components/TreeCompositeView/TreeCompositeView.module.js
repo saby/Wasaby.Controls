@@ -5,11 +5,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "Core/ParallelDeferred",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.CompositeViewMixin",
-   "html!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/TreeCompositeItemsTemplate',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
+   "tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
+   'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/TreeCompositeItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -93,8 +93,36 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       }
       parentOptions.listFolderTpl = TemplateUtil.prepareTemplate(listFolderTpl);
+      parentOptions.drawFolders = drawFolders;
+      parentOptions.drawLeafs = drawLeafs;
       parentOptions.defaultlistFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultListFolderTemplate);
       return parentOptions;
+   },
+   drawFolders = function(cfg){
+      var stashTpl = cfg.tplData.itemTpl,
+         markup;
+      if (cfg.tplData.viewMode == 'list'){
+         cfg.tplData.itemTpl = cfg.tplData.listFolderTpl;
+      }
+      else if (cfg.tplData.viewMode == 'tile'){
+         cfg.tplData.itemTpl = cfg.tplData.folderTpl;
+      }
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders, tplData : cfg.tplData});
+      cfg.tplData.itemTpl = stashTpl;
+      return markup;
+   },
+   drawLeafs = function(cfg){
+      var stashTpl = cfg.tplData.itemTpl,
+         markup;
+      if (cfg.tplData.viewMode == 'list'){
+         cfg.tplData.itemTpl = cfg.tplData.listTpl;
+      }
+      else if (cfg.tplData.viewMode == 'tile'){
+         cfg.tplData.itemTpl = cfg.tplData.tileTpl;
+      }
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs, tplData : cfg.tplData});
+      cfg.tplData.itemTpl = stashTpl;
+      return markup;
    },
    getRecordsForRedraw = function(projection, cfg, isOld) {
       if (cfg.viewMode == 'table' || isOld) {

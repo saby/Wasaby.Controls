@@ -1,0 +1,8 @@
+<div style="{{getItemTemplateData(...).computedPadding}}" class="{{getItemTemplateData(...).addClasses}}"
+     data-parent-hash="{{projItem.getParent().getHash()}}" data-hash="{{projItem.getHash()}}"
+     data-id="{{item.getId()}}">
+    <ws:if data="{{getItemTemplateData(...).drawExpandIcon}}">
+        <div class="controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open' : ''}}"></div>
+    </ws:if>
+    <ws:partial template="{{itemContent}}" scope="{{...}}" />
+</div>
