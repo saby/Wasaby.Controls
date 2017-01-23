@@ -159,18 +159,20 @@
          }
       }
    }
+   &.controls-TextBox {
+      .controls-TextBox__afterFieldWrapper {
+         order: 2;
+         display: inline-flex;
+         align-items: center;
+         height: @controls-FieldLink-afterField-height;
+         width: auto;
 
-   .controls-TextBox__afterFieldWrapper {
-      order: 2;
-      display: inline-flex;
-      align-items: center;
-      height: @controls-FieldLink-afterField-height;
-      width: auto;
-
-      > * {
-         padding: @controls-FieldLink-afterField-padding;
+         > * {
+            padding: @controls-FieldLink-afterField-padding;
+         }
       }
    }
+
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
          background-color: @text-box-error-bg;
@@ -232,12 +234,14 @@
    }
 }
 
-.controls-FieldLink__showAllLinks {
-   position: relative;
-   width: 20px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   padding: @controls-FieldLink-showAllLinks-padding;
-   float: left;
+.controls-TextBox__beforeFieldWrapper {
+   .controls-FieldLink__showAllLinks {
+      position: relative;
+      width: 20px;
+      line-height: @controls-FieldLink-showAllLinks-lineHeight;
+      padding: @controls-FieldLink-showAllLinks-padding;
+      float: left;
+   }
 }
 
 .controls-FieldLink__copyShowAll {

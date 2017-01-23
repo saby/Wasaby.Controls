@@ -1,7 +1,8 @@
 /*global define*/
 define('js!SBIS3.CONTROLS.DateRangeBig', [
    'js!SBIS3.CONTROLS.DateRange',
-   'js!SBIS3.CONTROLS.DateRangeBigChoose'
+   'js!SBIS3.CONTROLS.DateRangeBigChoose',
+   'css!SBIS3.CONTROLS.DateRangeBig'
 ], function (DateRange, DateRangeBigChoose) {
    'use strict';
    /**

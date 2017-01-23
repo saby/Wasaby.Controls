@@ -3,8 +3,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "js!SBIS3.CONTROLS.TextBoxBase",
    "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
-   "Core/IoC"
+   "Core/IoC",
+   'css!SBIS3.CONTROLS.TextArea'
 ], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC) {
+
 
    'use strict';
 

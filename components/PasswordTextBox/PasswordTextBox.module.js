@@ -5,7 +5,8 @@
 define('js!SBIS3.CONTROLS.PasswordTextBox', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBox",
-   "html!SBIS3.CONTROLS.PasswordTextBox"
+   "html!SBIS3.CONTROLS.PasswordTextBox",
+   'css!SBIS3.CONTROLS.PasswordTextBox'
 ], function ( constants,TextBox, dotTplFn) {
 
    'use strict';
