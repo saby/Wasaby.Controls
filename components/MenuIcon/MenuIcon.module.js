@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'css!SBIS3.CONTROLS.MenuIcon'], function(IconButton, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin) {
+define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'css!SBIS3.CONTROLS.MenuIcon',    'css!SBIS3.CONTROLS.MenuButton', 'css!SBIS3.CONTROLS.MenuButtonMixin'], function(IconButton, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin) {
 
    'use strict';
 
