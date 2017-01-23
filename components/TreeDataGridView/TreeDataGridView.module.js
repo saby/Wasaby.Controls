@@ -172,8 +172,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _getSearchBreadCrumbsWidth: function(){
-      	var firstCol = $('td:first', this._getItemsContainer()),
-      	firstColWidth = this._options.multiselect ? firstCol.width() : 0;
+      	var
+            firstCol = $('td:first', this._getItemsContainer()),
+      	   firstColWidth = this._options.multiselect ? firstCol.width() : 0,
       		secondCol = firstCol.next('td'),
       		cellPadding = secondCol.outerWidth() - secondCol.width();
       	return this.getContainer().width() - cellPadding - firstColWidth;
@@ -256,15 +257,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getEditorOffset: function(model) {
          var
              treeLevel = 0,
-             parentProj;
-         // Если мы в режиме поиска, то уровень иерархии редактируемой записи всегда равен единице
+             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
+         // Если мы в режиме поиска, то:
+         // - при наличии родительской записи (записей) уровень иерархии равен 1
+         // - в остальных случаях уровень иерархии равен 0
          if (this._isSearchMode()) {
-            treeLevel = 1;
-         } else {
-            parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
-            if (parentProj) {
-               treeLevel = parentProj.getLevel();
-            }
+            treeLevel = parentProj ? 1 : 0;
+         } else if (parentProj) {
+            treeLevel = parentProj.getLevel();
          }
          return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
       },

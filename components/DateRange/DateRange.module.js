@@ -61,6 +61,57 @@ define('js!SBIS3.CONTROLS.DateRange', [
       $protected: {
          _options: {
             /**
+             * @cfg {String} Формат отображения данных
+             * @remark
+             * На базе формата, заданного в этой опции, будет создана html-разметка, в соответствии с которой
+             * определяется весь функционал.
+             * Необходимо выбрать одну из масок в массиве допустимых значений.
+             * Допустимые символы в маске:
+             * <ol>
+             *    <li>D(day) - календарный день.</li>
+             *    <li>M(month) - месяц.</li>
+             *    <li>Y(year) - год.</li>
+             *    <li>H(hour) - час.</li>
+             *    <li>I - минута</li>
+             *    <li>S(second) - секунда.</li>
+             *    <li>U - доля секунды.</li>
+             *    <li>".", "-", ":", "/" - разделители.</li>
+             * </ol>
+             * @example
+             * <pre>
+             *     <option name="mask">HH:II:SS.UUU</option>
+             * </pre>
+             * @variant 'DD.MM.YYYY'
+             * @variant 'DD.MM.YY'
+             * @variant 'DD.MM'
+             * @variant 'YYYY-MM-DD'
+             * @variant 'YY-MM-DD'
+             * @variant 'HH:II:SS.UUU'
+             * @variant 'HH:II:SS'
+             * @variant 'HH:II'
+             * @variant 'DD.MM.YYYY HH:II:SS.UUU'
+             * @variant 'DD.MM.YYYY HH:II:SS'
+             * @variant 'DD.MM.YYYY HH:II'
+             * @variant 'DD.MM.YY HH:II:SS.UUU'
+             * @variant 'DD.MM.YY HH:II:SS'
+             * @variant 'DD.MM.YY HH:II'
+             * @variant 'DD.MM HH:II:SS.UUU'
+             * @variant 'DD.MM HH:II:SS'
+             * @variant 'DD.MM HH:II'
+             * @variant 'YYYY-MM-DD HH:II:SS.UUU'
+             * @variant 'YYYY-MM-DD HH:II:SS'
+             * @variant 'YYYY-MM-DD HH:II'
+             * @variant 'YY-MM-DD HH:II:SS.UUU'
+             * @variant 'YY-MM-DD HH:II:SS'
+             * @variant 'YY-MM-DD HH:II'
+             * @variant 'YYYY'
+             * @variant 'MM/YYYY'
+             * @see date
+             * @see isCalendarIconShow
+             */
+            mask: 'DD.MM.YY',
+
+            /**
              * @cfg {Date|String} Устанавливает начальную дату диапазона.
              * @remark
              * Опцию устанавливают вместе с {@link endtDate}, либо обе даты остаются не заданными.
@@ -233,7 +284,8 @@ define('js!SBIS3.CONTROLS.DateRange', [
             parent: this._picker,
             element: element,
             startValue: this._datePickerStart.getDate(),
-            endValue: this._datePickerEnd.getDate()
+            endValue: this._datePickerEnd.getDate(),
+            mask: this._options.mask
          });
       },
 
