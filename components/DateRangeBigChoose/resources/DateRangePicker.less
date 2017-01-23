@@ -301,7 +301,10 @@
                   color: lighten(@date-range-big-choose-date-range-picker-color, 50%);
 
                   &.controls-MonthView__weekend {
-                     color: lighten(@date-range-big-choose-date-range-picker-weekend-color, 20%);
+                     .controls-MonthView__dayTitle {
+                        color: lighten(@date-range-big-choose-date-range-picker-weekend-color, 20%);
+                     }
+                     
                   }
 
                   &:hover {
