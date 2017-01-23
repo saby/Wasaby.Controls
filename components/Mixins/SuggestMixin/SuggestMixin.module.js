@@ -343,13 +343,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._notifyOnPropertyChanged('listFilter');
 
          /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
-           то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
+            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused() || silent) {
             if(items && items.getCount()) {
                items.clear();
             }
             if(this._list) {
                this._list.setFilter(this._options.listFilter, true);
+
+               if(this.isPickerVisible()) {
+                  this.hidePicker();
+               }
             }
             return;
          }
