@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
-   "js!SBIS3.CONTROLS.SuggestShowAll"
+   "Core/helpers/functional-helpers"
 ], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance, fHelpers) {
    'use strict';
 
