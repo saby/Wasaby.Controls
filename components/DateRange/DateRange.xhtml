@@ -2,12 +2,14 @@
     <component data-component="SBIS3.CONTROLS.DateBox" name="DateRange__DatePickerStart" class="controls-DateRange__DatePickerStart">
         <option name="date" type="ref">{{@it.startValue}}</option>
         <option name="notificationMode">{{=it.notificationMode}}</option>
+        <option name="mask">{{=it.mask}}</option>
     </component><!--
     --><div class="controls-DateRange__dash"></div><!--
     --><component data-component="SBIS3.CONTROLS.DateBox" name="DateRange__DatePickerEnd" class="controls-DateRange__DatePickerEnd">
         <option name="date" type="ref">{{@it.endValue}}</option>
         <option name="focusOnActivatedOnMobiles" value="true" type="boolean"></option>
         <option name="notificationMode">{{=it.notificationMode}}</option>
+        <option name="mask">{{=it.mask}}</option>
     </component><!--
     --><component data-component="SBIS3.CONTROLS.IconButton" name="DateRange__Button" class="controls-DateRange__Button">
         <option name="tabindex" value="0"></option>

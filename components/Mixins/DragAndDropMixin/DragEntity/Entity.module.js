@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Entity', [
     * @class SBIS3.CONTROLS.DragEntity.Entity
     * @public
     * @author Крайнов Дмитрий Олегович
-    * @see SBIS3.CONTROLS.DragNDropMixinNew#dragEntity
+    * @see SBIS3.CONTROLS.DragNDropMixin#dragEntity
     * @see SBIS3.CONTROLS.DragObject
     * @see SBIS3.CONTROLS.DragObject#getSource
     * @see SBIS3.CONTROLS.DragObject#getTarget
