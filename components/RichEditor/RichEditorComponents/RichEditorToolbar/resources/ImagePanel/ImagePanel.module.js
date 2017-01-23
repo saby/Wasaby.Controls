@@ -16,14 +16,14 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             $protected: {
                _options: {
                   closeButton: true,
-                  richMode: false
+                  canMultiSelect: false
                }
             },
             _lastKey: undefined,
 
             _modifyOptions: function(options) {
                options = ImagePanel.superclass._modifyOptions.apply(this, arguments);
-               options.richMode = Di.resolve('ImageUploader').richMode;
+               options.canMultiSelect = Di.resolve('ImageUploader').canMultiSelect;
                return options;
             },
 
