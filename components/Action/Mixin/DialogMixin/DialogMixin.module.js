@@ -89,9 +89,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       */
       _doExecute: function(meta) {
          this._executedDeferred = new Deferred();
-         this._setConfig();
          this._openComponent(meta, this._options.template);
-         return this._closeDeferred;
+         return this._executedDeferred;
       },
 
       _openDialog: function(meta, template) {
@@ -181,7 +180,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             handlers: {
                onAfterClose: function(e, meta){
                   if (self._executedDeferred) {
-                     self.callback(meta);
+                     self._executedDeferred.callback(meta);
                   }
                   self._dialog = undefined;
                },
