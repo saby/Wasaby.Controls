@@ -171,6 +171,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _onChangeHoveredItemHandler: function(event, hoveredItem) {
+         /* Чтобы проинициализировать кнопку "Выбрать", если её нет */
+         this._onPropertyChangedHandler();
+
          var linkedObject = this._getLinkedObject(),
              selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
 
@@ -178,7 +181,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          if(hoveredItem.container) {
             if (this._isBranch(hoveredItem.record)) {
                if (linkedObject.getMultiselect() && linkedObject.getSelectedKeys().indexOf(hoveredItem.key) === -1 ||
-                  hoveredItem.container.hasClass('controls-HierarchyDataGridView__path')) {
+                   linkedObject._isSearchMode()) {
                   selectAction.show();
                } else {
                   selectAction.hide()
