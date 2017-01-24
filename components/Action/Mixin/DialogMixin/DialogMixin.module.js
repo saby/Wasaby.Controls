@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       $constructor: function() {
 
          if ( this._options.dialogComponent && !this._options.template) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.5', 1);
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
             this._options.template = this._options.dialogComponent;
          }
          this._publish('onAfterShow', 'onBeforeShow');
@@ -113,8 +113,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             this._dialog.reload();
          }
          else {
-            this._createComponent(config, meta, mode);
             cMerge(config, meta);
+            this._createComponent(config, meta, mode);
          }
       },
 
@@ -161,11 +161,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @private
        */
       _getDialogConfig: function(meta, template, mode) {
+         mode = mode || this._options.mode;
          var config = this._getDeafuiltDialogConfig(mode),
             self = this,
             compOptions = this._buildComponentConfig(meta);
 
-         mode = mode || this._options.mode;
          meta.componentOptions = meta.componentOptions  ||  {};
          meta.dialogOptions = meta.dialogOptions  ||  {};
          colHelpers.forEach(config, function(defaultValue, key){
@@ -215,6 +215,17 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        */
       getMode: function() {
          return this._options.mode;
+      },
+      /**
+       * Устанавливает название шаблона
+       * @param {String} Название модуля шаблона.
+       * @deprecated
+       */
+      setDialogComponent: function (template) {
+         //нужно для того чтобы работал метод setProperty(dialogComponent)
+         Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
+         this._options.template = template;
+
       }
    };
 
