@@ -20,7 +20,9 @@ define('js!SBIS3.CONTROLS.SearchController',
             searchMode: null,
             doNotRespondOnReset: null,
             breadCrumbs: null,
-            backButton: null
+            backButton: null,
+            keyboardLayoutRevert: true
+
          },
          _kbLayoutRevertObserver: null,
          _firstSearch: true,
@@ -264,7 +266,9 @@ define('js!SBIS3.CONTROLS.SearchController',
                }
             }
 
-            self._kbLayoutRevertObserver.startObserve();
+            if(self._options.keyboardLayoutRevert) {
+               self._kbLayoutRevertObserver.startObserve();
+            }
             if (isTree) {
                self._startHierSearch(text);
             } else {

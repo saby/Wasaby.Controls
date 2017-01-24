@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset, keyboardLayoutRevert) {
          if (!this._searchController){
             this._searchController = new SearchController({
                view: this._options.view,
@@ -143,7 +143,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                searchMode: searchMode,
                doNotRespondOnReset: doNotRespondOnReset,
                breadCrumbs: this._options.breadCrumbs,
-               backButton: this._options.backButton
+               backButton: this._options.backButton,
+               keyboardLayoutRevert: keyboardLayoutRevert
             });
          }
          this._searchController.bindSearch();
