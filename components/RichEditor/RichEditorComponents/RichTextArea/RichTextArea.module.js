@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "js!SBIS3.CONTROLS.TextBoxBase",
    "html!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
-   "js!SBIS3.CORE.FileStorageLoader",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    "js!SBIS3.CORE.PluginManager",
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
@@ -24,11 +23,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'js!WS.Data/Di',
+   'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor"
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di, ImageOptionsPanel) {
       'use strict';
-
+      //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          constants = {
             maximalPictureSize: 120,
@@ -101,15 +101,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 */
                maximalHeight: 300,
                /**
-                * @cfg {Boolean} Загрузка файлов в хранилище при их дропе (с десктопа) в поле редактора
-                * <wiTag group="Управление">
-                * @example
-                * <pre>
-                *     <option name="uploadImageOnDrop">true</option>
-                * </pre>
-                */
-               uploadImageOnDrop: true,
-               /**
                 * @cfg {Object} Объект с настройками для tinyMCE
                 * <wiTag group="Управление">
                 *
@@ -158,7 +149,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Если декоратор не укзан, то сыылки будут оборачиваться в <a>
                 * @cfg {String} имя декоратора
                 */
-               decoratorName: '' // engine - 'linkDecorator'
+               decoratorName: '', // engine - 'linkDecorator',
+               /**
+                * Имя каталога, в который будут загружаться изображения
+                * @cfg {String} имя декоратора
+                */
+               imageFolder: 'images'
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -168,12 +164,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _saveBeforeWindowClose: null,
             _sourceArea: undefined,
             _sourceContainer: undefined, //TODO: избавиться от _sourceContainer
-            _fileLoader: undefined,
             _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
             _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
             _clipboardText: undefined,
-            _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
+            _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
+            _imageOptionsPanel: undefined
          },
 
          _modifyOptions: function(options) {
@@ -184,8 +180,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          $constructor: function() {
             var
-               self = this,
-               editorHeight;
+               self = this;
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -894,6 +889,30 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             container.toggleClass('ws-hidden', sourceVisible);
             this._notify('onToggleContentSource', sourceVisible);
          },
+
+         insertImageTemplate: function(key, fileobj) {
+            var
+               meta = fileobj.id || '',
+               URL = this._prepareImageURL(fileobj);
+            switch (key) {
+               case "1":
+                  this._insertImg(URL, 'float:left; ', meta);
+                  break;
+               case "2":
+                  this._insertImg(URL, '', meta, '<p style="text-align: center;">', '</p><p></p>');
+                  break;
+               case "3":
+                  this._insertImg(URL, 'float:right; ', meta);
+                  break;
+               case "4":
+                  console.log(fileobj);
+                  fcHelpers.alert('Сейчас будет коллаж');
+                  break;
+               case "6":
+                  this._insertImg(URL, '', meta);
+                  break;
+            }
+         },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
          /*БЛОК ПРИВАТНЫХ МЕТОДОВ*/
@@ -958,7 +977,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          /**
           * JavaScript function to match (and return) the video Id
-          * of any valid Youtube Url, given as input string.
+          * of any valid Youtube URL, given as input string.
           * @author: Stephan Schmitz <eyecatchup@gmail.com>
           * @url: http://stackoverflow.com/a/10315969/624466
           */
@@ -983,10 +1002,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }.bind(this));
+               this._inputControl.bind('click', function(e) {
+                  if (this._inputControl.attr('contenteditable') !== 'false') {
+                     var target = e.target;
+                     if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
+                      self._showImageOptionsPanel($(target));
+                     }
+                  }
+               }.bind(this));
 
-               if (self._options.uploadImageOnDrop) {
-                  self._getFileLoader();
-               }
 
                this._inputControl.attr('tabindex', 1);
 
@@ -1255,6 +1279,51 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
          },
 
+         _showImageOptionsPanel: function(target) {
+            var
+               imageOptionsPanel = this._getImageOptionsPanel(target);
+            imageOptionsPanel.show();
+         },
+
+         _getImageOptionsPanel: function(target){
+            var
+               self = this;
+            if (!this._imageOptionsPanel) {
+               this._imageOptionsPanel = new ImageOptionsPanel({
+                  parent: self,
+                  target: target,
+                  corner: 'bl',
+                  closeByExternalClick: true,
+                  element: $('<div></div>'),
+                  imageFolder: self._options.imageFolder
+               });
+               this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
+                  var
+                     URL = self._prepareImageURL(fileobj);
+                  this.getTarget().attr('src', URL);
+                  this.getTarget().attr('data-mce-src', URL);
+                  this.getTarget().attr('alt', fileobj.id);
+                  self._tinyEditor.undoManager.add();
+                  self._setTrimmedText(self._getTinyEditorValue());
+               });
+               this._imageOptionsPanel.subscribe('onImageDelete', function(){
+                  this.getTarget().remove();
+                  self._tinyEditor.undoManager.add();
+                  self._setTrimmedText(self._getTinyEditorValue());
+               });
+            } else {
+               this._imageOptionsPanel.setTarget(target);
+            }
+            return this._imageOptionsPanel;
+         },
+            
+         _prepareImageURL: function(fileobj) {
+            //todo: preview
+            var
+               URL = fileobj.filePath ? fileobj.filePath : fileobj.url;
+            return URL;
+         },
+            
          _replaceWhitespaces: function(text) {
             var
                out = '',
@@ -1438,7 +1507,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function(path, name) {
+         _insertImg: function(path, styles, meta,  before, after) {
             var
                self = this,
                img =  $('<img src="' + path + '"></img>').css({
@@ -1447,6 +1516,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   bottom: 0,
                   left: 0
                });
+            styles = styles ? styles: '';
+            before = before ? before: '';
+            after = after ? after: '';
             img.on('load', function() {
                var
                   isIEMore8 = cConstants.browser.isIE && !cConstants.browser.isIE8,
@@ -1454,14 +1526,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
                   maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
-                  style = '';
-               if (maxSide[1] > constants.maximalPictureSize) {
-                  style = ' style="'+ maxSide[0] +': ' + constants.maximalPictureSize + 'px;"';
-               }
-               if (cConstants.browser.isIE8) {
-                  img.remove();
-               }
-               self.insertHtml('<img src="' + path + '"' + style + ' alt="' + name + '"></img>');
+                  style = ' style="' + styles + ' width: 25%"';
+               self.insertHtml(before + '<img class="controls-RichEditor__noneditable" src="' + path + '"' + style + ' alt="' + meta + '" data-mce-resize="false"></img>'+ after);
             });
             if (cConstants.browser.isIE8) {
                $('body').append(img);
@@ -1472,44 +1538,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._sourceContainerIsActive()) {
                this.setText(this._sourceArea.val());
             }
-         },
-
-         /**
-          * Создание загрузчика файлов
-          * @private
-          */
-         _createFileLoader: function(){
-            var
-               self = this,
-               imgName,
-               cont = $('<div class="ws-field-rich-editor-file-loader"></div>');
-            this._container.append(cont);
-            this._fileLoader = new FileLoader({
-               fileStorage: true,
-               extensions: ['image'],
-               element: cont,
-               dropElement: self._inputControl,
-               linkedContext: self.getLinkedContext(),
-               handlers: {
-                  onLoaded: function(e, json) {
-                     if (json.result && json.result.code === 201) {
-                        self._insertImg(json.result.filePath, imgName);
-                     } else {
-                        fcHelpers.alert(decodeURIComponent(json.result ? json.result.message : json.error ? json.error.message : ''));
-                     }
-                  },
-                  onChange: function(e, filePath) {
-                     imgName = filePath.substring(filePath.lastIndexOf('\\') + 1, filePath.length);
-                  }
-               }
-            });
-         },
-
-         _getFileLoader: function() {
-            if (!this._fileLoader) {
-               this._createFileLoader();
-            }
-            return this._fileLoader;
          },
 
          /**
