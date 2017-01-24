@@ -315,8 +315,17 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 });
              }
 
+             function updatePickerVisibility() {
+                var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function(result, element) {
+                   return result || element === false;
+                }, false);
+
+                context.setValue('additionalFilterVisible', showAdittionalBlock);
+             }
+
              this._pickerContext = context;
              updatePickerContext();
+             updatePickerVisibility();
 
              context.subscribe('onFieldNameResolution', function(event, fieldName) {
                 byFilter = self._findFilterStructureElement(function(element) {
@@ -362,13 +371,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 }
 
                 /* Скрытие/отображние блока дополнительных параметров по состоянию видимости, которое пишется в контекст */
-                if(fieldByVisibility) {
-                   showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function(result, element) {
-                      return result || element === false;
-                   }, false);
-
-                   context.setValue('additionalFilterVisible', showAdittionalBlock);
-                }
+                updatePickerVisibility();
              });
 
              context.subscribe('onFieldsChanged', function() {
