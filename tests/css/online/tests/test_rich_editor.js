@@ -274,7 +274,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textList);
 				actions.waitForElementToShow('[data-id="InsertOrderedList"]', 2000);
 				actions.click('[data-id="InsertOrderedList"]');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('unordered', function (actions) {
@@ -284,7 +285,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textList);
 				actions.waitForElementToShow('[data-id="InsertUnorderedList"]', 2000);
 				actions.click('[data-id="InsertUnorderedList"]');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('center', function (actions) {
