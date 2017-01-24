@@ -360,7 +360,7 @@ define('js!SBIS3.CONTROLS.Image',
                      this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
                   }
                   if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
-                     this._buttonUpload.setCaption('');
+                     this._buttonUpload.getContainer().find('.controls-Link__field').addClass('ws-hidden')
                   }
                   this._bindToolbarEvents();
                }
