@@ -787,10 +787,12 @@ define('js!SBIS3.CONTROLS.Image',
                   var dataSource = self.getDataSource();
                   if (dataSource) {
                      self._fileLoader.setMethod((
-                        this._options.linkedObject || dataSource.getEndpoint().contract) +
+                        self._options.linkedObject || dataSource.getEndpoint().contract) +
                         '.' + dataSource.getBinding().create
                      );
                   }
+
+                  def.callback(self._fileLoader);
                });
 
                return def;
