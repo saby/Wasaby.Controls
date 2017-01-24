@@ -1792,12 +1792,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
-                        // todo Последовательность событий
-                        // reload -> updateHover (навели мышь на другую запись) -> redraw -> lockToolbar
-                        // приводит к фиксации тулбара со старым контейнером записи.
-                        // Поэтому принудильно обновляем перед фиксацией тулбара.
-                        // Можно выпилить, если в момент reload показывать прозрачный div поверх ItemsContainer.
-                        this._refreshHoveredItem();
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
@@ -2143,6 +2137,12 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
+            var hoveredItem,
+                hoveredItemContainer,
+                hash,
+                projItem,
+                containsHoveredItem;
+
             ListView.superclass._drawItemsCallback.apply(this, arguments);
 
             /* Проверяем, нужно ли ещё подгружать данные в асинхронном _drawItemsCallback'e,
@@ -2154,29 +2154,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._drawSelectedItems(this._options.selectedKeys, {});
 
-            this._refreshHoveredItem();
+            hoveredItem = this.getHoveredItem();
+            hoveredItemContainer = hoveredItem.container;
 
-            //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
-            if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(true);
-            } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
-               this._createScrollPager();
-            }
-            this._notifyOnSizeChanged(true);
-         },
-
-         _refreshHoveredItem: function() {
-            var
-               hoveredItem = this.getHoveredItem(),
-               hoveredItemContainer = hoveredItem.container,
-               hash,
-               projItem,
-               containsHoveredItem;
-
-
-            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
-             то событие mouseLeave не сработает, поэтому вызовем руками метод,
-             если же он остался, то обновим положение кнопки опций*/
+             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+               то событие mouseLeave не сработает, поэтому вызовем руками метод,
+               если же он остался, то обновим положение кнопки опций*/
             if(hoveredItemContainer){
                // FIXME УДАЛИТЬ, вызывается, чтобы проходили тесты, просто создаёт индекс по хэшу в енумераторе
                this._getItemsProjection().getByHash(null);
@@ -2189,7 +2172,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   hash = hoveredItemContainer.attr('data-hash');
                   projItem = this._getItemsProjection().getByHash(hash);
                   /* Если в проекции нет элемента и этого элемента нет в DOM'e,
-                   но на него осталась jQuery ссылка, то надо её затереть */
+                     но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
                      hoveredItemContainer = this._getDomElementByItem(projItem);
                   } else {
@@ -2205,12 +2188,19 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                } else {
                   /* Даже если контейнер выбранной записи не изменился,
-                   надо обновить выделнный элемент, т.к. могло измениться его положение */
+                     надо обновить выделнный элемент, т.к. могло измениться его положение */
                   this._updateHoveredItem(hoveredItemContainer);
                }
             }
-         },
 
+            //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
+            if (this._scrollBinder){
+               this._scrollBinder._updateScrollPages(true);
+            } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
+               this._createScrollPager();
+            }
+            this._notifyOnSizeChanged(true);
+         },
          _drawItemsCallbackSync: function() {
             ListView.superclass._drawItemsCallbackSync.call(this);
             /* Подскролл после подгрузки вверх надо производить после отрисовки синхронно,
