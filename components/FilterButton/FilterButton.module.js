@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.FilterHistory",
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
    "i18n!SBIS3.CONTROLS.FilterButton",
-   "js!SBIS3.CONTROLS.ScrollContainer"
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   'css!SBIS3.CONTROLS.FilterButton'
 ],
     function(
         mStubs,

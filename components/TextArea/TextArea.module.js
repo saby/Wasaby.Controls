@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
    "Core/IoC",
-   "Core/constants"
+   "Core/constants",
+   'css!SBIS3.CONTROLS.TextArea'
 ], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, cConst) {
 
    'use strict';

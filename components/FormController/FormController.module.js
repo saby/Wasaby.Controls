@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.OpenDialogAction",
-   "i18n!SBIS3.CONTROLS.FormController"
+   "i18n!SBIS3.CONTROLS.FormController",
+   'css!SBIS3.CONTROLS.FormController'
 ],
    function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
    /**

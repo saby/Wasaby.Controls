@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CONTROLS.Link', 'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate'], function(ButtonBase, dotTplFn, hrefTemplate) {
+define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CONTROLS.Link', 'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate', 'css!SBIS3.CONTROLS.Link'], function(ButtonBase, dotTplFn, hrefTemplate) {
 
    'use strict';
 
