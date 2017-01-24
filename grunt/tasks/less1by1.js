@@ -11,21 +11,23 @@ module.exports = function less1by1Task(grunt) {
 
         grunt.log.ok(`${humanize.date('H:i:s')} : Запускается задача less1by1.`);
 
-        let root = grunt.option('root') || './components/',
+        let root = grunt.option('root') || './',
             app = grunt.option('application') || '',
             rootPath = path.join(root, app),
             taskDone = this.async(),
-            themesPath = path.join(rootPath, './../themes/');
+            themesPath = path.join(rootPath, './themes/');
 
         helpers.recurse(rootPath, function(filepath, cb) {
-
-            if (helpers.validateFile(filepath, ['**/*.less'])) {
+      
+            if (helpers.validateFile(filepath, ['components/**/*.less'])) {
+                      console.log(filepath);
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
 
                     let lessData = data.toString(),
                         theme = grunt.option('theme') || 'online',
                         imports = theme ?
                         `
+                            @themeName: ${theme}; 
                             @import '${themesPath}${theme}/variables';
                             @import '${themesPath}mixins';
 
