@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          var
             config = this._getDialogConfig(meta, template, mode);
          mode = mode || this._options.mode;
-         if (this._dialog && !this._dialog.isAutoHide()){
+         if (this._dialog && (typeof this._dialog.isAutoHide == 'function') && !this._dialog.isAutoHide()) {
             cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             opener: this,
             template: template,
             componentOptions: compOptions,
-            handlers: {
+            handlers: { 
                onAfterClose: function(e, meta){
                   if (self._executedDeferred) {
                      self._executedDeferred.callback(meta);

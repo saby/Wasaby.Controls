@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (this._isNeedToRedrawDialog()) {
             this._saveRecord().addCallback(function () {
                OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
-            });
+            }.bind(this));
          }
          else {
             OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
@@ -563,7 +563,23 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             collection = collection.getItems();
          }
          return collection;
+      },
+
+      _getDialogConfig: function () {
+         var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
+            self = this;
+         return cMerge(config, {
+            handlers: {
+               onAfterClose: function () {
+                  if (self._executedDeferred) {
+                     self._executedDeferred.callback(this._record);
+                  }
+               }
+            }
+         })
       }
+
+
    });
 
    OpenEditDialog.ACTION_CUSTOM = 'custom';
