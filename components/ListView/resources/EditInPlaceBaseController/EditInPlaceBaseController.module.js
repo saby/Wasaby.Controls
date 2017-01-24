@@ -477,11 +477,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   modelOptions,
-                  editingRecord;
+                  editingRecord,
+                  beginAddResult;
 
                if (!this._addLock) {
                   this._addLock = true;
-                  modelOptions = options.model || this._notify('onBeginAdd');
+                  beginAddResult = this._notify('onBeginAdd');
+                  modelOptions = options.model || beginAddResult;
                   this._lastTargetAdding = options.target;
                   return this.endEdit(true).addCallback(function() {
                      return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
