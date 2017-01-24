@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'use strict';
 
       var
+         COLLAGE_TEMPLATE = 4,
          ImagePanel =  CompoundControl.extend([PopupMixin], {
             _dotTplFn: dotTplFn,
             $protected: {
@@ -44,7 +45,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                   target = $(event.delegateTarget);
 
                this._selectedTemplate =  target.attr('data-id');
-               this.getFileLoader().startFileLoad(target, this._selectedTemplate == 4, this._options.imageFolder).addCallback(function(fileobj) {
+               this.getFileLoader().startFileLoad(target, this._selectedTemplate == COLLAGE_TEMPLATE, this._options.imageFolder).addCallback(function(fileobj) {
                   this._notify('onImageChange', this._selectedTemplate, fileobj);
                   this.hide();
                }.bind(this))
