@@ -246,6 +246,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          TextArea.superclass.setText.call(this, text);
          var newText = strHelpers.escapeHtml(text);
          this._disabledWrapper.html(strHelpers.wrapURLs(newText));
+         this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !text);
       },
 
       _processNewLine: function(event) {
