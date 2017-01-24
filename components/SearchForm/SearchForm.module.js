@@ -4,10 +4,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.SuggestMixin",
    "js!SBIS3.CONTROLS.SuggestTextBoxMixin",
+   "js!SBIS3.CONTROLS.ChooserMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
    "html!SBIS3.CONTROLS.SearchForm",
-   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons"
-], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, PickerMixin, dotTplFn, buttonsTpl) {
+   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
+   'css!SBIS3.CONTROLS.SearchForm'
+], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
 
@@ -25,7 +27,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * @category Search
     */
 
-   var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
+   var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearch При нажатии кнопки поиска
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -86,6 +88,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             event.stopPropagation();
          } else {
             SearchForm.superclass._keyUpBind.apply(this, arguments);
+         }
+      },
+
+      _chooseCallback: function(result) {
+         var item = result && result[0];
+         if(item) {
+            this._onListItemSelect(item.getId(), item);
          }
       },
 

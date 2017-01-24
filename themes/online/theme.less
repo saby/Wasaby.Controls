@@ -13,18 +13,21 @@
    display: inline-block;
 }
 .controls-Button.controls-Button__withoutCaption {
-   width: 50px;
+   width: 48px;
    .controls-Button__icon{
       left: 16px;
    }
    .controls-Button__icon{
       &.icon-24 {
-         left: 12px;
+         left: 11px;
       }
       &.icon-32 {
          left: 9px;
       }
 
+   }
+   .controls-Button__text {
+      visibility: hidden;
    }
 }
 .controls-Button.controls-Checked__checked.controls-Button__withoutCaption {
@@ -100,7 +103,7 @@
       &:not(.controls-CompositeView__verticalItemActions),
       &:not(.controls-ListView__item-type-node) {
          background-image: none !important;
-         border-color: transparent;
+         border-color: transparent !important;
       }
       &.controls-ListView__item {
          &:not(.controls-ListView__hoveredItem) {

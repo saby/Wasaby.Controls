@@ -11,6 +11,31 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
     function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil) {
    'use strict';
 
+   /* Вспомогательный класс, для посчёта времени запроса.
+      Нужен, чтобы понять, требуется ли скрывать/отображать индикатор  */
+   function Timer(){
+      this.startTime = null;
+      this.stared = false;
+
+      this.start = function() {
+         this.startTime = new Date();
+         this.stared = true;
+      };
+      this.stop = function() {
+         this.startTime = null;
+         this.stared = false;
+      };
+      this.getTime = function() {
+         /* Возвращаем время в мс */
+         return new Date().getTime() - this.startTime.getTime();
+      };
+   }
+
+   /* Обобщение механизма ожидания делается по задаче
+       https://inside.tensor.ru/opendoc.html?guid=7ef15c0d-c70e-4956-ba97-7f9e6d0d4f15&des=
+       Задача в разработку 25.03.2016 нужно обобщить появление ромашки ожидания. в FormController, в ListView логика ожидания должна быть … */
+   var INDICATOR_DELAY = 750;
+
    var KbLayoutRevertObserver = cExtend({}, {
       $protected: {
          _options: {
@@ -33,16 +58,19 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          _textBeforeTranslate: null,
          _onViewDataLoadHandler: null,
          _observed: false,
-         _oldSearchValue: ''
+         _oldSearchValue: '',
+         _timer: null
       },
 
       $constructor: function() {
          this._onViewDataLoadHandler = this._onViewDataLoad.bind(this);
+         this._onBeforeDataLoadHandler = this._onBeforeDataLoad.bind(this);
       },
 
       startObserve: function() {
          if(!this._observed) {
             this._options.view.subscribe('onDataLoad', this._onViewDataLoadHandler);
+            this._options.view.subscribe('onBeforeDataLoad', this._onBeforeDataLoadHandler);
             this._observed = true;
          }
       },
@@ -50,36 +78,39 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       stopObserve: function() {
          if(this._observed) {
             this._options.view.unsubscribe('onDataLoad', this._onViewDataLoadHandler);
+            this._options.view.unsubscribe('onBeforeDataLoad', this._onBeforeDataLoadHandler);
             this._textBeforeTranslate = null;
             this._observed = false;
             this._oldSearchValue = '';
+            this._toggleItemsEventRising(true);
          }
+      },
+
+      _onBeforeDataLoad: function() {
+         var timer = this._getTimer();
+
+         if(!timer.stared) {
+            timer.start();
+         }
+      },
+
+      _getTimer: function() {
+          if(!this._timer) {
+             this._timer = new Timer();
+          }
+          return this._timer;
       },
 
       _onViewDataLoad: function(event, data) {
          var view = this._options.view,
              viewFilter = cFunctions.clone(view.getFilter()),
              searchValue = viewFilter[this.getParam()],
-             viewItems = view.getItems(),
-             revertedSearchValue, symbolsDifference;
+             revertedSearchValue, symbolsDifference, timer;
          /* Не производим смену раскладки если:
             1) Нет поискового значения.
             2) После смены раскладки поисковое значения не меняется. */
          if(!searchValue || searchValue === revertedSearchValue) {
             return;
-         }
-
-         /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
-            чтобы избежать моргания данных, обработка событий включается,
-            когда поиск точно закончен (уже была сменена раскладка, если требуется) */
-         function toggleItemsEventRaising(enable) {
-            if(viewItems) {
-               var isEqual = viewItems.isEventRaising() === enable;
-
-               if(!isEqual) {
-                  viewItems.setEventRaising(enable, true);
-               }
-            }
          }
 
          /* Смену раскладки делаем после проверок,
@@ -92,7 +123,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._options.textBox.setText(searchValue);
                view.setHighlightText(searchValue, false);
                this._textBeforeTranslate = null;
-               toggleItemsEventRaising(true);
+               this._toggleItemsEventRising(true);
             }
             // если поиск произошел то запоминаем текущее значение
             this._oldSearchValue = searchValue;
@@ -105,7 +136,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                viewFilter[this.getParam()] = this._textBeforeTranslate;
                view.setFilter(viewFilter, true);
                this._textBeforeTranslate = null;
-               toggleItemsEventRaising(true);
+               this._toggleItemsEventRising(true);
             } else {
                /* Если количество символов в поисковом значении уменьшилось,
                   значит поисковое значение либо полностью изменилось, либо удалили часть символов,
@@ -138,8 +169,29 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
                this._textBeforeTranslate = searchValue;
                viewFilter[this.getParam()] = revertedSearchValue;
-               toggleItemsEventRaising(false);
+               this._toggleItemsEventRising(false);
+               /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
+               if(this._getTimer().getTime() > INDICATOR_DELAY) {
+                  view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
+               }
+               this._getTimer().stop();
                view.setFilter(viewFilter);
+            }
+         }
+      },
+
+
+      /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
+         чтобы избежать моргания данных, обработка событий включается,
+         когда поиск точно закончен (уже была сменена раскладка, если требуется) */
+      _toggleItemsEventRising: function(enable) {
+         var items = this._options.view.getItems();
+
+         if(items) {
+            var isEqual = items.isEventRaising() === enable;
+
+            if(!isEqual) {
+               items.setEventRaising(enable, true);
             }
          }
       },
@@ -153,7 +205,12 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       },
 
       destroy: function() {
+         if(this._timer) {
+            this._timer.stop();
+            this._timer = null;
+         }
          this._onViewDataLoadHandler = null;
+         this._onBeforeDataLoadHandler = null;
          KbLayoutRevertObserver.superclass.destroy.call(this);
       }
    });

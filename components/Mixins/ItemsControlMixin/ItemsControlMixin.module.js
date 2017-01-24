@@ -236,20 +236,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * </pre>
        */
       /**
-       * @event onBeforeDataLoad Перед загрузкой данных
-       * @remark
-       * Событие сработает перед запросом к источнику данных
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @example
-       * <pre>
-       *    myView.subscribe('onBeforeDataLoad', function(event, error){
-       *       var filter = this.getFilter();
-       *       filter['myParam'] = myValue;
-       *       this.setFilter(filter, true)
-       *    });
-       * </pre>
-       */
-      /**
        * @event onItemsReady при готовности экземпляра коллекции iList
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
@@ -701,13 +687,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._prepareItemsConfig();
 
          if (this._options.itemTemplate) {
-            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
+            IoC.resolve('ILogger').error('3.7.5 ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан itemTemplate');
          }
          if (!Object.isEmpty(this._options.groupBy) && !this._options.easyGroup) {
-            IoC.resolve('ILogger').error('ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
+            IoC.resolve('ILogger').error('3.7.5 ItemsControl', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Используется GroupBy без easyGroup: true');
          }
          if (this._options.userItemAttributes) {
-            IoC.resolve('ILogger').error('userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
+            IoC.resolve('ILogger').error('3.7.5 userItemAttributes', 'Option is no longer available since version 3.7.4.200. Use ItemTpl');
          }
 
       },
@@ -1355,7 +1341,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * Если источник данных установлен, значение опции {@link items} будет проигнорировано.
         * @param {DataSource|WS.Data/Source/ISource} source Новый источник данных.
         * @param {Boolean} noLoad Признак, с помощью устанавливается необходимость запроса нового набора данных по установленному источнику.
-        * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onBeforeDataLoad}, {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
+        * Если параметр установлен в значение true, то данные не будут подгружены, а также не произойдут события {@link onDataLoad}, {@link onItemsReady} или {@link onDataLoadError}.
         * @example
         * <pre>
         *     define( 'SBIS3.MyArea.MyComponent',
@@ -1384,7 +1370,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see dataSource
         * @see getDataSource
         * @see items
-        * @see onBeforeDataLoad
         * @see onDataLoad
         * @see onDataLoadError
         * @see onItemsReady
@@ -1482,6 +1467,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
+             //TODO удалить после 3.7.5
+             if (this.hasEventHandlers('onBeforeDataLoad')) {
+                IoC.resolve('ILogger').error('3.7.5 onBeforeDataLoad', 'Событие устарело и вскоре будет удалено. Вместо него используйте onBeforeProviderCall из источника данных');
+             }
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback(fHelpers.forAliveOnly(function (list) {
@@ -2074,6 +2063,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.displayProperty = displayProperty;
       },
 
+      /**
+       * Задаёт шаблон отображения содержимого каждого элемента коллекции
+       * @param {String} tpl Шаблон отображения содержимого каждого элемента коллекции
+       * @example
+       * <pre>
+       *    {{=it.item.get("title")}}
+       * </pre>
+       */
+      setItemContentTpl: function(tpl) {
+         this._options.itemContentTpl = tpl;
+      },
+
 
       _getScrollContainer: function() {
 
@@ -2319,7 +2320,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _onCollectionReplace: function(items) {
          var i, needToRevive = false;
          for (i = 0; i < items.length; i++) {
-            needToRevive = needToRevive || this._changeItemProperties(items[i]);
+            needToRevive = this._changeItemProperties(items[i]) || needToRevive;
          }
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;

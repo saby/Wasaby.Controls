@@ -1,12 +1,14 @@
 <div class="controls-TabControl">
-    <component data-component="SBIS3.CONTROLS.TabButtons" name="TabButtons" class="{{=it.tabButtonsExtraClass || ''}} {{?it.stickyHeader}}ws-sticky-header__block{{?}}">
-        <option name="selectedKey">{{=it.selectedKey}}</option>
-        <option name="displayProperty">{{=it.tabsDisplayProperty}}</option>
-        <option name="idProperty">{{=it.idProperty}}</option>
-        <option name="tabindex">0</option>
-        <option name="tabSpaceTemplate">{{=it.tabSpaceTemplate}}</option>
-        <option name="items" type="ref">{{@it.items}}</option>
-    </component>
+    <div class="controls-TabControl-tabButtons{{?it.stickyHeader}} ws-sticky-header__block{{?}}">
+        <component data-component="SBIS3.CONTROLS.TabButtons" name="TabButtons" class="{{=it.tabButtonsExtraClass || ''}}">
+            <option name="selectedKey">{{=it.selectedKey}}</option>
+            <option name="displayProperty">{{=it.tabsDisplayProperty}}</option>
+            <option name="idProperty">{{=it.idProperty}}</option>
+            <option name="tabindex">0</option>
+            <option name="tabSpaceTemplate">{{=it.tabSpaceTemplate}}</option>
+            <option name="items" type="ref">{{@it.items}}</option>
+        </component>
+    </div>
     <component data-component="SBIS3.CONTROLS.SwitchableArea" name="SwitchableArea">
         <!--<option name="displayProperty">{{=it.displayProperty}}</option>
         <option name="idProperty">{{=it.idProperty}}</option>-->

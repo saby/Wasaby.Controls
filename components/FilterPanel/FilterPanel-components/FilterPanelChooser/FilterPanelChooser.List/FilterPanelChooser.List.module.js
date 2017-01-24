@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}. При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
      * <br/>
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooserBase
+     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
@@ -108,13 +108,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             this._toggleAllButton();
         },
 
-        _updateTextValue: function() {
+        _updateTextValue: function(newValue) {
             var
                 self = this,
                 textValue = '',
                 viewItems = this._getListView().getItems();
-            colHelpers.forEach(this._options.value, function(id, idx) {
-                textValue += self._getItemTextByItemId(viewItems, id) + (idx < self._options.value.length - 1 ? ', ' : '');
+            colHelpers.forEach(newValue, function(id, idx) {
+                textValue += self._getItemTextByItemId(viewItems, id) + (idx < newValue.length - 1 ? ', ' : '');
             });
             this.setTextValue(textValue);
         },

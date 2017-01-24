@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.ToggleButton'], function(Button, Checkable, dotTplFn) {
+define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.ToggleButton', 'css!SBIS3.CONTROLS.ToggleButton'], function(Button, Checkable, dotTplFn) {
 
    'use strict';
 

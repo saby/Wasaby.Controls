@@ -60,8 +60,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          if(this._options.searchParam) {
             CommandDispatcher.declareCommand(this, 'changeSearchParam', this.setSearchParamName);
 
-            this.subscribe('onSearch', function() {
-               this._showLoadingIndicator();
+            this.subscribe('onSearch', function(e, text, force) {
+               if(!force) {
+                  this._showLoadingIndicator();
+               }
             });
 
             this.once('onSearch', function () {
@@ -92,13 +94,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
       _getLoadingContainer : function() {
          return this.getContainer().find('.controls-TextBox__fieldWrapper');
-      },
-
-      _chooseCallback: function(result) {
-         if(result && cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
-            var item = result[0];
-            this._onListItemSelect(item.getId(), item);
-         }
       },
 
       before: {
@@ -210,7 +205,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                когда фокус уходит на компонент, который был открыт из автодополнения. */
             function isSuggestParent(target) {
                do {
-                  target = target.getParent() || target.getOpener();
+                  target = target.getParent() || (target.getOpener instanceof Function ? target.getOpener() : null);
                }
                while (target && target !== list);
 
@@ -237,6 +232,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _setPickerConfig: function(parentFunc){
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
+            parentConfig.targetPart = true;
             return parentConfig;
          },
 

@@ -257,9 +257,9 @@ define('js!SBIS3.CONTROLS.SearchController',
          searchForm.subscribe('onSearch', function(event, text, forced) {
             /* Если у поля поиска есть автодополнение,
                то поиск надо запускать только по enter'у / выбору из автодополнения. */
-            if(searchForm.getProperty('usePicker')) {
+            if(searchForm.getProperty('usePicker') && text) {
                /* Если поиск происходит в автодополнении, то его надо разрешать */
-               if(!self._options.searchFormWithSuggest && text && !forced) {
+               if( (!self._options.searchFormWithSuggest && (!forced || searchForm.isPickerVisible())) || (self._options.searchFormWithSuggest && forced) ) {
                   return;
                }
             }

@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
    function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
@@ -404,15 +405,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   // TODO: errback без обработчика кидает ошибку в консоль https://inside.tensor.ru/opendoc.html?guid=5aba818a-4764-4c2b-b6d0-767abd2add7e&des=
                   this._savingDeferred.addErrback(function(res) {return res;}).errback();
                   return Deferred.fail();
+               } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
+                  this._afterEndEdit(eip, withSaving);
+                  return Deferred.success();
                } else {
-                  if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
-                     this._afterEndEdit(eip, withSaving);
-                  } else {
-                     this._updateModel(eip, withSaving).addBoth(function () {
-                        self._removePendingOperation();
-                        self._afterEndEdit(eip, withSaving);
-                     });
-                  }
+                  this._updateModel(eip, withSaving).addBoth(function () {
+                     self._removePendingOperation();
+                     self._afterEndEdit(eip, withSaving);
+                  });
                   return this._savingDeferred;
                }
             },

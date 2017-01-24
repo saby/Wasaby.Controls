@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
    "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
    function( constants,CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers) {

@@ -48,6 +48,10 @@
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
 
+@float-area-border-color:                 #bdbdbd;
+@float-area-border:                       1px solid @float-area-border-color;
+@float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
+
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
@@ -114,7 +118,7 @@
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
-@button-icon-gap:                         4px;                      // gap between icon and text
+@button-icon-gap:                         6px;                      // gap between icon and text
 @button-icon-text-margin:                 0 12px 0 32px;            // margin of text following 16x16 icon
 @button-icon-big-top-offset:              0;                         // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
@@ -675,7 +679,8 @@
 
 @menu-margin:                             -1px 0 0;
 @menu-subpopup-margin:                    -6px 0 0 0;
-@menu-padding:                            4px 0;
+@menu-subpopup-padding:                   4px 0;
+@menu-padding:                            0 0 4px 0;
 @menu-border-width:                       1px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-ccc-color;
@@ -700,7 +705,7 @@
 
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
-@menu-header-padding:                     8px;
+@menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 
 // --------- //
@@ -710,7 +715,7 @@
 @menu-item-width:                         auto;
 @menu-item-height:                        32px;
 @menu-item-line-height:                   @menu-item-height;
-@menu-item-default-padding:               0 8px;
+@menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
@@ -741,41 +746,10 @@
 // ----------- //
 
 // Menu
-@menu-button-menu-top-margin:                           26px;
-@menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;
 @menu-button-menu-border-width:                         1px;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
-
-// Menu header
-@menu-button-header-spritesheet:                        'img/MenuButton-header.png';
-
-@menu-button-header-left-width:                         12px;
-@menu-button-header-left-height:                        30px;
-@menu-button-header-left-margin:                        0;
-@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 211px;
-@menu-button-header-right-bg-revert-horizontal:         transparent url(@menu-button-header-spritesheet) -2px 152px;
-@menu-button-header-right-bg-revert-vertical:           transparent url(@menu-button-header-spritesheet) 0 119px;
-@menu-button-header-right-bg-revert-vertical-horizontal:transparent url(@menu-button-header-spritesheet) 0 29px;
-
-@menu-button-header-center-width:                       auto;
-@menu-button-header-center-height:                      8px;
-@menu-button-header-center-margin:                      0;
-@menu-button-header-center-bg:                          @white-color;
-
-@menu-button-header-right-width:                        28px;
-@menu-button-header-right-height:                       30px;
-@menu-button-header-right-margin:                       0;
-@menu-button-header-right-margin-revert-horizontal:     @menu-button-header-right-margin;
-@menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -4px;
-@menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 182px;
-@menu-button-header-left-bg-revert-vertical:            transparent url(@menu-button-header-spritesheet) 0 89px;
-@menu-button-header-left-bg-revert-vertical-horizontal: transparent url(@menu-button-header-spritesheet) 0 58px;
-
-
-
 
 // --------- //
 // Menu link //
@@ -800,8 +774,7 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-margin:                   -6px 0 0 -10px;
-@menu-link-menu-padding:                  0 0 4px 0;
+@menu-link-menu-margin:                   -5px 0 0 -13px;
 @menu-link-menu-item-container-padding:   4px 0 0 0;
 @menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
@@ -816,26 +789,9 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-margin:                   -10px 0 0 -10px;
+@menu-icon-menu-margin:                   -9px 0 0 -13px;
 @menu-icon-menu-padding:                  0 0 4px 0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
-
-// Menu header
-@menu-icon-header-spritesheet:            @menu-button-header-spritesheet;
-
-@menu-icon-header-left-width:             12px;
-@menu-icon-header-left-height:            28px;
-@menu-icon-header-left-top-offset:        1px;            // top offset of icon's left header part
-@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
-@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 -30px;
-
-@menu-icon-header-right-width:            28px;
-@menu-icon-header-right-height:           28px;
-@menu-icon-header-right-top-offset:       1px;            // top offset of icon's right header part
-@menu-icon-header-right-left-offset:      10px;          // left offset of icon's right header part
-@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet);
-
-@menu-icon-header-bg:                     @menu-icon-menu-bg;
 
 
 
@@ -992,12 +948,14 @@
 // ----------- //
 // Date box    //
 // ----------- //
+@date-box-color:                             @text-box-color;
 @date-box-wrapper-border-radius:             @text-box-border-radius;
 
 @date-box-wrapper-border-width:              @text-box-border-width;
 @date-box-wrapper-border-style:              @text-box-border-style;
 @date-box-wrapper-border-color:              @text-box-border-color;
 @date-box-wrapper-bg:                        @text-box-bg;
+@date-box-field-text-color:                  @text-box-field-text-color;
 
 @date-box-wrapper-focus-border-width:        @date-box-wrapper-border-width;
 @date-box-wrapper-focus-border-style:        @date-box-wrapper-border-style;
@@ -1123,7 +1081,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
-@text-area-field-line-height:                   normal;
+@text-area-field-line-height:                   18px;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -1165,7 +1123,7 @@
 
 @text-area-placeholder-color:              @text-box-placeholder-color;
 @text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
-@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-padding:     2px 0 0;
 @text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 // --------------- //
@@ -1481,7 +1439,7 @@
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
-@date-range-big-choose-border-color:               @gray-light-color;
+@date-range-big-choose-border-color:               @float-area-border-color;
 @date-range-big-choose-border-hovered-color:       @darkcyan-color;
 @date-range-big-choose-border-selected-color:      @darkcyan-color;
 @date-range-big-choose-bg-hovered-color:           @default-itemHover-color;
@@ -1681,7 +1639,7 @@
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
-@list-view-actions-menu-padding:                @menu-padding;
+@list-view-actions-menu-padding:                4px 0;
 @list-view-actions-menu-margin:                 3px 0 0 6px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
@@ -1700,6 +1658,7 @@
 @listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
+@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -1887,6 +1846,7 @@
 @data-grid-partScroll-thumb-margin:             20px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
+@data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-float:          left;
@@ -2023,7 +1983,7 @@
 // DropdownList//
 // --------------- //
 @DropdownList-cursor:                         pointer;
-@DropdownList-border-color:                   @gray-light-color;
+@DropdownList-border-color:                   @gray-ccc-color;
 
 @DropdownList-iconWidth:                      16px;
 @DropdownList-iconHeight:                     16px;
@@ -2036,9 +1996,9 @@
 
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
-@DropdownList-picker-offset:                          0;
-@DropdownList-picker-fastdatafilter-offset:           0;
-@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-offset:                          0 0 0 1px;
+@DropdownList-picker-fastdatafilter-offset:           1px 0 0 1px;
+@DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
@@ -2046,12 +2006,12 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-head-margin:                     0;
-@DropdownList-picker-border:                          2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              4px 4px 0 0;
+@DropdownList-picker-border:                          1px solid @DropdownList-border-color;
+@DropdownList-picker-head-border-radius:              0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
-@DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
+@DropdownList-picker-list-right-border-radius:        0;
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
-@DropdownList-picker-list-border-radius:              4px;
+@DropdownList-picker-list-border-radius:              0;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
@@ -2234,6 +2194,9 @@
 @controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
+@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-margin:   2px 4px;
+
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
@@ -2257,6 +2220,7 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
+@bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
@@ -2293,7 +2257,7 @@
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
-@controls-NotificationPopup-border:                                          1px solid #E4E4E4;
+@controls-NotificationPopup-border:                                          @float-area-border;
 @controls-NotificationPopup-border-top:                                      none;
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
@@ -2316,12 +2280,12 @@
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
+@controls-SubmitPopup-footer-border-top:           @float-area-border;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
-@controls-SubmitPopup-border:                      2px solid #E4E4E4;
+@controls-SubmitPopup-border:                      1px solid @float-area-border-color;
 @controls-SubmitPopup-border-top:                  none;
 @controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;

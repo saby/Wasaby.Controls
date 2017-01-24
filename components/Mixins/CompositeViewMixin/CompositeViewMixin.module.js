@@ -220,12 +220,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
        * @see getViewMode
        */
       setViewMode: function(mode) {
+         if (this._options.viewMode === mode) {
+            return;
+         }
          var dragndrop = this.getItemsDragNDrop();
          this.setItemsDragNDrop(false);
          this._options.viewMode = mode;
          this.setItemsDragNDrop(dragndrop);
          this._options.openedPath = {};
          this._drawViewMode(mode);
+         this._notify('onViewModeChanged');
       },
       /**
        * Возвращает признак, по которому можно определить установленный режим отображения данных.

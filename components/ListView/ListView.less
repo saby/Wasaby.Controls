@@ -1,11 +1,12 @@
+@import "../Utils/HtmlDecorators/HighlightDecorator";
 .controls-ListView {
 
    //Данные стили обеспечивают правильное поведение ListView при активации.
    //Фокус должен переходить на элемент с position fixed.
    .controls-ListView__fakeFocusElement {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
       width: 1px;
       height: 1px;
    }
@@ -84,12 +85,12 @@
       z-index: 1;
       right: 0;
       width: 100%;
-      background: url('img/ajax-loader-indicator.gif') no-repeat center;
-      background: url('img/ajax-loader-indicator.gif') no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+      background: url("@{list-view-scroll-spritesheet}") no-repeat center;
+      background: url("@{list-view-scroll-spritesheet}") no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
       &.controls-ListView-scrollIndicator__up{
          top: 0;
-         background: url('img/ajax-loader-indicator.gif') no-repeat center;
-         background: url('img/ajax-loader-indicator.gif') no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+         background: url("@{list-view-scroll-spritesheet}") no-repeat center;
+         background: url("@{list-view-scroll-spritesheet}") no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
       }
    }
    &.controls-ListView__outside-scroll-loader{
@@ -153,9 +154,7 @@
    &.controls-ListView__orangeMarker {
       .controls-ListView__itemsContainer > {
          .controls-ListView__item__selected {
-            background-image: url('img/rowSelect.png');
-            background-position: left top;
-            background-repeat: repeat-y;
+            .marker(left top)
          }
       }
    }
@@ -243,9 +242,9 @@
 @ie8: \0screen;
 @media @ie8 {
    .controls-ListView-scrollIndicator{
-      background-image: url('img/ajax-loader-indicator.gif');
+      background-image: url("@{list-view-scroll-spritesheet}");
       &.controls-ListView-scrollIndicator__up{
-         background-image: url('img/ajax-loader-indicator.gif');
+         background-image: url("@{list-view-scroll-spritesheet}");
       }
    }
 }

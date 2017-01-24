@@ -1,8 +1,2 @@
-<span>
-    <span class="js-controls-CheckBox__caption controls-CheckBox__caption {{ !caption ? ' ws-hidden'}}">
-        {{caption}}
-    </span>
-    <span class="controls-CheckBox__count">
-        {{ count }}
-    </span>
-</span>
+<span class="js-controls-CheckBox__caption controls-CheckBox__caption {{ !caption ? ' ws-hidden'}}">{{caption|sanitize}}</span>
+<span class="controls-CheckBox__count">{{ count }}</span>

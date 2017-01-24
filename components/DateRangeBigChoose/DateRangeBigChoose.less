@@ -67,10 +67,11 @@
 
 .controls-DateRangeBigChoose {
    background-color: #fff;
-   border: 3px solid @date-range-big-choose-border-color;
-   border-radius: 4px;
+   border: 1px solid @date-range-big-choose-border-color;
+   border-radius: 0;
    width: @date-range-big-choose-width;
    font-family: @date-range-big-choose-font-family;
+   .box-shadow(@float-area-shadow);
 
    &.ws-area{
       height: auto;
@@ -224,8 +225,12 @@
          font-size: @date-range-big-choose-years-panel-current-year-button-font-size !important;
          line-height: @date-range-big-choose-years-panel-current-year-button-line-height !important;
          &:hover {
-            color: @date-range-big-choose-link-text-color;
-            text-decoration: none;
+
+            .controls-Link-link {
+               color: @date-range-big-choose-link-text-color;
+               text-decoration: none;
+            }
+
          }
          &:active {
             .box-sizing(border-box);
@@ -244,7 +249,9 @@
          &:hover {
             border: 1px dotted @gray-color;
             color: @date-range-big-choose-link-text-color;
-            text-decoration: none;
+            .controls-Link-link {
+               text-decoration: none !important;
+            }
          }
       }
 

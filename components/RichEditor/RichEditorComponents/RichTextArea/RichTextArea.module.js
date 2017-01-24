@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/dom&controls-helpers",
    'js!WS.Data/Di',
    "css!SBIS3.CORE.RichContentStyles",
-   "i18n!SBIS3.CONTROLS.RichEditor"
+   "i18n!SBIS3.CONTROLS.RichEditor",
+   'css!SBIS3.CONTROLS.RichTextArea'
 ], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di) {
       'use strict';
 
@@ -173,8 +174,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
             _clipboardText: undefined,
-            _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
-            _lastReviewText: undefined
+            _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
          },
 
          _modifyOptions: function(options) {
@@ -622,6 +622,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
+            //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
+            this._removeFormat('fontsize')
             this._tinyEditor.execCommand('FontSize',false,  size + 'px');
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
@@ -1568,29 +1570,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled() && this._lastReviewText != text) {
-               //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
-               if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-                  var
-                     self = this;
-                  //если в момент прихода текста в редакторе ничего не отображается
-                  //то необходимо показать пользователю неотдекорированный текст
-                  // тк декорация может занять много(30с) времени
-                  if (!self._dataReview.html()) {
-                     self._dataReview.html(text)
-                  }
-                  Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
-                     //при открытии задачи в новой вкладке после поступления данных у areaAbstract зовут rebuildMarkup
-                     //необходимо проверять жив ли компонент  когда приходит ответ с сервера
-                     //TODO: переписать на parallelDeferred.kill
-                     if (!self.isDestroyed()) {
-                        self._dataReview.html(strHelpers.wrapFiles(text));
-                     }
-                  });
-               } else {
-                  this._dataReview.html(this._prepareReviewContent(text));
-               }
-               this._lastReviewText = text;
+            if (this._dataReview && !this.isEnabled()) {
+               this._dataReview.html(this._prepareReviewContent(text));
             }
          },
 

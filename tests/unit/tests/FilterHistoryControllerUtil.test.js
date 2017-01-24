@@ -124,9 +124,7 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                   internalCaptionField: "Тест_CaptionField",
                   internalValueField: "Тест_ValueField",
                   resetValue: null,
-                  value: null,
-                  itemTemplate: null,
-                  historyItemTemplate: null
+                  value: null
                },
                {
                   caption: "За сегодня",
@@ -139,11 +137,54 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                }
             ];
 
-            FilterHistoryControllerUntil.prepareNewStructure(structure, secondStructure);
+            var newStructure =  [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня"
+               },
+               {
+                  caption: "Завтра",
+                  internalCaptionField: "FilterDatePeriodTextTomorrow",
+                  internalValueField: "FilterDatePeriodTomorrow",
+                  resetValue: "Все",
+                  value: "Сегодня"
+               }
+            ];
+
+            var currentStructure = [
+               {
+                  caption: "Тест",
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: "Тест_Value"
+               },
+               {
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: new Date(2016, 11, 11),
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               }
+            ];
+
+            FilterHistoryControllerUntil.prepareNewStructure(currentStructure, newStructure);
 
             assert.deepEqual(
                 resultStructure,
-                secondStructure
+                newStructure
             );
          })
       });

@@ -10,7 +10,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown"
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   'css!SBIS3.CONTROLS.RichEditorToolbar',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton',
 ], function( cMerge,RichEditorToolbarBase, dotTplFn, defaultConfig) {
 
    'use strict';
@@ -31,41 +34,47 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          $protected : {
             _options : {
                /**
-                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок
-                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете
+                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок.
+                * @remark
+                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете.
+                * <br/>
                 * Список стандартных кнопок:
                 * <ol>
-                *    <li>undo - Шаг назад;</li>
-                *    <li>redo - Шаг вперед;</li>
-                *    <li>style - Стиль текста;</li>
-                *    <li>bold - Полужирный;</li>
-                *    <li>italic - Курсив;</li>
-                *    <li>underLine - Подчеркнутый;</li>
-                *    <li>strike - Зачеркнутый;</li>
-                *    <li>justify - Выравнивание текста;</li>
-                *    <li>color - Цвет текста;</li>
-                *    <li>list - Вставить/Удалить список;</li>
-                *    <li>link - Вставить/редактировать ссылку;</li>
-                *    <li>unlink - Убрать ссылку;</li>
-                *    <li>image - Вставить картинку;</li>
-                *    <li>smile - Смайлики;</li>
+                *    <li>undo - шаг назад;</li>
+                *    <li>redo - шаг вперед;</li>
+                *    <li>style - стиль текста;</li>
+                *    <li>bold - полужирный;</li>
+                *    <li>italic - курсив;</li>
+                *    <li>underLine - подчеркнутый;</li>
+                *    <li>strike - зачеркнутый;</li>
+                *    <li>justify - выравнивание текста;</li>
+                *    <li>color - цвет текста;</li>
+                *    <li>list - вставить/Удалить список;</li>
+                *    <li>link - вставить/редактировать ссылку;</li>
+                *    <li>unlink - убрать ссылку;</li>
+                *    <li>image - вставить картинку;</li>
+                *    <li>smile - смайлики;</li>
                 *    <li>source - html-разметка;</li>
                 *    <li>paste - вставка с сохранением стилей</li>
                 * </ol>
-                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}
-                * componentType - обязательный параметр определяющий вид компонента
-                * name - имя компонента по которому можно получить элемент тулбара
+                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
+                * <ul>
+                *    <li>componentType - обязательный параметр, определяющий вид компонента</li>
+                *    <li>name - имя компонента, по которому можно получить элемент тулбара.</li>
+                * </ul>
                 * @example
-                * <options name="items" type="array">
-                *        <options>
-                *           <option name="name">myButton</option>
-                *           <option name="componentType">SBIS3.CONTROLS.Button</option>
-                *           <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
-                *           <options name="handlers">
-                *              <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
-                *           </options>
-                *        </options>
-                *</options>
+                * <pre>
+                *    <options name="items" type="array">
+                *       <options>
+                *          <option name="name">myButton</option>
+                *          <option name="componentType">SBIS3.CONTROLS.Button</option>
+                *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
+                *          <options name="handlers">
+                *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
+                *          </options>
+                *       </options>
+                *    </options>
+                * </pre>
                 */
                items: undefined,
                defaultConfig: defaultConfig

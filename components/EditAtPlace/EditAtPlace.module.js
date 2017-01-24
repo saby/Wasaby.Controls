@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
-      'i18n!SBIS3.CONTROLS.EditAtPlace'
+      'i18n!SBIS3.CONTROLS.EditAtPlace',
+      'css!SBIS3.CONTROLS.EditAtPlace'
    ],
    function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn, strHelpers) {
       'use strict';
@@ -244,7 +245,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           */
          setInPlaceEditMode: function (inPlace) {
             this._options.displayAsEditor = inPlace;
-            this._container.toggleClass('controls-EditAtPlace__editorHidden', !inPlace).toggleClass('controls-EditAtPlace__fieldWrapperHidden', inPlace);
+            $('.js-controls-EditAtPlace__fieldWrapper', this._container).toggleClass('ws-hidden', inPlace);
+            $('.js-controls-EditAtPlace__editor', this._container).toggleClass('ws-hidden', !inPlace);
             if (inPlace) {
                this._notify('onShowEditor');
             }

@@ -1,5 +1,5 @@
 
-define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.MenuItem', 'Core/Sanitize', 'Core/EventBus'], function(ButtonBase, dotTplFn, Sanitize, EventBus) {
+define('js!SBIS3.CONTROLS.MenuItem', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.MenuItem', 'Core/Sanitize', 'Core/EventBus', 'css!SBIS3.CONTROLS.MenuItem'], function(ButtonBase, dotTplFn, Sanitize, EventBus) {
 
    'use strict';
    /**

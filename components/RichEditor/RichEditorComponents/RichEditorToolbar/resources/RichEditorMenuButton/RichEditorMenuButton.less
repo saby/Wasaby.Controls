@@ -1,20 +1,22 @@
 .controls-MenuButton__Menu {
    &.controls-RichEditorToolbar__menuButtonPicker {
-      padding: 0px;
+      padding: 0 0 4px 0;
       .controls-ListView__item {
          padding: 0 6px;
       }
-      .controls-MenuItem__icon {
+      .controls-MenuItem__icon.icon-16 {
          left: 3px;
+      }
+      &.controls-Menu.controls-Menu__hide-menu-header {
+         &.fre-smiles {
+            margin: -11px 0 0 -2px;
+         }
       }
       &.controls-MenuButton__withoutHeader{
          /*TODO: в menuButton без Header`a  перейти на использование menuIcon*/
-         margin-top: 24px;
-         &.controls-popup-revert-vertical{
-            margin-top: 24px!important;
-         }
-         border-top: none;
-         border-width: 2px; //ie8
+           margin-top: -9px;
+           margin-left: -6px;
+         border-width: 1px; //ie8
          border-top-left-radius: 0px;
          border-top-right-radius: 0px;
       }

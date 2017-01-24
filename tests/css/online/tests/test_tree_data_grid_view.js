@@ -519,6 +519,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 			
 			.capture('no_more', function (actions) {
                 actions.click(this.more);
+                actions.mouseMove(this.input);
 				actions.waitForElementToShow('[data-id="9"]', 5000);
 				actions.waitForElementToHide('.controls-TreePager-container', 5000);
             })

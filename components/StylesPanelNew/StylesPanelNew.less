@@ -63,24 +63,6 @@
       display: inline-block;
       border-radius: 2px;
       vertical-align: middle;
-      &__black{
-         background-color: black;
-      }
-      &__red{
-         background-color: red;
-      }
-      &__green{
-         background-color: green;
-      }
-      &__blue{
-         background-color: blue;
-      }
-      &__purple{
-         background-color: purple;
-      }
-      &__grey{
-         background-color: grey;
-      }
    }
 }
 .controls-StylesPanelNew {
@@ -112,13 +94,17 @@
   }
 
   .controls-StylesPanel__buttons {
-    padding: 12px 4px 6px 4px;
-    border-bottom: 1px solid #E4E4E4;
+    padding: 8px 0 6px 0;
+    border-bottom: 1px solid @float-area-border-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
 
     .inline-block-bug-fix(@font-basic-size);
 
     .controls-TextBox {
-      margin-right: 5px;
+      margin: 0 4px;
     }
 
     .controls-Button {

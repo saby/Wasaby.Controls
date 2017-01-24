@@ -47642,12 +47642,10 @@ tinymce.ThemeManager.add('modern', function(editor) {
 
       function render() {
          //Проблема:
-         //          render может случиться после destroy редактора
+         //          контейнер для тулбара строится всегда
          //Решение:
-         //          Проверять редактор на destroyed
-         if (editor.destroyed) {
-            return;
-         }
+         //          Не строить контейнер для тулюара
+         return;
          if (panel) {
             if (!panel.visible()) {
                show();

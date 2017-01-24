@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.Scrollbar',
       'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
-      'js!SBIS3.CORE.FloatAreaManager'
+      'js!SBIS3.CORE.FloatAreaManager',
+      'css!SBIS3.CONTROLS.ScrollContainer'
    ],
    function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
 

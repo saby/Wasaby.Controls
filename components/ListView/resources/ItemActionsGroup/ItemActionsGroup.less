@@ -124,13 +124,15 @@
 }
 
 .controls-MenuItem {
-   .controls-MenuItem__icon.controls-ItemActions__icon {
-      top: @list-view-actions-icon-top;
-      left: @menu-item-icon24-left-offset;
+   .controls-MenuItem__content  {
+         .controls-MenuItem__icon.controls-ItemActions__icon {
+            top: @list-view-actions-icon-top;
+            left: @menu-item-icon24-left-offset;
 
-      & + .controls-MenuItem__text {
-         margin: @list-view-actions-menu-text-margin;
-      }
+            & + .controls-MenuItem__text {
+               margin: @list-view-actions-menu-text-margin;
+            }
+         }
    }
 }
 
@@ -140,7 +142,7 @@
       margin: @list-view-actions-menu-margin;
    }
 
-   .controls-MenuItem {
+   .controls-MenuItem.controls-ListView__item {
       white-space: nowrap;
       padding-right: @list-view-actions-menu-item-padding-right;
 
@@ -218,13 +220,17 @@
       }
       .controls-MenuItem {
          padding-right: @list-view-small-actions-menu-item-padding-right;
-         .controls-MenuItem__icon {
-            top: @list-view-small-actions-menu-item-icon-top-offset;
-            left: @list-view-small-actions-menu-item-icon-left-offset;
-         }
+
          .controls-MenuItem__text {
             margin: @list-view-small-actions-menu-text-margin;
          }
+         .controls-MenuItem__content {
+            .controls-MenuItem__icon {
+               top: @list-view-small-actions-menu-item-icon-top-offset;
+               left: @list-view-small-actions-menu-item-icon-left-offset;
+            }
+         }
+
       }
    }
 }

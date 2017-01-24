@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    "js!SBIS3.CONTROLS.FilterPanelDataRange",
    "js!SBIS3.CONTROLS.FilterPanelBoolean",
    "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.ScrollContainer"
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   'css!SBIS3.CONTROLS.FilterPanel'
 ], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, RecordSet, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
@@ -91,14 +92,18 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
              * @property {Object} properties Опции, передаваемые в редактор.
-             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser" (см. опцию *template*). Возможные значения:
+             * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
+             * Возможные значения:
              * <ul>
              *     <li>list - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.List}.</li>
              *     <li>dictionary - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList}.</li>
              *     <li>favorites - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FavoritesList}.</li>
              *     <li>radio - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup}.</li>
+             *     <li>fieldLink - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.</li>
              * </ul>
-             *
+             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола SBIS3.CONTROLS.FieldLink, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
+             * Описание контрола и список его опций вы можете найти <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/dictionary/'>здесь</a>.
+             * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа {@link SBIS3.CONTROLS.FilterPanelChooser}.
              */
             /**
              * @cfg {WS.Data/Collection/RecordSet|Array.<FilterPanelItem>} Устанавливает структуру полей фильтра.

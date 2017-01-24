@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.FilterHistory",
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
    "i18n!SBIS3.CONTROLS.FilterButton",
-   "js!SBIS3.CONTROLS.ScrollContainer"
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   'css!SBIS3.CONTROLS.FilterButton'
 ],
     function(
         mStubs,
@@ -348,7 +349,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 });
 
                 if(field && field.internalVisibilityField) {
-                   if(FilterToStringUtil.isEqualValues(value, field.resetValue)) {
+                   /* Скрытие при работе с фильтров по заначению надо производить при выполнении двух условий:
+                      1) Фильтр сброшен
+                      2) Значение структуры тоже сброшено */
+                   if(FilterToStringUtil.isEqualValues(value, field.resetValue) &&
+                      FilterToStringUtil.isEqualValues(self.getResetFilter(), context.getValue(rootName + '/filter'))) {
                       self._changeFieldInternal(rootName + '/visibility/' + field.internalVisibilityField, false);
                    }
                 }

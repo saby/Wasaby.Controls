@@ -1,4 +1,5 @@
 .controls-TextArea {
+   height: auto;
    display: inline-block;
    vertical-align: top;
    position: relative;
@@ -11,22 +12,23 @@
    .box-sizing(border-box);
 
    .controls-TextArea__inputField {
-      position: absolute;
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       font: @text-area-field-font;
       color: @text-area-field-text-color;
       display: block;
       width: 100%;
       line-height: @text-area-field-line-height;
       //padding отсюда перенесен выше, чтобы autosize рассчитывался корректно
-      resize: none;
       border: none;
       padding: 0;
       background: transparent;
+      cursor: text;
       .box-sizing(border-box);
       // Internet Explorer 10+ placeholder
       .placeholder();
    }
+
    &.ws-has-focus {
       border-width: @text-area-focus-border-width;
       border-style: @text-area-focus-border-style;
@@ -70,52 +72,40 @@
          color: @text-area-field-disabled-text-color;
       }
 
-      //TODO временное решение для 230, в 240 будет автоматом
       &.controls-TextArea__hiddenIfEmpty {
          .controls-TextArea__inputField {
-            position: absolute;
-         }
-         .controls-TextArea__disabled-wrapper{
-            position: static;
-            height: auto !important;
+            min-height: 0;
          }
       }
    }
 
-   &.controls-TextArea__autoheight {
-      height: auto !important;
-   }
-   .controls-TextArea__disabled-wrapper{
-      top: @text-area-top-padding;
-      left: @text-area-left-padding;
-      right: @text-area-right-padding;
-      bottom: @text-area-bottom-padding;
-      background: @text-area-bg;
-      padding: 0;
-      box-sizing: border-box;
-      overflow: auto;
-      white-space: pre-line;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      min-height: @text-box-height - @text-area-top-padding - @text-area-bottom-padding - (@text-area-disabled-border-width * 2);
-   }
+
   .controls-TextArea__placeholder {
     position: absolute;
     top: 0;
+    left: @text-area-left-padding;
+    right: @text-area-right-padding;
     .text-overflow();
     color: @text-area-placeholder-color;
     font: @text-area-compat-placeholder-font;
     padding: @text-area-compat-placeholder-padding;
     text-align: @text-area-compat-placeholder-alignment;
+    line-height: @text-area-field-line-height;
+     cursor: text;
   }
 }
-.controls-TextArea__heightInit {
-   .controls-TextArea__disabled-wrapper {
-      position: absolute;
-      min-height: 0;
+
+@height-count: 10;  // Количество классов
+
+.generate-height(@i: 1) when (@i =< @height-count) {
+   .controls-TextArea__inputField__maxheight-@{i} {
+      max-height: @i * @text-area-field-line-height;
    }
-   .controls-TextArea__inputField {
-      position: static;
-      height: 100%;
+   .controls-TextArea__inputField__minheight-@{i} {
+      min-height: @i * @text-area-field-line-height;
    }
+
+   .generate-height(@i + 1);
 }
+
+.generate-height();

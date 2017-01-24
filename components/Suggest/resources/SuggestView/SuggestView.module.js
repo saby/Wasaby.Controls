@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
        var DELEGATED_EVENTS = [
           'onDrawItems',
           'onDataLoad',
+          'onBeforeDataLoad',
           'onDataLoadError',
           'onItemActivate',
           'onItemsReady'
@@ -259,6 +260,26 @@ define('js!SBIS3.CONTROLS.SuggestView',
              return this.getActiveView()._hasNextPage(hasMore, offset);
           },
 
+          setItemTpl: function(itemTpl) {
+             this.getActiveView().setItemTpl(itemTpl);
+          },
+
+          getItemTpl: function() {
+             return this.getActiveView().getProperty('itemTpl');
+          },
+
+          setIdProperty: function() {
+             this.getActiveView().setIdProperty(idProperty);
+          },
+
+          getIdProperty: function() {
+             return this.getActiveView().getProperty('idProperty');
+          },
+
+          setDisplayProperty: function(displayProperty) {
+             this.getActiveView().setDisplayProperty(displayProperty);
+          },
+
           //endregion SBIS3.CONTROLS.IItemsControl
 
           //region SBIS3.CONTROLS.DecorableMixin
@@ -277,6 +298,14 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           setInfiniteScroll: function(type, noLoad) {
              this.getActiveView().setInfiniteScroll(type, noLoad);
+          },
+
+          getColumns: function() {
+             return this.getActiveView().getColumns();
+          },
+
+          setColumns: function(columns) {
+             this.getActiveView().setColumns(columns);
           }
 
           //endregion SBIS3.CONTROLS.ListView

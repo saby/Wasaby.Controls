@@ -124,7 +124,9 @@
 
       &.ws-disabled {
          .controls-FieldLink__item {
-            max-width: 100%;
+            max-width: ~'calc(100% - '@controls-FieldLink-linkContainer-padding * 2~')';
+            padding: @controls-FieldLink-disabled-item-single-padding;
+            margin: @controls-FieldLink-disabled-item-single-margin;
          }
       }
    }
@@ -157,18 +159,20 @@
          }
       }
    }
+   &.controls-TextBox {
+      .controls-TextBox__afterFieldWrapper {
+         order: 2;
+         display: inline-flex;
+         align-items: center;
+         height: @controls-FieldLink-afterField-height;
+         width: auto;
 
-   .controls-TextBox__afterFieldWrapper {
-      order: 2;
-      display: inline-flex;
-      align-items: center;
-      height: @controls-FieldLink-afterField-height;
-      width: auto;
-
-      > * {
-         padding: @controls-FieldLink-afterField-padding;
+         > * {
+            padding: @controls-FieldLink-afterField-padding;
+         }
       }
    }
+
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
          background-color: @text-box-error-bg;
@@ -230,12 +234,14 @@
    }
 }
 
-.controls-FieldLink__showAllLinks {
-   position: relative;
-   width: 20px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   padding: @controls-FieldLink-showAllLinks-padding;
-   float: left;
+.controls-TextBox__beforeFieldWrapper {
+   .controls-FieldLink__showAllLinks {
+      position: relative;
+      width: 20px;
+      line-height: @controls-FieldLink-showAllLinks-lineHeight;
+      padding: @controls-FieldLink-showAllLinks-padding;
+      float: left;
+   }
 }
 
 .controls-FieldLink__copyShowAll {
@@ -317,6 +323,10 @@
          top: -1px;
       }
 
+      &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
+         display: none;
+      }
+
       .controls-FieldLink__copyShowAll {
          margin-right: @controls-FieldLink-showAll-margin-right-ff;
       }
@@ -335,5 +345,12 @@
          }
          border-bottom: @controls-FieldLink-border @gray-ccc-color;
       }
+   }
+}
+
+.ws-is-ie10 {
+   .controls-FieldLink__picker:not(.controls-Suggest__picker) .controls-FieldLink__item-caption {
+      display: inline-block;
+      max-width: ~'calc(100% - '@icon-width~');'
    }
 }

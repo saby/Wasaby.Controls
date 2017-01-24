@@ -24,7 +24,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
-   "Core/helpers/string-helpers"
+   "Core/helpers/string-helpers",
+   'css!SBIS3.CONTROLS.DataGridView'
 ],
    function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, footTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemResultTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';
@@ -1276,6 +1277,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _toggleEmptyData: function(show) {
          DataGridView.superclass._toggleEmptyData.apply(this, arguments);
+         this.getContainer().toggleClass('controls-DataGridView__emptyTable', !!show);
          if (this._options.emptyHTML && this._options.allowToggleHead) {
             if (this._thead) {
                this._thead.toggleClass('ws-hidden', !!show);
