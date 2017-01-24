@@ -617,9 +617,12 @@ define('js!SBIS3.CONTROLS.Image',
               * @see resetImage
               */
             _uploadImage: function(originalEvent) {
-               if (this.getDataSource()) {
-                  this._getFileLoader().selectFile(originalEvent, false);
+               if (!this.getDataSource()) {
+                  return;
                }
+               this._getFileLoader().addCallback(function (loader){
+                  loader.selectFile(originalEvent, false);
+               });
             },
              /**
               * Инициирует вызов диалога редактирования изображения.
