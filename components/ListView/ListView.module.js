@@ -49,7 +49,6 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.VirtualScrollController',
-   'js!SBIS3.CONTROLS.ViewportController',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
@@ -62,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListView',
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, VirtualScrollController, ViewportController) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, VirtualScrollController) {
 
      'use strict';
 
@@ -761,8 +760,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base',
-               virtualScrolling: true
+               moveStrategy: 'movestrategy.base'
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -796,18 +794,12 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._prepareInfiniteScroll();
-            if (this._options.scrollPaging || this._options.virtualScrolling){
-               this._viewportController = new ViewportController({
+            if (this._options.virtualScrolling){
+               this._virtualScrollController = new VirtualScrollController({
                   view: this
                });
             }
-            if (this._options.virtualScrolling){
-               this._virtualScrollController = new VirtualScrollController({
-                  view: this,
-                  viewportController: this._viewportController
-               });
-            }
+            this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
@@ -925,7 +917,7 @@ define('js!SBIS3.CONTROLS.ListView',
                view: this,
                paging: this._scrollPager
             });
-            this._scrollBinder.bindScrollPaging(null, this._viewportController);
+            this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
 
             if (!this._inScrollContainerControl) {
@@ -943,10 +935,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var itemActions = this.getItemsActions();
+            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
+                itemActions = this.getItemsActions();
+
             if(itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
+            this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
             var right;
@@ -2133,6 +2128,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._notifyOnChangeHoveredItem()
                }
             }
+            this._notifyOnPropertyChanged('itemsActions');
          },
          /**
           * todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
@@ -2206,9 +2202,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages();
+               this._scrollBinder._updateScrollPages(true);
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
+            }
+            if (this._virtualScrollController){
+               this._virtualScrollController.updateVirtualPages();
             }
             this._notifyOnSizeChanged(true);
          },
@@ -2234,6 +2233,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
+               }
+               if (this._virtualScrollController){
+                  this._virtualScrollController.updateVirtualPages();
                }
             }
          },
@@ -3541,12 +3543,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * <pre>
           *    new ListView({
           *       itemsActions: {
-      	 *	         name: 'moveSelected'
-      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
-      	 *	         onActivated: function(tr, id, record) {
-      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
-      	 *	         }
-      	 *	      }
+          *          name: 'moveSelected'
+          *          tooltip: 'Переместить выделленые записи внутрь папки'
+          *          onActivated: function(tr, id, record) {
+          *             this.move(this.getSelectedItems().toArray(), record, 'on')
+          *          }
+          *       }
           *    })
           * </pre>
           */

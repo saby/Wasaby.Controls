@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.ViewportController',
    var VIRTUAL_SCROLLING = 'virtualScrolling';
    var SCROLL_PAGING = 'scrollPaging';
    var THRESHOLD = 20;
+
    var ViewportController = cAbstract.extend({
       $protected: {
          _options: {
@@ -17,14 +18,12 @@ define('js!SBIS3.CONTROLS.ViewportController',
          _currentScrollPage: 0,
          _currentVirtualPage: 0,
          _windowResizeTimeout: null,
-         _debug: true
       },
 
       init: function(){
          ViewportController.superclass.init.call(this);
-         if (this._options.view._scrollWatcher) {
-            this._options.view._scrollWatcher.subscribe('onScroll', this._scrollHandler.bind(this));
-         }
+         var view = this._options.view; 
+         view._getScrollWatcher().subscribe('onScroll', this._scrollHandler.bind(this));
       },
 
       _scrollHandler: function(e, scrollTop){
@@ -51,6 +50,10 @@ define('js!SBIS3.CONTROLS.ViewportController',
             // Считаем через position, так как для плитки не подходит сложение высот
             curBottom = element.position().top + element.outerHeight(true) + topWrapperHeight;
          return curBottom;
+      },
+
+      update: function(reset){
+         this.updateVirtualPages(reset);
       },
 
       /*
@@ -104,9 +107,10 @@ define('js!SBIS3.CONTROLS.ViewportController',
          if (this._options.view.isScrollOnBottom(true)){
             return this._virtualPages.length - 1;
          }
+         var scrollTop = this._options.view._getScrollWatcher().getScrollContainer().scrollTop();
          for (var i = 0; i < this._virtualPages.length; i++){
             var page = this._virtualPages[i];
-            if (this._isPageStartVisisble(page)){
+            if (page.offset > scrollTop){
                return i;
             }
          }
