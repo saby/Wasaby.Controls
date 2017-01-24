@@ -3,8 +3,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "js!SBIS3.CONTROLS.TextBoxBase",
    "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
-   "Core/IoC"
-], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC) {
+   "Core/IoC",
+   "Core/constants"
+], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, cConst) {
 
    'use strict';
 
@@ -131,7 +132,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            var text = self._inputField.get(0).innerText;
+            var text = self._getTextFromMarkup();
             if (self._options.trim) {
                text = String.trim(text);
             }
@@ -159,7 +160,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText.call(self, self._formatText(self._inputField.get(0).innerText));
+                  self.setText.call(self, self._formatText(this._getTextFromMarkup()));
                   self._inputField.get(0).innerText = self._options.text;
                }
             }, 100)
@@ -182,9 +183,19 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._insertTextToMarkup(this._options.text);
       },
 
+      _prepareTextBecauseFFBug: function(text) {
+         //в файрфоксе есть баг с 2011 года при котором во время ввода и последующей очистки contenteditable там оказывается пустой фантомный br
+         if (cConst.browser.firefox && text.length == 1 && text == '\n') {
+            return '';
+         }
+         else {
+            return text;
+         }
+      },
+
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
-         if (this._inputField.get(0).innerText != text) {
+         if (this._getTextFromMarkup() != text) {
             this._insertTextToMarkup(text);
          }
       },
@@ -192,6 +203,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _insertTextToMarkup: function(text) {
          var dispText = prepareTextForDisplay(text, !this._options.enabled);
          this._inputField.get(0).innerHTML = dispText || '';
+      },
+
+      _getTextFromMarkup: function() {
+         var text = this._inputField.get(0).innerText;
+         text = this._prepareTextBecauseFFBug(text);
+         return text;
       },
 
       _processNewLine: function(event) {
@@ -206,7 +223,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _keyDownBind: function(event) {
-         var text = this._inputField.get(0).innerText;
+         var text = this._getTextFromMarkup();
          //TODO опасная проверка, но я пока не нашел случаев чтоб она не сработала
          if (text && this._options.maxLength && text.length >= this._options.maxLength && event.key && event.key.length == 1) {
             event.preventDefault();
@@ -215,7 +232,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _keyUpBind: function(event) {
          var
-            newText = this._inputField.get(0).innerText,
+            newText = this._getTextFromMarkup(),
             key = event.which || event.keyCode,
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
          if (!textsEmpty) {
