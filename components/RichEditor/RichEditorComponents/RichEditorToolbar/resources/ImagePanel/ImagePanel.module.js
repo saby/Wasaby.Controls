@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                   canMultiSelect: false
                }
             },
-            _lastKey: undefined,
+            _selectedTemplate: undefined,
 
             _modifyOptions: function(options) {
                options = ImagePanel.superclass._modifyOptions.apply(this, arguments);
@@ -43,9 +43,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                var
                   target = $(event.delegateTarget);
 
-               this._lastKey =  target.attr('data-id');
-               this.getFileLoader().startFileLoad(target, this._lastKey == 4, this._options.imageFolder).addCallback(function(fileobj) {
-                  this._notify('onImageChange', this._lastKey, fileobj);
+               this._selectedTemplate =  target.attr('data-id');
+               this.getFileLoader().startFileLoad(target, this._selectedTemplate == 4, this._options.imageFolder).addCallback(function(fileobj) {
+                  this._notify('onImageChange', this._selectedTemplate, fileobj);
                   this.hide();
                }.bind(this))
             }
