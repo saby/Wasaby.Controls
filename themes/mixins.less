@@ -219,6 +219,14 @@
   display: -ms-flexbox;
   display: flex;
 }
+
+.order(@val) {
+  -webkit-box-ordinal-group: @val;
+  -moz-box-ordinal-group: @val;
+  -ms-flex-order: @val;
+  -webkit-order: @val;
+  order: @val;
+}
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
 //ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.
 .inline-block-bug-fix(@child-font-size: 0) {

@@ -4,12 +4,15 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'Core/IoC',
     'js!WS.Data/Collection/RecordSet',
     'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/resources/FilterPanelChooserFavoritesHeader',
     'js!SBIS3.CONTROLS.FilterPanelBoolean'
-], function(FilterPanelChooserDictionary, cFunctions, IoC, RecordSet, ArraySimpleUtil, headerTpl) {
+], function(FilterPanelChooserDictionary, cFunctions, IoC, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
 
-    var favoritesIsChecked = function(value, favorites, idProperty) {
-        var result = true;
+    var favoritesIsChecked = function(value, favorites) {
+        var
+            result = true,
+            idProperty = favorites.getIdProperty();
         favorites.each(function(item) {
             if (!ArraySimpleUtil.hasInArray(value, item.get(idProperty))) {
                 result = false;
@@ -40,14 +43,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
      */
 
     var FilterPanelChooserFavorites = FilterPanelChooserDictionary.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FavoritesList.prototype */ {
+        _dotTplFn: dotTplFn,
         $protected: {
             _options: {
-                /**
-                 * @cfg {String} Устанавливает шаблон, отображающий кнопку с числом избранных записей.
-                 * @remark
-                 * Шаблон должен быть реализован только на <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизаторе</a>
-                 */
-                beforeChooserWrapper: headerTpl,
+                _beforeChooserWrapper: headerTpl,
                 /**
                  * @cfg {WS.Data/Collection/RecordSet} Устанавливает набор избранных записей.
                  */
@@ -62,32 +61,21 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
 
         init: function() {
             FilterPanelChooserFavorites.superclass.init.apply(this, arguments);
-            this._getFavoritesCheckBox().subscribe('onValueChange', this._onFavoritesCheckedChange.bind(this));
+            this._getFavoritesCheckBox().subscribe('onValueChange', this._updateValue.bind(this));
             //TODO: придрот. обработчик клика по надписи 'Избранное'
             $('.js-controls-CheckBox__caption', this._container).bind('click', this._clickFavoritesHandler.bind(this));
         },
 
         _modifyOptions: function() {
             var opts = FilterPanelChooserFavorites.superclass._modifyOptions.apply(this, arguments);
-            if (Array.isArray(opts.favorites)) {
-                IoC.resolve('ILogger').log('items', 'Array type option is deprecated. Use WS.Data/Collection/RecordSet.');
-                opts.favorites = new RecordSet({
-                    rawData: opts.favorites,
-                    idProperty: opts.idProperty
-                });
-            }
-            opts.favoritesIsChecked = favoritesIsChecked(opts.value, opts.favorites, opts.idProperty);
+            opts.favorites = opts.favorites || new RecordSet();
+            opts.favoritesIsChecked = favoritesIsChecked(opts.value, opts.favorites);
             return opts;
         },
 
         _updateView: function() {
             FilterPanelChooserFavorites.superclass._updateView.apply(this, arguments);
-            this._getFavoritesCheckBox().setValue(favoritesIsChecked(this._options.value, this._options.favorites, this._options.idProperty));
-        },
-
-        _getItemTextByItemId: function(items, id) {
-            var item = items.getRecordById(id) || this._options.favorites.getRecordById(id);
-            return item.get(this._options.displayProperty);
+            this._getFavoritesCheckBox().setValue(favoritesIsChecked(this._options.value, this._options.favorites));
         },
 
         _clickFavoritesHandler: function(e) {
@@ -95,17 +83,31 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
             e.stopPropagation();
         },
 
-        _onFavoritesCheckedChange: function() {
-            this._updateValue();
+        _updateTextValue: function() {
+            var
+                idProperty,
+                listView = this._getListView(),
+                textValue = listView.getTextValue();
+            if (this._getFavoritesCheckBox().getValue()) {
+                idProperty = this._options.favorites.getIdProperty();
+                this._options.favorites.each(function(item) {
+                    if (!ArraySimpleUtil.hasInArray(listView.getSelectedKeys(), item.get(idProperty))) {
+                        textValue = textValue + (textValue ? ', ' : '') + item.get(this._options.properties.displayProperty);
+                    }
+                }, this);
+            }
+            this.setTextValue(textValue);
         },
 
         _updateValue: function() {
             var
                 favoriteId,
+                idProperty,
                 value = cFunctions.clone(this._getListView().getSelectedKeys());
             if (this._getFavoritesCheckBox().getValue()) {
+                idProperty = this._options.favorites.getIdProperty();
                 this._options.favorites.each(function(item) {
-                    favoriteId = item.get(this._options.idProperty);
+                    favoriteId = item.get(idProperty);
                     if (!ArraySimpleUtil.hasInArray(value, favoriteId)) {
                         value.push(favoriteId);
                     }
