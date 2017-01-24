@@ -27,6 +27,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       all: ''
    };
 
+   var SELECT_ACTION_NAME = 'controls.select';
+
    var SelectorWrapper = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.SelectorWrapper.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
@@ -48,11 +50,18 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
       $constructor: function() {
          this.once('onInit', function() {
-            var childControl = this._getLinkedObject();
+            var linkedObject = this._getLinkedObject();
 
-            this.subscribeTo(childControl, 'onSelectedItemsChange', this._onSelectedItemsChangeHandler.bind(this));
-            this.subscribeTo(childControl, 'onItemActivate', this._onItemActivatedHandler.bind(this));
-            this.subscribeTo(childControl, 'onItemClick', this._onItemClickHandler.bind(this));
+            this.subscribeTo(linkedObject, 'onSelectedItemsChange', this._onSelectedItemsChangeHandler.bind(this))
+                .subscribeTo(linkedObject, 'onItemActivate', this._onItemActivatedHandler.bind(this))
+                .subscribeTo(linkedObject, 'onItemClick', this._onItemClickHandler.bind(this));
+
+            /* Обработка кнопки "Выбрать" для иерархических представлений */
+            if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+               this.subscribeTo(linkedObject, 'onChangeHoveredItem', this._onChangeHoveredItemHandler.bind(this))
+                   .subscribeTo(linkedObject, 'onPropertyChanged', this._onPropertyChangedHandler.bind(this));
+            }
+
             this.sendCommand('selectorWrapperInitialized', this);
          });
       },
@@ -161,6 +170,49 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          this.sendCommand('selectComplete');
       },
 
+      _onChangeHoveredItemHandler: function(event, hoveredItem) {
+         /* Чтобы проинициализировать кнопку "Выбрать", если её нет */
+         this._onPropertyChangedHandler();
+
+         var linkedObject = this._getLinkedObject(),
+             selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+
+         /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
+         if(hoveredItem.container) {
+            if (this._isBranch(hoveredItem.record)) {
+               if (linkedObject.getMultiselect() && linkedObject.getSelectedKeys().indexOf(hoveredItem.key) === -1 ||
+                   linkedObject._isSearchMode()) {
+                  selectAction.show();
+               } else {
+                  selectAction.hide()
+               }
+            } else {
+               selectAction.hide();
+            }
+         }
+      },
+
+      _onPropertyChangedHandler: function() {
+         var linkedObject = this._getLinkedObject(),
+             itemsActions = linkedObject.getItemsActions(),
+             itemsActionsArray;
+
+         /* Добавляем кнопку "Выбрать", если её нет в itemsActions */
+         if(!itemsActions || !itemsActions.getItems().getRecordById(SELECT_ACTION_NAME)) {
+            itemsActionsArray = itemsActions ? itemsActions.getItems().getRawData() : [];
+
+            itemsActionsArray.push({
+               caption: 'Выбрать',
+               name: SELECT_ACTION_NAME,
+               isMainAction: true,
+               onActivated: function(container, key) {
+                  this.sendCommand('activateItem', key);
+               }
+            });
+            linkedObject.setItemsActions(itemsActionsArray);
+         }
+      },
+
       /**
        * Проверяет запись на выбираемость
        * @param item
@@ -168,14 +220,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
        * @private
        */
       _checkItemForSelect: function(item) {
-         var linkedObject = this._getLinkedObject();
-
          /* Если в качестве списка для выбора записей используется дерево,
             то при обработке выбранной записи надо проверять папка это, или лист.
             Если опция selectionType установлена как 'node' (выбор только папок), то обработку листьев производить не надо.
             Если опция selectionType установлена как 'leaf' (только листьев), то обработку папок производить не надо. */
-         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
-            var isBranch = item.get(linkedObject.getProperty('hierField') + '@');
+         if(cInstance.instanceOfMixin(this._getLinkedObject(), 'SBIS3.CONTROLS.TreeMixin')) {
+            var isBranch = this._isBranch(item);
 
             if (!isBranch && _private.selectionType === 'node' || isBranch && _private.selectionType === 'leaf') {
                return false;
@@ -183,6 +233,10 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          }
 
          return true;
+      },
+
+      _isBranch: function(item) {
+         return item.get(this._getLinkedObject().getParentProperty() + '@');
       },
 
       setSelectedItems: function(items) {

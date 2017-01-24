@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
-   "js!SBIS3.CONTROLS.SuggestShowAll"
+   "Core/helpers/functional-helpers"
 ], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance, fHelpers) {
    'use strict';
 
@@ -348,13 +347,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._notifyOnPropertyChanged('listFilter');
 
          /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
-           то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
+            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused() || silent) {
             if(items && items.getCount()) {
                items.clear();
             }
             if(this._list) {
                this._list.setFilter(this._options.listFilter, true);
+
+               if(this.isPickerVisible()) {
+                  this.hidePicker();
+               }
             }
             return;
          }
