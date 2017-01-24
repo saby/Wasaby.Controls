@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!WS.Data/Relation/Hierarchy',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
-   "Core/IoC"
+   "Core/IoC",
+   'css!SBIS3.CONTROLS.Menu'
 
 ], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers, Sanitize, IoC) {
 

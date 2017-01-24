@@ -24,7 +24,7 @@
       }
    }
 
-   .controls-BackButton__caption {
+   .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @blue-dark-color;
       overflow: hidden;
@@ -86,12 +86,17 @@
    
    .controls-BackButton__caption.controls-Link{
       &:hover:not(.ws-disabled):not(.controls-Click__active):hover{
-         text-decoration: none;
-         color: @primary-color;
+         .controls-Link-link {
+            text-decoration: none;
+            color: @primary-color;
+         }
       }
       &.controls-Click__active {
          text-decoration: none;
-         color: @primary-color;
+         .controls-Link-link {
+            text-decoration: none;
+            color: @primary-color;
+         }
       }
    }
    &.controls-BackButton__empty {

@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/dom&controls-helpers",
    'js!WS.Data/Di',
    "css!SBIS3.CORE.RichContentStyles",
-   "i18n!SBIS3.CONTROLS.RichEditor"
+   "i18n!SBIS3.CONTROLS.RichEditor",
+   'css!SBIS3.CONTROLS.RichTextArea'
 ], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di) {
       'use strict';
 

@@ -7,7 +7,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "Core/detection",
+   'css!SBIS3.CONTROLS.TextBox'
+
 ], function(
     EventBus,
     constants,
