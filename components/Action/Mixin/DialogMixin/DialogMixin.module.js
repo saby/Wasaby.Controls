@@ -53,8 +53,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             dialogOptions: null
          },
-         _dialog: undefined,
-         _executedDeferred: undefined
+         _dialog: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -91,9 +90,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        *
       */
       _doExecute: function(meta) {
-         this._executedDeferred = new Deferred();
          this._openComponent(meta, this._options.template);
-         return this._executedDeferred;
+         return false;
       },
 
       _openDialog: function(meta, template) {
@@ -185,9 +183,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             componentOptions: compOptions,
             handlers: { 
                onAfterClose: function(e, meta){
-                  if (self._executedDeferred) {
-                     self._executedDeferred.callback(meta);
-                  }
+                  self._notifyOnExecuted(meta);
                   self._dialog = undefined;
                },
                onBeforeShow: function(){

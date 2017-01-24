@@ -570,16 +570,13 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             self = this;
          return cMerge(config, {
             handlers: {
-               onAfterClose: function () {
-                  if (self._executedDeferred) {
-                     self._executedDeferred.callback(this._record);
-                  }
+               onAfterClose: function (meta) {
+                  this._notifyOnExecuted(meta, this.record);
+                  self._dialog = undefined;
                }
             }
-         })
+         });
       }
-
-
    });
 
    OpenEditDialog.ACTION_CUSTOM = 'custom';

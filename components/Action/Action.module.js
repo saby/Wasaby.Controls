@@ -87,7 +87,9 @@ define('js!SBIS3.CONTROLS.Action.Action',
             var self = this;
             if (this.isCanExecute()) {
                return this._callHandlerMethod([meta], 'onExecute', '_doExecute').addCallbacks(function (result) {
-                  return self._notify('onExecuted', meta, result);
+                  if (result !== false) {
+                     return this._notifyOnExecuted(meta);
+                  }
                }, function (error) {
                   self._handleError(error, meta);
                   self._notify('onError', error, meta);
@@ -156,6 +158,15 @@ define('js!SBIS3.CONTROLS.Action.Action',
           * @private
           */
          _handleError: function (error, meta) {
+         },
+         /**
+          * 
+          * @private
+          */
+         _notifyOnExecuted: function () {
+            var args = arguments.slice();
+            args.unshift('onExecuted');
+            this._notify.apply(this, args);
          }
       });
       Action.ACTION_CUSTOM = 'custom';
