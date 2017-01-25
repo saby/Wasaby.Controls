@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.Browser', [
              *     <option name="keyboardLayoutRevert">false</option>
              * </pre>
              */
-            keyboardLayoutRevert: false,
+            keyboardLayoutRevert: true,
             /**
              * @cfg {String} Устанавливает Id для работы с историей фильтров.
              * @remark
