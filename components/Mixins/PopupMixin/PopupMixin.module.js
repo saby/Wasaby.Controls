@@ -868,7 +868,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('width', '');
                this._overflowedH = false;
             }
-            if (this._options.bodyBounds)
+            if (this._options.bodyBounds) {
                if (offset.left < 0) {
                   offset.left = 0;
                }
