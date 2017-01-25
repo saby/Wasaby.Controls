@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          _topWrapper: null,
          _bottomWrapper: null,
          _topDetachedPages: [],
+         _bottomDetachedPages: []
       },
 
       init: function(){
@@ -26,12 +27,15 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          this._topWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
          this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
 
+         //this._onVirtualPageChangeDebounce = this._onVirtualPageChange.debounce(10);
+         
          view._getScrollWatcher().subscribe('onScroll', this._scrollHandler.bind(this));
       },
 
       _scrollHandler: function(e, scrollTop){
          var page = this._getPage();
          if (page >= 0 && this._currentVirtualPage!= page) {
+            this._scrollingDown = this._currentVirtualPage < page;
             this._currentVirtualPage = page;
             this._onVirtualPageChange(page);
          }
@@ -54,40 +58,99 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       _onVirtualPageChange: function(pageNumber) {
          var 
             view = this._options.view,
-            pageToDetach = pageNumber - 5,
-            pageToAttach = pageNumber - 4,
+            pageToDetachTop = pageNumber - 5,
+            pageToAttachTop = pageNumber - 4,
+            pageToDetachBottom = pageNumber + 4,
+            pageToAttachBottom = pageNumber + 5,
             pages = this._virtualPages,
             hashes, pageStart;
          console.log('page', pageNumber);
-         if (pageToDetach >= 0 && !this._topDetachedPages[pageToDetach]){
-            var toDetach = [];
-            pageStart = pageToDetach * BATCH_SIZE;
+         if (this._scrollingDown){
+            /*------------------------Удаляем записи сверху--------------------*/
+            var toDetach = [], 
+               dettached = false;
+            for (var i = 0; i < pageToDetachTop; i++) {
+               if (!this._topDetachedPages[i]){
+                  pageStart = i * BATCH_SIZE;
 
-            this._topWrapper.height(pages[pageToDetach + 1]);
-            //TODO: Это должно перехать во view, тут только стрелять событием 
-            for (var i = pageStart; i < pageStart + BATCH_SIZE; i++){
-               toDetach.push(view._getItemsProjection().at(i));
-            }
-            view._removeItems(toDetach);
-            /***************************************************************/
-
-            console.log('removed ', pageToDetach);
-            this._topDetachedPages[pageToDetach] = true;
-         } else {
-            if (this._topDetachedPages[pageToAttach]){
-               var toAttach = [];
-               pageStart = pageToAttach * BATCH_SIZE;
-               console.log('attach', pageToAttach);
-               
-               this._topWrapper.height(pages[pageToAttach])
-               //TODO: Это должно перехать во view, тут только стрелять событием 
-               for (var i = pageStart; i < pageStart + BATCH_SIZE; i++){
-                  toAttach.push(view._getItemsProjection().at(i));
+                  //TODO: Это должно перехать во view, тут только стрелять событием с массивом индексов
+                  for (var j = pageStart; j < pageStart + BATCH_SIZE; j++){
+                     toDetach.push(view._getItemsProjection().at(j));
+                  }
                }
-               view._addItems(toAttach, 0);
-               /***************************************************************/
+               this._topDetachedPages[i] = true;
+               dettached = true;
+            }
+            if (dettached) {
+               console.log('removed top', pageToDetachTop);
+               this._topWrapper.height(pages[pageToDetachTop + 1]);
+               view._removeItems(toDetach);
+            }
+            /*------------------------Добавляем записи снизу--------------------*/
+            var toAttach = [],
+               attached = false;
+            for (var i = 0; i < pageToAttachBottom; i++) {
+               if (this._bottomDetachedPages[i]){
+                  pageStart = i * BATCH_SIZE;
+                    
+                  //TODO: Это должно перехать во view, тут только стрелять событием с массивом индексов
+                  for (var j = pageStart; j < pageStart + BATCH_SIZE; j++){
+                     toAttach.push(view._getItemsProjection().at(j));
+                  }
+                  /***************************************************************/
 
-               this._topDetachedPages[pageToAttach] = false;
+                  this._bottomDetachedPages[i] = false;
+                  attached = true;
+               }
+            }
+            if (attached) {
+               console.log('attached bottom', pageToAttachBottom);
+               this._bottomWrapper.height(pages[pageToAttachBottom + 1] ? this._bottomWrapper.height() - (pages[pageToAttachBottom + 1] - pages[pageToAttachBottom]) : 0);
+               view._addItems(toAttach, (pageToAttachBottom - 2) * BATCH_SIZE);
+            }
+
+         } else {
+            /*------------------------Добавляем записи сверху--------------------*/
+            var toAttach = [], 
+               attached = false;
+            for (var i = pageToAttachTop; i < this._topDetachedPages.length; i++) {
+               if (this._topDetachedPages[i]){
+                  pageStart = i * BATCH_SIZE;
+                    
+                  //TODO: Это должно перехать во view, тут только стрелять событием с массивом индексов
+                  for (var j = pageStart; j < pageStart + BATCH_SIZE; j++){
+                     toAttach.push(view._getItemsProjection().at(j));
+                  }
+
+                  this._topDetachedPages[i] = false;
+                  attached = true;
+               }
+            }
+            if (attached) {
+               console.log('attached top', pageToAttachTop);
+               this._topWrapper.height(pages[pageToAttachTop] ? pages[pageToAttachTop] : 0);
+               view._addItems(toAttach, 0);
+            }
+            /*------------------------Удаляем записи снизу--------------------*/
+            var toDetach = [], 
+                  dettached = false;
+            // почему -1 ???
+            for (var i = pageToDetachBottom; i < pages.length - 1; i++) {
+               if (!this._bottomDetachedPages[i]){
+                  pageStart = i * BATCH_SIZE;
+
+                  //TODO: Это должно перехать во view, тут только стрелять событием с массивом индексов
+                  for (var j = pageStart; j < pageStart + BATCH_SIZE; j++){
+                     toDetach.push(view._getItemsProjection().at(j));
+                  }
+               }
+               this._bottomDetachedPages[i] = true;
+               dettached = true;
+            }
+            if (dettached) {
+               console.log('removed bottom', pageToDetachBottom);
+               this._bottomWrapper.height(this._bottomWrapper.height() + (pages[pageToDetachBottom + 1] - pages[pageToDetachBottom]));
+               view._removeItems(toDetach);
             }
          }
       },
@@ -106,14 +169,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
        */
       updateVirtualPages: function(){
          var view = this._options.view,
+            detachedCount = this._topDetachedPages.filter(function(e){ return e || false; }).length,
             pageOffset = 0,
-            lastPageStart = 0,
             self = this,
             //Учитываем все что есть в itemsContainer (группировка и тд)
             listItems = $('> *', view._getItemsContainer()).filter(':visible'),
             count = 0;
 
-         lastPageStart = (this._virtualPages.length - 1) * BATCH_SIZE;
+         var lastPageStart = (this._virtualPages.length - detachedCount - 1) * BATCH_SIZE;
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart).each(function(){
             // Если набралось записей на выстору viewport'a добавим еще страницу
