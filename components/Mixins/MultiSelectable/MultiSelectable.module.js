@@ -12,6 +12,26 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/helpers/functional-helpers"
 ], function( ParallelDeferred, cHelpers, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
 
+   var EMPTY_SELECTION = [null],
+       onCollectionItemChangeSelected = function(eventObject, item, index, property) {},
+       convertToKeys = function(list, keyField) {
+          var keys = [],
+             key;
+
+          if (list) {
+             list.each(function (rec) {
+                key = rec.get(keyField || this._options.idProperty);
+
+                if (key === undefined) {
+                   throw new Error(this._moduleName + ': record key is undefined.')
+                }
+
+                keys.push(key);
+             }.bind(this));
+          }
+
+          return keys;
+       };
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов
     * @mixin SBIS3.CONTROLS.MultiSelectable
@@ -73,7 +93,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              * @remark
              * Устанавливает массив идентификаторов элементов коллекции, которые будут по умолчанию выбраны для контрола.
              * Опция актуальна только для контрола в режиме множественного выбора значений, который устанавливают с помощью опции {@link multiselect}.
-             * Чтобы элементы коллекции были выбраны, для контрола дополнительно должны быть установлены {@link SBIS3.CONTROLS.DSMixin#keyField поле первичного ключа} и {@link SBIS3.CONTROLS.DSMixin#dataSource источник данных}.
+             * Чтобы элементы коллекции были выбраны, для контрола дополнительно должны быть установлены {@link SBIS3.CONTROLS.DSMixin#idProperty поле первичного ключа} и {@link SBIS3.CONTROLS.DSMixin#dataSource источник данных}.
              * @example
              * В контрол, отображающий набор данных в виде таблицы {@link SBIS3.CONTROLS.DataGridView},  переданы три идентификатора элементов коллекции:
              * ![](/MultiSelectable03.png)
@@ -160,7 +180,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       after : {
          init: function () {
-            this._drawSelectedItems(this._options.selectedKeys);
+            this._drawSelectedItems(this._options.selectedKeys, {});
          },
          _setItemsEventHandlers: function() {
             if (!this._onCollectionItemChangeSelected) {
@@ -195,15 +215,15 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                this._checkNewItemsFormat(this.getItems());
             })
          },
-         init: function() {
-            if (this._options.selectedItems) {
-               this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
+         _modifyOptions: function(opts) {
+            if (opts.selectedItems) {
+               opts.selectedKeys = convertToKeys(opts.selectedItems, opts.idProperty);
             }
          }
       },
       /**
        * По массиву идентификаторов устанавливает массив выбранных элементов коллекции для контрола, который находится в режиме множественного выбора.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @param {Array} idArray Массив идентификаторов выбранных элементов коллекции.
        * @example
        * <pre>
@@ -311,7 +331,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       /**
        * Получает массив индентификаторов выбранных элементов коллекции.
        * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *    if (!checkBoxGroup.getSelectedKeys().length) {
@@ -330,7 +350,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * Добавляет указанные элементы коллекции в набор уже выбранных элементов.
        * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array} idArray Массив идентификаторов элементов, добавляемых к выбранным.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *    var keys = checkBoxGroup.getSelectedKeys();
@@ -384,7 +404,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * Удаляет указанные элементы коллекции из набора выбранных элементов.
        * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array} idArray Массив идентификаторов элементов к удалению из выбранных.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *     if (checkBox.isChecked()) {
@@ -464,7 +484,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * уберет элементы коллекции из набора выбранных или добавит элементы в набор.
        * Метод актуален для контрола, который находится в режиме {@link SBIS3.CONTROLS.MultiSelectable#multiselect множественного выбора значений}.
        * @param {Array} idArray Массив идентификаторов элементов для инвертирования.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *     if (needToggle) {
@@ -680,7 +700,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                             return record;
                          },
                          function(err) {
-                            throw new Error(err);
+                            IoC.resolve('ILogger').info('MultiSelectable', 'У контрола ' + self.getName() + ' не удалось вычитать запись по ключу ' + loadKeysArr[j]);
                          }
                      ));
                   }
@@ -725,7 +745,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
          /* Соберём элементы для удаления, т.к. в методе each не отслеживаются изменения IList'а */
          selItems.each(function(rec) {
-            if(!self._isItemSelected(rec.get(self._options.keyField))) {
+            if(!self._isItemSelected(rec.get(self._options.idProperty))) {
                delItems.push(rec);
             }
          });
@@ -760,7 +780,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
          if(index === -1 && cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
             if(selectedItems) {
-               index = selectedItems.getIndexByValue(item.getIdProperty(), item.get(this._options.keyField));
+               index = selectedItems.getIndexByValue(item.getIdProperty(), item.get(this._options.idProperty));
             } else {
                index = -1;
             }
@@ -785,7 +805,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             added : addedKeys,
             removed : removedKeys
          });
-         this._drawSelectedItems(this._options.selectedKeys);
+         this._drawSelectedItems(this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
 	   },
 
       _notifySelectedItems : function(idArray, changed) {
@@ -848,7 +871,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                      return;
                   }
 
-                  index = self._options.selectedItems.getIndexByValue(self._options.keyField, record.getId());
+                  index = self._options.selectedItems.getIndexByValue(self._options.idProperty, record.getId());
                   /**
                    * Запись в датасете есть - заменим в наборе выбранных записей, т.к. она могла измениться.
                    * Если нету, то просто добавим.
@@ -893,7 +916,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                }
 
                /* Пробуем найти среди selectedItems запись с ключём null, если она есть - выделение не пустое. */
-               if(isEmpty && selectedItems && selectedItems.getIndexByValue(this._options.keyField, EMPTY_SELECTION[0]) !== -1) {
+               if(isEmpty && selectedItems && selectedItems.getIndexByValue(this._options.idProperty, EMPTY_SELECTION[0]) !== -1) {
                   isEmpty = false;
                }
             } else if(isEmpty) {
@@ -911,32 +934,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @returns {Array}
        * @private
        */
-      _convertToKeys: function(list) {
-         var keys = [],
-             key;
-
-         if (list) {
-            list.each(function (rec) {
-               key = rec.get(this._options.keyField);
-
-               if (key === undefined) {
-                  throw new Error(this._moduleName + ': record key is undefined.')
-               }
-
-               keys.push(key);
-            }.bind(this));
-         }
-
-         return keys;
-      }
+      _convertToKeys: convertToKeys
    };
 
-   var EMPTY_SELECTION = [null];
-
-   var
-      onCollectionItemChangeSelected = function(eventObject, item, index, property) {
-
-      };
    return MultiSelectable;
 
 });

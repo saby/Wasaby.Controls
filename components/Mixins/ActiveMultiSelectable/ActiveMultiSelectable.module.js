@@ -146,8 +146,8 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model', 'C
             }
          });
 
-         if(this._options.keyField) {
-            createdModel.set(recordset.getIdProperty(), model.get(this._options.keyField));
+         if(this._options.idProperty) {
+            createdModel.set(recordset.getIdProperty(), model.get(this._options.idProperty));
          }
          return createdModel
       },

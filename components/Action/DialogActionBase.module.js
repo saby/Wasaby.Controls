@@ -85,6 +85,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
        *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title title}, {@link $ws.proto.Dialog#border border} и {@link $ws.proto.Dialog#buildMarkupWithContext buildMarkupWithContext}.</li>
        *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title title}, {@link $ws.proto.FloatArea#border border}, {@link $ws.proto.FloatArea#buildMarkupWithContext buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation animation}, {@link $ws.proto.FloatArea#autoCloseOnHide autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide autoHide}, {@link $ws.proto.FloatArea#isStack isStack}, {@link $ws.proto.FloatArea#side side} и {@link $ws.proto.FloatArea#target target}.</li>
        * </ul>
+       */
+      /**
        * Производит открытие диалога.
        * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
        * @remark
@@ -160,7 +162,6 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                autoCloseOnHide: true,
                border: true,
                target: '',
-               title: '',
                side: 'left',
                animation: 'slide'
                /* временнное решение проблемы описанной в надзадаче */
@@ -171,8 +172,14 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
             meta.dialogOptions = {};
          }
 
-         colHelpers.forEach(defaultConfig, function(defaultValue, key){
-            if (meta.hasOwnProperty(key)){
+         //FloatArea и Dialog позволяют задать title прямо на опциях шаблона-компонента.
+         //Поэтому, если при вызове execute, нам явно не говорят, какой должен быть title, то не перебиваем его
+         if (meta.dialogOptions.title) {
+            defaultConfig.title = meta.dialogOptions.title;
+         }
+
+         colHelpers.forEach(defaultConfig, function(defaultValue, key) {
+            if (meta.hasOwnProperty(key)) {
                IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.dialogOptions');
                floatAreaCfg[key] = meta[key];
             }

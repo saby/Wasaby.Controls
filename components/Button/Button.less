@@ -1,253 +1,252 @@
 .button-mixin(@icon-top, @icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
-  left: @icon-left - @border-width;
-  top: @icon-top - @border-width;
+   left: @icon-left - @border-width;
+   top: @icon-top - @border-width;
 
-  & + .controls-Button__text {
-    margin-right: @margin-right - @border-width;
-    margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
-  }
+   & + .controls-Button__text {
+      margin-right: @margin-right - @border-width;
+      margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+   }
 }
 
 // Normal default button
 .controls-Button {
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  outline: none;
-  background-size: contain;
-  white-space: nowrap;
-  .box-sizing(border-box);
-  .user-select();
+   position: relative;
+   cursor: pointer;
+   display: inline-block;
+   outline: none;
+   background-size: contain;
+   white-space: nowrap;
+   .box-sizing(border-box);
+   .user-select();
 
-  font: @button-font;
-  color: @button-text-color;
-  text-align: @button-text-alignment;
-  min-width: @button-min-width;
-  height: @button-height;
-  line-height: @button-line-height;
-  padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
-  margin: @button-margin;
-  overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
-  border: @button-border;
-  .border-radius(@button-border-radius);
-  .box-shadow(@button-shadow);
-  background: @button-bg;
+   font: @button-font;
+   color: @button-text-color;
+   text-align: @button-text-alignment;
+   min-width: @button-min-width;
+   height: @button-height;
+   line-height: @button-line-height;
+   padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
+   margin: @button-margin;
+   overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
+   border: @button-border;
+   .border-radius(@button-border-radius);
+   .box-shadow(@button-shadow);
+   background: @button-bg;
 
-  .controls-Button__text {
-    &.controls-Button__emptyCaption {
-      margin: @button-empty-text-margin;
-    }
+   .controls-Button__text {
+      &.controls-Button__emptyCaption {
+         margin: @button-empty-text-margin;
+      }
+   }
+
+   &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
+      background-color: #ffffff;
+   }
+
+   // Button's icon
+   .controls-Button__icon {
+      position: absolute;
+      .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+
+      &.icon-24 {
+         .button-mixin(@button-icon-big-top-offset; @button-icon-big-left-offset; 24px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-32 {
+         .button-mixin(@button-icon-32-top-offset; @button-icon-32-left-offset; 32px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
   }
 
-  // Button's icon
-  .controls-Button__icon {
-    position: absolute;
-    .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+   &.controls-Button__IE8Hack .controls-Button__icon:before {
+      content: '\00ad';
+   }
 
-    &.icon-24 {
-      .button-mixin(@button-icon-big-top-offset; @button-icon-big-left-offset; 24px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
-    }
-    &.icon-32 {
-      .button-mixin(@button-icon-32-top-offset; @button-icon-32-left-offset; 32px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
-    }
-  }
+   // Normal primary button
+   &.controls-Button__primary {
+      color: @button-primary-text-color;
+      border: @button-primary-border;
+      .box-shadow(@button-primary-shadow);
+      background: @button-primary-bg;
 
-  &.controls-Button__IE8Hack .controls-Button__icon:before {
-    content: '\00ad';
-  }
+      &.controls-Click__active {
+         color: @button-primary-active-text-color;
+         border: @button-primary-active-border;
+         .box-shadow(@button-primary-active-shadow);
+         background: @button-primary-active-bg;
+      }
 
-  // Normal primary button
-  &.controls-Button__primary {
-    color: @button-primary-text-color;
-    border: @button-primary-border;
-    .box-shadow(@button-primary-shadow);
-    background: @button-primary-bg;
+      &.ws-disabled {
+         color: @button-disabled-text-color;
+         border: @button-disabled-border;
+         .box-shadow(@button-disabled-shadow);
+         background: @button-disabled-bg;
+      }
+   }
 
-    &.controls-Click__active:active {
-      color: @button-primary-active-text-color;
-      border: @button-primary-active-border;
-      .box-shadow(@button-primary-active-shadow);
-      background: @button-primary-active-bg;
-    }
+   // Big default button
+   &.controls-Button__big {
+      font: @button-big-font;
+      color: @button-big-text-color;
+      text-align: @button-big-text-alignment;
+      min-width: @button-big-min-width;
+      height: @button-big-height;
+      line-height: @button-big-line-height;
+      padding: 0;   //FF ignore padding in button, therefore we use SPAN with margin
+      margin: @button-big-margin;
+      border: @button-big-border;
+      .border-radius(@button-big-border-radius);
+      .box-shadow(@button-big-shadow);
+      background: @button-big-bg;
 
-    &.ws-disabled {
+      &.controls-Click__active {
+         color: @button-big-active-text-color;
+         border: @button-big-active-border;
+         .box-shadow(@button-big-active-shadow);
+         background: @button-big-active-bg;
+      }
+
+      .controls-Button__text {
+         margin: @button-big-text-margin;
+         &.controls-Button__emptyCaption {
+            margin: @button-big-empty-text-margin;
+         }
+      }
+      // Button's icon
+      .controls-Button__icon {
+         position: absolute;
+         .button-mixin(@button-big-icon-top-offset; @button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+
+         &.icon-24 {
+            .button-mixin(@button-big-icon-big-top-offset; @button-big-icon-big-left-offset; 24px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+         &.icon-32 {
+            .button-mixin(@button-big-icon-32-top-offset; @button-big-icon-32-left-offset; 32px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+      }
+
+      // Big primary button
+      &.controls-Button__primary {
+         color: @button-big-primary-text-color;
+         border: @button-big-primary-border;
+         .box-shadow(@button-big-primary-shadow);
+         background: @button-big-primary-bg;
+
+         &.controls-Click__active {
+            color: @button-big-primary-active-text-color;
+            border: @button-big-primary-active-border;
+            .box-shadow(@button-big-primary-active-shadow);
+            background: @button-big-primary-active-bg;
+         }
+
+         &.ws-disabled {
+            color: @button-big-disabled-text-color;
+            border: @button-big-disabled-border;
+            .box-shadow(@button-big-disabled-shadow);
+            background: @button-big-disabled-bg;
+            .controls-Button__icon {
+               color: @icon-color-disabled !important;
+            }
+         }
+      }
+
+      &.ws-disabled {
+         color: @button-big-disabled-text-color;
+         border: @button-big-disabled-border;
+         .box-shadow(@button-big-disabled-shadow);
+         background: @button-big-disabled-bg;
+      }
+   }
+
+   &.controls-Click__active {
+      color: @button-active-text-color;
+      border: @button-active-border;
+      .box-shadow(@button-active-shadow);
+      background: @button-active-bg;
+   }
+
+   &.ws-disabled {
+      cursor: default;
       color: @button-disabled-text-color;
       border: @button-disabled-border;
       .box-shadow(@button-disabled-shadow);
       background: @button-disabled-bg;
-    }
-  }
-
-  // Big default button
-  &.controls-Button__big {
-    font: @button-big-font;
-    color: @button-big-text-color;
-    text-align: @button-big-text-alignment;
-    min-width: @button-big-min-width;
-    height: @button-big-height;
-    line-height: @button-big-line-height;
-    padding: 0;   //FF ignore padding in button, therefore we use SPAN with margin
-    margin: @button-big-margin;
-    border: @button-big-border;
-    .border-radius(@button-big-border-radius);
-    .box-shadow(@button-big-shadow);
-    background: @button-big-bg;
-
-    &.controls-Click__active:active {
-      color: @button-big-active-text-color;
-      border: @button-big-active-border;
-      .box-shadow(@button-big-active-shadow);
-      background: @button-big-active-bg;
-    }
-
-    .controls-Button__text {
-      margin: @button-big-text-margin;
-      &.controls-Button__emptyCaption {
-        margin: @button-big-empty-text-margin;
+      .controls-Button__icon {
+         color: @icon-color-disabled !important;
       }
-    }
-
-    // Button's icon
-    .controls-Button__icon {
-      position: absolute;
-      .button-mixin(@button-big-icon-top-offset; @button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-
-      &.icon-24 {
-        .button-mixin(@button-big-icon-big-top-offset; @button-big-icon-big-left-offset; 24px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-      }
-      &.icon-32 {
-        .button-mixin(@button-big-icon-32-top-offset; @button-big-icon-32-left-offset; 32px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-      }
-    }
-
-    // Big primary button
-    &.controls-Button__primary {
-      color: @button-big-primary-text-color;
-      border: @button-big-primary-border;
-      .box-shadow(@button-big-primary-shadow);
-      background: @button-big-primary-bg;
-
-      &.controls-Click__active:active {
-        color: @button-big-primary-active-text-color;
-        border: @button-big-primary-active-border;
-        .box-shadow(@button-big-primary-active-shadow);
-        background: @button-big-primary-active-bg;
-      }
-
-      &.ws-disabled {
-        color: @button-big-disabled-text-color;
-        border: @button-big-disabled-border;
-        .box-shadow(@button-big-disabled-shadow);
-        background: @button-big-disabled-bg;
-        .controls-Button__icon {
-          color: @icon-color-disabled !important;
-        }
-      }
-    }
-
-    &.ws-disabled {
-      color: @button-big-disabled-text-color;
-      border: @button-big-disabled-border;
-      .box-shadow(@button-big-disabled-shadow);
-      background: @button-big-disabled-bg;
-    }
-  }
-
-  &.controls-Click__active:active {
-    color: @button-active-text-color;
-    border: @button-active-border;
-    .box-shadow(@button-active-shadow);
-    background: @button-active-bg;
-  }
-
-  &.ws-disabled {
-    cursor: default;
-    color: @button-disabled-text-color;
-    border: @button-disabled-border;
-    .box-shadow(@button-disabled-shadow);
-    background: @button-disabled-bg;
-    .controls-Button__icon {
-      color: @icon-color-disabled !important;
-    }
-  }
-   &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
-      background-color: #ffffff;
    }
 }
 .ws-is-desktop-platform {
-  .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
-    &:hover {
-      color: @button-hover-text-color;
-      border: @button-hover-border;
-      .box-shadow(@button-hover-shadow);
-      background: @button-hover-bg;
-    }
-    // Normal primary button
-    &.controls-Button__primary {
+   .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
       &:hover {
-        color: @button-primary-hover-text-color;
-        border: @button-primary-hover-border;
-        .box-shadow(@button-primary-hover-shadow);
-        background: @button-primary-hover-bg;
+         color: @button-hover-text-color;
+         border: @button-hover-border;
+         .box-shadow(@button-hover-shadow);
+         background: @button-hover-bg;
       }
-
-    }
-    &.controls-Button__big {
-      &:hover {
-        color: @button-big-hover-text-color;
-        border: @button-big-hover-border;
-        .box-shadow(@button-big-hover-shadow);
-        background: @button-big-hover-bg;
-      }
-
+      // Normal primary button
       &.controls-Button__primary {
-        &:hover {
-          color: @button-big-primary-hover-text-color;
-          border: @button-big-primary-hover-border;
-          .box-shadow(@button-big-primary-hover-shadow);
-          background: @button-big-primary-hover-bg;
-        }
+         &:hover {
+            color: @button-primary-hover-text-color;
+            border: @button-primary-hover-border;
+            .box-shadow(@button-primary-hover-shadow);
+            background: @button-primary-hover-bg;
+         }
       }
-    }
-  }
+    
+      &.controls-Button__big {
+         &:hover {
+            color: @button-big-hover-text-color;
+            border: @button-big-hover-border;
+            .box-shadow(@button-big-hover-shadow);
+            background: @button-big-hover-bg;
+         }
+
+         &.controls-Button__primary {
+            &:hover {
+               color: @button-big-primary-hover-text-color;
+               border: @button-big-primary-hover-border;
+               .box-shadow(@button-big-primary-hover-shadow);
+               background: @button-big-primary-hover-bg;
+            }
+         }
+      }
+   }
 }
 
 .controls-Button__ellipsis .controls-Button__text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
 .controls-Button__text {
-  display: block;
-  margin: @button-text-margin;
+   display: block;
+   margin: @button-text-margin;
 }
 
 // Normal offsets' override for Firefox
 @-moz-document url-prefix() {
-  .controls-Button {
-    padding-bottom: 2px;
-    .controls-Button__icon {
-      top: @button-icon-top-offset - @button-border-width;
-
-      &.icon-24 {
-        top: @button-icon-big-top-offset - @button-border-width - 1;
-      }
-    }
-
-    &.controls-Button__big {
+   .controls-Button {
+      padding-bottom: 2px;
       .controls-Button__icon {
-        top: @button-big-icon-top-offset - @button-border-width;
+         top: @button-icon-top-offset - @button-border-width;
 
-        &.icon-24 {
-          top: @button-big-icon-big-top-offset - @button-border-width;
-        }
-        &.icon-32 {
-          top: @button-big-icon-32-top-offset - @button-border-width;
-        }
+         &.icon-24 {
+            top: @button-icon-big-top-offset - @button-border-width - 1;
+         }
       }
-    }
-  }
+
+      &.controls-Button__big {
+         .controls-Button__icon {
+            top: @button-big-icon-top-offset - @button-border-width;
+            &.icon-24 {
+               top: @button-big-icon-big-top-offset - @button-border-width;
+            }
+            &.icon-32 {
+               top: @button-big-icon-32-top-offset - @button-border-width;
+            }
+         }
+      }
+   }
 }
 
 @ie8: \0screen;
@@ -261,9 +260,9 @@
 }
 // хак для ie9, 10, 11 выравнивающий иконки
 @media screen and (min-width:~"0\0") {
-  .controls-Button__icon {
-    &.icon-24 {
-      top: -2px !important;
-    }
-  }
+   .controls-Button__icon {
+      &.icon-24 {
+         top: -2px !important;
+      }
+   }
 }

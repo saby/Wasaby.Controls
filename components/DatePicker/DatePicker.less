@@ -1,3 +1,4 @@
+@import "../DateBox/DateBox";
 .controls-DatePicker {
    border: none !important;
    background: transparent !important;
@@ -6,8 +7,8 @@
 
    .box-sizing(border-box);
 
-   .controls-DatePicker__dateBox {
-      margin-right: 22px;
+   .controls-DatePicker__dateBox.controls-DateBox__fieldWrapper {
+      margin-right: @date-picker-calendar-icon-width + 6px;
       display: block;
    }
 
@@ -36,7 +37,7 @@
    .controls-DatePicker__calendarWrapper {
       position: relative;
       float: right;
-      width: 16px;
+      width: @date-picker-calendar-icon-width;
       min-height: 19px;
       margin: 0;
       height: 100%;
@@ -47,14 +48,9 @@
       top: @date-picker-calendar-icon-top-offset;
       left: @date-picker-calendar-icon-left-offset;
 
-      // TODO: Когда сделают все кнопки синими при наведении убрать
-      &.icon-primary.controls-IconButton.action-hover:hover {
-         color: @blue-dark-color !important;
-      }
+      font-size: @date-picker-calendar-icon-height !important;
+      line-height: @date-picker-calendar-icon-height !important;
+      height: @date-picker-calendar-icon-height;
+      width: @date-picker-calendar-icon-width;
    }
-}
-
-// TODO: Когда сделают все кнопки синими при наведении убрать
-.controls-DatePicker.ws-disabled .controls-DatePicker__button.icon-primary.controls-IconButton.action-hover.ws-disabled {
-   color: @gray-ccc-color !important;
 }

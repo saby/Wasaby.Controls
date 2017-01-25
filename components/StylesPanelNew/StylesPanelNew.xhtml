@@ -14,7 +14,15 @@
     {{?}}
     <component data-component="SBIS3.CONTROLS.ColorStyle" class="controls-StylesPanel__colors">
         <option name="name">Pallete</option>
+        <option name="allowEmptySelection" type="boolean">{{=it.allowAutoColor}}</option>
+        <option name="selectedKey">{{=it.style.color}}</option>
         <option name="items" type="ref">{{@it.colors}}</option>
+    </component>
+    <component data-component="SBIS3.CONTROLS.CheckBox" class="controls-StylesPanel__checkBox">
+        <option name="name">CheckBox</option>
+        <option name="visible" type="boolean">{{=it.allowAutoColor}}</option>
+        <option name="caption">Автоматически (под фон)</option>
+        <option name="checked">{{=(it.style.color === 'auto')}}</option>
     </component>
     {{?(!it.paletteRenderStyle && (it.historyId || it.presets))}}
         <div class="controls-StylesPanel-presetFormats_wrapper">

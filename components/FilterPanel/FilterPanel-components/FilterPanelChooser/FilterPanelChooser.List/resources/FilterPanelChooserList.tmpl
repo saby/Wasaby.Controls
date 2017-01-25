@@ -1,0 +1,6 @@
+<ws:SBIS3.CONTROLS.ListView scope="{{ _preparedProperties }}">
+    <!-- Переопределяем шаблон, чтобы в itemContentTpl прокинуть опцию countField, другого способа это сделать не существует-->
+    <ws:itemContentTpl>
+        <ws:partial template="{{ _itemTpl }}" scope="{{ itemContentTpl }}" countField="{{ countField }}" />
+    </ws:itemContentTpl>
+</ws:SBIS3.CONTROLS.ListView>

@@ -1,24 +1,28 @@
-.controls-InformationPopup {
+.controls-InformationPopup.controls-FloatArea {
     border-top: @controls-InformationPopup-border-top;
     border-bottom: @controls-InformationPopup-border-bottom;
-    background: @controls-InformationPopup-bg;
+    .box-shadow(@controls-panel-shadow);
 
    .controls-PopupMixin__closeButton {
       top:  @controls-InformationPopup-closeButton-top;
    }
+
+   &.controls-InformationPopup__status-default {
+      border-top-color: @controls-InformationPopup-default-status-border-color;
+      border-bottom-color: @controls-InformationPopup-default-status-border-color;
+   }
+
+   &.controls-InformationPopup__status-success {
+      border-top-color: @controls-InformationPopup-success-status-border-color;
+      border-bottom-color: @controls-InformationPopup-success-status-border-color;
+   }
+
+   &.controls-InformationPopup__status-error {
+      border-top-color: @controls-InformationPopup-error-status-border-color;
+      border-bottom-color: @controls-InformationPopup-error-status-border-color;
+   }
 }
 
-.controls-InformationPopup.controls-InformationPopup__status-default {
-    border-top-color: @controls-InformationPopup-default-status-border-color;
-    border-bottom-color: @controls-InformationPopup-default-status-border-color;
-}
-
-.controls-InformationPopup.controls-InformationPopup__status-success {
-    border-top-color: @controls-InformationPopup-success-status-border-color;
-    border-bottom-color: @controls-InformationPopup-success-status-border-color;
-}
-
-.controls-InformationPopup.controls-InformationPopup__status-error {
-    border-top-color: @controls-InformationPopup-error-status-border-color;
-    border-bottom-color: @controls-InformationPopup-error-status-border-color;
+.controls-InformationPopup.controls-FloatArea {
+   background: @controls-InformationPopup-bg;
 }

@@ -1,4 +1,4 @@
-<div class="controls-TabButtons {{? it.items && it.items.length}}hasItems{{?}} {{? it.keyField}}hasKeyField{{?}}">
+<div class="controls-TabButtons {{? it.items && it.items.length}}hasItems{{?}} {{? it.idProperty}}hasKeyField{{?}}">
 <div class="controls-TabButtons__leftContainer">
    {{?it._serverRender}}{{=it._itemsTemplate({records : it._records['left'], tplData : it._itemData})}}{{?}}
 </div>

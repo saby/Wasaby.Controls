@@ -160,7 +160,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
 	
 	gemini.suite('back_button_editing', function (test) {
 
-        test.setUrl('/regression_engine_browser_online_8.html').setCaptureElements('html')
+        test.setUrl('/regression_engine_browser_online_8.html').skip('chrome').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="browserView"]', 40000);

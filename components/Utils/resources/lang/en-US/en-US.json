@@ -4,5 +4,7 @@
   "Подождите, идет выгрузка данных в": "Please wait while data download in",
   "DataProcessor. Ошибка выгрузки данных": "DataProcessor. Error download data",
   "Внимание! Кирилический тэг без замены": "Attention! Cyrillic tag without replacing",
-  "В поле требуется ввести адрес электронной почты": "Please enter email address"
+  "В поле требуется ввести адрес электронной почты": "Please enter email address",
+  "СНИЛС должен состоять из 11 цифр": "INILA should consist of 11 digits",
+  "Неверная контрольная сумма СНИЛС": "Invalid checksum INILA"
 }

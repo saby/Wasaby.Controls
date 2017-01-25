@@ -1,6 +1,6 @@
 <div class="controls-FilterPanel controls-FilterPanel_align-{{filterAlign}} {{expanded ? expandedClassName : collapsedClassName}}">
    <div class="controls-FilterPanel__headContainer">
-      <ws:SBIS3.CONTROLS.Link className="controls-FilterPanel__resetFilter" name="ResetFilterButton" caption="Сбросить фильтр" command="resetFilter" enabled="{{!!items}}"/>
+      <ws:SBIS3.CONTROLS.Link className="controls-FilterPanel__resetFilter additionalLink controls-Link__disabledHover" name="ResetFilterButton" caption="Сбросить фильтр" command="resetFilter" enabled="{{!!items}}"/>
       <ws:SBIS3.CONTROLS.IconButton className="controls-FilterPanel__hideFilterButton controls-IconButton__filter-{{filterAlign}}-close" command="toggleFilter"/>
    </div>
    <div class="controls-FilterPanel__contentContainer">

@@ -363,6 +363,28 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 				actions.click(this.input);
             })
     });
+
+    gemini.suite('folder_footer_not_hidden', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_12.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[name="TreeDataGridView 1"]', 40000);
+				this.data4_expand = '[data-id="4"] .controls-TreeView__expand';
+				this.data4 = '[data-id="4"]';
+				this.data12_expand = '[data-id="12"] .controls-TreeView__expand';
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = '[sbisname="TextBox 1"] input';
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.data4_expand);
+				actions.waitForElementToShow('[data-id="12"]', 2000);
+				actions.executeJS(function (window) {
+                    window.$('.controls-TreeDataGridView__folderFooterTmpl').addClass('ws-hidden')
+                });
+            })
+    });
 	
 	gemini.suite('with_cell_template_and_float_left', function (test) {
 
@@ -449,15 +471,35 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 				actions.wait(500);
             })
     });
+
+    gemini.suite('load_more_and_multiselect', function (test) {
+
+        test.setUrl('/regression_tree_data_grid_view_online_65.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
+                this.data1 = find('[data-id="1"]');
+				this.data1_expand = find('[data-id="1"] .controls-TreeView__expand');
+				this.more = '.controls-TreePager-container';
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+				this.input = find('[sbisname="TextBox 1"] input');
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.data1_expand);
+				actions.waitForElementToShow('[data-id="4"]', 5000);
+				actions.waitForElementToShow('.controls-TreePager-container', 5000);
+            })
+    });
 	
 	gemini.suite('load_more', function (test) {
 
         test.setUrl('/regression_tree_data_grid_view_online_18.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[name="ТипНоменклатуры"]', 40000);
+                actions.waitForElementToShow('[name="TypeNomenclature"]', 40000);
                 this.data1 = find('[data-id="1"]');
-				this.data1_expand = find('[data-id="0"] .controls-TreeView__expand');
+				this.data1_expand = find('[data-id="1"] .controls-TreeView__expand');
 				this.more = '.controls-TreePager-container';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -477,6 +519,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
 			
 			.capture('no_more', function (actions) {
                 actions.click(this.more);
+                actions.mouseMove(this.input);
 				actions.waitForElementToShow('[data-id="9"]', 5000);
 				actions.waitForElementToHide('.controls-TreePager-container', 5000);
             })

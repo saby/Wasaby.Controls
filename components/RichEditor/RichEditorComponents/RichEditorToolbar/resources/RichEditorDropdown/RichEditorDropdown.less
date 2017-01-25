@@ -1,3 +1,5 @@
+@import "../../../RichTextArea/RichTextArea";
+// Тут используется переменная из RichTextArea.less. Раньше это работало, потому что всё собиралось в один жирный бандл.
 .controls-RichEditorDropdown {
    &__head {
       height:24px;
@@ -40,6 +42,16 @@
       &.controls-DropdownList__picker.controls-DropdownList__hideSelectedInList {
          .controls-DropdownList__item.controls-DropdownList__item__selected {
             display: block;
+         }
+      }
+      &.controls-DropdownList__picker {
+         &.fre-align {
+            padding-top: 0;
+            margin: 3px 0 0 3px;
+            .controls-RichEditorDropdown__item {
+               text-align: center;
+               padding: 6px 4px 6px 2px !important;
+            }
          }
       }
    }

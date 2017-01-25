@@ -1,9 +1,9 @@
 <div class="docs-addInPlaceHierarchy">
    <component data-component="SBIS3.CONTROLS.TreeDataGridView" name="ТаблицаДобавлениеПоМесту"> <!-- Конфигурация представления данных -->
-      <option name="keyField">@Идентификатор</option> <!-- Устанавливаем ключевое поле -->
-      <option name="hierField">Раздел</option> <!-- Устанавливаем поле иерархии -->
+      <option name="idProperty">@Идентификатор</option> <!-- Устанавливаем ключевое поле -->
+      <option name="parentProperty">Раздел</option> <!-- Устанавливаем поле иерархии -->
       <option name="allowEnterToFolder">false</option> <!-- Запрещаем проваливание внутрь папки -->
-      <option name="displayField">Наименование</option> <!-- Устанавливаем поле отображения -->
+      <option name="displayProperty">Наименование</option> <!-- Устанавливаем поле отображения -->
       <option name="footerTpl">html!SBIS3.CONTROLS.DOCS.AutoAddHierarchy/resources/footerTpl</option> <!-- Устанавливаем шаблон футера -->
       <option name="folderFooterTpl">html!SBIS3.CONTROLS.DOCS.AutoAddHierarchy/resources/folderFooterTpl</option> <!-- Устанавливаем шаблон футера для узлов (папок) иерархии -->
       <options name="columns" type="array"> <!-- Конфигурация колонок представления данных -->

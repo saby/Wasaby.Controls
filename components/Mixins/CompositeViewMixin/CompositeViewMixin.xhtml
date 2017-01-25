@@ -1,6 +1,6 @@
 <div class="controls-CompositeView controls-DataGridView controls-ListView
             {{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}
-            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}}">
+            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}} controls-CompositeView-{{=it.viewMode}}">
    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
@@ -9,13 +9,23 @@
          </div>
       </div>
    </div>
-   <div class="controls-CompositeView__itemsContainer ws-hidden">
-      <div class="controls-CompositeView__foldersContainer"></div>
+   <div class="controls-CompositeView__itemsContainer{{?it.viewMode == 'table'}} ws-hidden{{?}}">
+      {{?it._serverRender}}
+         {{it.tplData = it._itemData; it.records = it._records; it.tplData.viewMode = it.viewMode; it.tplData._itemsTemplate = it._itemsTemplate;}}
+         {{=it._compositeItemsTemplate(it)}}
+      {{??}}
+         <div class="controls-CompositeView__foldersContainer"></div>
+      {{?}}
    </div>
-   <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
-      <tbody class="controls-DataGridView__tbody"></tbody>
-       <tfoot class="controls-DataGridView__tfoot">
-       </tfoot>
+   <table class="controls-DataGridView__table{{?it.viewMode != 'table'}} ws-hidden{{?}} {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
+      {{=it._colGroupTpl(it._colgroupData)}}
+      {{=it.headTpl(it._headData)}}
+      <tbody class="controls-DataGridView__tbody">
+      {{?it._serverRender && it.viewMode == 'table'}}
+      {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+      {{?}}
+      </tbody>
+      {{=it._footTpl(it)}}
    </table>
    <div class="controls-ListView__EmptyData ws-hidden">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}

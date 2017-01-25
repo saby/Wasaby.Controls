@@ -80,44 +80,6 @@
       height: 100%;
       padding: @text-box-wrapper-padding;
       line-height: @text-box-field-line-height;
-      .controls-TextBox__field {
-         font: @text-box-field-font;
-         font-size: @text-box-field-font-size;
-         line-height: @text-box-field-line-height;
-         width: 100%;
-         height: 100%;
-         min-height: @text-box-field-min-height;
-         margin: @text-box-field-margin;
-         padding: @text-box-field-padding;
-         text-align: @text-box-field-text-alignment;
-         color: @text-box-field-text-color;
-         border: @text-box-field-border;
-         outline: @text-box-field-outline;
-         background: @text-box-field-bg;
-         text-overflow: @text-box-overflow;
-
-         .box-sizing(border-box);
-         .placeholder();
-         &::-ms-clear {
-            display: none;
-         }
-         &.controls-TextBox__field-uppercase {
-            text-transform: uppercase;
-         }
-         &.controls-TextBox__field-lowercase {
-            text-transform: lowercase;
-         }
-      }
-      .controls-TextBox__placeholder {
-         position: absolute;
-         top: 0;
-         .text-overflow();
-         cursor: text;
-         color: @text-box-placeholder-color;
-         font: @text-box-compat-placeholder-font;
-         padding: @text-box-compat-placeholder-padding;
-         text-align: @text-box-compat-placeholder-alignment;
-      }
    }
 }
 
@@ -125,4 +87,51 @@
    .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
       outline: 1px solid transparent;
    }
+}
+
+.controls-TextBox__field {
+   font: @text-box-field-font;
+   font-size: @text-box-field-font-size;
+   line-height: @text-box-field-line-height;
+   width: 100%;
+   height: 100%;
+   min-height: @text-box-field-min-height;
+   margin: @text-box-field-margin;
+   padding: @text-box-field-padding;
+   text-align: @text-box-field-text-alignment;
+   color: @text-box-field-text-color;
+   border: @text-box-field-border;
+   outline: @text-box-field-outline;
+   background: @text-box-field-bg;
+   text-overflow: @text-box-overflow;
+
+   .box-sizing(border-box);
+   .placeholder();
+   &::-ms-clear {
+      display: none;
+   }
+   &::-webkit-contacts-auto-fill-button {
+     display: none !important;
+     visibility: hidden;
+     position: absolute;
+     right: 0;
+     pointer-events: none;
+   }
+   &.controls-TextBox__field-uppercase {
+      text-transform: uppercase;
+   }
+   &.controls-TextBox__field-lowercase {
+      text-transform: lowercase;
+   }
+}
+
+.controls-TextBox__placeholder {
+   position: absolute;
+   top: 0;
+   .text-overflow();
+   cursor: text;
+   color: @text-box-placeholder-color;
+   font: @text-box-compat-placeholder-font;
+   padding: @text-box-compat-placeholder-padding;
+   text-align: @text-box-compat-placeholder-alignment;
 }

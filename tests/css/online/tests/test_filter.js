@@ -126,7 +126,7 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 
 	gemini.suite('with_filter_history', function (test) {
 
-        test.setUrl('/regression_filter_online_3.html').setCaptureElements('.capture')
+        test.setUrl('/regression_filter_online_3.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
 				actions.waitForElementToShow('[sbisname="MyDataGrid"]', 40000);
@@ -182,14 +182,14 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 			
 			.after(function (actions) {
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('filterHistory')._historyController.clearHistory()
+                    window.$ws.single.UserConfig.setParam('historyId', '');
                 });
             })
     });
 
 	gemini.suite('custom_templates', function (test) {
 
-        test.setUrl('/regression_filter_online_4.html').setCaptureElements('.capture')
+        test.setUrl('/regression_filter_online_4.html').skip('chrome').setCaptureElements('.capture')
 
             .before(function (actions, find) {
 				actions.waitForElementToShow('[sbisname="MyDataGrid"]', 40000);
@@ -248,7 +248,7 @@ gemini.suite('SBIS3.CONTROLS.Filter Online', function () {
 			
 			.after(function (actions) {
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('filterHistory')._historyController.clearHistory()
+                    window.$ws.single.UserConfig.setParam('historyId', '');
                 });
             })
     });

@@ -25,13 +25,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/dom&controls-helpers",
    'js!WS.Data/Di',
    "css!SBIS3.CORE.RichContentStyles",
-   "i18n!SBIS3.CONTROLS.RichEditor"
+   "i18n!SBIS3.CONTROLS.RichEditor",
+   'css!SBIS3.CONTROLS.RichTextArea'
 ], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di) {
       'use strict';
 
       var
          constants = {
-            blankImgPath: '/cdn/richeditor/26-01-2015/blank.png',
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
@@ -190,9 +190,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
-            this._readyContolDeffered = new Deferred().addCallback(function(){
+            this._readyContolDeffered = new Deferred().addCallbacks(function(){
                this._notify('onReady');
-            }.bind(this));
+            }.bind(this), function (e) {
+               return e;
+            });
             this._dChildReady.push(this._readyContolDeffered);
             this._dataReview = this._container.find('.controls-RichEditor__dataReview');
             this._tinyReady = new Deferred();
@@ -620,6 +622,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
+            //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
+            this._removeFormat('fontsize')
             this._tinyEditor.execCommand('FontSize',false,  size + 'px');
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
@@ -677,7 +681,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                });
                if (typeof smile === 'object') {
-                  this.insertHtml(this._smileHtml(smile.key, smile.value, smile.alt));
+                  this.insertHtml(this._smileHtml(smile));
                }
             }
          },
@@ -950,7 +954,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _smileHtml: function(smile, name, alt) {
-            return '<img class="ws-fre__smile smile'+smile+'" data-mce-resize="false" unselectable ="on" src="'+constants.blankImgPath+'" ' + (name ? ' title="' + name + '"' : '') + ' alt=" ' + alt + ' " />';
+            return '&#' + smile.code + ';';
          },
 
          /**
@@ -970,7 +974,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                editor = this._tinyEditor;
 
             //По инициализации tinyMCE
-            editor.on('init', function(){
+            editor.on('initContentBody', function(){
                //По двойному клику на изображение внутри редактора - отображаем диалог редактирования размеров изображения
                this._inputControl.bind('dblclick', function(e) {
                   if (this._inputControl.attr('contenteditable') !== 'false') {
@@ -1377,6 +1381,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
                endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
                regResult;
+            text = this._removeEmptyTags(text);
             while ((regResult = beginReg.exec(text)) !== null)
             {
                text = text.substr(regResult[0].length + 1);
@@ -1386,6 +1391,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
+         },
+         /**
+          * Проблема:
+          *          при нажатии клавиши установки формата( полужирный/курсив и тд) генерируется пустой тег (strong,em и тд)
+          *          опция text при этом перестает быть пустой
+          * Решение:
+          *          убирать пустые теги перед тем как отдать значение опции text
+          * @param text
+          * @returns {String}
+          * @private
+          */
+         _removeEmptyTags: function(text) {
+            var
+               temp = $('<div>' + text + '</div>');
+            while ( temp.find(':empty:not(img, iframe, br)').length) {
+               temp.find(':empty:not(img, iframe)').remove();
+            }
+            return temp.html();
          },
 
          /**
@@ -1397,6 +1420,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _prepareContent: function(value) {
+            if (value && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               value = Di.resolve(this._options.decoratorName).unDecorateLinks(value)
+            }
             return typeof value === 'string' ? value : value === null || value === undefined ? '' : value + '';
          },
 
@@ -1548,16 +1574,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
             if (this._dataReview && !this.isEnabled()) {
-               //если никто не зарегистрировал декоратор то просто оборачиваем ссылки в <a>
-               if (text && this._options.decorateLinks && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-                  var
-                     self = this;
-                  Di.resolve(this._options.decoratorName).decorateLinks(text).addCallback(function(text){
-                     self._dataReview.html(strHelpers.wrapFiles(text));
-                  });
-               } else {
-                  this._dataReview.html(this._prepareReviewContent(text));
-               }
+               this._dataReview.html(this._prepareReviewContent(text));
             }
          },
 

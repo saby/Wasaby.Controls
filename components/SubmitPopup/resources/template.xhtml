@@ -1,14 +1,14 @@
 <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
-<div class="controls-SubmitPopup {{? it.message.length > it.messageMaxLength || it.details.length > it.detailsMaxLength }}controls-SubmitPopup__size-big{{?}}">
+<div class="controls-SubmitPopup {{? !it.autoWidth}}{{? it.message.length > it.messageMaxLength || it.details.length > it.detailsMaxLength }}controls-SubmitPopup__size-big{{??}}controls-SubmitPopup__size-standard{{?}}{{?}}">
 
    <div class="controls-SubmitPopup__body">
-      {{? it.messageTemplate || it.message }}<div class="controls-SubmitPopup__message">{{=(it.messageTemplate ? it.messageTemplate.apply(this, [it]) : it.message)}}</div>{{?}}
-      {{? it.detailsTemplate || it.details }}<div class="controls-SubmitPopup__details">{{=(it.detailsTemplate ? it.detailsTemplate.apply(this, [it]) : it.details)}}</div>{{?}}
+      {{? it.messageTemplate || it.message }}<div class="controls-SubmitPopup__message">{{?it.messageTemplate}}{{=it.messageTemplate.apply(this, [it])}}{{??}}<div class="controls-SubmitPopup__message-centered">{{=it.message}}</div>{{?}}</div>{{?}}
+      {{? it.detailsTemplate || it.details }}<div class="controls-SubmitPopup__details">{{?it.detailsTemplate}}{{=it.detailsTemplate.apply(this, [it])}}{{??}}<div class="controls-SubmitPopup__details-centered">{{=it.details}}</div>{{?}}</div>{{?}}
    </div>
 
    <div class="controls-SubmitPopup__footer">
       <div class="controls-SubmitPopup__buttonContainer">
-         {{? it.status === 'confirm'}}
+         {{? it.status === 'confirm' || it.useConfirmButtons}}
          <component data-component="{{? it.positiveButton.isLink}}SBIS3.CONTROLS.Link{{??}}SBIS3.CONTROLS.Button{{?}}" name="positiveButton" class="controls-SubmitPopup__button {{? it.hasCancelButton}}controls-SubmitPopup__button-mini{{?}}">
             <option name="caption">{{=it.positiveButton.caption}}</option>
             <option name="primary">true</option>

@@ -3,11 +3,13 @@
 
    &__inputs {
       padding-top: 3px;
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+      .flexbox();
+      .justify-content(space-between);
+      .align-items(baseline);
    }
-
+   &__input {
+      .flex-shrink(1);
+   }
    &__label {
       color:#cccccc;
       &__start {

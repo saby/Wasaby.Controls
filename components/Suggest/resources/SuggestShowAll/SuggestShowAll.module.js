@@ -6,10 +6,11 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'html!SBIS3.CONTROLS.SuggestShowAll',
        'Core/helpers/collection-helpers',
        'js!SBIS3.CONTROLS.DataGridView',
-       'i18n!SBIS3.CONTROLS.SuggestShowAll'
+       'i18n!SBIS3.CONTROLS.SuggestShowAll',
+       'js!SBIS3.CONTROLS.Button'
     ], function (CompoundControl, dotTplFn, colHelpers) {
 
-       var optionsToSet = ['columns', 'itemTemplate', 'keyField', 'filter'];
+       var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter'];
        /**
         * SBIS3.CORE.SuggestShowAll
         * @extends $ws.proto.CompoundControl

@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
-      'i18n!SBIS3.CONTROLS.EditAtPlace'
+      'i18n!SBIS3.CONTROLS.EditAtPlace',
+      'css!SBIS3.CONTROLS.EditAtPlace'
    ],
    function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn, strHelpers) {
       'use strict';
@@ -54,7 +55,6 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             _textField: null,
             _okButton: null,
             _oldText: '',
-            _oldEditorText: '',
             _requireDialog: false,
             _isEditInGroup: false, //Находится ли редактирование в группе
             _options: {
@@ -139,15 +139,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             //Начальный текст может быть и не пустой строкой
             this._saveOldText();
 
-            editorComponent.subscribe('onFocusIn', function(){
-               if (!self._isEditInGroup){
-                  self._oldEditorText = this.getText();
-               }
-            });
-
             editorComponent.subscribe('onFocusOut', function(){
                if (!self._isEditInGroup && self.validate()){
-                  if (this.getText() !== self._oldEditorText){
+                  if (this.getText() !== self._oldText){
                      self._editorFocusOutHandler(true);
                   } else {
                      self._editorFocusOutHandler(false);
@@ -251,7 +245,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           */
          setInPlaceEditMode: function (inPlace) {
             this._options.displayAsEditor = inPlace;
-            this._container.toggleClass('controls-EditAtPlace__editorHidden', !inPlace).toggleClass('controls-EditAtPlace__fieldWrapperHidden', inPlace);
+            $('.js-controls-EditAtPlace__fieldWrapper', this._container).toggleClass('ws-hidden', inPlace);
+            $('.js-controls-EditAtPlace__editor', this._container).toggleClass('ws-hidden', !inPlace);
             if (inPlace) {
                this._notify('onShowEditor');
             }

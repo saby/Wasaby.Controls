@@ -7,14 +7,18 @@
          </div>
       </div>
    </div>
-   <div class="controls-ListView__results-top"></div>
+   {{?it._resultsRecord && it.resultsPosition == 'top' && it.resultsTpl}}
+      {{=it.resultsTpl({item: it._resultsRecord, multiselect: it.multiselect})}}
+   {{?}}
    <div class="controls-ListView__itemsContainer">
       {{?it._serverRender}}
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
       {{?}}
    </div>
-   <div class="controls-ListView__results-bottom"></div>
-   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
+   {{?it._resultsRecord && it.resultsPosition == 'bottom' && it.resultsTpl}}
+      {{=it.resultsTpl({item: it._resultsRecord, multiselect: it.multiselect})}}
+   {{?}}
+   <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length || !it.emptyHTML}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}
       <div class="controls-ListView__footer">{{=it.footerTpl(it)}}</div>
    {{?}}

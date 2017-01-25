@@ -1,18 +1,19 @@
 {{ var
-      hierField = it.item.get(it.hierField + '@'),
+      nodePropertyValue = it.item.get(it.nodeProperty),
       projection = it.projItem.getOwner(),
       children = it.hierarchy.getChildren(
          it.item,
          projection.getCollection()
       ),
       hasLoadedChild = children.length > 0,
-      loadedWithoutChilds = it.projItem.isLoaded() && !hasLoadedChild && hierField != null,
+      loadedWithoutChilds = (it.projItem.isLoaded() || !hasLoadedChild) && nodePropertyValue != null,
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding,
-      drawExpandIcon = !!hierField;
-      classNodeType = ' controls-ListView__item-type-' + (hierField == null ? 'leaf' : hierField == true ? 'node' : 'hidden'),
-      classNodeState = hierField !== null ? (' controls-TreeView__item-' + (it.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '',
+      drawExpandIcon = !!nodePropertyValue;
+      classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue == null ? 'leaf' : nodePropertyValue == true ? 'node' : 'hidden'),
+      classNodeState = nodePropertyValue !== null ? (' controls-TreeView__item-' + (it.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '',
       classPresenceLoadedNodes = loadedWithoutChilds ? ' controls-ListView__item-without-child' : '',
-      addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + classNodeType + classNodeState + classPresenceLoadedNodes;}}
+      classIsSelected = (it.selectedKey==it.item.getId()) ? ' controls-ListView__item__selected' : '',
+      addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + classNodeType + classNodeState + classPresenceLoadedNodes + classIsSelected;}}
 <div{{?padding > it.originallPadding}} style="padding-left: {{=padding}}px;"{{?}} class="{{=addClasses}}" data-parent-hash="{{=it.projItem.getParent().getHash()}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
    {{?drawExpandIcon}}
       <div class="controls-TreeView__expand js-controls-TreeView__expand {{?it.projItem.isExpanded()}} controls-TreeView__expand__open{{?}}"></div>

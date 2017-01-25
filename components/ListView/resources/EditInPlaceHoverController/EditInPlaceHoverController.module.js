@@ -5,10 +5,11 @@
 define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
    [
    "Core/core-merge",
+   "Core/Deferred",
    "js!SBIS3.CONTROLS.EditInPlaceBaseController",
    "js!SBIS3.CONTROLS.EditInPlace"
 ],
-   function ( cMerge,EditInPlaceBaseController, EditInPlace) {
+   function ( cMerge, Deferred, EditInPlaceBaseController, EditInPlace) {
 
       'use strict';
 
@@ -57,9 +58,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             showEip: function(model, options) {
                if (options && options.isEdit === false) {
-                  this.show(model, this._options.itemsProjection.getItemBySourceItem(model))
+                  this.show(model, this._options.itemsProjection.getItemBySourceItem(model));
+                  return Deferred.success();
                } else {
-                  EditInPlaceHoverController.superclass.showEip.apply(this, arguments)
+                  return EditInPlaceHoverController.superclass.showEip.apply(this, arguments);
                }
             },
             /**
@@ -126,6 +128,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             _destroyEip: function() {
                EditInPlaceHoverController.superclass._destroyEip.apply(this);
+               //Очистим переменную, в которой хранится eip показанный по ховеру.
+               //Иначе он сохранится в переменной при разрушении,и мы продолжим с ним работать, что может привестьи к ошибкам.
+               this._hoveredEip = null;
                if (this._secondEip) {
                   this._secondEip.destroy();
                   this._secondEip = null;

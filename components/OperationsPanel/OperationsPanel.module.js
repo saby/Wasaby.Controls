@@ -7,12 +7,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/collection-helpers',
    'Core/helpers/markup-helpers',
+   'Core/core-instance',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove',
-   'js!SBIS3.CONTROLS.MenuIcon'
-], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers) {
+   'js!SBIS3.CONTROLS.MenuIcon',
+   'css!SBIS3.CONTROLS.OperationsPanel'
+], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers, cInstance) {
+
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
@@ -42,11 +45,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends $ws.proto.CompoundControl
     *
-    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1.
-    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2.
+    * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
+    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
     *
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
+    *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     *
     * @control
     * @public
@@ -101,17 +107,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              /**
               * @noShow
               */
-            keyField: 'name',
+             idProperty: 'name',
             /**
              * @cfg {Boolean} Флаг наличия блока с операциями отметки
              */
             hasMarkBlock: true,
-            /**
-             * @cfg {String} Направление выезжания панели массовых операций
-             * @variant vertical ПМО выезжает сверху вниз
-             * @variant horizontal ПМО выехжает слева направо
-             */
-            panelFloatDirection: 'vertical',
             visible: false,
             /**
              * @cfg {Boolean} Показывать ли кнопку с операциями, если операции не помещаются
@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                this.getItems().each(function(item){
                   if(item.get('id') === id){
                      var instance = item.get('instance');
-                     if($ws.helpers.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
                      }
                      else {
@@ -229,24 +229,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
          if (this.isVisible() !== show) {
             this._isVisible = show;
-            show && this._container.removeClass('ws-hidden');
-            var animateObj;
-            if (this._options.panelFloatDirection === 'vertical'){
-               animateObj = {'margin-top': show ? 0 : '-30px'};
-            }
-            else if (this._options.panelFloatDirection === 'horizontal'){
-               var width = this._blocks.wrapper.width();
-               animateObj = {'margin-left': show ? 0 : -width + 'px'};
-            }
-            this._blocks.wrapper.animate(animateObj, {
-               duration: 150,
-               easing: 'linear',
-               queue: false,
-               complete: function () {
-                  self._container.toggleClass('ws-hidden', !show);
-                  self._notify('onToggle');
-               }
-            });
+            // убрал анимацию т.к. в Engine браузере панель находится в фиксированном заголовке и при анимации перекрывает контент
+            // TODO вернуть анимацию, так чтобы контент в Engine браузере также был анимирован
+            this._container.toggleClass('ws-hidden', !show);
+            this._notify('onToggle');
          }
       },
       _initBlocks: function() {
@@ -310,24 +296,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       _checkCapacity: function(){
          this._itemsMenu.getContainer().toggleClass('ws-hidden', !(this._blocks.wrapper.height() < this._blocks.wrapper.children().height()));
-      },
-      /**
-       * @cfg {String} Установка направления выезжания панели массовых операций
-       * @variant vertical панель выезжает сверху вниз
-       * @variant horizontal панель выезжает слева направо
-       */
-      setPanelFloatDirection: function(panelFloatDirection){
-         if (panelFloatDirection && this._options.panelFloatDirection !== panelFloatDirection && (panelFloatDirection === 'vertical' || panelFloatDirection === 'horizontal')){
-            this._options.panelFloatDirection = panelFloatDirection;
-            if (!this.isVisible() && this._blocks && this._blocks.wrapper){
-               var width = this._blocks.wrapper.width();
-               this._blocks.wrapper.stop(); // stop animation
-               this._blocks.wrapper.css({
-                  'margin-top': panelFloatDirection === 'vertical' ? '-30px' : '',
-                  'margin-left': panelFloatDirection === 'horizontal' ? -width + 'px' : ''
-               });
-            }
-         }
       },
       destroy: function() {
          this._blocks = null;

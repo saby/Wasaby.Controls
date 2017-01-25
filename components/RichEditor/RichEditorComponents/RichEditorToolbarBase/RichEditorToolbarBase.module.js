@@ -8,7 +8,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    'use strict';
 
    var
-
+      /**
+       * @class SBIS3.CONTROLS.RichEditorToolbarBase
+       * @extends SBIS3.CONTROLS.ButtonGroupBase
+       * @author Борисов П.С.
+       * @public
+       * @control
+       */
       RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbarBase.prototype */{
          $protected : {
             _options : {
@@ -17,7 +23,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                _canServerRender: true,
                activableByClick: false,
                linkedEditor: undefined,
-               keyField: 'name', //по данному полю getItemInstance(keyField) обращаться к элементу тулбара
+               idProperty: 'name', //по данному полю getItemInstance(keyField) обращаться к элементу тулбара
                /**
                 * @cfg {Boolean} Открыт(true) или свёрнут(false) тулбар
                 */

@@ -14,7 +14,7 @@
   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
 }
 
-.ws-separator {
+.ws-splitter {
   &.ws-linkHeader {
     padding-right: 0;
   }
@@ -31,6 +31,8 @@
   text-decoration: @link-header-text-decoration;
 
   &:after {
+    display: inline-block;
+    width: 8px;
     .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
     margin-left: @link-header-after-margin-left;
   }
@@ -79,7 +81,7 @@
   }
 }
 
-.ws-toggleHeader {
+.controls-ToggleHeader__caption {
   .ws-headerCounter {
     display: inline-block;
     font: @toggle-header-count-font;
@@ -92,17 +94,19 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-Link {
+  .controls-Link:not(.ws-disabled) {
     &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader{
-      &:hover {
+      &, &:hover {
         text-decoration: @link-header-text-decoration;
       }
     }
-    &.ws-linkHeader:hover {
-      color: @link-header-hover-color
+    &.ws-linkHeader {
+      &:hover, &.controls-Click__active:active {
+        color: @link-header-hover-color;
+      }
     }
     &.ws-header,  &.ws-bigSubheader, &.ws-subheader {
-      &:hover {
+      &:hover, &.controls-Click__active:active {
         color: @primary-color;
       }
     }

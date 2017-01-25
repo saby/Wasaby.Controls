@@ -1,26 +1,26 @@
 <div class="controls-StylesPanel__buttons">
     <component data-component="SBIS3.CONTROLS.ComboBox" class="controls-ComboBox__ellipsis" name="FontSize">
        <option name="items" type="ref">{{@it.fontSizes.map(function(v) {var result = {}; result.key = v; result.value = v + 'px'; return result;}) }}</option>
-       <option name="keyField">key</option>
-       <option name="displayField">value</option>
+       <option name="idProperty">key</option>
+       <option name="displayProperty">value</option>
        <option name="selectedKey">{{=it.style['font-size'].substr(0, it.style['font-size'].length - 2 )}}</option>
        <option name="editable">false</option>
     </component>
 
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Bold">
         <option name="icon">sprite:icon-16 icon-Bold icon-primary</option>
-        <option name="checked">{{=it.style['font-weight']}}</option>
+        <option name="checked">{{=!!it.style['font-weight']}}</option>
     </component>
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Italic">
         <option name="icon">sprite:icon-16 icon-Italic icon-primary</option>
-        <option name="checked">{{=it.style['font-style']}}</option>
+        <option name="checked">{{=!!it.style['font-style']}}</option>
     </component>
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Underline">
         <option name="icon">sprite:icon-16 icon-Underline icon-primary</option>
-        <option name="checked">{{=it.style['text-decoration']}}</option>
+        <option name="checked">{{=(it.style['text-decoration'] && it.style['text-decoration'].indexOf('underline') !== -1)}}</option>
     </component>
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Strikethrough">
         <option name="icon">sprite:icon-16 icon-Stroked icon-primary</option>
-        <option name="checked">{{=it.style['text-decoration']}}</option>
+        <option name="checked">{{=(it.style['text-decoration'] && it.style['text-decoration'].indexOf('line-through') !== -1)}}</option>
     </component>
 </div>

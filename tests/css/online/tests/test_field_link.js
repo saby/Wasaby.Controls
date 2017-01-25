@@ -164,7 +164,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
                 actions.mouseMove('.controls-FieldLink__item-cross');
             })
     });
-	
+	/*
 	gemini.suite('three_dict', function (test) {
 
         test.setUrl('/regression_field_link_online_7.html').skip('chrome').setCaptureElements('.capture')
@@ -183,7 +183,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				actions.mouseMove(this.box);
             })
     });
-	
+	*/
 	gemini.suite('base_line', function (test) {
 
         test.setUrl('/regression_field_link_online_6.html').setCaptureElements('.capture')
@@ -236,7 +236,7 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
 				actions.executeJS(function (window) {
                     window.$('.capture').height(150);
                 });
-				actions.click('.controls-FieldLink__showAllLinks');
+				actions.click('.controls-FieldLink__copyShowAll');
 				actions.wait(500);
 				actions.mouseMove(this.box);
             })

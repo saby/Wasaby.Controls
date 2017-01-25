@@ -56,13 +56,19 @@
   }
 
   &.controls-Button__ellipsis {
-    &:extend(.controls-Button__ellipsis .controls-Button__text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     vertical-align: text-bottom;
   }
   .controls-Link-link {
      color: inherit;
      text-decoration: inherit;
      cursor: inherit;
+  }
+
+  &.controls-Link__underline {
+    text-decoration: underline;
   }
 }
 .ws-is-ie10 {
@@ -80,17 +86,17 @@
       line-height: 24px;
    }
 }
-.ws-is-desktop-platform {
-   .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
-      &:hover {
-         color: @link-hover-text-color;
-         cursor: @link-cursor;
-         text-decoration: @link-hover-text-decoration;
-         .controls-Link__icon {
-           &.icon-primary {
-             color: @button-icon-color-hover !important;
-           }
-         }
-      }
+
+.ws-is-firefox {
+  .controls-Link {
+   .controls-Link__icon {
+     margin: -5px 0 0;
    }
+  }
+}
+
+.ws-is-desktop-platform {
+  .controls-Link {
+    .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-Link-link);
+  }
 }

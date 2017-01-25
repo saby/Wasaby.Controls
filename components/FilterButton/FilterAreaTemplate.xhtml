@@ -6,6 +6,7 @@
             <option name="enabled" bind="{{=it.internalContextFilterName}}/filterChanged">false</option>
             <option name="tabindex">0</option>
         </component>
+        {{?it.topTemplate}}{{=it.topTemplate()}}{{?}}
         <component data-component="SBIS3.CONTROLS.Button" class="controls__filter-button__apply-filter">
             <option name="caption">Отобрать</option>
             <option name="primary" type="boolean">true</option>
@@ -13,21 +14,27 @@
             <option name="tabindex">0</option>
         </component>
     </div>
-    <div class="controls__filterButton__area-content">
-        <div class="controls__filterButton__templatedArea">
-            {{?it.template}}{{=it.template()}}{{?}}
-        </div>
-    </div>
-    <div class="controls__filterButton__area-footer {{? !it.historyController && !it.additionalFilterParamsTemplate}}ws-hidden{{?}}">
-        {{? it.additionalFilterParamsTemplate}}
-            <component data-component="SBIS3.CONTROLS.AdditionalFilterParams" name="additionalFilterParams">
-                <opt name="template" type="ref">{{@it.additionalFilterParamsTemplate}}</opt>
-            </component>
-        {{?}}
-        {{? it.historyController}}
-            <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory">
-                <option name="tabindex">0</option>
-            </component>
-        {{?}}
-    </div>
+    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="controls__filterButton__area-scrollContainer">
+        <option name="content">
+            <div>
+                <div class="controls__filterButton__area-content">
+                    <div class="controls__filterButton__templatedArea">
+                        {{?it.template}}{{=it.template()}}{{?}}
+                    </div>
+                </div>
+                <div class="controls__filterButton__area-footer {{? !it.historyController && !it.additionalFilterParamsTemplate}}ws-hidden{{?}}">
+                    {{? it.additionalFilterParamsTemplate}}
+                    <component data-component="SBIS3.CONTROLS.AdditionalFilterParams" name="additionalFilterParams">
+                        <opt name="template" type="ref">{{@it.additionalFilterParamsTemplate}}</opt>
+                    </component>
+                    {{?}}
+                    {{? it.historyController}}
+                    <component data-component="SBIS3.CONTROLS.FilterHistory" name="filterHistory">
+                        <option name="tabindex">0</option>
+                    </component>
+                    {{?}}
+                </div>
+            </div>
+        </option>
+    </component>
 </div>

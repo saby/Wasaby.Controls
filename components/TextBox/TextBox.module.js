@@ -1,19 +1,26 @@
 define('js!SBIS3.CONTROLS.TextBox', [
+   'Core/EventBus',
    'Core/constants',
    'js!SBIS3.CONTROLS.TextBoxBase',
    'html!SBIS3.CONTROLS.TextBox',
+   'html!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/detection"
+   "Core/helpers/functional-helpers",
+   "Core/detection",
+   'css!SBIS3.CONTROLS.TextBox'
+
 ], function(
+    EventBus,
     constants,
     TextBoxBase,
     dotTplFn,
+    textFieldWrapper,
     TemplateUtil,
     Sanitize,
     dcHelpers,
-    cDetection) {
+    fHelpers) {
 
    'use strict';
 
@@ -60,12 +67,17 @@ define('js!SBIS3.CONTROLS.TextBox', [
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
+      	_fromTouch: false,
          _pasteProcessing : 0,
          _inputField : null,
          _compatPlaceholder: null,
          _tooltipText: null,
          _fromTab: true,
+         _beforeFieldWrapper: null,
+         _afterFieldWrapper: null,
+         _textFieldWrapper: null,
          _options: {
+            textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
             /**
@@ -148,17 +160,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.js-controls-TextBox__field', this.getContainer().get(0));
-         this._container.bind('keypress', this._keyPressBind.bind(this))
-                        .bind('keydown', this._keyDownBind.bind(this))
-                        .bind('keyup', this._keyUpBind.bind(this));
-
+         this._inputField = this._getInputField();
+         this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
          this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  var text = self._inputField.val(),
+                  var text = self._getInputValue(),
                      newText = '';
                   if (self._options.inputRegExp){
                      var regExp = new RegExp(self._options.inputRegExp);
@@ -169,7 +178,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      }
                      text = newText;
                   }
-                  self._inputField.val(text);
+                  self._drawText(text);
                   /* Событие paste может срабатывать:
                      1) При нажатии горячих клавиш
                      2) При вставке из котекстного меню.
@@ -198,6 +207,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
                          .bind('focusout', this._inputFocusOutHandler.bind(this));
 
+         this._container.on('touchstart', function(){
+            this._fromTouch = true;
+         }.bind(this));
+
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
             this._inputField.attr('placeholder', '');
             this._createCompatPlaceholder();
@@ -223,12 +236,30 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._checkInputVal();
       },
 
+      _keyboardDispatcher: function(event){
+         return fHelpers.forAliveOnly(function(event){
+            var result = true;
+            switch (event.type) {
+               case 'keydown':
+                  result = this._keyDownBind.call(this, event);
+                  break;
+               case 'keyup':
+                  result = this._keyUpBind.call(this, event);
+                  break;
+               case 'keypress':
+                  result = this._keyPressBind.call(this, event);
+                  break;
+            }
+            return result;
+         }).call(this, event);
+      },
+
       _useNativePlaceHolder: function() {
          return constants.compatibility.placeholder;
       },
 
       _checkInputVal: function() {
-         var text = this._inputField.val();
+         var text = this._getInputValue();
 
          if (this._options.trim) {
             text = String.trim(text);
@@ -272,8 +303,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _drawText: function(text) {
          this._updateCompatPlaceholderVisibility();
-         if (this._inputField.val() != text) {
-            this._inputField.val(text || '');
+         if (this._getInputValue() != text) {
+            this._setInputValue(text || '');
          }
       },
 
@@ -287,7 +318,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @param {String} text Текст подсказки.
        * @example
        * <pre>
-       *     if (control.getText() == "") {
+       *     if (control.getText() == '') {
        *        control.setPlaceholder("Введите ФИО полностью");
        *     }
        * </pre>
@@ -339,13 +370,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
          }
       },
 
-      _keyDownBind: function(){
-
+      _keyDownBind: function(event){
+         if (event.which == 13){
+            this._checkInputVal();
+         }
       },
 
       _keyUpBind: function(event) {
-         var newText = this._inputField.val();
-         if (this._options.text !== newText){
+         var newText = this._getInputValue(),
+            textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
+         if (this._options.text !== newText && !textsEmpty){
             this._setTextByKeyboard(newText);
          }
          var key = event.which || event.keyCode;
@@ -356,6 +390,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setTextByKeyboard: function(newText){
          this.setText(newText);
+      },
+
+      _getInputValue: function() {
+         return this._inputField.val();
+      },
+      _setInputValue: function(value) {
+         this._inputField.val(value);
+      },
+      _getInputField: function() {
+         return $('.js-controls-TextBox__field', this.getContainer().get(0));
       },
 
       _keyPressBind: function(event) {
@@ -394,15 +438,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _inputFocusOutHandler: function(e) {
-         if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocusOut');
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocusOut');
+            this._fromTouch = false;
          }
          this._checkInputVal();
       },
 
       _inputFocusInHandler: function(e) {
-         if (cDetection.isMobilePlatform){
-            $ws.single.EventBus.globalChannel().notify('MobileInputFocus');
+         if (this._fromTouch){
+            EventBus.globalChannel().notify('MobileInputFocus');
          }
          if (this._options.selectOnClick || this._fromTab){
             this._inputField.select();
@@ -433,7 +478,23 @@ define('js!SBIS3.CONTROLS.TextBox', [
          });
       },
 
+      _getAfterFieldWrapper: function() {
+         if(!this._afterFieldWrapper) {
+            this._afterFieldWrapper = this.getContainer().find('.controls-TextBox__afterFieldWrapper');
+         }
+         return this._afterFieldWrapper;
+      },
+
+      _getBeforeFieldWrapper: function() {
+         if(!this._beforeFieldWrapper) {
+            this._beforeFieldWrapper = this.getContainer().find('.controls-TextBox__beforeFieldWrapper');
+         }
+         return this._beforeFieldWrapper;
+      },
+
       destroy: function() {
+         this._afterFieldWrapper = undefined;
+         this._beforeFieldWrapper = undefined;
          this._inputField.off('*');
          this._inputField = undefined;
          TextBox.superclass.destroy.apply(this, arguments);

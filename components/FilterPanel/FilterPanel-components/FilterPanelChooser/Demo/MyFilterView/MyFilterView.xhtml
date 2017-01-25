@@ -1,0 +1,11 @@
+<div class="MyFilterView">
+    <div class="ComponentBlock">
+        <div>Редактор "Список"</div>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.List" config="{{=$ws.helpers.encodeCfgAttr(it.prop1)}}"></component>
+        <div>Редактор "Список со справочником"</div>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.DictionaryList" config="{{=$ws.helpers.encodeCfgAttr(it.prop2)}}"></component>
+        <div>Редактор "Список с избранными записями"</div>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.FavoritesList" config="{{=$ws.helpers.encodeCfgAttr(it.prop3)}}"></component>
+        <component data-component="SBIS3.CONTROLS.FilterPanelChooser.RadioGroup" config="{{=$ws.helpers.encodeCfgAttr(it.prop4)}}"></component>
+    </div>
+</div>

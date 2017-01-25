@@ -13,7 +13,8 @@ define(
       'html!SBIS3.CONTROLS.MonthView/resources/MonthViewTableBody',
       'html!SBIS3.CONTROLS.MonthView',
       'js!SBIS3.CONTROLS.MonthPicker',
-      'i18n!SBIS3.CONTROLS.Calendar'
+      'i18n!SBIS3.CONTROLS.Calendar',
+      'css!SBIS3.CONTROLS.MonthView'
    ],
    function (constants, CompoundControl, ControlHierarchyManager, RangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
 

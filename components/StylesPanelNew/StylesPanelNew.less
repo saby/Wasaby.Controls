@@ -1,3 +1,70 @@
+.controls-StylesPanel {
+   width: 200px;
+   &__applyButton {
+      position: absolute;
+      top: 8px;
+      right: 42px;
+   }
+   &__title{
+      font-weight: bold;
+      font-size: 16px;
+      width: 120px;
+      padding: 8px 0 0 8px;
+      color:#313E78;
+   }
+   &__buttons {
+      padding: 12px 4px 6px 4px;
+      border-bottom: 1px solid #E4E4E4;
+      .controls-Button {
+         padding: 0 2px;
+         border-radius: 2px;
+         border: 1px solid transparent;
+         margin: 0 2px;
+         &.controls-Checked__checked {
+            border: 1px solid #587AB0;
+         }
+         .controls-Button__icon {
+            left:3px;
+            top:3px;
+         }
+      }
+      .controls-TextBox {
+         margin-right: 6px;
+         border-width: 1px;
+         border-style: solid;
+         border-color: #eaeaea #eaeaea #e4e4e4;
+         background: #ffffff;
+      }
+   }
+   &__colors {
+      padding: 6px 4px 6px 4px;
+      font-size: 0px;
+   }
+}
+.controls-ColorRadioButton {
+   height: 32px;
+   width: 32px;
+   border-radius: 3px;
+   background: #fff;
+   text-align: center;
+   line-height: 30px;
+   padding: 0!important;
+   vertical-align: middle;
+   display: inline-block!important;
+   &.controls-Checked__checked{
+      background: #F3F3F3;
+   }
+   &:hover {
+      background: #F0F5FB;
+   }
+   &__color {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      border-radius: 2px;
+      vertical-align: middle;
+   }
+}
 .controls-StylesPanelNew {
   width: auto;
   border: 1px solid #CCCCCC;
@@ -27,13 +94,17 @@
   }
 
   .controls-StylesPanel__buttons {
-    padding: 12px 4px 6px 4px;
-    border-bottom: 1px solid #E4E4E4;
+    padding: 8px 0 6px 0;
+    border-bottom: 1px solid @float-area-border-color;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
 
     .inline-block-bug-fix(@font-basic-size);
 
     .controls-TextBox {
-      margin-right: 5px;
+      margin: 0 4px;
     }
 
     .controls-Button {
@@ -72,5 +143,9 @@
     .controls-StylesPanel__presetView {
       padding: 6px 0 4px 0;
     }
+  }
+
+  .controls-StylesPanel__checkBox {
+    margin: 0 10px 10px;
   }
 }

@@ -1,8 +1,17 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
    'html!SBIS3.CONTROLS.CompositeViewMixin',
+   'Core/IoC',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
+   'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, cMerge) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -10,13 +19,77 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
     * @public
     * @author Крайнов Дмитрий Олегович
     */
+   var canServerRenderOther = function(cfg) {
+      return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate);
+   },
+   buildTplArgsComposite = function(cfg) {
+      var parentOptions = cfg._buildTplArgsLV.call(this, cfg);
+      if ((cfg.viewMode == 'list') || (cfg.viewMode == 'tile')) {
+         var tileContentTpl, tileTpl, listContentTpl, listTpl;
+
+         parentOptions.image = cfg.imageField;
+         parentOptions.description = cfg.displayProperty;
+         parentOptions.viewMode = cfg.viewMode;
+         parentOptions._itemsTemplate = cfg._itemsTemplate;
+         parentOptions.resourceRoot = constants.resourceRoot;
+
+         if (cfg.tileContentTpl) {
+            tileContentTpl = cfg.tileContentTpl;
+         }
+         else {
+            tileContentTpl = cfg._defaultTileContentTemplate;
+         }
+         parentOptions.tileContent = TemplateUtil.prepareTemplate(tileContentTpl);
+         if (cfg.tileTpl) {
+            tileTpl = cfg.tileTpl;
+         }
+         else {
+            tileTpl = cfg._defaultTileTemplate;
+         }
+         parentOptions.tileTpl = TemplateUtil.prepareTemplate(tileTpl);
+         parentOptions.defaultTileTpl = TemplateUtil.prepareTemplate(cfg._defaultTileTemplate);
+
+         if (cfg.listContentTpl) {
+            listContentTpl = cfg.listContentTpl;
+         }
+         else {
+            listContentTpl = cfg._defaultListContentTemplate;
+         }
+         parentOptions.listContent = TemplateUtil.prepareTemplate(listContentTpl);
+         if (cfg.listTpl) {
+            listTpl = cfg.listTpl;
+         }
+         else {
+            listTpl = cfg._defaultListTemplate;
+         }
+         parentOptions.listTpl = TemplateUtil.prepareTemplate(listTpl);
+         parentOptions.defaultListTpl = TemplateUtil.prepareTemplate(cfg._defaultListTemplate);
+      }
+      return parentOptions
+   },
+   buildTplArgs = function(cfg) {
+      var parentOptions = cfg._buildTplArgsDG(cfg);
+      var myOptions = cfg._buildTplArgsComposite(cfg);
+      cMerge(parentOptions, myOptions);
+      return parentOptions;
+   };
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
       _dotTplFn : dotTplFn,
       $protected: {
          _tileWidth: null,
          _folderWidth: null,
          _options: {
-            _canServerRender: false,
+            _defaultTileContentTemplate: TileContentTemplate,
+            _defaultTileTemplate: TileTemplate,
+            _defaultListContentTemplate: ListContentTemplate,
+            _defaultListTemplate: ListTemplate,
+            _canServerRender: true,
+            _canServerRenderOther : canServerRenderOther,
+            /*TODO для лечения тестов пришлось закоппипастить шаблон*/
+            _itemsTemplate: ItemsTemplate,
+            _compositeItemsTemplate : CompositeItemsTemplate,
+            _buildTplArgs : buildTplArgs,
+            _buildTplArgsComposite: buildTplArgsComposite,
             /**
              * @cfg {String} Устанавливает режим отображения элементов коллекции
              * @variant table Режим отображения "Таблица"
@@ -30,30 +103,23 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * Файловое поле используется в шаблоне для построения отображения элементов коллекции.
              * Использование опции актуально для режимов отображения "Список" и "Плитка".
              * Если для этих режимов используется пользовательский шаблон (задаётся опциями {@link listTemplate} и {@link tileTemplate}), то опция также неактуальна.
-             * @see SBIS3.CONTROLS.DSMixin#displayField
+             * @see SBIS3.CONTROLS.DSMixin#displayProperty
              * @see tileTemplate
              * @see listTemplate
              */
             imageField : null,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Список".
-             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
-             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
-             * @example
-             * Шаблон для отображения только картинки, наименования и идентификатора.
-             * <pre>
-             *    <div>
-             *       <img class="docs-MyCompositeView__list-image" src="{{=it.item.get('Изображение')}}" />
-             *       <div class="docs-MyCompositeView__list-title">{{=it.item.get('Наименование')}}</div>
-             *       <div class="docs-MyCompositeView__list-id">{{=it.item.get('@СписокИмущества')}}</div>
-             *    </div>
-             * </pre>
-             * @see tileTemplate
-             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             * @deprecated
              */
             listTemplate : null,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Плитка".
+             * @deprecated
+             */
+            tileTemplate : null,
+            /**
+             * @cfg {String} Шаблон отображения внутреннего содержимого элемента в режиме "Плитка".
              * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
              * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
              * @example
@@ -68,12 +134,57 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * @see listTemplate
              * @see SBIS3.CONTROLS.ListView#itemTemplate
              */
-            tileTemplate : null
+            tileContentTpl : null,
+            /**
+             * @cfg {String} Шаблон отображения элемента в режиме "Плитка".
+             * Используется чтобы добавить атрибуты на элементы или полностью переопрделить шаблон
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Навешивание класса на элементы
+             * <pre>
+             *    {{it.className="myClass";}}{{=it.defaultTileTpl(it)}}
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
+            tileTpl: null,
+            /**
+             * @cfg {String} Шаблон отображения внутреннего содержимого элемента в режиме "Список".
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Шаблон для отображения только картинки, наименования и идентификатора.
+             * <pre>
+             *    <div>
+             *       <img class="docs-MyCompositeView__tile-image" src="{{=it.item.get('Изображение')}}" />
+             *       <div class="docs-MyCompositeView__tile-title">{{=it.item.get('Наименование')}}</div>
+             *       <div class="docs-MyCompositeView__tile-id">{{=it.item.get('@СписокИмущества')}}</div>
+             *    </div>
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
+            listContentTpl : null,
+            /**
+             * @cfg {String} Шаблон отображения элемента в режиме "Список".
+             * Используется чтобы добавить атрибуты на элементы или полностью переопрделить шаблон
+             * В шаблоне допускается использование директив шаблонизатора для доступа к значениям полей текущей записи.
+             * Шаблоны представляют собой обычные XHTML-файлы, которые помещают рядом с компонентом в директории resources.
+             * @example
+             * Навешивание класса на элементы
+             * <pre>
+             *    {{it.className="myClass";}}{{=it.defaultTileTpl(it)}}
+             * </pre>
+             * @see listTemplate
+             * @see SBIS3.CONTROLS.ListView#itemTemplate
+             */
+            listTpl: null
          }
       },
 
       $constructor: function() {
-         this._drawViewMode(this._options.mode);
+         //this._drawViewMode(this._options.mode);
          this._container.addClass('controls-CompositeView-' + this._options.viewMode);
          var self = this;
 
@@ -88,9 +199,18 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                self._calculateTileWidth();
             }
          });
+
+         if (this._options.tileTemplate) {
+            IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
+         }
+         if (this._options.listTemplate) {
+            IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан listTemplate');
+         }
       },
       _updateHeadAfterInit: function() {
-         this._redrawHead();
+         if (this._options.viewMode == 'table') {
+            this._redrawTheadAndTfoot();
+         }
       },
       /**
        * Устанавливает режим отображения данных.
@@ -100,12 +220,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
        * @see getViewMode
        */
       setViewMode: function(mode) {
+         if (this._options.viewMode === mode) {
+            return;
+         }
          var dragndrop = this.getItemsDragNDrop();
          this.setItemsDragNDrop(false);
          this._options.viewMode = mode;
          this.setItemsDragNDrop(dragndrop);
          this._options.openedPath = {};
          this._drawViewMode(mode);
+         this._notify('onViewModeChanged');
       },
       /**
        * Возвращает признак, по которому можно определить установленный режим отображения данных.
@@ -116,6 +240,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
        */
       getViewMode: function(){
          return this._options.viewMode;
+      },
+
+      _getItemsTemplate: function() {
+         if (this._options.viewMode == 'table') {
+            return this._options._itemsTemplate;
+         }
+         else {
+            return TemplateUtil.prepareTemplate(this._options._compositeItemsTemplate);
+         }
       },
 
       _drawViewMode : function(mode) {
@@ -208,7 +341,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             var parentOptions = parentFnc.call(this, item);
             if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
                parentOptions.image = this._options.imageField;
-               parentOptions.description = this._options.displayField;
+               parentOptions.description = this._options.displayProperty;
             }
             return parentOptions;
          },
@@ -246,8 +379,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          //TODO заглушка для CompositeView
          _isSlowDrawing: function(parentFnc, easy) {
             var flag = parentFnc.call(this, easy);
-            if (this._options.viewMode == 'list' || this._options.viewMode == 'tile') {
-               flag = true;
+            if (this._options.viewMode == 'list') {
+               if (this._options.listTemplate) {
+                  flag = true;
+               }
+            }
+
+            if (this._options.viewMode == 'tile') {
+               if (this._options.tileTemplate) {
+                  flag = true;
+               }
             }
             return flag;
          },

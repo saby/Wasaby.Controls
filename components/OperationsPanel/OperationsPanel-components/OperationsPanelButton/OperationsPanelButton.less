@@ -1,20 +1,11 @@
 .controls-OperationsPanelButton {
-   &.ws-enabled {
-      cursor: @controls-OperationsPanelButton-cursor;
+   color: @default-color;
+   cursor: @controls-OperationsPanelButton-cursor;
 
-      &.controls-OperationsPanelButton__horizontal:hover .controls-OperationsPanelButton__icon {
-         color: @controls-OperationsPanelButton-active-icon-color;
-      }
-
-      &.controls-OperationsPanelButton__vertical:hover {
-         background-color: @controls-OperationsPanel-bg;
-      }
-   }
    .controls-OperationsPanelButton__icon {
       font: @controls-OperationsPanelButton-font;
       position: relative;
       left: @controls-OperationsPanelButton-icon-left;
-      color: @default-color;
    }
 
    /* стили для кнопки вверх-вниз */
@@ -23,10 +14,6 @@
       height: @controls-OperationsPanelButton-vert-height;
       line-height: @controls-OperationsPanelButton-vert-height;
       border-radius: @controls-OperationsPanelButton-vert-border-radius;
-
-      &:hover {
-         background-color: @controls-OperationsPanel-bg;
-      }
 
       &.controls-Checked__checked {
          .controls-OperationsPanelButton__icon:before {
@@ -37,29 +24,6 @@
          top: @controls-OperationsPanelButton-vertical-icon-top;
          &:before {
             content: "\e011";
-         }
-      }
-   }
-
-   /* стили для кнопки вправо-влево */
-   &.controls-OperationsPanelButton__horizontal {
-      width: @controls-OperationsPanelButton-width;
-      height: @controls-OperationsPanelButton-hor-height;
-      line-height: @controls-OperationsPanelButton-hor-line-height;
-
-      &.controls-Checked__checked {
-         background-color: @controls-OperationsPanel-bg;
-         .controls-OperationsPanelButton__icon {
-            color: @controls-OperationsPanelButton-active-icon-color;
-            &:before {
-               content: "\e008";
-            }
-         }
-      }
-      .controls-OperationsPanelButton__icon {
-         top: @controls-OperationsPanelButton-horizontal-icon-top;
-         &:before {
-            content: "\e007";
          }
       }
    }

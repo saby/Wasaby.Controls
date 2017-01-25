@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.OpenDialogAction', [
    'js!SBIS3.CONTROLS.DialogActionBase',
    'Core/core-instance',
+   'Core/EventBus',
    'Core/core-merge',
    'Core/Indicator',
    'Core/IoC',
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
    'js!WS.Data/Di',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea'
-], function (DialogActionBase, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
+], function (DialogActionBase, cInstance, EventBus, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
 
    'use strict';
 
@@ -97,7 +98,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
              * @variant remote
              * @variant delayedRemote
              */
-            initializingWay: 'remote'
+            initializingWay: 'remote',
+            /**
+             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             */
+            urlProperty: ''
          },
          /**
           * Ключ модели из связного списка
@@ -105,7 +110,12 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         _showedLoading: false
+         _showedLoading: false,
+         _openInNewTab: false
+      },
+      init: function(){
+         OpenDialogAction.superclass.init.apply(this, arguments);
+         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -120,8 +130,18 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
        */
       _getEditKey: function(item){
       },
+      _setOpeningMode: function(event){
+         this._openInNewTab = event.ctrlKey;
+      },
+      _needOpenInNewTab: function(){
+        return this._openInNewTab;
+      },
       _opendEditComponent: function(meta, dialogComponent, mode){
-         if (this._isNeedToRedrawDialog()){
+         var openUrl = meta.item && meta.item.get(this._options.urlProperty);
+         if (this._needOpenInNewTab() && openUrl){
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()){
             this._saveRecord(meta, dialogComponent, mode)
          }
          else{
@@ -137,21 +157,29 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
          if (currentRecord && currentRecord.isChanged()){
-            fcHelpers.question(rk('Сохранить изменения?'), {opener: templateComponent}).addCallback(function(result){
-               if (result === true){
-                  templateComponent.update({hideQuestion: true}).addCallback(function(){
-                     self._setConfig.apply(self, args);
-                  });
-               }
-               else {
-                  self._setConfig.apply(self, args);
-               }
-            });
+            InformationPopupManager.showConfirmDialog({
+                  message: rk('Сохранить изменения?')
+               },
+               this._positiveSaveConfirmDialogHandler.bind(this, templateComponent, args),
+               this._negativeSaveConfirmDialogHandler.bind(this, args)
+            );
          }
          else{
             self._setConfig.apply(self, args);
          }
       },
+
+      _positiveSaveConfirmDialogHandler: function(templateComponent, args){
+         var self = this;
+         templateComponent.update({hideQuestion: true}).addCallback(function(){
+            self._setConfig.apply(self, args);
+         });
+      },
+
+      _negativeSaveConfirmDialogHandler: function(args){
+         this._setConfig.apply(this, args);
+      },
+
       _setConfig: function(meta, dialogComponent, mode){
          this._linkedModelKey = meta.id;
          //Производим корректировку идентификатора только в случае, когда идентификатор передан
@@ -167,12 +195,6 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       _showDialog: function(config, meta, mode){
          var initializingWay = config.componentOptions.initializingWay,
              dialogComponent = config.template;
-
-         //TODO Выпилить в 200+
-         if (meta.controllerSource){
-            initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE;
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenDialogAction', 'meta.controllerSource is no longer available since version 3.7.4.200. Use option initializingWay = OpenDialogAction.INITIALIZING_WAY_REMOTE instead.');
-         }
 
          if (initializingWay == OpenDialogAction.INITIALIZING_WAY_REMOTE) {
             this._showLoadingIndicator();
@@ -214,6 +236,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this,
             isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
+            options,
             def;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod){
@@ -230,14 +253,20 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
                config.componentOptions.record = record;
                config.componentOptions.isNewRecord = isNewRecord;
                if (isNewRecord){
-                  config.componentOptions.key = record.getId();
+                  options = templateComponent.prototype.getComponentOptions.call(templateComponent.prototype, config.componentOptions);
+                  config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
                self._createDialog(config, meta, mode);
             }).addErrback(function(error){
-               InformationPopupManager.showMessageDialog({
-                  message: error.message,
-                  status: 'error'
-               })
+               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+               if (!error._isOfflineMode){
+                  //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
+                  error.processed = true;
+                  InformationPopupManager.showMessageDialog({
+                     message: error.message,
+                     status: 'error'
+                  })
+               }
             }).addBoth(function(){
                self._hideLoadingIndicator();
             });
@@ -314,6 +343,7 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          if (record) {
             record.acceptChanges();
          }
+
          //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
          //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
          if (meta.dataSource)
@@ -345,11 +375,11 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
       _updateModel: function (model, additionalData) {
-         if (additionalData && additionalData.isNewRecord){
+         if (additionalData.isNewRecord){
             this._createRecord(model, 0, additionalData);
          }
          else{
-            this._mergeRecords(model);
+            this._mergeRecords(model, null, additionalData);
          }
       },
 
@@ -377,15 +407,15 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       /**
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
        */
-      _destroyModel: function(model){
-         var collectionRecord = this._getCollectionRecord(model),
+      _destroyModel: function(model, additionalData){
+         var collectionRecord = this._getCollectionRecord(model, additionalData),
             collection = this._options.linkedObject;
          if (!collectionRecord){
             return;
          }
          //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
          if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
-            collection.removeItemsSelection([collectionRecord.getId()]);
+            collection.removeItemsSelection([this._getRecordId(collectionRecord, additionalData.idProperty)]);
          }
          if (cInstance.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
             collection = collection.getItems();
@@ -486,20 +516,24 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
       _mergeRecords: function(model, colRec, additionalData){
-         var collectionRecord = colRec || this._getCollectionRecord(model),
+         var collectionRecord = colRec || this._getCollectionRecord(model, additionalData),
             collectionData = this._getCollectionData(),
             recValue;
          if (!collectionRecord) {
             return;
          }
 
-         if (additionalData && additionalData.isNewRecord){
+         if (additionalData.isNewRecord){
             collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
          }
 
          Record.prototype.each.call(collectionRecord, function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
+               //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
+               if (recValue && (typeof recValue.clone == 'function')) {
+                  recValue = recValue.clone();
+               }
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
                try {
                   this.set(key, recValue);
@@ -517,15 +551,22 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       /**
        * Получаем запись из связного списка по ключу редактируемой записи
        */
-      _getCollectionRecord: function(model){
+      _getCollectionRecord: function(model, additionalData){
          var collectionData = this._getCollectionData(),
-            index;
+             index;
 
          if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
-            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
+            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || this._getRecordId(model, additionalData.idProperty));
             return collectionData.at(index);
          }
          return undefined;
+      },
+
+      _getRecordId: function(record, idProperty){
+         if (idProperty) {
+            return record.get(idProperty);
+         }
+         return record.getId();
       },
 
       _getCollectionData:function(){

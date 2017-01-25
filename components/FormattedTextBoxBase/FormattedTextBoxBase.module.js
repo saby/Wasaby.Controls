@@ -685,7 +685,8 @@ define(
             // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
             _maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
-            _modelForMaskTpl: []
+            _modelForMaskTpl: [],
+            _createModel : createModel
          }
       },
 
@@ -734,7 +735,7 @@ define(
                 pasteValue = e.originalEvent.clipboardData ? e.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
             //Пропустим вставляемый текст через модель. Если setText модели вернет true - значит
             //вставляемый текст соответствует маске и мы его можем проставить в значение текстового поля
-            if (formatModel.setText(pasteValue, maskReplacer)) {
+            if (self.isEnabled() && formatModel.setText(pasteValue, maskReplacer)) {
                self.setText(formatModel.getText(maskReplacer));
             }
             e.preventDefault();
@@ -994,7 +995,8 @@ define(
 
       _updateTextFromModel: function() {
          var formatModel = this._getFormatModel();
-         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined") ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
+         //Если форматное поле не заполено, то в опцию text не нужно класть пустую маску.
+         this._options.text = (formatModel._settedText !== null && typeof formatModel._settedText !== "undefined" && !formatModel.isEmpty(this._getMaskReplacer())) ? formatModel.getText(this._getMaskReplacer()) : formatModel._settedText;
       },
 
       _notifyOnTextChange: function() {
@@ -1040,7 +1042,14 @@ define(
             child = !this._getFormatModel().model[0].isGroup ? 1 : 0,
             startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
             startPosition = 0;
-         _moveCursor(startContainer, startPosition);
+         //В IE если ставить курсор синхронно по событию focusin, то он не устанавливается.
+         if (constants.browser.isIE) {
+            setTimeout(function() {
+               _moveCursor(startContainer, startPosition);
+            }, 0);
+         } else {
+            _moveCursor(startContainer, startPosition);
+         }
       },
 
       _setEnabled: function(enabled) {

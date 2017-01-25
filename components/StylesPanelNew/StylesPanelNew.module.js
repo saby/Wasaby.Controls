@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.StylesPanelNew', [
+   'Core/CommandDispatcher',
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.PopupMixin',
    'js!SBIS3.CONTROLS.HistoryController',
@@ -10,8 +11,11 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.FontStyle',
    'js!SBIS3.CONTROLS.ColorStyle',
-   'js!SBIS3.CONTROLS.IconButton'
-], function(CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+   'js!SBIS3.CONTROLS.IconButton',
+   'js!SBIS3.CONTROLS.CheckBox',
+   'css!SBIS3.CONTROLS.StylesPanelNew'
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+
 
    'use strict';
 
@@ -31,6 +35,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       $protected: {
          _options: {
             closeButton: true,
+            closeByExternalClick: true,
             /**
              * @cfg {Array.Object} Устанавливает набор цветов отображаемых в панели
              * @example
@@ -89,7 +94,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              * @cfg {Object}
              * Предустановленные наборы форматирования текст
              */
-            presets: null
+            presets: null,
+            allowAutoColor: false
          },
          /* При нажатии на крестик, вернем стиль из backup-a */
          _backup: null,
@@ -120,7 +126,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          _bold: null,
          _italic: null,
          _underline: null,
-         _strikethrought: null
+         _strikethrough: null
       },
 
       $constructor: function() {
@@ -128,7 +134,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             colorsCount, i;
 
          this._publish('changeFormat');
-         $ws.single.CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.
@@ -171,6 +177,21 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          StylesPanel.superclass.init.call(this);
 
          self._palette = self.getChildControlByName('Pallete');
+         self._checkBox = self.getChildControlByName('CheckBox');
+
+         self._checkBox.subscribe('onCheckedChange', function(e, checked) {
+            if (checked) {
+               self._palette.setSelectedKey("auto");
+               self._palette.redraw();
+            } else if (self._palette.getSelectedIndex() == -1) {
+               self._palette.setSelectedIndex(0);
+            }
+         });
+         self._palette.subscribe('onSelectedItemChange', function(e, item) {
+            if (item) {
+               self._checkBox.setChecked(false);
+            }
+         });
 
          if (self._options.paletteRenderStyle) {
             /* В случае палитру нужно подписаться на смену цвета, т.к. выбор происходит без подтверждения*/
@@ -182,7 +203,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             this._bold = this.getChildControlByName('Bold');
             this._italic = this.getChildControlByName('Italic');
             this._underline = this.getChildControlByName('Underline');
-            this._strikethrought = this.getChildControlByName('Strikethrough');
+            this._strikethrough = this.getChildControlByName('Strikethrough');
             if (self._options.historyId || self._options.presets) {
                self._presetView = this.getChildControlByName('presetView');
 
@@ -207,7 +228,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             this._bold.subscribe('onActivated', handler);
             this._italic.subscribe('onActivated', handler);
             this._underline.subscribe('onActivated', handler);
-            this._strikethrought.subscribe('onActivated', handler);
+            this._strikethrough.subscribe('onActivated', handler);
          }
 
          this.subscribe('onClose', this.onClose.bind(this));
@@ -247,11 +268,11 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             }
          } else {
             style['font-size'] = this._size.getSelectedKey() + 'px';
-            style['color'] = this._palette.getSelectedKey();
+            style['color'] = this._palette.getSelectedKey() || 'auto';
             this._bold.isChecked() && (style['font-weight'] = 'bold');
             this._italic.isChecked() && (style['font-style'] = 'italic');
             this._underline.isChecked() && (style['text-decoration'] = 'underline');
-            if (this._strikethrought.isChecked()) {
+            if (this._strikethrough.isChecked()) {
                style['text-decoration'] = this._underline.isChecked() ? style['text-decoration'] + ' line-through' : 'line-through';
             }
          }
@@ -329,13 +350,13 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                this._underline.setChecked(false);
             }
             if (styles['text-decoration'].indexOf('line-through') >= 0) {
-               this._strikethrought.setChecked(true);
+               this._strikethrough.setChecked(true);
             } else {
-               this._strikethrought.setChecked(false);
+               this._strikethrough.setChecked(false);
             }
          } else {
             this._underline.setChecked(false);
-            this._strikethrought.setChecked(false);
+            this._strikethrough.setChecked(false);
          }
 
          this.saveHandler();
@@ -412,6 +433,37 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          this._history.unshift(historyFormat);
          this._historyController.setHistory(this._history, true);
          this._presetView.setItems(this._prepareItems(this._history));
+      },
+
+      getStylesObject: function() {
+         var
+            styles = {};
+         if (this._options.paletteRenderStyle) {
+            styles = {
+               'color': this._palette.getSelectedKey()
+            }
+         } else {
+            styles = {
+               fontsize: this._size.getSelectedKey(),
+               color: this._palette.getSelectedKey(),
+               bold: this._bold.isChecked(),
+               italic: this._italic.isChecked(),
+               underline: this._underline.isChecked(),
+               strikethrough: this._strikethrough.isChecked()
+            }
+         }
+         return styles;
+      },
+
+      setStylesFromObject: function(styles) {
+         this._palette.setSelectedKey(styles.color);
+         if (!this._options.paletteRenderStyle) {
+               this._size.setSelectedKey(styles.fontsize);
+               this._bold.setChecked(styles.bold);
+               this._italic.setChecked(styles.italic);
+               this._underline.setChecked(styles.underline);
+               this._strikethrough.setChecked(styles.strikethrough);
+         }
       }
 
    });

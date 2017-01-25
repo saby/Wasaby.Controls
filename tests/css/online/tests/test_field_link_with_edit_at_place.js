@@ -1,3 +1,4 @@
+/*
 var gemini = require('gemini');
 
 gemini.suite('SBIS3.CONTROLS.FieldLinkWithEditAtPlace Online', function () {
@@ -20,4 +21,4 @@ gemini.suite('SBIS3.CONTROLS.FieldLinkWithEditAtPlace Online', function () {
 				actions.mouseMove(this.item_1)
 			})
     });
-});
+});*/

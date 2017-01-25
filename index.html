@@ -190,6 +190,9 @@
                <li>
                   <div id="Header"></div>
                </li>
+               <li>
+                  <div id="SearchForm"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -616,6 +619,13 @@
                element: "Ladder",
                caption: 'Ladder',
                href: '/pages/Ladder.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "SearchForm",
+               caption: 'SearchForm',
+               href: '/pages/SearchForm.html'
             })
          });
       })

@@ -1,4 +1,4 @@
-<div class="controls-DataGridView controls-ListView
+<div class="controls-TreeDataGridView controls-DataGridView controls-ListView
             {{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}
             {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}}">
    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
@@ -12,15 +12,14 @@
    <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
       {{?it.showHead}}
-         {{=it._headTpl(it._headData)}}
+         {{=it.headTpl(it._headData)}}
       {{?}}
       <tbody class="controls-DataGridView__tbody">
       {{?it._serverRender}}
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
       {{?}}
       </tbody>
-      <tfoot class="controls-DataGridView__tfoot">
-      </tfoot>
+      {{=it._footTpl(it)}}
    </table>
    <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{? it.showPaging}}

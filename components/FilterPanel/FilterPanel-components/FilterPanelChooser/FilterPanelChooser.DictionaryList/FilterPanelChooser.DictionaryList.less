@@ -1,0 +1,32 @@
+.controls-FilterPanelChooser {
+
+   &.controls-FilterPanelChooser__dictionaryAfterSelection {
+      .controls-ListView__itemsContainer {
+         .flexbox();
+         flex-direction: column;
+
+         .controls-ListView__item {
+            .order(2);
+
+            &.controls-ListView__item__multiSelected {
+               .order(1);
+            }
+         }
+      }
+   }
+
+   .controls-FilterPanelChooser__dictionaryButton {
+      line-height: @filter-panel-chooser-dictionary-button-line-height;
+      font-size: @filter-panel-chooser-dictionary-button-font-size;
+   }
+
+   &.controls-FilterPanelChooser__dictionary {
+      .controls-FilterPanelChooser__afterChooserWrapper {
+         height: @filter-panel-chooser-footer-height;
+
+         .controls-FilterPanelChooser__allButton {
+            float: @filter-panel-chooser-all-button-float;
+         }
+      }
+   }
+}

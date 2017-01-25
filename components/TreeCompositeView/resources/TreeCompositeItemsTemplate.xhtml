@@ -1,0 +1,20 @@
+{{var stashTpl = it.tplData.itemTpl;}}
+<div class="controls-CompositeView__foldersContainer">
+{{?it.tplData.viewMode == 'list'}}
+   {{it.tplData.itemTpl = it.tplData.listFolderTpl;}}
+   {{=it.tplData._itemsTemplate({records : it.records.folders, tplData : it.tplData})}}
+{{?}}
+{{?it.tplData.viewMode == 'tile'}}
+   {{it.tplData.itemTpl = it.tplData.folderTpl;}}
+   {{=it.tplData._itemsTemplate({records : it.records.folders, tplData : it.tplData})}}
+{{?}}
+</div>
+{{?it.tplData.viewMode == 'list'}}
+   {{it.tplData.itemTpl = it.tplData.listTpl;}}
+   {{=it.tplData._itemsTemplate({records : it.records.leafs, tplData : it.tplData})}}
+{{?}}
+{{?it.tplData.viewMode == 'tile'}}
+   {{it.tplData.itemTpl = it.tplData.tileTpl;}}
+   {{=it.tplData._itemsTemplate({records : it.records.leafs, tplData : it.tplData})}}
+{{?}}
+{{it.tplData.itemTpl = stashTpl;}}

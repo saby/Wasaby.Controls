@@ -26,6 +26,12 @@
 
       &.controls-ItemsToolbar__edit {
          background-color: @list-view-items-toolbar-locked-bg;
+         right: 0;
+         .controls-ItemActions {
+            .controls-ItemActions__itemsContainer {
+               margin-right: 0;
+            }
+         }
       }
 
       &.controls-ItemsToolbar__vertical {
@@ -42,6 +48,7 @@
                & > * {
                   margin: @list-view-actions-margin-action-multiView;
                }
+               margin-right: 0;
             }
 
             .controls-ItemActions__menu-button {
@@ -110,11 +117,15 @@
    &.controls-ListView__bottomStyle {
       padding-bottom: @bottomStyle-items-toolbar-height;
       .controls-ItemsToolbar {
+         right: 0;
+         .controls-ItemActions__itemsContainer {
+            margin-right: 0;
+         }
          background-color: @list-view-items-toolbar-bg;
          &.controls-ItemsToolbar__edit {
             background-color: @list-view-items-toolbar-locked-bg;
             &:before {
-               background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 -30px;
+               background: @items-toolbar-bottom-style-background no-repeat 0 -30px;
             }
          }
          bottom: @bottomStyle-items-toolbar-margin-bottom;
@@ -124,12 +135,14 @@
             content: '';
             position: absolute;
             display: block;
-            background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 0;
+            background: @items-toolbar-bottom-style-background no-repeat 0 0;
             width: 24px;
             height: @bottomStyle-items-toolbar-height;
-            left: -20px;
+            left: -24px;
          }
          .controls-ItemActions .controls-ItemActions__itemsContainer {
+            margin-left: -4px;
+
             > * {
                margin-top: @bottomStyle-items-toolbar-margin-top;
                &.controls-IconButton__round-border-24 {
@@ -219,5 +232,12 @@
             }
          }
       }
+   }
+}
+
+.ws-sticky-header__header-container {
+   // отменяем стили изменяющие размер таблицы в фиксированных заголовках
+   .controls-ListView.controls-ListView__bottomStyle {
+       padding-bottom: 0;
    }
 }

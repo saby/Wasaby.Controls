@@ -6,15 +6,22 @@
     <option name="tabindex">0</option>
     <opt name="activableByClick" type="boolean">false</opt>
 </component>
-<component data-component="SBIS3.CONTROLS.MenuIcon" name="fieldLinkMenu" class="controls-Menu__hide-menu-header icon-size controls-FieldLink__showSelector">
+<component data-component="SBIS3.CONTROLS.{{?it.menuSelector }}MenuIcon{{??}}IconButton{{?}}" name="fieldLinkMenu" class="icon-size controls-FieldLink__showSelector">
     <option name="icon">sprite:icon-16 icon-ListView icon-primary action-hover</option>
-    <option name="displayField">caption</option>
-    <option name="keyField">caption</option>
     <option name="tabindex">0</option>
-    <options name="handlers">
-        <option name="onMenuItemActivate" type="function">js!SBIS3.CONTROLS.FieldLink:prototype._menuItemActivatedHandler</option>
-    </options>
+    {{?it.menuSelector }}
+        <option name="displayProperty">caption</option>
+        <option name="idProperty">caption</option>
+        <options name="handlers">
+            <option name="onMenuItemActivate" type="function">js!SBIS3.CONTROLS.FieldLink:prototype._menuItemActivatedHandler</option>
+        </options>
+    {{??}}
+        <option name="command">showSelector</option>
+    {{?}}
 </component>
 {{? it.useSelectorAction}}
-    <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="FieldLinkSelectorAction"></component>
+    <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="FieldLinkSelectorAction">
+        <option name="mode">{{=it.selectMode}}</option>
+        <option name="visible">false</option>
+    </component>
 {{?}}

@@ -35631,7 +35631,9 @@
             dom = editor.dom, state = {};
 
          function isDraggable(elm) {
-            return isContentEditableFalse(elm);
+            //Проблема: при перетаскивании contenteditable=false элемента рядом с мышью создается элемент, из-за которого появляется скролл
+            return false;
+            //return isContentEditableFalse(elm);
          }
 
          function setBodyCursor(cursor) {
@@ -37875,6 +37877,15 @@
 
             // Clean up references for IE
             targetElm = doc = body = null;
+
+            //Проблема:
+            //          Пользователи могут быть очень быстрыми (destroy может сработать сразу после init)
+            //          fire(init) происходит в середине метода initContentBody, после еще происходят обращения к редактору
+            //          Eсли destroy сработает сразу после fire('init') оставшиеся вызовы в функции initContentBody будут падать с ошибками
+            //Решение:
+            //          Стрелять событием initContentBody в конце метода initContentBody,
+            //          чтобы только после выполнения всего метода можно было позвать destroy
+            self.fire('initContentBody');
          },
 
          /**
@@ -47630,6 +47641,11 @@ tinymce.ThemeManager.add('modern', function(editor) {
       }
 
       function render() {
+         //Проблема:
+         //          контейнер для тулбара строится всегда
+         //Решение:
+         //          Не строить контейнер для тулюара
+         return;
          if (panel) {
             if (!panel.visible()) {
                show();

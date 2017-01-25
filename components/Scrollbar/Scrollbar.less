@@ -1,3 +1,19 @@
+.controls-ScrollContainer__light {
+   .controls-Scrollbar {
+      &.controls-Scrollbar__dragging {
+         .controls-Scrollbar__thumb {
+            background-color: @controls-Scrollbar-light-active-thumb-color;
+         }
+      }
+      .controls-Scrollbar__thumb {
+         background-color: @controls-Scrollbar-light-hover-thumb-color;
+         &:hover {
+            background-color: @controls-Scrollbar-light-active-thumb-color;
+         }
+      }
+   }
+}
+
 .controls-Scrollbar {
    width: @controls-Scrollbar-width;
    outline: none;
@@ -5,14 +21,14 @@
       cursor: pointer;
       position: relative;
       border-radius: @controls-Scrollbar-thumb-border-radius;
-      background-color: @controls-Scrollbar-light-hover-thumb-color;
+      background-color: @controls-Scrollbar-dark-hover-thumb-color;
       &:hover {
-         background-color: @controls-Scrollbar-light-active-thumb-color;
+         background-color: @controls-Scrollbar-dark-active-thumb-color;
       }
    }
    &.controls-Scrollbar__dragging {
       .controls-Scrollbar__thumb {
-         background-color: @controls-Scrollbar-light-active-thumb-color;
+         background-color: @controls-Scrollbar-dark-active-thumb-color;
       }
    }
 }

@@ -1,13 +1,10 @@
+{{var caption = it.itemTemplate ? it.itemTemplate(it.item) : it.Sanitize(it.itemContent(it));}}
 <div class="controls-FieldLink__item controls-ListView__item {{?it.className}}{{=it.className}}{{?}}"
-     data-id="{{=it.item.getId()}}"
+     data-id='{{=it.item.getId()}}'
      data-hash="{{=it.item.getHash()}}"
      {{?it.needSort}}style="order: {{= it.itemsCount - it.projection.getIndexByInstanceId(it.projItem.getInstanceId())}}"{{?}}>
-    <span class="controls-FieldLink__item-caption">
-        {{? it.itemTemplate}}
-            {{=it.itemTemplate(it.item)}}
-        {{??}}
-            {{=it.Sanitize(it.itemContent(it))}}
-        {{?}}
+    <span class="controls-FieldLink__item-caption" {{? it.needTitle}}title="{{=caption}}"{{?}}>
+        {{= caption}}
     </span>
     <span class="controls-FieldLink__item-cross icon-16 icon-size icon-Close icon-disabled"/>
 </div>

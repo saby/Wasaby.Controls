@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/Sanitize",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   'css!SBIS3.CONTROLS.SelectorButton'
 ],
     function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers) {
 
@@ -36,7 +37,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
        if(items.length) {
           colHelpers.forEach(items, function(item) {
-             res.push(item.get(opts.displayField));
+             res.push(item.get(opts.displayProperty));
           })
        }
 
@@ -116,6 +117,23 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          },
          _text: null
       },
+      $constructor: function() {
+         var self = this;
+
+         this.subscribe('onSelectedItemsChange', function(event, result, changed) {
+            /* При добавлении элементов надо запустить валидацию,
+                в противном случае при выборе записи валидация не спадёт с компонента */
+            if(changed.added.length && !self._isEmptySelection()) {
+               /* Надо дожидаться загрузки выбранных записей,
+                  т.к. часто валидируют именно по ним,
+                  или же по значениям в контексте */
+               self.getSelectedItems(true).addCallback(function(list) {
+                  self.validate();
+                  return list
+               })
+            }
+         })
+      },
       _drawSelectedItems: function(keysArr) {
          var self = this,
              isSelected = !this._isEmptySelection();
@@ -126,7 +144,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
             this.getSelectedItems(true).addCallback(function(list){
                list.each(function(item) {
-                  linkTextArray.push(item.get(self._options.displayField));
+                  linkTextArray.push(item.get(self._options.displayProperty));
                });
                self._setCaption(linkTextArray.join(', '));
                return list;

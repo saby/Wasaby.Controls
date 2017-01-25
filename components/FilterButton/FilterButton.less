@@ -1,11 +1,19 @@
 .controls-FloatArea {
    &.controls__filterButton__picker {
-      height: @controls-filterButton-picker-height;
+      overflow-y: hidden !important;
       background: @controls-filterButton-picker-bg;
-      border-color: @controls-filterButton-picker-border-color;
-      border-style: @controls-filterButton-picker-border-style;
-      border-width: @controls-filterButton-picker-border-width;
+      border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
       .border-radius(@controls-filterButton-picker-border-radius);
+      .box-shadow(@menu-shadow);
+      margin-top: -1px;
+
+      .controls__filterButton__area-scrollContainer {
+         height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
+      }
+
+      .controls__filterButton__area {
+         height: 100%;
+      }
 
       .controls__filterButton__area-header {
          padding: @controls-filterButton-area-header-padding;
@@ -214,6 +222,21 @@
             }
          }
       }
+      .controls__filterButton__filterSelect{
+         .controls-FilterSelect__item{
+            display: inline-block;
+            color: #313E78;
+            > div {
+               display: inline-block;
+            }
+         }
+         :last-child {
+            .controls-FilterSelect__item-separator{
+               display: none;
+            }
+         }
+      }
+
    }
 
    .controls__filterButton__area-content {
@@ -268,6 +291,11 @@
          .controls__filterButton__filterLine-items {
             color: @link-disabled-text-color;
             cursor: default;
+
+            .controls__filterButton__filterLine-arrow {
+               color: @icon-color-disabled !important;
+               cursor: default;
+            }
 
             &:hover {
                color: @link-disabled-text-color;
@@ -324,6 +352,9 @@
 
    .controls__filterButton__filterLine-items:hover {
       color: @hover-color;
+      .controls__filterButton__filterLine-arrow {
+         color: @hover-color !important;
+      }
       .controls__filterButton__filterLine-text {
          text-decoration: underline;
       }
@@ -348,6 +379,7 @@
       }
    }
    .controls__filterButton__picker {
+      .controls__filterButton__area-header { 
       .blue-color {
          &.controls-Link {
             &.ws-enabled {
@@ -356,6 +388,7 @@
                }
             }
          }
+      }
 
          &.controls-DropdownList {
             &.ws-enabled {

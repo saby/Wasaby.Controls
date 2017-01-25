@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox',
    'Core/core-instance',
-   'i18n!SBIS3.CONTROLS.OperationsMark'
+   'i18n!SBIS3.CONTROLS.OperationsMark',
+   'css!SBIS3.CONTROLS.OperationsMark'
 ], function(MenuLink, CheckBox, cInstance) {
    /**
     * Операции выделения.
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
              * @deprecated
              */
             deepReload: false,
-            keyField: 'name'
+            idProperty: 'name'
          },
          _markCheckBox: undefined
       },
@@ -102,7 +103,9 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       setLinkedView: function(linkedView) {
          if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
+            //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
             this.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
+            this.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
             this._bindEvents();
             this._updateMark();
          }

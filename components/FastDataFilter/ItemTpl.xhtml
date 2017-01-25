@@ -1,27 +1,32 @@
 <component data-component="SBIS3.CONTROLS.DropdownList" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}">
     <option name="items" type="ref">{{@it.item.get('values')}}</option>
-    <option name="keyField" value="{{=it.item.get('keyField')}}"></option>
-    <option name="mode" value="{{=it.mode}}"></option>
+    <option name="idProperty" value="{{=(it.item.get('idProperty') || it.item.get('keyField'))}}"></option>
     <option name="multiselect" value="{{=it.item.get('multiselect')}}"></option>
-    <option name="displayField" value="{{=it.item.get('displayField')}}"></option>
-    <option name="hierField" value="{{=it.item.get('hierField')}}"></option>
+    <option name="displayProperty" value="{{=(it.item.get('displayProperty') || it.item.get('displayField'))}}"></option>
+    <option name="parentProperty" value="{{=it.item.get('hierField')}}"></option>
     <option name="className" value="{{=('controls-ListView__item ' + it.item.get('className'))}}"></option>
     <option name="pickerClassName" value="{{=(it.item.get('pickerClassName') + ' controls-DropdownList__picker')}}"></option>
-    <option name="dataSource" value="{{=it.item.get('dataSource')}}"></option>
-    <options name="filter" value="{{=it.item.get('filter')}}"></options>
+    <option name="dataSource" value="{{@it.item.get('dataSource')}}" type="ref"></option>
+    <option name="filter" value="{{@it.item.get('filter')}}" type="ref"></option>
     <option name="allowDblClick" value="{{=it.item.get('allowDblClick')}}"></option>
     <option name="name" value="{{=it.item.get('name')}}"></option>
     <option name="type" value="fastDataFilter"></option>
     {{?it.item.has('headTemplate')}}
-       <option name="headTemplate" value="{{=it.item.get('headTemplate')}}"></option>
+    <option name="headTemplate" value="{{=it.item.get('headTemplate')}}"></option>
     {{?}}
     {{?it.item.has('itemTpl')}}
     <option name="itemTpl" value="{{=it.item.get('itemTpl')}}"></option>
+    {{?}}
+    {{?it.item.has('itemContentTpl')}}
+    <option name="itemContentTpl" value="{{=it.item.get('itemContentTpl')}}"></option>
     {{?}}
     {{?it.item.has('itemTemplate')}}
     <option name="itemTemplate" value="{{=it.item.get('itemTemplate')}}"></option>
     {{?}}
     {{?it.item.has('includedTemplates')}}
-    <options name="includedTemplates" value="{{=it.item.get('includedTemplates')}}"></options>
+    <option name="includedTemplates" value="{{@it.item.get('includedTemplates')}}" type="ref"></option>
+    {{?}}
+    {{?it.item.has('templateBinding')}}
+    <option name="templateBinding" value="{{@it.item.get('templateBinding')}}" type="ref"></option>
     {{?}}
 </component>

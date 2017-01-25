@@ -1,7 +1,11 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], function(fHelpers) {
+define('js!SBIS3.CONTROLS.SearchMixin',
+    [
+       'Core/helpers/functional-helpers',
+       'Core/CommandDispatcher'
+    ], function(fHelpers, CommandDispatcher) {
 
    /**
     * Миксин, добавляющий иконку
@@ -15,6 +19,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], fun
        * @event onSearch При поиске
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
+       * @param {String} forced Срабатывание события было без задержки (searchDelay)
        */
       /**
        * @event onReset При нажатии кнопки отмена (крестик)
@@ -42,14 +47,25 @@ define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], fun
 
       $constructor: function() {
          this._publish('onSearch','onReset');
+         CommandDispatcher.declareCommand(this, 'applySearch', this.applySearch);
+      },
+
+      before: {
+         _setTextByKeyboard : function(text) {
+            if(text !== this._searchText) {
+               this._startSearch(text);
+            }
+         }
       },
 
       after : {
-         _setTextByKeyboard : function(text) {
-            if(text !== this._searchText) {
-               this._searchText = text;
-               this._startSearch(text);
-            }
+         setText : function(text) {
+            /* Текст может меняться как кодом, так и напрямую пользователем.
+               _searchText надо запоминать в обоих случаях. Зачем:
+               например когда после поиска проваливаемся в папку, текст из строки поиска удаляется,
+               но удаляется не кодом а пользователем, и если ввести тот же поисковой запрос,
+               то он должен выполниться. А вот если пользователь сам вствляет один и тот же текст, то поиска происходить не должно. */
+            this._searchText = text;
          },
          destroy : function() {
             this._clearSearchDelay();
@@ -82,7 +98,7 @@ define('js!SBIS3.CONTROLS.SearchMixin', ['Core/helpers/functional-helpers'], fun
             text = text.replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
             textTrimLength = String.trim(text).length;
             if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
-               this._notify('onSearch', text);
+               this._notify('onSearch', text, force);
                this._onResetIsFired = false;
             } else if (hasStartCharacter) {
                this._notifyOnReset();

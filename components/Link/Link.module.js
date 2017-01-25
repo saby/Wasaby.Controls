@@ -1,14 +1,15 @@
-define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CONTROLS.Link', 'html!SBIS3.CONTROLS.Link/resources/hrefTemplate'], function(ButtonBase, dotTplFn, hrefTemplate) {
+define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CONTROLS.Link', 'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate', 'css!SBIS3.CONTROLS.Link'], function(ButtonBase, dotTplFn, hrefTemplate) {
 
    'use strict';
 
    /**
-    * Контрол, отображающий кнопку в виде ссылки. Используется только в онлайне.
-    * Сторонние пользователи скорее предпочтут использовать просто <a></a>
+    * Класс контрол "Кнопка в виде ссылки". Используется только в онлайн.
+    *
     * @class SBIS3.CONTROLS.Link
-	 * @demo SBIS3.CONTROLS.Demo.MyLink
     * @extends SBIS3.CONTROLS.ButtonBase
     * @author Крайнов Дмитрий Олегович
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyLink
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -30,10 +31,18 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @cssModifier controls-Button__ellipsis При нехватке ширины текст на кнопке оборвётся многоточием.
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
-    *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
+    *
+    * @cssModifier controls-Button__ellipsis Устанавливает отображение многоточия в тексте кнопки при нехватке ширины.
+    * !Важно: при добавлении этого модификатора сломается "Базовая линия".
+    * @cssModifier controls-Link__disabledHover Отключает изменение цвета текста кнопки, которое происходит по наведению курсора.
+    * @cssModifier controls-Link__underline Устанавливает постоянное подчеркивание текста кнопки.
+    * @cssModifier mainLink__2 Устанавливает для кнопки стилевое оформление "Основная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink Устанавливает для кнопки стилевое оформление "Дополнительная ссылка" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__2 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 2" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__3 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 3" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__4 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 4" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
+    * @cssModifier additionalLink__5 Устанавливает для кнопки стилевое оформление "Дополнительная ссылка 5" (см. <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Кнопки-ссылки</a>).
     *
     * @control
     * @public
@@ -76,17 +85,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          caption = this._options.caption;
-         var $caption = $('.controls-Link__field', this._container);
-         if (this._options.icon) {
-            if ($caption.length){
-               $caption.html(caption);
-            } else {
-               $caption = $('<span class="controls-Link__field"></span>');
-               this._container.append($caption);
-            }
-         } else {
-            this._container.html(caption);
-         }
+         this._container.get(0).innerHTML = hrefTemplate(this._options);
          this.setTooltip(caption);
       },
 
@@ -104,13 +103,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'html!SBIS3.CO
       },
 
       _drawIcon: function (icon) {
-         var content;
-         if (icon) {
-            content = $('<i class="controls-Link__icon ' + this._options._iconClass + '" ></i><span class="controls-Link__field">' + (this._options.caption || '') + '</span>');
-         } else {
-            content = this._options.caption;
-         }
-         this._container.html(content);
+         this._container.get(0).innerHTML = hrefTemplate(this._options);
       },
       /**
        * Установить ссылку.

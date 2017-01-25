@@ -215,15 +215,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        */
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser) {
          var noSaveFilters = ['Разворот', 'ВидДерева'],
-            view = browser.getView(),
-            filter;
+            view, filter, preparedStructure;
+
+         if(browser) {
+            view = browser.getView();
+         }
 
          if(searchParam) {
             noSaveFilters.push(searchParam);
          }
 
          if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
-            noSaveFilters.push(view.getHierField());
+            noSaveFilters.push(view.getParentProperty());
          }
 
          if(ignoreFiltersList && ignoreFiltersList.length) {
@@ -244,16 +247,22 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
             if(filter) {
                /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               filterButton.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure()));
-               /* Это синхронизирует фильтр и структуру, т.к. некоторые фильтры возможно мы не сохраняли,
-                  и надо, чтобы это отразилось в структуре */
-               view.setFilter(filter.viewFilter, true);
+               preparedStructure = FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure());
+
+               if(ignoreFiltersList && ignoreFiltersList.length) {
+                  FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(filterButton, preparedStructure, ignoreFiltersList);
+               }
+
+               filterButton.setFilterStructure(preparedStructure);
             }
          }
-         setTimeout(fHelpers.forAliveOnly(function() {
-            // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
-            browser._notifyOnFiltersReady();
-         }, view), 0);
+
+         if(browser) {
+            setTimeout(fHelpers.forAliveOnly(function () {
+               // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
+               browser._notifyOnFiltersReady();
+            }, view), 0);
+         }
       },
 
       bindPagingHistory: function(view, id) {
@@ -294,7 +303,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
 
       bindScrollPaging: function(paging) {
-         if (!this._scrollPagingController){
+         if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
                paging: paging || this._options.paging

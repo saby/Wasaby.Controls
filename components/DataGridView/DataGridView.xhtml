@@ -9,16 +9,15 @@
          </div>
       </div>
    </div>
-   <table class="controls-DataGridView__table {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
+   <table class="controls-DataGridView__table {{?it.stickyHeader && it.showHead}}ws-sticky-header__table{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
-      {{=it._headTpl(it._headData)}}
+      {{=it.headTpl(it._headData)}}
       <tbody class="controls-DataGridView__tbody">
       {{?it._serverRender}}
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
       {{?}}
       </tbody>
-      <tfoot class="controls-DataGridView__tfoot">
-      </tfoot>
+      {{=it._footTpl(it)}}
    </table>
    <div class="controls-ListView__EmptyData {{?!it._serverRender || it._records.length}}ws-hidden{{?}}">{{=it.emptyHTML}}</div>
    {{?it.footerTpl}}

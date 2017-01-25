@@ -1,0 +1,1 @@
+{{~it.records :item:index}}{{?item.getContents}}{{it.tplData['item'] = item.getContents();it.tplData['projItem'] = item;/*TODO: выпилить вместе декоратором лесенки*/if (it.tplData.decorators && it.tplData.decorators.ladder) {it.tplData.decorators.ladder.setRecord(it.tplData['item']);}}}{{=it.tplData.itemTpl(it.tplData)}}{{??}}{{=item.tpl(item.data)}}{{?}}{{~}}

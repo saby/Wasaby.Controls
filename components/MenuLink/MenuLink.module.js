@@ -1,17 +1,23 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu', 'css!SBIS3.CONTROLS.MenuLink', 'css!SBIS3.CONTROLS.MenuButtonMixin'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
 
    'use strict';
 
    /**
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     * @class SBIS3.CONTROLS.MenuLink
-	 * @demo SBIS3.CONTROLS.Demo.MyMenuLink
+    * @extends SBIS3.CONTROLS.Link
+	*
+    * @demo SBIS3.CONTROLS.Demo.MyMenuLink
+    *
     * @remark
     * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие соответствующее этому пункту.
     * Кнопка с меню - это кнопка с выбором варинта действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
-    * @extends SBIS3.CONTROLS.Link
-    * @control
+    *
     * @author Крайнов Дмитрий Олегович
+    *
+    * @public
+    * @category Buttons
+    * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuLink'>
     *    <option name='caption' value='Ссылка с меню'></option>
@@ -26,11 +32,10 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
     *         </options>
     *      </options>
     * </component>
+    *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.MenuButtonMixin
-    * @public
-    * @category Buttons
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -46,6 +51,8 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
    var MenuLink = Link.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {

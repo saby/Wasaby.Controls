@@ -3,24 +3,25 @@
  */
 define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавливаем имя, по которому диалог выбора будет доступен для использования в других компонентах
    [ // Массив зависимостей компонента
-      'js!SBIS3.CORE.CompoundControl', // Подключаем базовый класс, от которого далее будем наследоваться
+      'js!SBIS3.CONTROLS.SelectorController', // Подключаем базовый класс, от которого далее будем наследоваться
       'html!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Подключаем вёрстку диалога выбора
       'js!WS.Data/Adapter/Sbis', // Подключаем класс адаптера, который предназначен для работы с данными в формате JSON-RPC
       'js!WS.Data/Source/Memory', // Подключаем класс для работы со статическим источником данных
       'js!SBIS3.CONTROLS.DataGridView', // Подключаем класс представления данных
       'js!SBIS3.CONTROLS.Button', // Подключаем класс кнопки
+      'js!SBIS3.CONTROLS.SelectorWrapper',
       'css!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate' // Подключаем CSS-файл
    ],
    function( // Подключенные в массиве зависимостей файлы будут доступны в следующих переменных
-      CompoundControl, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js
+      SelectorController, // В эту переменную импортируется класс CompoundControl из файла CompoundControl.module.js
       dotTplFn, // В эту переменную импортируется вёрстка диалога выбора из файла FieldLinkDemoTemplate.xhtml
       AdapterSbis, // В эту переменную импортируется класс для работы с данными в формате JSON-RPC
       StaticSource // В эту переменную импортируется класс для работы со статическим источником данных
    ){
-      var moduleClass = CompoundControl.extend({
+      var FieldLinkDemoTemplate = SelectorController.extend({
          _dotTplFn: dotTplFn, // Устанавливаем шаблон, по которому будет построена вёрстку диалога выбора
          init: function() { // Инициализация компонента, здесь все дочерние компоненты готовы к использованию
-            moduleClass.superclass.init.call(this); // Обязательная конструкция, чтобы корректно работал указатель this
+            FieldLinkDemoTemplate.superclass.init.apply(this, arguments); // Обязательная конструкция, чтобы корректно работал указатель this
             var self = this, // Сохраняем указатель, будет использован в обработчике кнопки
                 dataGrid = this.getChildControlByName('myView'), // Получаем экземпляр класс представления данных
                 dataSource = new StaticSource({ // Производим инициализацию статического источника данных
@@ -43,11 +44,8 @@ define('js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate', // Устанавлива
                     adapter: new AdapterSbis() // Устанавливаем адаптер для обработки "сырых" данных
                 });
             dataGrid.setDataSource(dataSource); // Устанавливаем представлению данных источник
-            this.getChildControlByName('SelectButton').subscribe('onActivated', function() { // Создаём обработчик на клик по кнопке
-               self.sendCommand('close', dataGrid.getSelectedKeys()); // Отправляем команду и передаём набор выбранных ключей для режима множественного выбора значений
-            });
          }
       });
-      return moduleClass;
+      return FieldLinkDemoTemplate;
    }
 );

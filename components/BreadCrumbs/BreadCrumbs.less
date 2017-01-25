@@ -83,7 +83,7 @@
 		width: 14px;
 		display: inline-block;
 		&:last-of-type{
-			background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
+			background: @bread-crumbs-hier-wrapper-bg no-repeat;
 			position: relative;
   			top: -3px;
 		}
@@ -91,6 +91,9 @@
 
    .controls-MenuItem{
       display: block;
+   }
+   &.controls-Menu__Popup {
+      padding: 4px 0;
    }
    &.ws-disabled {
       .controls-BreadCrumbs__crumb, .controls-BreadCrumbs__crumb:hover {

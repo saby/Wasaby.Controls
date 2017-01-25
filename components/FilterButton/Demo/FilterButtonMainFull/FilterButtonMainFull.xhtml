@@ -79,7 +79,16 @@
                 <opt name="resetVisibilityValue" type="boolean">false</opt>
                 <opt name="caption" bind="filterDescr/user"></opt>
                 <opt name="value" bind="filter/user"></opt>
-                <opt name="resetValue" type="null"></opt>
+                <opt name="resetValue" type="1"></opt>
+            </opts>
+
+            <opts>
+                <opt name="internalValueField">filterSelect</opt>
+                <opt name="internalCaptionField">filterSelectText</opt>
+                <opt name="internalVisibilityField">filterSelectVisibility</opt>
+                <opt name="caption" bind="filterDescr/filterSelectText"></opt>
+                <opt name="value" bind="filter/filterSelect" nonexistent="resetKeyStr"></opt>
+                <opt name="resetValue" value="resetKeyStr"></opt>
             </opts>
         </opts>
 
@@ -124,6 +133,11 @@
               <option name="width" type="string">150</option>
               <option name="field">user</option>
            </options>
+            <options>
+                <option name="title">Статус заказа</option>
+                <option name="width" type="string">150</option>
+                <option name="field">filterSelectText</option>
+            </options>
         </options>
         <option name="emptyHTML">Нет записей</option>
         <options name="items" type="array">
@@ -140,6 +154,8 @@
                 <option name="using">1</option>
 
                <option name="user" type="string">Пушкин</option>
+               <option name="filterSelect">1</option>
+               <option name="filterSelectText" type="string">Оплаченный</option>
             </options>
 
             <options>
@@ -153,6 +169,8 @@
                 <option name="using">1</option>
 
                <option name="user" type="string">Лермонтов</option>
+                <option name="filterSelect">2</option>
+                <option name="filterSelectText" type="string">Оплаченный частично</option>
             </options>
 
             <options>
@@ -167,6 +185,8 @@
                 <option name="using">1</option>
 
                <option name="user" type="string">Толстой</option>
+                <option name="filterSelect">1</option>
+                <option name="filterSelectText" type="string">Оплаченный</option>
             </options>
            <options>
               <option name="title" type="string">Четыре</option>
@@ -180,6 +200,8 @@
               <option name="using">1</option>
 
               <option name="user" type="string">Бродский</option>
+               <option name="filterSelect">1</option>
+               <option name="filterSelectText" type="string">Оплаченный</option>
            </options>
            <options>
               <option name="title" type="string">Пять</option>
@@ -192,6 +214,8 @@
               <option name="selling">2</option>
               <option name="using">1</option>
               <option name="user" type="string">Пушкин</option>
+               <option name="filterSelect">3</option>
+               <option name="filterSelectText" type="string">Неоплаченный</option>
            </options>
         </options>
         <options name="selectedKeys" type="array">

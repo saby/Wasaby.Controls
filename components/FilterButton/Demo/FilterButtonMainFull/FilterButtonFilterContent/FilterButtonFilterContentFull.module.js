@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.Demo.FilterButtonFilterContentFull', [
       'js!SBIS3.CORE.FieldLink',
       'js!SBIS3.CONTROLS.Demo.FilterButtonContentLinkSelect',
       'js!SBIS3.CONTROLS.FilterText',
-      'js!SBIS3.CONTROLS.TextBox'
+      'js!SBIS3.CONTROLS.TextBox',
+      'js!SBIS3.CONTROLS.FilterDropdown'
    ],
    function(CompoundControl, ContentTpl) {
 

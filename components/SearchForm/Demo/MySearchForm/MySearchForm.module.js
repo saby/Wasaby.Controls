@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.Demo.MySearchForm', [
    'js!SBIS3.CONTROLS.DEMO.DemoSearchMemory',
    'css!SBIS3.CONTROLS.Demo.MySearchForm',
    'js!SBIS3.CONTROLS.SearchForm',
-   'js!SBIS3.CONTROLS.DataGridView'
+   'js!SBIS3.CONTROLS.DataGridView',
+   'js!SBIS3.CONTROLS.SuggestView'
 ], function (CompoundControl, dotTplFn, DemoSuggestMemory) {
    'use strict';
    /**

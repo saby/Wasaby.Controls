@@ -21,6 +21,7 @@
    }
 }
 
+
 .controls-ItemsToolbar__editActions {
    .icon-size {
       font-size: 32px !important;
@@ -50,6 +51,21 @@
    }
 }
 
+// в оффлайн рознице поехало позиционирование хлебных крошек,
+// перевожу на флекс т.к. розницу не тестируют на ие8 и там уже используется es6 ( репозиторий warehouse)
+// TODO в .230 сверстать крошки без завязывание на том, что кнопка "назад" ломает базовую линию
+// код лежит здесь, т.к. Engine не поддерживает тематизацию
+.controls-Browser {
+   .engine-Browser__path {
+      display: flex;
+      justify-content: flex-start;
+
+      .controls-BreadCrumbs {
+         top: 0;
+      }
+   }
+}
+
 // поменял позиционирование Строки фильтров и иконки стрелки
 // чтобы онлайн и оффлайн версии Розницы отображались одинаково
 // это происходит потому что оффлайн версия собрана на движке WebKit
@@ -66,6 +82,17 @@
          height: 40px;
       }
    }
+}
+
+// баг оффлайн розницы, когда placeholder неправильно позиционируется
+.controls-TextBox__field::-webkit-input-placeholder{
+   line-height: normal !important;
+}
+
+.controls-TreePager {
+   font-size: 24px;
+   height: 44px;
+   line-height: 44px;
 }
 
 .controls-InformationPopup {
@@ -190,9 +217,9 @@
 }
 .ws-window-titlebar {
    .ws-float-area-title {
-      top: @float-area-top-offset !important;
+      line-height: @carry-big-height !important;
       font-size: 32px !important;
-      position: relative;
+      position: initial;
    }
 }
 
@@ -286,18 +313,33 @@
    }
 }
 
-.ws-field-button {
-   &.ws-button-classic {
-      &.sbisname-window-title-close{
-         &.ws-enabled {
-            &.ws-button-classic {
-               top: @float-area-top-offset !important;
+.ws-float-area-stack-panel-overflow {
+   .ws-field-button {
+      &.ws-button-classic {
+         &.sbisname-window-title-close {
+            &.ws-enabled {
+               &.ws-button-classic {
+                  top: @float-area-top-offset !important;
+               }
             }
          }
       }
    }
 }
 
+.ws-float-area-nostack-panel-overflow {
+   .ws-field-button {
+      &.ws-button-classic {
+         &.sbisname-window-title-close {
+            &.ws-enabled {
+               &.ws-button-classic {
+                  top: @float-area-top-offset + 2px !important;
+               }
+            }
+         }
+      }
+   }
+}
 .controls-FloatArea {
    &.controls__filterButton__picker {
       .controls-PopupMixin__closeButton {
@@ -385,75 +427,4 @@
       }
    }
 }
-
-
-/*TODO Тема для Длительных операций, находящихся в sbis3.Engine. Здесь этого явно быть не должно. Возможно придется выносить представление в контролы. */
-.controls-InformationPopup {
-   .engine-OperationNotificationPopup__footer {
-      height: 50px;
-      line-height: 50px;
-   }
-   .engine-OperationNotificationPopup__content_showRegistryButtonContainer {
-      height: 50px;
-   }
-   .engine-OperationNotificationPopup__content_showRegistryButton {
-      line-height: 50px;
-   }
-   &.engine-OperationNotificationPopup, .engine-OperationNotificationPopup__content {
-      width: 600px;
-   }
-   &.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode {
-      width: 420px;
-   }
-   .engine-OperationNotificationPopup__footer_execTasks, .engine-OperationNotificationPopup__footer_executeTime, .engine-OperationNotificationPopup__footer_progress {
-      font-size: 16px;
-   }
-   &.engine-OperationNotificationPopup .controls-NotificationPopup__header_caption {
-      font-size: 32px;
-      color: #313E78;
-      line-height: 52px;
-   }
-   &.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode .controls-NotificationPopup__header_caption {
-      font-size: 24px;
-      color: #000;
-      line-height: inherit;
-   }
-   .controls-NotificationPopup__header {
-      height: 60px;
-   }
-   .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
-      padding-right: 72px;
-   }
-   .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton, .engine-OperationNotificationPopup__header_downloadButton,
-   .engine-OperationNotificationPopup__header_stoppedOperationsButton {
-      line-height: 60px;
-   }
-   .controls-NotificationPopup__header_icon.icon-size {
-      font-size: 32px !important;
-      width: 32px;
-      height: 32px;
-   }
-}
-
-.engine-LongOperationsList {
-   .engine-LongOperationsList__startTimeContainer, .engine-LongOperationsList__executeTimeContainer {
-      font-size: 16px;
-   }
-}
-
-.engine-LongOperationsFilter {
-   .engine-LongOperationsFilter__stateDropdown {
-      width: 220px;
-   }
-
-   .engine-LongOperationsFilter__block {
-      height: 46px;
-   }
-
-   .engine-LongOperationsFilter__durationTitle, .engine-LongOperationsFilter__responsibleTitle {
-      min-height: 30px;
-      line-height: 30px;
-   }
-}
-/*TODO Конец костыля. */
 

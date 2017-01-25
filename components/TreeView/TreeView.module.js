@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.TreeView', [
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'html!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
    'html!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
-   'js!SBIS3.CORE.MarkupTransformer'
+   'js!SBIS3.CORE.MarkupTransformer',
+   'css!SBIS3.CONTROLS.TreeView'
 ], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, MarkupTransformer) {
    'use strict';
 
@@ -20,6 +21,17 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * @control
     * @public
     * @category Lists
+    *
+    * @initial
+    * <component data-component='SBIS3.CONTROLS.TreeView'>
+    *    <option name="idProperty">key</option>
+    *    <option name="idProperty">key</option>
+    *    <option name="displayProperty">title</option>
+    *    <option name="emptyHTML">Нет записей</option>
+    *    <option name="parentProperty">parent</option>
+    * </component>
+    *
+    *
     */
 
    var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {

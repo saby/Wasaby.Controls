@@ -3,11 +3,15 @@
 
 @gray-dark-color:                         #666;
 @gray-color:                              #999;
+@gray-lamantin-color:                     #8991A9;
 @gray-light-color:                        #E4E4E4;
 @gray-ccc-color:                          #CCC;
 @lightgray-color:                         #CBD5E5;
 @darkcyan-color:                          #0055BB;
 @dodgerblue-color:                        #0066FF;
+@red-color:                               #ef463a;
+@green-color:                             #53A52C;
+@purple-color:                            #9122BF;
 
 @blue-dark-color:                         #313E78;
 
@@ -17,10 +21,14 @@
 
 @icon-color-attention:                    #FEC63F;
 @icon-color-done:                         #72be44;
-@icon-color-error:                        #ef463a;
+@icon-color-error:                        @red-color;
 @icon-color-primary:                      @default-color;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
+
+@float-area-border-color:                 #bdbdbd;
+@float-area-border:                       1px solid @float-area-border-color;
+@float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 
 @bg:                                      transparent;
 @text-color:                              @black-color;
@@ -40,6 +48,7 @@
 @default-itemSelected-color:              #F3F3F3;
 
 @hover-color:                             @blue-dark-color;
+@controls-panel-shadow:                   0px 0px 12px 0px rgba(0,0,0,0.4);
 
 
 // ---- //
@@ -87,7 +96,7 @@
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
-@button-icon-gap:                         4px;                      // gap between icon and text
+@button-icon-gap:                         6px;                      // gap between icon and text
 @button-icon-text-margin:                 0 12px 0 32px;            // margin of text following 16x16 icon
 @button-icon-big-top-offset:              0;                         // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
@@ -106,6 +115,47 @@
 @FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
+
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    3px;
+@filter-panel-chooser-list-view-check-box-left:                   0;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
 
 // Normal default button
 @button-text-color:                       @black-color;
@@ -346,14 +396,14 @@
 @tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
+@tab-button-large-firstAddText-color-hover:     #313E78;
 @tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-firstAddText-font-weight:     normal;
-@tab-button-large-firstAddText-hover-color:     #FF7030;
 
 @tab-button-large-secondAddText-color:          #999999;
+@tab-button-large-secondAddText-text-decor:     underline;
 @tab-button-large-secondAddText-font-size:      12px;
 @tab-button-large-secondAddText-font-weight:    normal;
-@tab-button-large-secondAddText-hover-color:    #FF7030;
 
 @tab-button-inner-padding:                      0px 8px 0 8px;
 @tab-button-inner-line-height:                  30px;
@@ -607,12 +657,13 @@
 
 @menu-margin:                             -1px 0 0;
 @menu-subpopup-margin:                    -6px 0 0 0;
-@menu-padding:                            4px 0;
-@menu-border-width:                       2px;
+@menu-subpopup-padding:                   4px 0;
+@menu-padding:                            0 0 4px 0;
+@menu-border-width:                       1px;
 @menu-border-style:                       solid;
-@menu-border-color:                       @gray-light-color;
-@menu-border-radius:                      4px;
-@menu-shadow:                             none;
+@menu-border-color:                       @gray-ccc-color;
+@menu-border-radius:                      0;
+@menu-shadow:                             0px 0px 12px 0px rgba(0,0,0,0.25);
 
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
@@ -632,7 +683,7 @@
 
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
-@menu-header-padding:                     8px;
+@menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 
 // --------- //
@@ -642,7 +693,7 @@
 @menu-item-width:                         auto;
 @menu-item-height:                        32px;
 @menu-item-line-height:                   @menu-item-height;
-@menu-item-default-padding:               0 8px;
+@menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
@@ -673,41 +724,10 @@
 // ----------- //
 
 // Menu
-@menu-button-menu-top-margin:                           26px;
-@menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;
-@menu-button-menu-border-width:                         2px;
+@menu-button-menu-border-width:                         1px;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
-
-// Menu header
-@menu-button-header-spritesheet:                        'img/MenuButton-header.png';
-
-@menu-button-header-left-width:                         12px;
-@menu-button-header-left-height:                        30px;
-@menu-button-header-left-margin:                        0;
-@menu-button-header-left-bg:                            transparent url(@menu-button-header-spritesheet) 0 211px;
-@menu-button-header-right-bg-revert-horizontal:         transparent url(@menu-button-header-spritesheet) -2px 152px;
-@menu-button-header-right-bg-revert-vertical:           transparent url(@menu-button-header-spritesheet) 0 119px;
-@menu-button-header-right-bg-revert-vertical-horizontal:transparent url(@menu-button-header-spritesheet) 0 29px;
-
-@menu-button-header-center-width:                       auto;
-@menu-button-header-center-height:                      8px;
-@menu-button-header-center-margin:                      0;
-@menu-button-header-center-bg:                          @white-color;
-
-@menu-button-header-right-width:                        28px;
-@menu-button-header-right-height:                       30px;
-@menu-button-header-right-margin:                       0;
-@menu-button-header-right-margin-revert-horizontal:     @menu-button-header-right-margin;
-@menu-button-header-right-bg:                           transparent url(@menu-button-header-spritesheet) 0 -4px;
-@menu-button-header-left-bg-revert-horizontal:          transparent url(@menu-button-header-spritesheet) 0 182px;
-@menu-button-header-left-bg-revert-vertical:            transparent url(@menu-button-header-spritesheet) 0 89px;
-@menu-button-header-left-bg-revert-vertical-horizontal: transparent url(@menu-button-header-spritesheet) 0 58px;
-
-
-
 
 // --------- //
 // Menu link //
@@ -732,9 +752,9 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-margin:                   -6px 0 0 -10px;
-@menu-link-menu-padding:                  0 0 4px 0;
+@menu-link-menu-margin:                   -5px 0 0 -13px;
 @menu-link-menu-item-container-padding:   4px 0 0 0;
+@menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               #F4F4F4;
 @menu-link-menu-border-width:             @menu-border-width;
@@ -747,26 +767,9 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-margin:                   -10px 0 0 -10px;
+@menu-icon-menu-margin:                   -9px 0 0 -13px;
 @menu-icon-menu-padding:                  0 0 4px 0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
-
-// Menu header
-@menu-icon-header-spritesheet:            @menu-button-header-spritesheet;
-
-@menu-icon-header-left-width:             12px;
-@menu-icon-header-left-height:            28px;
-@menu-icon-header-left-top-offset:        1px;            // top offset of icon's left header part
-@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
-@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 -30px;
-
-@menu-icon-header-right-width:            28px;
-@menu-icon-header-right-height:           28px;
-@menu-icon-header-right-top-offset:       1px;            // top offset of icon's right header part
-@menu-icon-header-right-left-offset:      10px;          // left offset of icon's right header part
-@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet);
-
-@menu-icon-header-bg:                     @menu-icon-menu-bg;
 
 
 
@@ -910,15 +913,27 @@
 @number-text-box-arrow-down-disabled-border-style:    @number-text-box-arrow-down-border-style;
 @number-text-box-arrow-down-disabled-border-color:    @number-text-box-arrow-down-border-color;
 
+// --------------- //
+// Money text box  //
+// --------------- //
+
+@money-text-box-min-width:            102px;
+
+@money-text-box-decimals-margin-left: -4px;
+@money-text-box-decimals-padding:     2px 0;
+@money-text-box-decimals-font-size:   12px;
+
 // ----------- //
 // Date box    //
 // ----------- //
+@date-box-color:                             @text-box-color;
 @date-box-wrapper-border-radius:             @text-box-border-radius;
 
 @date-box-wrapper-border-width:              @text-box-border-width;
 @date-box-wrapper-border-style:              @text-box-border-style;
 @date-box-wrapper-border-color:              @text-box-border-color;
 @date-box-wrapper-bg:                        @text-box-bg;
+@date-box-field-text-color:                  @text-box-field-text-color;
 
 @date-box-wrapper-focus-border-width:        @date-box-wrapper-border-width;
 @date-box-wrapper-focus-border-style:        @date-box-wrapper-border-style;
@@ -950,15 +965,17 @@
 @search-focus-background:                             @search-background;
 @search-height:                                       @text-box-height;
 @search-padding:                                      0 24px 0 16px;
-@search-left-margin:                                  16px;
+@search-left-margin:                                  12px;
 @search-border-radius:                                10px;
 @search-border-color:                                 @search-background;
 @search-hover-border-color:                           @search-background;
 @search-bottom-border-color:                          @search-background;
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-buttons-wrapper-width:                        22px + 22px;
-@search-form-icon-padding:                            3px;
+@search-buttons-wrapper-width:                        20px + 20px;
+@search-form-field-wrapper-margin-right:              @search-buttons-wrapper-width + 5px;
+@search-button-wrapper-padding:                       0 5px 0 0;
+@search-form-icon-padding:                            3px  2px;
 @search-form-icon-disabled-display:                   block;
 @search-loop-size:                                    16px;
 
@@ -1012,8 +1029,6 @@
 
 @combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0;
-@combo-box-picker-margin:                       -1px;
-@combo-box-picker-padding:                      0 1px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
 @combo-box-picker-item-padding:                 7px 4px 6px 4px;
@@ -1031,6 +1046,7 @@
 @combo-box-after-width:                         @text-box-after-width;
 
 @compo-box-picker-show-color:                   @text-color;
+@combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 
 // TODO: check whether it's required
@@ -1043,7 +1059,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
-@text-area-field-line-height:                   normal;
+@text-area-field-line-height:                   18px;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -1085,7 +1101,7 @@
 
 @text-area-placeholder-color:              @text-box-placeholder-color;
 @text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
-@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-padding:     2px 0 0;
 @text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 // --------------- //
@@ -1153,13 +1169,10 @@
 @date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
 
 @date-picker-calendar-icon-cursor:              pointer;
-@date-picker-calendar-icon-width:               16px;
-@date-picker-calendar-icon-height:              16px;
+@date-picker-calendar-icon-width:               18px;
+@date-picker-calendar-icon-height:              18px;
 @date-picker-calendar-icon-top-offset:          4px;
 @date-picker-calendar-icon-left-offset:         1px;
-@date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
-@date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
-@date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
 
 // -------- //
 // Calendar //
@@ -1325,6 +1338,7 @@
 // ----------------- //
 @date-range-slider-font-family:                 @font-basic-name;
 @date-range-slider-color:                       @darkcyan-color;
+@date-range-slider-disabled-text-color:         @link-disabled-text-color;
 @date-range-slider-hover-color:                 @blue-dark-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
@@ -1353,6 +1367,7 @@
 @date-range-choose-hover-color:                 @blue-dark-color;
 @date-range-choose-width:                       150px;
 @date-range-choose-year-state-width:            80px;
+@date-range-choose-padding:                     0 0 4px;
 
 
 @date-range-choose-current-value-font-size:     15px;
@@ -1383,6 +1398,7 @@
 @date-range-choose-home-button-line-height:     22px;
 @date-range-choose-home-button-border-color:    inherit;
 @date-range-choose-home-color:                  @date-range-choose-color;
+@date-range-choose-home-button-margin:          4px auto 0;
 
 
 // -------------- //
@@ -1401,7 +1417,7 @@
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
-@date-range-big-choose-border-color:               @gray-light-color;
+@date-range-big-choose-border-color:               @float-area-border-color;
 @date-range-big-choose-border-hovered-color:       @darkcyan-color;
 @date-range-big-choose-border-selected-color:      @darkcyan-color;
 @date-range-big-choose-bg-hovered-color:           @default-itemHover-color;
@@ -1538,7 +1554,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
+@listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
+@listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
+@listView-check-box-icon-checked-bg:            url(@listView-check-box-icon-spritesheet) 0 72px;
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1557,7 +1576,7 @@
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
 @list-view-items-toolbar-bottom:                     3px;
-@list-view-items-toolbar-right:                      0;
+@list-view-items-toolbar-right:                      8px;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
@@ -1598,7 +1617,8 @@
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
-@list-view-actions-menu-padding:                @menu-padding;
+@list-view-actions-menu-padding:                4px 0;
+@list-view-actions-menu-margin:                 3px 0 0 6px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
@@ -1616,6 +1636,7 @@
 @listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
+@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -1711,6 +1732,8 @@
 @tree-view-big-node-font-size:                  16px;
 @tree-view-big-leaf-font-size:                  15px;
 
+@tree-view-copy-arrow-background:               @white-color;
+
 // --------- //
 // Data grid //
 // --------- //
@@ -1761,13 +1784,14 @@
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
 @data-grid-first-content-cell-padding-left:     8px;
+@data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
-@data-grid-first-cell-separator-color:          #EAEAEA;
+@data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1779,10 +1803,10 @@
 
 @data-grid-td-checkbox-width:                   24px;
 @data-grid-td-visible-checkbox-width:           24px;
-@data-grid-td-hidden-checkbox-width:            4px;
+@data-grid-td-hidden-checkbox-width:            8px;
 @data-grid-td-checkbox-width-without-marker:    20px;
-//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
-@data-grid-checkbox-margin:                     2px 0 -2px 0;
+@data-grid-check-box-top:                       2px;
+@data-grid-check-box-left:                      0px;
 
 @data-grid-table-layot: 								fixed;
 // ---------- //
@@ -1800,6 +1824,7 @@
 @data-grid-partScroll-thumb-margin:             20px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
+@data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-float:          left;
@@ -1889,14 +1914,11 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        29px;
-@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
-@controls-OperationsPanelButton-horizontal-icon-top: 1px;
 @controls-OperationsPanelButton-icon-left:         6px;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
@@ -1905,6 +1927,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    3px;
+@controls-editInPlace-editor-without-offset-margin: -6px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1912,10 +1935,10 @@
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                           3px;
-@listView-check-box-top:                            5px;
-@listView-check-box-width:                          16px;
-@listView-check-box-height:                         16px;
+@listView-check-box-left:                           0px;
+@listView-check-box-top:                            0px;
+@listView-check-box-width:                          24px;
+@listView-check-box-height:                         24px;
 @listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
@@ -1938,7 +1961,7 @@
 // DropdownList//
 // --------------- //
 @DropdownList-cursor:                         pointer;
-@DropdownList-border-color:                   @gray-light-color;
+@DropdownList-border-color:                   @gray-ccc-color;
 
 @DropdownList-iconWidth:                      16px;
 @DropdownList-iconHeight:                     16px;
@@ -1951,9 +1974,9 @@
 
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
-@DropdownList-picker-offset:                          0;
-@DropdownList-picker-fastdatafilter-offset:           0;
-@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-offset:                          0 0 0 1px;
+@DropdownList-picker-fastdatafilter-offset:           1px 0 0 1px;
+@DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
@@ -1961,12 +1984,12 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-head-margin:                     0;
-@DropdownList-picker-border:                          2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              4px 4px 0 0;
+@DropdownList-picker-border:                          1px solid @DropdownList-border-color;
+@DropdownList-picker-head-border-radius:              0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
-@DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
+@DropdownList-picker-list-right-border-radius:        0;
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
-@DropdownList-picker-list-border-radius:              4px;
+@DropdownList-picker-list-border-radius:              0;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
@@ -1981,8 +2004,10 @@
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
+@DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    4px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
@@ -2000,10 +2025,11 @@
 //FilterButton
 @controls-filterButton-picker-bg:                 #F9F9F9;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       1px 3px 3px 3px;
+@controls-filterButton-picker-border-width:       1px;
 @controls-filterButton-picker-border-style:       solid;
-@controls-filterButton-picker-border-color:       @gray-light-color;
-@controls-filterButton-picker-border-radius:      0 0 4px 4px;
+@controls-filterButton-picker-border-color:       @gray-ccc-color;
+@controls-filterButton-picker-border-radius:      0;
+@controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  12px;
 @controls-Popup-closeButton-right:                0;
 
@@ -2137,7 +2163,7 @@
 @controls-FieldLink-linkItem-position:             relative;
 @controls-FieldLink-linkItem-padding:              0 17px 0 4px;
 @controls-FieldLink-linkItem-caption-height:       16px;
-@controls-FieldLink-linkItem-cross-width:          21px;
+@controls-FieldLink-linkItem-cross-width:          20px;
 @controls-FieldLink-linkItem-cross-right:          -4px;
 @controls-FieldLink-linkItem-cross-top:            -2px;
 @controls-FieldLink-linkItem-cross-padding:        3px 5px 3px 0;
@@ -2146,9 +2172,14 @@
 @controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
+@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-margin:   2px 4px;
+
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -2161,12 +2192,13 @@
 @back-button-font-size:                            18px;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
-@back-button-arrow-height:                         17px;
+@back-button-arrow-height:                         24px;
 @icon-size:                                        16px;
 @icon-width:                                       16px;
 @icon-height:                                      16px;
 
 // BreadCrumbs
+@bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
@@ -2177,6 +2209,7 @@
 @editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
+@editdialog-applybutton-top:                       8px;
 
 //MoveDialog
 @controls-movedialog-activate-right:               38px;
@@ -2202,7 +2235,7 @@
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
-@controls-NotificationPopup-border:                                          1px solid #E4E4E4;
+@controls-NotificationPopup-border:                                          @float-area-border;
 @controls-NotificationPopup-border-top:                                      none;
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
@@ -2217,7 +2250,7 @@
 @controls-NotificationPopup-header-icon-height:                              24px;
 
 //SubmitPopup
-@controls-SubmitPopup-size-standart-width:         351px;
+@controls-SubmitPopup-size-standard-width:         351px;
 @controls-SubmitPopup-size-big-width:              440px;
 @controls-SubmitPopup-body-padding:                32px;
 @controls-SubmitPopup-message-font-size:           18px;
@@ -2225,16 +2258,18 @@
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
+@controls-SubmitPopup-footer-border-top:           @float-area-border;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
-@controls-SubmitPopup-border:                      2px solid #E4E4E4;
+@controls-SubmitPopup-border:                      1px solid @float-area-border-color;
 @controls-SubmitPopup-border-top:                  none;
 @controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
+@controls-SubmitPopup-message-color:               inherit;
+@controls-SubmitPopup-details-color:               inherit;
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
@@ -2269,11 +2304,11 @@
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
 @controls-Scrollbar-thumb-border-radius:           2px;
-@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
-@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+@controls-Scrollbar-light-hover-thumb-color:       rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-light-active-thumb-color:      rgba(255, 255, 255, 0.50);
 
-@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
-@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(0, 0, 0, 0.15);
 
 //----------//
 //  Header  //
@@ -2345,3 +2380,38 @@
 @toggle-header-hover-count-color:                  @toggle-header-hover-color;
 
 @toggle-header-checked-before-content:             '\E000';
+
+//----------------//
+//  moneyDecorator  //
+//----------------//
+
+@money-decorator-integer-font-size:                        14px;
+@money-decorator-integer-font-color:                       #000000;
+
+@money-decorator-integer-accent-results-font-size:         15px;
+@money-decorator-integer-accent-results-font-color:        @blue-dark-color;
+@money-decorator-integer-accent-results-font-weight:       bold;
+
+@money-decorator-integer-no-accent-results-font-size:      15px;
+@money-decorator-integer-no-accent-results-font-color:     #999999;
+@money-decorator-integer-no-accent-results-font-weight:    bold;
+
+@money-decorator-integer-group-font-size:                  14px;
+@money-decorator-integer-group-font-color:                 @gray-ccc-color;
+
+@money-decorator-integer-basic-registry-font-size:         14px;
+@money-decorator-integer-basic-registry-font-color:        #000000;
+
+@money-decorator-integer-no-basic-registry-font-size:      14px;
+@money-decorator-integer-no-basic-registry-font-color:     #999999;
+
+@money-decorator-integer-accent-registry-font-size:        15px;
+@money-decorator-integer-accent-registry-font-color:       @blue-dark-color;
+@money-decorator-integer-accent-registry-font-weight:      bold;
+
+@money-decorator-integer-no-accent-registry-font-size:     15px;
+@money-decorator-integer-no-accent-registry-font-color:    #999999;
+@money-decorator-integer-no-accent-registry-font-weight:   bold;
+
+@money-decorator-fraction-font-size:                       12px;
+@money-decorator-fraction-font-color:                      @gray-ccc-color;

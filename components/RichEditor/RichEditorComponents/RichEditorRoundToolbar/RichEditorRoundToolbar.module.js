@@ -8,10 +8,14 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
    'Core/helpers/string-helpers',
+   'js!SBIS3.CONTROLS.StylesPanelNew',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.StylesPanel'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers) {
+   'js!SBIS3.CONTROLS.StylesPanel',
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
+   'js!SBIS3.CONTROLS.IconButton'
+
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
 
    'use strict';
    var
@@ -37,36 +41,42 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          $protected : {
             _options : {
                /**
-                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок
-                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете
+                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок.
+                * @remark
+                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете.
+                * <br/>
                 * Список стандартных кнопок:
                 * <ol>
                 *    <li>styles - панель со стилями текста текста;</li>
                 *    <li>toggle - переключение видимости редактора;</li>
-                *    <li>list - Вставить/Удалить список;</li>
-                *    <li>link - Вставить/редактировать ссылку;</li>
-                *    <li>image - Вставить картинку;</li>
-                *    <li>smile - Смайлики;</li>
-                *    <li>history - история ввода;</li>
+                *    <li>list - вставить/Удалить список;</li>
+                *    <li>link - вставить/редактировать ссылку;</li>
+                *    <li>image - вставить картинку;</li>
+                *    <li>smile - смайлики;</li>
+                *    <li>history - история ввода.</li>
                 * </ol>
-                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}
-                * componentType - обязательный параметр определяющий вид компонента
-                * name - имя компонента по которому можно получить элемент тулбара
-                * round - число - порядок сортировки элементов тулбара // по умолчанию 0
-                * basic - остаётся ли элемент тулбара видимым при переключении выдимости // по умолчанию false
+                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
+                * <ul>
+                *   <li>componentType - обязательный параметр, определяющий вид компонента;</li>
+                *   <li>name - имя компонента, по которому можно получить элемент тулбара;</li>
+                *   <li>round - число-порядок сортировки элементов тулбара, по умолчанию 0;</li>
+                *   <li>basic - остаётся ли элемент тулбара видимым при переключении выдимости, по умолчанию false.</li>
+                * <ul>
                 * @example
-                * <options name="items" type="array">
-                *        <options>
-                *           <option name="name">myButton</option>
-                *           <option name="round">100</option>
-                *           <option name="basic">true</option>
-                *           <option name="componentType">SBIS3.CONTROLS.Button</option>
-                *           <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
-                *           <options name="handlers">
-                *              <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
-                *           </options>
-                *        </options>
-                * </options>
+                * <pre>
+                *    <options name="items" type="array">
+                *       <options>
+                *          <option name="name">myButton</option>
+                *          <option name="round">100</option>
+                *          <option name="basic">true</option>
+                *          <option name="componentType">SBIS3.CONTROLS.Button</option>
+                *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
+                *          <options name="handlers">
+                *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
+                *          </options>
+                *      </options>
+                *    </options>
+                * </pre>
                 */
                items: undefined,
                defaultConfig: defaultConfig,
@@ -81,7 +91,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                italic:false,
                underline:false,
                strikethrough: false
-            }
+            },
+            _stylesPanel: undefined
          },
 
          _modifyOptions: function(options) {
@@ -145,7 +156,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
 
          _fillHistory: function(){
             var
-               prepareHistory= function(value){
+               prepareHistory = function(value){
                   var
                      stripText, title,
                      $tmpDiv = $('<div/>').append(value);
@@ -162,24 +173,26 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                   }
                   return stripText;
                };
-            this.getLinkedEditor().getHistory().addCallback(function(arrBL) {
-               var
-                  items= [],
-                  history = this.getItemInstance('history');
-               for ( var i in arrBL) {
-                  if (arrBL.hasOwnProperty(i)) {
-                     items.push({
-                        key: items.length,
-                        title: prepareHistory(arrBL[i]),
-                        value: arrBL[i]
-                     })
+            if (this.getItems().getRecordById('history')) {
+               this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
+                  var
+                     items = [],
+                     history = this.getItemInstance('history');
+                  for (var i in arrBL) {
+                     if (arrBL.hasOwnProperty(i)) {
+                        items.push({
+                           key: items.length,
+                           title: prepareHistory(arrBL[i]),
+                           value: arrBL[i]
+                        })
+                     }
                   }
-               }
-               if (!arrBL.length) {
-                  history.setEnabled(false);
-               }
-               history.setItems(items)
-            }.bind(this));
+                  if (!arrBL.length) {
+                     history.setEnabled(false);
+                  }
+                  history.setItems(items)
+               }.bind(this));
+            }
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
@@ -214,35 +227,49 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             }
          },
 
-         _openStylesPanel: function(target){
+         _openStylesPanel: function(button){
             var
-               area = new FloatArea({
-                  visible: true,
-                  template: 'js!SBIS3.CONTROLS.StylesPanel',
-                  element: $('<div class="controls-RichEditorRoundToolbar__stylesPanel"></div>'),
-                  target: target,
-                  componentOptions: {
-                     formats: {
-                        fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
-                        buttons: this._buttons,
-                        color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)]
-                     },
-                     linkedToolbar: this
-                  },
-                  activableByClick: false,
-                  closeByExternalClick: true,
+               stylesPanel = this.getStylesPanel(button);
+            stylesPanel.setStylesFromObject({
+               fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
+               color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)],
+               bold: this._buttons.bold,
+               italic: this._buttons.italic,
+               underline: this._buttons.underline,
+               strikethrough: this._buttons.strikethrough
+            });
+            stylesPanel.show();
+         },
+
+         getStylesPanel: function(button){
+            var
+               self = this;
+            if (!this._stylesPanel) {
+               this._stylesPanel = new StylesPanel({
+                  parent: button,
+                  target: button.getContainer(),
                   corner: 'tl',
-                  closeButton: true,
                   verticalAlign: {
                      side: 'top',
-                     offset: -8
+                     offset: -4
                   },
-                  horizontalAlign: {
-                     side: 'left',
-                     offset: -8
-                  }
+                  element: $('<div></div>'),
+                  fontSizes: [12, 14, 15, 18],
+                  colors: [
+                     {color:'black'},
+                     {color:'red'},
+                     {color:'green'},
+                     {color:'blue'},
+                     {color:'purple'},
+                     {color:'grey'}
+                  ]
                });
-            area.show();
+
+               this._stylesPanel.subscribe('changeFormat', function(){
+                  self._applyFormats(self._stylesPanel.getStylesObject())
+               });
+            }
+            return this._stylesPanel;
          },
 
          _applyFormats: function(formats){
@@ -251,7 +278,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                this._options.linkedEditor.setFontSize(formats.fontsize);
                for ( var button in this._buttons) {
                   if (this._buttons.hasOwnProperty(button)) {
-                     if (this._buttons[button] !== formats.buttons[button]) {
+                     if (this._buttons[button] !== formats[button]) {
                         this._options.linkedEditor.execCommand(button);
                      }
                   }

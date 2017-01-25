@@ -1,0 +1,20 @@
+<ws:if data="{{href}}">
+   <a class="controls-Link-link" href="{{enabled ? href : ''}}" target="{{inNewTab ? '_blank' : ''}}" rel="noreferrer">
+      <ws:if data="{{icon}}">
+         <i class="controls-Link__icon {{_iconClass}}"></i><span class="controls-Link__field">{{caption|sanitize}}</span>
+      </ws:if>
+      <ws:else>
+         {{caption|sanitize}}
+      </ws:else>
+   </a>
+</ws:if>
+<ws:else>
+   <span class="controls-Link-link">
+      <ws:if data="{{icon}}">
+         <i class="controls-Link__icon {{_iconClass}}"></i><span class="controls-Link__field">{{caption|sanitize}}</span>
+      </ws:if>
+      <ws:else>
+         {{caption|sanitize}}
+      </ws:else>
+   </span>
+</ws:else>

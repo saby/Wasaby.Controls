@@ -29,10 +29,14 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
          if(this._options.selectedItem instanceof Model) {
             this.initializeSelectedItems();
             this._options.selectedItems.assign([this._options.selectedItem]);
-            /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
-         } else if(this._options.selectedKey) {
+            this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
+         }
+
+         /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
+         if(this._options.selectedKey) {
             this._options.selectedKeys = [this._options.selectedKey];
          }
+
          /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,
             то корректно произойдёт синхронизация с контекстом  */
          this.subscribe('onPropertyChanged', function(e, propName) {
@@ -60,7 +64,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                   case 'selectedItem':
                       /* При синхронизации selectedItem -> selectedItems, так же проверяем наличие ключевых поле у selectedItem */
                      if(cInstace.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
-                        !isEmptyItem(propValue, this._options.displayField, this._options.keyField)) {
+                        !isEmptyItem(propValue, this._options.displayProperty, this._options.idProperty)) {
                         this.setSelectedItems([propValue]);
                      } else {
                         this.clearSelectedItems();
@@ -79,7 +83,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
 
                      if (item) {
                         this._options.selectedItem = item;
-                        this._options.selectedKey = item.getId();
+                        this._options.selectedKey = item.get(this._options.idProperty);
                      } else {
                         this._options.selectedItem = null;
                         this._options.selectedKey = null;
@@ -107,20 +111,20 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
             var hasRequiredFields,
                 isModel = item && cInstace.instanceOfModule(item, 'WS.Data/Entity/Model'),
                 currentSelItem = this._options.selectedItem,
-                keyField = this._options.keyField,
-                displayField = this._options.displayField;
+               idProperty = this._options.idProperty,
+               displayProperty = this._options.displayProperty;
 
             if (isModel) {
                /* Проверяем запись на наличие ключевых полей */
-               hasRequiredFields = !isEmptyItem(item, displayField, keyField);
+               hasRequiredFields = !isEmptyItem(item, displayProperty, idProperty);
 
                if (hasRequiredFields) {
                   /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
                   if (!item.getIdProperty()) {
-                     item.setIdProperty(this._options.keyField);
+                     item.setIdProperty(this._options.idProperty);
                   }
                   /* Если передали пустую запись и текущая запись тоже пустая, то не устанавливаем её */
-               } else if(currentSelItem && isEmptyItem(currentSelItem, displayField, keyField) && this._isEmptySelection()) {
+               } else if(currentSelItem && isEmptyItem(currentSelItem, displayProperty, idProperty) && this._isEmptySelection()) {
                   return false;
                }
             }
@@ -139,12 +143,12 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
       }
    };
 
-   function isEmptyItem(item, keyField, displayField) {
+   function isEmptyItem(item, idProperty, displayProperty) {
       var isEmpty = function(val) {
          return val === null || val === undefined;
       };
 
-      return isEmpty(item.get(displayField)) || isEmpty(item.get(keyField));
+      return isEmpty(item.get(displayProperty)) || isEmpty(item.get(idProperty));
    }
 
    return SyncSelectionMixin;

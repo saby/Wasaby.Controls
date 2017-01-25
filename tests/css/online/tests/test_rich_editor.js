@@ -36,7 +36,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			
 			.capture('with_smile', function (actions) {
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.click(this.input2);
 			})
@@ -122,6 +122,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				this.addLink = find('[sbisname="FieldRichEditor 1"] [sbisname="link"]')
 				this.linkInput = find('input[name="fre_link_href"]')
 				this.ok = find('.ws-window-titlebar [type="button"] .controls-Button__text')
+				this.wrap = find('[sbisname="Button 1"]');
 				actions.wait(500);				
             })
 
@@ -273,7 +274,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textList);
 				actions.waitForElementToShow('[data-id="InsertOrderedList"]', 2000);
 				actions.click('[data-id="InsertOrderedList"]');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('unordered', function (actions) {
@@ -283,7 +285,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textList);
 				actions.waitForElementToShow('[data-id="InsertUnorderedList"]', 2000);
 				actions.click('[data-id="InsertUnorderedList"]');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('center', function (actions) {
@@ -293,7 +296,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentCenter', 2000);
 				actions.click('.icon-AlignmentCenter');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('right', function (actions) {
@@ -303,7 +307,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentRight', 2000);
 				actions.click('.icon-AlignmentRight');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
 			
 			.capture('justify', function (actions) {
@@ -313,7 +318,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentWidth', 2000);
 				actions.click('.icon-AlignmentWidth');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.wrap);
+				actions.click(this.input2);
 			})
     });
 
@@ -681,11 +687,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.sendKeys(this.input, ' смайлик ');
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.click(this.toolbar);
 				actions.sendKeys(this.input, gemini.TAB);
@@ -723,7 +729,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('Devil');
+                    window.$ws.single.ControlStorage.getByName('FieldRichEditor 1').insertSmile('first');
                 });
 				actions.sendKeys(this.input, gemini.ARROW_UP);
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.ARROW_LEFT);
@@ -769,7 +775,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 
 			.capture('plain')
     });
-
+    /*
 	gemini.suite('decorate_link_then_disabled', function (test) {
 
         test.setUrl('/IntRichFieldEditor48.html').setCaptureElements('[sbisname="FieldRichEditor 1"]')
@@ -794,7 +800,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
                 });
 				actions.waitForElementToShow('.engine-DecoratedLink', 5000);
 			})	
-    });
+    });*/
 	
 	gemini.suite('rich_text_area', function (test) {
 

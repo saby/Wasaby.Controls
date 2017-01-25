@@ -2,6 +2,7 @@
    <div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">
             Введите должность
             <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
@@ -11,8 +12,8 @@
                </options>
             </component>
          </option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
-         <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
-         <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+         <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+         <option name="idProperty">Ид</option> <!-- Устанавливаем ключевое поле -->
          <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
          <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
             <options>
@@ -34,7 +35,7 @@
                      <option name="field">Название</option>
                   </options>
                </options>
-               <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+               <option name="idProperty">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
                <options name="itemsActions" type="array"></options>
                <option name="footerTpl">
                   <component data-component="SBIS3.CONTROLS.Link" name="showAllButton">
@@ -51,6 +52,7 @@
    <div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect1"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">
             Введите должность
             <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
@@ -59,8 +61,8 @@
             </component>
          </option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
          <option name="showEmptyList">false</option>
-         <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
-         <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+         <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+         <option name="idProperty">Ид</option> <!-- Устанавливаем ключевое поле -->
          <option name="autoShow" type="boolean">true</option> <!-- Устанавливает режим работы автодополнения, в котором выводится список всех возможных значений при переходе фокуса на контрол -->
          <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
          <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
@@ -81,7 +83,7 @@
                      <option name="field">Название</option>
                   </options>
                </options>
-               <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+               <option name="idProperty">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
                <options name="itemsActions" type="array"></options>
             </options>
          </options>
@@ -98,9 +100,10 @@
       </component>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect2" style="margin-left: 10px; width: 360px;"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">Введите должность</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
-         <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
-         <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+         <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+         <option name="idProperty">Ид</option> <!-- Устанавливаем ключевое поле -->
          <option name="autoShow" type="boolean">true</option> <!-- Устанавливает режим работы автодополнения, в котором выводится список всех возможных значений при переходе фокуса на контрол -->
          <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
          <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
@@ -122,7 +125,7 @@
                      <option name="field">Название</option>
                   </options>
                </options>
-               <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+               <option name="idProperty">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
                <option name="pageSize">5</option>
                <options name="itemsActions" type="array"></options>
                <option name="footerTpl">
@@ -147,10 +150,11 @@
       </div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect3" style="margin: 0"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">false</option>
          <option name="placeholder">Введите должность сотрудника</option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
          <option name="showEmptyList">false</option>
-         <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
-         <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+         <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+         <option name="idProperty">Ид</option> <!-- Устанавливаем ключевое поле -->
          <option name="autoShow" type="boolean">true</option> <!-- Устанавливает режим работы автодополнения, в котором выводится список всех возможных значений при переходе фокуса на контрол -->
          <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
          <option name="multiselect">false</option>
@@ -172,7 +176,7 @@
                      <option name="field">Название</option>
                   </options>
                </options>
-               <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+               <option name="idProperty">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
                <option name="pageSize">5</option>
                <options name="itemsActions" type="array"></options>
                <option name="footerTpl">
@@ -190,6 +194,7 @@
    <div>
       <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect4"> <!-- Конфигурация первого поля связи -->
          <option name="text" bind="myTextField"></option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="useSelectorAction">true</option>
          <option name="placeholder">
             Выберите
             <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
@@ -207,8 +212,8 @@
             </component>
          </option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
          <option name="showEmptyList">false</option>
-         <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
-         <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+         <option name="displayProperty">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+         <option name="idProperty">Ид</option> <!-- Устанавливаем ключевое поле -->
          <option name="autoShow" type="boolean">true</option> <!-- Устанавливает режим работы автодополнения, в котором выводится список всех возможных значений при переходе фокуса на контрол -->
          <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
          <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
@@ -230,8 +235,124 @@
                      <option name="field">Название</option>
                   </options>
                </options>
-               <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+               <option name="idProperty">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
                <options name="itemsActions" type="array"></options>
+            </options>
+         </options>
+         <options name="listFilter"> <!-- Параметры фильтрации автодополнения -->
+            <option name="Название" bind="myTextField" oneWay="true"></option> <!-- Фильтрация происходит по полю Название, значение для фильтрации берётся из контекста - поле myTextField. С ним же связано значение опции text -->
+         </options>
+      </component>
+   </div>
+   <div>
+      <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="SelectorAction">
+         <option name="mode">floatArea</option>
+      </component>
+   </div>
+   <div>
+      <div style="margin-left: 40px; margin-bottom: -40px;">Автодополнение с вкладками:</div>
+      <component data-component="SBIS3.CONTROLS.FieldLink" class="demo-FieldLink__firstDemo" name="FieldLinkMultiSelect"> <!-- Конфигурация первого поля связи -->
+         <option name="searchParam">Название</option> <!-- Связываем значение поля связи с полем контекста, это используется для работы автодополнения -->
+         <option name="placeholder">
+            Введите должность
+            <component data-component='SBIS3.CONTROLS.FieldLink.Link'>
+               <option name="caption">сотрудника</option>
+               <options name="commandArgs" type="array">
+                  <option>FieldLinkDemoTemplate</option>
+               </options>
+            </component>
+         </option> <!-- Устанавливаем текст подсказки внутри поля ввода -->
+         <option name="displayField">Название</option> <!-- Устанавливаем поле, значение которого будет использовано для отображения выбранного элемента -->
+         <option name="keyField">Ид</option> <!-- Устанавливаем ключевое поле -->
+         <option name="chooserMode">dialog</option> <!-- Устанавливаем режим отображения диалога выбора в отдельном окне -->
+         <options name="dictionaries" type="array"> <!-- Конфигурация справочника для поля связи -->
+            <options>
+               <option name="name">FieldLinkDemoTemplate</option>
+               <option name="template">js!SBIS3.CONTROLS.Demo.FieldLinkDemoTemplate</option> <!-- Устанавливаем компонент, на основе которого будет построен справочник -->
+            </options>
+         </options>
+         <option name="selectedItems"></option> <!-- Конфигурация справочника для поля связи -->
+         <options name="list"> <!-- Настройка для автодополнения -->
+            <option name="component">js!SBIS3.CONTROLS.SuggestView</option> <!-- Компонент, который будет использован для построения списка значений автодополнения -->
+            <options name="options"> <!-- Опции компонента -->
+               <option name="tabsDisplayField" value="title"></option>
+               <option name="keyField" value="id"></option>
+               <option name="selectedKey" value="a"></option>
+               <opts name="tabControlItems" type="Array">
+                  <options>
+                     <option name="id">a</option>
+                     <option name="title">Статистика</option>
+                     <option name="align">left</option>
+                     <option name="searchParam">Название</option>
+                     <!-- содержимое -->
+                     <option name="content">
+                        <component data-component="SBIS3.CONTROLS.DataGridView" name="view">
+                           <options name="columns" type="array"> <!-- Настройка колонок компонента -->
+                              <options>
+                                 <option name="title">Ид</option> <!-- Заголовок колонки -->
+                                 <option name="field">Ид</option> <!-- Поле, значения которого будут использованы для отображения в колонке -->
+                              </options>
+                              <options>
+                                 <option name="title">Название</option>
+                                 <option name="field">Название</option>
+                              </options>
+                           </options>
+                           <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+                           <options name="itemsActions" type="array"></options>
+                           <option name="pageSize">5</option>
+                           <option name="emptyHTML">Не найдено.</option>
+                           <option name="footerTpl">
+                              <component data-component="SBIS3.CONTROLS.Link" name="showAllButton">
+                                 <option name="caption">Показать все</option>
+                              </component>
+                           </option>
+                        </component>
+                     </option>
+                  </options>
+                  <options>
+                     <option name="id">b</option>
+                     <option name="title">Вакансии</option>
+                     <option name="align">left</option>
+                     <option name="searchParam">Категория</option>
+                     <!-- содержимое -->
+                     <option name="content">
+                        <component data-component="SBIS3.CONTROLS.DataGridView" name="view">
+                           <options name="columns" type="array"> <!-- Настройка колонок компонента -->
+                              <options>
+                                 <option name="title">Ид</option> <!-- Заголовок колонки -->
+                                 <option name="field">Ид</option> <!-- Поле, значения которого будут использованы для отображения в колонке -->
+                              </options>
+                              <options>
+                                 <option name="title">Категория</option>
+                                 <option name="field">Категория</option>
+                              </options>
+                           </options>
+                           <option name="keyField">Ид</option> <!-- Ключевое поле источника данных автодополнения -->
+                           <options name="itemsActions" type="array"></options>
+                           <options name="items" type="array">
+                              <options>
+                                 <opt name="Ид">1</opt>
+                                 <opt name="Категория">Менеджер</opt>
+                              </options>
+                              <options>
+                                 <opt name="Ид">2</opt>
+                                 <opt name="Категория">Менеджер</opt>
+                              </options>
+                              <options>
+                                 <opt name="Ид">3</opt>
+                                 <opt name="Категория">Менеджер</opt>
+                              </options>
+                           </options>
+                           <option name="emptyHTML">Не найдено.</option>
+                           <option name="footerTpl">
+                              <component data-component="SBIS3.CONTROLS.Link" name="showAllButton">
+                                 <option name="caption">Показать все</option>
+                              </component>
+                           </option>
+                        </component>
+                     </option>
+                  </options>
+               </opts>
             </options>
          </options>
          <options name="listFilter"> <!-- Параметры фильтрации автодополнения -->

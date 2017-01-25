@@ -3,10 +3,10 @@
     item = it.item,
     options = item.get('options') || {},
     className = item.get('className') || '',
-    itemKey = item.get(it.keyField),
+    itemKey = item.get(it.idProperty),
     isToolbarItem = !!(item.get('showType') == it.showType.MENU_TOOLBAR || item.get('showType') == it.showType.TOOLBAR );
     if (isToolbarItem) {
-        subItems = it.getSubItems(itemKey, null, it.items, it.keyField, it.hierField);
+        subItems = it.getSubItems(itemKey, it.items, it.idProperty, it.parentProperty, it.itemsToSubItems);
         subItems = $ws.core.clone(subItems);
         for (var i = 0; i < subItems.length; i++) {
             if (subItems[i].parent == itemKey ) {
@@ -14,19 +14,21 @@
             }
             if (subItems.length) {
                 options.items = subItems;
-                options.hierField = it.hierField;
-                options.displayField = it.displayField;
+                options.parentProperty = it.parentProperty;
+                options.displayProperty = it.displayProperty;
             }
         }
     }
+    options.commandArgs = item.get('commandArgs');
 }}
 <component data-component="{{=item.get('componentType').substr(3)}}" config="{{=$ws.helpers.encodeCfgAttr(options)}}"
            data-hash="{{=it.projItem.getHash()}}"
            data-id="{{=itemKey}}"
            class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item {{=className}}">
     <option name="visible" type="boolean">{{=(isToolbarItem && item.get('visible'))}}</option>
-    <option name="keyField">{{=it.keyField}}</option>
+    <option name="idProperty">{{=it.idProperty}}</option>
     {{?item.get('icon')}}<option name="icon">{{=item.get('icon')}}</option>{{?}}
+    {{?item.get('name')}}<option name="name">{{=item.get('name')}}</option>{{?}}
     {{?item.get('caption')}}<option name="caption">{{=item.get('caption')}}</option>{{?}}
     {{?item.get('command')}}<option name="command">{{=item.get('command')}}</option>{{?}}
 </component>

@@ -32,10 +32,10 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
       _drawSelectedItem : function(id, index) {
          //TODO не будет работать с перечисляемым. Переписать
          var
-            item = this._getItemsProjection().at(index);
+            item = this._getItemsProjection().at(index),
+            controls = this.getItemsInstances();
          if (item) {
             var hash = item.getHash();
-            var controls = this.getItemsInstances();
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
                   if (!hash) {
@@ -51,9 +51,13 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
                   }
                }
             }
+         } else if (this._options.allowEmptySelection)  {
+            for (var i in controls) {
+               if (controls.hasOwnProperty(i)) {
+                  controls[i].setChecked(false);
+               }
+            }
          }
-
-
       }
    });
    return RadioGroupBase;

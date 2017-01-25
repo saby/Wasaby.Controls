@@ -71,6 +71,47 @@
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
 
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    6px;
+@filter-panel-chooser-list-view-check-box-left:                   4px;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
+
 // Normal default button
 @button-border:                           @button-border-width none;
 
@@ -500,6 +541,11 @@
 @number-text-box-arrow-down-disabled-border-color:    transparent;
 
 // ----------- //
+// DateBox //
+// ----------- //
+@date-box-field-text-color:                           #cccccc;
+
+// ----------- //
 // Search form //
 // ----------- //
 
@@ -760,7 +806,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
 @list-view-actions-item-height:                 16px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
@@ -816,6 +865,8 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
+@tree-view-copy-arrow-background:               #202835;
+
 // --------- //
 // Data grid //
 // --------- //
@@ -838,12 +889,16 @@
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
+@data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
+@data-grid-edge-cell-separator-color:           #2B3546;
+
 @data-grid-td-checkbox-width:                   16px;
 @data-grid-td-visible-checkbox-width:           24px;
-@data-grid-checkbox-margin:                     6px 0 0 -6px;
+@data-grid-check-box-top:                       5px;
+@data-grid-check-box-left:                      4px;
 @data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
@@ -869,8 +924,6 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        29px;
-@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -880,6 +933,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    1px;
+@controls-editInPlace-editor-without-offset-margin: 0;
 
 // --------------- //
 // OperationsMark //
@@ -890,6 +944,7 @@
 // --------------- //
 //    MultiView    //
 // --------------- //
+@listView-check-box-left:                           3px;
 @listView-check-box-top:                            5px;
 @listView-check-box-border:                         1px solid;
 @listView-check-box-width:                          18px;
@@ -913,6 +968,7 @@
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       0;
 @controls-filterButton-picker-border-radius:      0;
+@controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  16px;
 
 @controls-filterButton-button-height:             24px;
@@ -946,7 +1002,7 @@
 @controls-filterLine-link-color:                  #0055bb;
 @controls-filterLine-link-hover-color:            @primary-color;
 
-@controls-filterLine-copyCross-top:               -20px;
+@controls-filterLine-copyCross-top:               -28px;
 @controls-filterLine-copyCross-margin:            -16px;
 @controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
@@ -966,9 +1022,14 @@
 @controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
+@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-margin:   2px 4px;
+
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
 
 //SelectorButton
 @controls-SelectorButton-align:                    middle;
@@ -989,6 +1050,7 @@
 @editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
+@editdialog-applybutton-top:                       8px;
 
 //MoveDialog
 @controls-movedialog-activate-right:               38px;
@@ -1012,3 +1074,27 @@
 
 @controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+
+//InformationPopup
+@controls-InformationPopup-bg:                  #293543;
+@controls-InformationPopup-border:              1px solid @controls-InformationPopup-bg;
+@controls-InformationPopup-border-bottom:       @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-top:          3px solid;
+
+//SubmitPopup
+@controls-SubmitPopup-border-top:               none;
+@controls-SubmitPopup-border-bottom:            @controls-InformationPopup-border;
+@controls-SubmitPopup-border-left:              @controls-InformationPopup-border;
+@controls-SubmitPopup-border-right:             @controls-InformationPopup-border;
+@controls-SubmitPopup-message-color:            #FFFFFF;
+@controls-SubmitPopup-details-color:            #999999;
+
+//NotificationPopup
+@controls-NotificationPopup-border-top:         none;
+@controls-NotificationPopup-border-bottom:      @controls-InformationPopup-border;
+@controls-NotificationPopup-border-left:        @controls-InformationPopup-border;
+@controls-NotificationPopup-border-right:       @controls-InformationPopup-border;
+
+//TabButton
+@tab-buttons-border-bottom:                     1px solid #293543;
+

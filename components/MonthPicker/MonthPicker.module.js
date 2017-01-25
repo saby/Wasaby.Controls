@@ -13,9 +13,10 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
       'html!SBIS3.CONTROLS.MonthPicker',
-      'i18n!SBIS3.CONTROLS.MonthPicker'
+      'i18n!SBIS3.CONTROLS.MonthPicker',
+      'css!SBIS3.CONTROLS.MonthPicker'
    ],
-   function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn){
+   function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn) {
 
    'use strict';
 
@@ -27,6 +28,7 @@ define(
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
+    * @deprecated используйте SBIS3.CONTROLS.DateRangeSlider
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol className
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment

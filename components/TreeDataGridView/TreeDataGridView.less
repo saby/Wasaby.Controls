@@ -49,12 +49,19 @@
       }
    }
 }
-.controls-DataGridView {
-   .controls-DataGridView__table {
-      .controls-DataGridView__tbody {
-         .controls-DataGridView__td {
-            &.controls-TreeDataGridView__firstContentCell {
-               padding-left: @tree-view-first-td-padding-left;
+.controls-TreeDataGridView {
+   .controls-DataGridView__firstContentCell {
+      > .controls-TreeView__folderTitle, > .controls-DataGridView__columnValue {
+         margin-left: 18px;
+      }
+   }
+   &.controls-ListView__multiselect__off {
+      .controls-DataGridView__table {
+         .controls-DataGridView__tbody {
+            .controls-DataGridView__td {
+               &.controls-DataGridView__firstContentCell {
+                  padding-left: @tree-view-first-td-padding-left;
+               }
             }
          }
       }
@@ -63,7 +70,7 @@
 .controls-TreeDataGridView__hideExpandsOnHiddenNodes {
   .controls-ListView__item-type-hidden {
     .controls-TreeView__expand {
-      display: none;
+      visibility: hidden;
     }
   }
 }
@@ -119,8 +126,8 @@
          position: relative;
          top: -@tree-view-ellipsis-wrapper-height;
          padding: @tree-view-ellipsis-copyArrow-padding;
-         background-color: @white-color;
-         .box-shadow(@tree-view-ellipsis-copyArrow-shadow @white-color);
+         background-color: @tree-view-copy-arrow-background;
+         .box-shadow(@tree-view-ellipsis-copyArrow-shadow @tree-view-copy-arrow-background);
 
          .controls-TreeView__editArrow {
             width: @tree-view-ellipsis-copyArrow-width;

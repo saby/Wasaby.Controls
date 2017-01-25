@@ -11,9 +11,11 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.MenuItem',
    'js!WS.Data/Relation/Hierarchy',
    'Core/helpers/markup-helpers',
-   'Core/Sanitize'
+   'Core/Sanitize',
+   "Core/IoC",
+   'css!SBIS3.CONTROLS.Menu'
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers, Sanitize) {
+], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers, Sanitize, IoC) {
 
    'use strict';
 
@@ -73,9 +75,9 @@ define('js!SBIS3.CONTROLS.Menu', [
         *         </options>
         *      </options>
         * </pre>
-        * @see displayField
-        * @see keyField
-        * @see hierField
+        * @see displayProperty
+        * @see idProperty
+        * @see parentRproperty
         * @see onMenuItemActivate
         */
 
@@ -97,9 +99,20 @@ define('js!SBIS3.CONTROLS.Menu', [
              * @cfg {String} Поле отображается как название
              * @noShow
              */
-            displayField : 'title',
+            displayProperty : 'title',
             expand: true
          }
+      },
+
+      _modifyOptions: function (cfg) {
+         if (cfg.hierField) {
+            IoC.resolve('ILogger').log('Menu', 'Опция hierField является устаревшей, используйте parentProperty');
+            cfg.parentProperty = cfg.hierField;
+         }
+         if (cfg.parentProperty && !cfg.nodeProperty) {
+            cfg.nodeProperty = cfg.parentProperty + '@';
+         }
+         return Menu.superclass._modifyOptions.apply(this, arguments);
       },
 
       $constructor: function() {
@@ -118,7 +131,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          var
              isEnabled = item.get('enabled'),
              visible = item.get('visible'),
-             caption = Sanitize(item.get(this._options.displayField), {validNodes: {component: true}}),
+             caption = Sanitize(item.get(this._options.displayProperty), {validNodes: {component: true}}),
              options = {
                className: item.get('className'),
                activableByClick: false,
@@ -148,11 +161,11 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
 
       _getTargetContainer : function(item) {
-         if (!this._options.hierField) {
+         if (!this._options.parentProperty) {
             return this._getItemsContainer();
          }
          else {
-            var parId = this.getParentKey(this._items, item);
+            var parId = item.get(this._options.parentProperty);
             if (parId === null || parId === undefined) {
                return this._getItemsContainer();
             }
@@ -183,11 +196,12 @@ define('js!SBIS3.CONTROLS.Menu', [
       //По нормальному можно было бы сделать через css, но имеются три различных отступа слева у пунктов
       //для разных меню и совершенно не ясно как это делать.
       _checkIcons: function() {
-         var hierField = this._options.hierField,
+         var parentProperty = this._options.parentProperty,
+            nodeProperty = this._options.nodeProperty,
             hierarchy = new Hierarchy({
                idProperty: this._items.getIdProperty(),
-               parentProperty: hierField,
-               nodeProperty: hierField + '@'
+               parentProperty: parentProperty,
+               nodeProperty: nodeProperty
             }),
             parents = {},
             children,
@@ -199,7 +213,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          this._items.each(function(item) {
             icon = item.get('icon');
             if (icon) {
-               pid = item.get(hierField);
+               pid = item.get(parentProperty);
                if (!parents.hasOwnProperty(pid)) {
                   parents[pid] = [pid, icon.indexOf('icon-16') === -1 ? 'sprite:icon-24' : 'sprite:icon-16'];
                }
@@ -246,8 +260,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                      item = self._items.getRecordById(id),
                      parId = null,
                      parent;
-                  if (self._options.hierField) {
-                     parId = self.getParentKey(self._items, item);
+                  if (self._options.parentProperty) {
+                     parId = item.get(self._options.parentProperty);
                   }
                   if (parId) {
                      parent = self._subMenus[parId];
@@ -291,7 +305,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             verticalAlign : {
                side : 'top'
             },
-            horizontalAlign : {
+            horizontalAlign : {  
                side : 'left'
             },
             allowOverlapTarget: true,

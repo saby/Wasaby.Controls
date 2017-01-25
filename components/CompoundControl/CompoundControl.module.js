@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
     * @class SBIS3.CONTROLS.CompoundControl
     * @author Крайнов Дмитрий Олегович
     * @extends $ws.proto.CompoundControl
+    * @public
     */
 
    return Control.extend( /** @lends SBIS3.CONTROLS.CompoundControl.prototype */{

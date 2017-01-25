@@ -6,16 +6,42 @@ define('js!SBIS3.CONTROLS.SliderInput',
    [
       'js!SBIS3.CONTROLS.Slider',
       'html!SBIS3.CONTROLS.SliderInput',
-      'js!SBIS3.CONTROLS.NumberTextBox'
-   ], function(Slider, dotTplFn) {
+      'Core/constants',
+      'js!SBIS3.CONTROLS.NumberTextBox',
+      'css!SBIS3.CONTROLS.SliderInput'
+   ], function(Slider, dotTplFn, cConstants) {
       'use strict';
       var
+         /**
+          * Класс контрола "Слайдер с полям ввода".
+          * @class SBIS3.CONTROLS.SliderInput
+          * @extends SBIS3.CONTROLS.Slider
+          *
+          * @author Борисов Петр Сергеевич
+          *
+          * @demo SBIS3.CONTROLS.Demo.SliderInputDemo
+          */
          SliderInput = Slider.extend(/** @lends SBIS3.CONTROLS.SliderInput.prototype */{
             _dotTplFn : dotTplFn,
             $protected: {
                _options: {
+                  /**
+                   * @cfg {String} Устанавливает подпись перед первым полем ввода.
+                   * @see middleLabel
+                   * @see endLabel
+                   */
                   startLabel: '',
+                   /**
+                    * @cfg {String} Устанавливает подпись между первым и вторым полем ввода.
+                    * @see startLabel
+                    * @see endLabel
+                    */
                   middleLabel: '',
+                   /**
+                    * @cfg {String} Устанавливает подпись после второго поля ввода.
+                    * @see startLabel
+                    * @see middleLabel
+                    */
                   endLabel: ''
                },
                _endTextBox: undefined,
@@ -24,13 +50,13 @@ define('js!SBIS3.CONTROLS.SliderInput',
 
             init: function() {
                SliderInput.superclass.init.call(this);
-               this._textBoxStartChange = this._textBoxStartChange.debounce(300)
-               this._textBoxEndChange = this._textBoxEndChange.debounce(300)
                this._endTextBox = this.getChildControlByName('EndTextBox');
                this._startTextBox = this.getChildControlByName('StartTextBox');
-               this._startTextBox.subscribe('onTextChange', this._textBoxStartChange.bind(this));
-               this._endTextBox.subscribe('onTextChange', this._textBoxEndChange.bind(this));
+               this._startTextBox.subscribe('onFocusOut', this._textBoxStartFocusOut.bind(this));
+               this._endTextBox.subscribe('onFocusOut', this._textBoxEndFocusOut.bind(this));
                this.subscribe('onDrawValueChange', this._sliderDrawChange.bind(this));
+               this._startTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
+               this._endTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
             },
 
             setStartValue: function(value) {
@@ -43,30 +69,12 @@ define('js!SBIS3.CONTROLS.SliderInput',
                this._endTextBox.setText(value);
             },
 
-            setMaxValue: function(value) {
-               SliderInput.superclass.setMaxValue.apply(this, [value]);
-               this._endTextBox.setPlaceholder(value);
+            _textBoxStartFocusOut: function () {
+               this._textBoxFocusOut(this._startTextBox, 'start');
             },
 
-            setMinValue: function(value) {
-               SliderInput.superclass.setMinValue.apply(this, [value]);
-               this._startTextBox.setPlaceholder(value);
-            },
-
-            _textBoxStartChange: function () {
-               if (this._startTextBox._textChanged) {
-                  this._setPreparedStartVale(this._startTextBox.getNumericValue());
-                  this._pointsContainers.right.removeClass('lastActivePoint');
-                  this._pointsContainers.left.addClass('lastActivePoint');
-               }
-            },
-
-            _textBoxEndChange: function () {
-               if (this._endTextBox._textChanged) {
-                  this._setPreparedEndVale(this._endTextBox.getNumericValue());
-                  this._pointsContainers.left.removeClass('lastActivePoint');
-                  this._pointsContainers.right.addClass('lastActivePoint');
-               }
+            _textBoxEndFocusOut: function () {
+               this._textBoxFocusOut(this._endTextBox, 'end');
             },
 
             _sliderDrawChange: function(event, start, end) {
@@ -78,14 +86,43 @@ define('js!SBIS3.CONTROLS.SliderInput',
                }
             },
 
-            _setPreparedStartVale : function(value){
-               value = value || value === 0 ? this._prepareValue(value, 'left') : value;
-               this.setStartValue(value);
+            _textBoxFocusOut: function(input, side) {
+               if (input.isChanged()) {
+                  this._setPreparedValue(input.getNumericValue(), side);
+                  this._pointsContainers.start.removeClass('lastActivePoint');
+                  this._pointsContainers.end.removeClass('lastActivePoint');
+                  this._pointsContainers[side].addClass('lastActivePoint');
+               }
             },
 
-            _setPreparedEndVale : function(value){
-               value = value || value === 0 ? this._prepareValue(value, 'right') : value
-               this.setEndValue(value);
+            _setPreparedValue : function(value, side){
+               value = value || value === 0 ? this._prepareValue(value, side) : value;
+               side === 'start' ? this.setStartValue(value) : this.setEndValue(value);
+            },
+
+            _drawValue: function(value, side) {
+               var
+                  input = side === 'start' ? this._startTextBox : this._endTextBox;
+               SliderInput.superclass._drawValue.apply(this, arguments);
+               value = value || value === 0 ? this._prepareValue(value, side) : value;
+               input.setText(value);
+            },
+
+            _textBoxKeyDown: function(descriptor, event) {
+               if (event.which == cConstants.key.enter) {
+                  if (descriptor._target.getName() == 'EndTextBox') {
+                     this._textBoxFocusOut(this._endTextBox, 'end');
+                  } else {
+                     this._endTextBox.setActive(true);
+                  }
+               }
+            },
+
+            _updateMinMaxValue: function(value, side){
+               var
+                  input = side === 'min' ?  this._startTextBox : this._endTextBox;
+               SliderInput.superclass._updateMinMaxValue.apply(this, arguments);
+               input.setPlaceholder(value);
             }
          });
       return SliderInput;

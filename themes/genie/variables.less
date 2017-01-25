@@ -4,10 +4,14 @@
 @gray-dark-color:                         #515151;
 @gray-color:                              #919191;
 @gray-light-color:                        #d1d1d1;
+@gray-lamantin-color:                     #8991A9;
 @gray-ccc-color:                          #CCC;
 @lightgray-color:                         #CBD5E5;
 @darkcyan-color:                          #0055BB;
 @dodgerblue-color:                        #0066FF;
+@red-color:                               #ef463a;
+@green-color:                             #53A52C;
+@purple-color:                            #9122BF;
 
 @blue-dark-color:                         #313E78;
 
@@ -17,10 +21,14 @@
 
 @icon-color-attention:                    #FEC63F;
 @icon-color-done:                         #72be44;
-@icon-color-error:                        #ef463a;
+@icon-color-error:                        @red-color;
 @icon-color-primary:                      #587ab0;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
+
+
+@float-area-border-color:                 #bdbdbd;
+@float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 
 @bg:                                      transparent;
 @text-color:                              @black-color;
@@ -45,6 +53,7 @@
 @secondary-border-color:                  #999B9F;
 
 @hover-color:                             @primary-color;
+@controls-panel-shadow:                   0px 0px 12px 0px rgba(0,0,0,0.40);
 
 // ---- //
 // Link //
@@ -92,7 +101,7 @@
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
-@button-icon-gap:                         4px;                      // gap between icon and text
+@button-icon-gap:                         6px;                      // gap between icon and text
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              2px;                      // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
@@ -111,6 +120,47 @@
 @FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
+
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    6px;
+@filter-panel-chooser-list-view-check-box-left:                   4px;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
 
 // Normal default button
 @button-text-color:                       @gray-color;
@@ -350,14 +400,14 @@
 @tab-button-large-inner-text-overflow:          ellipsis;
 
 @tab-button-large-firstAddText-color:           #0055BB;
+@tab-button-large-firstAddText-color-hover:     #313E78;
 @tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-firstAddText-font-weight:     normal;
-@tab-button-large-firstAddText-hover-color:     #FF7030;
 
 @tab-button-large-secondAddText-color:          #999999;
+@tab-button-large-secondAddText-text-decor:     underline;
 @tab-button-large-secondAddText-font-size:      13px;
 @tab-button-large-secondAddText-font-weight:    normal;
-@tab-button-large-secondAddText-hover-color:    #FF7030;
 
 @tab-button-inner-padding:                      0px 8px 0 8px;
 @tab-button-inner-line-height:                  30px;
@@ -608,7 +658,8 @@
 
 @menu-margin:                             -1px 0 0;
 @menu-subpopup-margin:                    @menu-margin;
-@menu-padding:                            4px 0;
+@menu-subpopup-padding:                   4px 0;
+@menu-padding:                            0 0 4px 0;
 @menu-border-width:                       1px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-light-color;
@@ -635,7 +686,7 @@
 @menu-header-height:                      24px;
 @menu-big-header-height:                  32px;
 @menu-header-box-sizing:                  border-box;
-@menu-header-padding:                     4px;
+@menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 
 // --------- //
@@ -646,7 +697,7 @@
 @menu-item-height:                        24px;
 @menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
-@menu-item-default-padding:               0 8px;
+@menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
@@ -666,9 +717,9 @@
 @menu-item-icon24-top-offset-big:           0px;
 
 @menu-item-icon24-left-offset:              0px;
-@menu-item-icon24-left-offset-big:           0px;
+@menu-item-icon24-left-offset-big:          0px;
 
-@menu-item-text-margin:                   0 0 0 22px;
+@menu-item-text-margin:                     0 0 0 22px;
 
 
 
@@ -736,41 +787,10 @@
 @menu-button-arrow-disabled-bg:                         @menu-button-arrow-bg;
 
 // Menu
-@menu-button-menu-top-margin:                           3px;
-@menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;
 @menu-button-menu-border-width:                         @menu-border-width;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
-
-// Menu header
-@menu-button-header-spritesheet:                        '';
-
-@menu-button-header-left-width:                         0;
-@menu-button-header-left-height:                        0;
-@menu-button-header-left-margin:                        0;
-@menu-button-header-right-margin-revert-vertical:       0;
-@menu-button-header-left-bg:                            transparent;
-@menu-button-header-left-bg-revert-horizontal:          transparent;
-@menu-button-header-right-bg-revert-vertical:           transparent;
-@menu-button-header-right-bg-revert-vertical-horizontal:transparent;
-
-@menu-button-header-center-width:                       0;
-@menu-button-header-center-height:                      0;
-@menu-button-header-center-margin:                      0;
-@menu-button-header-center-bg:                          transparent;
-
-@menu-button-header-right-width:                        0;
-@menu-button-header-right-height:                       0;
-@menu-button-header-right-margin:                       0;
-@menu-button-header-right-margin-revert-horizontal:     0;
-@menu-button-header-right-bg:                           transparent;
-@menu-button-header-right-bg-revert-horizontal:         transparent;
-@menu-button-header-left-bg-revert-vertical:            transparent;
-@menu-button-header-left-bg-revert-vertical-horizontal: transparent;
-
-
 
 // --------- //
 // Menu link //
@@ -806,9 +826,10 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-margin:                   0 0 0 -9px;
+@menu-link-menu-margin:                   0 0 0 -10px;
 @menu-link-menu-padding:                  0;
 @menu-link-menu-item-container-padding:   0;
+@menu-link-menu-revert-item-container-padding: @menu-link-menu-item-container-padding;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               @menu-button-menu-bg;
 @menu-link-menu-border-width:             @menu-border-width;
@@ -826,25 +847,6 @@
 @menu-icon-menu-margin:                   -5px 0 0 -5px;
 @menu-icon-menu-padding:                  2px 0 0 2px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
-
-// Menu header
-@menu-icon-header-spritesheet:            @menu-button-header-spritesheet;
-
-@menu-icon-header-left-width:             12px;
-@menu-icon-header-left-height:            28px;
-@menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
-@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
-@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 0;
-
-@menu-icon-header-right-width:            28px;
-@menu-icon-header-right-height:           28px;
-@menu-icon-header-right-top-offset:       0;            // top offset of icon's right header part
-@menu-icon-header-right-left-offset:      6px;          // left offset of icon's right header part
-@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet) 0 -30px;
-
-@menu-icon-header-bg:                     @menu-icon-menu-bg;
-
-
 
 // -------- //
 // Text box //
@@ -986,15 +988,27 @@
 @number-text-box-arrow-down-disabled-border-style:    @number-text-box-arrow-down-border-style;
 @number-text-box-arrow-down-disabled-border-color:    transparent;
 
+// --------------- //
+// Money text box  //
+// --------------- //
+
+@money-text-box-min-width:            102px;
+
+@money-text-box-decimals-margin-left: -4px;
+@money-text-box-decimals-padding:     2px 0;
+@money-text-box-decimals-font-size:   12px;
+
 // ----------- //
 // Date box    //
 // ----------- //
+@date-box-color:                             @text-box-color;
 @date-box-wrapper-border-radius:             @text-box-border-radius;
 
 @date-box-wrapper-border-width:              @text-box-border-width;
 @date-box-wrapper-border-style:              @text-box-border-style;
 @date-box-wrapper-border-color:              @text-box-border-color;
 @date-box-wrapper-bg:                        @text-box-bg;
+@date-box-field-text-color:                  @text-box-field-text-color;
 
 @date-box-wrapper-focus-border-width:        @date-box-wrapper-border-width;
 @date-box-wrapper-focus-border-style:        @date-box-wrapper-border-style;
@@ -1026,15 +1040,16 @@
 @search-focus-background:                             @search-background;
 @search-height:                                       @text-box-height;
 @search-padding:                                      0 24px 0 16px;
-@search-left-margin:                                  16px;
+@search-left-margin:                                  12px;
 @search-border-radius:                                10px;
 @search-border-color:                                 @search-background;
 @search-hover-border-color:                           @search-background;
 @search-bottom-border-color:                          @search-background;
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-buttons-wrapper-width:                        22px + 22px;
-@search-form-icon-padding:                            3px;
+@search-buttons-wrapper-width:                        20px + 20px;
+@search-button-wrapper-padding:                       0 5px 0 0;
+@search-form-icon-padding:                            3px 2px;
 @search-form-icon-disabled-display:                   block;
 @search-loop-size:                                    22px;
 // --------- //
@@ -1085,10 +1100,8 @@
 @combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
 @combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
 
-@combo-box-picker-border:                       1px solid @gray-ccc-color;
+@combo-box-picker-border:                       1px solid @primary-color;
 @combo-box-picker-border-radius:                0 0 2px 2px;
-@combo-box-picker-margin:                       -2px;
-@combo-box-picker-padding:                      0 2px;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
 @combo-box-picker-item-padding:                 7px 4px 6px 4px;
@@ -1102,10 +1115,11 @@
 @combo-box-picker-item-selected-text-color:     @gray-color;
 @combo-box-picker-item-selected-bg:             @white-color;
 
-@compo-box-fieldWrapper-margin-right:                 16px;
+@compo-box-fieldWrapper-margin-right:           16px;
 @combo-box-after-width:                         @text-box-after-width;
 
 @compo-box-picker-show-color:                   @text-color;
+@combo-box-picker-show-border-color:            @primary-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 
 // TODO: check whether it's required
@@ -1118,7 +1132,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
-@text-area-field-line-height:                   normal;
+@text-area-field-line-height:                   18px;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -1227,13 +1241,11 @@
 @date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
 
 @date-picker-calendar-icon-cursor:              pointer;
-@date-picker-calendar-icon-width:               16px;
-@date-picker-calendar-icon-height:              16px;
+@date-picker-calendar-icon-width:               18px;
+@date-picker-calendar-icon-height:              18px;
 @date-picker-calendar-icon-top-offset:          4px;
 @date-picker-calendar-icon-left-offset:         1px;
-@date-picker-calendar-icon-bg:                  url(@date-picker-calendar-spritesheet) -1px 0 no-repeat;
-@date-picker-calendar-icon-hover-bg:            url(@date-picker-calendar-spritesheet) -18px 0 no-repeat;
-@date-picker-calendar-icon-disabled-bg:         url(@date-picker-calendar-spritesheet) -35px 0 no-repeat !important;
+
 
 // -------- //
 // Calendar //
@@ -1408,7 +1420,7 @@
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
-@date-range-big-choose-border-color:               @gray-light-color;
+@date-range-big-choose-border-color:               @float-area-border-color;
 @date-range-big-choose-border-hovered-color:       @darkcyan-color;
 @date-range-big-choose-border-selected-color:      @darkcyan-color;
 @date-range-big-choose-bg-hovered-color:           @default-itemHover-color;
@@ -1546,7 +1558,10 @@
 // --------- //
 // List view //
 // --------- //
-
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1565,7 +1580,7 @@
 @list-view-actions-bg:                          @data-grid-row-hover-bg;
 
 @list-view-items-toolbar-bottom:                     3px;
-@list-view-items-toolbar-right:                      0;
+@list-view-items-toolbar-right:                      8px;
 @list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
@@ -1606,7 +1621,8 @@
 @list-view-actions-menu-close-height:           16px;
 @list-view-actions-menu-close-width:            16px;
 @list-view-actions-menu-item-padding-right:     24px;
-@list-view-actions-menu-padding:                @menu-padding;
+@list-view-actions-menu-padding:                4px 0;
+@list-view-actions-menu-margin:                 3px 0 0 6px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
@@ -1718,6 +1734,8 @@
 @tree-view-folder-title-display:                block;
 @tree-view-big-node-font-size:                  16px;
 @tree-view-big-leaf-font-size:                  15px;
+
+@tree-view-copy-arrow-background:              @white-color;
 // --------- //
 // Data grid //
 // --------- //
@@ -1768,13 +1786,14 @@
 @data-grid-cell-line-height:                    21px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
+@data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
-@data-grid-first-cell-separator-color:          #EAEAEA;
+@data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
 
@@ -1787,8 +1806,8 @@
 @data-grid-td-checkbox-width:                   16px;
 @data-grid-td-visible-checkbox-width:           24px;
 @data-grid-td-hidden-checkbox-width:            4px;
-//Отрицательный margin снизу нужен, чтобы чекбокс не распирал td, а соответственно и tr
-@data-grid-checkbox-margin:                     2px 0 -2px 0;
+@data-grid-check-box-top:                       6px;
+@data-grid-check-box-left:                      6px;
 @data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
@@ -1807,6 +1826,7 @@
 @data-grid-partScroll-thumb-margin:             20px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
+@data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-float:          left;
@@ -1860,14 +1880,11 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             24px;
-@controls-OperationsPanelButton-hor-height:        29px;
-@controls-OperationsPanelButton-hor-line-height:   30px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
-@controls-OperationsPanelButton-horizontal-icon-top: 1px;
 @controls-OperationsPanelButton-icon-left:         6px;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
@@ -1876,6 +1893,7 @@
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
 @controls-editInPlace-first-editor-padding-left:    1px;
+@controls-editInPlace-editor-without-offset-margin: 0;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1962,7 +1980,7 @@
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
 @DropdownList-picker-offset:                          0;
 @DropdownList-picker-fastdatafilter-offset:           0;
-@DropdownList-picker-margin-top:                      -2px;
+@DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
@@ -1970,7 +1988,7 @@
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-border:                          2px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              4px 4px 0 0;
+@DropdownList-picker-head-border-radius:              0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
 @DropdownList-picker-list-right-border-radius:        0 4px 4px 4px;
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
@@ -1989,8 +2007,10 @@
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
+@DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    4px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
@@ -2008,10 +2028,11 @@
 //FilterButton
 @controls-filterButton-picker-bg:                 #F9F9F9;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       1px 3px 3px 3px;
+@controls-filterButton-picker-border-width:       1px;
 @controls-filterButton-picker-border-style:       solid;
-@controls-filterButton-picker-border-color:       @gray-light-color;
-@controls-filterButton-picker-border-radius:      0 0 4px 4px;
+@controls-filterButton-picker-border-color:       @gray-ccc-color;
+@controls-filterButton-picker-border-radius:      0;
+@controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  12px;
 @controls-Popup-closeButton-right:                0;
 
@@ -2134,7 +2155,7 @@
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-linkContainer-padding:         4px 0;
+@controls-FieldLink-linkContainer-padding:         4px;
 
 @controls-FieldLink-picker-max-height:             500px;
 @controls-FieldLink-picker-min-height:             16px;
@@ -2155,9 +2176,14 @@
 @controls-FieldLink-afterField-padding:            0 4px 0 0;
 @controls-FieldLink-afterField-height:             22px;
 
+@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-margin:   2px 4px;
+
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
 @controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -2186,6 +2212,7 @@
 @editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
+@editdialog-applybutton-top:                       8px;
 
 //MoveDialog
 @controls-movedialog-activate-right:               38px;
@@ -2233,11 +2260,11 @@
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
 @controls-Scrollbar-thumb-border-radius:           2px;
-@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
-@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+@controls-Scrollbar-light-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-light-active-thumb-color:       rgba(255, 255, 255, 0.50);
 
-@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
-@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+@controls-Scrollbar-dark-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-dark-active-thumb-color:      rgba(0, 0, 0, 0.15);
 
 //----------//
 //  Header  //

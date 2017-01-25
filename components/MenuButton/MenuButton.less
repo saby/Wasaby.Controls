@@ -10,104 +10,9 @@
     margin-right: @button-text-margin;
   }
 }
-// Header
-.controls-MenuButton__header {
-  display: inline-block;
-  position: absolute;
-  cursor: pointer;
-  border: none;
-  top: 0;
-  left: 0;
-  width: 100%;
 
-  &.controls-MenuButton__header-hidden {
-    display: none;
-  }
-
-  .controls-MenuButton__headerLeft {
-    float: left;
-    display: inline-block;
-    width: @menu-button-header-left-width;
-    height: @menu-button-header-left-height;
-    margin: @menu-button-header-left-margin;
-    background: @menu-button-header-left-bg;
-  }
-
-  &.controls-MenuButton__header-revert-horizontal{
-    .controls-MenuButton__headerLeft{
-      width: @menu-button-header-right-width;
-      height: @menu-button-header-right-height;
-      background: @menu-button-header-left-bg-revert-horizontal;
-    }
-    .controls-MenuButton__headerRight{
-      width: @menu-button-header-left-width;
-      height: @menu-button-header-left-height;
-      background: @menu-button-header-right-bg-revert-horizontal;
-      margin: @menu-button-header-right-margin-revert-horizontal;
-    }
-    &.controls-MenuButton__header-revert-vertical{
-      .controls-MenuButton__headerLeft{
-        width: @menu-button-header-right-width;
-        height: @menu-button-header-right-height;
-        background: @menu-button-header-left-bg-revert-vertical-horizontal;
-      }
-      .controls-MenuButton__headerRight{
-        width: @menu-button-header-left-width;
-        height: @menu-button-header-left-height;
-        background: @menu-button-header-right-bg-revert-vertical-horizontal;
-        margin: @menu-button-header-right-margin;
-        float: right;
-      }
-      .controls-MenuButton__headerCenter{
-        vertical-align: top;
-
-      }
-    }
-  }
-
-  &.controls-MenuButton__header-revert-vertical{
-    .controls-MenuButton__headerLeft{
-      width: @menu-button-header-left-width;
-      height: @menu-button-header-left-height;
-      background: @menu-button-header-left-bg-revert-vertical;
-    }
-    .controls-MenuButton__headerRight{
-      width: @menu-button-header-right-width;
-      height: @menu-button-header-right-height;
-      background: @menu-button-header-right-bg-revert-vertical;
-    }
-    .controls-MenuButton__headerCenter{
-      vertical-align: top;
-      height: @menu-button-header-center-height - 1px;
-      top: 0;
-    }
-  }
-
-  .controls-MenuButton__headerCenter {
-    display: inline-block;
-    width: calc(~"100% - 40px");
-    height: @menu-button-header-center-height;
-    margin: @menu-button-header-center-margin;
-    background: @menu-button-header-center-bg;
-    position: relative;
-    top: 16px;
-
-  }
-
-  .controls-MenuButton__headerRight {
-    display: inline-block;
-    width: @menu-button-header-right-width;
-    height: @menu-button-header-right-height;
-    margin: @menu-button-header-right-margin;
-    background: @menu-button-header-right-bg;
-    float: right;
-  }
-}
-
-.controls-MenuButton__Menu {
-  padding: @menu-button-menu-padding;
-  margin-top: @menu-button-menu-top-margin;
-  margin-left: @menu-button-menu-left-margin;
+.controls-Menu.controls-MenuButton__Menu {
+  margin: -5px 0 0 -1px;
   border-width: @menu-button-menu-border-width;
   border-style: @menu-button-menu-border-style;
   border-color: @menu-button-menu-border-color;
@@ -118,12 +23,4 @@
     border-top-left-radius: @menu-border-radius;
     border-top-right-radius: 0;
   }
-}
-
-//Правка смещения для стрелки в ie8. ! В режиме эмуляции ie8 проблемы не видно, только в настоящем ie8
-@ie8: \0screen;
-@media @ie8 {
-   .controls-MenuButton__header {
-      display: none;
-   }
 }

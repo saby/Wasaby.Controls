@@ -16,7 +16,8 @@
  http://msdn.microsoft.com/en-us/library/ms535872.aspx
  Other links:
  http://jorgenhorstink.nl/test/javascript/range/range.js
- http://jorgenhorstink.nl/2006/07/05/dom-range-implementation-in-ecmascript-completed/
+ http://jorgenhorstink.nl/2006/07/05/dom-range-implementation-in-ecmascript-c
+ ompleted/
  http://dylanschiemann.com/articles/dom2Range/dom2RangeExamples.html
  */
 

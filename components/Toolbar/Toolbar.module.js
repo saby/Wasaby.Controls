@@ -5,12 +5,13 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    "html!SBIS3.CONTROLS.Toolbar",
    "html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.CommandsButton"
+   "js!SBIS3.CONTROLS.CommandsButton",
+   'css!SBIS3.CONTROLS.Toolbar',
+   'css!SBIS3.CONTROLS.MenuButtonMixin'
 ], function( IoC, ConsoleLogger,ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
     var
-         itemsToSubItems,
          showType = {
             //отображать только в меню, соответствует isMainAction = false
             MENU: 0,
@@ -19,7 +20,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             //отображать только в списке, не в меню
             TOOLBAR: 2
          },
-         getSubItems = function(key, arrKeys, itemsCollection, keyField, hierField) {
+         getSubItems = function(key, itemsCollection, idProperty, parentProperty, itemsToSubItems, arrKeys) {
             if (!key) {
                return [];
             }
@@ -29,16 +30,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                return [];
             }
             arrKeys.push(key);
-            if (!itemsToSubItems) {
-               collectSubItems(itemsCollection, hierField);
-            }
+
             var items = [],
                subItems = [],
                curItems;
             if (itemsToSubItems.hasOwnProperty(key)) {
                items = itemsToSubItems[key];
                for (var i = 0; i < items.length; i++) {
-                  curItems = getSubItems(items[i][keyField], arrKeys);
+                  curItems = getSubItems(items[i][idProperty], itemsCollection, idProperty, parentProperty, itemsToSubItems, arrKeys);
                   subItems.push.apply(subItems, curItems);
                }
                //добавляем к элементам полученные подпункты
@@ -46,22 +45,23 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
             return items;
          },
-         collectSubItems = function(items, hierField) {
-            itemsToSubItems = {};
-
-            var rawData = getArrayItems(items),
-               subItems;
+         collectSubItems = function(items, parentProperty) {
+            var
+               subItems,
+               result = {},
+               rawData = getArrayItems(items);
             for (var i = 0; i < rawData.length; i++) {
                var curItem = rawData[i];
-               var parentKey = curItem[hierField] ;
+               var parentKey = curItem[parentProperty] ;
                if (!parentKey) {
                   continue;
                }
                //находим или создаем записи для этого родителя
-               subItems = (itemsToSubItems.hasOwnProperty(parentKey)) ? itemsToSubItems[parentKey] : [];
+               subItems = (result.hasOwnProperty(parentKey)) ? result[parentKey] : [];
                subItems.push(curItem);
-               itemsToSubItems[parentKey] = subItems;
+               result[parentKey] = subItems;
             }
+            return result;
          },
          getArrayItems = function(items) {
             var rawData = null;
@@ -80,10 +80,13 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          buildTplArgs = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.getSubItems = getSubItems;
+            tplOptions.itemsToSubItems = collectSubItems(cfg.items, cfg.parentProperty);
             tplOptions.showType = showType;
-            tplOptions.hierField = cfg.hierField;
+            tplOptions.hierField = cfg.parentProperty;
+            tplOptions.parentProperty = cfg.parentProperty;
             tplOptions.items = cfg.items;
-            tplOptions.keyField = cfg.keyField;
+            tplOptions.keyField = cfg.idProperty;
+            tplOptions.idProperty = cfg.idProperty;
 
             return tplOptions;
          };
@@ -109,6 +112,17 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          }
       },
 
+      _modifyOptions: function (cfg) {
+         if (cfg.hierField) {
+            IoC.resolve('ILogger').log('Toolbar', 'Опция hierField является устаревшей, используйте parentProperty');
+            cfg.parentProperty = cfg.hierField;
+         }
+         if (cfg.parentProperty && !cfg.nodeProperty) {
+            cfg.nodeProperty = cfg.parentProperty + '@';
+         }
+         return Toolbar.superclass._modifyOptions.apply(this, arguments);
+      },
+
       $constructor: function() {
          this._publish('onToolbarItemActivate');
          this._itemsContainer = this.getContainer().find('.controls-ToolBar__itemsContainer');
@@ -122,8 +136,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
       },
 
       setItems: function(items) {
-         //очищаем список найденных элементов
-         itemsToSubItems = null;
          Toolbar.superclass.setItems.apply(this, arguments);
          this._setMenuItems(items);
       },

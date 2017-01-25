@@ -7,7 +7,7 @@
     </div>
     {{?}}
     <component data-component="SBIS3.CONTROLS.DataGridView" name="myView" class="docs-ShowAllDictionary__tableView"> <!-- Конфигурация представления данных -->
-        <option name="keyField">@ТелефонныйСправочник3</option> <!-- Устанавливаем поле первичного ключа -->
+        <option name="idProperty">@ТелефонныйСправочник3</option> <!-- Устанавливаем поле первичного ключа -->
         <option name="multiselect">{{=it.showSelectButton}}</option> <!-- Устанавливаем режим множественного выбора записей -->
         <option name="showPaging">true</option> <!-- Устанавливаем режим отображения панели постраничной навигации -->
         <option name="pageSize">20</option> <!-- Устанавливаем число отображаемых записей на одной странице -->
@@ -28,6 +28,6 @@
                 <option name="width">100</option>
             </options>
         </options>
-        <options name="itemsActions"></options> <!-- Скрываем отображение быстрых операций над записью -->
+        <options name="itemsActions" type="array"></options> <!-- Скрываем отображение быстрых операций над записью -->
     </component>
 </div>

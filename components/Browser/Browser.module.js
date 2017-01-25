@@ -15,6 +15,9 @@ define('js!SBIS3.CONTROLS.Browser', [
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     *
+    * @ignoreEvents onAfterLoad onChange onStateChange
+    * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+    *
     * @control
     * @public
     * @category Lists
@@ -156,6 +159,12 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._operationsPanel = this._getOperationsPanel();
          if (this._operationsPanel) {
             this._componentBinder.bindOperationPanel(!this._options.showCheckBoxes, this._operationsPanel);
+            //Временное решение. Необходимо для решения ошибки: https://inside.tensor.ru/opendoc.html?guid=18468d65-ec58-4e2d-a0f0-fc35af4dfde5
+            //Если Browser переделать на flex-box то такие придроты не понадобятся.
+            //Выписана задача https://inside.tensor.ru/opendoc.html?guid=04d2ea0c-133c-4ee1-bf9b-4b222921b7d3
+            this._operationsPanel.subscribe('onToggle', function() {
+               self._container.toggleClass('controls-Browser__operationPanel-opened', this.isVisible());
+            });
          }
 
          this._filterButton = this._getFilterButton();

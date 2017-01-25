@@ -14,7 +14,6 @@
       .controls-DropdownList__textWrapper{
         flex-shrink: 1;
         overflow: hidden;
-        text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
         &:hover{
@@ -64,6 +63,17 @@
          display: none;
        }
      }
+
+
+   }
+   &.controls-DropdownList__type-filter:hover{
+      .controls-DropdownList__afterCaptionWrapper{
+         display: block;
+         .controls-DropdownList__crossIcon{
+            color: @gray-ccc-color!important;
+            cursor: pointer;
+         }
+      }
    }
    &.ws-disabled{
       color: #ccc;
@@ -93,7 +103,8 @@
 
 .controls-DropdownList__picker {
   .controls-DropdownList__scrollContainer{
-    height: 100%;
+    max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
+    width: 100%; //Укажем явно для ie edge
   }
 
   .controls-DropdownList__item, .controls-DropdownList__selectedItem *{
@@ -110,8 +121,18 @@
      &.controls-FloatArea {
        margin: @DropdownList-picker-fastdatafilter-offset;
      }
+      &.controls-DropdownList__type-fastDataFilter-shadow{
+         .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper:after{
+            display: block;
+         }
+      }
+      .controls-DropdownList{
+         width: 100%;
+      }
      .controls-DropdownList__body {
         max-width: 400px;
+        border-width: 1px;
+        border-color: @gray-ccc-color;
         border-radius: @DropdownList-picker-list-right-border-radius;
      }
      .controls-DropdownList__selectedItem{
@@ -119,6 +140,17 @@
          color: #313E78;
          font-weight: bold;
          text-decoration: none;
+         position: relative;
+         &:after{
+            content: '';
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 24px;
+            background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
+         }
        }
        .controls-DropdownList__arrowIcon {
          color: @DropdownList-linkStyleHoverColor!important;
@@ -126,6 +158,10 @@
      }
      .controls-DropdownList__header, .controls-DropdownList__beforeCaptionWrapper, .controls-DropdownList__afterCaptionWrapper{
        display: inline-block;
+     }
+     .controls-DropdownList__header {
+       border-width: 1px;
+       border-color: @gray-ccc-color;
      }
      .controls-DropdownList__withoutArrow{
        .controls-DropdownList__beforeCaptionWrapper{
@@ -190,15 +226,15 @@
          .controls-DropdownList__body {
             border-radius: @DropdownList-picker-list-left-border-radius;
          }
-      }
-      .controls-DropdownList__header{
-         float: right;
-        .controls-DropdownList{
-          margin: @DropdownList-picker-hor-revert-head-margin !important;
-        }
-      }
-      .controls-DropdownList__body{
-         margin-top: @DropdownList-height;
+         .controls-DropdownList__header{
+            float: right;
+            .controls-DropdownList{
+               margin: @DropdownList-picker-hor-revert-head-margin !important;
+            }
+         }
+         .controls-DropdownList__body{
+            margin-top: @DropdownList-height;
+         }
       }
    }
    .controls-DropdownList__header {
@@ -219,6 +255,8 @@
    }
 
   &.controls-dropdownlist__showHead {
+    .box-shadow(@menu-shadow);
+
     .controls-DropdownList__header {
       display: inline-block;
     }
@@ -232,6 +270,7 @@
     .controls-DropdownList__body {
       border-radius: @DropdownList-picker-list-border-radius;
       margin-top: @DropdownList-picker-margin-top;
+      .box-shadow(none);
     }
     .controls-DropdownList__pickerHead {
       font-weight: bold;
@@ -239,6 +278,7 @@
       padding: @DropdownList-picker-head-padding;
       cursor: default;
       width: 100%;
+      box-sizing: border-box;
       .controls-DropdownList__pickerHead-text {
         font-size: @DropdownList-picker-menu-font-size;
       }
@@ -276,6 +316,7 @@
       background: @DropdownList-picker-bg;
       padding: @DropdownList-picker-padding;
       max-height: @DropdownList-picker-max-height;
+      .box-shadow(@menu-shadow);
    }
    &.controls-FloatArea {
       background: transparent;
@@ -322,12 +363,14 @@
 
       height: @DropdownList-footer-buttonsBlock-height;
       position: @DropdownList-footer-buttonsBlock-position;
+      background: @DropdownList-picker-menu-item-color;
 
       .controls-DropdownListFooter_hasMore, .controls-DropdownListFooter_select {
          position: @DropdownList-footer-buttons-position;
       }
       .controls-DropdownListFooter_hasMore {
          left: @DropdownList-footer-hasMore-left;
+         top: @DropdownList-footer-hasMore-top;
       }
       .controls-DropdownListFooter_select {
          right: @DropdownList-footer-select-right;
@@ -371,7 +414,7 @@
       }
 
       &.controls-DropdownList__buttonsBlock{
-        height: 32px;
+        height: @DropdownList-footer-multisel-buttonsBlock-h;
         .controls-DropdownListFooter_hasMore{
           top: 4px;
         }
@@ -397,8 +440,18 @@
 }
 
 .ws-is-firefox {
-   .controls-DropdownList__picker .controls-DropdownList__header .controls-DropdownList{
-     line-height: 25px;
+   .controls-DropdownList__picker {
+      .controls-DropdownList__header .controls-DropdownList {
+         line-height: 25px;
+      }
+      .controls-DropdownList__body .controls-DropdownList__item .controls-DropdownList__itemTextWrapper {
+         .controls-DropdownList__item-text {
+            float: none;
+         }
+         .controls-DropdownList__item-text-shadow {
+            top: -@DropdownList-picker-menu-item-height - 5px;
+         }
+      }
    }
    .controls-DropdownList__afterCaptionWrapper {
       top: 3px;
@@ -410,23 +463,4 @@
      display: inline-block;
      display: inline-flex;
   }
-}
-
-/* Все ie без поддержки flexBox'a
-   TODO: Выпилить 1 января 2017 года
-*/
-.ws-is-ie8, .ws-is-ie9 {
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      .controls-DropdownList__header {
-         height: 24px;
-      }
-      .controls-DropdownList__body {
-         margin-top: -6px;
-      }
-      &.controls-popup-revert-horizontal {
-         .controls-DropdownList__body {
-            margin-top: @DropdownList-height;
-         }
-      }
-   }
 }

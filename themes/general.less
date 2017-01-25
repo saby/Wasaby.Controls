@@ -49,12 +49,7 @@ input[type="reset"]::-moz-focus-inner {
   color: @icon-color-disabled !important;
 }
 
-@media @ie8 {
-  /* Для IE8 */
-  .icon-primary[disabled] {
-    color: @icon-color-disabled !important;
-  }
-}
+
 
 /* HOVER styles */
 .icon-hover{
@@ -69,6 +64,27 @@ input[type="reset"]::-moz-focus-inner {
   color: @darkcyan-color;
 }
 
+// Модификаторы цвета ссылки
+.mainLink__2 {
+  color: @gray-lamantin-color;
+}
+
+.additionalLink {
+  color: @gray-color;
+}
+.additionalLink__2 {
+  color: @black-color;
+}
+.additionalLink__3 {
+  color: @red-color;
+}
+.additionalLink__4 {
+  color: @green-color;
+}
+.additionalLink__5 {
+  color: @purple-color;
+}
+
 .blue-dark-color {
   color: @blue-dark-color;
 }
@@ -76,8 +92,5 @@ input[type="reset"]::-moz-focus-inner {
 .ws-is-desktop-platform {
   .action-hover:not(.ws-disabled):hover {
     color: @blue-dark-color !important;
-  }
-  .gray-color:not(.ws-disabled):hover {
-    color: @gray-color;
   }
 }

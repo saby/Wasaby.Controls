@@ -1,4 +1,4 @@
-.controls-InformationPopup.controls-InformationPopup__status-confirm {
+.controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
    border-top-color: @controls-InformationPopup-default-status-border-color;
    border-bottom-color: @controls-InformationPopup-default-status-border-color;
 }
@@ -9,9 +9,11 @@
    border-left: @controls-SubmitPopup-border-left;
    border-right: @controls-SubmitPopup-border-right;
    border-bottom: @controls-SubmitPopup-border-bottom;
-   width: @controls-SubmitPopup-size-standart-width;
    &.controls-SubmitPopup__size-big {
       width: @controls-SubmitPopup-size-big-width;
+   }
+   &.controls-SubmitPopup__size-standard {
+      width: @controls-SubmitPopup-size-standard-width;
    }
 }
 
@@ -22,17 +24,22 @@
 .controls-SubmitPopup__message{
    font-size: @controls-SubmitPopup-message-font-size;
    font-weight: @controls-SubmitPopup-message-font-weight;
+   color: @controls-SubmitPopup-message-color;
    margin-bottom: @controls-SubmitPopup-message-margin-bottom;
 }
 
 .controls-SubmitPopup__details{
    font-size: @controls-SubmitPopup-details-font-size;
+   color: @controls-SubmitPopup-details-color;
 }
 
 .controls-SubmitPopup__message, .controls-SubmitPopup__details{
-   text-align: center;
    white-space: pre-wrap;
    word-wrap: break-word;
+}
+
+.controls-SubmitPopup__message-centered, .controls-SubmitPopup__details-centered{
+   text-align: center;
 }
 
 .controls-SubmitPopup__footer {
@@ -46,7 +53,7 @@
    font-size: 0; /* для того, чтобы убрать расстояние между кнопками, которые inline-block-и */
 }
 
-.controls-SubmitPopup__button {
+.controls-SubmitPopup__button.controls-Button {
    min-width: @controls-SubmitPopup-button-min-width;
    height: @controls-SubmitPopup-button-height;
    margin: 0 4px;

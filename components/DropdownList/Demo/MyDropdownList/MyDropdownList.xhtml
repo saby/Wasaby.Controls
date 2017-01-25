@@ -2,39 +2,39 @@
    <div> Выпадающие списки с кликом(в виде ссылки), по ховеру, с множественным выбором и разными вариантам отображения шапки</div>
    <component id="dropdownList1" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
       <opt name="name" value="DropdownList1"></opt>
-      <opt name="keyField" value="key"></opt>
-      <opt name="displayField" value="title"></opt>
+      <opt name="idProperty" value="key"></opt>
+      <opt name="displayProperty" value="title"></opt>
       <opt name="multiselect" >false</opt>
       <opt name="itemTpl" type="ref">{{@it.firstTemplate}}</opt>
       <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
    </component>
    <component id="dropdownList2" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
       <opt name="name" value="DropdownList2"></opt>
-      <opt name="keyField" value="key"></opt>
-      <opt name="displayField" value="title"></opt>
+      <opt name="idProperty" value="key"></opt>
+      <opt name="displayProperty" value="title"></opt>
       <opt name="multiselect" >false</opt>
       <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
    </component>
     <component id="dropdownList3" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
         <opt name="name" value="DropdownList3"></opt>
-        <opt name="keyField" value="key"></opt>
-        <opt name="displayField" value="title"></opt>
-        <opt name="hierField" value="parent"></opt>
+        <opt name="idProperty" value="key"></opt>
+        <opt name="displayProperty" value="title"></opt>
+        <opt name="parentProperty" value="parent"></opt>
         <opt name="multiselect" >false</opt>
         <opts name="selectedKeys" type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
     </component>
    <component id="dropdownList4" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
        <opt name="name" value="DropdownList4"></opt>
-       <opt name="keyField" value="key"></opt>
-       <opt name="displayField" value="title"></opt>
+       <opt name="idProperty" value="key"></opt>
+       <opt name="displayProperty" value="title"></opt>
        <opt name="type" value="duplicateHeader"></opt>
        <opt name="multiselect" >false</opt>
        <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
    </component>
    <component id="dropdownList5" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
       <opt name="name" value="DropdownList5"></opt>
-      <opt name="keyField" value="key"></opt>
-      <opt name="displayField" value="title"></opt>
+      <opt name="idProperty" value="key"></opt>
+      <opt name="displayProperty" value="title"></opt>
       <opt name="type" value="titleHeader"></opt>
       <opt name="title" value="Сортировать"></opt>
       <opt name="multiselect" >false</opt>
@@ -42,19 +42,23 @@
    </component>
     <component id="dropdownList6" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
         <opt name="name" value="DropdownList6"></opt>
-        <opt name="keyField" value="key"></opt>
-        <opt name="displayField" value="title"></opt>
+        <opt name="idProperty" value="key"></opt>
+        <opt name="displayProperty" value="title"></opt>
         <opt name="multiselect" >false</opt>
-        <opt name="headTemplate" >html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead</opt>
-        <opt name="itemTpl" >html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem</opt>
+        <opt name="headTemplate">html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconHead</opt>
+        <opt name="itemContentTpl">html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconItem</opt>
         <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
     </component>
     <component id="dropdownList7" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
         <opt name="name" value="DropdownList7"></opt>
-        <opt name="keyField" value="key"></opt>
-        <opt name="displayField" value="title"></opt>
+        <opt name="idProperty" value="key"></opt>
+        <opt name="displayProperty" value="title"></opt>
         <opt name="emptyValue" value="true"></opt>
         <opt name="multiselect" >false</opt>
         <opts name="selectedKeys"  type="array" bind="filter/title" direction="fromProperty" oneWay="true" nonexistent="none"></opts>
+    </component>
+    <component id="dropdownList8" data-component="SBIS3.CONTROLS.DropdownList" class="DropdownList">
+        <opt name="name" value="DropdownList8"></opt>
+        <opt name="multiselect" >false</opt>
     </component>
 </div>

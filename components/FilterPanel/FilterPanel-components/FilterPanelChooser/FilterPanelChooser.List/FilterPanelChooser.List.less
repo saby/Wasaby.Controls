@@ -1,0 +1,33 @@
+.controls-FilterPanelChooser {
+   .controls-ListView__item {
+      .controls-FilterPanelChooser__count {
+         display: inline-block;
+         padding: @filter-panel-chooser-list-view-count-padding;
+         color: @filter-panel-chooser-list-view-count-color;
+         background-color: @filter-panel-chooser-default-color;
+      }
+
+      &.controls-ListView__item__multiSelected {
+         .controls-FilterPanelChooser__count {
+            background-color: @filter-panel-chooser-selected-color;
+         }
+      }
+
+      &.controls-ListView__hoveredItem {
+         .controls-FilterPanelChooser__count {
+            background-color: @filter-panel-chooser-hovered-color;
+         }
+      }
+   }
+
+   .controls-FilterPanelChooser__afterChooserWrapper {
+      text-align: @filter-panel-chooser-footer-text-align;
+      background-color: @filter-panel-chooser-default-color;
+      padding: @filter-panel-chooser-footer-padding;
+
+      .controls-FilterPanelChooser__allButton {
+         line-height: @filter-panel-chooser-all-button-line-height;
+         font-size: @filter-panel-chooser-all-button-font-size;
+      }
+   }
+}

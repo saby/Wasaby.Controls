@@ -1,13 +1,19 @@
 <thead class="controls-DataGridView__thead">
 {{?it.showHead}}
+{{var hasScroll = it.startScrollColumn !== undefined,
+      isColumnScrolling;}}
 {{for (var i = it.countRows - 1; i > -1; i--){
    }}
     <tr>
     {{?it.multiselect}}
-    <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
+    {{isColumnScrolling = it.startScrollColumn === 0;}}
+    <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{? hasScroll}}{{? isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
+        {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
     </th>{{?}} {{~it.content[i] :column:index}}
-    <th class="controls-DataGridView__th{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
-        {{?i == 1}}controls-DataGridView__th__topRow{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}" {{?column.colspan}}colspan="{{=column.colspan}}"{{?}}>
+    {{isColumnScrolling = it.startScrollColumn !== undefined && it.startScrollColumn <= index;}}
+    <th class="{{?index === 0}}controls-DataGridView__firstContentCell{{?}} controls-DataGridView__th{{? hasScroll}}{{? isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
+        {{?i == 1}}controls-DataGridView__th__topRow{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}" {{?column.colspan}}colspan="{{=column.colspan}}"{{?}}
+        {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
     {{=column.value}}
     </th>
     {{~}}
@@ -15,16 +21,21 @@
    {{
 }
 }}
-{{? it.startScrollColumn !== undefined }}
+{{?}}
+
+{{?it.hasResults && it.resultsPosition === 'top'}}
+   {{=it.resultsTpl(it)}}
+{{?}}
+
+{{? it.showHead && hasScroll }}
 <tr>
     <th class="controls-DataGridView__PartScroll__row ws-hidden" colspan="{{=it.columns.length}}">
         <div class="controls-DataGridView__PartScroll__container">
-            <i class="controls-DataGridView__PartScroll__arrowLeft icon-24 icon-DayBackward  icon-disabled" />
-            <div class="controls-DataGridView__PartScroll__thumb" />
-            <i class="controls-DataGridView__PartScroll__arrowRight icon-24 icon-DayForward icon-primary action-hover" />
+            <i class="controls-DataGridView__PartScroll__arrowLeft icon-24 icon-DayBackward  icon-disabled"></i>
+            <div class="controls-DataGridView__PartScroll__thumb" style="left:{{=it.thumbPosition}}px;"></div>
+            <i class="controls-DataGridView__PartScroll__arrowRight icon-24 icon-DayForward icon-primary action-hover"></i>
         </div>
     </th>
 </tr>
-{{?}}
 {{?}}
 </thead>

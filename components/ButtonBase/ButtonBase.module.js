@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
     * @mixes SBIS3.CONTROLS.IconMixin
     * @author Крайнов Дмитрий Олегович
     *
+    *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
     * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
@@ -53,6 +54,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
             handleFocus: false
          },
          _checkClickByTap: true,
+         _maxTouchCount:2,
          _options: {
             /**
              * @cfg {String}  Текст на кнопке

@@ -11,9 +11,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'js!SBIS3.CORE.MarkupTransformer',
        'Core/helpers/dom&controls-helpers',
-       'i18n!SBIS3.CONTROLS.ItemsToolbar'
+       'Core/helpers/collection-helpers',
+       'i18n!SBIS3.CONTROLS.ItemsToolbar',
+       'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers, colHelpers) {
 
        'use strict';
        /**
@@ -108,7 +110,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._itemsActions = new ItemActionsGroup({
                 items: this._options.itemsActions,
                 element: $('<div class="controls-ListView__itemActions-container"></div>').prependTo(this._getToolbarContent()),
-                keyField: 'name',
+                idProperty: 'name',
                 parent: this,
                 linkedControl: this.getParent(),
                 touchMode: this._options.touchMode,
@@ -192,7 +194,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _bigIconsFix: function(items) {
-             $ws.helpers.forEach(
+             colHelpers.forEach(
                  items,
                  function(item){
                     if(item.hasOwnProperty('icon') && item.icon){
@@ -353,7 +355,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 }
                 return;
              }
-             this._currentTarget = target;                  // Запоминаем таргет в качестве текущего
+             /* Запоминаем таргет в качестве текущего */
+             this._currentTarget = target;
+
+             if(this._lockingToolbar) {
+                this._trackingTarget();
+             }
              /**
               * нужно следить за положением опций потому что в реестре высота строки может меняться динамически
               * например в сообщениях картинки прогружаются асинхронно и при подгрузке может измениться высота строки,

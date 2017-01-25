@@ -13,7 +13,7 @@
 
 }
 // Menu
-.controls-MenuIcon__Menu {
+.controls-MenuIcon__Menu.controls-Menu__Popup {
    padding: @menu-icon-menu-padding;
    margin: @menu-icon-menu-margin;
    background: @menu-icon-menu-bg;
@@ -23,25 +23,15 @@
       }
    }
    &.controls-Menu__big-header {
-      margin: -6px 0 0 -10px;
+      margin: -5px 0 0 -13px;
       .controls-Menu__header{
-         padding: 4px 8px;
-         .controls-Menu__header-caption{
-            position: relative;
-            top: 4px;
-         }
+         padding: 4px 12px;
       }
    }
    &.controls-IconButton__round-border{
-      margin: -4px 0 0 -4px;
+      margin: -3px 0 0 -7px;
       &.controls-Menu__big-header{
-         margin: -4px 0 0 -8px;
-         .controls-Menu__header{
-            .controls-Menu__header-caption{
-               position: relative;
-               top: 3px;
-            }
-         }
+         margin: -3px 0 0 -11px;
       }
       .controls-MenuItem{
          &.controls-Menu__hasChild{
@@ -54,6 +44,43 @@
       .controls-Menu__header {
          .icon-16, .icon-24 {
             padding-right: 0;
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-MenuIcon__Menu {
+      &.controls-Menu__big-header {
+         margin: -5px 0 0 -12px;
+      }
+      &.controls-IconButton__round-border {
+         &.controls-Menu__big-header {
+            margin: -3px 0 0 -8px;
+         }
+      }
+   }
+}
+
+// удалить в .230
+.ws-is-ie8, .ws-is-ie9 {
+   .controls-MenuIcon__Menu {
+      &.controls-Menu__big-header {
+         .controls-Menu__header {
+            .controls-Menu__header-caption{
+               position: relative;
+               top: 4px;
+            }
+         }
+      }
+      &.controls-IconButton__round-border {
+         &.controls-Menu__big-header {
+            .controls-Menu__header {
+               .controls-Menu__header-caption {
+                  position: relative;
+                  top: 3px;
+               }
+            }
          }
       }
    }

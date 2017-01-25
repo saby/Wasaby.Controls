@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
             _dotTplFn: dotTplFn,
             _options: {
                data: [{
-                  keyField : 'key',
-                  displayField: 'title',
+                  idProperty : 'key',
+                  displayProperty: 'title',
                   name: 'first',
                   multiselect : false,
                   className: 'controls-DropdownList__withoutCross',
@@ -54,10 +54,10 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   ]
                },
                {
-                  keyField : 'secondKey',
+                  idProperty : 'secondKey',
                   multiselect : true,
                   name: 'second',
-                  displayField: 'user',
+                  displayProperty: 'user',
                   values:[
                      {
                         secondKey : 0,
@@ -82,8 +82,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilter',
                   ]
                },
                {
-                  keyField : 'key',
-                  displayField: 'title',
+                  idProperty : 'key',
+                  displayProperty: 'title',
                   name: 'selling',
                   multiselect : false,
                   values:[

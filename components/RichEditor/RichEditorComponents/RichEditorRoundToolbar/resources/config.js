@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             className: 'controls-IconButton__round-border',
             handlers: {
                onActivated: function() {
-                  this.getParent()._openStylesPanel(this._container);
+                  this.getParent()._openStylesPanel(this);
                }
             },
             order: 10

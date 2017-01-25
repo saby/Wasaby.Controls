@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
         * @see selectedKey
         * @see setSelectedKey
         * @see getSelectedKey
-        * @see SBIS3.CONTROLS.DSMixin#keyField
+        * @see SBIS3.CONTROLS.DSMixin#idProperty
         */
       $protected: {
           /*не различаются события move и remove/add при смене пор номеров, поэтому используем этот флаг, см ниже*/
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
               */
              selectedIndex: null,
              /**
-              * @cfg {String|Number} Устанавливает выбранным элемент коллекции по переданному идентификатору - значению {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля} элемента коллекции.
+              * @cfg {String|Number} Устанавливает выбранным элемент коллекции по переданному идентификатору - значению {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля} элемента коллекции.
               * @remark
               * <ol>
               *    <li>Элемент будет выбран по переданному идентификатору только при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource}.</li>
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
               * @see selectedKey
               * @see setSelectedKey
               * @see getSelectedKey
-              * @see SBIS3.CONTROLS.DSMixin#keyField
+              * @see SBIS3.CONTROLS.DSMixin#idProperty
               */
             allowEmptySelection : true
          }
@@ -100,15 +100,22 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
       _prepareSelectedConfig: function(index, key) {
          if (this._isEmptyIndex(index)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
             if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
+            else {
+               //если ключа нет, значит это сброс значения, и ключ надо тоже сбросить
+               this._options.selectedKey = undefined;
+            }
          }
          else {
+            //если индекс передали - вычисляем ключ
             if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
+         //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
          if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
             if (this._getItemsProjection().getCount()) {
                this._options.selectedIndex = 0;
@@ -165,7 +172,14 @@ define('js!SBIS3.CONTROLS.Selectable', [
                   this._options.selectedIndex = projPos;
                }
             }
+
+            //Если в результату вычисления параметров индекс поменялся, надо установить его в проекцию с сигнализированием изменений
+            var oldIndex = this._options.selectedIndex;
             this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
+            if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
+               this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
+            }
          }
       },
 
@@ -178,11 +192,11 @@ define('js!SBIS3.CONTROLS.Selectable', [
       /**
        * Устанавливает выбранным элемент коллекции по переданному идентификатору.
        * @remark
-       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#keyField}.
+       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#idProperty}.
        * Для возвращения коллекции к состоянию без выбранного элемента нужно передать null.
        * При использовании метода происходит событие {@link onSelectedItemChange}.
        * @param {String|Number} id Идентификатор элемента, который нужно установить в качестве выбранного.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @example
        * <pre>
        *     var newKey = (someValue > 0) ? 'positive' : 'negative';
@@ -190,7 +204,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * </pre>
        * @see selectedKey
        * @see getSelectedKey
-       * @see SBIS3.CONTROLS.DSMixin#keyField
+       * @see SBIS3.CONTROLS.DSMixin#idProperty
        * @see onSelectedItemChange
        */
       setSelectedKey : function(id) {
@@ -204,7 +218,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       /**
        * Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
        * @remark
-       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#keyField}.
+       * Метод актуален для использования при условии, что для контрола установлен источник данных в опции {@link SBIS3.CONTROLS.DSMixin#dataSource} и поле первичного ключа в опции {@link SBIS3.CONTROLS.DSMixin#idProperty}.
        * @param {String|Number} index Индекс выбранного элемента коллекции.
        * @example
        * <pre>
@@ -222,7 +236,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
       /**
        * Возвращает идентификатор выбранного элемента коллекции.
-       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#keyField ключевого поля}.
+       * Идентификатором элемента коллекции служит значение его {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля}.
        * @return {String|Number} Первичный ключ выбранного элемента коллекции.
        * @example
        * <pre>
@@ -234,7 +248,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * @see selectedKey
        * @see setSelectedKey
        * @see onSelectedItemChange
-       * @see SBIS3.CONTROLS.DSMixin#keyField
+       * @see SBIS3.CONTROLS.DSMixin#idProperty
        */
       getSelectedKey : function() {
          return this._options.selectedKey;
@@ -283,9 +297,9 @@ define('js!SBIS3.CONTROLS.Selectable', [
          /*Method must be implemented*/
       },
 
-      _getItemValue: function(value, keyField) {
+      _getItemValue: function(value, idProperty) {
          if(value && typeof value === 'object') {
-            return Utils.getItemPropertyValue(value, keyField );
+            return Utils.getItemPropertyValue(value, idProperty );
          }
          return value;
       },

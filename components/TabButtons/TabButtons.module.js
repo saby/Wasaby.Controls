@@ -10,14 +10,15 @@ define(
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'Core/ParserUtilities',
-      'js!SBIS3.CONTROLS.TabButton'
+      'js!SBIS3.CONTROLS.TabButton',
+      'css!SBIS3.CONTROLS.TabButtons'
    ],
    function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil, ParserUtilities) {
 
    'use strict';
 
    /**
-    * Класс контрола "Вкладки". Чтобы контрол правильно работал, требуется установить опции {@link keyField} и {@link displayField}.
+    * Класс контрола "Вкладки". Чтобы контрол правильно работал, требуется установить опции {@link idProperty} и {@link displayProperty}.
     * Стандарт вкладок описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.
     * @remark
     * Чтобы скрыть одну вкладку, используйте следующий код:
@@ -106,11 +107,11 @@ define(
          var items = opts.items;
          if (items){
             for (var i = 0, l = opts.items.length; i < l; i++){
-               var tmpl = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayField] || '')({
+               var tmpl = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayProperty] || '')({
                   item: items[i],
                   options: opts
                }));
-               items[i][opts.displayField] = tmpl;
+               items[i][opts.displayProperty] = tmpl;
             }
          }
 

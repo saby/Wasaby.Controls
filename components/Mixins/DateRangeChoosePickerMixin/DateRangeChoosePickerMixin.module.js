@@ -24,9 +24,13 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
              */
             showQuarters: true,
             /**
-             * @cfg {Boolean} Отобразить возможность выбора по годам. По умолчанию true.
+             * @cfg {Boolean} Отобразить возможность выбора по полугодиям. По умолчанию true.
              */
             showHalfyears: true,
+            /**
+             * @cfg {Boolean} Отобразить возможность выбора по годам. По умолчанию true.
+             */
+            showYears: true,
 
             /**
              * @cfg {Date|String} Дата, начиная с которой месяца будут отмечены зеленой галочкой.
@@ -104,6 +108,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                showMonths: this._options.showMonths,
                showQuarters: this._options.showQuarters,
                showHalfyears: this._options.showHalfyears,
+               showYears: this._options.showYears,
                checkedStart: this._options.checkedStart,
                checkedEnd: this._options.checkedEnd,
                iconsHandler: this._options.iconsHandler

@@ -77,6 +77,9 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
               .orderBy(sorting || {});
 
          queryDef = source.query(query);
+         queryDef.addErrback(function(e) {
+            return e
+         });
 
          /* По готовности компонента установим данные */
          this.subscribe('onInit', function() {
@@ -89,20 +92,24 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             /* Фильтр устанавливаем пораньше, до ответа query, чтобы запустилась синхронизация,
              и фильтры проставились в кнопку фильтров */
             view.setFilter(queryFilter, true);
+            /* Источник устанавливаем сразу : во время выполнения запроса, могут менять фильтр.
+               Фильтр может меняться как пользователем, так и прикладным программистом */
+            view.setDataSource(source, true);
 
             queryDef.addCallback(function(dataSet) {
-               var keyField = view.getProperty('keyField'),
+               var idProperty = view.getProperty('idProperty'),
                    recordSet;
 
-               if (keyField && keyField !== dataSet.getIdProperty()) {
-                  dataSet.setIdProperty(keyField);
+               if (idProperty && idProperty !== dataSet.getIdProperty()) {
+                  dataSet.setIdProperty(idProperty);
                }
 
                recordSet = dataSet.getAll();
 
-               if (!view.isDestroyed()) { //Пока выполнялся запрос - view уже мог успеть уничтожиться. В таком случае не трогаем view
+               /* Пока выполнялся запрос - view уже мог успеть уничтожиться или могли загружаться новые данные.
+                  В таком случае не трогаем view. */
+               if (!view.isDestroyed() && !view.isLoading() && !view.getItems()) { /* Не устанавливаем данные, если они загружаются или уже есть */
                   view._toggleIndicator(false);
-                  view.setDataSource(source, true);
                   //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
                   view._notify('onDataLoad', recordSet);
                   view.setItems(recordSet);

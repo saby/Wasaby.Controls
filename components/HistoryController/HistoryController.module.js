@@ -2,6 +2,7 @@
  * Created by am.gerasimov on 12.01.2016.
  */
 define('js!SBIS3.CONTROLS.HistoryController', [
+   "Core/EventBus",
    "Core/SessionStorage",
    "Core/Abstract",
    "Core/UserConfig",
@@ -9,47 +10,15 @@ define('js!SBIS3.CONTROLS.HistoryController', [
    "Core/Deferred",
    "Core/helpers/functional-helpers",
    "Core/ConsoleLogger",
-   "Core/constants"
-], function( cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger, constants) {
+   "Core/constants",
+   "js!SBIS3.CORE.LocalStorage"
+], function( EventBus, cSessionStorage, cAbstract, UserConfig, strHelpers, Deferred, fHelpers, ConsoleLogger, constants, LocalStorage ) {
 
    'use strict';
 
    var serializeFnc = function(serialize, value) {
       return value ? strHelpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
-
-
-   /* Пока нет нормального способа, используя некий интерфейс сохранять параметры,
-      то смотрю на флаг globalConfigSupport (поддерживаются ли пользовательский параметры),
-      и сохраняю? используя UserConfig в пользоватльские параметры, иначе кладу в localStorage.
-      Задача по этому поводу:
-      https://inside.tensor.ru/opendoc.html?guid=5b44aa05-a1c8-4052-9cd7-88b50519588b&description=
-      Задача в разработку 25.10.2016 Нужен платформенный интерфейс, позволяющий работать с параметрами, которые запоминаются в длитель...
-   */
-   var setParam = function(key, value, serializer) {
-      var serializedValue = serializer(true, value);
-
-      if(constants.userConfigSupport) {
-         return UserConfig.setParam(key, serializedValue, true);
-      } else {
-         fHelpers.setLocalStorageValue(key, serializedValue);
-         return Deferred.success();
-      }
-   };
-
-   var getParam = function(key, serializer) {
-      var serializedValue;
-
-      try {
-         serializedValue = serializer(false, constants.userConfigSupport ? cSessionStorage.get(key) :  fHelpers.getLocalStorageValue(key));
-      } catch (e) {
-         ConsoleLogger.error('HistoryController', e.message, e);
-         serializedValue = null;
-      }
-
-      return serializedValue;
-   };
-   /**************************************************************/
 
    /**
     * Контроллер, который предоставляет базовые механизмы работы с иторией.
@@ -76,14 +45,84 @@ define('js!SBIS3.CONTROLS.HistoryController', [
              *    }
              * </pre>
              */
-            serialize: serializeFnc
+            serialize: serializeFnc,
+            /**
+             * Значение истории, которое устанвится при сбросе
+             * @cfg {*}
+             */
+            emptyValue: null
          },
          _saveParamsDeferred: undefined,     /* Деферед сохранения истории */
-         _history: undefined                 /* История */
+         _history: undefined                 /* История */,
+         _historyChannel: null
       },
 
       $constructor: function() {
-         this._history = getParam(this._options.historyId, this._options.serialize);
+         var self = this;
+         
+         this._publish('onHistoryUpdate');
+         this._history = this._getParam(this._options.historyId, this._options.serialize);
+         this._getLocalStorage();
+   
+         this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
+         this._historyChannel.subscribe('onHistoryUpdate', function(event, history) {
+            self._history = history;
+            self._notify('onHistoryUpdate', history);
+         });
+      },
+
+      _setParam: function(value) {
+         var serializedValue = this._options.serialize(true, value),
+             key = this._options.historyId;
+
+         /* Запись в пользовательские параметры не производит записи SessionStorage,
+            поэтому в рамках одной сессии может возникать разница в значениях,
+            которые хранятся в параметрах пользователя / SessionStorage. Для этого,
+            при записи в пользовательские параметры, запишем значение и в SessionStorage.
+            + надо записывать в LocalStorage, чтобы не было рассинхрона истории на разных вкладках. */
+         this._getLocalStorage().setItem(key, serializedValue);
+         cSessionStorage.set(key, serializedValue);
+
+         /* Пока нет нормального способа, используя некий интерфейс сохранять параметры,
+          то смотрю на флаг globalConfigSupport (поддерживаются ли пользовательский параметры),
+          и сохраняю? используя UserConfig в пользоватльские параметры, иначе кладу в localStorage.
+          Задача по этому поводу:
+          https://inside.tensor.ru/opendoc.html?guid=5b44aa05-a1c8-4052-9cd7-88b50519588b&description=
+          Задача в разработку 25.10.2016 Нужен платформенный интерфейс, позволяющий работать с параметрами, которые запоминаются в длитель...
+          */
+         if(constants.userConfigSupport) {
+            return UserConfig.setParam(key, serializedValue, true);
+         } else {
+            return Deferred.success();
+         }
+      },
+
+      _getParam: function() {
+         var serializedValue,
+             key = this._options.historyId;
+
+         try {
+            serializedValue = this._options.serialize(false, constants.userConfigSupport ? cSessionStorage.get(key) :  this._getLocalStorage().getItem(key));
+         } catch (e) {
+            ConsoleLogger.error('HistoryController', e.message, e);
+            serializedValue = null;
+         }
+
+         return serializedValue;
+      },
+
+      _getLocalStorage: function() {
+         if(!this._localStorage) {
+            this._localStorage = new LocalStorage(this._options.historyId);
+            this._localStorage.subscribe('onChange', function(event, key) {
+               /* Пока нет нормального механизма хранения данных (хранилища),
+                  в планах на январь фервраль. Пока просто подписываюсь на изменения LocalStorage. */
+               if(key === this._options.historyId) {
+                  cSessionStorage.set(this._options.historyId, this._localStorage.getItem(key));
+               }
+            }.bind(this));
+         }
+         return this._localStorage;
       },
 
       /**
@@ -117,9 +156,10 @@ define('js!SBIS3.CONTROLS.HistoryController', [
          if(!this.isNowSaving()) {
             this._saveParamsDeferred = new Deferred();
 
-            setParam(this._options.historyId, this._history, this._options.serialize).addCallback(fHelpers.forAliveOnly(function() {
+            this._setParam(this._history).addCallback(fHelpers.forAliveOnly(function() {
                self._saveParamsDeferred.callback();
             }, self));
+            this._historyChannel.notify('onHistoryUpdate', this._history);
          }
 
          return this._saveParamsDeferred;
@@ -130,7 +170,7 @@ define('js!SBIS3.CONTROLS.HistoryController', [
        * Очищает историю
        */
       clearHistory: function() {
-         this.setHistory(null, true);
+         this.setHistory(this._options.emptyValue, true);
       },
 
       /**

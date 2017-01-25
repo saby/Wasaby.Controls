@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
          _options: {
             rangeselect: false,
             month: null,
-            keyField: 'id',
+            idProperty: 'id',
             itemTpl: ItemTmpl,
             // itemTemplate: '<div>{{=it.item.get("date")}}</div>',
             // infiniteScroll: 'both',

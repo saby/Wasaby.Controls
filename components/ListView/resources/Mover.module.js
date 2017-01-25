@@ -120,8 +120,15 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             if (result !== false) {
                dragSource.each(function(movedItem) {
                   var model = movedItem.getModel();
-                  if (operation === 'add' || operation === 'move' && items.getIndex(model) === -1) {
-                     items.add(model.clone(), position);
+                  if (operation === 'add' || operation === 'move') {
+                     if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
+                        //Если items рекордсет то при перемещении добавится клон записи и по индексу ее будет не найти
+                        if (!items.getRecordById(model.getId())) {
+                           items.add(model, position);
+                        }
+                     } else if(items.getIndex(model) === -1)  {
+                        items.add(model.clone(), position);
+                     }
                   }
                   if (operation === 'delete' || operation === 'move') {
                      ownerItems.remove(model);

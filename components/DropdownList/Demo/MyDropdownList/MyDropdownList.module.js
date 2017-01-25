@@ -6,15 +6,16 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
          'js!SBIS3.CORE.CompoundControl',
          'js!SBIS3.CONTROLS.DropdownList',
          'html!SBIS3.CONTROLS.Demo.MyDropdownList',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownListItem',
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListItem',
          'Core/core-functions',
+         'js!WS.Data/Types/Enum',
          'i18n!SBIS3.CONTROLS.Demo.MyDropdownList',
          'css!SBIS3.CONTROLS.Demo.MyDropdownList',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconHead',
-         'html!SBIS3.CONTROLS.Demo.MyDropdownList/MyDropdownList_IconItem'
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconHead',
+         'html!SBIS3.CONTROLS.Demo.MyDropdownList/resources/MyDropdownListIconItem'
       ],
 
-      function(CompoundControl, DropdownList, dotTplFn, itemTpl, cFunctions) {
+      function(CompoundControl, DropdownList, dotTplFn, itemTpl, cFunctions, Enum) {
          'use strict';
          var MyDropdownList = CompoundControl.extend([],{
             $protected: {
@@ -76,6 +77,7 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                this.getChildControlByName('DropdownList5').setItems(this._getBigData());
                this.getChildControlByName('DropdownList6').setItems(this._options.data);
                this.getChildControlByName('DropdownList7').setItems(this._options.data);
+               this.getChildControlByName('DropdownList8').setItems(this._getEnumData());
             },
 
             _getBigData: function(){
@@ -113,6 +115,12 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownList',
                   }
                );
                return data;
+            },
+            _getEnumData: function () {
+               return new Enum({
+                  dictionary: ['Enum 1', 'Enum 2', 'Enum 3', 'Enum 4'],
+                  index: 2
+               });
             }
          });
          return MyDropdownList;

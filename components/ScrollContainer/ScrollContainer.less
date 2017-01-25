@@ -2,11 +2,27 @@
    overflow: hidden;
    position: relative;
    outline: none;
-   .controls-Scrollbar{
+   .controls-ScrollContainer__scrollbar{
+      position: absolute;
+      right: 0;
+      top: 0;
       opacity: 0;
       transition: opacity 0.1s ease;
       padding: 4px 2px;
       height: calc(~"100% - 8px");
+   }
+   &.controls-ScrollContainer__top-gradient {
+      &:before{
+         content: '';
+         position: absolute;
+         display: block;
+         z-index: 1;
+         height: 8px;
+         top: 0;
+         left: 0;
+         width: 100%;
+         box-shadow: inset 0 11px 6px -8px rgba(0, 0, 0, 0.16);
+      }
    }
 }
 
@@ -23,13 +39,17 @@
    position: relative;
    overflow-y: scroll;
    height: 100%;
-   &::-webkit-scrollbar {
-      width: 0!important;
-   }
+   max-height: inherit;
+   min-width: inherit;
    /*https://inside.tensor.ru/opendoc.html?guid=3d32d044-8a60-432d-9cd8-db555ad0786d&des=
    R! Убрать с новых контролов класс ws-area с height:100%, чтобы работало по человечески.*/
    &> .controls-ListView {
       height: auto;
+   }
+   -webkit-overflow-scrolling: touch;
+   
+   &.ws-sticky-header__scrollable-container {
+      width: auto;
    }
 }
 
@@ -37,17 +57,30 @@
    overflow: hidden;
 }
 
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-mobile-chrome-ios {
-   .controls-ScrollContainer {
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
+.ws-is-desktop-platform {
+   .controls-ScrollContainer__content {
+      &::-webkit-scrollbar {
+         width: 0!important;
+      }
    }
 }
 
-.controls-ScrollContainer .controls-ScrollContainer__scrollbar {
-   position: absolute;
-   right: 0;
-   top: 0;
+.ws-is-mobile-android {
+   .controls-ScrollContainer__content {
+      overflow-y: auto;
+   }
+}
+
+// показываем нативный скролл только на android и ios
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
+   .controls-ScrollContainer {
+      overflow: auto;
+   }
+   .controls-ScrollContainer__content {
+      &::-webkit-scrollbar {
+         width: auto!important;
+      }
+   }
 }
 /*TODO временный фикс для выпуска*/
 .controls-ScrollContainer{
@@ -57,4 +90,8 @@
          height: calc(~"100% - 32px");
       }
    }
+}
+
+.controls-ScrollContainer.ws-sticky-header__scrollable-container {
+   width: auto;
 }

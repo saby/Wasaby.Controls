@@ -139,7 +139,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             meta.movedItems = movedItems;
             this._opendEditComponent({
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               cssClassName: 'controls-moveDialog',
                opener: this._getListView(),
                movedItems: movedItems,
                componentOptions: meta.componentOptions || {}
@@ -149,7 +148,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          _buildComponentConfig: function(meta) {
             var self = this,
                options = cMerge(meta.componentOptions||{}, this._getComponentOptions());
-            return cMerge(options, {
+            cMerge(options, {
                linkedView: this._getListView(),
                dataSource: this.getDataSource(),
                parentProperty: this._options.parentProperty,
@@ -161,6 +160,12 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                   }
                }
             });
+            if (options.pageSize) {
+               //todo пейджинг нормально выглядит только с кнопкой еще, догрузка по скроллу не работает, потому что окно может не скролится, а обычный педжинг не отображает корень только на первой странице
+               //нужен стандарт на пейджинг в окне перемещения.
+               options.infiniteScroll = 'demand';
+            }
+            return options;
          },
 
          _move: function(movedItems, target) {

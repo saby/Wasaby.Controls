@@ -15,11 +15,13 @@
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 8px;
 @data-grid-first-content-cell-padding-left:     8px;
+@data-grid-ms-first-content-cell-padding-left:  8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
 @data-grid-header-cell-padding:                 @data-grid-cell-padding;
 @data-grid-cell-line-height:                    34px;
-@data-grid-checkbox-margin:                     4px 0 -4px 10px;
+@data-grid-check-box-top:                       10px;
+@data-grid-check-box-left:                      18px;
 @data-grid-td-checkbox-width:                   30px;
 @data-grid-td-visible-checkbox-width:           40px;
 
@@ -178,14 +180,20 @@
 // --------- //
 // List view //
 // --------- //
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
 @list-view-actions-menu-close-right:            2px;
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 
 @list-view-actions-menu-padding:                0;
+@list-view-actions-menu-margin:                 3px 0 0 0;
 @list-view-items-toolbar-vertical-line-height:  38px;
 @touch-mode-items-toolbar-icon-margin-top:      -38px;
 
+@listView-check-box-left:                       3px;
 @listView-check-box-top:                        7px;
 
 @listView-empty-data-color:                     #999999;
@@ -340,6 +348,7 @@
 @controls-filterButton-button-margin:           14px 8px 8px 8px;
 @controls-filterButton-area-header-padding:     24px 76px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
+@controls-filterButton-area-header-width:       429px;
 @controls-filterButton-area-text-size:          @globalDefaultFontSize;
 @controls-filterButton-area-content-padding:    16px 24px 24px 24px;
 @controls-filterButton-closeButton-top:         24px;
@@ -385,6 +394,9 @@
 @DropdownList-picker-bg:                        transparent;
 @DropdownList-header-bg:                        #C1D7F0;
 @DropdownList-linkStyleHoverColor:              @blue-dark-color;
+@DropdownList-footer-buttonsBlock-height:       @DropdownList-height;
+@DropdownList-footer-multisel-buttonsBlock-h:   32px;
+@DropdownList-footer-hasMore-top:               6px;
 
 // -------- //
 // Text box //
@@ -403,7 +415,7 @@
 @text-box-wrapper-padding:                      0 8px;
 @text-box-field-after-margin:                   0 32px 0 0;
 
-
+@text-area-field-line-height:                   36px;
 // ----------- //
 // Search form //
 // ----------- //
@@ -464,6 +476,10 @@
 
 @switcher-btn-color-disabled:                   @switcher-do-disabled-line-color;
 
+@switcher-dot-height:                           8px;
+@switcher-dot-margin:                           5px 0 0 8px;
+@switcher-dot-margin-hover:                     4px 0 0 7px;
+
 @swithcer-do-font-weight:                       bold;
 @switcher-do-vertical-toggle-width:             40px;
 @switcher-do-vertical-toggle-height:            80px;
@@ -498,6 +514,7 @@
 @editdialog-applybutton-right:                  64px; /*ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:          194px; /*ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
 @editdialog-template-minwidth:                  460px;
+@editdialog-applybutton-top:                    10px;
 
 //MoveDialog
 @controls-movedialog-activate-right:            76px;
@@ -531,8 +548,6 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:          32px;
-@controls-OperationsPanelButton-hor-height:     31px;
-@controls-OperationsPanelButton-hor-line-height:32px;
 @controls-OperationsPanelButton-vert-height:    32px;
 @controls-OperationsPanelButton-icon-left:      8px;
 @controls-OperationsPanelButton-font:           24px 'TensorFont Regular', 'TensorFont';
@@ -544,9 +559,9 @@
 @menu-link-line-height:                         38px;
 @menu-link-header-bg-color:                     #C1D7F0;
 @menu-link-menu-border-width:                   0;
-@menu-link-menu-margin:                         0 0 0 -8px;
+@menu-link-menu-item-container-padding:         0;
+@menu-link-menu-margin:                        -2px 0 0 -8px;
 @menu-link-menu-padding:                        0;
-
 // ---------- //
 // Data Range //
 // ---------- //
@@ -568,6 +583,7 @@
 @controls-editInPlace-editor-margin-bottom:     2px;
 @controls-editInPlace-editor-padding:           2px;
 @controls-editInPlace-first-editor-padding-left:2px;
+@controls-editInPlace-editor-without-offset-margin: 0;
 
 //FieldLink
 
@@ -601,6 +617,8 @@
 
 //InformationPopup
 @controls-InformationPopup-border-bottom:       3px solid;
+@controls-SubmitPopup-size-standard-width:      660px;
+@controls-SubmitPopup-button-mini-min-width:    150px;
 @controls-InformationPopup-border-top:          none;
 
 //NotificationPopup

@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "html!SBIS3.CONTROLS.ItemActionsGroup",
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/collection-helpers",
-   "Core/helpers/markup-helpers"
+   "Core/helpers/markup-helpers",
+   'css!SBIS3.CONTROLS.ItemActionsGroup'
 ],
    function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
 
@@ -70,10 +71,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this.once('onInit', function() {
                this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
             }.bind(this));
-
-            if(this._options.items.length && this._options.items[0].title) {
-               IoC.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
-            }
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки
@@ -165,10 +162,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: this.getItems(),
-               keyField: this._options.keyField,
+               idProperty: this._options.idProperty,
                allowChangeEnable: false,
-               displayField: 'caption',
-               hierField: 'parent',
+               displayProperty: 'caption',
+               parentProperty: 'parent',
                parent: this,
                opener: this,
                target:  target,
@@ -253,7 +250,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Скрывает операции над записью
           */
          hide: function() {
-            if(this._activeItem.container && this._options.touchMode) {
+            if(this._activeItem && this._activeItem.container && this._options.touchMode) {
                this._activeItem.container.removeClass(this._activeCls);
             }
 
@@ -268,6 +265,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this._itemActionsButtons ={};
             this._itemActionsMenu && this._itemActionsMenu.setItems(items);
             ItemActionsGroup.superclass.setItems.apply(this, arguments);
+            if(this.isVisible()) {
+               this.applyItemActions();
+            }
             if(this.isItemActionsMenuVisible()){
                this._onBeforeMenuShowHandler();
             }

@@ -1,2 +1,19 @@
-<ws:SBIS3.CONTROLS.FilterPanelChooser scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}">
-</ws:SBIS3.CONTROLS.FilterPanelChooser>
+<!--viewMode оставлен для поддержки совместимости-->
+<ws:if data="{{ properties.editor === 'dictionary' || properties.viewMode === 'dictionary' }}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.DictionaryList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>
+<ws:if data="{{ properties.editor === 'favorites' || properties.viewMode === 'favorites' }}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.FavoritesList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>
+<ws:if data="{{ properties.editor === 'list' || properties.viewMode === 'list' || (!properties.editor && !properties.viewMode) }}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.List scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>
+<ws:if data="{{ properties.editor === 'radio'}}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.RadioGroup scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>
+<ws:if data="{{ properties.editor === 'fieldLink'}}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.FieldLink scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>
+<ws:if data="{{ properties.editor === 'details'}}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.DetailsList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>

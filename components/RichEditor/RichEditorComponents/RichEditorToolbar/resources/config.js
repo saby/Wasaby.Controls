@@ -47,6 +47,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             { key: 'additionalText', title: rk('Дополнительный текст') },
             { key: 'selectedMainText', title: rk('Выделенный основной текст') }
          ],
+         type: 'fastDataFilter',
          selectedKeys: ['mainText'],
          pickerClassName: 'fre-style',
          className: 'fre-style',

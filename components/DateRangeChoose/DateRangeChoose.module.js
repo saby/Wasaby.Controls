@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    "Core/helpers/event-helpers",
    "Core/helpers/date-helpers",
    "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link"
+   "js!SBIS3.CONTROLS.Link",
+   'css!SBIS3.CONTROLS.DateRangeChoose'
 ], function ( Deferred, IoC, ConsoleLogger,CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil, cInstance, eHelpers, dateHelpers) {
    'use strict';
 
@@ -24,6 +25,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             showMonths: true,
             showQuarters: true,
             showHalfyears: true,
+            showYears: true,
 
             checkedStart: null,
             checkedEnd: null,
@@ -136,7 +138,9 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             }.bind(this)
          );
 
-         container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
+         if (this._options.showYears) {
+            container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
+         }
 
          container.find('.controls-DateRangeChoose__year-prev').click(this._onPrevYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
@@ -305,7 +309,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          }
 
          icons = iconsHandler.call(this, periods, pType);
-         if (!cInstance.instanceOfModule(Deferred)) {
+         if (!(icons && icons instanceof Deferred)) {
             icons = (new Deferred()).callback(icons);
          }
 

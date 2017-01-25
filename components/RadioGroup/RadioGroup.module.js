@@ -2,13 +2,14 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroup', ['' +
-      'js!SBIS3.CONTROLS.RadioGroupBase',
+define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.RadioGroup',
       'html!SBIS3.CONTROLS.RadioGroup/resources/ItemTemplate',
-      'js!SBIS3.CONTROLS.RadioButton'
+      'js!SBIS3.CONTROLS.ITextValue',
+      'js!SBIS3.CONTROLS.RadioButton',
+      'css!SBIS3.CONTROLS.RadioGroup'
       ],
-function(RadioGroupBase, dotTpl, ItemTemplate) {
+function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
 
    'use strict';
 
@@ -36,8 +37,8 @@ function(RadioGroupBase, dotTpl, ItemTemplate) {
     * @category Inputs
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
-    *    <option name="displayField">title</option>
-    *    <option name="keyField">id</option>
+    *    <option name="displayProperty">title</option>
+    *    <option name="idProperty">id</option>
     *    <options name="items" type="array">
     *       <options>
     *          <option name="id">1</option>
@@ -51,7 +52,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate) {
     * </component>
     */
 
-   var RadioGroup = RadioGroupBase.extend( /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
+   var RadioGroup = RadioGroupBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
       _dotTplFn : dotTpl,
       /**
        * @typedef {Object} GroupItems
@@ -87,6 +88,18 @@ function(RadioGroupBase, dotTpl, ItemTemplate) {
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate
          }
+      },
+
+      getTextValue: function() {
+         var textValue = '', projItem;
+         if (this._getItemsProjection()) {
+            projItem = this._getItemsProjection().at(this._options.selectedIndex);
+            if (projItem) {
+               textValue = this._propertyValueGetter(projItem.getContents(), this._options.displayProperty);
+            }
+         }
+
+         return textValue;
       }
    });
 

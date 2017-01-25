@@ -5,14 +5,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.DecorableMixin',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
    'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl',
-   'Core/helpers/string-helpers'
-], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers) {
+   'Core/helpers/string-helpers',
+   "Core/IoC",
+   'css!SBIS3.CONTROLS.BreadCrumbs'
+], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers, IoC) {
    /**
-    * Контрол рисующий "Хлебные крошки"
-    * Пример использования - иерархические реестры
+    * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends $ws.proto.CompoundControl
+    *
     * @author Крайнов Дмитрий Олегович
+    *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
@@ -28,6 +31,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    var BREAD_CRUMB_MIN_WIDTH = 36;
    //TODO: Переписать все к чертям
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
+       /**
+        * @event onItemClick Происходит при клике по хлебным крошкам (элементу коллекции).
+        * @param {Number|String} idProperty Идентификатор элемента коллекции.
+        */
       _dotTplFn: dotTpl,
       $protected: {
          _resizeTimeout: null,
@@ -40,8 +47,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _paddings: undefined,
          _margins: undefined,
          _options: {
-            keyField: 'id',
-            displayField: 'title',
+            idProperty: 'id',
+            displayField: '',
+            displayProperty: 'title',
             /**
              * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
              * @remark
@@ -60,8 +68,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              *                'html!SBIS3.MyArea.MyComponent/resources/item_template'
              *             ],
              *             function(..., myItemTpl) {
-                *             ...
-                *          });
+             *             ...
+             *          });
              *       </pre>
              * 2. Установить шаблон:
              *       <pre>
@@ -82,7 +90,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              *
              */
             itemTemplate: pointTpl,
-            pickerClassName: 'controls-Menu__Popup controls-BreadCrumbs'
+            pickerClassName: 'controls-Menu__Popup controls-BreadCrumbs '
          }
       },
 
@@ -90,6 +98,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          var newCfg = BreadCrumbs.superclass._modifyOptions.apply(this, arguments);
          if (!cfg.items || cfg.length !== 0) {
             newCfg.visible = false;
+         }
+         if (cfg.keyField) {
+            IoC.resolve('ILogger').log('BreadCrumbs', 'Опция keyField является устаревшей, используйте idProperty');
+            cfg.idProperty = cfg.keyField;
+         }
+         if (cfg.displayField) {
+            IoC.resolve('ILogger').log('BreadCrumbs', 'Опция displayField является устаревшей, используйте displayProperty');
+            cfg.displayProperty = cfg.displayField;
          }
          return newCfg;
       },
@@ -116,8 +132,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             if (crumb.hasClass('controls-BreadCrumbs__dots')) {
                this._dotsClickHandler(crumb)
             } else if (crumb.length) {
-               this._notify('onItemClick', crumb.data(this._options.keyField));
-               this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.keyField));
+               this._notify('onItemClick', crumb.data(this._options.idProperty));
+               this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.idProperty));
             }
             if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
@@ -156,7 +172,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       setItems: function(items){
          BreadCrumbs.superclass.setItems.call(this, items);
-         this._dataSet._keyField = this._options.keyField;
+         this._dataSet._keyField = this._options.idProperty;
       },
 
       //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
@@ -194,15 +210,15 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             var width = this._picker._container.width();
             this._picker._container.empty();
             this._dataSet.each(function(record) {
-               if (record.get(self._options.keyField)){
+               if (record.get(self._options.idProperty)){
                   var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
                      point.html(self._options._decorators.apply(
-                           strHelpers.escapeHtml(record.get(self._options.displayField))
+                           strHelpers.escapeHtml(record.get(self._options.displayProperty))
                      ))
                      .attr('style', self._options._decorators.apply(
                         self._options.colorField ? record.get(self._options.colorField) : '', 'color'
                      ));
-                     point.data(self._options.keyField, record.get(self._options.keyField));
+                     point.data(self._options.idProperty, record.get(self._options.idProperty));
                   self._picker._container.append(point);
                   var previousContainer = point.prev('.js-controls-BreadCrumbs__crumb', self._picker._container),
                      previousWrappersCount = $('.controls-BreadCrumbs__hierWrapper', previousContainer).length;
@@ -239,11 +255,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                dots: true,
                get: function(field) {return this[field];}
             };
-            item[this._options.displayField] = '...';
+            item[this._options.displayProperty] = '...';
             dots = $(pointTpl({
                   item: item,
                   decorators: this._options._decorators,
-                  displayField: this._options.displayField
+                  displayField: this._options.displayProperty,
+                  displayProperty: this._options.displayProperty
                }));
          }
 
@@ -336,7 +353,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          return {
             item: item,
-            displayField: this._options.displayField,
+            displayField: this._options.displayProperty,
+            displayProperty: this._options.displayProperty,
             decorators: this._options._decorators
          };
       },
@@ -346,7 +364,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _addItemAttributes: function(container, item) {
-         container.data(this._options.keyField, item.get(this._options.keyField));
+         container.data(this._options.idProperty, item.get(this._options.idProperty));
          BreadCrumbs.superclass._addItemAttributes.apply(this, arguments);
       },
 

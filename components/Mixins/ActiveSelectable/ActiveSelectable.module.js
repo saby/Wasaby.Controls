@@ -35,12 +35,12 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
             /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
                требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
-            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.keyField] && opts.selectedItem[opts.displayField]) {
+            if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.idProperty] && opts.selectedItem[opts.displayProperty]) {
                opts.selectedItem = new Model({
-                  idProperty: opts.keyField,
+                  idProperty: opts.idProperty,
                   rawData: opts.selectedItem
                });
-               opts.selectedKey = opts.selectedItem.getId();
+               opts.selectedKey = opts.selectedItem.get(opts.idProperty);
             }
 
             return opts;
@@ -79,7 +79,12 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
          this._options.selectedItem = isModel ? item : null;
 
-         key = isModel ? item.getId() : null;
+         key = isModel ? item.get(this._options.idProperty) : null;
+
+         if(key === undefined) {
+            throw new Error(this._moduleName + ': record key is undefined.');
+         }
+
          this._options.selectedKey = key;
 
          this._notifyOnPropertyChanged('selectedItem');
@@ -87,7 +92,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
       },
 
       initializeSelectedItem: function() {
-         this._options.selectedItem = new Model({idProperty: this._options.keyField});
+         this._options.selectedItem = new Model({idProperty: this._options.idProperty});
       },
 
       /**
@@ -141,13 +146,17 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
       /* Синхронизирует выбранные ключи и выбранные записи */
       _syncSelectedItem: function() {
          var selItem = this._options.selectedItem,
-             selKey = this._options.selectedKey;
+             selKey = this._options.selectedKey,
+             key;
+
+         if(selItem) {
+            key = selItem.get(this._options.idProperty);
+         }
 
          /* При синхронизации запись без ключа считаем невыбранной, т.к. с помощью метода set такую запись установить нельзя,
-          т.е. она может только проинициализироваться из контекста */
-         if( selItem && selItem.getId() &&
-             /* Ключ может быть строкой или числом, учитываем при проверке */
-             (selKey === null || (selKey !== selItem.getId()) && selKey !== String(selItem.getId())) ) {
+            т.е. она может только проинициализироваться из контекста */
+         /* Ключ может быть строкой или числом, учитываем при проверке */
+         if( key && (selKey === null || (selKey !== key) && selKey !== String(key)) ) {
             this._options.selectedItem = null;
             this._notifyOnPropertyChanged('selectedItem');
          }

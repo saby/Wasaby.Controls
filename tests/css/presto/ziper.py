@@ -33,5 +33,6 @@ if __name__ == '__main__':
                 continue
             new_file_name = file_name.replace(current, '')
             rename(file_name, new_file_name)
-            archive.write(new_file_name)
+            archive_name = new_file_name.replace(dst, '')
+            archive.write(new_file_name, archive_name)
     archive.close()

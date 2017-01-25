@@ -15,13 +15,17 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                internalCaptionField: "Тест_CaptionField",
                internalValueField: "Тест_ValueField",
                resetValue: null,
-               value: "Тест_Value"
+               value: "Тест_Value",
+               itemTemplate: null,
+               historyItemTemplate: null
             },
             {
                internalCaptionField: "FilterDatePeriodText",
                internalValueField: "FilterDatePeriod",
                resetValue: "Все",
-               value: "Все"
+               value: new Date(2016, 11, 11),
+               itemTemplate: null,
+               historyItemTemplate: null
             }
          ];
 
@@ -38,6 +42,13 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                internalValueField: "FilterDatePeriod",
                resetValue: "Все",
                value: "Сегодня"
+            },
+            {
+               caption: "Завтра",
+               internalCaptionField: "FilterDatePeriodTextTomorrow",
+               internalValueField: "FilterDatePeriodTomorrow",
+               resetValue: "Все",
+               value: "Сегодня"
             }
          ];
       });
@@ -47,17 +58,133 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
          secondStructure = undefined;
       });
 
-      describe('.prepareStructureToApply', function() {
-         it('should merge structures', function() {
+      describe('.prepareStructureToSave', function() {
+         it('should prepare structures', function() {
+
+            var resultStructure =  [
+               {
+                  caption: "Тест",
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: "Тест_Value"
+               },
+               {
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "2016-12-11"
+               }
+            ];
 
             assert.deepEqual(
-                secondStructure,
-                FilterHistoryControllerUntil.prepareStructureToApply(secondStructure, structure)
+                resultStructure,
+                FilterHistoryControllerUntil.prepareStructureToSave(structure)
             );
+         })
+      });
+
+      describe('.prepareStructureToApply', function() {
+         it('should prepare structure', function() {
+
+            var resultStructure = [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня",
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               }
+            ];
+
+            FilterHistoryControllerUntil.prepareNewStructure(structure, secondStructure);
 
             assert.deepEqual(
-                structure,
-                FilterHistoryControllerUntil.prepareStructureToApply(structure, secondStructure)
+                resultStructure,
+                secondStructure
+            );
+         })
+      });
+
+      describe('.prepareNewStructure', function() {
+         it('should prepare structure', function() {
+
+            var resultStructure = [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня",
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               }
+            ];
+
+            var newStructure =  [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня"
+               },
+               {
+                  caption: "Завтра",
+                  internalCaptionField: "FilterDatePeriodTextTomorrow",
+                  internalValueField: "FilterDatePeriodTomorrow",
+                  resetValue: "Все",
+                  value: "Сегодня"
+               }
+            ];
+
+            var currentStructure = [
+               {
+                  caption: "Тест",
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: "Тест_Value"
+               },
+               {
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: new Date(2016, 11, 11),
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               }
+            ];
+
+            FilterHistoryControllerUntil.prepareNewStructure(currentStructure, newStructure);
+
+            assert.deepEqual(
+                resultStructure,
+                newStructure
             );
          })
       });

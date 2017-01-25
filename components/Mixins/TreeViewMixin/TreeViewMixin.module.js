@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       _needCreateFolderFooter: function(item) {
          var
              model = item.getContents(),
-             id = model && model.get(this._options.keyField);
+             id = model && model.get(this._options.idProperty);
          return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
       },
       //********************************//
@@ -278,16 +278,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                }
             }
             return parentFunc.call(this, items, notCollapsed, groupId);
-         },
-         /**
-          * Проверяет, является ли $-элемент визуальным отображением элемента коллекции
-          * @param parentFunc
-          * @param elem
-          * @returns {*|boolean}
-          * @private
-          */
-         _isViewElement: function(parentFunc, elem) {
-            return  parentFunc.call(this, elem) && !elem.hasClass('controls-HierarchyDataGridView__path') && !(cInstance.instanceOfModule(elem.wsControl(), 'SBIS3.CONTROLS.BreadCrumbs'));
          },
          /**
           * Обработка изменения item property
@@ -343,17 +333,16 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             }
          }
       },
-      _elemClickHandlerInternal: function (data, id, target, e) {
+      _elemClickHandlerInternal: function (data, id, target) {
          var $target = $(target),
-             nodeID = $target.closest('.js-controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));
 
          if (closestExpand.hasClass('js-controls-TreeView__expand')) {
-            this.toggleNode(nodeID);
+            this.toggleNode(id);
             /* Не вызываем активацию item'a при клике на чекбокс */
          } else if(!$target.hasClass('js-controls-ListView__itemCheckBox')) {
-            if ((this._options.allowEnterToFolder) && ((data.get(this._options.hierField + '@')))){
-               this.setCurrentRoot(nodeID);
+            if ((this._options.allowEnterToFolder) && ((data.get(this._options.nodeProperty)))){
+               this.setCurrentRoot(id);
                this.reload();
             }
             else {
@@ -365,11 +354,13 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       //Переопределяем метод, чтоб передать тип записи
       _activateItem : function(id) {
          var
-            item = this._options._items.getRecordById(id),
+            item = this.getItems().getRecordById(id),
             meta = {
                id: id,
                item: item,
-               hierField : this._options.hierField
+               hierField : this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
             };
 
          this._notify('onItemActivate', meta);
@@ -396,6 +387,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          else {
             this._container.empty();
          }
+         this._container.toggleClass('ws-hidden', !more);
       }
    });
 

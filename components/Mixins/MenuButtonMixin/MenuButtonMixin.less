@@ -1,3 +1,4 @@
+@import "../../IconButton/IconButton";
 .controls-Menu {
    .controls-Menu__header {
       position: relative;
@@ -6,14 +7,22 @@
       font-weight: bold;
       background-color: #F4F4F4;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+
+      .controls-Menu-headWrapper {
+         display: flex;
+         align-items: center;
+      }
       .controls-Menu__header-caption {
          color: @blue-dark-color;
-         vertical-align: top;
-         position: relative;
-         top: -1px;
+         flex-shrink: 0;
       }
       .controls-Menu__header-icon{
-         color: @button-icon-color-hover !important;
+         &.icon-primary {
+            color: @button-icon-color-hover !important;
+         }
+         position: relative;
       }
       .controls-Menu__header-icon + .controls-Menu__header-caption{
          padding-left: 0;
@@ -23,12 +32,12 @@
       height: @menu-header-height;
    }
    &.controls-Menu__hide-menu-header {
-      margin: -9px 0 0 -10px;
+      margin: -8px 0 0 -13px;
       .controls-Menu__header {
          display: none;
       }
       &.controls-IconButton__round-border-24 {
-         margin: -8px 0 0 -4px;
+         margin: -7px 0 0 -7px !important;
          .controls-ListView__item:first-child {
             .controls-MenuItem__icon {
                .round-button-mixin(@gray-ccc-color);
@@ -43,31 +52,25 @@
    }
 }
 
-.ws-is-mobile-platform {
-// в заголовке меню на айпаде текст и иконка съезжают на пиксель вниз
+.ws-is-firefox {
    .controls-Menu {
       .controls-Menu__header {
-         .controls-Menu__header-icon{
+         .icon-24 {
             top: -1px;
             position: relative;
-         }
-         .controls-Menu__header-caption {
-            top: -3px;
          }
       }
    }
 }
 
-.ws-is-firefox {
-   // в заголовке меню на ff текст и иконка съезжают на пиксель вниз
+// удалить в .230
+.ws-is-ie8, .ws-is-ie9 {
    .controls-Menu {
       .controls-Menu__header {
-         .controls-Menu__header-icon{
-            top: -1px;
-            position: relative;
-         }
          .controls-Menu__header-caption {
-            top: -2px;
+            vertical-align: top;
+            position: relative;
+            top: -1px;
          }
       }
    }

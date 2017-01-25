@@ -1,4 +1,4 @@
-.controls-SearchForm {
+.controls-SearchForm.controls-TextBox {
   .border-radius(@search-border-radius);
   border-color: @search-border-color;
   border-bottom-color: @search-bottom-border-color;
@@ -37,12 +37,13 @@
   }
 
   &.controls-TextBox .controls-TextBox__fieldWrapper {
-    margin: 0 @search-buttons-wrapper-width 0 @search-left-margin;
+    margin: 0 @search-form-field-wrapper-margin-right 0 @search-left-margin;
     padding: 0;
   }
 
   .controls-TextBox__afterFieldWrapper {
     width: @search-buttons-wrapper-width;
+    padding: @search-button-wrapper-padding;
   }
   .controls-SearchForm__search, .controls-SearchForm__reset {
     display: block;

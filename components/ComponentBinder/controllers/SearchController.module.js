@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          _options: {
             view: null,
             searchForm: null,
+            searchFormWithSuggest: false,
             searchParamName: null,
             searchCrumbsTpl: null,
             searchMode: null,
@@ -39,90 +40,91 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
       },
 
-      _needSearch: function(text, searchParamName) {
-         return text && this._options.view.getFilter()[searchParamName] !== text;
-      },
-
       _startHierSearch: function(text) {
-         var searchParamName = this._options.searchParamName;
-         if (this._needSearch(text, searchParamName)) {
-            var filter = cMerge(this._options.view.getFilter(), {
-                  'Разворот': 'С разворотом',
-                  'usePages': 'full'
-               }),
-               view = this._options.view,
+         var searchParamName = this._options.searchParamName,
+             filter = cMerge(this._options.view.getFilter(), {
+                'Разворот': 'С разворотом',
+                'usePages': 'full'
+             }),
+             view = this._options.view,
+             self = this;
 
-               args = arguments,
-               self = this;
+         /* Проекции может не быть, если например начали искать до первой загрузки данных,
+            поэтому делаю метод обёртку, который проверяет, есть ли проекция */
+         function callProjectionMethod(method, args) {
+            var projection = view._getItemsProjection();
 
-            filter[searchParamName] = text;
-            view._options.hierarchyViewMode = true;
-            view.setHighlightText(text, false);
-            view.setHighlightEnabled(true);
-
-            if (self._isInfiniteScroll == undefined) {
-               self._isInfiniteScroll = view.isInfiniteScroll();
+            if(projection) {
+               projection[method].apply(projection, args);
             }
-            view.setInfiniteScroll(true, true);
-
-            if (this._firstSearch) {
-               this._lastRoot = view.getCurrentRoot();
-               //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
-               if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()) {
-                  this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
-               }
-            }
-            this._firstSearch = false;
-            //Флаг обозначает, что ввод был произведен пользователем
-            this._searchReload = true;
-            if (this._options.searchMode == 'root') {
-               filter[view.getHierField()] = undefined;
-            }
-
-            view.once('onDataLoad', function(event, data) {
-               var root;
-               //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
-               if (self._options.backButton) {
-                  self._options.backButton.getContainer().css({'display': 'none'});
-               }
-               //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
-               if (self._options.breadCrumbs) {
-                  self._options.breadCrumbs.getContainer().css({'display': 'none'});
-               }
-
-               if (self._options.searchMode === 'root') {
-                  root = view._options.root !== undefined ? view._options.root : null;
-                  //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-                  view._options._itemsProjection.setEventRaising(false);
-                  //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
-                  view._options._itemsProjection.setRoot(root);
-                  view._options._curRoot = root;
-                  view._options._itemsProjection.setEventRaising(true);
-               }
-            });
-
-            view.reload(filter, view.getSorting(), 0).addCallback(function() {
-               view._container.addClass('controls-GridView__searchMode');
-            });
-            this._searchMode = true;
          }
+
+         filter[searchParamName] = text;
+         view._options.hierarchyViewMode = true;
+         view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
+
+         if (self._isInfiniteScroll == undefined) {
+            self._isInfiniteScroll = view.isInfiniteScroll();
+         }
+         view.setInfiniteScroll(true, true);
+
+         if (this._firstSearch) {
+            this._lastRoot = view.getCurrentRoot();
+            //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
+            if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()) {
+               this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
+            }
+         }
+         this._firstSearch = false;
+         //Флаг обозначает, что ввод был произведен пользователем
+         this._searchReload = true;
+         if (this._options.searchMode == 'root') {
+            filter[view.getParentProperty()] = undefined;
+         }
+
+         view.once('onDataLoad', function(event, data) {
+            var root;
+            //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
+            if (self._options.backButton) {
+               self._options.backButton.getContainer().css({'display': 'none'});
+            }
+            //Это нужно чтобы поиск был от корня, а крошки при этом отображаться не должны
+            if (self._options.breadCrumbs) {
+               self._options.breadCrumbs.getContainer().css({'display': 'none'});
+            }
+
+            if (self._options.searchMode === 'root') {
+               root = view._options.root !== undefined ? view._options.root : null;
+               //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
+               callProjectionMethod('setEventRaising',[false, true]);
+               //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
+               callProjectionMethod('setRoot', [root]);
+               view._options._curRoot = root;
+               callProjectionMethod('setEventRaising', [true, true]);
+            }
+         });
+
+         view.reload(filter, view.getSorting(), 0).addCallback(function() {
+            view._container.addClass('controls-GridView__searchMode');
+         });
+         this._searchMode = true;
+
       },
 
       _startSearch: function(text) {
-         var searchParamName = this._options.searchParamName;
-         if (this._needSearch(text, searchParamName)) {
-            var view = this._options.view,
-               filter = cMerge(view.getFilter(), {
-                  'usePages': 'full'
-               }),
-               args = arguments;
+         var searchParamName = this._options.searchParamName,
+             view = this._options.view,
+             filter = cMerge(view.getFilter(), {
+                'usePages': 'full'
+             });
 
-            filter[searchParamName] = text;
-            view.setHighlightText(text, false);
-            view.setHighlightEnabled(true);
-            view.setInfiniteScroll(true, true);
-            view.reload(filter, view.getSorting(), 0);
-         }
+         filter[searchParamName] = text;
+         view.setHighlightText(text, false);
+         view.setHighlightEnabled(true);
+         view.setInfiniteScroll(true, true);
+         view.reload(filter, view.getSorting(), 0);
+
       },
 
       _resetSearch: function() {
@@ -147,8 +149,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
          view.once('onDataLoad', function() {
             view._container.removeClass('controls-GridView__searchMode');
-            view._options._curRoot = self._lastRoot || null;
-            view._getItemsProjection().setRoot(self._lastRoot || null);
+            view.setCurrentRoot(self._lastRoot || null);
          });
          this._searchMode = false;
          view._options.hierarchyViewMode = false;
@@ -164,7 +165,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          if (this._searchReload) {
             //Нужно поменять фильтр и загрузить нужный корень.
             //TODO менять фильтр в контексте, когда появятся data-binding'и
-            filter[view.getHierField()] = this._lastRoot;
+            filter[view.getParentProperty()] = this._lastRoot;
             //DataGridView._filter = filter;
             //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
             //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
@@ -253,7 +254,16 @@ define('js!SBIS3.CONTROLS.SearchController',
             });
          }
 
-         searchForm.subscribe('onSearch', function(event, text) {
+         searchForm.subscribe('onSearch', function(event, text, forced) {
+            /* Если у поля поиска есть автодополнение,
+               то поиск надо запускать только по enter'у / выбору из автодополнения. */
+            if(searchForm.getProperty('usePicker') && text) {
+               /* Если поиск происходит в автодополнении, то его надо разрешать */
+               if( (!self._options.searchFormWithSuggest && (!forced || searchForm.isPickerVisible())) || (self._options.searchFormWithSuggest && forced) ) {
+                  return;
+               }
+            }
+
             self._kbLayoutRevertObserver.startObserve();
             if (isTree) {
                self._startHierSearch(text);
@@ -302,6 +312,14 @@ define('js!SBIS3.CONTROLS.SearchController',
                event.preventDefault();
             }
          });
+      },
+
+      /**
+       * Устанавливает имя параметра поиска
+       * @param {String} name имя параметра поиска
+       */
+      setSearchParamName: function(name) {
+         this._options.searchParamName = name;
       }
 
    });

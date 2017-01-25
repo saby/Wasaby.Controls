@@ -13,8 +13,12 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
 
    /**
     * Диаграмма HighChartsLight
-    * @class HighChartsLight
+    * @class SBIS3.CONTROLS.HighChartsLight
     * @extends $ws.proto.Control
+    *
+    * @cssModifier controls-HighChartsLight__overflow-visible Отменяет обрезание для контенеров в которых лежит график. Все элементы которые рисуются с опцией useHTML не будут обрезаться границами контенера
+    * @cssModifier controls-HighChartsLight__svg-overflow-visible Отменяет обрезание для контенеров в которых лежит график, в том числе и для самого svg контенера графика. Все элементы в том числе и те, которые рисуются внутри svg, не будут обрезаться.
+    *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
@@ -24,7 +28,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
     * <component data-component='SBIS3.CONTROLS.HighChartsLight'>
     * </component>
     */
-   var HighChartsLight = BaseControl.Control.extend(/** @lends HighChartsLight.prototype */{
+   var HighChartsLight = BaseControl.Control.extend(/** @lends SBIS3.CONTROLS.HighChartsLight.prototype */{
       _dotTplFn : dotTpl,
       $protected : {
          _chartObj : null,

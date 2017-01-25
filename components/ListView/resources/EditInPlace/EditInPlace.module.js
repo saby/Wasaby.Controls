@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
    'js!WS.Data/Builder',
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlace'
 ],
    function(Deferred, Control, dotTplFn, CompoundFocusMixin, DataBuilder, cInstance, fcHelpers) {
       'use strict';
@@ -39,8 +40,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _model: undefined,
                _editing: false,
                _editors: [],
-               _trackerInterval: undefined,
+               _trackerHeightInterval: undefined,
+               _trackerPositionInterval: undefined,
                _lastHeight: 0,
+               _lastPosition: undefined,
                _editingModel: undefined,
                _editingDeferred: undefined
             },
@@ -48,9 +51,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown)
-                              .bind('keyup', this._onKeyUp.bind(this));
+                              .bind('keyup', this._onKeyUp.bind(this))
+                              .bind('mousedown', this._onMouseDown.bind(this));
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
                this._editors = this.getContainer().find('.controls-editInPlace__editor');
+            },
+
+            _onMouseDown: function(event) {
+               // Не даем всплывать событию mousedown выше контейнера редактирования.
+               // Это связано с особенностями обработки фокуса родительскими компонентами.
+               // todo: можно будет выпилить, когда редактирование по месту будет частью разметки табличных представлений
+               event.stopPropagation();
             },
 
             _onChildControlFocusOut: function() {
@@ -143,8 +154,20 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._lastHeight = 0;
                // Данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
                this.recalculateHeight();
-               this._trackerInterval = setInterval(this.recalculateHeight.bind(this), 50);
+               this._trackerHeightInterval = setInterval(this.recalculateHeight.bind(this), 50);
             },
+
+            _beginTrackPosition: function() {
+               this._lastPosition = null;
+               // Синхронно пересчитаем позицию, чтобы не было визуальных скачков из-за асинхронного позиционирования
+               this.updatePosition();
+               this._trackerPositionInterval = setInterval(this.updatePosition.bind(this), 50);
+            },
+
+            _endTrackPosition: function() {
+               clearInterval(this._trackerPositionInterval);
+            },
+
             recalculateHeight: function() {
                var
                    newHeight = 0,
@@ -157,13 +180,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this.getTarget().height(newHeight);
-                  this.updatePosition();
+                  this.getTarget().outerHeight(newHeight, true);
                   this._notify('onChangeHeight', this._model);
                }
             },
             _endTrackHeight: function() {
-               clearInterval(this._trackerInterval);
+               clearInterval(this._trackerHeightInterval);
                //Сбросим установленное ранее значение высоты строки
                this.getTarget().height('');
             },
@@ -175,9 +197,14 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                if (!this.isVisible()) {
                   this.show(model, itemProj);
                }
-               this._beginTrackHeight();
-               this._editing = true;
+               /*Сначада необходимо повестиь класс что запись реактируется, т.к. это может привести к изменению высоты
+                 редактируемой строки, что в свою очередь может привести к смещению редакторов и визуальным скачкам.*/
                this.getTarget().addClass('controls-editInPlace__editing');
+               this._beginTrackHeight();
+               /*Необходимо отслеживать позицию редакторов, т.к. во время редактирования может измениться позиция редакторов,
+                 в следствии изменения высоты записей(лежащих выше или ниже редактируемой) или добавления/удаления записей.*/
+               this._beginTrackPosition();
+               this._editing = true;
                if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
                   this.activateFirstControl();
                }
@@ -189,10 +216,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             endEdit: function() {
                this.getContainer().removeAttr('data-id');
                this._endTrackHeight();
+               this._endTrackPosition();
                this.getTarget().removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
-               this._deactivateActiveChildControl();
+               //После завершения редактирования, нужно деактивировать опласть с редакторами, иначе фокус останется на ней
+               this.setActive(false);
                //Возможен такой сценарий: начали добавление по месту, не заполнив данные, подтверждают добавление
                //и срабатывает валидация. Валидация помечает невалидные поля. После этого происходит отмена добавления,
                //и редакторы скрываются. При следующем начале добавления по месту редакторы будут показаны, как невалидные.
@@ -226,9 +255,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                //которую можно будет удалить после отказа от hover режима.
                if (target && target.length) {
                   editorTop = target.position().top - this.getContainer().position().top;
-                  $.each(this._editors, function (id, editor) {
-                     $(editor).css('top', editorTop);
-                  });
+                  if (this._lastPosition !== editorTop) {
+                     this._lastPosition = editorTop;
+                     $.each(this._editors, function (id, editor) {
+                        $(editor).css('top', editorTop);
+                     });
+                  }
                }
             },
             getEditingRecord: function() {
@@ -251,7 +283,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
             },
             destroy: function() {
-               this._container.unbind('keypress keydown keyup');
+               this._container.unbind('keypress keydown keyup mousedown');
                EditInPlace.superclass.destroy.call(this);
             },
             //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.

@@ -1,11 +1,14 @@
+@import "../Utils/HtmlDecorators/HighlightDecorator";
 .controls-ListView {
-
+    &.ws-area {
+      position: relative;
+    }
    //Данные стили обеспечивают правильное поведение ListView при активации.
    //Фокус должен переходить на элемент с position fixed.
    .controls-ListView__fakeFocusElement {
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
       width: 1px;
       height: 1px;
    }
@@ -17,16 +20,16 @@
      &.controls-ListView__hoveredItem {
         background-color: @default-itemHover-color;
         .controls-ListView__itemCheckBox {
-           	background: @check-box-icon-bg;
+           	background: @listView-check-box-icon-bg;
            	&:hover{
-      			background: @check-box-icon-hover-bg;
+      			background: @listView-check-box-icon-hover-bg;
       		}
         }
      }
   }
 
    .controls-Pager-container {
-      min-height: @controls-Pager-minHeight;
+      overflow: hidden;
    }
 
    &.controls-small-ListView {
@@ -54,7 +57,7 @@
       top: @listView-check-box-top;
       border: @listView-check-box-border;
       &:hover{
-      	background: @check-box-icon-hover-bg;
+      	background: @listView-check-box-icon-hover-bg;
       }
    }
    &.controls-ListView__multiselect {
@@ -68,9 +71,9 @@
       }
       .controls-ListView__item__multiSelected{
          .controls-ListView__itemCheckBox {
-            background: @check-box-icon-checked-bg;
+            background: @listView-check-box-icon-checked-bg;
             &:hover{
-      			background: @check-box-icon-checked-bg;
+      			background: @listView-check-box-icon-checked-bg;
       		}
          }
       }
@@ -84,12 +87,12 @@
       z-index: 1;
       right: 0;
       width: 100%;
-      background: url('img/ajax-loader-indicator.gif') no-repeat center;
-      background: url('img/ajax-loader-indicator.gif') no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+      background: url("@{list-view-scroll-spritesheet}") no-repeat center;
+      background: url("@{list-view-scroll-spritesheet}") no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
       &.controls-ListView-scrollIndicator__up{
          top: 0;
-         background: url('img/ajax-loader-indicator.gif') no-repeat center;
-         background: url('img/ajax-loader-indicator.gif') no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+         background: url("@{list-view-scroll-spritesheet}") no-repeat center;
+         background: url("@{list-view-scroll-spritesheet}") no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
       }
    }
    &.controls-ListView__outside-scroll-loader{
@@ -100,7 +103,7 @@
 
    &.controls-ListView__showCheckBoxes {
       .controls-ListView__itemCheckBox {
-         background: @check-box-icon-bg;
+         background: @listView-check-box-icon-bg;
       }
    }
    &.controls-ListView__hideCheckBoxes {
@@ -153,9 +156,7 @@
    &.controls-ListView__orangeMarker {
       .controls-ListView__itemsContainer > {
          .controls-ListView__item__selected {
-            background-image: url('img/rowSelect.png');
-            background-position: left top;
-            background-repeat: repeat-y;
+            .marker(left top)
          }
       }
    }
@@ -233,19 +234,19 @@
   }
 }
 
-.controls-DataGridView__results{
+.controls-ListView__results{
   background: #FFF;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 14px;
   color: #313E78;
 }
 
 @ie8: \0screen;
 @media @ie8 {
    .controls-ListView-scrollIndicator{
-      background-image: url('img/ajax-loader-indicator.gif');
+      background-image: url("@{list-view-scroll-spritesheet}");
       &.controls-ListView-scrollIndicator__up{
-         background-image: url('img/ajax-loader-indicator.gif');
+         background-image: url("@{list-view-scroll-spritesheet}");
       }
    }
 }
@@ -261,6 +262,18 @@
       display: none;
    }
 }
+.controls-ScrollContainer {
+   > .controls-ListView__scrollPager{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      height: 32px;
+      background: white;
+      border-top: 1px solid @default-color;
+      z-index: 10;
+   }
+}
+
 .controls-GroupBy__separator {
    height: @list-view-separator-height / 2;
    margin-bottom: @list-view-separator-height / 2;

@@ -1,0 +1,69 @@
+<div>
+   <component data-component="SBIS3.CONTROLS.FilterButton" name="FilterTable">
+      <option name="resetLinkText">Нужно отобрать?</option> <!-- Текст, отображаемый рядом с кнопой фильтров -->
+      <options name="filterStructure" type="array"> <!-- Тут перечислен набор фильтров, эти значения берутся из контекста. При выборе фильтра они отображаются слева от кнопки -->
+         <options>
+            <option name="internalValueField">author</option>
+            <option name="value" bind="filter/author" value=""></option>
+         </options>
+         <options>
+            <option name="internalValueField">authorName</option>
+            <option name="value" bind="filter/author_name" value=""></option>
+         </options>
+         <options>
+            <option name="internalValueField">opus</option>
+            <option name="value" bind="filter/work" value=""></option>
+         </options>
+         <options>
+            <option name="value" bind="filter/country" value=""></option>
+            <option name="internalValueField">countryRussia</option>
+            <option name="internalVisibilityField">countryRussiaVisible</option>
+         </options>
+         <options>
+            <option name="internalValueField">genreKey</option> <!-- Поле контекста со всплывающей панели, которое содержит ключ выбранного значения фильтра -->
+            <option name="internalCaptionField">genreName</option> <!-- Поле контекста со всплывающей панели, которое содержит выбранное значение фильтра -->
+            <option name="internalVisibilityField">genreNameVisible</option> <!-- Название поля, которое хранит отображение элемента в зависимости от значения -->
+            <option name="value" bind="filter/genreKey" nonexistent="stroka" value=""></option> <!-- Текущее ключевое значение элемента -->
+            <option name="caption" bind="filterDescr/genreName" value=""></option> <!-- Текущее текстовое значение элемента -->
+            <option name="resetValue" value="stroka"></option> <!-- Значение поля при сбрасывании фильтра, или при пустом значении в value. Указано несуществующее значение, чтобы при сбрасывании фильтра не установилось первое из возможных значений -->
+         </options>
+      </options>
+      <option name="template">
+         <component data-component="SBIS3.Demo.FilterButton.FilterDropdownPanel"></component> <!-- Шаблон всплывающей панели фильтрации  -->
+      </option>
+      <option name="additionalFilterParamsTemplate"> <!-- Описание шаблона для блока "Можно отобрать" на всплывающей панели -->
+         <component data-component="SBIS3.Demo.FilterButton.FilterDropdownPanelAdd"></component>
+      </option>
+   </component>
+   <component data-component="SBIS3.CONTROLS.DataGridView" name="myTable" class="controls-DataGridView__hasSeparator fb-FilterDropdown__myTable">
+      <options name="filter" bind="filter"></options> <!-- Связывание представления с полем фильтра в контексте -->
+      <option name="idProperty">@Книга</option> <!-- Устанавливаем поле первичного ключа -->
+      <options name="columns" type="array"> <!-- Конфигурация колонок представления данных -->
+         <options>
+            <option name="title">Жанр</option> <!-- Заголовок колонки -->
+            <option name="field">genreName</option> <!-- Поле источника, значения которого будут отображены в этой колонке -->
+            <option name="width">100</option> <!-- Ширина колонки -->
+         </options>
+         <options>
+            <option name="title">Страна</option>
+            <option name="field">country</option>
+            <option name="width">100</option>
+         </options>
+         <options>
+            <option name="title">Фамилия</option>
+            <option name="field">author</option>
+            <option name="width">200</option>
+         </options>
+         <options>
+            <option name="title">Имя</option>
+            <option name="field">author_name</option>
+            <option name="width">150</option>
+         </options>
+         <options>
+            <option name="title">Произведение</option>
+            <option name="field">work</option>
+         </options>
+      </options>
+      <options name="itemsActions" type="array"></options>
+   </component>
+</div>

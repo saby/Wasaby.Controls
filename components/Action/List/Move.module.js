@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
       var Move = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Move.prototype */{
          $protected: {
             _options:{
-               _moveStrategy: 'movestrategy.base'
+               moveStrategy: 'movestrategy.base'
             }
          },
          /**

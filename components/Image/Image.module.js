@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Link",
-   "i18n!SBIS3.CONTROLS.Image"
+   "i18n!SBIS3.CONTROLS.Image",
+   'css!SBIS3.CONTROLS.Image'
 ], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var
@@ -35,6 +36,12 @@ define('js!SBIS3.CONTROLS.Image',
           * @author Крайнов Дмитрий Олегович
           *
           * @ignoreOptions validators
+          * @ignoreEvents onAfterLoad onChange onStateChange
+          * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+          *
+          * @demo SBIS3.CONTROLS.DEMO.IntImage <b>Пример 1.</b> Разные типы изображения + плагин.
+          * @demo SBIS3.CONTROLS.DEMO.IntImage2 <b>Пример 2.</b> Базовая линия.
+          * @demo SBIS3.CONTROLS.DEMO.IntImage3 <b>Пример 3.</b> Редактирование изображения при загрузке.
           *
           * @public
           * @control
@@ -330,7 +337,7 @@ define('js!SBIS3.CONTROLS.Image',
                this._setImage = this._setImage.debounce(0);
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
-               CommandDispatcher.declareCommand(this, 'resetImage', this._resetImage);
+               CommandDispatcher.declareCommand(this, 'resetImage', this.resetImage);
                if (this._options.imageBar) {
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
@@ -643,10 +650,10 @@ define('js!SBIS3.CONTROLS.Image',
               * @see uploadImage
               * @see editImage
               */
-            _resetImage: function() {
+            resetImage: function(onlyClient) {
                var
                   self = this,
-                  imageResetResult = this._notify('onResetImage'),
+                  imageResetResult,
                   callDestroy = function(filter) {
                      var
                         dataSource = self.getDataSource(),
@@ -660,15 +667,23 @@ define('js!SBIS3.CONTROLS.Image',
                            }
                         });
                   };
-               if (imageResetResult !== false) {
-                  if (imageResetResult instanceof Deferred) {
-                     imageResetResult.addCallback(function(result) {
-                        if (result !== false) {
-                           callDestroy(result);
-                        }
-                     }.bind(this));
-                  } else {
-                     callDestroy(imageResetResult);
+               if (onlyClient) {
+                  self._setImage(self._options.defaultImage);
+                  if (self._options.defaultImage === '') {
+                     self.reload();
+                  }
+               } else {
+                  imageResetResult = this._notify('onResetImage');
+                  if (imageResetResult !== false) {
+                     if (imageResetResult instanceof Deferred) {
+                        imageResetResult.addCallback(function(result) {
+                           if (result !== false) {
+                              callDestroy(result);
+                           }
+                        }.bind(this));
+                     } else {
+                        callDestroy(imageResetResult);
+                     }
                   }
                }
             },

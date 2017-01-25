@@ -1,13 +1,13 @@
 <div>
    <component data-component="SBIS3.CONTROLS.Toolbar" name="MyToolbar" class="Toolbar">
       <!-- обязательные опции -->
-      <option name="keyField">id</option>
-      <option name="hierField">parent</option>
-      <option name="displayField">caption</option>
+      <option name="idProperty">id</option>
+      <option name="parentProperty">parent</option>
+      <option name="displayProperty">caption</option>
       <!-- задание элементов из контекста -->
 
       <!-- задание элементов через xhtml -->
-      <options name="items" bind="myContext/items">
+      <options name="items" bind="myContext/items" type="array">
          <options>
             <option name="id">1</option>
             <option name="componentType">js!SBIS3.CONTROLS.IconButton</option>

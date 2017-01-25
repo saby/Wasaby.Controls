@@ -1,5 +1,5 @@
 
-define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Paging', 'js!SBIS3.CONTROLS.ItemsControlMixin', 'js!SBIS3.CONTROLS.Selectable', 'html!SBIS3.CONTROLS.Paging/resources/ItemsTemplate', 'js!SBIS3.CONTROLS.IconButton'], function(CompoundControl, dotTplFn, ItemsControlMixin, Selectable, ItemsTemplate) {
+define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Paging', 'js!SBIS3.CONTROLS.ItemsControlMixin', 'js!SBIS3.CONTROLS.Selectable', 'html!SBIS3.CONTROLS.Paging/resources/ItemsTemplate', 'js!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.Paging'], function(CompoundControl, dotTplFn, ItemsControlMixin, Selectable, ItemsTemplate) {
 
    'use strict';
 
@@ -75,8 +75,8 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
    generateItems = function(cfg) {
       if (cfg.pagesCount && !cfg.items) {
          cfg.items = [];
-         cfg.keyField = 'id';
-         cfg.displayField = 'text';
+         cfg.idProperty = 'id';
+         cfg.displayProperty = 'text';
          for (var i = 1; i <= cfg.pagesCount; i++) {
             cfg.items.push({
                id : i,

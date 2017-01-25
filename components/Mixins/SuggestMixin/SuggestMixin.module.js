@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
-   "js!SBIS3.CONTROLS.SuggestShowAll"
+   "Core/helpers/functional-helpers"
 ], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance, fHelpers) {
    'use strict';
 
@@ -178,7 +177,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *     <options name="list">
              *        <option name="component" value="js!SBIS3.CONTROLS.DataGridView"></option> <!-- Указываем класс контрола, на его основе строятся результаты автодополнения -->
              *        <options name="options">
-             *           <option name="keyField" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
+             *           <option name="idProperty" value="@Пользователь"></option> <!-- Указываем ключевое поле -->
              *           <options name="columns" type="array"> <!-- Производим настройку колонок -->
              *              <options>
              *                 <option name="title">№</option>
@@ -197,7 +196,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @see listFilter
              * @see getList
              * @see startChar
-             * @see SBIS3.CONTROLS.DSMixin#keyField
+             * @see SBIS3.CONTROLS.DSMixin#idProperty
              * @see SBIS3.CORE.FieldLink/Columns.typedef
              * @see SBIS3.CONTROLS.DataGridView#showHead
              */
@@ -274,8 +273,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          this._publish('onFilterBuild', 'onListReady', 'onListItemSelect');
 
-         this.getContainer().addClass('controls-Suggest');
-
+         this._showAllButtonHandler = this._showAllButtonHandler.bind(this);
          this._initBindingRules();
       },
 
@@ -286,10 +284,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          destroy: function () {
             this._clearDelayTimer();
             this._loadingIndicator = undefined;
-            this._showAllButton = undefined;
             if (this._list) {
                this._list.destroy();
             }
+         }
+      },
+
+      around: {
+         _modifyOptions: function(parentFnc, opts) {
+            var options = parentFnc.call(this, opts);
+            options.className += ' controls-Suggest';
+            return options;
          }
       },
 
@@ -337,13 +342,17 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._notifyOnPropertyChanged('listFilter');
 
          /* Если в контролах, которые мы отслеживаем, нет фокуса или изменение фильтра произошло после внуренних изменений
-           то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
+            то почистим датасет, т.к. фильтр сменился и больше ничего делать не будем */
          if(!this._isObservableControlFocused() || silent) {
             if(items && items.getCount()) {
                items.clear();
             }
             if(this._list) {
                this._list.setFilter(this._options.listFilter, true);
+
+               if(this.isPickerVisible()) {
+                  this.hidePicker();
+               }
             }
             return;
          }
@@ -547,37 +556,27 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
          this.subscribeTo(this._list, 'onDataLoad', this._onListDataLoad.bind(this))
              .subscribeTo(this._list, 'onItemsReady', this._onListDataLoad.bind(this))
-             .subscribeTo(this._list, 'onDataLoadError', this._hideLoadingIndicator.bind(this))
+             .subscribeTo(this._list, 'onDataLoadError', function() {
+                self._hideLoadingIndicator();
+                /* https://inside.tensor.ru/opendoc.html?guid=700c5bec-d003-4489-ab94-e14df6ee16fb&des=
+                   Ошибка в разработку 27.12.2016 Не закрывается сообщение "о недоступном сервисе сообщений" в реестре Мои/Общие, если открыть…
+
+                   При возниконовении ошибки отключаем отображение автодополнения по приходу фокуса,
+                   иначе будет зацикливание и интерфейс заблокируется.*/
+                self.setAutoShow(false);
+             })
              .subscribeTo(this._list, 'onDrawItems', this._onListDrawItems.bind(this))
              .subscribeTo(this._list, 'onItemActivate', (function (eventObject, itemObj) {
                 self.setActive(true);
-                self._onListItemSelect(itemObj.id, itemObj.item);
-                /* По задаче:
-                   https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
-                   Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
+               /* По задаче:
+                https://inside.tensor.ru/opendoc.html?guid=7ce2bd66-bb6b-4628-b589-0e10e2bb8677&description=
+                Ошибка в разработку 03.11.2016 В полях связи не скрывается список с историей после выбора из него значения. Необходимо закрывать...
 
-                   В стандарте не описано поведение автодополнения при выборе из него,
-                   поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
-                self.hidePicker();
-
-            }));
-
-         /* Найдём и подпишемся на клик кнопки показа всех записей (если она есть) */
-         if(this._list.hasChildControlByName('showAllButton')) {
-            this._showAllButton = this._list.getChildControlByName('showAllButton');
-
-            this.subscribeTo(this._showAllButton, 'onActivated', function() {
-               var showAllConfig;
-
-               showAllConfig = self._getShowAllConfig();
-
-
-               //FIXME и ещё один костыль до перевода пикера на фокусную систему
+                В стандарте не описано поведение автодополнения при выборе из него,
+                поэтому жду как опишут и согласуют. Для выпуска 200 решили, что всегда будем скрывать при выборе */
                self.hidePicker();
-
-               self._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
-            });
-         }
+                self._onListItemSelect(itemObj.id, itemObj.item);
+            }));
 
          this._notify('onListReady', this._list);
       },
@@ -620,12 +619,14 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _onListDataLoad: function(e, dataSet) {
+         var list = this.getList();
+
          this._hideLoadingIndicator();
          this._listReversed = false;
 
-         if(this._showAllButton) {
-            var list = this.getList(),
-                items = dataSet || list.getItems(),
+         if(list.hasChildControlByName('showAllButton')) {
+            var items = dataSet || list.getItems(),
+                button = list.getChildControlByName('showAllButton'),
                 showButton;
 
             /* Изменяем видимость кнопки в зависимости от:
@@ -637,8 +638,24 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                showButton = list._hasNextPage(items.getMetaData().more);
             }
 
-            this._showAllButton.getContainer().toggleClass('ws-hidden', !showButton);
+            if(showButton) {
+               /* Чтобы не подписываться лишний раз */
+               if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
+                  this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
+               }
+               button.show();
+            } else {
+               this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
+               button.hide();
+            }
          }
+      },
+
+      _showAllButtonHandler: function() {
+         var showAllConfig = this._getShowAllConfig();
+
+         this.hidePicker();
+         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
       },
 
       /**

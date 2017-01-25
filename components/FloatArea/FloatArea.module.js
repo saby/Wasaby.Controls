@@ -7,11 +7,14 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
    'use strict';
 
    /**
-    * Контрол, отображающий вложенные компоненты в виде диалоговго окна
+    * Класс контрола "Всплывающая панель". Отображает вложенные компоненты в виде диалогового окна.
     * @class SBIS3.CONTROLS.FloatArea
-    * @public
     * @extends $ws.proto.CompoundControl
+    * @public
+    *
     * @mixes SBIS3.CONTROLS.PopupMixin
+    * @mixes SBIS3.CORE.LikeWindowMixin
+    *
     * @author Крайнов Дмитрий Олегович
     */
 
@@ -20,15 +23,17 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
       $protected: {
          _options: {
             /**
-             * @typedef {Object} AnimationEnum
-             * @variant no
-             * @variant fade
-             * @variant slide
-             */
-            /**
-             * @cfg {AnimationEnum} Вид анимации появления
+             * @cfg {String} Устанавливает анимацию появления панели.
+             * @variant no Без анимации.
+             * @variant fade Появление.
+             * @variant slide Всплывание.
              */
             animation : 'no',
+             /**
+              * @cfg {String} Устанавливает имя компонента, который будет открыт на всплывающей панели, или вёрстку всего шаблона.
+              * @remark
+              * Имя компонента устанавливают в формате "js!SBIS3.MyArea.MyComponent".
+              */
             template: null
          }
       },

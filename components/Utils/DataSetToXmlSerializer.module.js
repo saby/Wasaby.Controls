@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/core-structure",
-   "Core/xslt",
+   "Core/xslt-async",
    "Transport/ReportPrinter",
    "Core/helpers/helpers",
    "Core/core-extend",
@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
-   "js!SBIS3.CORE.XSLT",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
 ], function( $ws, cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, fcHelpers, strHelpers) {
    return cExtend({}, {
@@ -69,9 +68,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          var
                self = this,
                rp = this._reportPrinter,
-               xslDoc = new $ws.proto.XMLDocument({ name: xsl }).getDocument(),
                xmlDoc = this.serialize(dataSet, rp.getColumns());
-         return rp.prepareReport(dataSet, xslDoc, undefined, xmlDoc).addErrback(function(error){
+         return rp.prepareReport(dataSet, xsl, undefined, xmlDoc).addErrback(function(error){
             fcHelpers.alert(error, { checkAlreadyProcessed: true }, self);
             return error;
          });
@@ -81,7 +79,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
       },
       /**
        * Сериализует контейнер в XML-документ
-       * @param {SBIS3.CONTROLS.DataSet} records набор сериализуемых записей
+       * @param {WS.Data/Collection/RecordSet} records набор сериализуемых записей
        * @return {Document}  результат сериализации
        */
       serialize: function(dataSet, columns){
@@ -113,7 +111,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             object.each(function(record){
                self._serializeObject(record, currentElement, document, columns);
             });
-
+            self._serializeResults(object, currentElement, document);
          }
          else if (object && (typeof object.getRawData === 'function') && object.getRawData()){
             var key = object.getId();
@@ -130,6 +128,22 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             }
          }
       },
+      _serializeResults: function(object, recordSetElement, document){
+         var
+            self = this,
+            meta = object.getMetaData(),
+            results = meta ? meta.results : null;
+         if( results ) {
+            var currentElement;
+            recordSetElement.appendChild(currentElement = document.createElement('Results'));
+            results.each(function(field){
+               var column = {
+                  'field': field
+               };
+               self._serializeField(column, results, currentElement, document);
+            });
+         }
+      },
       _serializeField: function(column, record, recordElement, document){
          var fieldElement,
                tagName,
@@ -141,6 +155,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          recordElement.appendChild(fieldElement = document.createElement('Field'));
          fieldElement.setAttribute('Name', column.field);
          var fieldValue = record.get(column.field) === null ? "" : record.get(column.field),
+            fieldPrimitiveValue,
             format;
          if (cInstance.instanceOfMixin(record, 'WS.Data/Entity/FormattableMixin')) {
             var recordFormat = record.getFormat(),
@@ -165,7 +180,15 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                if(typeName === 'Время' || typeName === 'Time')
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
-            fieldValue = strHelpers.removeInvalidXMLChars(fieldValue + "");
+
+            if (fieldValue instanceof Object) {
+               fieldPrimitiveValue = fieldValue.valueOf();
+               if (fieldPrimitiveValue !== fieldValue) {
+                  element.setAttribute('Value', fieldPrimitiveValue);
+               }
+            }
+
+            fieldValue = strHelpers.removeInvalidXMLChars(''.concat(fieldValue));
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
          } else if(typeName == 'Связь'){

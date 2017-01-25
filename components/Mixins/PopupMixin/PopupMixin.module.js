@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       });
 
       $(window).blur(function(e) {
-         if(document.activeElement.tagName == "IFRAME"){
+         if(document.activeElement && document.activeElement.tagName == "IFRAME"){
             if(! $(document.activeElement).hasClass('ws-popup-mixin-ignore-iframe')){
                eventsChannel.notify('onDocumentClick', e);
             }
@@ -149,9 +149,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             isModal: false,
             /**
-             * Разрешить всплывающему окну перекрывать target 
-             * Например нужно для меню, которое может перекрывать target без потери функцианальности, 
-             * но не подходит для поля связи, так как может перекрывать вводимый текст 
+             * Разрешить всплывающему окну перекрывать target
+             * Например нужно для меню, которое может перекрывать target без потери функцианальности,
+             * но не подходит для поля связи, так как может перекрывать вводимый текст
              * @type {Boolean}
              */
             targetOverlay: false,
@@ -161,7 +161,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @variant dontMove всплывающая панель не двигается относительно таргета
              */
             locationStrategy: null,
-
+            /**
+             * Может ли popup выходить за пределы body слева и сверху т.е иметь отрицательные координаты
+             * TODO: это поведение вероятнее всего должно быть по умолчанию
+             * https://inside.tensor.ru/opendoc.html?guid=75ee0e7b-4b6d-4335-964d-6c93b40a0adc&des=
+             * Задача в разработку 15.12.2016
+             * Избавиться от опции bodyBounds в PopupMixin, добавленной по надзадаче. Вероятнее всего это п...
+             * @type {Boolean}
+             */
+            bodyBounds: false,
             isHint: true
          }
       },
@@ -547,6 +555,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
+
+            /* task:1173219692
+            im.dubrovin на Chrome on Android при получении offset необходимо учитывать scrollTop , scrollLeft */
+            if(detection.isMobileAndroid){
+               this._targetSizes.offset.top-=$(window).scrollTop();
+               this._targetSizes.offset.left-=$(window).scrollLeft();
+            };
+
             if (this._fixed) this._targetSizes.offset = this._targetSizes.boundingClientRect;
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
@@ -826,6 +842,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('height', '');
                this._overflowedV = false;
             }
+            if (this._options.bodyBounds && offset.top < 0) {
+               offset.top = 0;
+            }
             return offset.top;
          }
          else {
@@ -849,6 +868,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('width', '');
                this._overflowedH = false;
             }
+            if (this._options.bodyBounds && offset.left < 0) {
+               offset.left = 0;
+            }
             return offset.left;
          }
       },
@@ -862,7 +884,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             height = this._targetSizes.height,
             //При расчете свободного места, учитываем весь экран
             //так как на айпаде нужно открывать окна под клавиатуру что бы скролить не выпадашку, а все окно (для красоты)
-            //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет  
+            //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет
             windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
             windowWidth = this._windowSizes.width,
             spaces = {
@@ -962,16 +984,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
             }
-         },
-
-         _onResizeHandler: function(){
-            this._checkFixed(this._options.target || $('body'));
-            if (this.isVisible() && !this._fixed) {
-               this.recalcPosition(false);
-            } else {
-               this._initSizes();
-            }
-            this._checkTargetPosition();
          }
       },
 
@@ -990,6 +1002,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._options.isModal) {
                this._setModal(true);
             }
+         },
+         _onResizeHandler: function(){
+            this._checkFixed(this._options.target || $('body'));
+            if (this.isVisible() && !this._fixed) {
+               this.recalcPosition(false);
+            } else {
+               this._initSizes();
+            }
+            this._checkTargetPosition();
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
@@ -1027,7 +1048,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (detection.isMobileIOS) {
                 if(this.getContainer().find(document.activeElement).length > 0){
                    $(document.activeElement).trigger('blur');
-                };
+                }
             }
 
             var self = this,

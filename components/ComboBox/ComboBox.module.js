@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
-   "Core/core-instance"
+   "Core/core-instance",
+   'css!SBIS3.CONTROLS.ComboBox'
 ], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
@@ -25,17 +26,19 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * Особенности работы с контролом:
     * <ul>
     *    <li>Для работы контрола необходим источник данных, его можно задать либо в опции {@link items}, либо методом {@link setDataSource}.</li>
-    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link keyField}, и из какого поля будем отображать данные в выпадающий блок - {@link displayField}.</li>
+    *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link idProperty}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
     *    <li>При отсутствии данных будет выведен текст опции {@link emptyHTML}.</li>
     *    <li>Контрол по умолчанию позволяет {@link editable вручную вводить значение}.</li>
+    *    <li>По стандарту максимальная высота выпадающего списка 400px. В некоторых случаях может возникнуть необходимость её изменить.
+    *        Для этого в опции {@link pickerClassName} нужно указать свой класс someClass и в css указать селектор .someClass.controls-ComboBox__picker .controls-ComboBox__scrollContainer, установив свойство max-height в нужное значение</li>
     * </ul>
     * <br/>
     * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
     * <pre>
     *    <component data-component="SBIS3.CONTROLS.ComboBox">
     *       <options name="items" type="array" bind="record/MyEnumField"></options>
-    *       <option name="keyField">@Идентификатор</option>
-    *       <option name="displayField">Описание</option>
+    *       <option name="idProperty">@Идентификатор</option>
+    *       <option name="displayProperty">Описание</option>
     *    </component>
     * </pre>
     *
@@ -71,7 +74,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *            <option name="title">Пункт2</option>
     *         </options>
     *      </options>
-    *      <option name="keyField">key</option>
+    *      <option name="idProperty">key</option>
     * </component>
     */
 
@@ -89,13 +92,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       var rawData = {},
          emptyItemProjection,
          rs;
-      rawData[cfg.keyField] = null;
-      rawData[cfg.displayField] = 'Не выбрано';
+      rawData[cfg.idProperty] = null;
+      rawData[cfg.displayProperty] = 'Не выбрано';
       rawData.isEmptyValue = true;
 
       rs = new RecordSet({
          rawData: [rawData],
-         idProperty: cfg.keyField
+         idProperty: cfg.idProperty
       });
 
       emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
@@ -131,10 +134,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        *         </options>
        *      </options>
        *      <!--необходимо указать какое из наших полей является ключевым-->
-       *      <option name="keyField">key</option>
+       *      <option name="idProperty">key</option>
        * </pre>
-       * @see keyField
-       * @see displayField
+       * @see idProperty
+       * @see displayProperty
        * @see setDataSource
        * @see getDataSet
        */
@@ -163,11 +166,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              *     <option name="itemTemplate">
              *         <div data-key="{{=it.item.getId()}}" class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow">
              *             <div class="genie-colorComboBox__itemTitle">
-             *                 {{=it.displayField}}
+             *                 {{=it.displayProperty}}
              *             </div>
              *         </div>
              *     </option>
              * </pre>
+             * @deprecated Используйте опцию {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
              */
             itemTemplate: '',
             afterFieldWrapper: arrowTpl,
@@ -199,7 +203,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /*
-               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке 
+               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
             */
             autocomplete: false
          }
@@ -207,10 +211,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       $constructor: function () {
          var self = this;
-         self.getContainer().addClass('controls-ComboBox');
-         if (!this._options.displayField) {
+         if (!this._options.displayProperty) {
             //TODO по умолчанию поле title???
-            this._options.displayField = 'title';
+            this._options.displayProperty = 'title';
          }
 
          if (this._options.autocomplete){
@@ -221,17 +224,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
-            if (isArrow || target.hasClass('controls-TextBox__afterFieldWrapper') || self.isEditable() === false) {
+            if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
                if (self.isEnabled()) {
                   self.togglePicker();
-                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку 
+                  // Что бы не открывалась клавиатура на айпаде при клике на стрелку
                   if (isArrow) {
                      e.preventDefault();
                   }
                }
             }
          });
-         this.reload();
       },
 
       init : function() {
@@ -248,7 +250,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _searchFilter: function(model){
          //TODO: Обобщить поиск с автодополнением и строкой поиска
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
-         var itemText = model.get(this._options.displayField).toLowerCase(),
+         var itemText = model.get(this._options.displayProperty).toLowerCase(),
              text = this.getText().toLowerCase();
          if (itemText.match(text)){
             return true;
@@ -397,11 +399,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItemText: function(key, item){
          if (item) {
-            var newText = this._propertyValueGetter(item, this._options.displayField);
+            var newText = this._propertyValueGetter(item, this._options.displayProperty);
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);                              
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
             }
             /*управлять этим классом надо только когда имеем дело с рекордами
              * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
@@ -478,7 +480,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          return {
             corner: 'bl',
             verticalAlign: {
-               side: 'top'
+               side: 'top',
+               offset: -1
             },
             horizontalAlign: {
                side: 'left'
@@ -501,10 +504,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _getItemTemplate: function (projItem) {
          var
             item = projItem.getContents(),
-            title = item.get(this._options.displayField);
-         
+            title = item.get(this._options.displayProperty);
+
          if (this._options.itemTemplate) {
-            return doT.template(this._options.itemTemplate)({item : item, displayField : title})
+            return doT.template(this._options.itemTemplate)({item : item, displayProperty : title, displayField: title})
          }
          else {
             return '<div>' + title + '</div>';
@@ -558,7 +561,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             filterFieldObj = {};
 
          if (this._dataSource) {
-            filterFieldObj[this._options.displayField] = self._options.text;
+            filterFieldObj[this._options.displayProperty] = self._options.text;
 
             self._callQuery(filterFieldObj).addCallback(function (DataSet) {
                self._findItemByKey(DataSet);
@@ -573,20 +576,41 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _findItemByKey: function(items) {
+         //Алгоритм ищет нужный рекорд по текстовому полю. Это нужно в случае, если в комбобокс
+         //передают текст, и надо оперделить ключ записи
          var noItems = true,
             selKey,
             oldKey = this._options.selectedKey,
+            oldIndex = this._options.selectedIndex,
             oldText = this.getText(),
             self = this;
          items.each(function (item) {
             noItems = false;
-            selKey = item.getId();
-            self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
-            self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
-            //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
-            if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
-               self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
-               self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+            if (self._propertyValueGetter(item, self._options.displayProperty) == self._options.text) {
+               //для рекордов и перечисляемого чуть разный механизм
+               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+                  selKey = item.getId();
+                  self._options.selectedKey = (selKey !== null && selKey !== undefined && selKey == selKey) ? selKey : null;
+
+                  //могут позвать setText, когда проекции еще не создали. Весь этот код уберется по задаче
+                  //https://inside.tensor.ru/opendoc.html?guid=8dd659f0-a83e-4804-970f-2c0d482193c9&des=
+                  if (self._getItemsProjection()) {
+                     self._options.selectedIndex = self._getItemIndexByKey(self._options.selectedKey);
+                  }
+                  //TODO: переделать на setSelectedItem, чтобы была запись в контекст и валидация если надо. Учесть проблемы с первым выделением
+                  if (oldKey !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                     self._drawSelectedItem(self._options.selectedKey, self._options.selectedIndex);
+                  }
+               }
+               else {
+                  self._options.selectedIndex = self._getItemsProjection().getIndexBySourceItem(item);
+                  if (oldIndex !== self._options.selectedKey) { // при повторном индексе null не стреляет событием
+                     self._notifySelectedItem(null, self._options.selectedIndex);
+                     self._drawSelectedItem(null, self._options.selectedIndex);
+                  }
+               }
+
             }
          });
 
@@ -701,7 +725,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var self = this;
          if (self._picker._options.target){
             this._picker.getContainer().css({
-               'min-width': self._picker._options.target.outerWidth() - this._border/*ширина бордеров*/
+               'min-width': self._picker._options.target.outerWidth()
             });
          }
       },

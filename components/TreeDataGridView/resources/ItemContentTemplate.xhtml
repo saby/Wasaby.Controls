@@ -1,17 +1,20 @@
 <!--WS-EXPERT
-{{ var
-      hierField$ = it.projItem.getContents().get(it.hierField + '$'),
+{{var
+      hierField$ = it.projItem.getContents().get(it.parentProperty + '$'),
+      hasScroll = it.startScrollColumn !== undefined,
       padding;
    if (it.isSearch) {
       padding = (it.projItem.getLevel() == 1) ? it.originallPadding : it.originallPadding + it.paddingSize
    } else {
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding;
    }
-   it.isNode = it.projItem.getContents().get(it.hierField + '@');
-   it.hasChilds = hierField$ !== false; }}
-{{~it.columns :column:index}}{{it.cellData['isNode'] = it.isNode;it.cellData['item'] = it.item;it.cellData['Sanitize']=it.Sanitize;it.cellData['projItem'] = it.projItem;it.cellData['field']=column.field;it.cellData['column']=column;it.cellData['included']=column.included;it.cellData['templateBinding']=column.templateBinding;it.cellData['decorators']=it.decorators;}}{{?(!it.foldersColspan || !it.isNode || (it.isNode && index < 1))}}<td {{?it.foldersColspan && it.isNode}} colspan="{{=it.columns.length}}"{{?}} class="controls-DataGridView__td
+   it.isNode = it.projItem.getContents().get(it.nodeProperty);
+   it.hasChilds = it.hierarchy.getChildren(it.item, it.projItem.getOwner().getCollection()).length > 0;
+}}
+{{~it.columns :column:index}}{{it.cellData['isNode'] = it.isNode;it.cellData['item'] = it.item;it.cellData['Sanitize']=it.Sanitize;it.cellData['projItem'] = it.projItem;it.cellData['field']=column.field;it.cellData['column']=column;it.cellData['included']=column.included;it.cellData['templateBinding']=column.templateBinding;it.cellData['decorators']=it.decorators;var isColumnScrolling=it.startScrollColumn <= index;}}{{?(!it.foldersColspan || !it.isNode || (it.isNode && index < 1))}}<td {{?it.foldersColspan && it.isNode}} colspan="{{=it.columns.length}}"{{?}} class="controls-DataGridView__td
       {{? !!column.editor}} controls-DataGridView__edited-td{{?}}
       {{?column.className}} {{=column.className}}{{?}}
-      {{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn <= index}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}{{?index == 0}} controls-TreeDataGridView__firstContentCell{{?}}"
-      {{?index == 0 && padding > it.originallPadding}} style="padding-left: {{=padding}}px;"{{?}}>{{?index == 0}}<div class="lvl{{=it.projItem.getLevel()}} controls-TreeView__expand js-controls-TreeView__expand{{?it.projItem.isExpanded()}} controls-TreeView__expand__open{{?}}{{?it.isNode === null || (it.isNode === false && hierField$ === false) || (it.displayType === 'folders' && hierField$ === false)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>{{?it.projItem.isNode()}}{{?it.arrowActivatedHandler || it.editArrow}}<div class="controls-TreeView__ellipsis-wrapper"><div class="controls-TreeView__ellipsis-container">{{?}}<div class="controls-TreeView__folderTitle">{{=column.contentTpl(it.cellData)}}</div>{{?it.arrowActivatedHandler|| it.editArrow}}<div class="controls-TreeView__editArrow"></div></div><!-- Чтобы стрелка показывалась, даже когда название папки не влезает в колонку, добавим дополнительный блок со стрелкой,который сместится в крайнее правое положение и отобразит многоточие и стрелку, если название не поместлось --><div class="controls-TreeView__ellipsis-copyArrow"><div class="controls-TreeView__editArrow"></div></div></div>{{?}}{{??}}<div class="controls-DataGridView__columnValue">{{=column.contentTpl(it.cellData)}}</div>{{?}}{{??}}<div class="controls-DataGridView__columnValue">{{=column.contentTpl(it.cellData)}}</div>{{?}}</td>{{?}}{{~}}
+      {{? hasScroll}}{{?isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
+      {{?index == 0}} controls-DataGridView__firstContentCell{{?}}"
+      style="{{?index == 0 && padding > it.originallPadding}}padding-left: {{=padding}}px;{{?}}{{?isColumnScrolling}}left:{{=it.currentScrollPosition}}px;{{?}}">{{?index == 0}}<div class="lvl{{=it.projItem.getLevel()}} controls-TreeView__expand js-controls-TreeView__expand{{?it.projItem.isExpanded()}} controls-TreeView__expand__open{{?}}{{?it.isNode === null || (it.isNode === false && hierField$ === false && !it.hasChilds) || (it.displayType === 'folders' && hierField$ === false && !it.hasChilds)}} controls-TreeView__expand__leaf{{??}} has-child{{?}}"></div>{{?it.projItem.isNode()}}{{?it.arrowActivatedHandler || it.editArrow}}<div class="controls-TreeView__ellipsis-wrapper"><div class="controls-TreeView__ellipsis-container">{{?}}<div class="controls-TreeView__folderTitle">{{=column.contentTpl(it.cellData)}}</div>{{?it.arrowActivatedHandler|| it.editArrow}}<div class="controls-TreeView__editArrow"></div></div><!-- Чтобы стрелка показывалась, даже когда название папки не влезает в колонку, добавим дополнительный блок со стрелкой,который сместится в крайнее правое положение и отобразит многоточие и стрелку, если название не поместлось --><div class="controls-TreeView__ellipsis-copyArrow"><div class="controls-TreeView__editArrow"></div></div></div>{{?}}{{??}}<div class="controls-DataGridView__columnValue">{{=column.contentTpl(it.cellData)}}</div>{{?}}{{??}}<div class="controls-DataGridView__columnValue">{{=column.contentTpl(it.cellData)}}</div>{{?}}</td>{{?}}{{~}}
 WS-EXPERT-->

@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.
       },
       _modifyOptions: function (options) {
          options = RichEditorMenuButton.superclass._modifyOptions.apply(this, arguments);
-         options.pickerClassName = options.pickerClassName + ' controls-MenuButton__Menu controls-RichEditorToolbar__menuButtonPicker';
+         options.pickerClassName = options.pickerClassName + ' controls-MenuButton__Menu controls-RichEditorToolbar__menuButtonPicker controls-Menu__hide-menu-header';
          options.pickerClassName = options.withoutHeader ? options.pickerClassName + ' controls-MenuButton__withoutHeader' : options.pickerClassName;
          return options;
       },

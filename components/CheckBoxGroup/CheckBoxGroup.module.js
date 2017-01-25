@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase', 'html!SBIS3.CONTROLS.CheckBoxGroup', 'html!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate', 'js!SBIS3.CONTROLS.CheckBox'], function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
+define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase', 'html!SBIS3.CONTROLS.CheckBoxGroup', 'html!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate', 'js!SBIS3.CONTROLS.CheckBox', 'css!SBIS3.CONTROLS.CheckBoxGroup'], function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
 
    'use strict';
 
@@ -30,8 +30,8 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     *          <option name="caption">CheckBox 2</option>
     *       </options>
     *    </options>
-    *    <option name="keyField">id</option>
-    *    <option name="displayField">caption</option>
+    *    <option name="idProperty">id</option>
+    *    <option name="displayProperty">caption</option>
     * </component>
     */
 

@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.ColorStyle', [
                {color:'#A426D9'},
                {color:'#999999'}
             ],
+            allowEmptySelection: false,
             _defaultItemTemplate: ItemTemplate
          }
       }

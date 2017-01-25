@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
    "html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
-   "i18n!SBIS3.CONTROLS.MoveDialogTemplate"
+   "i18n!SBIS3.CONTROLS.MoveDialogTemplate",
+   'css!SBIS3.CONTROLS.MoveDialogTemplate'
 ], function( CommandDispatcher,Control, dotTplFn, cInstance) {
 
    var MoveDialogTemplate = Control.extend({
@@ -24,11 +25,13 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             resizable: false,
             linkedView: undefined,
             records: undefined,
-            cssClassName: 'controls-MoveDialog',
             dataSource: undefined,
             partialyReload: undefined,
-            displayField: undefined,
-            filter: undefined
+            displayProperty: undefined,
+            filter: undefined,
+            infiniteScroll: null,
+            pageSize: undefined
+
          },
          treeView: undefined
       },

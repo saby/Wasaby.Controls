@@ -23,8 +23,8 @@
                     <option name="title">С НДС</option>
                 </options>
             </options>
-            <option name="keyField">key</option>
-            <option name="displayField">title</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
             <option name="selectedKey" value="1" bind="NDS" nonexistent="none"/>
@@ -52,8 +52,8 @@
                     <option name="title">Для продажи</option>
                 </options>
             </options>
-            <option name="keyField">key</option>
-            <option name="displayField">title</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
 
@@ -82,8 +82,8 @@
                     <option name="title">Все (используемые и нет)</option>
                 </options>
             </options>
-            <option name="keyField">key</option>
-            <option name="displayField">title</option>
+            <option name="idProperty">key</option>
+            <option name="displayProperty">title</option>
             <option name="editable">false</option>
             <option name="mode">click</option>
 
@@ -107,7 +107,7 @@
                 <options>
                     <option name="editMode">newFloatArea</option>
                     <option name="formatMethod">ТипНоменклатуры.Список</option>
-                    <option name="keyField">@ТипНоменклатуры</option>
+                    <option name="idProperty">@ТипНоменклатуры</option>
                     <option name="name">ТипНоменклатуры</option>
                     <option name="objectName">ТипНоменклатуры</option>
                     <option name="template">js!SBIS3.CONTROLS.Demo.FilterButtonContentLinkSelect</option>
@@ -115,7 +115,7 @@
                 </options>
             </options>
             <options name="suggestSettings">
-                <option name="keyField">@ТипНоменклатуры</option>
+                <option name="idProperty">@ТипНоменклатуры</option>
                 <option name="inputTooltip">Выбрать тип</option>
                 <option name="tooltipInside" type="boolean">true</option>
                 <option name="readMethodName">Прочитать</option>

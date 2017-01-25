@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
-         _currentScrollPage: 1,
+         _currentScrollPage: 0,
          _windowResizeTimeout: null,
          _zIndex: null
       },
@@ -44,44 +44,32 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }.bind(this));
          }
 
+         var scrollToPage = function(page){
+            // Если первая страница - проскролим к самому верху, не считая оффсет
+            var offset = page.offset ? this._offsetTop : 0;
+            view._scrollWatcher.scrollTo(page.offset + offset);
+         };
+
          paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
-         paging.subscribe('onSelectedItemChange', function(e, pageNumber){
-            var scrollToPage = function(page){
-               // Если первая страница - проскролим к самому верху, не считая оффсет
-               var offset = page.offset ? this._offsetTop : 0;
-               view._scrollWatcher.scrollTo(page.offset + offset);
-            }.bind(this);
-            if (pageNumber != this._currentScrollPage && this._scrollPages.length){
+         paging.subscribe('onSelectedItemChange', function(e, key, index){
+            if (index != this._currentScrollPage && this._scrollPages.length){
                var view = this._options.view,
-                  page = this._scrollPages[pageNumber - 1];
-                  if (page){
-                     scrollToPage(page);
-                  } else {
-                     view.once('onDrawItems', function(){
-                        this.updateScrollPages();
-                        page = this._scrollPages[pageNumber - 1];
-                        scrollToPage(page);
-                     }.bind(this));
-                     view._scrollLoadNextPage();
-                  }
-               this._currentScrollPage = pageNumber;
+                  page = this._scrollPages[index];
+               if (page){
+                  scrollToPage.call(this, page);
+               }
             }
          }.bind(this));
 
-         view.subscribe('onScrollPageChange', function(e, page){
-            var newKey, curKey,
-               paging = this._options.paging;
-            if (page >= 0 && paging.getItems()) {
-               newKey = page + 1;
-               curKey = parseInt(paging.getSelectedKey(), 10);
-               if (curKey != newKey) {
-                  if (newKey > paging.getItems().getCount()) {
-                     paging.setPagesCount(newKey);
-                  }
-                  this._currentScrollPage = newKey;
-                  paging.setSelectedKey(newKey);
+         view.subscribe('onScrollPageChange', function(e, pageNumber){
+            var paging = this._options.paging;
+            if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
+               if (pageNumber > paging.getPagesCount()) {
+                  paging.setPagesCount(pageNumber);
                }
+               this._currentScrollPage = pageNumber;
+               paging.setSelectedKey(pageNumber + 1);
             }
          }.bind(this));
 
@@ -93,7 +81,13 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _isPageStartVisisble: function(page){
-         return page.element.offset().top + page.element.outerHeight(true) >= 0
+         var top;
+         if (this._options.view._getScrollWatcher().getScrollContainer()[0] == window) {
+            top = page.element[0].getBoundingClientRect().bottom;
+         } else {
+            top = page.element.offset().top + page.element.outerHeight(true);
+         }
+         return top >= 0;
       },
 
       _resizeHandler: function(){
@@ -121,9 +115,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       updateScrollPages: function(reset){
-         var view = this._options.view;
-         var viewportHeight = $(view._scrollWatcher.getScrollContainer()).height(),
-            pageHeight = 0,
+         var view = this._options.view,
+            viewport = $(view._scrollWatcher.getScrollContainer()),
+            viewportHeight = viewport.height(),
+            pageOffset = 0,
             lastPageStart = 0,
             self = this,
             //Учитываем все что есть в itemsContainer (группировка и тд)
@@ -137,8 +132,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }
 
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
-            if (!this._offsetTop){
-               this._offsetTop = self._options.view._getItemsContainer().get(0).getBoundingClientRect().top; //itemsContainerTop - containerTop + self._options.view.getContainer().get(0).offsetTop;
+            if (this._offsetTop === undefined){
+               var viewTop = view.getContainer().get(0).getBoundingClientRect().top,
+                  viewportTop = viewport[0] == window ? 0 : viewport.get(0).getBoundingClientRect().top;
+               this._offsetTop = viewTop - viewportTop;
             }
          //Сбрасываем все для пересчета
          if (reset){
@@ -155,24 +152,29 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                this._scrollPages.push({
                   element: element,
                   offset: self._pageOffset
-               })
+               });
             }
          }
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
             var $this = $(this),
-               nextHeight = $this.next('.controls-ListView__item').outerHeight(true);
-            pageHeight += $this.outerHeight(true);
+               $next = $this.next('.controls-ListView__item'),
+               // Считаем через position, так как для плитки не подходит сложение высот
+               curBottom = $this.position().top + $this.outerHeight(true),
+               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0;
+            curBottom = curBottom > pageOffset ? curBottom : pageOffset;
+            nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
+            pageOffset = curBottom;
             // Если набралось записей на выстору viewport'a добавим еще страницу
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
             var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
-            if (pageHeight + nextHeight > viewportHeight - offsetTop) {
-               self._pageOffset += pageHeight;
+            var prevPageOffset = self._scrollPages.length ? self._scrollPages[self._scrollPages.length - 1].offset : 0;
+            if (nextBottom - prevPageOffset > viewportHeight - offsetTop) {
+               self._pageOffset = pageOffset;
                self._scrollPages.push({
                   element: $this,
                   offset: self._pageOffset - stickyHeaderHeight
                });
-               pageHeight = 0;
             }
          });
 
@@ -182,7 +184,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
-            this._options.paging._options.selectedKey = pagesCount;
+            this._options.paging.setSelectedKey(pagesCount);
          }
          this._options.paging.setPagesCount(pagesCount);
 

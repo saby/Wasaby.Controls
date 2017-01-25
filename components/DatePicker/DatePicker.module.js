@@ -12,7 +12,10 @@ define(
       'html!SBIS3.CONTROLS.DatePicker',
       'Core/helpers/dom&controls-helpers',
       'i18n!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.IconButton'
+      'js!SBIS3.CONTROLS.IconButton',
+      'css!SBIS3.CONTROLS.DatePicker',
+      'css!SBIS3.CONTROLS.FormattedTextBox',
+      'css!SBIS3.CONTROLS.DateBox'
    ],
    function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, dcHelpers) {
 
@@ -195,6 +198,14 @@ define(
       },
 
       _onChooserChange: function(event, date) {
+         // DateRangeBigChoose не поддерживает ввод времени, по этому сохраняем время из даты текущего контрола
+         if (date && this._lastDate) {
+            date = new Date(date);
+            date.setHours(this._lastDate.getHours());
+            date.setMinutes(this._lastDate.getMinutes());
+            date.setSeconds(this._lastDate.getSeconds());
+            date.setMilliseconds(this._lastDate.getMilliseconds());
+         }
          this.setDate(date);
          this.hidePicker();
       },

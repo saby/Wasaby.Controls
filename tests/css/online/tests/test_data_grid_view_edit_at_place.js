@@ -7,14 +7,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимое_bind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -43,17 +43,17 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_7.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
-				this.editor_input = find('[sbisname="Содержимоеbind"] textarea')
+				this.editor_input = find('[sbisname="Data_bind"] .controls-TextArea__inputField')
             })
 
             .capture('opened_editor', function (actions) {
                 actions.click(this.item3);
-				actions.waitForElementToShow('[sbisname="Содержимоеbind"] textarea', 2000);
+				actions.waitForElementToShow('[sbisname="Data_bind"] .controls-TextArea__inputField', 2000);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
@@ -64,16 +64,16 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_15.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
-				this.editor_input = find('[sbisname="Содержимоеbind"] .controls-RichEditor__editorFrame')
+				this.editor_input = find('[sbisname="Data_bind"] .controls-RichEditor__editorFrame')
             })
 
             .capture('opened_editor', function (actions) {
                 actions.click(this.item3);
-				actions.waitForElementToShow('[sbisname="Содержимоеbind"] .controls-RichEditor__editorFrame', 2000);
+				actions.waitForElementToShow('[sbisname="Data_bind"] .controls-RichEditor__editorFrame', 2000);
 				actions.click(this.editor_input);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
@@ -138,13 +138,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item15 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item15 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимое_bind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -174,14 +174,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -210,13 +210,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_2.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item15 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item15 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -245,14 +245,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_3.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимое_bind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -281,13 +281,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_3.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item15 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item15 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимое_bind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -316,14 +316,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -352,13 +352,13 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_4.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item15 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item15 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -387,19 +387,19 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_6.html').skip('firefox').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item8 = find('[sbisname="ТипНоменклатуры"] [data-id="8"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item8 = find('[sbisname="TypeNomenclature"] [data-id="8"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('with_ellipsis_text', function (actions) {
                 actions.click(this.item8);
-				actions.waitForElementToShow('[sbisname="Содержимоеbind"] input', 2000);
+				actions.waitForElementToShow('[sbisname="Data_bind"] input', 2000);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
             })
@@ -410,14 +410,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_8.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item5 = find('[sbisname="ТипНоменклатуры"] [data-id="5"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item5 = find('[sbisname="TypeNomenclature"] [data-id="5"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -446,14 +446,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_9.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item5 = find('[sbisname="ТипНоменклатуры"] [data-id="5"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item5 = find('[sbisname="TypeNomenclature"] [data-id="5"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимое_bind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -469,8 +469,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_19.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item4 = find('[sbisname="ТипНоменклатуры"] [data-id="4"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item4 = find('[sbisname="TypeNomenclature"] [data-id="4"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancel = find('[title="Отмена"]');
@@ -517,12 +517,12 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 	/*
 	gemini.suite('add_and_edit_again', function (test) {
 
-        test.setUrl('/integration_datagrid_edit_at_place_19.html').skip('firefox').setCaptureElements('[sbisname="ТипНоменклатуры"]')
+        test.setUrl('/integration_datagrid_edit_at_place_19.html').skip('firefox').setCaptureElements('[sbisname="TypeNomenclature"]')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
 				this.focus = find('[sbisname="Фокус"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input');
+				this.editor_input = find('[sbisname="Data_bind"] input');
 				this.save = find('[title="Сохранить"]');
 				this.data = find('.controls-DataGridView__tbody tr:nth-child(1)');
 				this.clearData = find('[sbisname="Данные"] .controls-Button__text');
@@ -540,9 +540,9 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 
 			.capture('begin_add', function (actions) {
                 actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('ТипНоменклатуры').sendCommand('beginAdd');
+                    window.$ws.single.ControlStorage.getByName('TypeNomenclature').sendCommand('beginAdd');
                 });
-				actions.waitForElementToShow('[sbisname="Содержимоеbind"] input', 2000)
+				actions.waitForElementToShow('[sbisname="Data_bind"] input', 2000)
 				actions.waitForElementToShow('[title="Сохранить"]');
 				actions.sendKeys(this.editor_input, 'test')
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.ARROW_LEFT)
@@ -551,7 +551,7 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 			.capture('confirm_adding', function (actions) {
                 actions.sendKeys(this.editor_input, gemini.ENTER)
 				actions.executeJS(function (window) {
-                    window.$ws.single.ControlStorage.getByName('ТипНоменклатуры').reload({});
+                    window.$ws.single.ControlStorage.getByName('TypeNomenclature').reload({});
                 });
 				actions.wait(250);
             })
@@ -561,8 +561,8 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
                     window.$('.controls-DataGridView__tbody tr:first').click();
                 });
 				actions.wait(500);
-				actions.click('[sbisname="Содержимоеbind"] input');
-				actions.sendKeys('[sbisname="Содержимоеbind"] input', gemini.SHIFT+gemini.HOME);
+				actions.click('[sbisname="Data_bind"] input');
+				actions.sendKeys('[sbisname="Data_bind"] input', gemini.SHIFT+gemini.HOME);
             })
 			
 			.after(function (actions, find) {
@@ -580,18 +580,18 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_11.html').setCaptureElements('.capture')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item4 = find('[sbisname="ТипНоменклатуры"] [data-id="4"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item4 = find('[sbisname="TypeNomenclature"] [data-id="4"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
-				this.box = find('[sbisname="Содержимоеbind"]')
+				this.box = find('[sbisname="Data_bind"]')
             })
 
             .capture('opened_editor', function (actions) {
                 actions.click(this.item4);
 				actions.wait(500);
-				actions.click('[sbisname="Содержимоеbind"] .js-controls-TextBox__field');
-				actions.sendKeys('[sbisname="Содержимоеbind"] .js-controls-TextBox__field', gemini.SHIFT+gemini.HOME);
+				actions.click('[sbisname="Data_bind"] .js-controls-TextBox__field');
+				actions.sendKeys('[sbisname="Data_bind"] .js-controls-TextBox__field', gemini.SHIFT+gemini.HOME);
             })
     });
 
@@ -600,14 +600,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_13.html').setCaptureElements('html')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -624,14 +624,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_20.html').setCaptureElements('html')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -648,14 +648,14 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
         test.setUrl('/regression_data_grid_view_edit_at_place_online_14.html').setCaptureElements('html')
 
             .before(function (actions, find) {
-                actions.waitForElementToShow('[sbisname="ТипНоменклатуры"]', 40000);
-                this.item3 = find('[sbisname="ТипНоменклатуры"] [data-id="3"]');
-				this.item7 = find('[sbisname="ТипНоменклатуры"] [data-id="7"]');
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+                this.item3 = find('[sbisname="TypeNomenclature"] [data-id="3"]');
+				this.item7 = find('[sbisname="TypeNomenclature"] [data-id="7"]');
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
                 this.input = find('[name="TextBox 1"] .controls-TextBox__field');
 				this.cancell = find('[title="Отмена"]');
 				this.save = find('[title="Сохранить"]');
-				this.editor_input = find('[sbisname="Содержимоеbind"] input')
+				this.editor_input = find('[sbisname="Data_bind"] input')
             })
 
             .capture('opened_editor', function (actions) {
@@ -665,6 +665,71 @@ gemini.suite('SBIS3.CONTROLS.DataGridEditAtPlace Online', function () {
 				actions.click(this.editor_input);
 				actions.sendKeys(this.editor_input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.editor_input, gemini.SHIFT+gemini.HOME);
+            })
+    });
+
+    gemini.suite('result_position_top', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_76.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = '[name="TextBox 1"] .controls-TextBox__field';
+				this.add_top = '[sbisname="Добавить сверху"]';
+				this.add_bot = '[sbisname="Добавить снизу"]';
+				this.eip_input = '[sbisname="Nomer_bind"]';
+				this.eip_input2 = '[sbisname="Price_bind"]';
+            })
+
+            .capture('plain', function (actions) {
+                actions.click(this.add_top);
+				actions.waitForElementToShow(this.eip_input, 5000);
+				actions.waitForElementToShow(this.eip_input2, 5000);
+            })
+    });
+
+    gemini.suite('result_position_bottom', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_77.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="DataGridView 1"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = '[name="TextBox 1"] .controls-TextBox__field';
+				this.add_top = '[sbisname="Добавить сверху"]';
+				this.add_bot = '[sbisname="Добавить снизу"]';
+				this.eip_input = '[sbisname="Nomer_bind"]';
+				this.eip_input2 = '[sbisname="Price_bind"]';
+            })
+
+			.capture('plain', function (actions) {
+                actions.click(this.add_bot);
+                actions.waitForElementToShow(this.eip_input, 5000);
+				actions.waitForElementToShow(this.eip_input2, 5000);
+            })
+    });
+	
+	gemini.suite('op_panel_and_edit', function (test) {
+
+        test.setUrl('/regression_data_grid_view_edit_at_place_online_78.html').setCaptureElements('.capture')
+
+            .before(function (actions, find) {
+                actions.waitForElementToShow('[sbisname="TypeNomenclature"]', 40000);
+				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
+                this.input = '[name="TextBox 1"] .controls-TextBox__field';
+				this.open_panel = '[sbisname="OperationsPanelButton 1"]';
+				this.data3 = '[data-id="3"]';
+				this.fl = '[sbisname="FieldLinkMultiSelect"]';
+				this.del = '[data-id="delete"]';
+            })
+
+			.capture('plain', function (actions) {
+                actions.click(this.data3);
+                actions.waitForElementToShow(this.fl, 5000);
+				actions.click(this.open_panel);
+				actions.wait(1000);
+				actions.waitForElementToShow(this.del, 5000);
             })
     });
 });

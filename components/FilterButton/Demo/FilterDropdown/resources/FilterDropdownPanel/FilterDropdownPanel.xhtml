@@ -1,0 +1,46 @@
+<div class="fb-FilterDropdownPanel">
+   <span class="fb-FilterDropdownPanel__span">Автор</span>
+   <component data-component="SBIS3.CONTROLS.TextBox" name="filterAuthor" class="fb-FilterDropdownPanel__text-box">
+      <option name="placeholder">введите фамилию</option>
+      <option name="text" bind="author" nonexistent="" value=""></option>
+   </component>
+   <component data-component="SBIS3.CONTROLS.TextBox" name="filterAuthorName" class="fb-FilterDropdownPanel__text-box">
+      <option name="placeholder">введите имя</option>
+      <option name="text" bind="authorName" nonexistent="" value=""></option>
+   </component>
+   <span class="fb-FilterDropdownPanel__span">Произведение</span>
+   <component data-component="SBIS3.CONTROLS.TextBox" name="filterOpus" class="fb-FilterDropdownPanel__text-box">
+      <option name="placeholder">введите название</option>
+      <option name="text" bind="opus" nonexistent="" value=""></option>
+   </component>
+   <component data-component="SBIS3.CONTROLS.FilterText" name="filterRussia" class="fb-FilterDropdownPanel__text-box">
+      <option name="filterValue" value="Россия" bind="countryRussia" oneWay="true" direction="fromProperty"></option>
+      <option name="visible" bind="countryRussiaVisible" value=""></option>
+      <option name="caption">писатели России</option>
+   </component>
+   <component data-component="SBIS3.CONTROLS.FilterDropdown" name="filterGenreName" class="fb-FilterDropdownPanel__text-box">
+      <options name="items" type="array">
+         <options>
+            <option name="key">1</option>
+            <option name="title">фантастика</option>
+         </options>
+         <options>
+            <option name="key">2</option>
+            <option name="title">фэнтези</option>
+         </options>
+         <options>
+            <option name="key">3</option>
+            <option name="title">мистика</option>
+         </options>
+      </options>
+      <option name="resetKey" value="stroka"></option>
+      <option name="idProperty">key</option>
+      <option name="displayProperty">title</option>
+      <option name="multiselect">false</option>
+      <option name="text" bind="genreName" value=""></option>
+      <options name="selectedKeys" type="array">
+         <option bind="genreKey" value=""></option>
+      </options>
+      <option name="visible" bind="genreNameVisible" oneWay="true" direction="fromContext" value=""></option>
+   </component>
+</div>

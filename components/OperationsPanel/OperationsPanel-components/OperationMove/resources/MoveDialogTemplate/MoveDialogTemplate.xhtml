@@ -18,21 +18,24 @@
       <option name="itemsDragNDrop" type="boolean">false</option>
       <option name="allowEmptySelection" type="boolean">true</option>
       <option name="partialyReload" type="boolean">{{=it.partialyReload}}</option>
+      <option name="infiniteScroll">{{=it.infiniteScroll}}</option>
+      <option name="pageSize">{{=it.pageSize}}</option>
       <options name="columns" type="array">
          <options>
             <option name="title"></option>
-            <option name="field">{{=it.displayField}}</option>
+            <option name="field">{{=it.displayProperty}}</option>
             <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
             <option name="cellTemplate">html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl</option>
          </options>
       </options>
-      <option name="displayField">{{=it.displayField}}</option>
-      <option name="keyField">{{=it.keyField}}</option>
-      <option name="hierField">{{=it.hierField}}</option>
+      <option name="displayProperty">{{=it.displayProperty}}</option>
+      <option name="idProperty">{{=it.idProperty}}</option>
+      <option name="parentProperty">{{=it.parentProperty}}</option>
+      <option name="nodeProperty">{{=it.nodeProperty}}</option>
       <options name="root">
-         <option name="{{=it.keyField}}" type="null">null</option>
-         <option name="{{=it.displayField}}" type="string">{{=rk('Корень')}}</option>
-         <option name="{{=it.hierField}}" type="boolean">true</option>
+         <option name="{{=it.idProperty}}" type="null">null</option>
+         <option name="{{=it.displayProperty}}" type="string">{{=rk('Корень')}}</option>
+         <option name="{{=it.parentProperty}}" type="boolean">true</option>
       </options>
    </component>
 </div>
