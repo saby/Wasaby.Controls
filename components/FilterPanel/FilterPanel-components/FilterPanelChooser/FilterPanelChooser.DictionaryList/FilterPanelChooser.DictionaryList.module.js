@@ -13,13 +13,39 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
 
     /**
      * Класс редактора "Список со справочником".
-     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
-     * <br/>
-     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Все" под списком или командой {@link showDictionary}.
-     * По умолчанию отображается 3 записи в списке. Чтобы подгрузить все, используйте кнопку "Ещё" под списком или команду {@link showFullList}.
-     * <br/>
-     * Чтобы изменить шаблон отображения кнопок "Все" и "Ещё", измените опцию {@link afterChooserWrapper}.
-     * Если вы используете шаблон по умолчанию, то подпись кнопки "Все" можно изменить через опцию {@link captionFullList}.
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
+     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Ещё" под списком или командой {@link showDictionary}.
+     *
+     * <h2>Особенности отображения редактора</h2>
+     * По умолчанию отображается 3 записи в списке.
+     * Чтобы подгрузить все, используйте кнопку "Все" под списком или команду {@link showFullList}.
+     * Чтобы открыть справочник и произвести выбор записей, используйте кнопку "Ещё" или команду {@link showDictionary}.
+     *
+     * <h2>Конфигурация редактора</h2>
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
+     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS.ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#items} и {@link SBIS3.CONTROLS.MultiSelectable#selectedKeys}.
+     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS.ListView#multiselect}=true, {@link SBIS3.CONTROLS.ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS.ListView#itemsActions}=&#91;&#93;.
+     *
+     * <h2>Кнопка "Все"</h2>
+     * Отображается под списком, когда записей списка больше 3.
+     * Применяется, чтобы подгрузить все записи списка.
+     * При клике по кнопке выполняется команда {@link showFullList}.
+     * По умолчанию для кнопки установлено имя "controls-FilterPanelChooser__allButton".
+     * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}.
+     * При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
+     *
+     * <h2>Кнопка "Ещё"</h2>
+     * Отображается всегда, под списком.
+     * Применяется, чтобы открыть справочник с полным списком записей.
+     * При клике по кнопке выполняется команда {@link showDictionary}.
+     * По умолчанию для кнопки установлено имя "controls-FilterPanelChooser__dictionaryButton".
+     * Шаблон кнопки "Ещё" устанавливают в опции {@link afterChooserWrapper}.
+     *
+     * <h2>Создание пользовательского редактора</h2>
+     * Вы можете создать собственный класс редактора, на основе класса редактора "Список со справочником".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
+     *
+     *
      * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
      * @extends SBIS3.CONTROLS.FilterPanelChooser.List
      * @author Сухоручкин Андрей Сергеевич

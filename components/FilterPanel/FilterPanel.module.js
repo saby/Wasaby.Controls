@@ -34,16 +34,36 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
 
    'use strict';
    /**
-    * Класс контрола "Панель фильтрации".
-    * <br/>
-    * При создания компонента допускается использование только <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
+    * Класс компонента "Панель фильтра с набираемыми параметрами". Реализован по <a href='http://axure.tensor.ru/standarts/v7/%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C_%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D0%B0_%D1%81_%D0%BD%D0%B0%D0%B1%D0%B8%D1%80%D0%B0%D0%B5%D0%BC%D1%8B%D0%BC%D0%B8_%D0%BF%D0%B0%D1%80%D0%B0%D0%BC%D0%B5%D1%82%D1%80%D0%B0%D0%BC%D0%B8.html'>этому стандарту</a>.
+    *
+    * <h2>Разметка компонента</h2>
+    *
+    * При создании компонента допускается использование только <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
     * Т.е. разметка компонента описывается в TMPL-файле.
-    * <br/>
+    *
+    * <h2>Кнопки панели фильтров</h2>
+    *
+    * <h3>Кнопка открытия панели</h3>
+    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков.
+    * Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
+    * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), на кнопку открытию устанавливают классы "controls-IconButton__filter-left" (открытие панели влево) или "controls-IconButton__filter-right" (открытие панели вправо).
+    * Чтобы открыть панель, используйте метод {@link toggleExpanded}.
+    *
+    * <h3>Кнопка "Сбросить фильтр"</h3>
+    * По умолчанию присутствует в шаблоне компонента.
+    * В опции {@link $ws.proto.Control#name} для неё предустановлено имя "ResetFilterButton".
+    * При клике по кнопке выполняется команда {@link resetFilter}.
+    * Из пользовательского интерфейса кнопка доступна для взаимодействия, когда в опции {@link items} установлена структура полей фильтра.
+    *
+    * <h3>Кнопка "Скрыть панель"</h3>
+    * По умолчанию присутствует в шаблоне компонента "Панель фильтрации".
+    * При клике по кнопке выполняется команда {@link toggleFilter}.
+    *
+    * <h2>Конфигурация фильтров</h2>
+    * Чтобы установить структуру полей фильтра, используйте опцию {@link items}.
+    *
+    * <h2>Особенности компонента</h2>
     * При взаимодействии с контекстом привязка производится односторонняя.
-    * <br/>
-    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков. Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
-    * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), кнопку открытию устанавливают классы "controls-IconButton__filter-left" или "controls-IconButton__filter-right".
-    * Чтобы открыть панель фильтрации, используйте метод {@link toggleExpanded}.
     *
     * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.FilterPanel
@@ -87,11 +107,11 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              * @property {String} template Шаблон редактора поля фильтрации.
              * Возможные значения:
              * <ol>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelChooser}.</li>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelDataRange}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации. Подробнее о редакторе читайте в описании к классу {@link SBIS3.CONTROLS.FilterPanelChooser}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе читайте в описании к классу {@link SBIS3.CONTROLS.FilterPanelDataRange}.</li>
              *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
-             * @property {Object} properties Опции, передаваемые в редактор.
+             * @property {Object} properties Опции, передаваемые в конфигурацию редактора.
              * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
              * Возможные значения:
              * <ul>
