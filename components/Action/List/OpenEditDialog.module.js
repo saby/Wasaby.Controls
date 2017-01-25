@@ -150,13 +150,6 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
          }
       },
-      /**
-      @deprecated
-      **/
-      _opendEditComponent: function(meta, dialogComponent, mode){
-         IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenEditDialog', 'method _opendEditComponent was deprecated please use _openComponent instead.');
-         this._openComponent.call(this, meta, dialogComponent, mode);
-      },
 
       _saveRecord: function(){
          var resultDeferred = new Deferred(),
@@ -571,7 +564,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return cMerge(config, {
             handlers: {
                onAfterClose: function (e, meta) {
-                  self._notifyOnExecuted(meta, this.record);
+                  self._notifyOnExecuted(meta, this._record);
                   self._dialog = undefined;
                }
             }

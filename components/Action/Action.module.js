@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
           * @private
           */
          _notifyOnExecuted: function () {
-            var args = Array.prototype.slice(arguments);
+            var args = Array.prototype.slice.call(arguments);
             args.unshift('onExecuted');
             this._notify.apply(this, args);
          }

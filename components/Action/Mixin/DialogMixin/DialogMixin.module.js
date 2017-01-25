@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        *
       */
       _doExecute: function(meta) {
-         this._openComponent(meta, this._options.template);
+         this._openComponent(meta, meta.template || this._options.template);
          return false;
       },
 
@@ -222,7 +222,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
          this._options.template = template;
 
-      }
+      },
+
+      /**
+       @deprecated
+       **/
+      _opendEditComponent: function(meta, dialogComponent, mode){
+         IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenEditDialog', 'method _opendEditComponent was deprecated please use _openComponent instead.');
+         this._openComponent.call(this, meta, dialogComponent, mode);
+      },
    };
 
    return DialogMixin;

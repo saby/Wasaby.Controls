@@ -31,9 +31,6 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
                  };
 
              return сMerge(cfg, chooseCfg);
-          },
-          _doExecute: function(meta) {
-             return this._openComponent(meta, meta.template || this._options.template || 'js!SBIS3.CONTROLS.SelectorDefaultComponent');
           }
        });
        return SelectorAction;
