@@ -54,7 +54,9 @@ define('js!SBIS3.CONTROLS.ListView',
    "i18n!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.DragEntity.List",
    "js!WS.Data/MoveStrategy/Base",
-   "js!SBIS3.CONTROLS.ListView.Mover"
+   "js!SBIS3.CONTROLS.ListView.Mover",
+   'css!SBIS3.CONTROLS.ListView',
+   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -3547,7 +3549,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(models, target.getModel(), position);
+            return this._getMover().move(movedItems, target, position);
          },
          //endregion moveMethods
          /**
@@ -3696,6 +3698,23 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         getTextValue: function() {
+            var
+                selectedItem,
+                textValues = [];
+            if (this._options.multiselect) {
+               this.getSelectedItems().each(function(item) {
+                  textValues.push(item.get(this._options.displayProperty));
+               }, this);
+            } else {
+               selectedItem = this.getItems().getRecordById(this.getSelectedKey());
+               if (selectedItem) {
+                  textValues.push(selectedItem.get(this._options.displayProperty));
+               }
+            }
+            return textValues.join(', ');
          }
       });
 

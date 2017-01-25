@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Link",
-   "i18n!SBIS3.CONTROLS.Image"
+   "i18n!SBIS3.CONTROLS.Image",
+   'css!SBIS3.CONTROLS.Image'
 ], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var

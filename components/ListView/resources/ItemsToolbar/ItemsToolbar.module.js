@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CORE.MarkupTransformer',
        'Core/helpers/dom&controls-helpers',
        'Core/helpers/collection-helpers',
-       'i18n!SBIS3.CONTROLS.ItemsToolbar'
+       'i18n!SBIS3.CONTROLS.ItemsToolbar',
+       'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers, colHelpers) {
 
@@ -352,12 +353,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       this.getItemsActions().applyItemActions();
                    }
                 }
-                /* При зафиксированном тулбаре может пропасть отслеживаемый элемент (например при перерисовке/удалении),
-                   если он пропал, то при вызове show, не смотрим на флаг lockingToolbar,
-                   ведь больше нет элемента у которого был зафиксирован тулбар, фиксируемся у нового переданного target'a */
-                if (!this._currentTarget || dcHelpers.contains(this.getParent().getContainer(), this._currentTarget.container)) {
-                   return;
-                }
+                return;
              }
              /* Запоминаем таргет в качестве текущего */
              this._currentTarget = target;

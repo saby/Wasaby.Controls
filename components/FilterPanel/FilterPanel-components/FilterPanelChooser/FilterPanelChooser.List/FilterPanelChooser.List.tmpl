@@ -1,9 +1,4 @@
-<div class="controls-FilterPanelChooser controls-FilterPanelChooser__list">
-    <ws:if data="{{ beforeChooserWrapper }}">
-        <ws:partial template="{{ beforeChooserWrapper }}" scope="{{...}}" />
-    </ws:if>
-    <ws:partial template="{{ chooserTemplate }}" scope="{{...}}" />
-    <ws:if data="{{ afterChooserWrapper }}">
-        <ws:partial template="{{ afterChooserWrapper }}" scope="{{...}}" />
-    </ws:if>
+<div class="controls-FilterPanelChooser">
+    <ws:partial template="{{ _chooserTemplate }}" scope="{{...}}" />
+    <ws:partial template="{{ _afterChooserWrapper }}" scope="{{ ... }}" />
 </div>

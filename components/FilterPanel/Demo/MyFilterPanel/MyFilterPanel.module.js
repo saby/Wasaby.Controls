@@ -35,8 +35,12 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanel',
                 }
              }.bind(this));
              moduleClass.superclass.init.apply(this, arguments);
-             this.getChildControlByName('MyFilterPanel').subscribe('onExpandedChange', function(event, expanded) {
+             var filterPanel = this.getChildControlByName('MyFilterPanel');
+              filterPanel.subscribe('onExpandedChange', function(event, expanded) {
                 this.getChildControlByName('ToggleFilterButton').getContainer().toggleClass('ws-hidden', expanded);
+             }.bind(this));
+              filterPanel.subscribe('onFilterChange', function() {
+                this._getTextValuePreviewEventContainer().html(filterPanel.getTextValue());
              }.bind(this));
           },
           _getFilterPreviewContextContainer: function() {
@@ -44,6 +48,9 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanel',
           },
           _getFilterPreviewEventContainer: function() {
              return $('.controls-MyFilterPanel_filter-preview_event', this.getContainer());
+          },
+          _getTextValuePreviewEventContainer: function() {
+             return $('.controls-MyFilterPanel_textValue-preview_event', this.getContainer());
           }
        });
        return moduleClass;

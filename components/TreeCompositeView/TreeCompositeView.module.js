@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'Core/core-merge'
+   'Core/core-merge',
+   'css!SBIS3.CONTROLS.CompositeView'
 ], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
@@ -330,6 +331,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
 
+      setViewMode: function() {
+         this._prevMode = null;
+         TreeCompositeView.superclass.setViewMode.apply(this, arguments);
+      },
 
       //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
       //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=

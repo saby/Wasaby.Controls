@@ -10,7 +10,8 @@ define(
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'Core/ParserUtilities',
-      'js!SBIS3.CONTROLS.TabButton'
+      'js!SBIS3.CONTROLS.TabButton',
+      'css!SBIS3.CONTROLS.TabButtons'
    ],
    function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil, ParserUtilities) {
 

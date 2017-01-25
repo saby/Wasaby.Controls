@@ -202,7 +202,7 @@
 }
 
 .marker(@position: left top, @image: 'img/rowSelect.png') {
-  background-image: url(@image);
+  background-image: url("@{themeName}/@{image}");
   background-position: @position;
   background-repeat: repeat-y;
 }
@@ -218,6 +218,43 @@
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+.flex-shrink(@shrink: 1) {
+   -webkit-flex-shrink: @shrink;
+   -ms-flex-negative: @shrink; //ie10
+   -ms-flex-shrink: @shrink;
+   flex-shrink: @shrink;
+}
+.flex-grow(@grow: 0) {
+   -webkit-flex-grow: @grow;
+   -ms-flex-positive: @grow;//ie10
+   -ms-flex-grow: @grow;
+   flex-grow: @grow;
+
+}
+.justify-content(@justify: flex-start) {
+   -webkit-justify-content: @justify;
+   -ms-flex-pack: @justify; //ie 10
+   -ms-justify-content: @justify;
+   justify-content: @justify;
+   //ie 10 fix space-between
+   & when (@justify = space-between) {
+      -ms-flex-pack: justify;
+   }
+}
+.align-items(@align: stretch) {
+   -webkit-align-items: @align;
+   -ms-flex-align: @align; //ie10
+   -ms-align-items: @align;
+   align-items: @align;
+}
+
+.order(@val) {
+  -webkit-box-ordinal-group: @val;
+  -moz-box-ordinal-group: @val;
+  -ms-flex-order: @val;
+  -webkit-order: @val;
+  order: @val;
 }
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
 //ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.

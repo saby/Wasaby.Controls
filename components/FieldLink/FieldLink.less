@@ -49,19 +49,6 @@
    padding: @controls-FieldLink-linkItem-padding;
    line-height: @controls-FieldLink-linkItem-line-height;
 
-   .controls-FieldLink__item-caption {
-      position: relative;
-      height: @controls-FieldLink-linkItem-caption-height;
-   }
-
-   .controls-FieldLink__item-cross {
-      position: absolute;
-      right: @controls-FieldLink-linkItem-cross-right;
-      top: @controls-FieldLink-linkItem-cross-top;
-      padding: @controls-FieldLink-linkItem-cross-padding;
-      cursor: @link-cursor;
-      z-index: 1;
-   }
    &:after {
       position: absolute;
       right: 0;
@@ -71,6 +58,20 @@
    &:last-child:after {
       content: '';
    }
+}
+
+.controls-FieldLink__item-caption {
+   position: relative;
+   height: @controls-FieldLink-linkItem-caption-height;
+}
+
+.controls-FieldLink__item-cross {
+   position: absolute;
+   right: @controls-FieldLink-linkItem-cross-right;
+   top: @controls-FieldLink-linkItem-cross-top;
+   padding: @controls-FieldLink-linkItem-cross-padding;
+   cursor: @link-cursor;
+   z-index: 1;
 }
 
 .controls-FieldLink__picker,
@@ -100,7 +101,6 @@
 }
 
 .controls-FieldLink {
-   justify-content: space-between;
    border-color: @controls-FieldLink-border-color;
    position: relative;
    white-space: nowrap;
@@ -159,18 +159,20 @@
          }
       }
    }
+   &.controls-TextBox {
+      .controls-TextBox__afterFieldWrapper {
+         order: 2;
+         display: inline-flex;
+         align-items: center;
+         height: @controls-FieldLink-afterField-height;
+         width: auto;
 
-   .controls-TextBox__afterFieldWrapper {
-      order: 2;
-      display: inline-flex;
-      align-items: center;
-      height: @controls-FieldLink-afterField-height;
-      width: auto;
-
-      > * {
-         padding: @controls-FieldLink-afterField-padding;
+         > * {
+            padding: @controls-FieldLink-afterField-padding;
+         }
       }
    }
+
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
          background-color: @text-box-error-bg;
@@ -232,12 +234,14 @@
    }
 }
 
-.controls-FieldLink__showAllLinks {
-   position: relative;
-   width: 20px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   padding: @controls-FieldLink-showAllLinks-padding;
-   float: left;
+.controls-TextBox__beforeFieldWrapper {
+   .controls-FieldLink__showAllLinks {
+      position: relative;
+      width: 20px;
+      line-height: @controls-FieldLink-showAllLinks-lineHeight;
+      padding: @controls-FieldLink-showAllLinks-padding;
+      float: left;
+   }
 }
 
 .controls-FieldLink__copyShowAll {
@@ -348,5 +352,12 @@
    .controls-FieldLink__picker:not(.controls-Suggest__picker) .controls-FieldLink__item-caption {
       display: inline-block;
       max-width: ~'calc(100% - '@icon-width~');'
+   }
+}
+/* Почему то сафари неправильно рендерит шрифт и считает  1px === 2px, т.е. при прибавлении ширины в 1px
+   реальная ширина увеличивается на 2px */
+.ws-is-desktop-safari, .ws-is-mobile-safari {
+   .controls-FieldLink.controls-FieldLink__selected-single.ws-disabled .controls-FieldLink__item{
+      max-width: ~'calc(100% - '(@controls-FieldLink-linkContainer-padding * 2) - 1~')';
    }
 }

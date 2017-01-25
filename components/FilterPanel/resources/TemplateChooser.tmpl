@@ -14,3 +14,6 @@
 <ws:if data="{{ properties.editor === 'fieldLink'}}">
     <ws:SBIS3.CONTROLS.FilterPanelChooser.FieldLink scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
 </ws:if>
+<ws:if data="{{ properties.editor === 'details'}}">
+    <ws:SBIS3.CONTROLS.FilterPanelChooser.DetailsList scope="{{properties}}" value="{{ 'value'|mutable:[] }}" textValue="{{ 'textValue'|mutable }}" />
+</ws:if>

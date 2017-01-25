@@ -56,7 +56,9 @@
   }
 
   &.controls-Button__ellipsis {
-    &:extend(.controls-Button__ellipsis .controls-Button__text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     vertical-align: text-bottom;
   }
   .controls-Link-link {
