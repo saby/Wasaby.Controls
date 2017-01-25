@@ -1281,6 +1281,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
+               this._container.addClass('controls-ListView__dataLoaded');
             }
          },
          destroy : function() {
