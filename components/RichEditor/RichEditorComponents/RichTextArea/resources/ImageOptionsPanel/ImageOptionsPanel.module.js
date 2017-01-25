@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             _commandsButton: undefined,
             _deleteButton: undefined,
             _imageViewer: undefined,
+            _fileLoader: undefined,
 
             _modifyOptions: function(options) {
                options = ImageOptionsPanel.superclass._modifyOptions.apply(this, arguments);
@@ -57,7 +58,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             },
 
             getFileLoader: function() {
-               return Di.resolve('ImageUploader').fileLoader;
+               if (!this._fileLoader) {
+                  this._fileLoader = Di.resolve('ImageUploader').fileLoader();
+               }
+               return this._fileLoader;
             },
 
             getEditor: function() {

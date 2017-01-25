@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                }
             },
             _selectedTemplate: undefined,
+            _fileLoader: undefined,
 
             _modifyOptions: function(options) {
                options = ImagePanel.superclass._modifyOptions.apply(this, arguments);
@@ -37,7 +38,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             },
 
             getFileLoader: function() {
-               return Di.resolve('ImageUploader').fileLoader;
+               if (!this._fileLoader) {
+                  this._fileLoader = Di.resolve('ImageUploader').fileLoader();
+               }
+               return this._fileLoader;
             },
 
             _buttonClickHandler: function(event) {
