@@ -219,6 +219,12 @@
   display: -ms-flexbox;
   display: flex;
 }
+.flex-direction(@direction: row){
+  -webkit-flex-direction: @direction;
+  -moz-flex-direction: @direction;
+  -ms-flex-direction: @direction;
+  flex-direction: @direction;
+}
 .flex-shrink(@shrink: 1) {
    -webkit-flex-shrink: @shrink;
    -ms-flex-negative: @shrink; //ie10
@@ -230,7 +236,6 @@
    -ms-flex-positive: @grow;//ie10
    -ms-flex-grow: @grow;
    flex-grow: @grow;
-
 }
 .justify-content(@justify: flex-start) {
    -webkit-justify-content: @justify;
