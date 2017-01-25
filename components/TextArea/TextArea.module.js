@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
    }
 
    function prepareTextForDisplay(text, needToWrap) {
-      var dispText = strHelpers.escapeHtml(text);
+      var dispText = strHelpers.escapeHtml(text || '');
       if (needToWrap) {
          dispText = strHelpers.wrapURLs(dispText);
       }
