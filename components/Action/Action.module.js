@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
             if (this.isCanExecute()) {
                return this._callHandlerMethod([meta], 'onExecute', '_doExecute').addCallbacks(function (result) {
                   if (result !== false) {
-                     return this._notifyOnExecuted(meta);
+                     return self._notifyOnExecuted(meta);
                   }
                }, function (error) {
                   self._handleError(error, meta);

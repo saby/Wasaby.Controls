@@ -570,8 +570,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             self = this;
          return cMerge(config, {
             handlers: {
-               onAfterClose: function (meta) {
-                  this._notifyOnExecuted(meta, this.record);
+               onAfterClose: function (e, meta) {
+                  self._notifyOnExecuted(meta, this.record);
                   self._dialog = undefined;
                }
             }
