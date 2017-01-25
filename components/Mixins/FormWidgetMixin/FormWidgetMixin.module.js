@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             cont = this.getContainer(),
             previousStatus = this._prevValidationResult;
          this.clearMark();
-         if (this._validating || !this.isEnabled() || !cont || cont.hasClass('ws-hidden') === true) {
+         if (this._validating || (!this._options.validateIfDisabled && !this.isEnabled()) || !cont || cont.hasClass('ws-hidden') === true) {
             return true;
          }
 
