@@ -1419,6 +1419,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _prepareContent: function(value) {
+            if (value && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
+               value = Di.resolve(this._options.decoratorName).unDecorateLinks(value)
+            }
             return typeof value === 'string' ? value : value === null || value === undefined ? '' : value + '';
          },
 
@@ -1587,9 +1590,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
-            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
-            }
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
