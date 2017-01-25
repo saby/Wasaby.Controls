@@ -13,9 +13,11 @@
    }
 
    &.controls-DataGridView__hasSeparator{
-      .controls-DataGridView__table {
-        border-width: 0 0 1px 0;
-        border-color: @data-grid-edge-cell-separator-color;
+     &.controls-ListView__dataLoaded {
+       .controls-DataGridView__table {
+          border-width: 0 0 1px 0;
+          border-color: @data-grid-edge-cell-separator-color;
+        }
 
         .controls-DataGridView__tr {
           .controls-DataGridView__td {
