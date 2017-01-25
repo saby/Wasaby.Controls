@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js
       }
 
    });
-
+   CompositeView.TILE_MODE = CompositeViewMixin.TILE_MODE;
    return CompositeView;
 
 });
