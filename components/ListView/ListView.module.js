@@ -760,7 +760,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base'
+               moveStrategy: 'movestrategy.base',
+               virtualScrolling: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -2243,7 +2244,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.bottom -= this._getAdditionalOffset(items);
             }
             if (this.isInfiniteScroll()) {
-               this._preScrollLoading();
+               //this._preScrollLoading();
             }
          },
          
