@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }
 
             // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
-            if (this._offsetTop == undefined){
+            if (this._offsetTop === undefined){
                var viewTop = view.getContainer().get(0).getBoundingClientRect().top,
                   viewportTop = viewport[0] == window ? 0 : viewport.get(0).getBoundingClientRect().top;
                this._offsetTop = viewTop - viewportTop;
@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                this._scrollPages.push({
                   element: element,
                   offset: self._pageOffset
-               })
+               });
             }
          }
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             // Если набралось записей на выстору viewport'a добавим еще страницу
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
             var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
-            var prevPageOffset = self._scrollPages[self._scrollPages.length - 1].offset;
+            var prevPageOffset = self._scrollPages.length ? self._scrollPages[self._scrollPages.length - 1].offset : 0;
             if (nextBottom - prevPageOffset > viewportHeight - offsetTop) {
                self._pageOffset = pageOffset;
                self._scrollPages.push({

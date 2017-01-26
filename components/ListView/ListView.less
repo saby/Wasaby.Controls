@@ -1,6 +1,7 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
 .controls-ListView {
-
+    position: relative;
+    height: 100%;
    //Данные стили обеспечивают правильное поведение ListView при активации.
    //Фокус должен переходить на элемент с position fixed.
    .controls-ListView__fakeFocusElement {
@@ -193,7 +194,7 @@
          padding: @controls-AjaxLoader-block-padding;
          .controls-AjaxLoader__LoadingIndicator{
             position: absolute;
-            background: @list-view-scroll-bg;
+            background: url("@{list-view-scroll-spritesheet}") 0 0 no-repeat;
             padding-left: @controls-AjaxLoader-indicator-padding-left;
             height: @controls-AjaxLoader-indicator-height;
          }

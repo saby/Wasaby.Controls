@@ -233,6 +233,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
 
+         if(this._filterHistoryController) {
+            this._filterHistoryController.destroy();
+         }
+
          this._filterHistoryController = new FilterHistoryController({
             historyId: historyId,
             filterButton: filterButton,

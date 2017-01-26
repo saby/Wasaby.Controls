@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this.getTarget().height(newHeight);
+                  this.getTarget().outerHeight(newHeight, true);
                   this._notify('onChangeHeight', this._model);
                }
             },

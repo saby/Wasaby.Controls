@@ -115,14 +115,14 @@ define('js!SBIS3.CONTROLS.Selectable', [
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
-         //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
-         if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
-            if (this._getItemsProjection().getCount()) {
-               this._options.selectedIndex = 0;
-               this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
-            }
-         }
          if (this._getItemsProjection()) {
+            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
+            if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
+               if (this._getItemsProjection().getCount()) {
+                  this._options.selectedIndex = 0;
+                  this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+               }
+            }
             var curItem = this._getItemsProjection().at(this._options.selectedIndex);
             if (curItem) {
                this._curHash = curItem.getHash();
@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       //TODO переписать метод
       _setSelectedIndex: function(index, id) {
          this._drawSelectedItem(id, index);
-         this._notifySelectedItem(id, index)
+         this._notifySelectedItem(id, index);
       },
       /**
        * Устанавливает выбранным элемент коллекции по переданному идентификатору.

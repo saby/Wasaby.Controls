@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'Core/core-functions',
     'Core/helpers/collection-helpers',
     'Core/core-instance',
+    'js!WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'js!SBIS3.CONTROLS.Action.SelectorAction'
-], function(FilterPanelChooserList, CommandDispatcher, cFunctions, colHelpers, cInstance, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, cFunctions, colHelpers, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -30,7 +31,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList.prototype */ {
         $protected: {
             _options: {
-                afterChooserWrapper: footerTpl,
+                _afterChooserWrapper: footerTpl,
                 className: 'controls-FilterPanelChooser__dictionary',
                 /**
                  * @typedef {Object} dictionaryOptions
@@ -50,7 +51,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                  * @remark
                  * Открытие справочника происходит при клике по кнопке под списком или командой {@link showDictionary}.
                  */
-                dictionaryOptions: {}
+                dictionaryOptions: {},
+                defaultItems: undefined
             },
             _selectorAction: undefined,
             _afterSelection: false
@@ -60,10 +62,18 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             CommandDispatcher.declareCommand(this, 'showDictionary', this._showDictionary.bind(this))
         },
 
+        _modifyOptions: function() {
+            var
+                opts = FilterPanelChooserDictionary.superclass._modifyOptions.apply(this, arguments);
+            opts.defaultItems = opts.defaultItems || new RecordSet();
+            return opts;
+        },
+
         init: function() {
             FilterPanelChooserDictionary.superclass.init.apply(this, arguments);
             this._getListView().subscribe('onSelectedItemsChange', this._selectedItemsChangeHandler.bind(this));
         },
+
         /**
          * Инициирует открытие справочника.
          * @param {Object} meta Мета-данные.
@@ -85,14 +95,32 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                     item = items.getRecordById(id);
                     if (item) {
                         items.remove(item);
+                        this._addItemsFromDefault();
                     }
                 }, this);
             }
         },
 
-        _toggleFullState: function(toggle) {
-            FilterPanelChooserDictionary.superclass._toggleFullState.apply(this, arguments);
-            this._getAllButton().setCaption('Ещё' + ' ' + (this._options.items.getCount() - 3));
+        _addItemsFromDefault: function() {
+            var
+                items = this._getListView().getItems(),
+                defaultItems = this._options.defaultItems,
+                idProperty = defaultItems.getIdProperty(),
+                difference = defaultItems.getCount() - items.getCount();
+
+            if (difference > 0) {
+                defaultItems.each(function(item) {
+                    if (difference > 0 && !items.getRecordById(item.get(idProperty))) {
+                        items.add(item);
+                        difference--;
+                    }
+                });
+            }
+        },
+
+        _toggleAllButton: function() {
+            FilterPanelChooserDictionary.superclass._toggleAllButton.apply(this, arguments);
+            this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
         },
 
         _onExecutedHandler: function(event, meta, result) {
@@ -107,8 +135,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                 }
                 listView.setSelectedItemsAll();
                 this._updateValue();
+                this._addItemsFromDefault();
                 this._toggleFullState(false);
                 this._afterSelection = true;
+                this._container.addClass('controls-FilterPanelChooser__dictionaryAfterSelection');
             }
         },
 

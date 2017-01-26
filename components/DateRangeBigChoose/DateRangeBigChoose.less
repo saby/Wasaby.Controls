@@ -66,16 +66,15 @@
 }
 
 .controls-DateRangeBigChoose {
+
    background-color: #fff;
    border: 1px solid @date-range-big-choose-border-color;
    border-radius: 0;
    width: @date-range-big-choose-width;
    font-family: @date-range-big-choose-font-family;
    .box-shadow(@float-area-shadow);
-
-   &.ws-area{
-      height: auto;
-   }
+   height: auto;
+   position: relative;
 
    .controls-DateRangeBigChoose__header {
       background-color: #f9f9f9;
@@ -227,7 +226,6 @@
          &:hover {
 
             .controls-Link-link {
-               color: @date-range-big-choose-link-text-color;
                text-decoration: none;
             }
 
