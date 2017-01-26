@@ -10,12 +10,12 @@
    padding: @controls-FieldLink-linkContainer-padding;
    border-top: none;
    .flexbox();
-   flex-wrap: wrap;
+   .flex-wrap(wrap);
 
    .controls-FieldLink__item {
       /* Учитываем бордер пикера */
       width: ~'calc(50% - 2px)';
-      display: inline-flex;
+      .inline-flexbox();
       align-items: center;
       margin: 0;
       padding: 0;
@@ -162,8 +162,8 @@
 
    .controls-TextBox__afterFieldWrapper {
       order: 2;
-      display: inline-flex;
-      align-items: center;
+      .inline-flexbox();
+      .align-items(center);
       height: @controls-FieldLink-afterField-height;
       width: auto;
 
@@ -294,7 +294,7 @@
 
 .controls-FieldLink__dynamicInputWidth {
    .controls-TextBox__fieldWrapper {
-      display: flex;
+      .flexbox();
 
       .controls-TextBox__field {
          width: 100%;
