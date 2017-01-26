@@ -122,7 +122,14 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
       _createComponent: function(config, meta, mode) {
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
-         this._dialog = new Component(config);
+         if (this._isNeedToRedrawDialog()){
+            this._dialog._options.componentOptions = {};
+            cMerge(this._dialog._options, config);
+            this._dialog.reload();
+         }
+         else{
+            this._dialog = new Component(config);
+         }
       },
       /**
        * Возвращает конфигурацию диалога по умолчанию.
@@ -224,13 +231,18 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
       },
 
+      _isNeedToRedrawDialog: function(){
+         return this._dialog && !this._dialog.isDestroyed() && !this._dialog.isAutoHide();
+      },
+
       /**
        @deprecated
        **/
       _opendEditComponent: function(meta, dialogComponent, mode){
          IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenEditDialog', 'method _opendEditComponent was deprecated please use _openComponent instead.');
          this._openComponent.call(this, meta, dialogComponent, mode);
-      },
+      }
+
    };
 
    return DialogMixin;

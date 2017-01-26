@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'js!SBIS3.CONTROLS.Action.OpenDialog',
+      'Core/EventBus',
       'Core/core-instance',
       'Core/core-merge',
       'Core/Indicator',
@@ -11,7 +12,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'js!WS.Data/Di',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
+   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
    'use strict';
 
    /**
@@ -152,7 +153,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _saveRecord: function(){
-         var resultDeferred = new Deferred(),
+         var args = arguments, 
+             resultDeferred = new Deferred(),
              templateComponent,
              currentRecord;
 
@@ -162,8 +164,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             InformationPopupManager.showConfirmDialog({
                   message: rk('Сохранить изменения?')
                },
-               this._confirmDialogHandler.bind(this, true, resultDeferred, templateComponent),
-               this._confirmDialogHandler.bind(this, false, resultDeferred, templateComponent)
+               this._confirmDialogHandler.bind(this, true, resultDeferred, templateComponent, args),
+               this._confirmDialogHandler.bind(this, false, resultDeferred, templateComponent, args)
             );
             return resultDeferred;
          }
@@ -234,6 +236,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
          var self = this,
+            options,
             isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
             def;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
@@ -250,10 +253,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                config.componentOptions.isNewRecord = isNewRecord;
                if (isNewRecord){
                   config.componentOptions.key = record.getId();
+                  options = templateComponent.prototype.getComponentOptions.call(templateComponent.prototype, config.componentOptions);
+                  config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
             }).addErrback(function(error){
                //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
                if (!error._isOfflineMode){
+                  //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
+                  error.processed = true;
                   InformationPopupManager.showMessageDialog({
                      message: error.message,
                      status: 'error'
@@ -274,7 +281,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             if (this._showedLoading){
                cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
             }
-         }.bind(this), 750);
+         }.bind(this), 2000);
       },
 
       _hideLoadingIndicator: function(){
@@ -301,17 +308,6 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             this._overlay.appendTo('body');
          }
          this._overlay.toggleClass('ws-hidden', !show);
-      },
-
-      _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed() && !this._dialog.isAutoHide();
-      },
-
-      _setNewDialogConfig: function(config){
-         //Актуальные опции для FC содержатся в config.componentOptions, то что уже содержится в this._dialog._options нам не нужно
-         this._dialog._options.componentOptions = {};
-         cMerge(this._dialog._options, config);
-         this._dialog.reload();
       },
 
       _buildComponentConfig: function (meta) {
@@ -367,11 +363,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * Базовая логика при событии ouUpdate. Обновляем рекорд в связном списке
        */
       _updateModel: function (model, additionalData) {
-         if (additionalData && additionalData.isNewRecord){
+         if (additionalData.isNewRecord){
             this._createRecord(model, 0, additionalData);
          }
          else{
-            this._mergeRecords(model);
+            this._mergeRecords(model, null, additionalData);
          }
       },
 
@@ -399,15 +395,15 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       /**
        * Базовая логика при событии ouDestroy. Дестроим рекорд в связном списке
        */
-      _destroyModel: function(model){
-         var collectionRecord = this._getCollectionRecord(model),
+      _destroyModel: function(model, additionalData) {
+         var collectionRecord = this._getCollectionRecord(model, additionalData),
             collection = this._options.linkedObject;
          if (!collectionRecord){
             return;
          }
          //Уберём удаляемый элемент из массива выбранных у контрола, являющегося linkedObject.
          if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.MultiSelectable')) {
-            collection.removeItemsSelection([collectionRecord.getId()]);
+            collection.removeItemsSelection([this._getRecordId(collectionRecord, additionalData.idProperty)]);
          }
          if (cInstance.instanceOfModule(collection.getItems && collection.getItems(), 'WS.Data/Collection/RecordSet')) {
             collection = collection.getItems();
@@ -508,20 +504,24 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
       _mergeRecords: function(model, colRec, additionalData){
-         var collectionRecord = colRec || this._getCollectionRecord(model),
+         var collectionRecord = colRec || this._getCollectionRecord(model, additionalData),
             collectionData = this._getCollectionData(),
             recValue;
          if (!collectionRecord) {
             return;
          }
 
-         if (additionalData && additionalData.isNewRecord){
+         if (additionalData.isNewRecord) {
             collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
          }
 
          Record.prototype.each.call(collectionRecord, function (key, value) {
             recValue = model.get(key);
             if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
+               //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
+               if (recValue && (typeof recValue.clone == 'function')) {
+                  recValue = recValue.clone();
+               }
                //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
                try {
                   this.set(key, recValue);
@@ -539,15 +539,23 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       /**
        * Получаем запись из связного списка по ключу редактируемой записи
        */
-      _getCollectionRecord: function(model){
+      _getCollectionRecord: function(model, additionalData){
          var collectionData = this._getCollectionData(),
             index;
 
          if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
-            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey || model.getId());
+            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey ||
+               this._getRecordId(model, additionalData.idProperty));
             return collectionData.at(index);
          }
          return undefined;
+      },
+      
+      _getRecordId: function(record, idProperty){
+         if (idProperty) {
+            return record.get(idProperty);
+         }
+         return record.getId();
       },
 
       _getCollectionData:function(){
