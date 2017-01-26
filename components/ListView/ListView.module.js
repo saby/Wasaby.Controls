@@ -2032,7 +2032,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   visible: false,
                   touchMode: this._touchSupport,
                   className: this._notEndEditClassName,
-                  itemsActions: this._options.itemsActions,
+                  itemsActions: cFunctions.clone(this._options.itemsActions),
                   showEditActions: this._options.editMode.indexOf('toolbar') !== -1,
                   handlers: {
                      onShowItemActionsMenu: function() {
@@ -2117,7 +2117,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setItemsActions: function (itemsActions) {
             this._options.itemsActions = itemsActions;
             if(this._itemsToolbar) {
-               this._itemsToolbar.setItemsActions(this._options.itemsActions);
+               this._itemsToolbar.setItemsActions(cFunctions.clone(this._options.itemsActions));
                if (this.getHoveredItem().container) {
                   this._notifyOnChangeHoveredItem()
                }
