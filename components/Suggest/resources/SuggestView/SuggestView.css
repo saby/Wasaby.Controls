@@ -1,9 +1,0 @@
-/*group*/
-/*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-/*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
-.controls-suggestView__singleTab .controls-TabButtons {
-  display: none;
-}
-.controls-suggestView__singleTab .ws-SwitchableArea {
-  padding-top: 0;
-}
