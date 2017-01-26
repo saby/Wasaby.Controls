@@ -3656,8 +3656,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._toggleIndicator(true);
                return this._deleteRecordsFromData(idArray).addCallback(function () {
                   //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                  if (this.getDataSource()) {
-                     return this._reloadViewAfterDelete(idArray).addCallback(function() {
+                  if (self.getDataSource()) {
+                     return self._reloadViewAfterDelete(idArray).addCallback(function() {
                         self._syncSelectedKeys();
                      });
                   } else {
