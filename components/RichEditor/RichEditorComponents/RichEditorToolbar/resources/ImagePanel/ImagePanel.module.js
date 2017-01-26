@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!SBIS3.CORE.FileStorageLoader',
       'js!WS.Data/Di',
       'Core/helpers/fast-control-helpers',
-      'html!SBIS3.CONTROLS.RichEditor.ImagePanel'
+      'html!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
    ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
       'use strict';
 
