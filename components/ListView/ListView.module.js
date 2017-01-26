@@ -3034,6 +3034,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * <br/>
           * Команда поддерживает инициацию добавления по месту для заранее подготовленной записи (см. примеры).
           * @param {BeginEditOptions} [options] Параметры вызова команды.
+          * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
           * @example
           * <u>Пример 1.</u> Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
           * <pre>
@@ -3057,12 +3058,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see cancelEdit
           * @see commitEdit
           */
-         _beginAdd: function(options) {
+         _beginAdd: function(options, withoutActivateEditor) {
             if (!options) {
                options = {};
             }
             options.target = this._getItemProjectionByItemId(options.parentId);
-            return this.showEip(null, options);
+            return this.showEip(null, options, withoutActivateEditor);
          },
          /**
           * Запускает редактирование по месту.
@@ -3070,6 +3071,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
           * @param {WS.Data/Entity/Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
+          * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);
@@ -3082,8 +3084,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see beginAdd
           * @see activateItem
           */
-         _beginEdit: function(record) {
-            return this.showEip(record, { isEdit: true });
+         _beginEdit: function(record, withoutActivateEditor) {
+            return this.showEip(record, { isEdit: true }, withoutActivateEditor);
          },
          /**
           * Завершает редактирование по месту без сохранения изменений.
