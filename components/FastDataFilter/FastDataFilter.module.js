@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
-            this._container.removeClass('ws-area');
+            
          },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();

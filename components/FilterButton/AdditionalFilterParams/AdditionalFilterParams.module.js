@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
           },
 
           $constructor: function() {
-             this._container.removeClass('ws-area');
+             
              this._templateContainer = this._container.find('.controls-filterButton__additionalFilterParams-content');
              CommandDispatcher.declareCommand(this, 'toggleAdditionalFilterParams', this.toggleAdditionalFiltersBlock);
 

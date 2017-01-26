@@ -187,7 +187,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
              this._checkPickerContent = this._checkPickerContent.once();
-             this.getContainer().removeClass('ws-area')
                                 .on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 

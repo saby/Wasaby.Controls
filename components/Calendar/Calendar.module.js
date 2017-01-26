@@ -95,7 +95,7 @@ define(
 
          $constructor: function () {
             this._publish('onDateChange');
-            this._container.removeClass('ws-area');
+            
          },
 
          init: function(){

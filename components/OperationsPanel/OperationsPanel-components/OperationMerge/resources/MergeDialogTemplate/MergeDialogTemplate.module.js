@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             _applyContainer: undefined
         },
         $constructor: function() {
-            this._container.removeClass('ws-area');
+            
             CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
         },
         onSearchPathClick: function(event) {
