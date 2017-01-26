@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (options && options.isEdit) {
                   return this.edit(model, withoutActivateFirstControl);
                } else {
-                  return this.add(options);
+                  return this.add(options, withoutActivateFirstControl);
                }
             },
             edit: function (model, withoutActivateFirstControl) {
@@ -473,7 +473,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.callback();
                }
             },
-            add: function(options) {
+            add: function(options, withoutActivateFirstControl) {
                var
                   self = this,
                   modelOptions,
@@ -497,7 +497,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            //завершение редактирования, но записи уже может не быть в рекордсете.
                            self._isAdd = true;
                            self._createAddTarget(model, options);
-                           self._getEip().edit(model);
+                           self._getEip().edit(model, undefined, withoutActivateFirstControl);
                            editingRecord = self._getEip().getEditingRecord();
                            self._notify('onAfterBeginEdit', editingRecord);
                            if (!self._pendingOperation) {
