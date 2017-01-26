@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.Image',
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Source/SbisService",
    "html!SBIS3.CONTROLS.Image",
-   "js!SBIS3.CORE.FileLoader",
    "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.LoadingIndicator",
    "Core/core-instance",
@@ -20,7 +19,7 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Link",
    "i18n!SBIS3.CONTROLS.Image"
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -355,12 +354,9 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                 //todo Удалить, временная опция для поддержки смены логотипа компании
-                  if (dataSource) {
-                     this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
-                  }
                   if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
                      this._buttonUpload.setCaption('');
+                     this._buttonUpload.setTooltip('Загрузить');
                   }
                   this._bindToolbarEvents();
                }
@@ -622,9 +618,12 @@ define('js!SBIS3.CONTROLS.Image',
               * @see resetImage
               */
             _uploadImage: function(originalEvent) {
-               if (this.getDataSource()) {
-                  this._getFileLoader().selectFile(originalEvent, false);
+               if (!this.getDataSource()) {
+                  return;
                }
+               this._getFileLoader().addCallback(function (loader){
+                  loader.selectFile(originalEvent, false);
+               });
             },
              /**
               * Инициирует вызов диалога редактирования изображения.
@@ -708,8 +707,16 @@ define('js!SBIS3.CONTROLS.Image',
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
                   this._options.dataSource = dataSource;
+
                   //todo Удалить, временная опция для поддержки смены логотипа компании
-                  this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
+                  var self = this;
+                  if (this._fileLoader) {
+                     this._fileLoader.setMethod(
+                           (self._options.linkedObject || dataSource.getEndpoint().contract) +
+                           '.' + dataSource.getBinding().create
+                     );
+                  }
+
                   if (!noReload) {
                      this._setImage(this._getSourceUrl());
                   }
@@ -749,33 +756,49 @@ define('js!SBIS3.CONTROLS.Image',
 
             _getFileLoader: function() {
                if (!this._fileLoader) {
-                  this._createFileLoader();
+                  return this._createFileLoader();
                }
-               return this._fileLoader;
+               return Deferred.success(this._fileLoader);
             },
 
             /**
              * Создание загрузчика файлов
              * @private
              */
-            _createFileLoader: function(){
-               var
-                  self = this,
-                  cont = $('<div class="controls-image__file-loader"></div>');
-               this.getContainer().append(cont);
-               this._fileLoader = new FileLoader({
-                  extensions: ['image'],
-                  element: cont,
-                  name: 'FileLoader',
-                  parent: self,
-                  showIndicator: false,
-                  handlers: {
-                     onLoadStarted: self._onBeginLoad,
-                     onLoaded: self._onEndLoad
-                  }
-               });
-            }
+            _createFileLoader: function() {
+               var def = new $ws.proto.Deferred();
+               var self = this;
 
+               require(['js!SBIS3.CORE.FileLoader'], function (FileLoader) {
+                  var cont = $('<div class="controls-image__file-loader"></div>');
+                  self.getContainer().append(cont);
+                  self._fileLoader = new FileLoader({
+                     extensions: ['image'],
+                     element: cont,
+                     name: 'FileLoader',
+                     parent: self,
+                     showIndicator: false,
+                     handlers: {
+                        onLoadStarted: self._onBeginLoad,
+                        onLoaded: self._onEndLoad
+                     }
+                  });
+
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  var dataSource = self.getDataSource();
+                  if (dataSource) {
+                     self._fileLoader.setMethod((
+                        self._options.linkedObject || dataSource.getEndpoint().contract) +
+                        '.' + dataSource.getBinding().create
+                     );
+                  }
+
+                  def.callback(self._fileLoader);
+               });
+
+               return def;
+            }
          });
+
       return Image;
    });
