@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          for (var i = 0; i < movedItems.length; i++) {
             key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
-            if ($.inArray(key, toMap) !== -1) {
+            if (toMap.indexOf(key) !== -1) {
                return false;
             }
             if (target !== null && !isChangeOrder && !target.get(this._options.nodeProperty)) {
@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          var record = recordSet.getRecordById(parentKey);
          while (record) {
             parentKey = '' + record.getId();
-            if ($.inArray(parentKey, toMap) === -1) {
+            if (toMap.indexOf(parentKey) === -1) {
                toMap.push(parentKey);
             }
             parentKey = record.get(this._options.parentProperty);
