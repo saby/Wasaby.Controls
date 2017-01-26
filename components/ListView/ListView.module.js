@@ -758,10 +758,16 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntityList: 'dragentity.list',
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @deprecated
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base'
+               moveStrategy: 'movestrategy.base',
+               /**
+                * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
+                * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
+                */
+               moveInvertOrder: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -3526,7 +3532,8 @@ define('js!SBIS3.CONTROLS.ListView',
                items: this.getItems(),
                projection: this._getItemsProjection(),
                parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty
+               nodeProperty: this._options.nodeProperty,
+               invertOrder: this._options.invertOrder
             }));
          },
          /**

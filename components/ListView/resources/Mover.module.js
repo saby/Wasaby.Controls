@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
    "Core/core-instance",
    "Core/Deferred",
    "Core/Abstract",
-   "Core/IoC"
-], function (Di, cInstance, Deferred, Abstract, IoC) {
+   'js!WS.Data/Utils'
+], function (Di, cInstance, Deferred, Abstract, Utils) {
    'use strict';
    /**
     * Перемещает элементы
@@ -50,13 +50,17 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
              *    <option name="parentProperty">Раздел@</option>
              * </pre>
              */
-            nodeProperty: null
+            nodeProperty: null,
+            /**
+             * @cfg {Boolean} Инвертирует вызов методов перемещния по порядку.
+             */
+            invertOrder: false
          }
       },
       $constructor: function () {
          this._publish('onBeginMove', 'onEndMove');
       },
-
+      //region for_controls
       moveRecordDown: function(record) {
          this._moveToOneRow(record, true);
       },
@@ -167,91 +171,27 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          return (result instanceof Deferred) ? result : new Deferred().callback(result);
       },
-
+      //endregion for_controls
       //region move_strategy
       /**
        * Возвращает стратегию перемещения
+       * @deprecated
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        */
       getMoveStrategy: function() {
+         Utils.logger.stack(this._moduleName + 'Method getMoveStrategy have deprecated, and will be removed in 3.8.0, please use events onBeginMove or onEndMove on ListView instead of MoveStrategy');
          return this._options.moveStrategy;
       },
       /**
        * Устанавливает стратегию перемещения
+       * @deprecated
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (moveStrategy) {
+         Utils.logger.stack(this._moduleName + 'Method setMoveStrategy have deprecated, and will be removed in 3.8.0, please use events onBeginMove or onEndMove on ListView instead of MoveStrategy', 1);
          this._options.moveStrategy = strategy;
-      },
-      //endregion move_strategy
-      //region checkmove
-      /**
-       * Проверяет можно ли перенести элементы
-       * @param {Array} movedItems Массив перемещаемых элементов
-       * @param {WS.Data/Entity/Record} target рекорд к которому надо переместить
-       * @param {Boolean} isChangeOrder Изменяется порядок элементов
-       * @returns {Boolean}
-       * @private
-       */
-      _checkRecordsForMove: function(movedItems, target, isChangeOrder) {
-         var
-            key,
-            toMap = [];
-         if (target === undefined) {
-            return false;
-         }
-         if (target !== null && this._options.parentProperty) {
-            toMap = this._getParentsMap(target.getId());
-         }
-         for (var i = 0; i < movedItems.length; i++) {
-            key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
-            if ($.inArray(key, toMap) !== -1) {
-               return false;
-            }
-            if (target !== null && !isChangeOrder && !target.get(this._options.nodeProperty)) {
-               return false;
-            }
-         }
-
-         return true;
-      },
-      /**
-       *
-       * @param parentKey
-       * @returns {Array}
-       * @private
-       */
-      _getParentsMap: function(parentKey) {
-         var
-            recordSet = this.getItems(),
-         /*
-          TODO: проверяем, что не перемещаем папку саму в себя, либо в одного из своих детей.
-          В текущей реализации мы можем всего-лишь из метаданных вытащить путь от корня до текущего открытого раздела.
-          Это костыль, т.к. мы расчитываем на то, что БЛ при открытии узла всегда вернет нам путь до корня.
-          Решить проблему можно следующими способами:
-          1. во первых в каталоге номенклатуры перемещение сделано не по стандарту. при нажатии в операциях над записью кнопки "переместить" всегда должен открываться диалог выбора папки. сейчас же они без открытия диалога сразу что-то перемещают и от этого мы имеем проблемы. Если всегда перемещать через диалог перемещения, то у нас всегда будет полная иерархия, и мы сможем определять зависимость между двумя узлами, просто пройдясь вверх по иерархии.
-          2. тем не менее это не отменяет сценария обычного Ctrl+C/Ctrl+V. В таком случае при операции Ctrl+C нам нужно запоминать в метаданные для перемещения текущую позицию иерархии от корня (если это возможно), чтобы в будущем при вставке произвести анализ на корректность операции
-          3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
-          */
-            path = recordSet.getMetaData().path,
-            toMap = [];
-         if (recordSet.getMetaData().path) {
-            path.each(function (elem) {
-               toMap.push('' + elem.getId());
-            });
-         }
-         var record = recordSet.getRecordById(parentKey);
-         while (record) {
-            parentKey = '' + record.getId();
-            if ($.inArray(parentKey, toMap) === -1) {
-               toMap.push(parentKey);
-            }
-            parentKey = record.get(this._options.parentProperty);
-            record = recordSet.getRecordById(parentKey);
-         }
-         return toMap;
       },
 
       /**
@@ -373,7 +313,77 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             );
             items.setEventRaising(true, true);
          }.bind(this));
+      },
+      //endregion move_strategy
+      //region checkmove
+      /**
+       * Проверяет можно ли перенести элементы
+       * @param {Array} movedItems Массив перемещаемых элементов
+       * @param {WS.Data/Entity/Record} target рекорд к которому надо переместить
+       * @param {Boolean} isChangeOrder Изменяется порядок элементов
+       * @returns {Boolean}
+       * @private
+       */
+      _checkRecordsForMove: function(movedItems, target, isChangeOrder) {
+         var
+            key,
+            toMap = [];
+         if (target === undefined) {
+            return false;
+         }
+         if (target !== null && this._options.parentProperty) {
+            toMap = this._getParentsMap(target.getId());
+         }
+         for (var i = 0; i < movedItems.length; i++) {
+            key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
+            if ($.inArray(key, toMap) !== -1) {
+               return false;
+            }
+            if (target !== null && !isChangeOrder && !target.get(this._options.nodeProperty)) {
+               return false;
+            }
+         }
+
+         return true;
+      },
+      /**
+       *
+       * @param parentKey
+       * @returns {Array}
+       * @private
+       */
+      _getParentsMap: function(parentKey) {
+         var
+            recordSet = this.getItems(),
+         /*
+          TODO: проверяем, что не перемещаем папку саму в себя, либо в одного из своих детей.
+          В текущей реализации мы можем всего-лишь из метаданных вытащить путь от корня до текущего открытого раздела.
+          Это костыль, т.к. мы расчитываем на то, что БЛ при открытии узла всегда вернет нам путь до корня.
+          Решить проблему можно следующими способами:
+          1. во первых в каталоге номенклатуры перемещение сделано не по стандарту. при нажатии в операциях над записью кнопки "переместить" всегда должен открываться диалог выбора папки. сейчас же они без открытия диалога сразу что-то перемещают и от этого мы имеем проблемы. Если всегда перемещать через диалог перемещения, то у нас всегда будет полная иерархия, и мы сможем определять зависимость между двумя узлами, просто пройдясь вверх по иерархии.
+          2. тем не менее это не отменяет сценария обычного Ctrl+C/Ctrl+V. В таком случае при операции Ctrl+C нам нужно запоминать в метаданные для перемещения текущую позицию иерархии от корня (если это возможно), чтобы в будущем при вставке произвести анализ на корректность операции
+          3. это не исключает ситуации, когда БЛ не возвращает иерархию до корня, либо пользователь самостоятельно пытается что-то переместить с помощью интерфейса IDataSource.move. В таком случае мы считаем, что БЛ вне зависимости от возможности проверки на клиенте, всегда должна проверять входные значения при перемещении. В противном случае это приводит к зависанию запроса.
+          */
+            path = recordSet.getMetaData().path,
+            toMap = [];
+         if (recordSet.getMetaData().path) {
+            path.each(function (elem) {
+               toMap.push('' + elem.getId());
+            });
+         }
+         var record = recordSet.getRecordById(parentKey);
+         while (record) {
+            parentKey = '' + record.getId();
+            if ($.inArray(parentKey, toMap) === -1) {
+               toMap.push(parentKey);
+            }
+            parentKey = record.get(this._options.parentProperty);
+            record = recordSet.getRecordById(parentKey);
+         }
+         return toMap;
       }
+
+
       //endregion checkmove
    });
    Di.register('listview.mover', Mover);
