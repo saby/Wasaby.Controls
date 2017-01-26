@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!WS.Data/Di',
       'Core/helpers/fast-control-helpers',
       'html!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
-      'js!SBIS3.CONTROLS.CommandsButton'
+      'js!SBIS3.CONTROLS.CommandsButton',
+      'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel'
    ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
       'use strict';
 
