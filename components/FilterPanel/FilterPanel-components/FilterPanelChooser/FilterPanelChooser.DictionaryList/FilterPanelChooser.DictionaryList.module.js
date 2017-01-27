@@ -95,9 +95,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                     item = items.getRecordById(id);
                     if (item) {
                         items.remove(item);
-                        this._addItemsFromDefault();
                     }
                 }, this);
+                this._addItemsFromDefault();
+                this._toggleAllButton();
             }
         },
 
