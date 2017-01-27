@@ -273,7 +273,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onBeginDelete Происходит перед удалением записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
-          * @returns {*|Boolean} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
+          * @returns {*|Boolean|Deferred} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
           */
          /**
           * @typedef {String} MovePosition
@@ -3631,36 +3631,52 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
           */
          deleteRecords: function(idArray, message) {
-            var self = this;
+            var
+                self = this,
+                beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
             idArray = Array.isArray(idArray) ? cFunctions.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return fcHelpers.question(message).addCallback(function(res) {
                if (res) {
-                  if (self._notify('onBeginDelete', idArray) !== false) {
-                     self._toggleIndicator(true);
-                     return self._deleteRecords(idArray).addCallback(function () {
-                        //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                        if (self.getDataSource()) {
-                           return self._reloadViewAfterDelete(idArray).addCallback(function() {
-                              self._syncSelectedKeys();
-                           });
-                        } else {
-                           self._syncSelectedKeys();
-                        }
+                  beginDeleteResult = self._notify('onBeginDelete', idArray);
+                  if (beginDeleteResult instanceof Deferred) {
+                     beginDeleteResult.addCallback(function(result) {
+                        self._deleteRecords(idArray, result);
                      }).addErrback(function (result) {
-                        fcHelpers.alert(result)
-                     }).addBoth(function (result) {
-                        self._toggleIndicator(false);
-                        self._notify('onEndDelete', idArray, result);
+                        fcHelpers.alert(result);
                      });
+                  } else {
+                     self._deleteRecords(idArray, beginDeleteResult);
                   }
                }
             });
          },
 
-         _deleteRecords: function(idArray) {
+         _deleteRecords: function(idArray, beginDeleteResult) {
+            var self = this;
+            if (beginDeleteResult !== false) {
+               this._toggleIndicator(true);
+               return this._deleteRecordsFromData(idArray).addCallback(function () {
+                  //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
+                  if (self.getDataSource()) {
+                     return self._reloadViewAfterDelete(idArray).addCallback(function() {
+                        self._syncSelectedKeys();
+                     });
+                  } else {
+                     self._syncSelectedKeys();
+                  }
+               }).addErrback(function (result) {
+                  fcHelpers.alert(result)
+               }).addBoth(function (result) {
+                  self._toggleIndicator(false);
+                  self._notify('onEndDelete', idArray, result);
+               });
+            }
+         },
+
+         _deleteRecordsFromData: function(idArray) {
             var
                 items = this.getItems(),
                 source = this.getDataSource();
