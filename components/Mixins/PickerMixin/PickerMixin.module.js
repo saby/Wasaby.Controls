@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
       },
 
       $constructor: function() {
-         this._publish('onOpen', 'onClose');
+         this._publish('onPickerOpen', 'onPickerClose');
       },
 
       _initializePicker: function () {
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          }
          this._container.addClass('controls-Picker__show');
          this._picker.show();
-         this._notify('onOpen');
+         this._notify('onPickerOpen');
       },
       /**
        * Метод скрывает выпадающий блок.
@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          if(this._picker) {
             this._container.removeClass('controls-Picker__show');
             this._picker.hide();
-            this._notify('onClose');
+            this._notify('onPickerClose');
          }
       },
      /**
