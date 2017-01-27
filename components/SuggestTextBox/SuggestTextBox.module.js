@@ -52,9 +52,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
             this._crossContainer.toggleClass('ws-hidden', !text);
          });
 
-         this._crossContainer.click(function() {
-            self.setText('');
-         });
+         this._crossContainer.click(self.resetSearch.bind(self));
       },
 
       _chooseCallback: function(result) {
