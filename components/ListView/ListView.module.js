@@ -1883,7 +1883,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._lastDeleteActionState = undefined;
                }
                // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-               if (this.getHoveredItem().container) {
+               if (this.getHoveredItem().container && !this._touchSupport) {
                   this._notifyOnChangeHoveredItem();
                } else {
                   this._hideItemsToolbar();
