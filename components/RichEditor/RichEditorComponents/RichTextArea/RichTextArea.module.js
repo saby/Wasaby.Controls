@@ -906,8 +906,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this._insertImg(URL, 'float:right; ', meta);
                   break;
                case "4":
-                  console.log(fileobj);
-                  fcHelpers.alert('Сейчас будет коллаж');
+                  //todo: сделать коллаж
                   break;
                case "6":
                   this._insertImg(URL, '', meta);
