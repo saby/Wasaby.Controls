@@ -34,17 +34,32 @@
       }
     }
 
-    .controls-BreadCrumbs {
-      margin-left: @controls-MergeDialogTemplate-BreadCrumbs-margin-left;
-      line-height: @controls-MergeDialogTemplate-BreadCrumbs-line-height;
-      .controls-BreadCrumbs__itemsContainer {
+    .controls-ListView__item-type-node {
+      .controls-DataGridView__td, .controls-BreadCrumbs__crumb {
+        cursor: default;
+      }
+
+      .controls-BreadCrumbs {
+        margin-left: @controls-MergeDialogTemplate-BreadCrumbs-margin-left;
+        line-height: @controls-MergeDialogTemplate-BreadCrumbs-line-height;
+
         .controls-BreadCrumbs__crumb {
-          .controls-BreadCrumbs__title {
-            font-size: @font-basic-size;
+          &, &:hover {
+            .controls-BreadCrumbs__title, .icon-16 {
+              color: @darkcyan-color !important;
+            }
           }
-          &:first-child {
+        }
+
+        .controls-BreadCrumbs__itemsContainer {
+          .controls-BreadCrumbs__crumb {
             .controls-BreadCrumbs__title {
-              font-size: @font-popup-size;
+              font-size: @font-basic-size;
+            }
+            &:first-child {
+              .controls-BreadCrumbs__title {
+                font-size: @font-popup-size;
+              }
             }
           }
         }
