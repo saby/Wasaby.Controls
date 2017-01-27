@@ -241,6 +241,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
+    * @demo SBIS3.DOCS.GroupByWrap Группировка записей.
     *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
