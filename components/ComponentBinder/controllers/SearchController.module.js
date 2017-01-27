@@ -149,7 +149,12 @@ define('js!SBIS3.CONTROLS.SearchController',
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
          view.once('onDataLoad', function() {
             view._container.removeClass('controls-GridView__searchMode');
-            view.setCurrentRoot(self._lastRoot || null);
+            /* Отктываю правку по установке корня через setCurrentRoot,
+             т.к. появлялась ошибка при сценарии: ищем что-то, пока грузится сбрасываем поиск,
+             и сразу опять что-то ищем. В фильтре списка оставался неправильный раздел. */
+            //view.setCurrentRoot(self._lastRoot || null);
+            view._options._curRoot = self._lastRoot ||  view.getRoot() || null;
+            view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
          });
          this._searchMode = false;
          view._options.hierarchyViewMode = false;
