@@ -68,6 +68,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
+               self.hidePicker();
                self.applySearch(true);
             }
          });

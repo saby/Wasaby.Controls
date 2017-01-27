@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl",
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl",
    "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
-   'css!SBIS3.CONTROLS.MergeDialogTemplate'
+   'css!SBIS3.CONTROLS.MergeDialogTemplate',
+   'css!SBIS3.CONTROLS.RadioButton'
 ], function( CommandDispatcher,Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, Query, RecordSet, fcHelpers) {
 
 
@@ -61,7 +62,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             _applyContainer: undefined
         },
         $constructor: function() {
-            this._container.removeClass('ws-area');
+            
             CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
         },
         onSearchPathClick: function(event) {

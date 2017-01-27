@@ -89,7 +89,7 @@ define(
 
          $constructor: function () {
             this._publish('onSelectionChange');
-            this._container.removeClass('ws-area');
+            
          },
 
          init: function () {

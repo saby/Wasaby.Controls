@@ -1,3 +1,4 @@
+@themeName: 'online';
 .body {
   font-family: @font-basic-name;
   font-size: @font-basic-size;
@@ -59,7 +60,7 @@
    z-index: 1;
 }
 
-.controls-Button__closeButton {
+.controls-Button__closeButton.controls-IconButton {
    width: @closeButtonWidth;
    height: @closeButtonHeight;
    background: @closeButtonImage;
@@ -94,7 +95,7 @@
    }
 }
 
-&.controls-ListView__withoutMarker {
+&.controls-ListView__withoutMarker.controls-ListView.controls-CompositeView {
    .controls-ListView__item__selected,
    .controls-ListView__item__multiSelected {
       .controls-DataGridView__td:first-child,
@@ -103,7 +104,7 @@
       &:not(.controls-CompositeView__verticalItemActions),
       &:not(.controls-ListView__item-type-node) {
          background-image: none !important;
-         border-color: transparent !important;
+         border-color: transparent;
       }
       &.controls-ListView__item {
          &:not(.controls-ListView__hoveredItem) {

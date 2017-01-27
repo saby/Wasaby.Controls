@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
+         
          CommandDispatcher.declareCommand(this, 'toggleHistory', this.toggleHistoryBlock);
       },
 
