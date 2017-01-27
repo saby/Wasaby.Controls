@@ -9,7 +9,7 @@ define(
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'html!SBIS3.CONTROLS.DateBox',
+      'tmpl!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
