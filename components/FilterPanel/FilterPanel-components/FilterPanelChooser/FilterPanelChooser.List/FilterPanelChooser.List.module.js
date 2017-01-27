@@ -79,7 +79,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
 
         _updateView: function() {
             FilterPanelChooserList.superclass._updateView.apply(this, arguments);
-            this._toggleAllButton();
         },
         /**
          * Инициирует подгрузку всех записей списка.
@@ -89,12 +88,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _toggleFullState: function(toggle) {
             this._getListView()._options._showFullList = toggle;
             this._getListView().redraw();
-            this._toggleAllButton(toggle);
+            this._toggleAllButton();
         },
 
-        _toggleAllButton: function(toggle) {
-            //Скрываем кнопку если показываются все записи (toggle = true) или показываем не все записи, но их меньше 4
-            this._getAllButton().toggle(!(toggle || this._getListView().getItems().getCount() < 4));
+        _toggleAllButton: function() {
+            var listView = this._getListView();
+            //Скрываем кнопку если показываются все записи (showFullList = true) или показываем не все записи, но их меньше 4
+            this._getAllButton().toggle(!(listView._options._showFullList || listView.getItems().getCount() < 4));
         },
 
         _getAllButton: function() {
