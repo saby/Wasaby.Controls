@@ -1041,6 +1041,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
                   content = e.content;
                e.content =  content.replace('orphans: 31415;','');
+               //Необходимо заменять декорированные ссылки обратно на url
+               e.content = self._prepareContent( e.content);
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
