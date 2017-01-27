@@ -684,10 +684,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListItemSelect: function (id, item) {
          var def = new Deferred(),
-             items = this._getListItems(),
-             ctx = this._getBindingContext(),
-             self = this,
-             toSet = {};
+             items = this._getListItems();
 
          if (id === null || id === undefined) {
             return;
@@ -703,17 +700,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
          }
 
-         def.addCallback(function (item) {
-            self._notify('onListItemSelect', item, self._resultBindings);
-            /* Соберём все изменения в пачку,
-               чтобы контекст несколько раз не пересчитывался */
-            for (var field in self._resultBindings) {
-               if (self._resultBindings.hasOwnProperty(field)) {
-                  toSet[field] = item.get(self._resultBindings[field]);
-               }
+         def.addCallback(this._onListItemSelectNotify.bind(this, item));
+      },
+      _onListItemSelectNotify: function (item) {
+         var ctx = this._getBindingContext(),
+             toSet = {};
+         this._notify('onListItemSelect', item, this._resultBindings);
+         /* Соберём все изменения в пачку,
+          чтобы контекст несколько раз не пересчитывался */
+         for (var field in this._resultBindings) {
+            if (this._resultBindings.hasOwnProperty(field)) {
+               toSet[field] = item.get(self._resultBindings[field]);
             }
-            ctx.setValue(toSet, false, self._list);
-         });
+         }
+         ctx.setValue(toSet, false, this._list);
       },
 
       /**
