@@ -632,7 +632,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             /* Изменяем видимость кнопки в зависимости от:
              1) Записей не найдено вовсе - показываем (по стандарту).
              2) Записи найдены, но есть ещё. */
-            if(!items.getCount()) {
+            if(!items || !items.getCount()) {
                showButton = true;
             } else {
                showButton = list._hasNextPage(items.getMetaData().more);
