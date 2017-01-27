@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       },
       $constructor: function() {
          this._publish('onPrepareFilterOnMove', 'onMove');
-         this._container.removeClass('ws-area');
+         
          this.subscribe('onReady', this._onReady.bind(this));
          CommandDispatcher.declareCommand(this, 'applyMove', this._onMoveButtonActivated.bind(this));
       },

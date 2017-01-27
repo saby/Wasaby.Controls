@@ -127,7 +127,7 @@ define(
 
          this._calendarInit();
 
-         this._container.removeClass('ws-area');
+         
       },
 
       _modifyOptions : function(options) {

@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       $constructor: function() {
          this._initBlocks();
          this._publish('onToggle');
-         this._container.removeClass('ws-area');
+         
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);

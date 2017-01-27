@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self._clickHandler();
             });
             /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
-            this._container.removeClass('ws-area');
+            
             
             //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a) 
             var decorators = this._container.attr('decorators');

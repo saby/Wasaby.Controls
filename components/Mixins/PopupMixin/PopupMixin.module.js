@@ -184,9 +184,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             'left': '-10000px'
          });
 
-         //TODO: Придрот
-         container.removeClass('ws-area');
-         /********************************/
 
          this._initOppositeCorners();
 

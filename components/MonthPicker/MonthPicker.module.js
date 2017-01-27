@@ -166,7 +166,7 @@ define(
          });
 
          //TODO из-за Витиной ошибки прилетает класс ws-area, хотя наследуемся от контррла
-         this._container.removeClass('ws-area');
+         
       },
 
       _initializePicker: function(){

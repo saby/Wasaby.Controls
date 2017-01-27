@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
+         
       },
 
       init : function() {
