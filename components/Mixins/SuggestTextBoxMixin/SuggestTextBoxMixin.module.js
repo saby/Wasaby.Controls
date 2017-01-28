@@ -150,8 +150,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          },
          _onListItemSelectNotify: function(item){
-            this._historyController.prepend(item.getRawData());
-         },
+            if (this._historyController) {
+               this._historyController.prepend(item.getRawData());
+            }
+         }
       },
 
 
