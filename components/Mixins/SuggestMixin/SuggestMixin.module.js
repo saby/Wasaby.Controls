@@ -710,7 +710,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
           чтобы контекст несколько раз не пересчитывался */
          for (var field in this._resultBindings) {
             if (this._resultBindings.hasOwnProperty(field)) {
-               toSet[field] = item.get(self._resultBindings[field]);
+               toSet[field] = item.get(this._resultBindings[field]);
             }
          }
          ctx.setValue(toSet, false, this._list);
