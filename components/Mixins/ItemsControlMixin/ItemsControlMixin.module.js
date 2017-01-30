@@ -189,12 +189,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
     */
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
        /**
-        * @event onDrawItems После отрисовки всех элементов коллекции
+        * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
-        *     Menu.subscribe('onDrawItems', function(){
-        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие'){
+        *     Menu.subscribe('onDrawItems', function() {
+        *        if (Menu.getItemsInstance(2).getCaption() == 'Входящие') {
         *           Menu.getItemsInstance(2).destroy();
         *        }
         *     });
@@ -203,7 +203,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see displayProperty
         */
        /**
-        * @event onDataLoad При загрузке данных
+        * @event onBeforeDataLoad Происходит перед загрузкой данных.
+        * @remark
+        * Событие сработает перед запросом к источнику данных
+        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @example
+        * <pre>
+        *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
+        *       var filter = this.getFilter();
+        *       filter['myParam'] = myValue;
+        *       this.setFilter(filter, true)
+        *    });
+        * </pre>
+        */
+       /**
+        * @event onDataLoad Происходит при загрузке данных.
         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
         * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
@@ -217,7 +231,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getDataSource
         */
       /**
-       * @event onDataLoadError При ошибке загрузки данных
+       * @event onDataLoadError Происходит при ошибке загрузки данных.
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
@@ -229,22 +243,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * </ol>
        * @example
        * <pre>
-       *    myView.subscribe('onDataLoadError', function(event, error){
+       *    myView.subscribe('onDataLoadError', function(eventObject, error) {
        *       event.setResult(true);
        *       TextBox.setText('Ошибка при загрузке данных');
        *    });
        * </pre>
        */
       /**
-       * @event onItemsReady при готовности экземпляра коллекции iList
+       * @event onItemsReady Происходит при готовности экземпляра коллекции {@link WS.Data/Collection/IList}.
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
-       *    myView.subscribe('onItemsReady', function(event){
+       *    myView.subscribe('onItemsReady', function(event) {
        *       var items = this.getItems();
-       *       items.subscribe('onCollectionChange', function(){
+       *       items.subscribe('onCollectionChange', function() {
        *          alert('Collection is changed')
        *       })
        *    });
@@ -283,12 +297,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _canApplyGrouping: canApplyGrouping,
 
             /**
-             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
-             * @deprecated
+             * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
+             * @deprecated Используйте опцию {@link idProperty}.
              */
             keyField : null,
             /**
-             * @cfg {String} Поле элемента коллекции, которое является идентификатором записи
+             * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
              * @remark
              * Выбранный элемент в коллекции задаётся указанием ключа элемента.
              * @example
@@ -304,20 +318,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             idProperty : null,
             /**
-             * @cfg {String} Поле элемента коллекции, из которого отображать данные
-             * @deprecated
+             * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
+             * @deprecated Используйте опцию {@link displayProperty}.
              */
             displayField: null,
             /**
-             * @cfg {String} Поле элемента коллекции, из которого отображать данные
+             * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
              * @example
              * <pre class="brush:xml">
              *     <option name="displayProperty">Название</option>
              * </pre>
-             * @remark
-             * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
-             * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
-             * которого нужно отобразить в выпадающем списке.
              * @see idProperty
              * @see items
              * @see setDataSource
@@ -341,7 +351,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               *         <options>
               *            <option name="id">3</option>
               *            <option name="title">ПунктПодменю</option>
-              *            <!--необходимо указать это полем иерархии для корректной работы-->
+              *            <!--необходимо указать это полем иерархии в опции parentProperty для корректной работы-->
               *            <option name="parent">2</option>
               *            <option name="icon">sprite:icon-16 icon-Birthday icon-primary</option>
               *         </options>
@@ -363,15 +373,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @example
              * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
              * <pre>
-             *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей
+             *    // SbisService - это переменная, в которую импортирован класс источника данных из массива зависимостей компонента
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
-             *           contract: 'Отчеты' // Устанавливаем объект БЛ
+             *
+             *           // устанавливаем объект БЛ
+             *           contract: 'Отчеты'
              *        },
+             *
+             *        // устанавливаем списочный метод
              *        binding: {
-             *           query: 'Список' // Устанавливаем списочный метод
+             *           query: 'Список'
              *        },
-             *        idProperty: '@Идентификатор' // Устанавливаем поле первичного ключа
+             *
+             *        // устанавливаем поле первичного ключа
+             *        idProperty: '@Идентификатор'
              *    });
              *    myView.setDataSource(myDataSource); // Устанавливаем представлению новый источник данных
              * </pre>
@@ -406,8 +422,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * Функция должна возвращать объект с конфигурацией источника данных.
              * <pre>
              *    getMyDataSource: function() {
-             *       return new MemorySource({
-             *          ...
+             *       return new SbisService({
+             *          endpoint: {
+             *             contract: 'Отчеты'
+             *          },
+             *          binding: {
+             *             query: 'Список'
+             *          },
+             *          idProperty: '@Идентификатор'
              *       });
              *    }
              * </pre>
@@ -417,12 +439,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             dataSource: undefined,
              /**
-              * @cfg {Number} Количество записей, запрашиваемых с источника данных
+              * @cfg {Number} Устанавливает количество записей, запрашиваемых с источника данных.
               * @remark
-              * Опция определяет количество запрашиваемых записей с источника даныых как при построении контрола, так и
-              * при осуществлении подгрузки.
-              * Для иерархических структур при пейджинге по скроллу опция также задаёт количество подгружаемых записей
-              * кликом по кнопке "Ещё".
+              * Опция определяет количество запрашиваемых записей от источника данных как при построении контрола, так и при осуществлении подгрузки.
+              * Для иерархических структур при пейджинге по скроллу опция также задаёт количество подгружаемых записей кликом по кнопке "Ещё".
               * !Важно: в базе данных как листья, так и узлы являются записями. Поэтому необходимо учитывать, что в
               * количество записей считаются и узлы, и листья. Т.е. подсчёт идёт относительно полностью развёрнутого
               * представления данных. Например, узел с тремя листьями - это 4 записи.
@@ -472,45 +492,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *     <li>В компоненте в секции *_options* создайте переменную, в значение которой передайте импортированный шаблон.</li>
              *     <li>Передайте значение опции в конфигурацию *groupBy* в опцию *contentTemplate*.</li>
              * </ol>
+             */
             /**
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
-             *    define('js!SBIS3.MyArea.MyComponent',
-             *       [
-             *          ...,
-             *          "html!MyArea.MyComponent/resources/myTpl"
-             *       ],
-             *       function( ..., myTpl) {
-             *          ...
-             *          $protected: {
-             *             _options: {
-             *                myGroupTemplate: myTpl
-             *             }
-             *          }
-             *          ...
-             *    );
+             *    define('js!SBIS3.MyArea.MyComponent', [ ..., "html!MyArea.MyComponent/resources/myTpl"], ...);
              * </pre>
-             * 2. Настройка группировки и передача шаблона:
+             * 2. Настройка группировки:
              * <pre>
              *     <options name="groupBy">
              *         <option name="field">ДатаВходаСотрудника</option> <!-- Так будет использована стандартная функция группировки элементов коллекции -->
-             *         <option name="contentTemplate">{{@ it.myGroupTemplate}}</option>
+             *         <option name="contentTemplate" value="html!MyArea.MyComponent/resources/myTpl"></option>
              *     </options>
              *     <option name="easyGroup">true</option> <!-- Временная обязательная опция для быстрой отрисовки списков с группировкой -->
              * </pre>
              */
             groupBy : {},
             /**
-             * @cfg {String|HTMLElement|jQuery} Отображаемый контент при отсутствии данных
+             * @cfg {String|HTMLElement|jQuery} Устанавливает отображаемый контент при отсутствии данных.
+             * @remark
+             * Опция устанавливает содержимое, отображаемое как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
+             * Это может быть как обычный текст, так и пользовательский контрол или компонент.
              * @example
              * <pre class="brush:xml">
              *     <option name="emptyHTML">Нет данных</option>
              * </pre>
-             * @remark
-             * Опция задаёт текст, отображаемый как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * @translatable
              * @see items
              * @see setDataSource
@@ -518,8 +527,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             emptyHTML: '',
             /**
-             * @cfg {Object} Фильтр данных
+             * @cfg {Object} Устанавливает фильтр данных.
              * @example
+             * Фильтрация будет произведена по полям creatingDate и documentType, значения для которых берутся из контекста из полей selectedDocumentDate и selectedDocumentType соответственно.
              * <pre class="brush:xml">
              *     <options name="filter">
              *        <option name="creatingDate" bind="selectedDocumentDate"></option>
@@ -529,10 +539,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             filter: {},
             /**
-             * @cfg {Array} Сортировка данных. Задается массивом объектов, в котором ключ - это имя поля, а значение ASC - по возрастанию, DESC  - по убыванию
+             * @cfg {Array.<Object>} Устанавливает сортировку данных.
+             * @remark
+             * Формат объекта:
+             * <ul>
+             *     <li>ключ - это поле, по которому производится сортировка;</li>
+             *     <li>значение - тип сортировки. ASC - по возрастанию, DESC  - по убыванию.</li>
+             * </ul>
              * @example
              * <pre class="brush:xml">
-             *     <options name="sorting" type="Array">
+             *     <options name="sorting" type="array">
              *        <option name="date" value="ASC"></option>
              *        <option name="name" value="DESC"></option>
              *     </options>
@@ -558,22 +574,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             includedTemplates: {},
             /**
-             * @cfg {String|function} Шаблон элементов, которые будт рисоваться под даннными.
-             * @remark
-             * Например, для отрисовки кнопки " + Документ ".
-             * Если задан, то под всеми(!) элементами появится контейнер с содержимым этого шаблона
+             * @cfg {String|function} Устанавливает шаблон, который будет отображаться под элементами коллекции.
              * @example
              * <pre>
-             *    <div>\
-             *       <component data-component="SBIS3.CONTROLS.Link">\
-             *          <option name="caption">+ Документ</option>\
-             *       </component>\
+             *    <div>
+             *       <component data-component="SBIS3.CONTROLS.Link">
+             *          <option name="caption">+ Документ</option>
+             *       </component>
              *    </div>
              * </pre>
              */
             footerTpl: undefined,
             /**
-             * @cfg {String} Шаблон отображения содержимого каждого элемента коллекции
+             * @cfg {String} Устанавливает шаблон отображения содержимого каждого элемента коллекции.
+             * @remark
+             * При создании элемента данный шаблон будет автоматически помещён в контейнер со служебными атрибутами.
              * @example
              * <pre>
              *    {{=it.item.get("title")}}
@@ -581,26 +596,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             itemContentTpl : null,
             /**
-             * @cfg {String} Шаблон отображения каждого элемента коллекции
+             * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
+             * @remark
+             * В любом месте шаблона можно сделать вызов
+             * <pre>
+             * {{=it.defaultItemTpl(it)}}
+             * </pre>
+             * вызвав стандартный шаблон содержимого элемента.
              * @example
              * <pre>
-             *    <div class="listViewItem" style="height: 30px;">\
-             *       {{=it.item.get("title")}}\
+             *    <div class="docs-listViewItem">
+             *       {{=it.item.get("title")}}
              *    </div>
              * </pre>
              */
             itemTpl : null,
             /**
-             * @cfg {Function|null} Метод используется для сортировки элементов, принимает два
-             * объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и
-             * должен вернуть -1|0|1
+             * @cfg {Function|null} Устанавливает метод сортировки элементов коллекции.
+             * @remark
+             * Принимает два объекта вида {item:ProjectionItem, collectionItem: Model, index: Number, collectionIndex: Number} и должен вернуть -1|0|1.
              * @example
+             * 1. Конфигурация в разметке компонента:
              * <pre>
-             *      <option name="itemsSortMethod" type"function">SBIS3.Demo.Handlers.sort</option>
+             *      <option name="itemsSortMethod" type="function">SBIS3.Demo.Handlers.sort</option>
              * </pre>
+             * 2.Объявление функции:
              * <pre>
              *    sort: function(obj1, obj2) {
-             *       return obj1.index - obj2.index
+             *       return obj1.index - obj2.index;
              *    }
              * </pre>
              * @see setItemsSortMethod
