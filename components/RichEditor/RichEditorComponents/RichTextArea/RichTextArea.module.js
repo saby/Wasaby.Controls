@@ -1059,8 +1059,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (self._clipboardText !== false) {
-                        //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
-                        e.content = strHelpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
+                        e.content = self._getTextBeforePaste();
                      }
                   }
                }
@@ -1660,7 +1659,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
+         },
+         _getTextBeforePaste: function(){
+            //Проблема:
+            //          после вставки текста могут возникать пробелы после <br> в начале строки
+            //Решение:
+            //          разбить метод _tinyEditor.plugins.paste.clipboard.pasteText:
+            //             a)Подготовка текста
+            //             b)Вставка текста
+            //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
+            var
+               text = this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
+            return text;
          }
+
       });
 
       return RichTextArea;
