@@ -1,5 +1,5 @@
 <!--WS-EXPERT
-<tr class="controls-DataGridView__tr controls-ListView__item js-controls-ListView__item {{=it.className}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"
+<tr class="controls-DataGridView__tr controls-ListView__item js-controls-ListView__item {{?it.selectedKey==it.item.getId()}}controls-ListView__item__selected{{?}} {{=it.className}}" style="{{=it.decorators.apply((it.colorField ? it.item.get(it.colorField) : ''), 'color')}}" data-hash="{{=it.projItem.getHash()}}" data-id="{{=it.item.getId()}}"
    {{for(var j in it.attributes){}}
       {{=j}}="{{=it.attributes[j]}}"
    {{}}}>

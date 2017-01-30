@@ -6,14 +6,14 @@
    // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
    // т.к. браузер неправильно делал расчет ширины контента
    &:after {
-      font-family: 'TensorFont Regular', 'TensorFont';
+      font-family: 'TensorFont', sans-serif;
       font-weight: bold;
       content: '';
    }
 
 }
 // Menu
-.controls-MenuIcon__Menu {
+.controls-MenuIcon__Menu.controls-Menu__Popup {
    padding: @menu-icon-menu-padding;
    margin: @menu-icon-menu-margin;
    background: @menu-icon-menu-bg;
@@ -23,15 +23,15 @@
       }
    }
    &.controls-Menu__big-header {
-      margin: -6px 0 0 -10px;
+      margin: -5px 0 0 -13px;
       .controls-Menu__header{
-         padding: 4px 8px;
+         padding: 4px 12px;
       }
    }
    &.controls-IconButton__round-border{
-      margin: -4px 0 0 -4px;
+      margin: -3px 0 0 -7px;
       &.controls-Menu__big-header{
-         margin: -4px 0 0 -8px;
+         margin: -3px 0 0 -11px;
       }
       .controls-MenuItem{
          &.controls-Menu__hasChild{
@@ -52,7 +52,7 @@
 .ws-is-firefox {
    .controls-MenuIcon__Menu {
       &.controls-Menu__big-header {
-         margin: -5px 0 0 -10px;
+         margin: -5px 0 0 -12px;
       }
       &.controls-IconButton__round-border {
          &.controls-Menu__big-header {

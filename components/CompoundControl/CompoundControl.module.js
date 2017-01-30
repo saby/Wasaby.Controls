@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.CompoundControl', ['js!SBIS3.CORE.CompoundControl'], f
          }
       },
       $constructor : function(){
-         this._container.removeClass('ws-area');
+         
       }
    });
 

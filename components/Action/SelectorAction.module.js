@@ -6,15 +6,17 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
     function (Action, DialogMixin, сMerge) {
        'use strict';
        /**
-       * Класс, который описывает действие открытия окна с заданным шаблоном.
-       * Из этого окна можно осуществлять выбор.
+       * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
        * @class SBIS3.CONTROLS.Action.SelectorAction
        * @public
-       * @extends SBIS3.CONTROLS.Action.OpenDialog
+       * @extends SBIS3.CONTROLS.Action.Action
+       * @mixes SBIS3.CONTROLS.Action.DialogMixin
+       *
        * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
+       *
        * @author Герасимов Александр Максимович
        */
-       var SelectorAction = Action.extend([DialogMixin], {
+       var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
           _buildComponentConfig: function(metaConfig) {
              var cfg = metaConfig.componentOptions || {},
                  chooseCfg = {
@@ -29,9 +31,6 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
                  };
 
              return сMerge(cfg, chooseCfg);
-          },
-          _doExecute: function(meta) {
-             return this._opendEditComponent(meta, meta.template || this._options.template);
           }
        });
        return SelectorAction;

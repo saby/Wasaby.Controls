@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
          if(this._options.selectedItem instanceof Model) {
             this.initializeSelectedItems();
             this._options.selectedItems.assign([this._options.selectedItem]);
+            this._options.selectedKeys = this._convertToKeys(this._options.selectedItems);
          }
 
          /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
@@ -82,7 +83,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
 
                      if (item) {
                         this._options.selectedItem = item;
-                        this._options.selectedKey = item.getId();
+                        this._options.selectedKey = item.get(this._options.idProperty);
                      } else {
                         this._options.selectedItem = null;
                         this._options.selectedKey = null;

@@ -1,5 +1,8 @@
 .controls-EditAtPlace {
-   border: none;
+   &.controls-TextBox {
+     border: none;
+   }
+   position: relative;
    &:hover,
    &.ws-disabled {
       border: none;
@@ -75,16 +78,6 @@
       border-color: @edit-at-place-editor-border-color;
       .controls-TextBox {
          line-height: 24px;
-      }
-   }
-   &.controls-EditAtPlace__fieldWrapperHidden {
-      .controls-EditAtPlace__fieldWrapper {
-         display: none;
-      }
-   }
-   &.controls-EditAtPlace__editorHidden {
-      .controls-EditAtPlace__editor {
-         display: none;
       }
    }
 }

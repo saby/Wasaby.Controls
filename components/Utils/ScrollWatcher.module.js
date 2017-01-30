@@ -88,7 +88,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          this._notify('onScroll', curScrollTop);
          if (this.isScrollOnTop()) {
             this._notify('onTotalScroll', 'top', curScrollTop);
-         } else if (this.isScrollOnBottom()) {
+         } 
+         if (this.isScrollOnBottom()) {
             this._notify('onTotalScroll', 'bottom', curScrollTop);
          }
       },

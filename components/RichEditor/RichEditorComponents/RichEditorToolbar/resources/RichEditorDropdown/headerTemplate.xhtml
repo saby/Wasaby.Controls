@@ -5,5 +5,5 @@
    {{? it.icon}}
    <i class="controls-RichEditorDropdown__headIcon {{=it.icon}}"></i>
    {{?}}
-   <div class="controls-RichEditorDropdown__headArrow"></div>
+   {{?(arguments[1] && arguments[1].type === 'fastDataFilter')}}<div class="controls-RichEditorDropdown__headArrow"></div>{{?}}
 </div>

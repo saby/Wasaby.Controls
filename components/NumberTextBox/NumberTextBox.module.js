@@ -7,8 +7,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    "Core/constants",
    "js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil",
    "js!SBIS3.CONTROLS.TextBox",
-   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
+   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows",
+   'css!SBIS3.CONTROLS.NumberTextBox'
 ], function ( cDefaultRenders, constants, NumberTextBoxUtil, TextBox, arrowTpl) {
+
 
    'use strict';
    /**
@@ -194,7 +196,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _modifyOptions: function(options){
          options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
-         if (options.numericValue){
+         if (options.numericValue != undefined){
             options.text = formatText(
                options.numericValue, 
                options.text, 

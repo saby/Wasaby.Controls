@@ -184,9 +184,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             'left': '-10000px'
          });
 
-         //TODO: Придрот
-         container.removeClass('ws-area');
-         /********************************/
 
          this._initOppositeCorners();
 
@@ -380,6 +377,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._checkFixed(target);
          this._subscribeTargetMove();
          this.recalcPosition(true);
+      },
+      /**
+       * Получить текущий  таргет
+       */
+      getTarget: function() {
+         return this._options.target
       },
 
       /**
@@ -868,8 +871,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('width', '');
                this._overflowedH = false;
             }
-            if (this._options.bodyBounds && offset.left < 0) {
-               offset.left = 0;
+            if (this._options.bodyBounds) {
+               if (offset.left < 0) {
+                  offset.left = 0;
+               }
+               if (this._containerSizes.requiredOffset.left > this._windowSizes.width) {
+                  offset.left = this._windowSizes.width - this._containerSizes.originWidth;
+               }
             }
             return offset.left;
          }

@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DecorableMixin",
-   "js!SBIS3.CONTROLS.DragNDropMixinNew",
+   "js!SBIS3.CONTROLS.DragNDropMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CORE.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
@@ -54,7 +54,9 @@ define('js!SBIS3.CONTROLS.ListView',
    "i18n!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.DragEntity.List",
    "js!WS.Data/MoveStrategy/Base",
-   "js!SBIS3.CONTROLS.ListView.Mover"
+   "js!SBIS3.CONTROLS.ListView.Mover",
+   'css!SBIS3.CONTROLS.ListView',
+   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -70,6 +72,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
+            tplOptions.selectedKey = cfg.selectedKey;
 
             return tplOptions;
          },
@@ -84,6 +87,8 @@ define('js!SBIS3.CONTROLS.ListView',
             after: 'after',
             before: 'before'
          };
+
+      var INDICATOR_DELAY = 750;
 
       /**
        * Контрол, отображающий набор однотипных сущностей. Позволяет отображать данные списком по определенному шаблону, а так же фильтровать и сортировать.
@@ -100,7 +105,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
+       * @mixes SBIS3.CONTROLS.DragNDropMixin
        * @mixes SBIS3.CONTROLS.CommonHandlers
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
@@ -268,7 +273,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onBeginDelete Происходит перед удалением записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
-          * @returns {*|Boolean} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
+          * @returns {*|Boolean|Deferred} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
           */
          /**
           * @typedef {String} MovePosition
@@ -995,8 +1000,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
          _allowDelete: function() {
-            var itemActions = this.getItemsActions();
-            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
+            var
+                delInstance,
+                itemActions = this.getItemsActions();
+
+            if (itemActions) {
+               delInstance = itemActions.getItemInstance('delete');
+            }
+            return this.isEnabled() && !!delInstance && delInstance.isVisible();
          },
          /**
           * Возвращает следующий элемент
@@ -1872,7 +1883,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._lastDeleteActionState = undefined;
                }
                // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-               if (this.getHoveredItem().container) {
+               if (this.getHoveredItem().container && !this._touchSupport) {
                   this._notifyOnChangeHoveredItem();
                } else {
                   this._hideItemsToolbar();
@@ -2029,7 +2040,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   visible: false,
                   touchMode: this._touchSupport,
                   className: this._notEndEditClassName,
-                  itemsActions: this._options.itemsActions,
+                  itemsActions: cFunctions.clone(this._options.itemsActions),
                   showEditActions: this._options.editMode.indexOf('toolbar') !== -1,
                   handlers: {
                      onShowItemActionsMenu: function() {
@@ -2114,11 +2125,12 @@ define('js!SBIS3.CONTROLS.ListView',
          setItemsActions: function (itemsActions) {
             this._options.itemsActions = itemsActions;
             if(this._itemsToolbar) {
-               this._itemsToolbar.setItemsActions(this._options.itemsActions);
+               this._itemsToolbar.setItemsActions(cFunctions.clone(this._options.itemsActions));
                if (this.getHoveredItem().container) {
                   this._notifyOnChangeHoveredItem()
                }
             }
+            this._notifyOnPropertyChanged('itemsActions');
          },
          /**
           * todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
@@ -2233,7 +2245,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
          },
-         
+
          _addItems: function(newItems, newItemsIndex, groupId){
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
@@ -2242,7 +2254,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
             return items.length;
          },
@@ -2771,7 +2783,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                      ajaxLoader.removeClass('ws-hidden');
                   }
-               }, 750);
+               }, INDICATOR_DELAY);
             }
             else {
                ajaxLoader.addClass('ws-hidden');
@@ -3030,6 +3042,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * <br/>
           * Команда поддерживает инициацию добавления по месту для заранее подготовленной записи (см. примеры).
           * @param {BeginEditOptions} [options] Параметры вызова команды.
+          * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
           * @example
           * <u>Пример 1.</u> Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
           * <pre>
@@ -3053,12 +3066,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see cancelEdit
           * @see commitEdit
           */
-         _beginAdd: function(options) {
+         _beginAdd: function(options, withoutActivateEditor) {
             if (!options) {
                options = {};
             }
             options.target = this._getItemProjectionByItemId(options.parentId);
-            return this.showEip(null, options);
+            return this.showEip(null, options, withoutActivateEditor);
          },
          /**
           * Запускает редактирование по месту.
@@ -3066,6 +3079,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
           * @param {WS.Data/Entity/Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
+          * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);
@@ -3078,8 +3092,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see beginAdd
           * @see activateItem
           */
-         _beginEdit: function(record) {
-            return this.showEip(record, { isEdit: true });
+         _beginEdit: function(record, withoutActivateEditor) {
+            return this.showEip(record, { isEdit: true }, withoutActivateEditor);
          },
          /**
           * Завершает редактирование по месту без сохранения изменений.
@@ -3537,7 +3551,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(models, target.getModel(), position);
+            return this._getMover().move(movedItems, target, position);
          },
          //endregion moveMethods
          /**
@@ -3617,36 +3631,52 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
           */
          deleteRecords: function(idArray, message) {
-            var self = this;
+            var
+                self = this,
+                beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
             idArray = Array.isArray(idArray) ? cFunctions.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return fcHelpers.question(message).addCallback(function(res) {
                if (res) {
-                  if (self._notify('onBeginDelete', idArray) !== false) {
-                     self._toggleIndicator(true);
-                     return self._deleteRecords(idArray).addCallback(function () {
-                        //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                        if (self.getDataSource()) {
-                           return self._reloadViewAfterDelete(idArray).addCallback(function() {
-                              self._syncSelectedKeys();
-                           });
-                        } else {
-                           self._syncSelectedKeys();
-                        }
+                  beginDeleteResult = self._notify('onBeginDelete', idArray);
+                  if (beginDeleteResult instanceof Deferred) {
+                     beginDeleteResult.addCallback(function(result) {
+                        self._deleteRecords(idArray, result);
                      }).addErrback(function (result) {
-                        fcHelpers.alert(result)
-                     }).addBoth(function (result) {
-                        self._toggleIndicator(false);
-                        self._notify('onEndDelete', idArray, result);
+                        fcHelpers.alert(result);
                      });
+                  } else {
+                     self._deleteRecords(idArray, beginDeleteResult);
                   }
                }
             });
          },
 
-         _deleteRecords: function(idArray) {
+         _deleteRecords: function(idArray, beginDeleteResult) {
+            var self = this;
+            if (beginDeleteResult !== false) {
+               this._toggleIndicator(true);
+               return this._deleteRecordsFromData(idArray).addCallback(function () {
+                  //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
+                  if (self.getDataSource()) {
+                     return self._reloadViewAfterDelete(idArray).addCallback(function() {
+                        self._syncSelectedKeys();
+                     });
+                  } else {
+                     self._syncSelectedKeys();
+                  }
+               }).addErrback(function (result) {
+                  fcHelpers.alert(result)
+               }).addBoth(function (result) {
+                  self._toggleIndicator(false);
+                  self._notify('onEndDelete', idArray, result);
+               });
+            }
+         },
+
+         _deleteRecordsFromData: function(idArray) {
             var
                 items = this.getItems(),
                 source = this.getDataSource();
@@ -3686,6 +3716,23 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         getTextValue: function() {
+            var
+                selectedItem,
+                textValues = [];
+            if (this._options.multiselect) {
+               this.getSelectedItems().each(function(item) {
+                  textValues.push(item.get(this._options.displayProperty));
+               }, this);
+            } else {
+               selectedItem = this.getItems().getRecordById(this.getSelectedKey());
+               if (selectedItem) {
+                  textValues.push(selectedItem.get(this._options.displayProperty));
+               }
+            }
+            return textValues.join(', ');
          }
       });
 

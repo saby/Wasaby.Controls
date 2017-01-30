@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     if (cInstance.instanceOfModule(item, 'WS.Data/Source/DataSet')) {
                         item = item.getRow();
                     }
-                    return self._opendEditComponent({
+                    return self._openComponent({
                         item: item
                     }, self._options.template);
                 });

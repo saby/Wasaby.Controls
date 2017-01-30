@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.OpenDialogAction",
-   "i18n!SBIS3.CONTROLS.FormController"
+   "i18n!SBIS3.CONTROLS.FormController",
+   'css!SBIS3.CONTROLS.FormController'
 ],
    function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
    /**
@@ -928,9 +929,6 @@ define('js!SBIS3.CONTROLS.FormController', [
              dataSource,
              result;
 
-         if (options.source){
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Источник данных нужно задавать через опцию dataSource. Опция source в версии 3.7.5 будет удалена');
-         }
          //TODO в рамках совместимости
          if (Object.isEmpty(options.dataSource) && !options.source){
             IoC.resolve('ILogger').error('SBIS3.CONTROLS.FormController', 'Необходимо задать опцию dataSource');

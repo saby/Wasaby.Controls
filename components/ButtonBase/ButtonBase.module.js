@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
             handleFocus: false
          },
          _checkClickByTap: true,
+         _maxTouchCount:2,
          _options: {
             /**
              * @cfg {String}  Текст на кнопке
@@ -72,7 +73,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
+         
       },
 
       init : function() {

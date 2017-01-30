@@ -4,12 +4,18 @@
 define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/constants",
    'js!SBIS3.CONTROLS.SearchController',
+   'js!SBIS3.CONTROLS.HistoryList',
+   'js!WS.Data/Collection/RecordSet',
+   'js!WS.Data/Di',
    "Core/core-instance",
    "Core/CommandDispatcher",
    "Core/core-functions"
 ], function (
    constants,
    SearchController,
+   HistoryList,
+   RecordSet,
+   Di,
    cInstance,
    CommandDispatcher,
    cFunctions ) {
@@ -35,6 +41,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             что список находится в body, а блокировать всплытие события надо на уровне поля ввода,
             поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
          _selectedFromList: false,
+         _historyController: null,
 
          _options: {
             /**
@@ -60,8 +67,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          if(this._options.searchParam) {
             CommandDispatcher.declareCommand(this, 'changeSearchParam', this.setSearchParamName);
 
-            this.subscribe('onSearch', function() {
-               this._showLoadingIndicator();
+            this.subscribe('onSearch', function(e, text, force) {
+               if(!force) {
+                  this._showLoadingIndicator();
+               }
             });
 
             this.once('onSearch', function () {
@@ -79,6 +88,41 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
       },
 
+      _showHistory: function () {
+         if (this._historyController.getCount()) {
+            this.getList().setItems(this._getHistoryRecordSet());
+            this.showPicker();
+         }
+      },
+      _getHistoryRecordSet: function(){
+         var historyRecordSet = new RecordSet({
+            adapter: this.getDataSource().getAdapter(),
+            rawData: [],
+            idProperty: this._list.getProperty('idProperty')
+         });
+         historyRecordSet.assign(this._prepareHistoryData());
+         return historyRecordSet;
+      },
+      _prepareHistoryData: function(){
+         var history = this._historyController,
+            rawData = [];
+         for (var i = 0, l = history.getCount(); i < l; i++){
+            rawData.push(this._getHistoryRecord(history.at(i).get('data')));
+         }
+         return rawData;
+      },
+      _getHistoryRecord: function(item){
+         var list = this.getList();
+         return Di.resolve(list.getDataSource().getModel(), {
+            adapter: list.getDataSource().getAdapter(),
+            idProperty: list.getProperty('idProperty'),
+            rawData: item.getRawData()
+         });
+      },
+      _needShowHistory: function(){
+         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
+      },
+
       /**
        * Изменяет параметр поиска
        * @param {String} paramName
@@ -94,18 +138,21 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          return this.getContainer().find('.controls-TextBox__fieldWrapper');
       },
 
-      _chooseCallback: function(result) {
-         if(result && cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
-            var item = result[0];
-            this._onListItemSelect(item.getId(), item);
-         }
-      },
-
       before: {
          _setTextByKeyboard: function () {
             /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
                чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
             this._changedByKeyboard = true;
+         },
+         _observableControlFocusHandler: function(){
+            if (this._needShowHistory()){
+               this._showHistory();
+            }
+         },
+         _onListItemSelectNotify: function(item){
+            if (this._historyController) {
+               this._historyController.prepend(item.getRawData());
+            }
          }
       },
 
@@ -186,7 +233,18 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                }
             }
          },
+         _initList: function(){
+            if (this._options.historyId){
+               this._historyController = new HistoryList({
+                  historyId: this._options.historyId
+               });
+            }
+         },
          _resetSearch: function() {
+            if (this._needShowHistory()){
+               this._showHistory();
+            }
+
             if(this._options.searchParam) {
                /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
                 то просто удалим параметр поиска из фильтра */
@@ -237,6 +295,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _setPickerConfig: function(parentFunc){
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
+            parentConfig.targetPart = true;
             return parentConfig;
          },
 

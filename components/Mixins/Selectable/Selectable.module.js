@@ -100,22 +100,29 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
       _prepareSelectedConfig: function(index, key) {
          if (this._isEmptyIndex(index)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
             if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
                this._options.selectedIndex = this._getItemIndexByKey(key);
             }
+            else {
+               //если ключа нет, значит это сброс значения, и ключ надо тоже сбросить
+               this._options.selectedKey = undefined;
+            }
          }
          else {
+            //если индекс передали - вычисляем ключ
             if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
-         if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
-            if (this._getItemsProjection().getCount()) {
-               this._options.selectedIndex = 0;
-               this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
-            }
-         }
          if (this._getItemsProjection()) {
+            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
+            if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
+               if (this._getItemsProjection().getCount()) {
+                  this._options.selectedIndex = 0;
+                  this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+               }
+            }
             var curItem = this._getItemsProjection().at(this._options.selectedIndex);
             if (curItem) {
                this._curHash = curItem.getHash();
@@ -180,7 +187,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       //TODO переписать метод
       _setSelectedIndex: function(index, id) {
          this._drawSelectedItem(id, index);
-         this._notifySelectedItem(id, index)
+         this._notifySelectedItem(id, index);
       },
       /**
        * Устанавливает выбранным элемент коллекции по переданному идентификатору.

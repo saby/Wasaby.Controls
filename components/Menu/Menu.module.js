@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!WS.Data/Relation/Hierarchy',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
-   "Core/IoC"
+   "Core/IoC",
+   'css!SBIS3.CONTROLS.Menu'
 
 ], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers, Sanitize, IoC) {
 
@@ -26,6 +27,8 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @mixes SBIS3.CONTROLS.TreeMixinDS
+    *
+    * @cssModifier controls-MenuPicker__resetIconColor Отменяет перекрашивание иконки в темно-синий цвет в заголовке меню.
     */
 
    var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {

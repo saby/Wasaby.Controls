@@ -333,17 +333,16 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             }
          }
       },
-      _elemClickHandlerInternal: function (data, id, target, e) {
+      _elemClickHandlerInternal: function (data, id, target) {
          var $target = $(target),
-             nodeID = $target.closest('.js-controls-ListView__item').data('id'),
              closestExpand = this._findExpandByElement($(target));
 
          if (closestExpand.hasClass('js-controls-TreeView__expand')) {
-            this.toggleNode(nodeID);
+            this.toggleNode(id);
             /* Не вызываем активацию item'a при клике на чекбокс */
          } else if(!$target.hasClass('js-controls-ListView__itemCheckBox')) {
             if ((this._options.allowEnterToFolder) && ((data.get(this._options.nodeProperty)))){
-               this.setCurrentRoot(nodeID);
+               this.setCurrentRoot(id);
                this.reload();
             }
             else {
@@ -388,6 +387,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          else {
             this._container.empty();
          }
+         this._container.toggleClass('ws-hidden', !more);
       }
    });
 

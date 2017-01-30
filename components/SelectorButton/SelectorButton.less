@@ -5,32 +5,6 @@
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
 
-   .controls-SelectorButton__text {
-      .text-overflow();
-   }
-
-   .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
-      padding-left: 4px;
-   }
-
-   .controls-SelectorButton__icon,
-   .controls-SelectorButton__cross {
-      align-self: center;
-   }
-
-   &.controls-SelectorButton__asLink {
-      .controls-SelectorButton__text {
-         color: @link-text-color;
-         text-decoration: @link-text-decoration;
-      }
-   }
-
-   &.controls-SelectorButton__withoutCross {
-      .controls-SelectorButton__cross {
-         display: none;
-      }
-   }
-
    &.ws-validation-error {
       outline: @controls-SelectorButton-error-outline;
       outline-offset: -1px;
@@ -38,29 +12,40 @@
 
    &.ws-disabled {
       cursor: default;
-      &.controls-SelectorButton__asLink {
-         .controls-SelectorButton__text, &:hover {
-            color: @link-disabled-text-color;
-            text-decoration: @link-text-decoration;
-         }
-      }
       .controls-SelectorButton__cross {
          display: none;
       }
    }
 }
 
+.controls-SelectorButton__icon,
+.controls-SelectorButton__cross {
+   align-self: center;
+   text-decoration: none;
+}
+
+.controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
+   padding-left: 4px;
+}
+
+.controls-SelectorButton__text {
+   .text-overflow();
+}
+
+.controls-SelectorButton__withoutCross {
+   .controls-SelectorButton__cross {
+      display: none;
+   }
+}
+
+.controls-SelectorButton__asLink {
+   color: @link-text-color;
+   text-decoration: @link-text-decoration;
+}
+
 .ws-is-desktop-platform {
-   .controls-Button:not(.ws-disabled) {
-      &.controls-SelectorButton__asLink {
-         &:hover {
-            color: @link-hover-text-color;
-            text-decoration: @link-hover-text-decoration;
-            .controls-SelectorButton__icon {
-               color: @link-hover-text-color !important;
-            }
-         }
-      }
+   .controls-SelectorButton__asLink {
+      .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-SelectorButton__text);
    }
 }
 // Для ie, которые плохо поддерживают flexbox =(

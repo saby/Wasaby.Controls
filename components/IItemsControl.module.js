@@ -220,6 +220,51 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        */
       setFilter: function(filter, noLoad){
          throw new Error('Method must be implemented');
+      },
+      /**
+       * Устанавливает шаблон для каждого элемента коллекции.
+       * @param {String} tpl Шаблон отображения каждого элемента коллекции
+       * @example
+       * <pre>
+       *    <div class="listViewItem" style="height: 30px;">\
+       *       {{=it.item.get("title")}}\
+       *    </div>
+       * </pre>
+       */
+      setItemTpl: function() {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="idProperty">Идентификатор</option>
+       * </pre>
+       * @see items
+       * @see displayProperty
+       * @see setDataSource
+       * @param {String} idProperty
+       */
+      setIdProperty: function() {
+         throw new Error('Method must be implemented');
+      },
+      /**
+       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * @example
+       * <pre class="brush:xml">
+       *     <option name="displayProperty">Название</option>
+       * </pre>
+       * @remark
+       * Данные задаются либо в опции {@link items}, либо методом {@link setDataSource}.
+       * Источник данных может состоять из множества полей. В данной опции необходимо указать имя поля, данные
+       * которого нужно отобразить.
+       * @see idProperty
+       * @see items
+       * @see setDataSource
+       * @param {String} displayProperty
+       */
+      setDisplayProperty: function() {
+
       }
    };
 

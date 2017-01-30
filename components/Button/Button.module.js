@@ -2,7 +2,8 @@
 define('js!SBIS3.CONTROLS.Button', [
    "Core/constants",
    "js!SBIS3.CONTROLS.ButtonBase",
-   "html!SBIS3.CONTROLS.Button"
+   "html!SBIS3.CONTROLS.Button",
+   'css!SBIS3.CONTROLS.Button'
 ], function( constants,ButtonBase, dotTplFn) {
 
    'use strict';

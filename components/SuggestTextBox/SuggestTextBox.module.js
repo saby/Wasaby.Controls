@@ -6,7 +6,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
    'js!SBIS3.CONTROLS.SearchController',
-   'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper'
+   'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
+   'Core/core-instance',
+   'css!SBIS3.CONTROLS.SuggestTextBox'
 ], function (
     TextBox,
     PickerMixin,
@@ -15,7 +17,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     SuggestTextBoxMixin,
     SearchMixin,
     SearchController,
-    afterFieldWrapper ) {
+    afterFieldWrapper,
+    cInstance ) {
    'use strict';
 
    /**
@@ -42,17 +45,20 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _crossContainer: null
       },
       $constructor: function() {
-         var self = this;
-
          this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._getAfterFieldWrapper());
 
          this.subscribe('onTextChange', function(e, text) {
             this._crossContainer.toggleClass('ws-hidden', !text);
          });
 
-         this._crossContainer.click(function() {
-            self.setText('');
-         });
+         this._crossContainer.click(this.resetSearch.bind(this));
+      },
+
+      _chooseCallback: function(result) {
+         if(result && cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model')) {
+            var item = result[0];
+            this._onListItemSelect(item.getId(), item);
+         }
       },
 
       _modifyOptions: function() {

@@ -32,7 +32,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
    "Core/helpers/dom&controls-helpers",
-   "i18n!SBIS3.CONTROLS.DropdownList"
+   "i18n!SBIS3.CONTROLS.DropdownList",
+   'css!SBIS3.CONTROLS.DropdownList'
 ],
 
    function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
@@ -305,10 +306,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          init: function(){
             DropdownList.superclass.init.apply(this, arguments);
-            //Если установлен сорс - нужно сделать запрос на БЛ. Логика itemsControlMixin'a здесь не подходит, т.к. если были установлены итемы - то стрельнет redraw
-            if (this._dataSource){
-               this.reload();
-            }
          },
          _modifyOptions: function(cfg, parsedCfg) {
             if (cfg.hierField) {
@@ -335,6 +332,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
+            this.reload(); //todo - убрать в 375. Если нужен reload, должны позвать сами. Наша логика перерисовки содержится в itemsControlMixin'e
             this._bindItemSelect();
 
             if(this._isHoverMode()) {

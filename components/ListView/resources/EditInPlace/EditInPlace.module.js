@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
    'js!WS.Data/Builder',
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlace'
 ],
    function(Deferred, Control, dotTplFn, CompoundFocusMixin, DataBuilder, cInstance, fcHelpers) {
       'use strict';
@@ -179,7 +180,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this.getTarget().height(newHeight);
+                  this.getTarget().outerHeight(newHeight, true);
                   this._notify('onChangeHeight', this._model);
                }
             },

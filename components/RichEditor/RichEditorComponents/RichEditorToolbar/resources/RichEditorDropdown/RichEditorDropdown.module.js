@@ -16,7 +16,6 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
          $protected : {
             _options : {
                multiselect: false,
-               type: 'fastDataFilter',
                headTemplate: headerTemplate,
                itemTpl: itemTemplate
             }
@@ -34,7 +33,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
                pickerContainer = this._getPickerContainer();
                pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
-               var headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, record)))();
+               var headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, record, this._options)))();
                this._pickerHeadContainer.html(headTpl);
                this._selectedItemContainer.html(headTpl);
                this._setHasMoreButtonVisibility();

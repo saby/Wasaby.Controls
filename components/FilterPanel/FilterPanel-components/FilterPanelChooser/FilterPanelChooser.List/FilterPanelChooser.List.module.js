@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
-    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
+    'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
     'Core/core-instance',
     'Core/core-functions',
     'Core/CommandDispatcher',
@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserListFooter',
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView'
-], function(FilterPanelChooserBase, cInstance, cFunctions, CommandDispatcher, colHelpers, dotTplFn, itemTpl, chooserTpl, footerTpl) {
+], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, dotTplFn, itemTpl, chooserTpl, footerTpl) {
     var
         //TODO: выписана задача https://inside.tensor.ru/opendoc.html?guid=62947517-9859-4291-a899-42bacf350341 по которой
         //будет предоставлен функционал фильтрации на уровне проекции с учётом сортировки, и перебитие приватной опции
@@ -29,107 +29,72 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
 
     /**
      * Класс редактора "Список".
-     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
-     * <br/>
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
      * Реализует выборку идентификаторов из списка {@link SBIS3.CONTROLS.ListView}.
-     * <br/>
+     *
+     * <h2>Особенности отображения редактора</h2>
      * По умолчанию отображаются только 3 записи списка.
-     * Чтобы подгрузить все записи, используют кнопку "Все", которая расположена под списком, или команду {@link showFullList}.
-     * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}. При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
-     * <br/>
+     * Чтобы получить доступ ко всем записям списка, используйте кнопку "Все".
+     *
+     * <h2>Конфигурация редактора</h2>
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
+     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS.ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#items} и {@link SBIS3.CONTROLS.MultiSelectable#selectedKeys}.
+     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS.ListView#multiselect}=true, {@link SBIS3.CONTROLS.ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS.ListView#itemsActions}=&#91;&#93;.
+     *
+     * <h2>Кнопка "Все"</h2>
+     * Отображается под списком, когда записей списка больше 3.
+     * Применяется, чтобы подгрузить все записи списка.
+     * При клике по кнопке выполняется команда {@link showFullList}.
+     * По умолчанию для кнопки установлено имя "controls-FilterPanelChooser__allButton".
+     * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}.
+     * При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
+     *
+     * <h2>Создание пользовательского редактора</h2>
+     * Вы можете создать собственный класс редактора, на основе класса редактора "Список".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
+     *
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooserBase
+     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
      * @demo SBIS3.CONTROLS.Demo.MyFilterView
      */
 
-    var FilterPanelChooserList = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.List.prototype */ {
+    var FilterPanelChooserList = FilterPanelChooserBaseList.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.List.prototype */ {
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
                 _itemTpl: itemTpl,
-                _getRecordsForRedraw: getRecordsForRedraw,
-                _itemsSortMethod: itemsSortMethod,
-                chooserTemplate: chooserTpl,
-                /**
-                 * @cfg {String} Устанавливает шаблон, отображаемый под списком.
-                 * @remark
-                 * Шаблон по умолчанию реализует кнопку "Все", клик по которой подгружает все записи списка.
-                 * Шаблон должен быть реализован только на <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизаторе</a>
-                 * @see captionFullList
-                 * @see chooserTemplate
-                 */
-                afterChooserWrapper: footerTpl,
+                _chooserTemplate: chooserTpl,
+                _afterChooserWrapper: footerTpl,
                 /**
                  * @cfg {String} Устанавливает текст, отображаемый на кнопке под списком.
-                 * @remark
-                 * Кнопка реализована в шаблоне {@link afterChooserWrapper}. Клик по кнопке подгружает все записи списка.
-                 * @see afterChooserWrapper
                  */
                 captionFullList: 'Все',
                 /**
                  * @cfg {String} Устанавливает поле, в котором лежит количественное значения наименования.
-                 * @see idProperty
-                 * @see displayProperty
                  */
                 countField: 'count'
             },
-            _listView: undefined
+            _allButton: undefined
         },
 
         $constructor: function() {
             CommandDispatcher.declareCommand(this, 'showFullList', this._toggleFullState.bind(this));
         },
 
-        init: function() {
-            var listView;
-            FilterPanelChooserList.superclass.init.apply(this, arguments);
-            listView = this._getListView();
-            listView._checkClickByTap = false;
-            listView.subscribe('onItemClick', this._elemClickHandler.bind(this));
-        },
-
-        setValue: function(value) {
-            this._setValue(value);
-            this._updateView(value);
-        },
-
-        /*Определяем приватный _setValue, который зовёт setValue суперкласса (который меняет только данные), т.к. к изменению
-          данных может приводить изменение визуального состояния, и в таком случае если звать setValue суперкласса
-          мы заново будем проставлять визуальное состояние, которое уже находится в правильном состояние*/
-        _setValue: function(value) {
-            FilterPanelChooserList.superclass.setValue.apply(this, arguments);
-        },
-
-        _updateView: function(value) {
-            this._getListView().setSelectedKeys(value);
-            this._toggleAllButton();
-        },
-
-        _updateTextValue: function() {
-            var
-                self = this,
-                textValue = '',
-                viewItems = this._getListView().getItems();
-            colHelpers.forEach(this._options.value, function(id, idx) {
-                textValue += self._getItemTextByItemId(viewItems, id) + (idx < self._options.value.length - 1 ? ', ' : '');
+        _prepareProperties: function() {
+            var opts = FilterPanelChooserList.superclass._prepareProperties.apply(this, arguments);
+            return cFunctions.merge(opts, {
+                itemsSortMethod: itemsSortMethod,
+                _getRecordsForRedraw: getRecordsForRedraw,
+                _showFullList: false
             });
-            this.setTextValue(textValue);
         },
 
-        _getItemTextByItemId: function(items, id) {
-            return items.getRecordById(id).get(this._options.displayProperty);
-        },
-
-        _elemClickHandler: function(e, id) {
-            this._getListView().toggleItemsSelection([id]);
-            this._updateValue();
-        },
-
-        _updateValue: function() {
-            this._setValue(cFunctions.clone(this._getListView().getSelectedKeys()));
+        _updateView: function() {
+            FilterPanelChooserList.superclass._updateView.apply(this, arguments);
         },
         /**
          * Инициирует подгрузку всех записей списка.
@@ -139,12 +104,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _toggleFullState: function(toggle) {
             this._getListView()._options._showFullList = toggle;
             this._getListView().redraw();
-            this._toggleAllButton(toggle);
+            this._toggleAllButton();
         },
 
-        _toggleAllButton: function(toggle) {
-            //Скрываем кнопку если показываются все записи (toggle = true) или показываем не все записи, но их меньше 4
-            this._getAllButton().toggle(!(toggle || this._options.items.getCount() < 4));
+        _toggleAllButton: function() {
+            var listView = this._getListView();
+            //Скрываем кнопку если показываются все записи (showFullList = true) или показываем не все записи, но их меньше 4
+            this._getAllButton().toggle(!(listView._options._showFullList || listView.getItems().getCount() < 4));
         },
 
         _getAllButton: function() {
@@ -152,13 +118,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
                 this._allButton = this.getChildControlByName('controls-FilterPanelChooser__allButton');
             }
             return this._allButton;
-        },
-
-        _getListView: function() {
-            if (!this._listView) {
-                this._listView = this.getChildControlByName('controls-FilterPanelChooser__ListView');
-            }
-            return this._listView;
         }
     });
     return FilterPanelChooserList;

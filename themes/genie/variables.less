@@ -1,3 +1,4 @@
+@import "../online/variables";
 @white-color:                             #fff;
 @black-color:                             #353535;
 
@@ -101,7 +102,7 @@
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  7px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 8px;
-@button-icon-gap:                         4px;                      // gap between icon and text
+@button-icon-gap:                         6px;                      // gap between icon and text
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              2px;                      // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
@@ -130,7 +131,7 @@
 @filter-panel-chooser-default-text-color:                         #8991A9;
 @filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
 @filter-panel-chooser-list-view-item-cursor:                      pointer;
-@filter-panel-chooser-list-view-item-padding:                     6px 0 6px 24px;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
 @filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
@@ -138,7 +139,7 @@
 @filter-panel-chooser-list-view-check-box-left:                   4px;
 @filter-panel-chooser-list-view-count-top:                        6px;
 @filter-panel-chooser-list-view-count-right:                      0;
-@filter-panel-chooser-list-view-count-padding:                    0 8px;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
 @filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-selected-title-color:             @black-color;
@@ -355,7 +356,7 @@
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              #313E78;
-@tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
+@tab-button-font:                               14px 'TensorFont', sans-serif;
 @tab-button-margin-top:                         0;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
@@ -658,7 +659,8 @@
 
 @menu-margin:                             -1px 0 0;
 @menu-subpopup-margin:                    @menu-margin;
-@menu-padding:                            4px 0;
+@menu-subpopup-padding:                   4px 0;
+@menu-padding:                            0 0 4px 0;
 @menu-border-width:                       1px;
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-light-color;
@@ -685,7 +687,7 @@
 @menu-header-height:                      24px;
 @menu-big-header-height:                  32px;
 @menu-header-box-sizing:                  border-box;
-@menu-header-padding:                     4px;
+@menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 
 // --------- //
@@ -696,7 +698,7 @@
 @menu-item-height:                        24px;
 @menu-big-item-height:                    32px;
 @menu-item-line-height:                   @menu-item-height;
-@menu-item-default-padding:               0 8px;
+@menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 
 @menu-item-text-color:                    @black-color;
@@ -716,9 +718,9 @@
 @menu-item-icon24-top-offset-big:           0px;
 
 @menu-item-icon24-left-offset:              0px;
-@menu-item-icon24-left-offset-big:           0px;
+@menu-item-icon24-left-offset-big:          0px;
 
-@menu-item-text-margin:                   0 0 0 22px;
+@menu-item-text-margin:                     0 0 0 22px;
 
 
 
@@ -786,41 +788,10 @@
 @menu-button-arrow-disabled-bg:                         @menu-button-arrow-bg;
 
 // Menu
-@menu-button-menu-top-margin:                           3px;
-@menu-button-menu-left-margin:                          0;
-@menu-button-menu-padding:                              4px 0;
 @menu-button-menu-border-width:                         @menu-border-width;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
-
-// Menu header
-@menu-button-header-spritesheet:                        '';
-
-@menu-button-header-left-width:                         0;
-@menu-button-header-left-height:                        0;
-@menu-button-header-left-margin:                        0;
-@menu-button-header-right-margin-revert-vertical:       0;
-@menu-button-header-left-bg:                            transparent;
-@menu-button-header-left-bg-revert-horizontal:          transparent;
-@menu-button-header-right-bg-revert-vertical:           transparent;
-@menu-button-header-right-bg-revert-vertical-horizontal:transparent;
-
-@menu-button-header-center-width:                       0;
-@menu-button-header-center-height:                      0;
-@menu-button-header-center-margin:                      0;
-@menu-button-header-center-bg:                          transparent;
-
-@menu-button-header-right-width:                        0;
-@menu-button-header-right-height:                       0;
-@menu-button-header-right-margin:                       0;
-@menu-button-header-right-margin-revert-horizontal:     0;
-@menu-button-header-right-bg:                           transparent;
-@menu-button-header-right-bg-revert-horizontal:         transparent;
-@menu-button-header-left-bg-revert-vertical:            transparent;
-@menu-button-header-left-bg-revert-vertical-horizontal: transparent;
-
-
 
 // --------- //
 // Menu link //
@@ -856,7 +827,7 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-margin:                   0 0 0 -9px;
+@menu-link-menu-margin:                   0 0 0 -10px;
 @menu-link-menu-padding:                  0;
 @menu-link-menu-item-container-padding:   0;
 @menu-link-menu-revert-item-container-padding: @menu-link-menu-item-container-padding;
@@ -877,25 +848,6 @@
 @menu-icon-menu-margin:                   -5px 0 0 -5px;
 @menu-icon-menu-padding:                  2px 0 0 2px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
-
-// Menu header
-@menu-icon-header-spritesheet:            @menu-button-header-spritesheet;
-
-@menu-icon-header-left-width:             12px;
-@menu-icon-header-left-height:            28px;
-@menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
-@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
-@menu-icon-header-left-bg:                transparent url(@menu-icon-header-spritesheet) 0 0;
-
-@menu-icon-header-right-width:            28px;
-@menu-icon-header-right-height:           28px;
-@menu-icon-header-right-top-offset:       0;            // top offset of icon's right header part
-@menu-icon-header-right-left-offset:      6px;          // left offset of icon's right header part
-@menu-icon-header-right-bg:               transparent url(@menu-icon-header-spritesheet) 0 -30px;
-
-@menu-icon-header-bg:                     @menu-icon-menu-bg;
-
-
 
 // -------- //
 // Text box //
@@ -1181,7 +1133,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
-@text-area-field-line-height:                   normal;
+@text-area-field-line-height:                   18px;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -1670,7 +1622,7 @@
 @list-view-actions-menu-close-height:           16px;
 @list-view-actions-menu-close-width:            16px;
 @list-view-actions-menu-item-padding-right:     24px;
-@list-view-actions-menu-padding:                @menu-padding;
+@list-view-actions-menu-padding:                4px 0;
 @list-view-actions-menu-margin:                 3px 0 0 6px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
@@ -1875,6 +1827,7 @@
 @data-grid-partScroll-thumb-margin:             20px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
+@data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-float:          left;
@@ -1930,7 +1883,7 @@
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
-@controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -2203,7 +2156,7 @@
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-linkContainer-padding:         4px 0;
+@controls-FieldLink-linkContainer-padding:         4px;
 
 @controls-FieldLink-picker-max-height:             500px;
 @controls-FieldLink-picker-min-height:             16px;
@@ -2317,7 +2270,7 @@
 //----------//
 //  Header  //
 //----------//
-@header-font-family:                               'TensorFont';
+@header-font-family:                               'TensorFont', sans-serif;
 
 @header-padding-left:                              8px;
 @header-padding-right:                             12px;

@@ -5,9 +5,10 @@
    position: relative;
 
    .controls-FilterPanelBoolean__CheckBox {
-      padding: 6px 0;
+      padding: 6px 4px;
       height: 100%;
       width: 100%;
+      box-sizing: border-box;
 
       &:hover {
          background-color: #EAECEE;
@@ -44,14 +45,15 @@
       .controls-CheckBox__count {
          position: absolute;
          right: 8px;
+         bottom: 8px;
+      }
+
+      .controls-CheckBox__caption {
+         display: inline;
       }
 
       .controls-CheckBox__caption, .controls-CheckBox__count {
          color: #8991A9 !important;
-      }
-
-      .controls-CheckBox__caption, .controls-CheckBox__icon {
-         margin-left: 4px;
       }
    }
 }

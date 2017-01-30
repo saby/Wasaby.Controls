@@ -29,11 +29,11 @@
    }
 }
 .controls-RichEditorRoundToolbar__smilesPicker {
+   width: 200px;
    .controls-Menu__header{
       display: none;
    }
    .controls-Menu__itemsContainer {
-      width: 192px;
       padding: 1px 0;
       .controls-ListView__item {
          color: #587ab0;
@@ -44,6 +44,17 @@
          vertical-align: bottom;
          &:hover {
             color: #313E78
+         }
+      }
+   }
+}
+.ws-is-desktop-platform {
+   .controls-RichEditorRoundToolbar__smilesPicker {
+      width: 192px;
+      font-family: 'EmojiFont', 'TensorFont', sans-serif;
+      &.controls-MenuIcon__Menu {
+         .controls-ListView__item {
+            font-size: 18px;
          }
       }
    }

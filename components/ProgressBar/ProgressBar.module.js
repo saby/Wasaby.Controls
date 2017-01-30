@@ -1,7 +1,7 @@
 /**
  * Модуль 'Индикатор процесса'.
  */
-define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!SBIS3.CORE.Control'], function(dotTplFn, Control){
+define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!SBIS3.CORE.Control', 'css!SBIS3.CONTROLS.ProgressBar'], function(dotTplFn, Control){
    /**
     * Контрол, индикатор прохождения процесса
     * @class SBIS3.CONTROLS.ProgressBar

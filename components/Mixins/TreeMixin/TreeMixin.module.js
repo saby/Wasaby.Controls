@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
        * @remark
        * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
-       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link SBIS3.CONTROLS.Data.Collection.RecordSet#meta}).
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
@@ -339,7 +339,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
        *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
-       *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
        * @see onBeforeSetRoot
        */
@@ -563,7 +563,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              /**
               * @cfg {Boolean}
               */
-            hierarchyViewMode: false
+            hierarchyViewMode: false,
+            /**
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
+             * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
+             * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
+             *
+             */
+            loadItemsStrategy: 'merge'
          },
          _foldersFooters: {},
          _lastParent : undefined,
@@ -717,7 +724,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
-               this._options._items.merge(list, {remove: false});
+               if (this._options.loadItemsStrategy == 'merge') {
+                  this._options._items.merge(list, {remove: false});
+               }
+               else {
+                  this._options._items.append(list);
+               }
                this._getItemProjectionByItemId(id).setLoaded(true);
             }).bind(this))
             .addBoth(function(error){
@@ -981,7 +993,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               self._options._items.merge(dataSet, {remove: false});
+               if (this._options.loadItemsStrategy == 'merge') {
+                  self._options._items.merge(dataSet, {remove: false});
+               }
+               else {
+                  self._options._items.append(dataSet);
+               }
                self._updateItemsToolbar();
                self._dataLoadedCallback();
                self._createFolderFooter(id);
@@ -1062,15 +1079,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   if (!this._container.parents('.controls-ListView').length) {
                      this._scrollToItem(this._previousRoot);
                   }
-               }
-               else {
+               } else {
                   /*иначе вход в папку*/
-                  item = this.getItems() && this.getItems().at(0);
-                  if (item){
-                     this.setSelectedKey(item.getId());
+                  item = this._getItemsProjection() && this._getItemsProjection().at(0);
+                  if (item) {
+                     this.setSelectedKey(item.getContents().getId());
                      if (!this._container.parents('.controls-ListView').length) {
                         //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                        this._scrollToItem(item.getId());
+                        this._scrollToItem(item.getContents().getId());
                      }
                   }
                }

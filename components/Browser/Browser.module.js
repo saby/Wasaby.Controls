@@ -79,6 +79,15 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             searchMode: 'current',
             /**
+             * @cfg {Boolean} При неудачной попытке поиска (нет результатов), изменяет раскладку
+             * и пробует поискать в другой раскладке
+             * @example
+             * <pre>
+             *     <option name="keyboardLayoutRevert">false</option>
+             * </pre>
+             */
+            keyboardLayoutRevert: true,
+            /**
              * @cfg {String} Устанавливает Id для работы с историей фильтров.
              * @remark
              * Опция задает идентификатор, под которым будет сохраняться история фильтрации.
@@ -152,27 +161,33 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._searchForm = this._getSearchForm();
          if (this._searchForm) {
-            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm, this._options.searchMode);
+            this._componentBinder.bindSearchGrid(
+               this._options.searchParam,
+               this._options.searchCrumbsTpl,
+               this._searchForm,
+               this._options.searchMode,
+               false,
+               this._options.keyboardLayoutRevert);
          }
 
 
          this._operationsPanel = this._getOperationsPanel();
          if (this._operationsPanel) {
             this._componentBinder.bindOperationPanel(!this._options.showCheckBoxes, this._operationsPanel);
+            //Временное решение. Необходимо для решения ошибки: https://inside.tensor.ru/opendoc.html?guid=18468d65-ec58-4e2d-a0f0-fc35af4dfde5
+            //Если Browser переделать на flex-box то такие придроты не понадобятся.
+            //Выписана задача https://inside.tensor.ru/opendoc.html?guid=04d2ea0c-133c-4ee1-bf9b-4b222921b7d3
+            this._operationsPanel.subscribe('onToggle', function() {
+               self._container.toggleClass('controls-Browser__operationPanel-opened', this.isVisible());
+            });
          }
 
          this._filterButton = this._getFilterButton();
          this._fastDataFilter = this._getFastDataFilter();
+
          if (this._filterButton) {
             if(this._options.historyId) {
-               this._componentBinder.bindFilterHistory(
-                   this._filterButton,
-                   this._fastDataFilter,
-                   this._options.searchParam,
-                   this._options.historyId,
-                   this._options.ignoreFiltersList,
-                   this._options.applyHistoryFilterOnLoad,
-                   this);
+               this._bindFilterHistory();
             } else {
                this._notifyOnFiltersReady();
             }
@@ -204,6 +219,28 @@ define('js!SBIS3.CONTROLS.Browser', [
        */
       setPath: function(path){
          this._componentBinder.setPath(path);
+      },
+
+      /**
+       * Устанавливает занчение идентификатора истории
+       * @param id
+       */
+      setHistoryId: function(id) {
+         this._options.historyId = id;
+         this._bindFilterHistory();
+      },
+
+      _bindFilterHistory: function() {
+         if(this._filterButton && this._options.historyId) {
+            this._componentBinder.bindFilterHistory(
+               this._filterButton,
+               this._fastDataFilter,
+               this._options.searchParam,
+               this._options.historyId,
+               this._options.ignoreFiltersList,
+               this._options.applyHistoryFilterOnLoad,
+               this);
+         }
       },
 
       _notifyOnFiltersReady: function() {

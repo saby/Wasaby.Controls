@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.FilterHistory",
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
    "i18n!SBIS3.CONTROLS.FilterButton",
-   "js!SBIS3.CONTROLS.ScrollContainer"
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   'css!SBIS3.CONTROLS.FilterButton'
 ],
     function(
         mStubs,
@@ -186,8 +187,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
              this._checkPickerContent = this._checkPickerContent.once();
-             this.getContainer().removeClass('ws-area')
-                                .on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
+             this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
           showPicker: function() {
@@ -315,8 +315,17 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 });
              }
 
+             function updatePickerVisibility() {
+                var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function(result, element) {
+                   return result || element === false;
+                }, false);
+
+                context.setValue('additionalFilterVisible', showAdittionalBlock);
+             }
+
              this._pickerContext = context;
              updatePickerContext();
+             updatePickerVisibility();
 
              context.subscribe('onFieldNameResolution', function(event, fieldName) {
                 byFilter = self._findFilterStructureElement(function(element) {
@@ -343,15 +352,26 @@ define('js!SBIS3.CONTROLS.FilterButton',
              });
 
              context.subscribe('onFieldChange', function(ev, fieldChanged, value) {
-                var field = self._findFilterStructureElement(function(elem) {
-                   return elem.internalValueField === fieldChanged;
-                });
+                var fieldByValue = self._findFilterStructureElement(function(elem) {
+                       return elem.internalValueField === fieldChanged;
+                    }),
+                    fieldByVisibility = self._findFilterStructureElement(function(elem) {
+                       return elem.internalVisibilityField === fieldChanged;
+                    }),
+                   showAdittionalBlock = false;
 
-                if(field && field.internalVisibilityField) {
-                   if(FilterToStringUtil.isEqualValues(value, field.resetValue)) {
-                      self._changeFieldInternal(rootName + '/visibility/' + field.internalVisibilityField, false);
+                /* Скрытие/отображние фильтров по значению */
+                if(fieldByValue && fieldByValue.internalVisibilityField) {
+                   /* Скрытие при работе с фильтров по заначению надо производить при выполнении двух условий:
+                      1) Фильтр сброшен
+                      2) Значение структуры тоже сброшено */
+                   if(FilterToStringUtil.isEqualValues(value, fieldByValue.resetValue) && FilterToStringUtil.isEqualValues(self.getResetFilter(), context.getValue(rootName + '/filter'))) {
+                      self._changeFieldInternal(rootName + '/visibility/' + fieldByValue.internalVisibilityField, false);
                    }
                 }
+
+                /* Скрытие/отображние блока дополнительных параметров по состоянию видимости, которое пишется в контекст */
+                updatePickerVisibility();
              });
 
              context.subscribe('onFieldsChanged', function() {
