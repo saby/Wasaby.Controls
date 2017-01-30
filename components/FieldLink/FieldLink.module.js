@@ -386,7 +386,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.init.apply(this, arguments);
 
              if(this._options.useSelectorAction) {
-                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, meta, result) {
+                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, result) {
                    /* После выбора из панели выбора, надо фокус возвращать в поле связи:
                       после закрытия панели фокус будет проставляться на компонент, который был активным до этого (механизм WindowManager),
                       последним активным компонентом была кнопка открытия справочника/ссылка открывающая справочник,
