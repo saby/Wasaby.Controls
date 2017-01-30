@@ -44,9 +44,12 @@
         line-height: @controls-MergeDialogTemplate-BreadCrumbs-line-height;
 
         .controls-BreadCrumbs__crumb {
-          &, &:hover {
-            .controls-BreadCrumbs__title, .icon-16 {
-              color: @darkcyan-color !important;
+          &:hover {
+            .controls-BreadCrumbs__title {
+              color: @darkcyan-color;
+            }
+            .icon-16 {
+              color: @default-color !important;
             }
           }
         }
