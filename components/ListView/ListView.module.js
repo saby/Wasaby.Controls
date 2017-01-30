@@ -2896,7 +2896,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                         itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
                         item = this.getItems().getRecordById(itemId);
-                     this.scrollToItem(item);
+                     if (item) {
+                        this.scrollToItem(item);
+                     }
                   }
                } else {
                   this._offset = this._options.pageSize * pageNumber;
