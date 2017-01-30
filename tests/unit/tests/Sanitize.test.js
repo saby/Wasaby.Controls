@@ -89,5 +89,12 @@ define(['js!SBIS3.CONTROLS.Utils.Sanitize'], function (Sanitize) {
 
          assert.equal(text, Sanitize(text));
       });
+      it('no data attributes', function (){
+         var
+            text = '<div data-raw="123" data-123="raw" data-alphanumberic0912="0912alphanumberic" data-really-long-123-numeric="sleep">sometext</div>',
+            expect = '<div>sometext</div>';
+
+         assert.equal(expect, Sanitize(text,{checkDataAttribute: false}));
+      });
    });
 });
