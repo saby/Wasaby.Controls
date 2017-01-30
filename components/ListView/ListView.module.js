@@ -2531,7 +2531,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _updateScrolOffset: function(){
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               this._scrollOffset.bottom += this._limit;
+               if (this._getSourceNavigationType() != 'Offset') {
+                  this._scrollOffset.bottom += this._limit;
+               }
             } else {
                if (this._scrollOffset.top >= this._limit){
                   this._scrollOffset.top -= this._limit;
