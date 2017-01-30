@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
+   'js!SBIS3.CONTROLS.CursorListNavigation',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
@@ -60,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListView',
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation) {
 
      'use strict';
 
@@ -741,6 +742,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see showPaging
                 */
                partialPaging: true,
+               navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
@@ -784,6 +786,10 @@ define('js!SBIS3.CONTROLS.ListView',
             dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
             dispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
             dispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
+
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation = new CursorNavigation(this._options.navigation);
+            }
          },
 
          init: function () {
@@ -2843,7 +2849,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updatePaging();
          },
          _getQueryForCall: function(filter, sorting, offset, limit){
-            var query = new Query();
+            var
+               query = new Query(),
+               queryFilter = filter;
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               queryFilter = $ws.core.clone(filter);
+               var addParams = this._listNavigation.prepareQueryParams(this._options._getItemsProjection());
+               $ws.core.merge(queryFilter, addParams);
+            }
             query.where(filter)
                .offset(offset)
                .limit(limit)
@@ -3156,6 +3169,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
+            }
+            if (this._listNavigation) {
+               this._listNavigation.destroy();
             }
             ListView.superclass.destroy.call(this);
          },
