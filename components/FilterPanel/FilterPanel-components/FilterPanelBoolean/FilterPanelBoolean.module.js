@@ -7,7 +7,10 @@ define('js!SBIS3.CONTROLS.FilterPanelBoolean', [
 
 var
     /**
-     * Класс контрола "Чекбокс", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel}.
+     * Класс контрола "Чекбокс", который применяется для панели фильтров {@link SBIS3.CONTROLS.FilterPanel} в качестве редактора фильтра.
+     * <br/>
+     * По умолчанию для контрола установлено фиксированое имя - "controls-FilterPanelBoolean__CheckBox".
+     * При создании собственного редактора, наследуясь от класса SBIS3.CONTROLS.FilterPanelBoolean, для контрола вы должны использовать только это имя.
      * @class SBIS3.CONTROLS.FilterPanelBoolean
      * @extends SBIS3.CORE.CompoundControl
      * @public
@@ -16,9 +19,10 @@ var
      *
      * @author Авраменко Алексей Сергеевич
      */
-   FilterPanelBoolean = CompoundControl.extend([IFilterItem],/**@lends SBIS3.CONTROLS.FilterPanelBoolean.prototype  */{
+   FilterPanelBoolean = CompoundControl.extend([IFilterItem],/** @lends SBIS3.CONTROLS.FilterPanelBoolean.prototype  */{
         /**
          * @event onValueChange Происходит при изменении значения контрола.
+         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
          * @remark
          * Изменение значения можно производить с помощью метода {@link setValue}.
          */

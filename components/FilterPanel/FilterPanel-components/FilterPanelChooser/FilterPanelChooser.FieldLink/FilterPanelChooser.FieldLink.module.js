@@ -8,10 +8,17 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
 
     /**
      * Класс редактора "Поле связи".
-     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef FilterPanelItem}).
-     * <br/>
-     * Реализует выборку идентификаторов из поля связи.
-     * <br/>
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
+     * Реализует выборку идентификаторов из поля связи - {@link SBIS3.CONTROLS.FieldLink}.
+     *
+     * <h2>Конфигурация редактора</h2>
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties.properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
+     * По умолчанию опции для контрола редактора {@link SBIS3.CONTROLS.FieldLink} не установлены. Полный список опций и примеры конфигурации поля связи вы можете найти в описании его класса.
+     *
+     * <h2>Создание пользовательского редактора</h2>
+     * Вы можете создать собственный класс редактора, на основе класса редактора "Поле связи".
+     * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__FieldLink-component".
+     *
      * @class SBIS3.CONTROLS.FilterPanelChooser.FieldLink
      * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
      * @author Авраменко Алексей Сергеевич
