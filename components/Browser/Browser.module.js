@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Browser',
+   'tmpl!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
-   'html!SBIS3.CONTROLS.Browser/resources/contentTpl',
    'Core/core-instance'
 ], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl, cInstance){
    'use strict';
