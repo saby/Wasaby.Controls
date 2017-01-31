@@ -67,8 +67,9 @@
 }
 .controls-StylesPanelNew {
   width: auto;
-  border: 1px solid #CCCCCC;
-  border-radius: 4px;
+  border: @menu-border-width @menu-border-style @menu-border-color;
+  .box-shadow(@menu-shadow);
+  border-radius: 0;
   max-width: 200px;
 
   .controls-StylesPanel__header {
@@ -95,7 +96,7 @@
 
   .controls-StylesPanel__buttons {
     padding: 8px 0 6px 0;
-    border-bottom: 1px solid @float-area-border-color;
+    border-bottom: 1px solid @gray-light-color;
     display: flex;
     flex-direction: row;
     align-items: center;
