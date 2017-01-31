@@ -2122,7 +2122,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getId() + '"]');
+         var projItem = this._getItemProjectionByItemId(item.get(this._options.idProperty));
+         return projItem ? parent.find('[data-hash="' + projItem.getHash() + '"]') : $();
       },
 
 
