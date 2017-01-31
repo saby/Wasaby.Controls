@@ -266,11 +266,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _initPlaceholder : function() {
          var self = this;
          this._compatPlaceholder = $('.controls-TextArea__placeholder', this._container.get(0));
-         this._compatPlaceholder.click(function(){
-            if (self.isEnabled()) {
-               self._inputField.get(0).focus();
-            }
-         });
       },
       _updateCompatPlaceholderVisibility: function() {
          this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text);
