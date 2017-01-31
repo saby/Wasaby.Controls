@@ -249,6 +249,9 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      side: 'top',
                      offset: -4
                   },
+                  horizontalAlign: {
+                     side: 'left'
+                  },
                   element: $('<div></div>'),
                   fontSizes: [12, 14, 15, 18],
                   colors: [
