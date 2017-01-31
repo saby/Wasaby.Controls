@@ -174,6 +174,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
 
