@@ -225,8 +225,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _keyDownBind: function(event) {
          var text = this._getTextFromMarkup();
          //TODO опасная проверка, но я пока не нашел случаев чтоб она не сработала
-         if (text && this._options.maxLength && text.length >= this._options.maxLength && event.key && event.key.length == 1) {
-            event.preventDefault();
+         if (this._options.enabled && event.key && event.key.length == 1) {
+            //отключаем плейсхолдер на ввод первого символа
+            this._compatPlaceholder.addClass('ws-hidden');
+            //не даем вводить больше maxLength
+            if (text && this._options.maxLength && text.length >= this._options.maxLength) {
+               event.preventDefault();
+            }
          }
       },
 
