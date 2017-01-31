@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    "Core/constants",
    "js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil",
    "js!SBIS3.CONTROLS.TextBox",
-   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
+   "tmpl!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows"
 ], function ( cDefaultRenders, constants, NumberTextBoxUtil, TextBox, arrowTpl) {
 
    'use strict';
