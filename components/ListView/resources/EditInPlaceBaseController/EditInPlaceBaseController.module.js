@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
    function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
@@ -240,7 +241,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (options && options.isEdit) {
                   return this.edit(model, withoutActivateFirstControl);
                } else {
-                  return this.add(options);
+                  return this.add(options, withoutActivateFirstControl);
                }
             },
             edit: function (model, withoutActivateFirstControl) {
@@ -473,47 +474,52 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.callback();
                }
             },
-            add: function(options) {
+            add: function(options, withoutActivateFirstControl) {
                var
                   self = this,
-                  beginAddResult = this._notify('onBeginAdd'),
-                  modelOptions = options.model || beginAddResult,
-                  preparedModel = options.preparedModel,
-                  editingRecord;
-               this._lastTargetAdding = options.target;
-               return this.endEdit(true).addCallback(function() {
-                  return self._createModel(modelOptions, preparedModel).addCallback(function (createdModel) {
-                     return self._prepareEdit(createdModel).addCallback(function(model) {
-                        if (self._options.parentProperty) {
-                           model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
-                        }
-                        //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
-                        //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
-                        //Так же мы пытались находить запись в текущем рекордсете, но например при поиске надор данных изменяется и вызывается
-                        //завершение редактирования, но записи уже может не быть в рекордсете.
-                        self._isAdd = true;
-                        self._createAddTarget(model, options);
-                        self._getEip().edit(model);
-                        editingRecord = self._getEip().getEditingRecord();
-                        self._notify('onAfterBeginEdit', editingRecord);
-                        if (!self._pendingOperation) {
-                           self._subscribeToAddPendingOperation(editingRecord);
-                        }
-                        return editingRecord;
+                  modelOptions,
+                  editingRecord,
+                  beginAddResult;
+
+               if (!this._addLock) {
+                  this._addLock = true;
+                  beginAddResult = this._notify('onBeginAdd');
+                  modelOptions = options.model || beginAddResult;
+                  this._lastTargetAdding = options.target;
+                  return this.endEdit(true).addCallback(function() {
+                     return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
+                        return self._prepareEdit(createdModel).addCallback(function(model) {
+                           if (self._options.parentProperty) {
+                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
+                           }
+                           //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
+                           //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
+                           //Так же мы пытались находить запись в текущем рекордсете, но например при поиске надор данных изменяется и вызывается
+                           //завершение редактирования, но записи уже может не быть в рекордсете.
+                           self._isAdd = true;
+                           self._createAddTarget(model, options);
+                           self._getEip().edit(model, undefined, withoutActivateFirstControl);
+                           editingRecord = self._getEip().getEditingRecord();
+                           self._notify('onAfterBeginEdit', editingRecord);
+                           if (!self._pendingOperation) {
+                              self._subscribeToAddPendingOperation(editingRecord);
+                           }
+                           return editingRecord;
+                        });
                      });
+                  }).addBoth(function(result){
+                     self._addLock = false;
+                     return result;
                   });
-               });
+               } else {
+                  return Deferred.fail();
+               }
             },
             _createModel: function(modelOptions, preparedModel) {
-               var self = this;
-               if (this._addLock) {
-                  return Deferred.fail();
-               } else if (preparedModel instanceof Model) {
+               if (preparedModel instanceof Model) {
                   return Deferred.success(preparedModel);
                } else {
-                  this._addLock = true;
                   return this._options.dataSource.create(modelOptions).addBoth(function(model) {
-                     self._addLock = false;
                      return model;
                   });
                }

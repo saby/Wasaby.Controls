@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "html!SBIS3.CONTROLS.ItemActionsGroup",
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/collection-helpers",
-   "Core/helpers/markup-helpers"
+   "Core/helpers/markup-helpers",
+   'css!SBIS3.CONTROLS.ItemActionsGroup'
 ],
    function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
 
@@ -70,10 +71,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             this.once('onInit', function() {
                this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
             }.bind(this));
-
-            if(this._options.items.length && this._options.items[0].title) {
-               IoC.resolve('ILogger').log('title', 'C 3.7.3.140 свойство операции над записью title перестанет работать. Используйте свойство caption');
-            }
          },
          /**
           * Изменяет операции над строкой до нужного состояния - скрывает / показывает кнопки

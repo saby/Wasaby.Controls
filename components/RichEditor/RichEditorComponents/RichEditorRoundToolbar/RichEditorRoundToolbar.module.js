@@ -10,7 +10,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.StylesPanelNew',
    'js!SBIS3.CONTROLS.MenuIcon',
+   'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
+
 ], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
 
    'use strict';

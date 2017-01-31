@@ -72,58 +72,6 @@
          }
       }
 
-      /* Стили для кнопки раскрытия списка в кнопке фильтров */
-      .controls-filterButton__toggleButton,
-      .controls-filterButton__toggleButton.controls-Checked__checked,
-      .controls-filterButton__toggleButton.controls-Click__active {
-         border: @controls-filterButton-toggleButton-border;
-         background-color: @controls-filterButton-toggleButton-bgColor;
-
-         line-height: @controls-filterButton-toggleButton-lineHeight;
-         font-size: @controls-filterButton-toggleButton-fontSize;
-         font-family: @controls-filterButton-toggleButton-fontFamily;
-         width: auto;
-         color: #CCCCCC;
-         height: @controls-filterButton-toggleButton-height;
-         box-sizing: border-box;
-         display: block;
-         text-align: center;
-
-         &:hover {
-            /* Т.к. усиливать селектор уже некуда, а кнопка особая,
-               используется только в кнопке фильтров, то пишу !important.
-               Из-за постоянной смены селекторов базовой кнопки, это правило ломалосью */
-            background-color: @controls-filterButton-toggleButton-bgColor !important;
-            border: @controls-filterButton-toggleButton-border !important;
-            .controls-filterButton__toggleButton-icon {
-               color: @controls-filterButton-history-title-color;
-            }
-         }
-
-         .controls-filterButton__toggleButton-icon {
-            display: inline-block;
-            color: @controls-filterButton-toggleButton-color;
-            width: @controls-filterButton-toggleButton-icon-width;
-            height: @controls-filterButton-toggleButton-icon-height;
-            position: relative;
-            top: auto;
-            left: auto;
-         }
-
-         .controls-filterButton__toggleButton-icon:before {
-            content: @controls-filterButton-toggleButton-icon-down;
-            font-style: @controls-filterButton-toggleButton-icon-style;
-            position: absolute;
-            top: @controls-filterButton-toggleButton-icon-top;
-            left: @controls-filterButton-toggleButton-icon-left;
-         }
-         &.controls-Checked__checked {
-            .controls-filterButton__toggleButton-icon:before {
-               content: @controls-filterButton-toggleButton-icon-up;
-            }
-         }
-      }
-
       .controls__filterButton__filterText {
          height: @controls-filterButton-button-height;
          line-height: @controls-filterButton-button-height;
@@ -379,6 +327,7 @@
       }
    }
    .controls__filterButton__picker {
+      .controls__filterButton__area-header { 
       .blue-color {
          &.controls-Link {
             &.ws-enabled {
@@ -387,6 +336,7 @@
                }
             }
          }
+      }
 
          &.controls-DropdownList {
             &.ws-enabled {

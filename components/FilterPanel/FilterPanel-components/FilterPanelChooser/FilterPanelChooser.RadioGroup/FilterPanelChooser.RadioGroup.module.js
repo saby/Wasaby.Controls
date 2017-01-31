@@ -4,17 +4,23 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'js!SBIS3.CONTROLS.RadioGroup',
-   'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroup',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
    'Core/core-functions'
-], function(FilterPanelChooserBase, RadioGroup, chooserTpl, FilterPanelChooserRadioGroupTpl, cFunctions) {
+], function(FilterPanelChooserBase, RadioGroup, chooserTpl, cFunctions) {
    'use strict';
    /**
     * Класс редактора "Набор радиокнопок".
-    * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef FilterPanelItem}).
-    * <br/>
-    * Реализует выборку идентификатора из списка {@link SBIS3.CONTROLS.Ragiogroup}.
-    * <br/>
+    * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
+    * Реализует выборку идентификатора из списка {@link SBIS3.CONTROLS.RadioGroup}.
+    *
+    * <h2>Конфигурация редактора</h2>
+    * Чтобы изменить конфигурацию редактора, используют подопцию *properties.properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
+    * По умолчанию опции для контрола редактора {@link SBIS3.CONTROLS.RadioGroup} не установлены. Полный список опций и примеры конфигурации радиокнопок вы можете найти в описании его класса.
+    *
+    * <h2>Создание пользовательского редактора</h2>
+    * Вы можете создать собственный класс редактора, на основе класса редактора "Набор радиокнопок".
+    * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__RadioGroup".
+    *
     * @class SBIS3.CONTROLS.FilterPanelChooser.RadioGroup
     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
     * @author Борисов Петр Сергеевич
@@ -23,14 +29,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
       $protected: {
          _options: {
-            _defaultTemplate: FilterPanelChooserRadioGroupTpl,
-            chooserTemplate: chooserTpl,
-            /**
-             * @cfg {String} Устанавливает идентификатор элемента, который будет выбран для фильтра.
-             * @see setValue
-             * @see getValue
-             */
-            value: undefined
+            _chooserTemplate: chooserTpl
          },
          _radioGroup: undefined
       },

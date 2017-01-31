@@ -75,7 +75,11 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
              * @see clearMark
              * @see onValidate
              */
-            validators: []
+            validators: [],
+            /**
+             * @cfg {Boolean} Валидация даже если компонент является задизабленным
+             */
+            validateIfDisabled: false
          }
       },
 
@@ -126,7 +130,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * @protected
        */
       _canValidate: function () {
-         return this._options.validators.length && this.isEnabled();
+         return this._options.validators.length && (this.isEnabled() || this._options.validateIfDisabled);
       },
 
       _invokeValidation: function () {
@@ -185,7 +189,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             cont = this.getContainer(),
             previousStatus = this._prevValidationResult;
          this.clearMark();
-         if (this._validating || !this.isEnabled() || !cont || cont.hasClass('ws-hidden') === true) {
+         if (this._validating || (!this._options.validateIfDisabled && !this.isEnabled()) || !cont || cont.hasClass('ws-hidden') === true) {
             return true;
          }
 

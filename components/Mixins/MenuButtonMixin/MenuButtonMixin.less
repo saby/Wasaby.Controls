@@ -1,3 +1,4 @@
+@import "../../IconButton/IconButton";
 .controls-Menu {
    .controls-Menu__header {
       position: relative;
@@ -6,22 +7,16 @@
       font-weight: bold;
       background-color: #F4F4F4;
       overflow: hidden;
-      display: flex;
-      align-items: center;
+      .flexbox();
+      .align-items(center);
 
       .controls-Menu-headWrapper {
-         display: flex;
-         align-items: center;
+         .flexbox();
+         .align-items(center);
       }
       .controls-Menu__header-caption {
          color: @blue-dark-color;
-         flex-shrink: 0;
-      }
-      .controls-Menu__header-icon{
-         &.icon-primary {
-            color: @button-icon-color-hover !important;
-         }
-         position: relative;
+         .flex-shrink(0);
       }
       .controls-Menu__header-icon + .controls-Menu__header-caption{
          padding-left: 0;
@@ -36,7 +31,7 @@
          display: none;
       }
       &.controls-IconButton__round-border-24 {
-         margin: -7px 0 0 -7px;
+         margin: -7px 0 0 -7px !important;
          .controls-ListView__item:first-child {
             .controls-MenuItem__icon {
                .round-button-mixin(@gray-ccc-color);

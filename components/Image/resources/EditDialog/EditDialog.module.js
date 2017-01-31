@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
    "Core/helpers/transport-helpers",
    "Core/helpers/helpers",
    "js!SBIS3.CONTROLS.Button",
-   "i18n!SBIS3.CONTROLS.Image.EditDialog"
+   "i18n!SBIS3.CONTROLS.Image.EditDialog",
+   'css!SBIS3.CONTROLS.Image.EditDialog'
 ], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, transHelpers, cHelpers) {
    /**
     * SBIS3.CONTROLS.Image.EditDialog

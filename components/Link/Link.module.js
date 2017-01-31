@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CONTROLS.Link', 'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate'], function(ButtonBase, dotTplFn, hrefTemplate) {
+define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CONTROLS.Link', 'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate', 'css!SBIS3.CONTROLS.Link'], function(ButtonBase, dotTplFn, hrefTemplate) {
 
    'use strict';
 
@@ -85,17 +85,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          caption = this._options.caption;
-         var $caption = $('.controls-Link__field', this._container);
-         if (this._options.icon) {
-            if ($caption.length){
-               $caption.html(caption);
-            } else {
-               $caption = $('<span class="controls-Link__field"></span>');
-               this._container.append($caption);
-            }
-         } else {
-            this._container.html(caption);
-         }
+         this._container.get(0).innerHTML = hrefTemplate(this._options);
          this.setTooltip(caption);
       },
 
@@ -113,13 +103,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
       },
 
       _drawIcon: function (icon) {
-         var content;
-         if (icon) {
-            content = $('<i class="controls-Link__icon ' + this._options._iconClass + '" ></i><span class="controls-Link__field">' + (this._options.caption || '') + '</span>');
-         } else {
-            content = this._options.caption;
-         }
-         this._container.html(content);
+         this._container.get(0).innerHTML = hrefTemplate(this._options);
       },
       /**
        * Установить ссылку.

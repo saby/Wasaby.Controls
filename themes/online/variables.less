@@ -33,7 +33,7 @@
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
-@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;
+@font-basic-name:                         'TensorFont', sans-serif;
 @font-basic-size:                         14px;
 @font-popup-size:                         15px;
 @font-folder-size:                        15px;
@@ -125,7 +125,7 @@
 @filter-panel-chooser-default-text-color:                         #8991A9;
 @filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
 @filter-panel-chooser-list-view-item-cursor:                      pointer;
-@filter-panel-chooser-list-view-item-padding:                     6px 0 6px 24px;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
 @filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
@@ -133,7 +133,7 @@
 @filter-panel-chooser-list-view-check-box-left:                   0;
 @filter-panel-chooser-list-view-count-top:                        6px;
 @filter-panel-chooser-list-view-count-right:                      0;
-@filter-panel-chooser-list-view-count-padding:                    0 8px;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
 @filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-selected-title-color:             @black-color;
@@ -350,7 +350,7 @@
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
-@tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
+@tab-button-font:                               14px 'TensorFont', sans-serif;
 @tab-button-margin-top:                         0;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
@@ -709,7 +709,7 @@
 @menu-item-icon-left-offset:              0px;
 @menu-item-icon-left-offset-big:          0px;
 
-@menu-item-icon24-top-offset:             3px;
+@menu-item-icon24-top-offset:             4px;
 @menu-item-icon24-top-offset-big:         -4px;
 
 @menu-item-icon24-left-offset:            0;
@@ -1621,11 +1621,12 @@
 @list-view-actions-menu-margin:                 3px 0 0 6px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
-@list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
+@list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
-
+@list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+@list-view-loading-indicator-gradient-bg-up:    url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @list-view-disabled-cursor:                     default;
 
 @listView-empty-data-color:                     @black-color;
@@ -1636,6 +1637,7 @@
 @listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
+@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -1915,7 +1917,7 @@
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
-@controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -2086,23 +2088,23 @@
 @controls-filterButton-history-title-color:       @blue-dark-color !important;
 @controls-filterButton-history-title-width:       100%;
 
-//FilterButtonToggleButton
-@controls-filterButton-toggleButton-lineHeight:   20px !important;
-@controls-filterButton-toggleButton-fontSize:     26px !important;
-@controls-filterButton-toggleButton-fontFamily:   acordion-font !important;
-@controls-filterButton-toggleButton-height:       24px;
+//CommandsSeparator
+@controls-commandsSeparator-lineHeight:   20px !important;
+@controls-commandsSeparator-fontSize:     26px !important;
+@controls-commandsSeparator-fontFamily:   acordion-font !important;
+@controls-commandsSeparator-height:       24px;
 
-@controls-filterButton-toggleButton-icon-width:   24px;
-@controls-filterButton-toggleButton-icon-height:  24px;
-@controls-filterButton-toggleButton-icon-top:     2px;
-@controls-filterButton-toggleButton-icon-left:    -1px;
-@controls-filterButton-toggleButton-icon-style:   normal;
-@controls-filterButton-toggleButton-icon-down:    "\e902";
-@controls-filterButton-toggleButton-icon-up:      "\e904";
-@controls-filterButton-toggleButton-color:        #CCCCCC !important;
+@controls-commandsSeparator-icon-width:   24px;
+@controls-commandsSeparator-icon-height:  24px;
+@controls-commandsSeparator-icon-top:     2px;
+@controls-commandsSeparator-icon-left:    -1px;
+@controls-commandsSeparator-icon-style:   normal;
+@controls-commandsSeparator-icon-down:    "\e902";
+@controls-commandsSeparator-icon-up:      "\e904";
+@controls-commandsSeparator-color:        #CCCCCC !important;
 
-@controls-filterButton-toggleButton-border:       none;
-@controls-filterButton-toggleButton-bgColor:      transparent;
+@controls-commandsSeparator-border:       none;
+@controls-commandsSeparator-bgColor:      transparent;
 
 //FilterLine
 @controls-filterLine-padding:                     8px 8px 8px 0;
@@ -2197,6 +2199,7 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
+@bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
@@ -2364,7 +2367,7 @@
 @toggle-header-background:                         none;
 
 @toggle-header-before-content:                     '\E013';
-@toggle-header-before-font:                        18px 'TensorFont';
+@toggle-header-before-font:                        18px 'TensorFont', sans-serif;
 @toggle-header-before-color:                       #D94700;
 @toggle-header-before-width:                       24px;
 

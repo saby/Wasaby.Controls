@@ -1,3 +1,5 @@
+@import "../IconButton/IconButton";
+@import "../Button/Button";
 .controls-Button {
   &.controls-Checked__checked {
     &.controls-Button {
@@ -47,33 +49,34 @@
   }
 }
 
-.controls-Button__big.controls-Checked__checked {
-  .controls-Button__text {
-    margin-left: @button-big-checked-text-margin-left;
-    margin-right: @button-big-checked-text-margin-right;
-  }
-  .controls-Button__icon {
-    .button-mixin(@button-big-icon-top-offset, @button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
-  }
-  .controls-Button__icon.icon-24 {
-    .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
-  }
+.controls-Button.controls-Button__big.controls-Checked__checked {
+    .controls-Button__text {
+      margin-left: @button-big-checked-text-margin-left;
+      margin-right: @button-big-checked-text-margin-right;
+    }
+    .controls-Button__icon {
+      .button-mixin(@button-big-icon-top-offset, @button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
+    .controls-Button__icon.icon-24 {
+      .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
 }
+
 
 .ws-is-desktop-platform {
   .controls-Button:not(.ws-disabled) {
     &:hover {
       &.controls-Checked__checked {
-        border: @button-checked-border;
+        border: @button-checked-border !important;
 
         &.controls-Button__primary {
-          border: @button-primary-checked-border;
+          border: @button-primary-checked-border !important;
         }
         &.controls-Button__big {
-          border: @button-big-checked-border;
+          border: @button-big-checked-border !important;
 
           &.controls-Button__primary {
-            border: @button-big-primary-checked-border;
+            border: @button-big-primary-checked-border !important;
           }
         }
       }

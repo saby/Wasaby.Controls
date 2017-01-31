@@ -13,9 +13,11 @@
    }
 
    &.controls-DataGridView__hasSeparator{
-      .controls-DataGridView__table {
-        border-width: 0 0 1px 0;
-        border-color: @data-grid-edge-cell-separator-color;
+     &.controls-ListView__dataLoaded {
+       .controls-DataGridView__table {
+          border-width: 0 0 1px 0;
+          border-color: @data-grid-edge-cell-separator-color;
+        }
 
         .controls-DataGridView__tr {
           .controls-DataGridView__td {
@@ -39,7 +41,7 @@
       }
      &.controls-DataGridView__emptyTable {
        .controls-DataGridView__table {
-         border-color: transparent;
+         border-width: 0;
        }
      }
    }
@@ -357,13 +359,6 @@
 
 .controls-DataGridView__with-partScroll {
   overflow-x: hidden;
-}
-
-.controls-DataGridView__PartScroll__animation {
-  .controls-DataGridView__PartScroll__thumb,
-  .controls-DataGridView__scrolledCell {
-    .transition(left 0.5s);
-  }
 }
 
 .controls-DataGridView__scrollingNow {

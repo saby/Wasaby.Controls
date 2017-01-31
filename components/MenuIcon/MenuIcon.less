@@ -6,14 +6,14 @@
    // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
    // т.к. браузер неправильно делал расчет ширины контента
    &:after {
-      font-family: 'TensorFont Regular', 'TensorFont';
+      font-family: 'TensorFont', sans-serif;
       font-weight: bold;
       content: '';
    }
 
 }
 // Menu
-.controls-MenuIcon__Menu {
+.controls-MenuIcon__Menu.controls-Menu__Popup {
    padding: @menu-icon-menu-padding;
    margin: @menu-icon-menu-margin;
    background: @menu-icon-menu-bg;

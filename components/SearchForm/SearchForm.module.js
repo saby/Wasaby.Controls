@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    "js!SBIS3.CONTROLS.ChooserMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
    "html!SBIS3.CONTROLS.SearchForm",
-   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons"
+   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
+   'css!SBIS3.CONTROLS.SearchForm'
 ], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
@@ -62,11 +63,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          });
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__reset', function() {
-            self.resetSearch()
+            self.resetSearch();
          });
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
+               self.hidePicker();
                self.applySearch(true);
             }
          });
