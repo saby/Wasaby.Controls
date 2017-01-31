@@ -71,6 +71,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          this._setEqualPickerWidth();
       },
 
+      _onListDrawItems: function() {
+         SuggestTextBox.superclass._onListDrawItems.apply(this, arguments);
+         this._setEqualPickerWidth();
+      },
+
       destroy: function(){
          SuggestTextBox.superclass.destroy.apply(this, arguments);
          this._crossContainer.unbind('click');
