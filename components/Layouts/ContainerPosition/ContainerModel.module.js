@@ -103,17 +103,6 @@ define('js!SBIS3.CONTROLS.ContainerModel',[],function() {
          }
       },
 
-      /**
-       * Размеры и сдвиг копируются из переднной модели конейнера
-       * @param containerModel
-       */
-      clone: function(containerModel){
-         this.setWidth( containerModel.getWidth() );
-         this.setHeight( containerModel.getHeight() );
-         this.setOffsetByCorner(TOP_LEFT_CORNER, containerModel.getOffsetByCorner(TOP_LEFT_CORNER));
-      },
-
-
 
       /* Проверки входных данных */
 
