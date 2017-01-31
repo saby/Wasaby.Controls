@@ -1297,7 +1297,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   corner: 'bl',
                   closeByExternalClick: true,
                   element: $('<div></div>'),
-                  imageFolder: self._options.imageFolder
+                  imageFolder: self._options.imageFolder,
+                  verticalAlign: {
+                     side: 'top'
+                  },
+                  horizontalAlign: {
+                     side: 'left'
+                  }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
                   var
