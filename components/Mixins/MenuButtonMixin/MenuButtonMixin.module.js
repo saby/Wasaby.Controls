@@ -225,6 +225,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
                   $icon && $icon.remove();
                }
             }
+         },
+
+         setCaption: function(caption){
+            if (this._picker){
+               $('.controls-Menu__header-caption', this._picker._container).html(caption);
+            }
          }
       },
 
