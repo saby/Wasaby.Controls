@@ -1198,7 +1198,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
           /* При установке колонок, надо сбросить частичный скролл */
           this._currentScrollPosition = 0;
           checkColumns(this._options);
-          this._destroyEditInPlace();
+          this._destroyEditInPlaceController();
        },
 
       _oldRedraw: function() {
