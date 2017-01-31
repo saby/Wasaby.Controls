@@ -140,11 +140,15 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _setEnabled: function () {
+            var items = this.getItems();
             /* Т.к. при изменении состояния поля связи, для всех элементов появляются/исчезают крестики удаления,
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
             this._clearItems();
             FieldLinkItemsCollection.superclass._setEnabled.apply(this, arguments);
-            this.redraw();
+
+            if(items && items.getCount()) {
+               this.redraw();
+            }
          },
 
          _getItemsContainer: function() {
