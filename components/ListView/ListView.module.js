@@ -799,7 +799,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -882,7 +882,15 @@ define('js!SBIS3.CONTROLS.ListView',
                case 'taphold':
                   this._container.removeClass(mobFix);
                   break;
-
+               case 'contextmenu':
+                  this._contextMenuHandler(e);
+                  break;
+               case 'mousedown':
+                  this._mouseDownHandler(e);
+                  break;
+               case 'mouseup':
+                  this._mouseUpHandler(e);
+                  break;
             }
          },
 
@@ -1279,6 +1287,40 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._hideItemsToolbar();
                }
+            }
+         },
+
+         _contextMenuHandler: function(event){
+            var itemsActions = this.getItemsActions(),
+                align = {
+                   verticalAlign: {
+                      side: 'top',
+                      offset: event.pageY
+                   },
+                   horizontalAlign: {
+                      side: 'left',
+                      offset: event.pageX
+                   }
+                };
+
+            if(this._hoveredItem && this._hoveredItem.container && itemsActions && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+               event.preventDefault();
+               event.stopPropagation();
+               itemsActions.showItemActionsMenu(align);
+            }
+         },
+
+         _mouseDownHandler: function(event){
+            var itemsActions = this.getItemsActions();
+           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
+              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           }
+         },
+
+         _mouseUpHandler: function(event){
+            if(this._itemsToolbar && event.button === 2){
+               this._itemsToolbar.getContainer().removeClass('controls-ItemsToolbar__hidden');
             }
          },
 
