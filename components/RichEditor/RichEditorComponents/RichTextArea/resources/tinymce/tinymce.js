@@ -50086,13 +50086,7 @@ tinymce.PluginManager.add('lists', function(editor) {
             }
          }
 
-         /**
-          * Pastes the specified text. This means that the plain text is processed
-          * and converted into BR and P elements. It will fire paste events for custom filtering.
-          *
-          * @param {String} text Text to paste as the current selection location.
-          */
-         function pasteText(text) {
+         function prepareTextBeforePaste(text) {
             text = editor.dom.encode(text).replace(/\r\n/g, '\n');
 
             var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
@@ -50120,7 +50114,17 @@ tinymce.PluginManager.add('lists', function(editor) {
                   text = forcedRootBlockStartHtml + text;
                }
             }
+            return text;
+         }
 
+         /**
+          * Pastes the specified text. This means that the plain text is processed
+          * and converted into BR and P elements. It will fire paste events for custom filtering.
+          *
+          * @param {String} text Text to paste as the current selection location.
+          */
+         function pasteText(text) {
+            text = prepareTextBeforePaste(text);
             pasteHtml(text);
          }
 
@@ -50677,6 +50681,7 @@ tinymce.PluginManager.add('lists', function(editor) {
          self.pasteHtml = pasteHtml;
          self.pasteText = pasteText;
          self.pasteImageData = pasteImageData;
+         self.prepareTextBeforePaste = prepareTextBeforePaste;
 
          editor.on('preInit', function() {
             registerEventHandlers();
