@@ -268,7 +268,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          });
       },
       _updateCompatPlaceholderVisibility: function() {
-         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text);
+         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text || !this._options.enabled);
       },
        /**
         * Метод установки минимального количества строк.
