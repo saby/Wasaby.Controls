@@ -18246,6 +18246,15 @@
             var scrollContainer, node = this.dom.getRoot();
 
             while (node && node.nodeName != 'BODY') {
+               //Проблема:
+               //          при вставке контента если смещение поля ввода меньше чем скролл родительского элемента происходит подскролл
+               //Решение:
+               //          если поле ввода находится в фиксированном элементе данный подскролл не нужен
+               var
+                  styles = getComputedStyle(node);
+               if (styles && styles.position == 'fixed') {
+                  return false;
+               }
                if (node.scrollHeight > node.clientHeight) {
                   scrollContainer = node;
                   break;
