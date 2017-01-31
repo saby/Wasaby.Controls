@@ -1621,11 +1621,12 @@
 @list-view-actions-menu-margin:                 3px 0 0 6px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
-@list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
+@list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
-
+@list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+@list-view-loading-indicator-gradient-bg-up:    url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @list-view-disabled-cursor:                     default;
 
 @listView-empty-data-color:                     @black-color;
