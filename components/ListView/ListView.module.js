@@ -1521,6 +1521,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hoveredItem = {};
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._destroyEditInPlace();
             this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
@@ -1621,7 +1622,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else if (this._isClickEditMode()) {
                   this._toggleEipClickHandlers(false);
                }
-               this._destroyEditInPlace();
+               this._destroyEditInPlaceController();
                this._options.editMode = editMode;
                if (this._isHoverEditMode()) {
                   this._toggleEipHoveredHandlers(true);
@@ -1676,7 +1677,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //разрушать редактирование нужно как при enabled = false так и при enabled = true. У нас предусмотрено
             //редактирование задизабленного браузера, и настройки редакторов для задизабленного режима, может отличаться
             //от раздизабленного.
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
          },
 
          _startEditOnItemClick: function(event, id, model, originalEvent) {
@@ -1719,10 +1720,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
-            if (this._hasEditInPlace()) {
-               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-               this._getEditInPlace()._destroyEip();
-            }
+            this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
@@ -1768,13 +1766,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
-         _destroyEditInPlace: function() {
+         _destroyEditInPlaceController: function() {
             if (this._hasEditInPlace()) {
                this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
          },
+
+         _destroyEditInPlace: function() {
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
+               this._getEditInPlace()._destroyEip();
+            }
+         },
+
          _getEditInPlaceConfig: function() {
             var
                config = {
@@ -2997,7 +3003,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
@@ -3136,7 +3142,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getEditInPlace().endEdit(true);
          },
          destroy: function () {
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
             if (this._scrollWatcher) {
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
