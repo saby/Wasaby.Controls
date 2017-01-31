@@ -1073,7 +1073,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                if (!self._mouseIsPressed) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
@@ -1610,7 +1610,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text);
+            text = Sanitize(text, {checkDataAttribute: false});
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
@@ -1637,7 +1637,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._tinyReady.isReady()) {
                      this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(Sanitize(text));
+                     this._inputControl.html(Sanitize(text, {checkDataAttribute: false}));
                   }
                }
             }
