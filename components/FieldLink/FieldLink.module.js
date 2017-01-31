@@ -1063,11 +1063,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._getLinkCollection().isPickerVisible() || !this._isInputVisible()) {
                 return;
              }
+
+             // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
+             // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
+             if (constants.browser.isMobilePlatform) {
+                $('.controls-ScrollContainer').addClass('controls-ScrollContainer-overflow-scrolling-auto');
+             }
+
              FieldLink.superclass.showPicker.apply(this, arguments);
              /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
                 при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
                 поэтому при перевороте проскролим вниз автодополнение */
              this._processSuggestPicker();
+          },
+          
+          // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
+          // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
+          hidePicker: function(){
+             FieldLink.superclass.hidePicker.apply(this, arguments);
+             if (constants.browser.isMobilePlatform) {
+                $('.controls-ScrollContainer').removeClass('controls-ScrollContainer-overflow-scrolling-auto');
+             }
           },
 
           setEnabled: function() {
