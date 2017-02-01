@@ -214,6 +214,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             this._togglePlaceholder();
+            if (cConstants.browser.isMobileAndroid) {
+               this._notifyTextChanged = this._notifyTextChanged.debounce(300);
+            }
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
@@ -926,13 +929,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._options.text = text;
                this._notify('onTextChange', text);
-               this._notifyOnPropertyChanged('text');
+               this._notifyTextChanged();
                this._updateDataReview(text);
                this.clearMark();
             }
             //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
             this._updateHeight();
             this._togglePlaceholder(text);
+         },
+         _notifyTextChanged: function() {
+            this._notifyOnPropertyChanged('text');
          },
          _showImagePropertiesDialog: function(target) {
             var
