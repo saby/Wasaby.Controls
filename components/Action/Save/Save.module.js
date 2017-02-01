@@ -1,8 +1,8 @@
 define('js!SBIS3.CONTROLS.Action.Save', [
     'js!SBIS3.CONTROLS.Action.Action',
-    'js!SBIS3.CONTROLS.SaveStrategy.Base',
-    'Core/core-instance'
-], function (Action, SaveStrategyBase, cInstance) {
+    'Core/core-instance',
+    'js!WS.Data/Di'
+], function (Action, cInstance, Di) {
 
     /**
      * Базовый экшен для сохранения данных.
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Action.Save', [
     var Save = Action.extend(/** @lends SBIS3.CONTROLS.Action.Save.prototype */{
         $protected: {
             _options: {
-                saveStrategy: undefined
+                saveStrategy: 'savestrategy.sbis'
             },
             _saveStrategy: undefined
         },
@@ -23,22 +23,21 @@ define('js!SBIS3.CONTROLS.Action.Save', [
          * Сохраняет елементы.
          * @private
          */
-        _save: function(meta) {
+        _doExecute: function(meta) {
             this.getSaveStrategy().saveAs(meta);
         },
 
         /**
          * Возвращает стратегию сохранения
+         * @returns {SBIS3.CONTROLS.ISaveStrategy} strategy - стратегия сохранения
          */
         getSaveStrategy: function () {
-            if (!this._saveStrategy) {
-                this._makeSaveStrategy();
-            }
-            return this._saveStrategy;
+            return this._saveStrategy || (this._saveStrategy = this._makeSaveStrategy());
         },
 
         /**
          * Устанавливает стратегию сохранения
+         * @param {SBIS3.CONTROLS.ISaveStrategy} strategy - стратегия сохранения
          */
         setSaveStrategy: function (strategy) {
             if(!cInstance.instanceOfMixin(strategy, 'SBIS3.CONTROLS.ISaveStrategy')){
@@ -46,12 +45,13 @@ define('js!SBIS3.CONTROLS.Action.Save', [
             }
             this._saveStrategy = strategy;
         },
+
         /**
          * Создает стратегию сохранения
          * @private
          */
         _makeSaveStrategy: function () {
-            this._saveStrategy = new SaveStrategyBase();
+            return Di.resolve(this._options.saveStrategy);
         }
 
     });
