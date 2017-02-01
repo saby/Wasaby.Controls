@@ -1,5 +1,5 @@
 'use strict';
-const express = require('express'),
+var express = require('express'),
     path = require('path'),
     fs = require('fs'),
     spawn = require('child_process').spawn,
@@ -12,50 +12,50 @@ app.use(express.static(path.resolve(__dirname)));
 app.listen(process.env.PORT || 666);
 
 console.log('app available on port 666');
-console.log(`current dir is  ${process.cwd()}`);
 
 
 app.get('/cdn*', function(req, res) {
-  res.redirect(`https://test-inside.tensor.ru${req.url}`);
+  res.redirect('https://test-inside.tensor.ru' + req.url);
 });
 
-app.post('/theme-preview/get-theme/', (req, res) => {
+app.post('/theme-preview/get-theme/', function(req, res)  {
 
-    req.on('data', data => {
+    req.on('data', function(data) {
 
-        let themeName = JSON.parse(data.toString()).name;
+        var themeName = JSON.parse(data.toString()).name;
         if (!themeName) {
             res.send('err occured');
         }
-        let themeVariables = fs.readFile(`${process.cwd()}/themes/${themeName}/variables.less`, (err, data) => {
+        fs.readFile(process.cwd() + '/themes/' + themeName + '/variables.less', function(err, data) {
             res.send(data);
-        })
-    })
+        });
+    });
 });
 
-app.post('/theme-preview/apply-theme/', (req, res) => {
-    req.on('data', data => {
+app.post('/theme-preview/apply-theme/', function(req, res)  {
+    req.on('data', function(data) {
 
-        let [themeName, newRules, variablesPath] = [JSON.parse(data.toString()).themeName, JSON.parse(data.toString()).rules, `${process.cwd()}/themes/online/variables.less`];
+        var themeName = JSON.parse(data.toString()).themeName;
+        var newRules = JSON.parse(data.toString()).rules;
+        var variablesPath = process.cwd() +  '/themes/online/variables.less';
+        fs.readFile(variablesPath, function(err, data) {
+            var stringData = data.toString();
 
-        fs.readFile(variablesPath, (err, data) => {
-            let stringData = data.toString();
+            for (var i in newRules) {
 
-            for (let i in newRules) {
-
-                let reg = new RegExp(`@${i}:\\s+\\S+`);
-                stringData = stringData.replace(reg, `@${i}:      ${newRules[i]};`);
+                var reg = new RegExp('@' + i + ':\\s+\\S+');
+                stringData = stringData.replace(reg, '@' + i + ':      ' + newRules[i] + ';');
 
             };
             fs.writeFile(variablesPath, stringData, function(err) {
                 if (err) {
                     console.error(err);
                 }
-                const grunt = spawn('grunt', ['css', '--theme=online']);
+                var grunt = spawn('grunt', ['css', '--theme=online']);
                 grunt.stdout.pipe(process.stdout);
                 grunt.stderr.pipe(process.stderr);
-                grunt.on('close', (code) => {
-                    console.log(`child process exited with code ${code}`);
+                grunt.on('close', function(code) {
+                    console.log('child process exited with code: ' +  code);
                     res.send('фсё')
                 });
 
