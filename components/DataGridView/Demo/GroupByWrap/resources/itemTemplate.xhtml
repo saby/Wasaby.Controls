@@ -1,0 +1,9 @@
+<div class="docs-GroupByWrap__recordTemplate">
+   {{? it.item.get('Фамилия') == null }}
+     <span class="docs-GroupByWrap__recordTemplate-fio">{{=it.item.get('Название')}}</span>
+      {{?? it.item.get('Фамилия') != null }}
+         {{=it.item.get('Фамилия')}} {{=it.item.get('Имя')}} {{=it.item.get('Отчество')}}
+      {{??}}
+      что-то пошло не так...
+   {{?}}
+</div>

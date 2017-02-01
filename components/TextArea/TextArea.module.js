@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
    }
 
    function prepareTextForDisplay(text, needToWrap) {
-      var dispText = strHelpers.escapeHtml(text || '');
+      var dispText = strHelpers.escapeHtml(text || '') + '';
       if (needToWrap) {
          dispText = strHelpers.wrapURLs(dispText);
       }
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText.call(self, self._formatText(this._getTextFromMarkup()));
+                  self.setText.call(self, self._formatText(self._getTextFromMarkup()));
                   self._inputField.get(0).innerText = self._options.text;
                }
             }, 100)
@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          });
       },
       _updateCompatPlaceholderVisibility: function() {
-         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text);
+         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text || !this._options.enabled);
       },
        /**
         * Метод установки минимального количества строк.

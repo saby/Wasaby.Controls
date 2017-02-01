@@ -22,12 +22,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
-   'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
    'css!SBIS3.CONTROLS.RichTextArea'
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di, ImageOptionsPanel) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel) {
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
@@ -176,6 +175,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
 
@@ -906,8 +906,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this._insertImg(URL, 'float:right; ', meta);
                   break;
                case "4":
-                  console.log(fileobj);
-                  fcHelpers.alert('Сейчас будет коллаж');
+                  //todo: сделать коллаж
                   break;
                case "6":
                   this._insertImg(URL, '', meta);
@@ -1066,12 +1065,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
                   content = e.content;
                e.content =  content.replace('orphans: 31415;','');
+               //Необходимо заменять декорированные ссылки обратно на url
+               //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+               e.content = self._prepareContent( e.content);
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                if (!self._mouseIsPressed) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
@@ -1084,8 +1086,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (self._clipboardText !== false) {
-                        //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
-                        e.content = strHelpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
+                        e.content = self._getTextBeforePaste();
                      }
                   }
                }
@@ -1296,7 +1297,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   corner: 'bl',
                   closeByExternalClick: true,
                   element: $('<div></div>'),
-                  imageFolder: self._options.imageFolder
+                  imageFolder: self._options.imageFolder,
+                  verticalAlign: {
+                     side: 'top'
+                  },
+                  horizontalAlign: {
+                     side: 'left'
+                  }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
                   var
@@ -1488,11 +1495,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this._tinyEditor && this._tinyEditor.initialized && this.isEnabled() ? this._getTinyEditorValue() : this.getText();
          },
 
-         _prepareContent: function(value) {
-            if (value && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-               value = Di.resolve(this._options.decoratorName).unDecorateLinks(value)
-            }
-            return typeof value === 'string' ? value : value === null || value === undefined ? '' : value + '';
+         _prepareContent: function(text) {
+            text = typeof text === 'string' ? text : text === null || text === undefined ? '' : text + '';
+            //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+            return RichUtil.unDecorateLinks(text);
          },
 
          //метод показа плейсхолдера по значению//
@@ -1610,7 +1616,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text);
+            text = Sanitize(text, {checkDataAttribute: false});
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
@@ -1637,7 +1643,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._tinyReady.isReady()) {
                      this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(Sanitize(text));
+                     this._inputControl.html(Sanitize(text, {checkDataAttribute: false}));
                   }
                }
             }
@@ -1689,7 +1695,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
+         },
+         _getTextBeforePaste: function(){
+            //Проблема:
+            //          после вставки текста могут возникать пробелы после <br> в начале строки
+            //Решение:
+            //          разбить метод _tinyEditor.plugins.paste.clipboard.pasteText:
+            //             a)Подготовка текста
+            //             b)Вставка текста
+            //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
+            var
+               text = this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
+            return text;
          }
+
       });
 
       return RichTextArea;

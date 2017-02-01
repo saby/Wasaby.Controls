@@ -54,6 +54,17 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
 
    var RadioGroup = RadioGroupBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.RadioGroup.prototype */ {
       _dotTplFn : dotTpl,
+       /**
+        * @cfg {Boolean} Устанавливает поведение, при котором допускается отсутствие выбранного элемента в группе.
+        * @name SBIS3.CONTROLS.CheckBoxGroup#allowEmptySelection
+        * @remark
+        * Когда опция *allowEmptySelection=true*, то чтобы перевести группу радиокнопок в состояние без выбранного значения, используйте код:
+        * <pre>
+        *     // radioGroup - экземпляр класса SBIS3.CONTROLS.RadioGroup
+        *     radioGroup.setSelectedKey(null);
+        * </pre>
+        * @default false
+        */
       /**
        * @typedef {Object} GroupItems
        * @property {String} id Идентификатор элемента группы.

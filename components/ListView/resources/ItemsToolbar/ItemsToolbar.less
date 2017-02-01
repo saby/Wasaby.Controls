@@ -72,6 +72,11 @@
          }
 
       }
+
+
+      &.controls-ItemsToolbar__hidden {
+         visibility: hidden;
+      }
    }
 
    &.controls-DataGridView,
@@ -221,6 +226,12 @@
                   top: 50%;
                   margin-top: @touch-mode-items-toolbar-icon-margin-top;
                }
+            }
+         }
+
+         &.controls-ItemsToolbar__edit {
+            .controls-ItemsToolbar__container {
+               background-color: @list-view-items-toolbar-locked-bg;
             }
          }
 

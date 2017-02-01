@@ -1,11 +1,5 @@
 define('js!SBIS3.CONTROLS.Demo.MyCalendar', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyCalendar', 'css!SBIS3.CONTROLS.Demo.MyCalendar', 'js!SBIS3.CONTROLS.Calendar'], function(CompoundControl, dotTplFn) {
-   /**
-    * SBIS3.CONTROLS.Demo.MyCalendar
-    * @class SBIS3.CONTROLS.Demo.MyCalendar
-    * @extends $ws.proto.CompoundControl
-    * @control
-    */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyCalendar.prototype */{
+   var moduleClass = CompoundControl.extend({
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
