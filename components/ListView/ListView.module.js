@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DecorableMixin",
-   "js!SBIS3.CONTROLS.DragNDropMixin",
+   "js!SBIS3.CONTROLS.DragNDropMixinNew",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CORE.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
@@ -54,9 +54,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "i18n!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.DragEntity.List",
    "js!WS.Data/MoveStrategy/Base",
-   "js!SBIS3.CONTROLS.ListView.Mover",
-   'css!SBIS3.CONTROLS.ListView',
-   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
+   "js!SBIS3.CONTROLS.ListView.Mover"
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -105,7 +103,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.DragNDropMixin
+       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
        * @mixes SBIS3.CONTROLS.CommonHandlers
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
@@ -1305,7 +1303,7 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(itemsActions && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+            if(this._hoveredItem && this._hoveredItem.container && itemsActions && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                event.preventDefault();
                event.stopPropagation();
                itemsActions.showItemActionsMenu(align);
@@ -1548,7 +1546,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
           *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
           * </ol>
-          * В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
           * Если источник данных не установлен, производит перерисовку установленного набора данных.
           * @return {Deferred}
           * @example
@@ -2293,7 +2291,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
          },
-
+         
          _addItems: function(newItems, newItemsIndex, groupId){
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
@@ -2302,7 +2300,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
          _getAdditionalOffset: function(items){
             return items.length;
          },
