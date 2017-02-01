@@ -214,7 +214,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             this._togglePlaceholder();
-            if(cConstants.browser.isMobileAndroid) {
+            if (cConstants.browser.isMobileAndroid) {
                this._notifyTextChanged = this._notifyTextChanged.debounce(300);
             }
          },
