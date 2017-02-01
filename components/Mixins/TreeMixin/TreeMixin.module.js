@@ -1121,8 +1121,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see root
        * @see getRoot
        */
-      setRoot: function(root){
+      setRoot: function(root) {
          this._options.root = root;
+         // Быстрое решение для изменения корня выборки на текущий раздел
+         if (this._options.task1173527374) {
+            this._previousRoot = null;
+         }
       },
 
 
