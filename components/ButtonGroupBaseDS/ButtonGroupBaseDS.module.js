@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
+         
 
          if (this._options.displayField) {
             this._options.displayProperty = this._options.displayField;

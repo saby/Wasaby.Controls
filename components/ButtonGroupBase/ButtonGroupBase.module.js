@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
+         
          this._hasItems = this._container.hasClass('hasItems');
       },
 
