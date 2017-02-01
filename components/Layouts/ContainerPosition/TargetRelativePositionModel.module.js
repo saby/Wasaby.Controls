@@ -70,10 +70,10 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
 
 
       /**
-       * @cfg {CoordinatesType} тип координат которые будут передаваться в метод _setOffsetOfTargetRelative, если опция не задана(undefined) то будет
+       * @cfg {CoordinatesType} тип координат которые будут передаваться в метод _setOffsetOfTargetRelative, если опция не задана(null) то будет
        * передаваться offset html блока, если задано например {vertical:'top', horizontal:'right'} то будут переданы координаты html элемента {top: 10, right: 200}
        */
-      _coordinatesType: undefined,
+      _coordinatesType: null,
 
       /**
        * @cfg {Corner} выбранная точка(угол) отсчета на target контейнере
@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
        * @param {Corner} coordinatesType
        */
       setCoordinatesType: function(coordinatesType){
-         if(typeof coordinatesType === "undefined" || this._isCornerOk(coordinatesType)) {
+         if(coordinatesType === null || this._isCornerOk(coordinatesType)) {
             this._coordinatesType = coordinatesType;
          }
       },
@@ -192,7 +192,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
             coordinates = this._blocks.targetRelative.getOffsetByCorner(TOP_LEFT_CORNER);
          }else{
             this._refreshParentContainer();
-            coordinates = this._getCoordinatesOfTargetRelative(this._coordinatesType);
+            coordinates = this._getCoordinatesOfTargetRelative();
          }
          return coordinates;
       },
@@ -262,20 +262,20 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
        * @param {CoordinatesType} coordinatesType
        * @private
        */
-      _getCoordinatesOfTargetRelative: function(coordinatesType){
+      _getCoordinatesOfTargetRelative: function(){
          /* Для расчета координат внутри parent контейнера, например  {right:10,top:200}, проще всего использовать ближайшие углы(точки) на контейнерах,
          в данном случае вырхние правые углы на позиционируемом контейнере и на parent контейнере. */
          var coordinates = {},
-            closestOffsetOfTargetRelative = this._blocks.targetRelative.getOffsetByCorner(coordinatesType),
-            closestOffsetOfParent = this._blocks.parentContainer.getOffsetByCorner(coordinatesType);
+            closestOffsetOfTargetRelative = this._blocks.targetRelative.getOffsetByCorner(this._coordinatesType),
+            closestOffsetOfParent = this._blocks.parentContainer.getOffsetByCorner(this._coordinatesType);
 
-         if(coordinatesType.vertical === 'top'){
+         if(this._coordinatesType.vertical === 'top'){
             coordinates.top = closestOffsetOfTargetRelative.top - closestOffsetOfParent.top;
          }else{
             coordinates.bottom = closestOffsetOfParent.top - closestOffsetOfTargetRelative.top;
          }
 
-         if(coordinatesType.horizontal === 'left'){
+         if(this._coordinatesType.horizontal === 'left'){
             coordinates.left = closestOffsetOfTargetRelative.left - closestOffsetOfParent.left;
          }else{
             coordinates.right = closestOffsetOfParent.left - closestOffsetOfTargetRelative.left;
