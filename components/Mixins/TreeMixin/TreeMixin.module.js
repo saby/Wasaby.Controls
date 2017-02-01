@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (item.isNode()){
                cfg.hasNodes = true;
             }
-            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
