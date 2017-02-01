@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
       _onChangeHoveredItemHandler: function(event, hoveredItem) {
          /* Чтобы проинициализировать кнопку "Выбрать", если её нет */
-         this._onPropertyChangedHandler();
+         this._initSelectAction();
 
          var linkedObject = this._getLinkedObject(),
              selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
          if(hoveredItem.container) {
             if (this._isBranch(hoveredItem.record)) {
-               if (linkedObject.getMultiselect() && linkedObject.getSelectedKeys().indexOf(hoveredItem.key) === -1 ||
+               if (linkedObject.getMultiselect() && !linkedObject.getSelectedKeys().length ||
                    linkedObject._isSearchMode()) {
                   selectAction.show();
                } else {
@@ -192,9 +192,16 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          }
       },
 
-      _onPropertyChangedHandler: function() {
+      _onPropertyChangedHandler: function(e, propName) {
+         if(propName === 'itemsActions') {
+            this._initSelectAction();
+         }
+      },
+
+      _initSelectAction: function() {
          var linkedObject = this._getLinkedObject(),
              itemsActions = linkedObject.getItemsActions(),
+             self = this,
              itemsActionsArray;
 
          /* Добавляем кнопку "Выбрать", если её нет в itemsActions */
@@ -205,8 +212,11 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                caption: 'Выбрать',
                name: SELECT_ACTION_NAME,
                isMainAction: true,
-               onActivated: function(container, key) {
-                  this.sendCommand('activateItem', key);
+               onActivated: function(container, key, item) {
+                  self._onItemActivatedHandler(null, {
+                     item: item,
+                     id: key
+                  })
                }
             });
             linkedObject.setItemsActions(itemsActionsArray);
