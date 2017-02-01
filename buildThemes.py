@@ -20,6 +20,11 @@ def main():
    #       fname = os.path.join(root, dirname, os.path.basename(dirname) + ".less")
    #       if os.path.exists(fname):
    #          process_file(fname)
-   subprocess.call(['grunt', 'css'])
+
+   # INSTALLING GRUNT LOCALY
+   subprocess.call(['echo' ,'installing grunt locally....'])
+   subprocess.call(['npm' ,'install', 'grunt'])
+   subprocess.call(['npm' ,'install', 'grunt-cli'])
+   subprocess.call(['node', 'node_modules/grunt-cli/bin/grunt', 'css'])
 if __name__ == "__main__":
    main()
