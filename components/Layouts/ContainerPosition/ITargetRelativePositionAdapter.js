@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.ITargetRelativePositionAdapter', [], function () {
    'use strict';
    /**
     * Интерфейс адаптера, осуществляющиего операции c домом(виртуальным домом / произвольной моделью) в контексте позиционирования относительно таргета
-    * @mixin CONTROLS.iTargetRelativePositionAdapter
+    * @mixin CONTROLS.ITargetRelativePositionAdapter
     * @public
     * @author Дубровин Игорь
     */
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ITargetRelativePositionAdapter', [], function () {
        * @param {Coordinates} coordinates
        * @protected
        */
-      setOffsetOfTargetRelative: function(coordinates){
+      setCoordinatesOfTargetRelative: function(coordinatesType, coordinates){
          throw new Error("Метод для задания offset'a targetRelative контейнера должен быть импелементирован");
       }
    };
