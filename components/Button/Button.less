@@ -19,19 +19,19 @@
    .box-sizing(border-box);
    .user-select();
 
-   font: @default-font-size @default-font;
-   color: @primary-text-color;
-   text-align: center;
-   min-width: @default-size;
-   height: @default-size;
+   font: @button-font;
+   color: @button-text-color;
+   text-align: @button-text-alignment;
+   min-width: @button-min-width;
+   height: @button-height;
+   line-height: @button-line-height;
    padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
-   margin: auto;
+   margin: @button-margin;
    overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
-   border: @tiny-size solid @default-color;
-   .border-radius(@default-border-radius);
-
-
-   background: @default-bg-color;
+   border: @button-border;
+   .border-radius(@button-border-radius);
+   .box-shadow(@button-shadow);
+   background: @button-bg;
 
    .controls-Button__text {
       &.controls-Button__emptyCaption {
@@ -39,6 +39,9 @@
       }
    }
 
+   &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
+      background-color: #ffffff;
+   }
 
    // Button's icon
    .controls-Button__icon {
@@ -59,10 +62,10 @@
 
    // Normal primary button
    &.controls-Button__primary {
-      color: @primary-text-color;
-      border: @tiny-size solid @primary-color;
-
-      background: @primary-bg-color;
+      color: @button-primary-text-color;
+      border: @button-primary-border;
+      .box-shadow(@button-primary-shadow);
+      background: @button-primary-bg;
 
       &.controls-Click__active {
          color: @button-primary-active-text-color;
@@ -81,22 +84,22 @@
 
    // Big default button
    &.controls-Button__big {
-      font: @big-font-size @default-font;
-      color: @primary-text-color;
+      font: @button-big-font;
+      color: @button-big-text-color;
       text-align: @button-big-text-alignment;
       min-width: @button-big-min-width;
       height: @button-big-height;
       line-height: @button-big-line-height;
       padding: 0;   //FF ignore padding in button, therefore we use SPAN with margin
       margin: @button-big-margin;
-      border: @tiny-size solid @default-color;
-      .border-radius(@big-border-radius);
+      border: @button-big-border;
+      .border-radius(@button-big-border-radius);
       .box-shadow(@button-big-shadow);
-      background: @default-bg-color;
+      background: @button-big-bg;
 
       &.controls-Click__active {
          color: @button-big-active-text-color;
-         border: @tiny-size solid @default-color;
+         border: @button-big-active-border;
          .box-shadow(@button-big-active-shadow);
          background: @button-big-active-bg;
       }
@@ -122,14 +125,14 @@
 
       // Big primary button
       &.controls-Button__primary {
-         color: @primary-text-color;
-         border: @tiny-size solid @primary-color;
+         color: @button-big-primary-text-color;
+         border: @button-big-primary-border;
          .box-shadow(@button-big-primary-shadow);
-         background: @primary-bg-color;
+         background: @button-big-primary-bg;
 
          &.controls-Click__active {
             color: @button-big-primary-active-text-color;
-            border: @tiny-size solid @primary-color;
+            border: @button-big-primary-active-border;
             .box-shadow(@button-big-primary-active-shadow);
             background: @button-big-primary-active-bg;
          }
@@ -174,35 +177,35 @@
 .ws-is-desktop-platform {
    .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
       &:hover {
-         color: @hovered-text-color;
-         border: @tiny-size solid @default-color;
+         color: @button-hover-text-color;
+         border: @button-hover-border;
          .box-shadow(@button-hover-shadow);
-         background: @hovered-bg-color;
+         background: @button-hover-bg;
       }
       // Normal primary button
       &.controls-Button__primary {
          &:hover {
-            color: @primary-hovered-text-color;
-            border: @tiny-size solid @primary-color;
+            color: @button-primary-hover-text-color;
+            border: @button-primary-hover-border;
             .box-shadow(@button-primary-hover-shadow);
-            background: @primary-hovered-bg-color;
+            background: @button-primary-hover-bg;
          }
       }
-    
+
       &.controls-Button__big {
          &:hover {
-            color: @hovered-text-color;
-            border: @tiny-size solid @default-color;
+            color: @button-big-hover-text-color;
+            border: @button-big-hover-border;
             .box-shadow(@button-big-hover-shadow);
-            background: @hovered-bg-color;
+            background: @button-big-hover-bg;
          }
 
          &.controls-Button__primary {
             &:hover {
-               color: @primary-hovered-text-color;
-               border: @tiny-size solid @primary-color;
+               color: @button-big-primary-hover-text-color;
+               border: @button-big-primary-hover-border;
                .box-shadow(@button-big-primary-hover-shadow);
-               background: @primary-hovered-bg-color;
+               background: @button-big-primary-hover-bg;
             }
          }
       }
@@ -217,7 +220,7 @@
 
 .controls-Button__text {
    display: block;
-   margin: 0 @default-size/2 0 @default-size/2;
+   margin: @button-text-margin;
 }
 
 // Normal offsets' override for Firefox
