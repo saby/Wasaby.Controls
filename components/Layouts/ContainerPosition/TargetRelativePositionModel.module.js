@@ -63,12 +63,10 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
       coordinatesType:1,
       originCornerOfTargetRelative:1,
       originCornerOfTarget:1,
-      cornerToCornerOffset:1,
+      RelativeOffset:1,
       adapter:1
    },
    TargetRelativePositionModel = $ws.core.extend({
-
-
       /**
        * @cfg {CoordinatesType} тип координат которые будут передаваться в метод _setOffsetOfTargetRelative, если опция не задана(null) то будет
        * передаваться offset html блока, если задано например {vertical:'top', horizontal:'right'} то будут переданы координаты html элемента {top: 10, right: 200}
@@ -94,7 +92,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
       /**
        * @cfg {Offset} координаты выбранной точки отсчета на позиционируемом контейнере относительно выбранной точки отсчета на таргете
        */
-      _cornerToCornerOffset: {
+      _relativeOffset: {
          top: 0,
          left: 0
       },
@@ -106,7 +104,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
 
 
       // блоки/контейнеры учавствующие в позиционировании
-      _blocks: {
+      _containerModels: {
          target : null,
          targetRelative : null,
          parentContainer : null
@@ -127,9 +125,9 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
 
       _init: function(){
          // создаем модели контейнеров
-         this._blocks.target = new ContainerModel();
-         this._blocks.targetRelative = new ContainerModel();
-         this._blocks.parentContainer = new ContainerModel();
+         this._containerModels.target = new ContainerModel();
+         this._containerModels.targetRelative = new ContainerModel();
+         this._containerModels.parentContainer = new ContainerModel();
       },
 
       /**
@@ -157,9 +155,9 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
        * Задать коориднаты выбранной точки на позиционируемом контейнере(Y) относительно выбранной точки на таргете(X)
        * @param offset
        */
-      setCornerToCornerOffset: function(offset){
+      setRelativeOffset: function(offset){
          if(this._isOffsetOk(offset)) {
-            this._cornerToCornerOffset = offset;
+            this._relativeOffset = offset;
          }
       },
 
@@ -174,119 +172,134 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
       },
 
       /**
-       * Пересчитать положение targetRelative в модели
-       */
-      recalculate: function(){
-         this._refreshTargetRelative();
-      },
-
-      /**
-       * Вернуть координаты по заданному типу координат исходя из текущего состояния модели
-       * @returns {*}
-       */
-      getCoordinates:function(){
-         var coordinates;
-
-         if(!this._coordinatesType) {
-            // если не задан тип координат то позиционируем с помощью css offset
-            coordinates = this._blocks.targetRelative.getOffsetByCorner(TOP_LEFT_CORNER);
-         }else{
-            this._refreshParentContainer();
-            coordinates = this._getCoordinatesOfTargetRelative();
-         }
-         return coordinates;
-      },
-
-      /**
-       * Применить координаты через адаптер
-       * @param {Coordinates} coordinates
-       */
-      refreshPosition: function(coordinates){
-         this._adapter.setOffsetOfTargetRelative(this._coordinatesType , coordinates);
-      },
-
-      /**
-       * Задать коориднаты выбранной точки на позиционируемом контейнере(Y) относительно выбранной точки на таргете(X), вызвать перерисовку
-       * @param offset
-       */
-      move: function(offset){
-         // задатиь в модели сдвиг от таргета к targetRelative
-         this.setCornerToCornerOffset(offset);
-         // пересчитать модель
-         this.recalculate();
-         // получить координаты в нужном вииде
-         var coordinates = this.getCoordinates();
-         // применить координаты через адаптер(например к дом элементу)
-         this.refreshPosition(coordinates);
-      },
-
-      /**
        * Обновляет  targetRelative контейнер(позиция, размеры) в модели
        * @private
        */
-      _refreshTargetRelative: function(){
-         /* Получаем offset target'a */
-         this._blocks.target.setOffsetByCorner( TOP_LEFT_CORNER , this._adapter.getContainerOffset('target') );
+      recalcOffsetOfTargetRelative: function(){
+         // обновляем данные контейнеров через адаптер
+         this._refreshContainerSize('target');
+         this._refreshContainerSize('targetRelative');
+         this._refreshContainerOffset('target');
 
-         /* Получаем размеры target блока */
-         this._blocks.target.setHeight( this._adapter.getContainerSize('target', 'height') );
-         this._blocks.target.setWidth( this._adapter.getContainerSize('target', 'width') );
+         var originPoint = {};
+         // получаем offset точеки отсчета на таргете
+         originPoint.onTarget = this._containerModels.target.getOffsetByCorner(this._originCornerOfTarget);
+         // вычисляем offset точки отсчета на targetRelative
+         originPoint.onTargetRelative = this._calcOriginPointOfTargetRelative(originPoint.onTarget, this._relativeOffset);
+         // выставляем offset targetRelative контейнера по его originCorner
+         this._containerModels.targetRelative.setOffsetByCorner( this._originCornerOfTargetRelative , originPoint.onTargetRelative );
 
-         /* Получаем размеры targetRelative блока */
-         this._blocks.targetRelative.setHeight( this._adapter.getContainerSize('targetRelative', 'height') );
-         this._blocks.targetRelative.setWidth( this._adapter.getContainerSize('targetRelative', 'width') );
+         // если требуется получить координаты относительно parent container модель парент контейнера через адаптер
+         if(this._coordinatesType !== null){
+            this._refreshContainerOffset('parentContainer');
+            this._refreshContainerSize('parentContainer');
+         }
 
-         /* Получаем offset выбранного originCorner'a target'a */
-         var resultOffset = this._blocks.target.getOffsetByCorner(this._originCornerOfTarget);
-
-         /* Получаем offset выбранной точки отсчета targetRelative контейнера */
-         resultOffset.top += this._cornerToCornerOffset.top;
-         resultOffset.left += this._cornerToCornerOffset.left;
-
-         /* Выставляем offset targetRelative контейнера по его originCorner*/
-         this._blocks.targetRelative.setOffsetByCorner( this._originCornerOfTargetRelative , resultOffset );
+         // применяем позицию из модели через адаптер
+         this._applyPositionOfTargetRelative();
       },
 
       /**
-       * Обновляет parentContainer (позиция, размеры) в модели(необходимо для получения произвольного вида координат) получая данные через адаптер
+       * Обновить размер в модели контейнера
+       * @param {ContainerName} containerName
        * @private
        */
-      _refreshParentContainer: function(){
-         this._blocks.parentContainer.setOffsetByCorner( TOP_LEFT_CORNER , this._adapter.getContainerOffset('parentContainer') );
-         this._blocks.parentContainer.setHeight( this._adapter.getContainerSize('parentContainer', 'height') );
-         this._blocks.parentContainer.setWidth( this._adapter.getContainerSize('parentContainer', 'width') );
+      _refreshContainerSize: function(containerName){
+         var containerModel, width, height;
+
+         containerModel = this._containerModels[containerName];
+         // получаем размеры через адаптер
+         width = this._adapter.getContainerSize(containerName, 'width');
+         height = this._adapter.getContainerSize(containerName, 'height');
+         // записываем модель
+         containerModel.setWidth( width );
+         containerModel.setHeight( height );
       },
 
       /**
-       * Возвращает позицию targetRelative контейнера в parentContainer'e, например {right:10,top:200}
-       * @param {CoordinatesType} coordinatesType
+       * Обновить offset в модели контейнера
+       * @param {ContainerName} containerName
+       * @private
+       */
+      _refreshContainerOffset: function(containerName){
+         var containerModel, offset;
+
+         containerModel = this._containerModels[containerName];
+         // получаем через адаптер
+         offset = this._adapter.getContainerOffset(containerName);
+         // записываем в модель
+         containerModel.setOffsetByCorner( TOP_LEFT_CORNER , offset);
+      },
+
+      /**
+       * Вычисляет offset точки отсчета позиционируемого блока
+       * @param {Offset} originPointOnTarget offset точки остчета
+       * @param relativeOffset сдвиг позиционируемого контейнера относительно точки отсчета
+       * @returns {Offset}
+       * @private
+       */
+      _calcOriginPointOfTargetRelative: function(originPointOnTarget, relativeOffset){
+         return {
+            top: originPointOnTarget.top + relativeOffset.top,
+            left:originPointOnTarget.left + relativeOffset.left
+         }
+      },
+
+      /*
+       * Выдает из модели offset targetRelative блока
+       */
+      _getOffsetOfTargetRelative: function(){
+         // offset targetRelative блока === offset его верхней левой точки
+         return this._containerModels.targetRelative.getOffsetByCorner(TOP_LEFT_CORNER);
+      },
+
+      /**
+       * Выдает координаты заданного типа
+       * @returns {{}}
        * @private
        */
       _getCoordinatesOfTargetRelative: function(){
-         /* Для расчета координат внутри parent контейнера, например  {right:10,top:200}, проще всего использовать ближайшие углы(точки) на контейнерах,
-         в данном случае вырхние правые углы на позиционируемом контейнере и на parent контейнере. */
-         var coordinates = {},
-            closestOffsetOfTargetRelative = this._blocks.targetRelative.getOffsetByCorner(this._coordinatesType),
-            closestOffsetOfParent = this._blocks.parentContainer.getOffsetByCorner(this._coordinatesType);
+         var coordinates = {}, // результирующие координаты
+            // угол на прямоугольнике имеющий наименьше координаты для заданного типа координат(совпадает с типом координат)
+            closestCorner = this._coordinatesType,
+            // offset closestCorner'a на позиционируемом контейнере
+            closestPoint = this._containerModels.targetRelative.getOffsetByCorner(closestCorner),
+            // угол на паренте который берется за точку отсчета
+            originCorner = this._coordinatesType,
+            // offset originCorner'a
+            originPoint = this._containerModels.parentContainer.getOffsetByCorner(originCorner),
 
-         if(this._coordinatesType.vertical === 'top'){
-            coordinates.top = closestOffsetOfTargetRelative.top - closestOffsetOfParent.top;
-         }else{
-            coordinates.bottom = closestOffsetOfParent.top - closestOffsetOfTargetRelative.top;
-         }
+            // сдвиг сверху ближайшей точки на позиционируемом контейнере относительно точки отсчета
+            relativeTop = closestPoint.top - originPoint.top,
+            // сдвиг слева ближайшей точки на позиционируемом контейнере относительно точки отсчета
+            relativeLeft = closestPoint.left - originPoint.left;
 
-         if(this._coordinatesType.horizontal === 'left'){
-            coordinates.left = closestOffsetOfTargetRelative.left - closestOffsetOfParent.left;
-         }else{
-            coordinates.right = closestOffsetOfParent.left - closestOffsetOfTargetRelative.left;
-         }
+         // координата по вертикали (top/bottom)
+         coordinates[this._coordinatesType.vertical] =  (this._coordinatesType.vertical === 'top') ? relativeTop : -relativeTop;
+         // координата по горизонтали (top/bottom)
+         coordinates[this._coordinatesType.horizontal] =  (this._coordinatesType.horizontal === 'left') ? relativeLeft : -relativeLeft;
 
          return coordinates;
       },
 
+      /**
+       * Применить координаты позиционируемого контейнера из модели
+       * @private
+       */
+      _applyPositionOfTargetRelative: function(){
+         // получаем нужного типа координаты
+         var coordinates = (this._coordinatesType === null)
+            // если тип координат не передан используем офсет
+            ? this._getOffsetOfTargetRelative()
+            // иначе получаем координаты заданного типа
+            : this._getCoordinatesOfTargetRelative();
+
+         // выставляем их через адаптер
+         this._adapter.setCoordinatesOfTargetRelative(this._coordinatesType , coordinates);
+      },
 
       /* Проверки входных данных (cтоит проверки типов вынести в отдельную сущность) */
-      _isOffsetOk: function (offset) {
+      _isOffsetOk: function(offset) {
          if(typeof offset.top === 'number' && typeof offset.left === 'number'){
             return true;
          }else{
@@ -294,7 +307,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
          }
       },
 
-      _isCornerOk: function (corner) {
+      _isCornerOk: function(corner) {
          if (corner.vertical in {'top': 1, 'bottom': 1} && corner.horizontal in {'left': 1, 'right': 1}) {
             return true;
          } else {
