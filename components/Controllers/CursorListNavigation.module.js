@@ -15,12 +15,12 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
       var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
          prepareQueryParams: function(projection, direction) {
             var edgeRecord, filterValue, additionalFilter = {};
-            if (direction == 'top') {
+            if (direction == 'up') {
                edgeRecord = projection.at(0).getContents();
                filterValue = edgeRecord.get(this._options.config.field);
                additionalFilter[this._options.config.field+'<='] = filterValue;
             }
-            else if (direction == 'bottom') {
+            else if (direction == 'down') {
                edgeRecord = projection.at(projection.getCount() - 1).getContents();
                filterValue = edgeRecord.get(this._options.config.field);
                additionalFilter[this._options.config.field+'>='] = filterValue;
