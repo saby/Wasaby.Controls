@@ -22,7 +22,6 @@ def main():
    #          process_file(fname)
 
    # INSTALLING GRUNT LOCALY
-   subprocess.call(['echo' ,'installing grunt locally....'])
    subprocess.call(['npm' ,'install', 'grunt'])
    subprocess.call(['npm' ,'install', 'grunt-cli'])
    subprocess.call(['node', 'node_modules/grunt-cli/bin/grunt', 'css'])
