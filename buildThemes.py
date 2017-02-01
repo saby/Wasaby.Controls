@@ -22,8 +22,8 @@ def main():
    #          process_file(fname)
 
    # INSTALLING GRUNT LOCALY
-   subprocess.call(['npm' ,'install', 'grunt'])
-   subprocess.call(['npm' ,'install', 'grunt-cli'])
-   subprocess.call(['node', 'node_modules/grunt-cli/bin/grunt', 'css'])
+   subprocess.call(['npm' ,'install', 'grunt'], shell=True)
+   subprocess.call(['npm' ,'install', 'grunt-cli'], shell=True)
+   subprocess.call(['node', 'node_modules/grunt-cli/bin/grunt', 'css'], shell=True)
 if __name__ == "__main__":
    main()
