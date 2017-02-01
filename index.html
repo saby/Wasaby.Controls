@@ -235,6 +235,13 @@
                   <div id="EditInPlacePending"></div>
                </li>
             </ul>
+            <h3>Theme preview</h3>
+            <ul>
+               <li>
+                  <div id="themepreview"></div>
+               </li>
+
+            </ul>
          </td>
       </tr>
       <tr>
@@ -626,6 +633,13 @@
                element: "SearchForm",
                caption: 'SearchForm',
                href: '/pages/SearchForm.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "themepreview",
+               caption: 'Theme preview',
+               href: '/theme-preview/preview.html'
             })
          });
       })
