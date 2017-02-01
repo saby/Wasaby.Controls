@@ -2268,6 +2268,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
+            ListView.superclass._onResizeHandler.call(this);
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
