@@ -805,7 +805,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -888,7 +888,15 @@ define('js!SBIS3.CONTROLS.ListView',
                case 'taphold':
                   this._container.removeClass(mobFix);
                   break;
-
+               case 'contextmenu':
+                  this._contextMenuHandler(e);
+                  break;
+               case 'mousedown':
+                  this._mouseDownHandler(e);
+                  break;
+               case 'mouseup':
+                  this._mouseUpHandler(e);
+                  break;
             }
          },
 
@@ -1288,6 +1296,40 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _contextMenuHandler: function(event){
+            var itemsActions = this.getItemsActions(),
+                align = {
+                   verticalAlign: {
+                      side: 'top',
+                      offset: event.pageY
+                   },
+                   horizontalAlign: {
+                      side: 'left',
+                      offset: event.pageX
+                   }
+                };
+
+            if(this._hoveredItem && this._hoveredItem.container && itemsActions && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+               event.preventDefault();
+               event.stopPropagation();
+               itemsActions.showItemActionsMenu(align);
+            }
+         },
+
+         _mouseDownHandler: function(event){
+            var itemsActions = this.getItemsActions();
+           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
+              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           }
+         },
+
+         _mouseUpHandler: function(event){
+            if(this._itemsToolbar && event.button === 2){
+               this._itemsToolbar.getContainer().removeClass('controls-ItemsToolbar__hidden');
+            }
+         },
+
          /**
           * Установить что отображается при отсутствии записей.
           * @param html Содержимое блока.
@@ -1527,6 +1569,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hoveredItem = {};
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._destroyEditInPlace();
             this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
@@ -1627,7 +1670,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else if (this._isClickEditMode()) {
                   this._toggleEipClickHandlers(false);
                }
-               this._destroyEditInPlace();
+               this._destroyEditInPlaceController();
                this._options.editMode = editMode;
                if (this._isHoverEditMode()) {
                   this._toggleEipHoveredHandlers(true);
@@ -1682,7 +1725,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //разрушать редактирование нужно как при enabled = false так и при enabled = true. У нас предусмотрено
             //редактирование задизабленного браузера, и настройки редакторов для задизабленного режима, может отличаться
             //от раздизабленного.
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
          },
 
          _startEditOnItemClick: function(event, id, model, originalEvent) {
@@ -1725,10 +1768,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
-            if (this._hasEditInPlace()) {
-               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-               this._getEditInPlace()._destroyEip();
-            }
+            this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
@@ -1774,13 +1814,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
-         _destroyEditInPlace: function() {
+         _destroyEditInPlaceController: function() {
             if (this._hasEditInPlace()) {
                this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
          },
+
+         _destroyEditInPlace: function() {
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
+               this._getEditInPlace()._destroyEip();
+            }
+         },
+
          _getEditInPlaceConfig: function() {
             var
                config = {
@@ -2543,7 +2591,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _updateScrolOffset: function(){
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               this._scrollOffset.bottom += this._limit;
+               if (this._getSourceNavigationType() != 'Offset') {
+                  this._scrollOffset.bottom += this._limit;
+               }
             } else {
                if (this._scrollOffset.top >= this._limit){
                   this._scrollOffset.top -= this._limit;
@@ -2915,7 +2965,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
                         itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
                         item = this.getItems().getRecordById(itemId);
-                     this.scrollToItem(item);
+                     if (item) {
+                        this.scrollToItem(item);
+                     }
                   }
                } else {
                   this._offset = this._options.pageSize * pageNumber;
@@ -3006,7 +3058,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
@@ -3145,7 +3197,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getEditInPlace().endEdit(true);
          },
          destroy: function () {
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
             if (this._scrollWatcher) {
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);

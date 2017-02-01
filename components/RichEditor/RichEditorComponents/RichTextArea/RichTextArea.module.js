@@ -174,6 +174,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
 
@@ -1071,7 +1072,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                if (!self._mouseIsPressed) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
@@ -1084,8 +1085,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (self._clipboardText !== false) {
-                        //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
-                        e.content = strHelpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
+                        e.content = self._getTextBeforePaste();
                      }
                   }
                }
@@ -1296,7 +1296,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   corner: 'bl',
                   closeByExternalClick: true,
                   element: $('<div></div>'),
-                  imageFolder: self._options.imageFolder
+                  imageFolder: self._options.imageFolder,
+                  verticalAlign: {
+                     side: 'top'
+                  },
+                  horizontalAlign: {
+                     side: 'left'
+                  }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
                   var
@@ -1609,7 +1615,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text);
+            text = Sanitize(text, {checkDataAttribute: false});
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
@@ -1636,7 +1642,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._tinyReady.isReady()) {
                      this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(Sanitize(text));
+                     this._inputControl.html(Sanitize(text, {checkDataAttribute: false}));
                   }
                }
             }
@@ -1688,7 +1694,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
+         },
+         _getTextBeforePaste: function(){
+            //Проблема:
+            //          после вставки текста могут возникать пробелы после <br> в начале строки
+            //Решение:
+            //          разбить метод _tinyEditor.plugins.paste.clipboard.pasteText:
+            //             a)Подготовка текста
+            //             b)Вставка текста
+            //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
+            var
+               text = this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
+            return text;
          }
+
       });
 
       return RichTextArea;

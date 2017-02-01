@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
           true
       );
 
-      return value;
+      return value || '';
    }
 
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {

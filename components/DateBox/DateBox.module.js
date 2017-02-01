@@ -590,8 +590,9 @@ define(
                switch (item.mask) {
                   case 'YY' :
                      value = Number(value);
-                     //Если год задаётся двумя числами, то считаем что это текущий век если год меньше текущего года + 10, иначе это прошлый век.
-                     yyyy = value < shortCurYear + 10 ? curCentury + value : (curCentury - 100) + value;
+                     //Если год задаётся двумя числами, то считаем что это текущий век
+                     // если год меньше или равен текущему году + 10, иначе это прошлый век.
+                     yyyy = value <= shortCurYear + 10 ? curCentury + value : (curCentury - 100) + value;
                      break;
                   case 'YYYY' :
                      yyyy = value;
