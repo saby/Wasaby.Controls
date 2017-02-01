@@ -11,14 +11,14 @@ define([
 
    describe('SBIS3.CONTROLS.TargetRelativePositionModel', function() {
       var TRPModel,
-      testVariantsOf_Offset = [123,undefined, 'abc', [123,'abc'], {},
+      testVariantsOf_Offset = [123,undefined, 'abc', [123,'abc'], {},null,
          {tap:10, left:10}, {top:10, loft:10},
          {top:'10', left:10},{top:10, left:'10'},
          {top:'10', left:10},{top:10, left:'10'},
          {top:undefined, left:10},{top:10, left:undefined},
       ],
 
-      testVariantsOf_Corner = [123, 'abc', [123,'abc'], {},
+      testVariantsOf_Corner = [123, 'abc', [123,'abc'], {}, undefined,
          {vertical: 'top', хorizontal: 'left'},{wertical: 'top', horizontal: 'left'},
          {vertical: 'tap', horizontal: 'left'},{vertical: 'top', horizontal: 'loft'}
       ],
@@ -105,7 +105,7 @@ define([
                }, TypeError);
             }
             assert.throws(function() {
-               TRPModel.setOriginCornerOfTarget(undefined);
+               TRPModel.setOriginCornerOfTarget(null);
             }, TypeError);
          });
       });
@@ -118,7 +118,7 @@ define([
                }, TypeError);
             }
             assert.throws(function() {
-               TRPModel.setOriginCornerOfTargetRelative(undefined);
+               TRPModel.setOriginCornerOfTargetRelative(null);
             }, TypeError);
          });
       });
@@ -148,7 +148,7 @@ define([
          it('should return correct coordinates by each coordinates type', function() {
             var testScenario = [
                {// this scenario checks recalculate method
-                  coordinatesType: undefined, // css offset
+                  coordinatesType: null, // css offset
                   rightAnswer: {top: 210, left: 160}
                },
 
