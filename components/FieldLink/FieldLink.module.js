@@ -529,12 +529,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
+                var selectedItems = this.getSelectedItems();
                 this._getSelectorAction().execute({
                    template: template,
                    componentOptions: componentOptions,
                    multiselect: this.getMultiselect(),
                    selectionType: selectionType,
-                   selectedItems: this.getSelectedItems()
+                   selectedItems: selectedItems ? selectedItems.clone() : selectedItems
                 });
              } else {
                 this._showChooser(template, componentOptions);
