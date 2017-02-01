@@ -15,10 +15,16 @@ def process_file(name):
    subprocess.call([util, name, css_name])
 
 def main():
-   for root, dirs, files in os.walk(r'themes'):
-      for dirname in dirs:
-         fname = os.path.join(root, dirname, os.path.basename(dirname) + ".less")
-         if os.path.exists(fname):
-            process_file(fname)
+   # for root, dirs, files in os.walk(r'themes'):
+   #    for dirname in dirs:
+   #       fname = os.path.join(root, dirname, os.path.basename(dirname) + ".less")
+   #       if os.path.exists(fname):
+   #          process_file(fname)
+
+   # INSTALLING GRUNT LOCALY
+   subprocess.call(['echo' ,'installing grunt locally....'])
+   subprocess.call(['npm' ,'install', 'grunt'])
+   subprocess.call(['npm' ,'install', 'grunt-cli'])
+   subprocess.call(['node', 'node_modules/grunt-cli/bin/grunt', 'css'])
 if __name__ == "__main__":
    main()
