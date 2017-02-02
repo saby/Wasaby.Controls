@@ -1311,7 +1311,7 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(this._hoveredItem && this._hoveredItem.container && itemsActions && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+            if(this._hoveredItem && this._hoveredItem.container && itemsActions && itemsActions.hasVisibleActions() && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                event.preventDefault();
                event.stopPropagation();
                itemsActions.showItemActionsMenu(align);
