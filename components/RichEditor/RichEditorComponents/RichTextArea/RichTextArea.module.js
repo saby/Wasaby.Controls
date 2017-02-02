@@ -124,7 +124,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   menubar: false,
                   browser_spellcheck: true,
                   smart_paste: true,
-                  noneditable_noneditable_class: "controls-RichEditor__noneditable"
+                  noneditable_noneditable_class: "controls-RichEditor__noneditable",
+                  object_resizing: false
                },
                /**
                 * @cfg {String} Значение Placeholder`а
@@ -1532,7 +1533,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   bottom: 0,
                   left: 0
                });
-            styles = styles ? styles: '';
+            className = className ? className: '';
             before = before ? before: '';
             after = after ? after: '';
             img.on('load', function() {
@@ -1543,7 +1544,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
                   maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
                   style = ' style="width: 25%"';
-               self.insertHtml(before + '<img class="controls-RichEditor__noneditable ' + className + '" src="' + path + '"' + style + ' alt="' + meta + '" data-mce-resize="false"></img>'+ after);
+               self.insertHtml(before + '<img class="controls-RichEditor__noneditable ' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
             });
             if (cConstants.browser.isIE8) {
                $('body').append(img);
