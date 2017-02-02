@@ -170,17 +170,14 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
-            var moveStrategy = this.getMoveStrategy(),
-               method =  moveStrategy.hierarchyMove ? 'hierarchyMove' : 'move'; //todo поддерживаем стратегию с двумя методами перемещения
 
-            moveStrategy[method](movedItems, target, 'on').addCallback(function (result) {
+            this._getMover().move(movedItems, target, 'on').addCallback(function (result) {
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
             }.bind(this)).addBoth(function () {
                Indicator.hide();
             });
-
          },
 
          _makeMoveStrategy: function () {

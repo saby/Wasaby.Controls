@@ -762,7 +762,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base',
+               moveStrategy: null,
                /**
                 * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
                 * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
@@ -3502,13 +3502,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _makeMoveStrategy: function () {
-            return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty,
-               listView: this
-            });
+            if (this._options.moveStrategy) {
+               return Di.resolve(this._options.moveStrategy, {
+                  dataSource: this.getDataSource(),
+                  hierField: this._options.parentProperty,
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty,
+                  listView: this
+               });
+            }
          },
          /**
           * Устанавливает стратегию перемещения

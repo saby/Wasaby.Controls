@@ -2,9 +2,10 @@
 define('js!SBIS3.CONTROLS.Action.List.Move', [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.List.ListMixin',
+      'js!SBIS3.CONTROLS.ListView.Mover',
       'js!WS.Data/Di'
    ],
-   function (ActionBase, ListMixin, Di) {
+   function (ActionBase, ListMixin, Mover, Di) {
       'use strict';
       /**
        * Базовый класс перемещения элементов в списке
@@ -33,8 +34,20 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
       var Move = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Move.prototype */{
          $protected: {
             _options:{
-               moveStrategy: 'movestrategy.base'
-            }
+               /**
+                * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @deprecated
+                * @see {@link WS.Data/MoveStrategy/Base}
+                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
+                */
+               moveStrategy: 'movestrategy.base',
+               /**
+                * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
+                * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
+                */
+               moveInvertOrder: false
+            },
+            _mover: null
          },
          /**
           * Перемещает елементы. Должен быть реализован в наследниках
@@ -46,6 +59,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
 
          /**
           * Возвращает стратегию перемещения
+          * @deprecated
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
@@ -55,6 +69,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
 
          /**
           * Устанавливает стратегию перемещения
+          * @deprecated
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
@@ -63,6 +78,15 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
             }
             this._moveStrategy = strategy;
+         },
+
+         _getMover: function () {
+            return this._mover || (this._mover = Di.resolve('listview.mover', {
+               moveStrategy: this.getMoveStrategy(),
+               items: this._getItems(),
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
+            }));
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
