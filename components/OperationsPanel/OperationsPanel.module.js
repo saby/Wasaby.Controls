@@ -306,7 +306,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       _checkCapacity: function(){
-         debugger;
          this._itemsMenu.getContainer().toggleClass('ws-hidden', !(this._blocks.wrapper.height() < this._blocks.wrapper.children().height()));
       },
       destroy: function() {
