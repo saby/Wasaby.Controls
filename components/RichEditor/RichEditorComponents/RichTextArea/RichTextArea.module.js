@@ -901,13 +901,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //todo:classes
             switch (key) {
                case "1":
-                  this._insertImg(URL, 'image-float-left', meta);
+                  this._insertImg(URL, 'image-template-left', meta);
                   break;
                case "2":
                   this._insertImg(URL, '', meta, '<p style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
-                  this._insertImg(URL, 'image-float-right ', meta);
+                  this._insertImg(URL, 'image-template-right ', meta);
                   break;
                case "4":
                   //todo: сделать коллаж

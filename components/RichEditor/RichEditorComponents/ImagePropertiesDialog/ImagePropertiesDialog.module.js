@@ -84,6 +84,11 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', ['js!SBIS3.CORE.Com
             ctrlImageWidth.setTooltip(parseInt($image.width(), 10));
             ctrlValueType.setValue(percentSizes ? 'per' : 'pix');
          });
+         if (percentSizes) {
+            var
+               basis = currentHeight.indexOf('%') !== -1 ? currentHeight : currentWidth;
+            currentHeight = currentWidth = basis;
+         }
       }
    });
    moduleClass.title = 'Свойства';
