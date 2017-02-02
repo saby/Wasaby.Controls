@@ -65,8 +65,9 @@ define(
            * @see setDate
            * @see date
            */
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
+
             _CalendarTableBodyTpl: CalendarTableBodyTpl,
             /**
              * Контролл MonthPicker
