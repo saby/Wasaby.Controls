@@ -28,8 +28,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
         * @public
         */
        var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
+          _dotTplFn: dotTplFn,
           $protected: {
-             _dotTplFn: dotTplFn,
              _options: {
                 /**
                  * @cfg {Boolean} Отображать тулбар для touсh устройств
