@@ -2,8 +2,9 @@
  * Created by ps.borisov on 03.12.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
-   'Core/constants'
-], function (constants) {
+   'Core/constants',
+   'Core/markup/ParserUtilitiesNew'
+], function (constants, Parser) {
    'use strict';
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
@@ -66,6 +67,52 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                event.target.style.orphans = oldOrphans;
             });
          }
+      },
+
+      //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+      unDecorateLinks: function(text) {
+         var
+            parsed = Parser.parse(text),
+
+            replaceDecoratedLinks = function(content) {
+               var
+                  i = 0;
+               if (content.childNodes) {
+                  while (i < content.childNodes.length) {
+                     if (getAttribute(content.childNodes[i], 'class') === 'LinkDecorator') {
+                        replaceToHref(content, i);
+                     } else {
+                        replaceDecoratedLinks(content.childNodes[i]);
+                     }
+                     i++;
+                  }
+               }
+            },
+
+            getAttribute = function(node, atrrName){
+               var
+                  j = 0;
+               if (node && node.attributes) {
+                  while (j < node.attributes.length) {
+                     if (node.attributes[j].name === atrrName ) {
+                        return node.attributes[j].value;
+                     }
+                     j++;
+                  }
+               }
+               return false;
+            },
+
+            replaceToHref = function(content, index){
+               var
+                  href = getAttribute(content.childNodes[index], 'href'),
+                  node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
+               content.childNodes[index] = node;
+            };
+
+         replaceDecoratedLinks(parsed);
+
+         return parsed.innerHTML();
       }
    };
 

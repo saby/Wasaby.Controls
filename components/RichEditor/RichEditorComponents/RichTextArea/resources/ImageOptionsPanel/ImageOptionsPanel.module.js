@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'Core/helpers/fast-control-helpers',
       'html!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.CommandsButton',
+      'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel'
    ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
       'use strict';
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             _modifyOptions: function(options) {
                options = ImageOptionsPanel.superclass._modifyOptions.apply(this, arguments);
                if (Di.isRegistered('ImageEditor')) {
-                  options.richMode = true;
+                  options.richMode = this._options.target.attr('alt') !== ''; //если файлы грузили через fileStorageLoader, то не надо показывать редактор изображений
                }
                return options;
             },

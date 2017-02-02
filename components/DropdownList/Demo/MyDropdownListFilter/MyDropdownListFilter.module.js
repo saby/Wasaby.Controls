@@ -15,39 +15,34 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
    function(CompoundControl, DropdownList, FilterButtonMainDemo, dotTplFn) {
       'use strict';
       var MyDropdownList = CompoundControl.extend([],{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _options: {
-               data: [
-                  {
-                     key : 0,
-                     title : rk('Заголовок')
-                  },
-                  {
-                     key : 1,
-                     title : rk('Один')
-                  },
-                  {
-                     key : 2,
-                     title : rk('Два')
-                  },
-                  {
-                     key : 3,
-                     title : rk('Три')
-                  },
-                  {
-                     key : 4,
-                     title : rk('Четыре')
-                  },
-                  {
-                     key : 5,
-                     title : rk('Пять')
-                  }
-               ]
+               data: [{
+                  key : 0,
+                  title : rk('Заголовок')
+               },{
+                  key : 1,
+                  title : rk('Один')
+               },{
+                  key : 2,
+                  title : rk('Два')
+               },{
+                  key : 3,
+                  title : rk('Три')
+               },{
+                  key : 4,
+                  title : rk('Четыре')
+               },{
+                  key : 5,
+                  title : rk('Пять')
+               }]
             }
          },
+
          $constructor: function(){
          },
+
          init: function () {
             var context = this.getLinkedContext();
 
@@ -63,4 +58,5 @@ define('js!SBIS3.CONTROLS.Demo.MyDropdownListFilter',
          }
       });
       return MyDropdownList;
-   });
+   }
+);
