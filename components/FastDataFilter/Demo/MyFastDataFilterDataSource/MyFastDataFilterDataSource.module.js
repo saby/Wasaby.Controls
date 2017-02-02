@@ -17,8 +17,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
    function(CompoundControl, FastDataFilter, FilterButtonMainDemo, dotTplFn) {
       'use strict';
       var MyFastDataFilter = CompoundControl.extend([],{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _options: {
                data: [{
                   idProperty : 'key',
