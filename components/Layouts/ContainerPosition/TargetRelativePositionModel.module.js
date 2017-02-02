@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
       coordinatesType:1,
       originCornerOfTargetRelative:1,
       originCornerOfTarget:1,
-      RelativeOffset:1,
+      relativeOffset:1,
       adapter:1
    },
    TargetRelativePositionModel = $ws.core.extend({
@@ -175,11 +175,16 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
        * Обновляет  targetRelative контейнер(позиция, размеры) в модели
        * @private
        */
-      recalcOffsetOfTargetRelative: function(){
+      recalcPositionOfTargetRelative: function(){
          // обновляем данные контейнеров через адаптер
          this._refreshContainerSize('target');
          this._refreshContainerSize('targetRelative');
          this._refreshContainerOffset('target');
+         // если требуется получить координаты относительно parent container модель парент контейнера через адаптер
+         if(this._coordinatesType !== null){
+            this._refreshContainerOffset('parentContainer');
+            this._refreshContainerSize('parentContainer');
+         }
 
          var originPoint = {};
          // получаем offset точеки отсчета на таргете
@@ -188,12 +193,6 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
          originPoint.onTargetRelative = this._calcOriginPointOfTargetRelative(originPoint.onTarget, this._relativeOffset);
          // выставляем offset targetRelative контейнера по его originCorner
          this._containerModels.targetRelative.setOffsetByCorner( this._originCornerOfTargetRelative , originPoint.onTargetRelative );
-
-         // если требуется получить координаты относительно parent container модель парент контейнера через адаптер
-         if(this._coordinatesType !== null){
-            this._refreshContainerOffset('parentContainer');
-            this._refreshContainerSize('parentContainer');
-         }
 
          // применяем позицию из модели через адаптер
          this._applyPositionOfTargetRelative();
