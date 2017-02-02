@@ -24,9 +24,38 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
-   "Core/helpers/string-helpers"
+   "Core/helpers/string-helpers",
+   "Core/helpers/dom&controls-helpers"
 ],
-   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, footTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemResultTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
+   function(
+      cFunctions,
+      cMerge,
+      constants,
+      Deferred,
+      ListView,
+      dotTplFn,
+      rowTpl,
+      colgroupTpl,
+      headTpl,
+      footTpl,
+      resultsTpl,
+      MarkupTransformer,
+      DragAndDropMixin,
+      ImitateEvents,
+      groupByTpl,
+      Ladder,
+      LadderDecorator,
+      TemplateUtil,
+      ItemTemplate,
+      ItemResultTemplate,
+      ItemContentTemplate,
+      cellTemplate,
+      GroupTemplate,
+      colHelpers,
+      strHelpers,
+      dcHelpers
+   ) {
+
    'use strict';
 
       var _prepareColumns = function(columns, cfg) {
@@ -543,11 +572,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
              trs = [],
              cells = [],
-             index, hoveredColumn, cell, resultTr;
+             index, hoveredColumn, cell, colValue, colValueText;
 
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
+
+            if(!this.getColumns()[index + (this.getMultiselect() ? 1 : 0)].cellTemplate && !td[0].getAttribute('title')) {
+               colValue = td.find('.controls-DataGridView__columnValue')[0];
+               colValueText = colValue.innerText;
+
+               if(dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
+                  colValue.setAttribute('title', colValueText);
+               }
+            }
 
             if (hoveredColumn.columnIndex !== index) {
                this._clearHoveredColumn();
