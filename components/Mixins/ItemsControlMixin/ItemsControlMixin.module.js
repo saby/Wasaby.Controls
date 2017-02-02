@@ -630,7 +630,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
-            easyGroup: false
+            easyGroup: false,
+            task1173537554: false
          },
          _loader: null
 
@@ -1759,6 +1760,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 data: this._options.items,
                 idProperty: this._options.idProperty
              });
+          }
+          else {
+             if (this._options.task1173537554) {
+                this._notifyOnPropertyChanged('items');
+             }
           }
           this.redraw();
       },
