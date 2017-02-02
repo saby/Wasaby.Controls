@@ -355,16 +355,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   self.resetSearch();
                }
 
-               /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
-                  этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
-                  становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
-               if(this.isActive() && !this._isInputVisible()) {
-                  this._getElementToFocus().focus();
-               }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
                   то валидация будет запущена либо эрией, либо по уходу фокуса из поля связи (По стандарту). */
                if(changed.added.length && !self._isEmptySelection()) {
+                  /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
+                     этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
+                     становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
+                  if(this.isActive() && !this._isInputVisible()) {
+                     this._getElementToFocus().focus();
+                  }
                   /* Надо дожидаться загрузки выбранных записей,
                      т.к. часто валидируют именно по ним,
                      или же по значениям в контексте */
@@ -381,9 +381,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           init: function() {
-             var self = this;
+             var self = this,
+                 linkCollection;
 
              FieldLink.superclass.init.apply(this, arguments);
+             linkCollection = this._getLinkCollection();
+             this.subscribeTo(linkCollection, 'onDrawItems', this._onDrawItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onCrossClick', this._onCrossClickItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onItemActivate', this._onItemActivateItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onClosePicker', this._onItemActivateItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onShowPicker', this._onItemActivateItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onFocusIn', function() {
+                    self.setActive(true);
+                 });
 
              if(this._options.useSelectorAction) {
                 this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, result) {
@@ -393,7 +403,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       но по стандарту курсор должен проставиться в поле ввода поля связи после выбора из панели,
                       поэтому руками устанавливаем фокус в поле связи  */
                    self.setActive(true);
-
                    if(result) {
                       self.setSelectedItems(result);
                    }
@@ -406,9 +415,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    которое стреляет раньше фокуса. В противном случае автодополнение будет мограть, если включена опиция autoShow,
                    потому что оно показывается по фокусу. */
                 showAllButton.getContainer().on('mousedown', function () {
-                      self._showAllItems();
-                   }
-                );
+                   self._showAllItems();
+                });
 
                 /* При клике на кнопку переводим нативный фокус обратно в поле ввода */
                 this.subscribeTo(showAllButton, 'onActivated', function() {
@@ -794,13 +802,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
           },
-          _onCrossClickItemsCollection: function(key) {
+          _onCrossClickItemsCollection: function(event, key) {
              this.removeItemsSelection([key]);
              if(!this._options.multiselect && this._options.alwaysShowTextBox) {
                 this.setText('');
              }
+
+             if(this.isActive()) {
+                this._getElementToFocus().focus();
+             }
           },
-          _onItemActivateItemsCollection: function(key) {
+          _onItemActivateItemsCollection: function(event, key) {
              this.getSelectedItems(false).each(function(item) {
                 if(item.get(this._options.idProperty) == key) {
                    this._notify('onItemActivate', {item: item, id: key});
