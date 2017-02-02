@@ -45,17 +45,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _crossContainer: null
       },
       $constructor: function() {
-         var self = this;
-
          this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._getAfterFieldWrapper());
 
          this.subscribe('onTextChange', function(e, text) {
             this._crossContainer.toggleClass('ws-hidden', !text);
          });
 
-         this._crossContainer.click(function() {
-            self.setText('');
-         });
+         this._crossContainer.click(this.resetSearch.bind(this));
       },
 
       _chooseCallback: function(result) {
@@ -73,6 +69,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
+         this._setEqualPickerWidth();
+      },
+
+      _onListDrawItems: function() {
+         SuggestTextBox.superclass._onListDrawItems.apply(this, arguments);
          this._setEqualPickerWidth();
       },
 

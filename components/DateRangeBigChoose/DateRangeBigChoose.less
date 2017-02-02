@@ -218,18 +218,21 @@
             }
          }
       }
+      .controls-DateRangeBigChoose__years-panel-wrapper {
+        .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
+          &:hover {
+             .controls-Link-link {
+                text-decoration: none;
+             }
+          }
+        }
+      }
 
       .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
          margin: 0 22px 0 18px;
          font-size: @date-range-big-choose-years-panel-current-year-button-font-size !important;
          line-height: @date-range-big-choose-years-panel-current-year-button-line-height !important;
-         &:hover {
 
-            .controls-Link-link {
-               text-decoration: none;
-            }
-
-         }
          &:active {
             .box-sizing(border-box);
             color: @date-range-big-choose-boundary-selected-color;
@@ -469,6 +472,7 @@
    }
 
    .controls-DateRangeBigChoose__iconPrevYear {
+     height: 100%;
       background: @date-range-big-left-arrow-icon-bg;
       &:hover {
          background: @date-range-big-left-arrow-icon-hover-bg;
@@ -477,6 +481,7 @@
 
    .controls-DateRangeBigChoose__iconNextYear {
       background: @date-range-big-right-arrow-icon-bg;
+      height: 100%;
       &:hover {
          background: @date-range-big-right-arrow-icon-hover-bg;
       }

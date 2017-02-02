@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       init: function(){
          this._publish('onActivated', 'onArrowActivated');
          BackButton.superclass.init.call(this);
-         this._container.removeClass('ws-area');
+         
          var self = this;
          this._link = this.getChildControlByName('BackButton-caption');
          // Две подписки сделаны для того что бы в тестах можно было стриггерить событие нажатия
