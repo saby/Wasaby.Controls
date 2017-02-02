@@ -315,7 +315,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @param {String} text Текст подсказки.
        * @example
        * <pre>
-       *     if (control.getText() == "") {
+       *     if (control.getText() == '') {
        *        control.setPlaceholder("Введите ФИО полностью");
        *     }
        * </pre>

@@ -1,6 +1,6 @@
 .controls-MyFilterPanel {
    background-color: #ccefff;
-   width: 1000px;
+   width: 1200px;
    height: 750px;
 }
 .controls-MyFilterPanel_tds-FilterPanel {
@@ -20,6 +20,7 @@
    padding: 8px 8px 0 8px;
    box-sizing: border-box;
    border-right: 1px solid black;
+   width: 400px;
 }
 .controls-MyFilterPanelToggleButton {
    margin-top: 12px;

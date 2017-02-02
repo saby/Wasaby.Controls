@@ -37,13 +37,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
              * </pre>
              * @see getLinkedPanel
              */
-            linkedPanel: undefined,
-            /**
-             * @cfg {String} Направление стрелки в кнопки
-             * @variant vertical стрелка раскрытия панели смотрит вниз, стрелка закрытия - вверх
-             * @variant horizontal стрелка раскрытия панели смотрит вправо, стрелка закрытия - влево
-             */
-            panelFloatDirection: 'vertical'
+            linkedPanel: undefined
          },
          _internalHandlers: undefined
       },

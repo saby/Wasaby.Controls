@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (item.isNode()){
                cfg.hasNodes = true;
             }
-            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
@@ -563,7 +563,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              /**
               * @cfg {Boolean}
               */
-            hierarchyViewMode: false
+            hierarchyViewMode: false,
+            /**
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
+             * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
+             * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
+             *
+             */
+            loadItemsStrategy: 'merge'
          },
          _foldersFooters: {},
          _lastParent : undefined,
@@ -717,7 +724,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
-               this._options._items.merge(list, {remove: false});
+               if (this._options.loadItemsStrategy == 'merge') {
+                  this._options._items.merge(list, {remove: false});
+               }
+               else {
+                  this._options._items.append(list);
+               }
                this._getItemProjectionByItemId(id).setLoaded(true);
             }).bind(this))
             .addBoth(function(error){
@@ -981,7 +993,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               self._options._items.merge(dataSet, {remove: false});
+               if (this._options.loadItemsStrategy == 'merge') {
+                  self._options._items.merge(dataSet, {remove: false});
+               }
+               else {
+                  self._options._items.append(dataSet);
+               }
                self._updateItemsToolbar();
                self._dataLoadedCallback();
                self._createFolderFooter(id);
@@ -1123,10 +1140,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       setRoot: function(root) {
          this._options.root = root;
-         // Быстрое решение для изменения корня выборки на текущий раздел
-         if (this._options.task1173527374) {
-            this._previousRoot = undefined;
-         }
+         // при изменении корня, сбросим предыдущий, так как он теряет актуальность
+         this._previousRoot = undefined;
       },
 
 
@@ -1160,7 +1175,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var
             filter = this.getFilter() || {};
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
-         this._destroyEditInPlace();
+         this._destroyEditInPlaceController();
          if (key !== undefined && key !== null) {
             filter[this._options.parentProperty] = key;
          } else {

@@ -1,4 +1,9 @@
 <div class="controls-Menu controls-Menu__Popup">
    <div class="controls-Menu__itemsContainer"></div>
+   {{?it.additionalProperty}}
+   <component data-component="SBIS3.CONTROLS.CommandsSeparator" name="toggleAdditionalItems">
+      <option name="command">toggleAdditionalItems</option>
+   </component>
+   {{?}}
    {{?it.footerTpl}}<div class="controls-Menu__footer">{{=it.footerTpl()}}</div>{{?}}
 </div>

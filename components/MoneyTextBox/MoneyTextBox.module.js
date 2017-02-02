@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
           true
       );
 
-      return value;
+      return value || '';
    }
 
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
@@ -56,10 +56,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              */
             delimiters: true,
             /**
-             * @cfg {Number} Денежное значение контрола
+             * @cfg {String} Денежное значение контрола
              * @example
              * <pre>
-             *     <option name="numericValue">123.456</option>
+             *     <option name="moneyValue">123.456</option>
              * </pre>
              * @see text
              */
@@ -98,6 +98,27 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
             MoneyTextBox.superclass.setEnabled.apply(this, arguments);
          }
       },
+      /**
+       * Возвращает текущее значение денежного поля ввода.
+       * @returns {String} Текущее значение денежного поля ввода.
+       */
+      getMoneyValue: function(){
+         return this._options.moneyValue;
+      },
+      /**
+       * Устанавливает значение денежного поля ввода.
+       * @param value Новое значение поля ввода.
+       */
+      setMoneyValue: function(value){
+         if (value !== this._options.moneyValue){
+            this._setNumericValue(value);
+            this.setText(value + '');
+         }
+      },
+
+      _useNativePlaceHolder: function () {
+        return false;
+      },
 
       _setNumericValue: function(value) {
          if (typeof(value) == 'string'){
@@ -114,6 +135,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setInputValue: function(value) {
+         this._updateCompatPlaceholderVisibility();
          this._inputField[0].innerHTML = value;
       },
 

@@ -80,7 +80,7 @@
 @filter-panel-chooser-default-text-color:                         #8991A9;
 @filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
 @filter-panel-chooser-list-view-item-cursor:                      pointer;
-@filter-panel-chooser-list-view-item-padding:                     6px 0 6px 24px;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
 @filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
@@ -88,7 +88,7 @@
 @filter-panel-chooser-list-view-check-box-left:                   4px;
 @filter-panel-chooser-list-view-count-top:                        6px;
 @filter-panel-chooser-list-view-count-right:                      0;
-@filter-panel-chooser-list-view-count-padding:                    0 8px;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
 @filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-selected-title-color:             @black-color;
@@ -888,7 +888,8 @@
 
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
+@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;

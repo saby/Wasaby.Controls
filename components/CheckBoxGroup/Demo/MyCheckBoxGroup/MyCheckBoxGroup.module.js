@@ -1,11 +1,5 @@
 define('js!SBIS3.CONTROLS.Demo.MyCheckBoxGroup', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Demo.MyCheckBoxGroup', 'css!SBIS3.CONTROLS.Demo.MyCheckBoxGroup', 'js!SBIS3.CONTROLS.CheckBoxGroup'], function(CompoundControl, dotTplFn) {
-   /**
-    * SBIS3.CONTROLS.Demo.MyCheckBoxGroup
-    * @class SBIS3.CONTROLS.Demo.MyCheckBoxGroup
-    * @extends $ws.proto.CompoundControl
-    * @control
-    */
-   var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Demo.MyCheckBoxGroup.prototype */{
+   var moduleClass = CompoundControl.extend({
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -18,13 +12,13 @@ define('js!SBIS3.CONTROLS.Demo.MyCheckBoxGroup', ['js!SBIS3.CORE.CompoundControl
       init: function() {
          moduleClass.superclass.init.call(this);
          this.getChildControlByName('CheckBoxGroup 3').subscribe('onDrawItems', function(eventObject) {
-            this.setSelectedKeys([1, 2])      
+            this.setSelectedKeys([1, 2]);
          });
          this.getChildControlByName('CheckBoxGroup 1').subscribe('onDrawItems', function(eventObject) {
-            this.setSelectedKeys([1])
+            this.setSelectedKeys([1]);
          });
          this.getChildControlByName('CheckBoxGroup 2').subscribe('onDrawItems', function(eventObject) {
-           this.setSelectedKeys([2]) 
+            this.setSelectedKeys([2]) ;
          });
       }
    });

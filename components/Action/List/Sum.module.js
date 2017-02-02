@@ -152,11 +152,14 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                 return Deferred.success(resultRecord);
             },
 
-            _getSumSource: fHelpers.memoize(function() {
-                return new SbisService({
-                    endpoint: "Сумма"
-                });
-            })
+            _getSumSource: function() {
+                if (!this._sumSource) {
+                    this._sumSource = new SbisService({
+                        endpoint: "Сумма"
+                    });
+                }
+                return this._sumSource;
+            }
         });
         return Sum;
     });

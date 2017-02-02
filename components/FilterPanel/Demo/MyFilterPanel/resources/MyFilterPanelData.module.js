@@ -5,27 +5,33 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             id: 'Регион',
             caption: 'Регион',
             expanded: true,
-            value: [11, 12],
+            value: [],
             resetValue: [11],
+            textValue: '',
             template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
             properties: {
-               items: new RecordSet({
-                  rawData: [
-                     {'title': 'Краснодарский край', 'id': 1, count: 11},
-                     {'title': 'Владимирская область', 'id': 2, count: 12},
-                     {'title': 'Нижегородская область', 'id': 3,count: 13},
-                     {'title': 'Астраханская область', 'id': 4,  count: 14},
-                     {'title': 'Белгородская область', 'id': 5, count: 15},
-                     {'title': 'Вологодская область', 'id': 6, count: 16},
-                     {'title': 'Псковская область', 'id': 7, count: 17},
-                     {'title': 'Самарская область', 'id': 8, count: 18},
-                     {'title': 'Ярославская область', 'id': 9, count: 19},
-                     {'title': 'Московская область', 'id': 10, count: 10},
-                     {'title': 'Калужская область', 'id': 11, count: 20},
-                     {'title': 'Республика Крым', 'id': 12, count: 21}
-                  ],
-                  idProperty: 'id'
-               })
+               editor: 'list',
+               properties: {
+                  items: new RecordSet({
+                     rawData: [
+                        {'title': 'Краснодарский край', 'id': 1, count: 11},
+                        {'title': 'Владимирская область', 'id': 2, count: 12},
+                        {'title': 'Нижегородская область', 'id': 3, count: 13},
+                        {'title': 'Астраханская область', 'id': 4, count: 14},
+                        {'title': 'Белгородская область', 'id': 5, count: 15},
+                        {'title': 'Вологодская область', 'id': 6, count: 16},
+                        {'title': 'Псковская область', 'id': 7, count: 17},
+                        {'title': 'Самарская область', 'id': 8, count: 18},
+                        {'title': 'Ярославская область', 'id': 9, count: 19},
+                        {'title': 'Московская область', 'id': 10, count: 10},
+                        {'title': 'Калужская область', 'id': 11, count: 20},
+                        {'title': 'Республика Крым', 'id': 12, count: 21}
+                     ],
+                     idProperty: 'id'
+                  }),
+                  idProperty: 'id',
+                  displayProperty: 'title'
+               }
             }
          },
          {
@@ -34,6 +40,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             id: 'Покупатель',
             value: [1],
             resetValue: [],
+            textValue: 'Сергей Лукьяненко',
             template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
             properties: {
                editor: 'fieldLink',
@@ -102,6 +109,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             id: 'Поставщики с избранными',
             value: [1,2],
             resetValue: [],
+            textValue: 'ВТБ Капитал, АО, НК "Роснефть", ОАО',
             template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
             properties: {
                items: new RecordSet({
@@ -112,18 +120,38 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
                   idProperty: 'id'
                }),
                editor: 'favorites',
-               dictionaryTemplate: 'js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate',
-               favoritesCount: 49,
+               dictionaryOptions: {
+                  template: 'js!SBIS3.CONTROLS.Demo.FilterViewDemoTemplate'
+               },
+               favoritesCount: 10,
                favorites: new RecordSet({
-                  rawData:[
-                     { id: 1, title: 'ВТБ Капитал, АО', count: 10 },
-                     { id: 2, title: 'НК "Роснефть", ОАО', count: 39 }
+                  rawData: [
+                     {id: 1, title: 'ВТБ Капитал, АО', count: 10},
+                     {id: 2, title: 'НК "Роснефть", ОАО', count: 39}
                   ],
                   idProperty: 'id'
-               })
+               }),
+               defaultItems: new RecordSet({
+                  rawData: [
+                     {id: 1, title: 'ВТБ Капитал, АО', count: 10},
+                     {id: 2, title: 'НК "Роснефть", ОАО', count: 39}
+                  ],
+                  idProperty: 'id'
+               }),
+               properties: {
+                  items: new RecordSet({
+                     rawData: [
+                        {id: 1, title: 'ВТБ Капитал, АО', count: 10},
+                        {id: 2, title: 'НК "Роснефть", ОАО', count: 39}
+                     ],
+                     idProperty: 'id'
+                  }),
+                  idProperty: 'id',
+                  displayProperty: 'title'
+               }
             }
          },
-         {
+         /*{
             caption: 'Стоимость',
             expanded: true,
             id: 'Стоимость',
@@ -136,13 +164,14 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
                middleLabel: '-',
                endLabel: '₽'
             }
-         },
-         {
-            caption: 'ЖНВЛП очень длинный текст очень длинный текст очень длинный текст',
+         },*/
+         /*{
+            caption: 'ЖНВЛП',
             expanded: true,
             id: 'ЖНВЛП',
             value: true,
             resetValue: false,
+            textValue: 'ЖНВЛП',
             template: 'js!SBIS3.CONTROLS.FilterPanelBoolean',
             className: 'controls-FilterPanelItem__withSeparator'
          },
@@ -152,14 +181,16 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
             id: 'В наличии',
             value: false,
             resetValue: false,
+            textValue: '',
             template: 'js!SBIS3.CONTROLS.FilterPanelBoolean'
-         },
+         },*/
          {
             caption: 'Оплата',
             expanded: true,
             id: 'Оплата',
             value: 'yes',
             resetValue: null,
+            textValue: 'Оплачено',
             template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
             properties: {
                editor: 'radio',
@@ -171,6 +202,34 @@ define('js!SBIS3.CONTROLS.Demo.MyFilterPanelData', ['js!WS.Data/Collection/Recor
                      rawData: [
                         {id: 'yes', title: 'Оплачено'},
                         {id: 'no', title: 'Не оплачено'}
+                     ],
+                     idProperty: 'id'
+                  })
+               }
+            }
+         },
+         {
+            id: 'Детализация',
+            caption: 'Детализация',
+            expanded: true,
+            value: [{
+               id: 1,
+               hierarchy: true
+            }],
+            resetValue: [],
+            textValue: '',
+            template: 'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
+            properties: {
+               editor: 'details',
+               properties: {
+                  idProperty: 'id',
+                  displayProperty: 'title',
+                  items: new RecordSet({
+                     rawData: [
+                        { id: 1, 'title': 'Номенклатура', hierarchy: false },
+                        { id: 2, 'title': 'Ответственный', hierarchy: true },
+                        { id: 3, 'title': 'Покупатель', hierarchy: null },
+                        { id: 4, 'title': 'Склад', hierarchy: false }
                      ],
                      idProperty: 'id'
                   })
