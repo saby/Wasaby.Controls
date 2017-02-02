@@ -62,7 +62,7 @@ define([
       MockAdapter.prototype.getContainerOffset = function(containerName){
          return this.offsets[containerName];
       };
-      MockAdapter.prototype.setOffsetOfTargetRelative = function(coordinatesType , coordinates){
+      MockAdapter.prototype.setCoordinatesOfTargetRelative = function(coordinatesType , coordinates){
          this.coordinates = coordinates;
       };
 
@@ -79,7 +79,7 @@ define([
                horizontal: 'right',
                vertical: 'bottom'
             },
-            cornerToCornerOffset: {
+            relativeOffset: {
                top: 100,
                left: 50
             }
@@ -134,17 +134,17 @@ define([
          });
       });
 
-      describe('.setCornerToCornerOffset(offset)', function() {
+      describe('.setRelativeOffset(offset)', function() {
          it('should throw an error for invalid "offset" argument', function() {
             for(var i=0; i < testVariantsOf_Offset.length; i++){
                assert.throws(function() {
-                  TRPModel.setCornerToCornerOffset(testVariantsOf_Offset[i]);
+                  TRPModel.setRelativeOffset(testVariantsOf_Offset[i]);
                }, TypeError);
             }
          });
       });
 
-      describe('.recalculate() && .getCoordinates()', function() {
+      describe('.setCoordinatesType() + .recalcPositionOfTargetRelative()', function() {
          it('should return correct coordinates by each coordinates type', function() {
             var testScenario = [
                {// this scenario checks recalculate method
@@ -167,36 +167,32 @@ define([
                }
             ];
 
-            TRPModel.recalculate();
-
             for(var i =0; i < testScenario.length; i++){
                TRPModel.setCoordinatesType(testScenario[i].coordinatesType);
-               assert.deepEqual(testScenario[i].rightAnswer , TRPModel.getCoordinates());
+               TRPModel.recalcPositionOfTargetRelative();
+               assert.deepEqual(testScenario[i].rightAnswer , mockAdapter.coordinates);
             };
          });
       });
 
-      describe('.move(offset)', function() {
-         it('should move container into correct coordinates(recalculate and pass coordinates using adapter)', function() {
-            TRPModel.move({top: 99, left: 51});
-            assert.deepEqual({bottom: 701, right: 749}, mockAdapter.coordinates);
-         });
-
-      });
-
-      describe('.setOriginCornerOfTarget(originCorner) + move', function() {
-         it('same as .move(offset) test but origin corner of target was changed', function() {
+      describe('.setOriginCornerOfTarget(originCorner) + .recalcPositionOfTargetRelative()', function() {
+         it('same as .recalcPositionOfTargetRelative() test but origin corner of target was changed', function() {
             TRPModel.setOriginCornerOfTarget({vertical:'top', horizontal:'left'});
-            TRPModel.move({top: 99, left: 51});
-            assert.deepEqual({bottom: 711, right: 759}, mockAdapter.coordinates);
+            TRPModel.recalcPositionOfTargetRelative();
+            assert.deepEqual({bottom: 710, right: 760}, mockAdapter.coordinates);
+         });
+         it('same as .recalcPositionOfTargetRelative() test but origin corner of targetRelative was changed', function() {
+            TRPModel.setOriginCornerOfTargetRelative({vertical:'top', horizontal:'right'});
+            TRPModel.recalcPositionOfTargetRelative();
+            assert.deepEqual({bottom: 700, right: 850}, mockAdapter.coordinates);
          });
       });
 
-      describe('.setOriginCornerOfTarget(originCorner) + move', function() {
+      describe('.setOriginCornerOfTarget(originCorner) + .recalcPositionOfTargetRelative()', function() {
          it('same as .move(offset) test but origin corner of targetRelative was changed', function() {
-            TRPModel.setOriginCornerOfTargetRelative({vertical:'bottom', horizontal:'right'});
-            TRPModel.move({top: 99, left: 51});
-            assert.deepEqual({bottom: 801, right: 849}, mockAdapter.coordinates);
+            TRPModel.setRelativeOffset({top: 101, left: 51});
+            TRPModel.recalcPositionOfTargetRelative();
+            assert.deepEqual({bottom: 699, right: 749}, mockAdapter.coordinates);
          });
       });
    });
