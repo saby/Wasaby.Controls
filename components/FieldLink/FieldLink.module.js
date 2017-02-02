@@ -353,16 +353,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   self.resetSearch();
                }
 
-               /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
-                  этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
-                  становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
-               if(this.isActive() && !this._isInputVisible()) {
-                  this._getElementToFocus().focus();
-               }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
                   то валидация будет запущена либо эрией, либо по уходу фокуса из поля связи (По стандарту). */
                if(changed.added.length && !self._isEmptySelection()) {
+                  /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
+                     этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
+                     становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
+                  if(this.isActive() && !this._isInputVisible()) {
+                     this._getElementToFocus().focus();
+                  }
                   /* Надо дожидаться загрузки выбранных записей,
                      т.к. часто валидируют именно по ним,
                      или же по значениям в контексте */
@@ -803,6 +803,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.removeItemsSelection([key]);
              if(!this._options.multiselect && this._options.alwaysShowTextBox) {
                 this.setText('');
+             }
+
+             if(this.isActive()) {
+                this._getElementToFocus().focus();
              }
           },
           _onItemActivateItemsCollection: function(event, key) {
