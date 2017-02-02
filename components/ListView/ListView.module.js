@@ -1077,7 +1077,11 @@ define('js!SBIS3.CONTROLS.ListView',
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
             var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+               recordItems = this.getItems(),
+               recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
+               itemsProjection = this._getItemsProjection(),
+               selectedInstanceId = itemsProjection.getItemBySourceIndex(recordIndex).getInstanceId(),
+               selectedItem = $('[data-hash="' + selectedInstanceId + '"]', this._getItemsContainer()),
                index = items.index(selectedItem),
                siblingItem;
             if (isNext) {
