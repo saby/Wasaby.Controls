@@ -381,6 +381,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._subscribeTargetMove();
          this.recalcPosition(true);
       },
+      /**
+       * Получить текущий  таргет
+       */
+      getTarget: function() {
+         return this._options.target
+      },
 
       /**
        * Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.
@@ -868,8 +874,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('width', '');
                this._overflowedH = false;
             }
-            if (this._options.bodyBounds && offset.left < 0) {
-               offset.left = 0;
+            if (this._options.bodyBounds) {
+               if (offset.left < 0) {
+                  offset.left = 0;
+               }
+               if (this._containerSizes.requiredOffset.left > this._windowSizes.width) {
+                  offset.left = this._windowSizes.width - this._containerSizes.originWidth;
+               }
             }
             return offset.left;
          }

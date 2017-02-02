@@ -2,7 +2,7 @@
    .controls-ListView {
       .controls-ListView__itemsContainer {
          .controls-ListView__item {
-            display: flex;
+            .flexbox();
             cursor: @filter-panel-chooser-list-view-item-cursor;
             padding: @filter-panel-chooser-list-view-item-padding;
             background-color: @filter-panel-chooser-list-view-item-bg;
@@ -16,10 +16,7 @@
             .controls-FilterPanelChooser__title {
                width: 100%;
                padding: 6px 0;
-               //Во всех браузерах flex-shrink по умолчанию имеет значение 1, но в IE10 значение 0. Из за этого flex
-               //элементы не могут ужиматься. Выставим значение сами, чтобы везде оно было равно 1.
-               //http://stackoverflow.com/questions/29562755/flexbox-ie10-width-issues
-               flex-shrink: 1;
+               .flex-shrink(1);
                color: @filter-panel-chooser-list-view-title-color;
                max-height: @filter-panel-chooser-list-view-title-max-height;
                overflow: hidden;
