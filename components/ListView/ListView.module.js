@@ -55,7 +55,9 @@ define('js!SBIS3.CONTROLS.ListView',
    "i18n!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.DragEntity.List",
    "js!WS.Data/MoveStrategy/Base",
-   "js!SBIS3.CONTROLS.ListView.Mover"
+   "js!SBIS3.CONTROLS.ListView.Mover",
+   'css!SBIS3.CONTROLS.ListView',
+   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
@@ -2298,7 +2300,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
          },
-         
+
          _addItems: function(newItems, newItemsIndex, groupId){
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
@@ -2307,7 +2309,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
             return items.length;
          },
@@ -2514,7 +2516,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
                this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
@@ -2583,7 +2585,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
-            
+
             this._needScrollCompensation = false;
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
