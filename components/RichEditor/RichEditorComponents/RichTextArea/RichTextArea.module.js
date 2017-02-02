@@ -897,15 +897,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                meta = fileobj.id || '',
                URL = this._prepareImageURL(fileobj);
+            //todo:classes
             switch (key) {
                case "1":
-                  this._insertImg(URL, 'float:left; ', meta);
+                  this._insertImg(URL, 'image-float-left', meta);
                   break;
                case "2":
                   this._insertImg(URL, '', meta, '<p style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
-                  this._insertImg(URL, 'float:right; ', meta);
+                  this._insertImg(URL, 'image-float-right ', meta);
                   break;
                case "4":
                   //todo: сделать коллаж
@@ -976,7 +977,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
          },
 
-         _smileHtml: function(smile, name, alt) {
+         _smileHtml: function(smile) {
             return '&#' + smile.code + ';';
          },
 
@@ -1522,7 +1523,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function(path, styles, meta,  before, after) {
+         _insertImg: function(path, className, meta,  before, after) {
             var
                self = this,
                img =  $('<img src="' + path + '"></img>').css({
@@ -1541,8 +1542,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
                   maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
-                  style = ' style="' + styles + ' width: 25%"';
-               self.insertHtml(before + '<img class="controls-RichEditor__noneditable" src="' + path + '"' + style + ' alt="' + meta + '" data-mce-resize="false"></img>'+ after);
+                  style = ' style="width: 25%"';
+               self.insertHtml(before + '<img class="controls-RichEditor__noneditable ' + className + '" src="' + path + '"' + style + ' alt="' + meta + '" data-mce-resize="false"></img>'+ after);
             });
             if (cConstants.browser.isIE8) {
                $('body').append(img);
