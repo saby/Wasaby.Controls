@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
        * Обновляет  targetRelative контейнер(позиция, размеры) в модели
        * @private
        */
-      recalcOffsetOfTargetRelative: function(){
+      recalcPositionOfTargetRelative: function(){
          // обновляем данные контейнеров через адаптер
          this._refreshContainerSize('target');
          this._refreshContainerSize('targetRelative');
