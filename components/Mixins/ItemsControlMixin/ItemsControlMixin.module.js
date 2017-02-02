@@ -1528,17 +1528,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(fHelpers.forAliveOnly(function (error) {
-                   if (!error.canceled) {
-                      self._toggleIndicator(false);
-                      if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-                         error.message = error.message.toString().replace('Error: ', '');
-                         fcHelpers.alert(error);
-                         error.processed = true;
-                      }
-                   }
-                   return error;
-                }, self));
+                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
@@ -1555,6 +1545,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _loadErrorProcess: function(error) {
+         if (!error.canceled) {
+            this._toggleIndicator(false);
+            if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+               error.message = error.message.toString().replace('Error: ', '');
+               fcHelpers.alert(error);
+               error.processed = true;
+            }
+         }
+         return error;
+      },
 
       _getFilterForReload: function() {
          return this._options.filter;
