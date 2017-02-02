@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.OpenDialogAction",
-   "i18n!SBIS3.CONTROLS.FormController"
+   "i18n!SBIS3.CONTROLS.FormController",
+   'css!SBIS3.CONTROLS.FormController'
 ],
    function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
    /**
@@ -191,7 +192,6 @@ define('js!SBIS3.CONTROLS.FormController', [
              * }
              * </pre>
              * @see getDataSource
-             * @see setDataSource
              */
             dataSource: {
             }
@@ -479,7 +479,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @deprecated
        * @return {Object} Объект с конфигурацией источника данных.
        * @remark
-       * Чтобы установить источник данных, используют метод {@link setDataSource}.
        * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS.DialogActionBase}.
        * @example
        * В примере продемонстрирована задача изменения списочного метода источника данных
@@ -502,36 +501,8 @@ define('js!SBIS3.CONTROLS.FormController', [
       isNewRecord: function(){
          return this._newRecord;
       },
-      /**
-       * Устанавливает источник данных диалогу редактирования.
-       * @deprecated
-       * @remark
-       * Для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
-       * Чтобы получить объект источника данных, используют метод {@link getDataSource}.
-       * @param {DataSource} source Источник данных.
-       * @param {Object} config
-       *    Структура конфига:
-       *    {
-       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
-       *      hideIndicator: Boolean               //Не показывать индикатор
-       *    }
-       * @example
-       * <pre>
-       *    var dataSource = new SbisService({ // Инициализация источника данных
-       *       endpoint: 'Товар' // Устанавливаем объект бизнес-логики
-       *    });
-       *    this.setDataSource(dataSource); // Устанавливаем источник данных диалогу редактирования
-       * </pre>
-       * @see dataSource
-       * @see getDataSource
-       */
-      setDataSource: function(source, config){
-         IoC.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
-         this._dataSource = source;
-         return this._getRecordFromSource(config)
-      },
-      _setDataSource: function(source){
-         this._dataSource = source;
+      setDataSource: function (source, config) {
+         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/create/');
       },
       /**
        * Устанавливает запись, по данным которой производится инициализация данных диалога.
@@ -688,19 +659,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onReadModel'
             },
             self = this,
-            readDeferred,
-            key;
+            key = (config && config.key) || this._options.key,
+            readDeferred;
 
-         //TODO Выпилить в 200, все должны уже блыи перейти на объект
-         if (typeof(config) !== 'object'){
-            key = config;
-            config = {};
-            IoC.resolve('ILogger').log('FormController', 'команда read в качестве аргумента принимает объект');
-         }
-         else {
-            key = config.key;
-         }
-         key = key || this._options.key;
          readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
@@ -741,12 +702,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see dataSource
        */
       update: function(config){
-         if (typeof(config) !== 'object'){
-            config = {
-               closePanelAfterSubmit: config
-            };
-            IoC.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
-         }
          return this._prepareUpdatingRecord(config);
       },
 
@@ -968,7 +923,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
-      //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
+      //Функционал, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
          var options = this.getComponentOptions(opt),
              dataSource,

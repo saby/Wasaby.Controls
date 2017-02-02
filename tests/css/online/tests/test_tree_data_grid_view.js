@@ -479,7 +479,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[sbisname="TreeDataGridView 1"]', 40000);
                 this.data1 = find('[data-id="1"]');
-				this.data1_expand = find('[data-id="0"] .controls-TreeView__expand');
+				this.data1_expand = find('[data-id="1"] .controls-TreeView__expand');
 				this.more = '.controls-TreePager-container';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');
@@ -499,7 +499,7 @@ gemini.suite('SBIS3.CONTROLS.TreeDataGridView Online', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="TypeNomenclature"]', 40000);
                 this.data1 = find('[data-id="1"]');
-				this.data1_expand = find('[data-id="0"] .controls-TreeView__expand');
+				this.data1_expand = find('[data-id="1"] .controls-TreeView__expand');
 				this.more = '.controls-TreePager-container';
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input');

@@ -202,7 +202,7 @@
 }
 
 .marker(@position: left top, @image: 'img/rowSelect.png') {
-  background-image: url(@image);
+  background-image: url("@{themeName}/@{image}");
   background-position: @position;
   background-repeat: repeat-y;
 }
@@ -257,6 +257,14 @@
    -ms-flex-align: @align; //ie10
    -ms-align-items: @align;
    align-items: @align;
+}
+
+.order(@val) {
+  -webkit-box-ordinal-group: @val;
+  -moz-box-ordinal-group: @val;
+  -ms-flex-order: @val;
+  -webkit-order: @val;
+  order: @val;
 }
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
 //ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.

@@ -200,11 +200,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'image',
          componentType: 'SBIS3.CONTROLS.Button',
-         tooltip: rk('Вставить картинку'),
          icon: 'sprite:icon-16 icon-Picture icon-primary',
+         tooltip: 'Вставить изображение',
          handlers: {
-            onActivated: function(event, originalEvent) {
-               this.getParent()._selectFile(originalEvent);
+            onActivated: function() {
+               this.getParent()._openImagePanel(this);
             }
          },
          order: 120

@@ -7,11 +7,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.RichEditorToolbarBase",
    "html!SBIS3.CONTROLS.RichEditorToolbar",
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
+   'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown"
-], function( cMerge,RichEditorToolbarBase, dotTplFn, defaultConfig) {
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   'css!SBIS3.CONTROLS.RichEditorToolbar',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton'
+], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
 
@@ -31,41 +35,47 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          $protected : {
             _options : {
                /**
-                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок
-                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете
+                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок.
+                * @remark
+                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете.
+                * <br/>
                 * Список стандартных кнопок:
                 * <ol>
-                *    <li>undo - Шаг назад;</li>
-                *    <li>redo - Шаг вперед;</li>
-                *    <li>style - Стиль текста;</li>
-                *    <li>bold - Полужирный;</li>
-                *    <li>italic - Курсив;</li>
-                *    <li>underLine - Подчеркнутый;</li>
-                *    <li>strike - Зачеркнутый;</li>
-                *    <li>justify - Выравнивание текста;</li>
-                *    <li>color - Цвет текста;</li>
-                *    <li>list - Вставить/Удалить список;</li>
-                *    <li>link - Вставить/редактировать ссылку;</li>
-                *    <li>unlink - Убрать ссылку;</li>
-                *    <li>image - Вставить картинку;</li>
-                *    <li>smile - Смайлики;</li>
+                *    <li>undo - шаг назад;</li>
+                *    <li>redo - шаг вперед;</li>
+                *    <li>style - стиль текста;</li>
+                *    <li>bold - полужирный;</li>
+                *    <li>italic - курсив;</li>
+                *    <li>underLine - подчеркнутый;</li>
+                *    <li>strike - зачеркнутый;</li>
+                *    <li>justify - выравнивание текста;</li>
+                *    <li>color - цвет текста;</li>
+                *    <li>list - вставить/Удалить список;</li>
+                *    <li>link - вставить/редактировать ссылку;</li>
+                *    <li>unlink - убрать ссылку;</li>
+                *    <li>image - вставить картинку;</li>
+                *    <li>smile - смайлики;</li>
                 *    <li>source - html-разметка;</li>
                 *    <li>paste - вставка с сохранением стилей</li>
                 * </ol>
-                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}
-                * componentType - обязательный параметр определяющий вид компонента
-                * name - имя компонента по которому можно получить элемент тулбара
+                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
+                * <ul>
+                *    <li>componentType - обязательный параметр, определяющий вид компонента</li>
+                *    <li>name - имя компонента, по которому можно получить элемент тулбара.</li>
+                * </ul>
                 * @example
-                * <options name="items" type="array">
-                *        <options>
-                *           <option name="name">myButton</option>
-                *           <option name="componentType">SBIS3.CONTROLS.Button</option>
-                *           <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
-                *           <options name="handlers">
-                *              <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
-                *           </options>
-                *        </options>
-                *</options>
+                * <pre>
+                *    <options name="items" type="array">
+                *       <options>
+                *          <option name="name">myButton</option>
+                *          <option name="componentType">SBIS3.CONTROLS.Button</option>
+                *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
+                *          <options name="handlers">
+                *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
+                *          </options>
+                *       </options>
+                *    </options>
+                * </pre>
                 */
                items: undefined,
                defaultConfig: defaultConfig
@@ -261,6 +271,32 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
+         getImagePanel: function(button){
+            var
+               self = this;
+            if (!this._imagePanel) {
+               this._imagePanel = new ImagePanel({
+                  parent: button,
+                  target: button.getContainer(),
+                  corner: 'tr',
+                  closeByExternalClick: true,
+                  verticalAlign: {
+                     side: 'top',
+                     offset: -4
+                  },
+                  horizontalAlign: {
+                    side: 'right'
+                  },
+                  element: $('<div></div>'),
+                  imageFolder: self.getLinkedEditor()._options.imageFolder
+               });
+               this._imagePanel.subscribe('onImageChange', function(event, key, fileobj){
+                  self._insertImageTemplate(key, fileobj);
+               });
+            }
+            return this._imagePanel;
+         },
+
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
          _execCommand : function(name) {
             if (this._options.linkedEditor) {
@@ -292,12 +328,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
-         _selectFile: function(originalEvent) {
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor._getFileLoader().selectFile(originalEvent);
-            }
-         },
-
          _insertSmile: function(smile) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertSmile(smile);
@@ -314,6 +344,17 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             if (this._options.linkedEditor) {
                this._options.linkedEditor.toggleContentSource();
             }
+         },
+         _insertImageTemplate: function(key, fileobj) {
+            if (this._options.linkedEditor) {
+               this._options.linkedEditor.insertImageTemplate(key, fileobj);
+            }
+         },
+
+         _openImagePanel: function(button){
+            var
+               imagePanel = this.getImagePanel(button);
+            imagePanel.show();
          },
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
 

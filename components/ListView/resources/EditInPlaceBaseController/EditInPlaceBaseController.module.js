@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
    function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
@@ -424,30 +425,33 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   deferred,
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
-                  deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
-                     eip.acceptChanges();
-                     if (self._editingRecord) {
-                        self._editingRecord.merge(eipRecord);
-                        self._editingRecord = undefined;
-                     }
-                     if (self._isAdd) {
-                        if (self._options.items && self._options.items.getFormat().getCount()) {
-                           self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
-                        } else {
-                           self._options.items.add(eipRecord);
-                        }
-                     }
-                  }).addErrback(function(error) {
-                     fcHelpers.alert(error);
-                  });
-               } else {
-                  if (this._isAdd && eipRecord.getId()) {
-                     deferred = this._options.dataSource.destroy(eipRecord.getId());
+                  if (this._options.dataSource) {
+                     deferred = this._options.dataSource.update(eipRecord).addCallback(function () {
+                        self._acceptChanges(eip, eipRecord);
+                     }).addErrback(function (error) {
+                        fcHelpers.alert(error);
+                     });
                   } else {
-                     deferred = Deferred.success()
+                     this._acceptChanges(eip, eipRecord);
+                  }
+               } else if (this._isAdd && eipRecord.getId() && this._options.dataSource) {
+                  deferred = this._options.dataSource.destroy(eipRecord.getId());
+               }
+               return deferred || Deferred.success();
+            },
+            _acceptChanges: function(eip, record) {
+               eip.acceptChanges();
+               if (this._editingRecord) {
+                  this._editingRecord.merge(record);
+                  this._editingRecord = undefined;
+               }
+               if (this._isAdd) {
+                  if (this._options.items && this._options.items.getFormat().getCount()) {
+                     this._options.items.add(DataBuilder.reduceTo(record, this._options.items.getFormat(), this._options.items.getModel()));
+                  } else {
+                     this._options.items.add(record);
                   }
                }
-               return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
                var isAdd = this._isAdd;

@@ -7,7 +7,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "Core/detection",
+   'css!SBIS3.CONTROLS.TextBox'
+
 ], function(
     EventBus,
     constants,
@@ -175,6 +178,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      }
                      text = newText;
                   }
+                  text = self._formatText(text);
                   self._drawText(text);
                   /* Событие paste может срабатывать:
                      1) При нажатии горячих клавиш
@@ -185,7 +189,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
                      которые на это рассчитывают.
                    */
-                  self._setTextByKeyboard(self._formatText(text));
+                  self._setTextByKeyboard(text);
                }
             }, 100);
          });
@@ -315,7 +319,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @param {String} text Текст подсказки.
        * @example
        * <pre>
-       *     if (control.getText() == "") {
+       *     if (control.getText() == '') {
        *        control.setPlaceholder("Введите ФИО полностью");
        *     }
        * </pre>

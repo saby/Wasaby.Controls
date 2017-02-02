@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.CheckBox', [
    "js!SBIS3.CONTROLS.Checkable",
    "tmpl!SBIS3.CONTROLS.CheckBox",
    "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
-   "js!SBIS3.CONTROLS.ITextValue"
+   "js!SBIS3.CONTROLS.ITextValue",
+   'css!SBIS3.CONTROLS.CheckBox'
 ], function( constants,ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';

@@ -1,14 +1,30 @@
 define('js!SBIS3.CONTROLS.TextArea', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.TextArea",
+   "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
-   "Core/helpers/dom&controls-helpers",
-   "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin"
-], function( constants,TextBoxBase, dotTplFn, strHelpers, dcHelpers) {
+   "Core/IoC",
+   "Core/constants",
+   'css!SBIS3.CONTROLS.TextArea'
+], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, cConst) {
 
    'use strict';
 
+   function generateClassesName(min, max) {
+      if (!max || max < min) {
+         max = min;
+      }
+      return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
+   }
+
+   function prepareTextForDisplay(text, needToWrap) {
+      var dispText = strHelpers.escapeHtml(text || '') + '';
+      if (needToWrap) {
+         dispText = strHelpers.wrapURLs(dispText);
+      }
+      dispText = dispText.replace(/\n/g, '<br/>');
+      return dispText;
+   }
    /**
     * Многострочное поле ввода - это текстовое поле с автовысотой.
     * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
@@ -73,28 +89,18 @@ define('js!SBIS3.CONTROLS.TextArea', [
              */
             minLinesCount: 0,
             /**
-             * @typedef {Object} AutoResize
-             * @property {Boolean} [state=false] Включёно/выключено автоматическое подстраивание по высоте.
-             * @property {Number} maxLinesCount Максимальное количество строк.
-             */
-            /**
-             * @cfg {AutoResize} Автоматическое подстраивание по высоте, если текст не помещается
+             * @cfg {Number} Максимальное количество строк
              * @example
              * <pre>
-             *    <options name="autoResize">
-             *        <option name="state">true</option>
-             *        <option name="maxLinesCount">10</option>
-             *    </options>
+             *     <option name="maxLinesCount">4</option>
              * </pre>
              * @remark
-             * В данной опции можно:
-             * <ul>
-             *    <li>включить автоматическое изменение высоты многострочного поля ввода, например, при нехватке строк;</li>
-             *    <li>задать максимальное количество строк.</li>
-             * </ul>
-             * По достижению максимального количества строк поле ввода больше не будет увеличиваться по высоте, и
-             * появится вертикальная полоса прокрутки.
+             * При несовпадении максимального и минимального количества строк у поля ввода включится автовысота
              * @see minLinesCount
+             */
+            maxLinesCount: 0,
+            /**
+             * @deprecated
              */
             autoResize: {},
             /**
@@ -109,6 +115,17 @@ define('js!SBIS3.CONTROLS.TextArea', [
          }
       },
 
+      _modifyOptions: function(cfg) {
+         var newCfg = TextArea.superclass._modifyOptions.apply(this, arguments);
+         if (cfg.autoResize && cfg.autoResize.maxLinesCount) {
+            cfg.maxLinesCount = cfg.autoResize.maxLinesCount;
+            IoC.resolve('ILogger').log('TextArea', 'Опция cfg.autoResize устарела - используйте maxLinesCount');
+         }
+         newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.maxLinesCount);
+         newCfg.displayedText = prepareTextForDisplay(cfg.text, !cfg.enabled);
+         return newCfg;
+      },
+
       $constructor: function() {
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
@@ -116,7 +133,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
-            var text = self._inputField.val();
+            var text = self._getTextFromMarkup();
             if (self._options.trim) {
                text = String.trim(text);
             }
@@ -136,6 +153,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== constants.key.esc && event.which !== constants.key.tab) {
                event.stopPropagation();
             }
+            self._keyDownBind(event)
          });
 
          this._inputField.bind('paste', function(){
@@ -143,8 +161,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
-                  self.setText.call(self, self._formatText(self._inputField.val()));
-                  self._inputField.val(self._options.text);
+                  self.setText.call(self, self._formatText(self._getTextFromMarkup()));
+                  self._inputField.get(0).innerText = self._options.text;
                }
             }, 100)
          });
@@ -152,79 +170,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       init :function(){
          TextArea.superclass.init.call(this);
-         var self = this;
-         if (this._options.placeholder && !constants.compatibility.placeholder) {
-            this._createCompatPlaceholder();
-         }
-         if (this._options.autoResize.state) {
-            this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
-            if (!this._options.autoResize.maxLinesCount) {
-               this._options.autoResize.maxLinesCount = 100500;
-            }
-            this._options.autoResize.maxLinesCount = parseInt(this._options.autoResize.maxLinesCount, 10);
-            if (this._options.minLinesCount > this._options.autoResize.maxLinesCount) {
-               this._options.autoResize.maxLinesCount = this._options.minLinesCount;
-            }
-            this._inputField.data('minLinesCount', this._options.minLinesCount);
-            this._inputField.data('maxLinesCount', this._options.autoResize.maxLinesCount);
-
-            this._cachedW = this._inputField.width();
-            this._cachedH = this._inputField.height();
-
-            var trg = dcHelpers.trackElement(this._container, true);
-
-            this._autosizeTextArea();
-
-            trg.subscribe('onVisible', function (event, visible) {
-               if (visible) {
-                  var w = self._inputField.width();
-                  var h = self._inputField.height();
-                  if (w != self._cachedW || h != self._cachedH) {
-                     self._cachedW = w;
-                     self._cachedH = h;
-                     self._autosizeTextArea(true);
-                  }
-               }
-            });
-
-         } else {
-            if (this._options.minLinesCount){
-               this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
-            }
-            this._removeAutoSizeDognail();
-         }
-      },
-
-      _removeAutoSizeDognail: function() {
-         //Автовысота считается на клиенте отложенно. А высота контрола стоит авто именно по размерам текстареи
-         //поэтому на момент, когда она еще не посчиталась абсолютное позиционирование дизаблед враппера снято и высота считается исходя из размеров враппера
-         //controls-TextArea__heightInit навешивает абсолютное позиционирование после расчета высоты и высота начинает считаться исходя из размеров area
-
-         //так же при отключенном абсолютном позиционировании если на text-area ws-invisible, то еще добавляется ее высота
-         //поэтому изначально скрываем ws-hidden, а потом уже делаем ws-invisible
-         if (!this.isEnabled()) {
-            this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
-         }
-         else {
-            $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
-            this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
-            if (!this._options.text) {
-               $('.controls-TextArea__disabled-wrapper', this._container.get(0)).empty();
-               $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('controls-TextArea__disabled-wrapper-empty');
-            }
-         }
-      },
-
-      _autosizeTextArea: function(hard){
-         var self = this;
-         this._inputField.autosize({
-            callback: self._notifyOnSizeChanged(self, self),
-            hard: hard
-         });
-
-
-         this._removeAutoSizeDognail();
-         this._container.addClass('controls-TextArea__heightInit');
+         this._initPlaceholder();
       },
 
       _getElementToFocus: function() {
@@ -233,20 +179,37 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
-         this._inputField.toggleClass('ws-invisible', !state);
-         this._disabledWrapper.toggleClass('ws-hidden', state);
-         if (!state){
-            this._inputField.attr('readonly', 'readonly')
-         } else {
-            this._inputField.removeAttr('readonly');
+         this._inputField.attr('contenteditable', !!state);
+         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text || !state);
+         this._insertTextToMarkup(this._options.text);
+      },
+
+      _prepareTextBecauseFFBug: function(text) {
+         //в файрфоксе есть баг с 2011 года при котором во время ввода и последующей очистки contenteditable там оказывается пустой фантомный br
+         if (cConst.browser.firefox && text.length == 1 && text == '\n') {
+            return '';
+         }
+         else {
+            return text;
          }
       },
 
-      setText: function(text){
-         TextArea.superclass.setText.call(this, text);
-         var newText = strHelpers.escapeHtml(text);
-         this._disabledWrapper.html(strHelpers.wrapURLs(newText));
-         this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !text);
+      _drawText: function(text) {
+         this._updateCompatPlaceholderVisibility();
+         if (this._getTextFromMarkup() != text) {
+            this._insertTextToMarkup(text);
+         }
+      },
+
+      _insertTextToMarkup: function(text) {
+         var dispText = prepareTextForDisplay(text, !this._options.enabled);
+         this._inputField.get(0).innerHTML = dispText || '';
+      },
+
+      _getTextFromMarkup: function() {
+         var text = this._inputField.get(0).innerText;
+         text = this._prepareTextBecauseFFBug(text);
+         return text;
       },
 
       _processNewLine: function(event) {
@@ -260,12 +223,25 @@ define('js!SBIS3.CONTROLS.TextArea', [
          }
       },
 
+      _keyDownBind: function(event) {
+         var text = this._getTextFromMarkup();
+         //TODO опасная проверка, но я пока не нашел случаев чтоб она не сработала
+         if (this._options.enabled && event.key && event.key.length == 1) {
+            //отключаем плейсхолдер на ввод первого символа
+            this._compatPlaceholder.addClass('ws-hidden');
+            //не даем вводить больше maxLength
+            if (text && this._options.maxLength && text.length >= this._options.maxLength) {
+               event.preventDefault();
+            }
+         }
+      },
+
       _keyUpBind: function(event) {
          var
-            newText = this._inputField.val(),
+            newText = this._getTextFromMarkup(),
             key = event.which || event.keyCode,
             textsEmpty = this._isEmptyValue(this._options.text) && this._isEmptyValue(newText);
-         if (newText != this._options.text && !textsEmpty) {
+         if (!textsEmpty) {
             this.setText.call(this, newText);
          }
          if (!this._processNewLine(event) && ((key === constants.key.enter && !event.ctrlKey) ||
@@ -286,35 +262,14 @@ define('js!SBIS3.CONTROLS.TextArea', [
         * @see placeholder
         */
       setPlaceholder: function(text){
-          if (!constants.compatibility.placeholder) {
-             if (!this._compatPlaceholder) {
-                this._createCompatPlaceholder();
-             }
-             this._compatPlaceholder.text(text || '');
-          }
-          else {
-             this._inputField.attr('placeholder', text);
-          }
+          this._compatPlaceholder.text(text || '');
       },
-      _createCompatPlaceholder : function() {
+      _initPlaceholder : function() {
          var self = this;
-         this._compatPlaceholder = $('<div class="controls-TextArea__placeholder">' + this._options.placeholder + '</div>');
-         this._updateCompatPlaceholderVisibility();
-         this._inputField.after(this._compatPlaceholder);
-         this._compatPlaceholder.css({
-            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
-            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
-         });
-         this._compatPlaceholder.click(function(){
-            if (self.isEnabled()) {
-               self._inputField.get(0).focus();
-            }
-         });
+         this._compatPlaceholder = $('.controls-TextArea__placeholder', this._container.get(0));
       },
       _updateCompatPlaceholderVisibility: function() {
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!this._options.text);
-         }
+         this._compatPlaceholder.toggleClass('ws-hidden', !!this._options.text || !this._options.enabled);
       },
        /**
         * Метод установки минимального количества строк.
@@ -327,35 +282,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
         * </pre>
         * @see minLinesCount
         */
-      setMinLinesCount: function(count) {
-         var cnt = parseInt(count, 10);
-         this._options.minLinesCount = cnt;
-         this._inputField.attr('rows', cnt);
-         this._inputField.data('minLinesCount', count);
-         this._inputField.trigger('autosize.resize');
-      },
-
-      _drawText: function(text) {
-         this._updateCompatPlaceholderVisibility();
-         if (this._inputField.val() != text) {
-            this._inputField.val(text || '');
-         }
-         if (this._options.autoResize.state) {
-            this._inputField.trigger('autosize.resize');
-         }
-      },
-
-      setMaxLength: function(num) {
-         TextArea.superclass.setMaxLength.call(this, num);
-         this._inputField.attr('maxlength',num);
-      },
-
-      destroy: function() {
-         if (this._options.autoResize.state) {
-            this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
-         }
-         TextArea.superclass.destroy.apply(this, arguments);
-      }
+       setMinLinesCount: function (count) {
+          this._options.minLinesCount = parseInt(count, 10);
+          var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
+          this._inputField.get(0).className = 'controls-TextArea__inputField ' + hClasses;
+       }
    });
 
    return TextArea;

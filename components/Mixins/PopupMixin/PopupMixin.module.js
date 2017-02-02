@@ -184,9 +184,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             'left': '-10000px'
          });
 
-         //TODO: Придрот
-         container.removeClass('ws-area');
-         /********************************/
 
          this._initOppositeCorners();
 
@@ -380,6 +377,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._checkFixed(target);
          this._subscribeTargetMove();
          this.recalcPosition(true);
+      },
+      /**
+       * Получить текущий  таргет
+       */
+      getTarget: function() {
+         return this._options.target
       },
 
       /**

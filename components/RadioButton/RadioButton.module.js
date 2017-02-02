@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.RadioButton'], function(RadioButtonBase,dotTplFn) {
+define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'html!SBIS3.CONTROLS.RadioButton', 'css!SBIS3.CONTROLS.RadioButton'], function(RadioButtonBase,dotTplFn) {
 
    'use strict';
 

@@ -69,6 +69,10 @@
    &.controls-DropdownList__type-filter:hover{
       .controls-DropdownList__afterCaptionWrapper{
          display: block;
+         .controls-DropdownList__crossIcon{
+            color: @gray-ccc-color!important;
+            cursor: pointer;
+         }
       }
    }
    &.ws-disabled{
@@ -87,6 +91,13 @@
        }
      }
    }
+
+   &.ws-validation-error {
+      outline: 1px solid @red-color;
+      outline-offset: -1px;
+      background-color: @text-box-error-bg;
+   }
+
    &.controls-DropdownList__defaultItem{
      .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper{
        color: #999;
@@ -459,31 +470,4 @@
      display: inline-block;
      display: inline-flex;
   }
-}
-
-/* Все ie без поддержки flexBox'a
-   TODO: Выпилить 1 января 2017 года
-*/
-.ws-is-ie8, .ws-is-ie9 {
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      .controls-DropdownList__header {
-         height: 24px;
-      }
-      .controls-DropdownList__body {
-         .controls-DropdownList__item .controls-DropdownList__itemTextWrapper {
-            .controls-DropdownList__item-text-shadow {
-               display: none;
-            }
-            .controls-DropdownList__item-text {
-               padding-right: 16px;
-            }
-         }
-      }
-
-      &.controls-popup-revert-horizontal {
-         .controls-DropdownList__body {
-            margin-top: @DropdownList-height;
-         }
-      }
-   }
 }

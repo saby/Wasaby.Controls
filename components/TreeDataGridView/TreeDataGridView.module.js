@@ -12,7 +12,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    "Core/ConsoleLogger",
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.Link',
+   'css!SBIS3.CONTROLS.TreeDataGridView',
+   'css!SBIS3.CONTROLS.TreeView'
 ], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
@@ -303,20 +305,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                allowChangeEnable: false,
                handlers: {
                   onActivated: function () {
-                     var hoveredItem = self.getHoveredItem(),
-                         id = hoveredItem.key;
-
-                     // TODO для обратной совместимости - удалить позже
-                     if(self._options.arrowActivatedHandler) {
-                        IoC.resolve('ILogger').error('SBIS3.CONTROLS.TreeDataGridView', 'Опция arrowActivatedHandler помечена как deprecated и будет удалена в 3.7.5');
-                        self._options.arrowActivatedHandler.call(this,
-                            hoveredItem.record,
-                            id,
-                            hoveredItem.container
-                        );
-                     } else {
-                        self._activateItem(id);
-                     }
+                     var id = self.getHoveredItem().key;
+                     self._activateItem(id);
                      self.setSelectedKey(id);
                   }
                }

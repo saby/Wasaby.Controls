@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Selectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DecorableMixin",
-   "js!SBIS3.CONTROLS.DragNDropMixinNew",
+   "js!SBIS3.CONTROLS.DragNDropMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CORE.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
@@ -48,19 +48,22 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
+   'js!SBIS3.CONTROLS.CursorListNavigation',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
    "i18n!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.DragEntity.List",
    "js!WS.Data/MoveStrategy/Base",
-   "js!SBIS3.CONTROLS.ListView.Mover"
+   "js!SBIS3.CONTROLS.ListView.Mover",
+   'css!SBIS3.CONTROLS.ListView',
+   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation) {
 
      'use strict';
 
@@ -79,7 +82,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         START_NEXT_LOAD_OFFSET = 800,
+         START_NEXT_LOAD_OFFSET = 400,
          DRAG_META_INSERT = {
             on: 'on',
             after: 'after',
@@ -271,7 +274,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onBeginDelete Происходит перед удалением записей.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
-          * @returns {*|Boolean} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
+          * @returns {*|Boolean|Deferred} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
           */
          /**
           * @typedef {String} MovePosition
@@ -741,6 +744,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see showPaging
                 */
                partialPaging: true,
+               navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
@@ -784,6 +788,10 @@ define('js!SBIS3.CONTROLS.ListView',
             dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
             dispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
             dispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
+
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation = new CursorNavigation(this._options.navigation);
+            }
          },
 
          init: function () {
@@ -799,7 +807,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart', this._eventProxyHandler.bind(this));
+            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHandler.bind(this));
          },
 
          _modifyOptions : function(opts){
@@ -882,7 +890,15 @@ define('js!SBIS3.CONTROLS.ListView',
                case 'taphold':
                   this._container.removeClass(mobFix);
                   break;
-
+               case 'contextmenu':
+                  this._contextMenuHandler(e);
+                  break;
+               case 'mousedown':
+                  this._mouseDownHandler(e);
+                  break;
+               case 'mouseup':
+                  this._mouseUpHandler(e);
+                  break;
             }
          },
 
@@ -998,8 +1014,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
          _allowDelete: function() {
-            var itemActions = this.getItemsActions();
-            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
+            var
+                delInstance,
+                itemActions = this.getItemsActions();
+
+            if (itemActions) {
+               delInstance = itemActions.getItemInstance('delete');
+            }
+            return this.isEnabled() && !!delInstance && delInstance.isVisible();
          },
          /**
           * Возвращает следующий элемент
@@ -1276,6 +1298,40 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _contextMenuHandler: function(event){
+            var itemsActions = this.getItemsActions(),
+                align = {
+                   verticalAlign: {
+                      side: 'top',
+                      offset: event.pageY
+                   },
+                   horizontalAlign: {
+                      side: 'left',
+                      offset: event.pageX
+                   }
+                };
+
+            if(this._hoveredItem && this._hoveredItem.container && itemsActions && itemsActions.hasVisibleActions() && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+               event.preventDefault();
+               event.stopPropagation();
+               itemsActions.showItemActionsMenu(align);
+            }
+         },
+
+         _mouseDownHandler: function(event){
+            var itemsActions = this.getItemsActions();
+           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
+              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           }
+         },
+
+         _mouseUpHandler: function(event){
+            if(this._itemsToolbar && event.button === 2){
+               this._itemsToolbar.getContainer().removeClass('controls-ItemsToolbar__hidden');
+            }
+         },
+
          /**
           * Установить что отображается при отсутствии записей.
           * @param html Содержимое блока.
@@ -1515,6 +1571,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hoveredItem = {};
             this._unlockItemsToolbar();
             this._hideItemsToolbar();
+            this._destroyEditInPlace();
             this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
          },
@@ -1615,7 +1672,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else if (this._isClickEditMode()) {
                   this._toggleEipClickHandlers(false);
                }
-               this._destroyEditInPlace();
+               this._destroyEditInPlaceController();
                this._options.editMode = editMode;
                if (this._isHoverEditMode()) {
                   this._toggleEipHoveredHandlers(true);
@@ -1670,7 +1727,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //разрушать редактирование нужно как при enabled = false так и при enabled = true. У нас предусмотрено
             //редактирование задизабленного браузера, и настройки редакторов для задизабленного режима, может отличаться
             //от раздизабленного.
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
          },
 
          _startEditOnItemClick: function(event, id, model, originalEvent) {
@@ -1713,10 +1770,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
-            if (this._hasEditInPlace()) {
-               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-               this._getEditInPlace()._destroyEip();
-            }
+            this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
          },
@@ -1762,13 +1816,21 @@ define('js!SBIS3.CONTROLS.ListView',
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
-         _destroyEditInPlace: function() {
+         _destroyEditInPlaceController: function() {
             if (this._hasEditInPlace()) {
                this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
          },
+
+         _destroyEditInPlace: function() {
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
+               this._getEditInPlace()._destroyEip();
+            }
+         },
+
          _getEditInPlaceConfig: function() {
             var
                config = {
@@ -1875,7 +1937,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._lastDeleteActionState = undefined;
                }
                // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-               if (this.getHoveredItem().container) {
+               if (this.getHoveredItem().container && !this._touchSupport) {
                   this._notifyOnChangeHoveredItem();
                } else {
                   this._hideItemsToolbar();
@@ -2214,6 +2276,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
+            ListView.superclass._onResizeHandler.call(this);
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
@@ -2237,7 +2300,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._preScrollLoading();
             }
          },
-         
+
          _addItems: function(newItems, newItemsIndex, groupId){
             ListView.superclass._addItems.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
@@ -2246,7 +2309,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне 
+         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
             return items.length;
          },
@@ -2453,7 +2516,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
                this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
@@ -2522,7 +2585,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
-            
+
             this._needScrollCompensation = false;
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
@@ -2839,7 +2902,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updatePaging();
          },
          _getQueryForCall: function(filter, sorting, offset, limit){
-            var query = new Query();
+            var
+               query = new Query(),
+               queryFilter = filter;
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               queryFilter = $ws.core.clone(filter);
+               var addParams = this._listNavigation.prepareQueryParams(this._options._getItemsProjection(), this._infiniteScrollState.mode);
+               $ws.core.merge(queryFilter, addParams);
+            }
             query.where(filter)
                .offset(offset)
                .limit(limit)
@@ -2991,7 +3061,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager = undefined;
                this._pagerContainer = undefined;
             }
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
          /**
@@ -3130,7 +3200,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getEditInPlace().endEdit(true);
          },
          destroy: function () {
-            this._destroyEditInPlace();
+            this._destroyEditInPlaceController();
             if (this._scrollWatcher) {
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
@@ -3154,6 +3224,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
+            }
+            if (this._listNavigation) {
+               this._listNavigation.destroy();
             }
             ListView.superclass.destroy.call(this);
          },
@@ -3547,7 +3620,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(models, target.getModel(), position);
+            return this._getMover().move(movedItems, target, position);
          },
          //endregion moveMethods
          /**
@@ -3627,36 +3700,52 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
           */
          deleteRecords: function(idArray, message) {
-            var self = this;
+            var
+                self = this,
+                beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
             idArray = Array.isArray(idArray) ? cFunctions.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             return fcHelpers.question(message).addCallback(function(res) {
                if (res) {
-                  if (self._notify('onBeginDelete', idArray) !== false) {
-                     self._toggleIndicator(true);
-                     return self._deleteRecords(idArray).addCallback(function () {
-                        //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                        if (self.getDataSource()) {
-                           return self._reloadViewAfterDelete(idArray).addCallback(function() {
-                              self._syncSelectedKeys();
-                           });
-                        } else {
-                           self._syncSelectedKeys();
-                        }
+                  beginDeleteResult = self._notify('onBeginDelete', idArray);
+                  if (beginDeleteResult instanceof Deferred) {
+                     beginDeleteResult.addCallback(function(result) {
+                        self._deleteRecords(idArray, result);
                      }).addErrback(function (result) {
-                        fcHelpers.alert(result)
-                     }).addBoth(function (result) {
-                        self._toggleIndicator(false);
-                        self._notify('onEndDelete', idArray, result);
+                        fcHelpers.alert(result);
                      });
+                  } else {
+                     self._deleteRecords(idArray, beginDeleteResult);
                   }
                }
             });
          },
 
-         _deleteRecords: function(idArray) {
+         _deleteRecords: function(idArray, beginDeleteResult) {
+            var self = this;
+            if (beginDeleteResult !== false) {
+               this._toggleIndicator(true);
+               return this._deleteRecordsFromData(idArray).addCallback(function () {
+                  //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
+                  if (self.getDataSource()) {
+                     return self._reloadViewAfterDelete(idArray).addCallback(function() {
+                        self._syncSelectedKeys();
+                     });
+                  } else {
+                     self._syncSelectedKeys();
+                  }
+               }).addErrback(function (result) {
+                  fcHelpers.alert(result)
+               }).addBoth(function (result) {
+                  self._toggleIndicator(false);
+                  self._notify('onEndDelete', idArray, result);
+               });
+            }
+         },
+
+         _deleteRecordsFromData: function(idArray) {
             var
                 items = this.getItems(),
                 source = this.getDataSource();
@@ -3696,6 +3785,23 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         getTextValue: function() {
+            var
+                selectedItem,
+                textValues = [];
+            if (this._options.multiselect) {
+               this.getSelectedItems().each(function(item) {
+                  textValues.push(item.get(this._options.displayProperty));
+               }, this);
+            } else {
+               selectedItem = this.getItems().getRecordById(this.getSelectedKey());
+               if (selectedItem) {
+                  textValues.push(selectedItem.get(this._options.displayProperty));
+               }
+            }
+            return textValues.join(', ');
          }
       });
 

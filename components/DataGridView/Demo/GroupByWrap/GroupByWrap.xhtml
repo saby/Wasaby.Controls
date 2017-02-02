@@ -1,0 +1,16 @@
+<div class='docs-GroupByWrap'>
+   <component data-component="SBIS3.CONTROLS.DataGridView" name="ContactsList">
+      <option name="idProperty">@ТелефонныйСправочник3</option>
+      <option name="easyGroup">true</option> <!-- Временная опция для быстрой отрисовки группировки в списке -->
+      <options name="groupBy">
+          <option name="field">Имя</option> <!-- Группировка по полю "Имя" -->
+          <option name="contentTemplate">html!SBIS3.DOCS.GroupByWrap/resources/groupTemplate</option> <!-- Шаблон заголовка группы -->
+      </options>
+      <options name="itemsActions" type="array"></options>
+      <options name="columns" type="array">
+          <options>
+              <option name="cellTemplate">html!SBIS3.DOCS.GroupByWrap/resources/itemTemplate</option>
+          </options>
+      </options>
+   </component>
+</div>

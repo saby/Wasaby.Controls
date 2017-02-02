@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin'], function(DataGridView, CompositeViewMixin) {
+define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js!SBIS3.CONTROLS.CompositeViewMixin', 'css!SBIS3.CONTROLS.CompositeView', 'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'], function(DataGridView, CompositeViewMixin) {
    'use strict';
 
       /**

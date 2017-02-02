@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove',
-   'js!SBIS3.CONTROLS.MenuIcon'
+   'js!SBIS3.CONTROLS.MenuIcon',
+   'css!SBIS3.CONTROLS.OperationsPanel'
 ], function(Control, dotTplFn, DSMixin, colHelpers, fHelpers, mkpHelpers, cInstance, StickyHeaderManager) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
@@ -124,7 +125,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       $constructor: function() {
          this._initBlocks();
          this._publish('onToggle');
-         this._container.removeClass('ws-area');
+         
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);

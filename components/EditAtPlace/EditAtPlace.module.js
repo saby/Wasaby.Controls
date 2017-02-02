@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
-      'i18n!SBIS3.CONTROLS.EditAtPlace'
+      'i18n!SBIS3.CONTROLS.EditAtPlace',
+      'css!SBIS3.CONTROLS.EditAtPlace'
    ],
    function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn, strHelpers) {
       'use strict';
@@ -110,7 +111,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self._clickHandler();
             });
             /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
-            this._container.removeClass('ws-area');
+            
             
             //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a) 
             var decorators = this._container.attr('decorators');

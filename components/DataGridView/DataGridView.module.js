@@ -24,13 +24,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
-   "Core/helpers/string-helpers"
+   "Core/helpers/string-helpers",
+   'css!SBIS3.CONTROLS.DataGridView'
 ],
    function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, footTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemResultTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
    'use strict';
 
-      var ANIMATION_DURATION = 500, //Продолжительность анимации скролла заголовков
-         _prepareColumns = function(columns, cfg) {
+      var _prepareColumns = function(columns, cfg) {
             var columnsNew = cFunctions.clone(columns);
             for (var i = 0; i < columnsNew.length; i++) {
                if (columnsNew[i].cellTemplate) {
@@ -242,6 +242,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
+    * @demo SBIS3.DOCS.GroupByWrap Группировка записей.
     *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -249,6 +250,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    * @cssModifier controls-DataGridView__sidePadding-12 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 12px.
+    * @cssModifier controls-DataGridView__sidePadding-16 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 16px.
+    * @cssModifier controls-DataGridView__sidePadding-20 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 20px.
+    * @cssModifier controls-DataGridView__sidePadding-24 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 24px.
     *
     * @control
     * @public
@@ -295,7 +300,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _options: {
-            _headTpl: headTpl,
             _footTpl: footTpl,
             _colGroupTpl: colgroupTpl,
             _defaultCellTemplate: cellTemplate,
@@ -375,6 +379,34 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @see getColumns
              */
             columns: [],
+            /**
+             * @cfg {String} Устанавливает шаблон для шапки таблицы
+             * @remark
+             * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
+             * @example
+             * 1. Подключаем шаблон в массив зависимостей:
+             * <pre>
+             *     define('js!SBIS3.Demo.nDataGridView',
+             *        [
+             *           ...,
+             *           'html!SBIS3.Demo.nDataGridView/resources/headTpl'
+             *        ],
+             *        ...
+             *     );
+             * </pre>
+             * 2. Передаем шаблон в опцию:
+             * <pre class="brush: xml">
+             *     <option name="headTpl" value="html!SBIS3.Demo.nDataGridView/resources/headTpl"></option>
+             * </pre>
+             * 3. Содержимое шаблона должно начинаться с тега thead, для которого установлен атрибут class со значением "controls-DataGridView__thead".
+             * <pre>
+             *    <tr class="controls-DataGridView__thead">
+             *       ...
+             *    </tr>
+             * </pre>
+             * @see showHead
+             */
+            headTpl: headTpl,
             /**
              * @cfg {Boolean} Устанавливает отображение заголовков колонок списка.
              * @example
@@ -643,7 +675,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData = prepareHeadData(this._options);
          headData.columnsScrollPosition = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
-         headMarkup = MarkupTransformer(this._options._headTpl(headData));
+         headMarkup = MarkupTransformer(this._options.headTpl(headData));
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
@@ -1002,8 +1034,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _dragEnd: function() {
-         this._animationAtPartScrollDragEnd();
-
          /* Навешиваем класс на body,
             это самый оптимальный способ избавиться от выделения */
          constants.$body.removeClass('ws-unSelectable');
@@ -1013,39 +1043,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._thumb.removeClass('controls-DataGridView__PartScroll__thumb-clicked');
          this._scrollingNow = false;
          this._lastLeftPos = null;
-      },
-
-      /*
-       * Анимация по окончании скролла заголовков
-       * Используется для того, чтобы в редактировании по месту не было обрезков при прокрутке
-       */
-      _animationAtPartScrollDragEnd: function() {
-         /* Не надо анимировать если:
-            - нет элементов
-            - скролл у крайней правой координаты */
-         if(this._currentScrollPosition === this._stopMovingCords.right || !this.getItems().getCount()) {
-            return;
-         }
-         //Найдём элемент, который нужно доскроллить
-         var arrowRect = this._arrowLeft[0].getBoundingClientRect(),
-             elemToScroll = document.elementFromPoint(arrowRect.left + arrowRect.width / 2, arrowRect.top + arrowRect.height + 1),
-             elemWidth,
-             delta;
-
-         //Если нашли, то рассчитаем куда и на сколько нам скролить
-         if(elemToScroll) {
-            delta = arrowRect.left - elemToScroll.getBoundingClientRect().left;
-            elemWidth = elemToScroll.offsetWidth;
-
-            //Подключим анимацию
-            this._container.addClass('controls-DataGridView__PartScroll__animation');
-            this._moveThumbAndColumns({left: this._currentScrollPosition - ((delta > elemWidth / 2  ? - (elemWidth - delta) : delta) / this._partScrollRatio)});
-
-            //Тут приходится делать таймаут, чтобы правильно прошло выключение-включение анимации
-            setTimeout(function() {
-               this._container.removeClass('controls-DataGridView__PartScroll__animation')
-            }.bind(this), ANIMATION_DURATION);
-         }
       },
 
       _getDragContainer: function() {
@@ -1229,7 +1226,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
           /* При установке колонок, надо сбросить частичный скролл */
           this._currentScrollPosition = 0;
           checkColumns(this._options);
-          this._destroyEditInPlace();
+          this._destroyEditInPlaceController();
        },
 
       _oldRedraw: function() {

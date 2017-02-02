@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ws="ws-component">
+<head>
+   <title>Theme-preview</title>
+   <script type="text/javascript">
+      window.wsConfig = {
+         WSRootPath: '/sbis3-ws/ws/',
+         wsRoot: '/sbis3-ws/ws/',
+         WSTheme: 'wi_scheme',
+         resourceRoot: '/components',
+         nostyle: true,
+         globalConfigSupport: false
+      };
+      window.WSTheme = 'wi_scheme';
+   </script>
+   <script type="text/javascript" id="dev-style-enable">
+      (function () {
+         window.wsConfig.nostyle = false;
+      })();
+   </script>
+   <link rel="icon" type="image/png" href="data:image/jpeg;base64,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" />
+   <script type="text/javascript" data-pack-name="contents" src="/components/contents.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-min.js"></script>
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/ext/jquery-cookie-min.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
+   <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
+   <link rel="stylesheet" type="text/css" href="/sbis3-ws/ws/css/core.css"/>
+   <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
+
+   <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
+   <script src="/theme-preview/preview.js"></script>
+
+   <style>
+   div#content {
+      width: 50%;
+   }
+      html, body {
+         font-family: 'TensorFont' !important;
+         font-size: 13px;
+         margin: 0 !important;
+         height: 100%;
+      }
+
+    @font-face {
+        font-family: 'TensorFont';
+        src: url('/sbis3-ws/ws/css/themes/webfonts/TensorFont/TensorFont.eot');
+        src: url('/sbis3-ws/ws/css/themes/webfonts/TensorFont/TensorFont.eot?#iefix') format('embedded-opentype'), url('/sbis3-ws/ws/css/themes/webfonts/TensorFont/TensorFont.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      .zButton {
+         width: 100%;
+         text-align: left;
+      }
+      @-moz-document url-prefix() {
+         .zButton {
+            width: auto;
+            min-width: 100%;
+         }
+      }
+      #sidemenu span {
+         display: inline-block;
+         width: 40%;
+      }
+      #sidemenu input {
+          display: inline-block;
+          width: 50%;
+          background-color: rgba(51, 51, 51, 0.58) !important;
+          color: #fff;
+          border: 1px solid #333;
+          line-height: 24px;
+          font-size: 1.12rem;
+          padding: 6px;
+          border-bottom-color: rgba(0, 255, 255, 0.62);
+ }
+ #sidemenu input:hover {
+   border: 1px solid #555;
+   border-bottom-color: cyan;
+ }
+      #TextBox2 {
+         width: 100px;
+      }
+
+      td {
+         padding-top: 5px;
+         padding-right: 20px;
+      }
+      .myButton {
+   -moz-box-shadow:inset 0px 34px 0px -15px #b54b3a;
+   -webkit-box-shadow:inset 0px 34px 0px -15px #b54b3a;
+   box-shadow:inset 0px 34px 0px -15px #b54b3a;
+   background-color:#a73f2d;
+   border:1px solid #a73f2d;
+   display:inline-block;
+   cursor:pointer;
+   color:#ffffff;
+
+   font-weight:bold;
+   padding:9px 23px;
+   text-decoration:none;
+   text-shadow:0px -1px 0px #7a2a1d;
+}
+.myButton:hover {
+   background-color:#b34332;
+}
+.myButton:active {
+   position:relative;
+   top:1px;
+}
+
+      #container {
+  display: flex;
+    flex-flow: row wrap;
+    height: auto;
+
+  flex-direction: row;/* or inline-flex */
+}
+.row {
+   margin: 24px;
+   display: inline-block;
+}
+#sidemenu {
+   width: 23%;
+   padding:8px;
+   height: auto;
+   background: rgba(0,0,0,.8);
+   margin-right: 40px;
+   box-shadow: 4px 1px 14px 0px rgba(50, 50, 50, 0.32);
+   color: #ddd !important;
+}
+.menu_item {
+   margin-top: 0px;
+}
+.menu_title {
+   margin-right: 8px;
+}
+   </style>
+   <script type="text/javascript" id="ws-include-css"></script>
+   <link rel="stylesheet" type="text/css" href="../fonts/index.css"/>
+   <link rel="stylesheet" type="text/css" href="../icons/index.css"/>
+   <link rel="stylesheet" id="controls-theme" type="text/css" href="../themes/online/online.css"/>
+</head>
+<body>
+<div id="container">
+<div id="sidemenu">
+<select>
+  <option value="Online">Online</option>
+  <option value="Presto">Presto</option>
+  <option value="Carry">Carry</option>
+
+</select>
+   <h3>Colors</h3>
+   <button class="myButton" style="float: right;margin-top: -44px;" id="apply">apply</button>
+   <br>
+   <div class="menu_item">    <span class="menu_title">default-color</span>    <input type="text" id="default-color"> </div> <div class="menu_item">    <span class="menu_title">primary-color</span>    <input type="text" id="primary-color"> </div> <div class="menu_item">    <span class="menu_title">primary-text-color</span>    <input type="text" id="primary-text-color"> </div>  <div class="menu_item">    <span class="menu_title">secondary-bg-color</span>    <input type="text" id="default-bg-color"> </div> <div class="menu_item">    <span class="menu_title">primary-bg-color</span>    <input type="text" id="primary-bg-color"> </div> <div class="menu_item">    <span class="menu_title">hovered-text-color</span>    <input type="text" id="hovered-text-color"> </div>   <div class="menu_item">    <span class="menu_title">hovered-bg-color</span>    <input type="text" id="hovered-bg-color"> </div>  <div class="menu_item">    <span class="menu_title">primary-hovered-bg-color</span>    <input type="text" id="primary-hovered-bg-color"> </div>  <div class="menu_item">    <span class="menu_title">primary-hovered-text-color</span>    <input type="text" id="primary-hovered-text-color"> </div> <br/> <h3>Sizes</h3> <br/> <div class="menu_item">    <span class="menu_title">tiny-size</span>    <input type="text" id="tiny-size"> </div>  <div class="menu_item">    <span class="menu_title">border-radius</span>    <input type="text" id="border-radius"> </div>  <div class="menu_item">    <span class="menu_title">default-size</span>    <input type="text" id="default-size"> </div> 
+
+   <div class="menu_item"> 
+      <span class="menu_title">big-border-radius</span> 
+      <input type="text" id="big-border-radius"> 
+   </div>  
+   <div class="menu_item"> 
+      <span class="menu_title">default-font-size</span> 
+      <input type="text" id="default-font-size"> 
+   </div>  
+   <div class="menu_item"> 
+      <span class="menu_title">big-font-size</span> 
+      <input type="text" id="big-font-size"> 
+   </div>  
+
+</div>
+   <div id="content">
+
+ <h3>Кнопки</h3>
+      <ul class="preview-list clearfix">
+         <li>
+            <div class="row">
+               <div id="normalDefaultButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalDisabledDefaultButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalDefaultToggleButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalEllipsisDefaultButton" class="controls-Button__ellipsis" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="normalMultilineDefaultButton" class="" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="normalMultilineDefaultButton16" class="" style="width: 150px;"></div>
+            </div>
+            <div class="row">
+               <div id="normalDefaultButton16"></div>
+            </div>
+            <div class="row">
+               <div id="normalDefaultButton24"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDisabledDefaultButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultToggleButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigEllipsisDefaultButton" class="controls-Button__big controls-Button__ellipsis" style="width: 100px;"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultButton16" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDefaultButton24" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigToggleButton24" class="controls-Button__big"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="normalPrimaryButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalDisabledPrimaryButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalPrimaryToggleButton"></div>
+            </div>
+            <div class="row">
+               <div id="normalEllipsisPrimaryButton" class="controls-Button__ellipsis" style="width: 70px;"></div>
+            </div>
+            <div class="row">
+               <div id="normalPrimaryButton16"></div>
+            </div>
+            <div class="row">
+               <div id="normalTogglePrimaryButton16"></div>
+            </div>
+            <div class="row">
+               <div id="normalPrimaryButton24"></div>
+            </div>
+            <div class="row">
+               <div id="normalTogglePrimaryButton24"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigDisabledPrimaryButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryToggleButton" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigEllipsisPrimaryButton" class="controls-Button__big controls-Button__ellipsis" style="width: 100px;"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryButton16" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigPrimaryButton24" class="controls-Button__big"></div>
+            </div>
+            <div class="row">
+               <div id="bigToggleButton16" class="controls-Button__big"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="link"></div>
+            </div>
+            <div class="row">
+               <div id="iconButton" class="controls-IconButton__round-border"></div>
+            </div>
+            <div class="row">
+               <div id="tabButton1"></div>
+               <div id="tabButton2"></div>
+               <div id="tabButton3"></div>
+            </div>
+            <div class="row">
+               <div id="tabButtons"></div>
+            </div>
+         </li>
+      </ul>
+
+      <h3>Переключатели</h3>
+      <ul class="preview-list clearfix">
+         <li>
+            <div class="row">
+               <div id="checkBox1"></div>
+            </div>
+            <div class="row">
+               <div id="checkBox2"></div>
+            </div>
+            <div class="row">
+               <div id="checkBox3"></div>
+            </div>
+            <div class="row">
+               <div id="checkBox4"></div>
+            </div>
+            <div class="row">
+               <div id="checkBox5"></div>
+            </div>
+            <div class="row">
+               <div id="checkBoxGroup1"></div>
+            </div>
+            <div class="row">
+               <div id="checkBoxGroup2" class="controls-ButtonGroup__vertical"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="radioButton1"></div>
+            </div>
+            <div class="row">
+               <div id="radioButton2"></div>
+            </div>
+            <div class="row">
+               <div id="radioButton3"></div>
+            </div>
+            <div class="row">
+               <div id="radioGroup1"></div>
+            </div>
+            <div class="row">
+               <div id="radioGroup2" class="controls-ButtonGroup__vertical controls-Radio__primary"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="switcher11"></div>
+            </div>
+            <div class="row">
+               <div id="switcher12"></div>
+            </div>
+            <div class="row">
+               <div id="switcher13"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="switcher21"></div>
+            </div>
+            <div class="row">
+               <div id="switcher22"></div>
+            </div>
+            <div class="row">
+               <div id="switcher23"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="switcher31" class="controls-SwitcherDouble__primary"></div>
+            </div>
+            <div class="row">
+               <div id="switcher32"></div>
+            </div>
+            <div class="row">
+               <div id="switcher33"></div>
+            </div>
+         </li>
+      </ul>
+
+      <h3>Меню</h3>
+      <ul class="preview-list clearfix">
+         <li>
+            <div id="menuBar"></div>
+         </li>
+         <li>
+            <div id="menuItem"></div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="menu"></div>
+               <div id="menuButton1"></div>
+            </div>
+            <div class="row">
+               <div id="menuButton2"></div>
+            </div>
+            <div class="row">
+               <div id="menuButton3"></div>
+            </div>
+            <div class="row">
+               <div id="menuButton4"></div>
+            </div>
+            <div class="row">
+               <div id="menuButtonFixedWidth" class="controls-Button__ellipsis" style="width:100px;"></div>
+             </div>
+            <div class="row">
+               <div id="menuButtonFixedWidthIcon" class="controls-Button__ellipsis" style="width:100px;"></div>
+            </div>
+            <div class="row">
+               <div id="menuButtonWithClose"></div>
+            </div>
+            <div class="row">
+               <div id="menuLink"></div>
+            </div>
+            <div class="row">
+               <div id="menuLinkFixedWidth" class="controls-Button__ellipsis" style="width:60px;"></div>
+            </div>
+            <div class="row">
+               <div id="menuIcon"></div>
+            </div>
+         </li>
+      </ul>
+
+      <h3>Поля ввода</h3>
+      <ul class="preview-list clearfix">
+         <li>
+            <div class="row">
+               <div id="textBox1"></div>
+               <div id="textBox2"></div>
+            </div>
+            <div class="row">
+               <div id="passwordTextBox1"></div>
+               <div id="passwordTextBox2"></div>
+            </div>
+            <div class="row">
+               <div id="formattedTextBox1"></div>
+               <div id="formattedTextBox2"></div>
+            </div>
+            <div class="row">
+               <div id="formattedTextBox3"></div>
+               <div id="formattedTextBox4"></div>
+            </div>
+            <div class="row">
+               Установка даты в ISO-формате
+               <div id="datePickerISO"></div>
+               <div id="monthPickerISO"></div>
+            </div>
+            <div class="row">
+               <div id="numberTextBox1"></div>
+               <div id="numberTextBox2"></div>
+               <div id="numberTextBox3"></div>
+               <div id="numberTextBox4"></div>
+            </div>
+            <div class="row">
+               <div id="unitEditor"></div>
+            </div>
+            <div class="row">
+               <div id="comboBox1" style="width: 200px;"></div>
+               <div id="comboBox2" style="width: 200px;"></div>
+               <div id="comboBox3" style="width: 200px;"></div>
+            </div>
+            <div class="row">
+               <div id="searchForm" style="width: 250px;"></div>
+            </div>
+            <div class="row">
+               <div id="searchForm2" style="width: 280px;"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="textArea1"></div>
+            </div>
+            <div class="row">
+               <div id="textArea2"></div>
+            </div>
+         </li>
+         <li>
+            <div class="row">
+               <div id="editAtPlaceArea1">
+                  <div id="editAtPlace1" data-bind="{Text: field1}" style="width: 150px;"></div>
+               </div>
+            </div>
+            <div class="row">
+               <div id="editAtPlaceArea2">
+                  <div id="editAtPlace2" data-bind="{Text: field2}" style="width: 100px;"  class="controls-EditAtPlace__ellipsis"></div>
+               </div>
+            </div>
+            <div class="row">
+               <div id="editAtPlaceArea3">
+                  <div id="editAtPlace3" data-bind="{Text: field3}" style="width: 250px;"></div>
+               </div>
+            </div>
+            <div class="row">
+               <div id="editAtPlaceArea4">
+                  <div id="editAtPlace4" data-bind="{Text: field4}" style="width: 250px;"></div>
+               </div>
+            </div>
+            <div class="row">
+               <div id="editAtPlaceArea5">
+                  <div id="editAtPlace5" data-bind="{Text: field5}" style="width: 150px;"></div>
+               </div>
+            </div>
+            <div class="row">
+               <div id="editAtPlaceGroupArea">
+                  <div id="editAtPlaceGroup"></div>
+               </div>
+            </div>
+         </li>
+      </ul>
+
+      <h3>Представления коллекций</h3>
+      <ul class="preview-list clearfix">
+         <li>
+            <div class="row">
+               <div id="listView"></div>
+            </div>
+            <div class="row">
+               <div id="treeView"></div>
+            </div>
+            <div class="row">
+               <div id="DataGridView" style="width: 500px;"></div>
+            </div>
+         </li>
+      </ul>
+
+   </div>
+</div>
+
+
+
+
+</body>
+</html>

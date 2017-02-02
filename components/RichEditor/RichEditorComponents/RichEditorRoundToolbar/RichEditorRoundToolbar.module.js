@@ -10,7 +10,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.StylesPanelNew',
    'js!SBIS3.CONTROLS.MenuIcon',
+   'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
+
 ], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
 
    'use strict';
@@ -37,36 +40,42 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          $protected : {
             _options : {
                /**
-                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок
-                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете
+                * @cfg {Object} Объект с настройками стандартных и пользовательских кнопок.
+                * @remark
+                * Стандартные кнопки мержатся с пользовательскими, последние в приоритете.
+                * <br/>
                 * Список стандартных кнопок:
                 * <ol>
                 *    <li>styles - панель со стилями текста текста;</li>
                 *    <li>toggle - переключение видимости редактора;</li>
-                *    <li>list - Вставить/Удалить список;</li>
-                *    <li>link - Вставить/редактировать ссылку;</li>
-                *    <li>image - Вставить картинку;</li>
-                *    <li>smile - Смайлики;</li>
-                *    <li>history - история ввода;</li>
+                *    <li>list - вставить/Удалить список;</li>
+                *    <li>link - вставить/редактировать ссылку;</li>
+                *    <li>image - вставить картинку;</li>
+                *    <li>smile - смайлики;</li>
+                *    <li>history - история ввода.</li>
                 * </ol>
-                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}
-                * componentType - обязательный параметр определяющий вид компонента
-                * name - имя компонента по которому можно получить элемент тулбара
-                * round - число - порядок сортировки элементов тулбара // по умолчанию 0
-                * basic - остаётся ли элемент тулбара видимым при переключении выдимости // по умолчанию false
+                * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
+                * <ul>
+                *   <li>componentType - обязательный параметр, определяющий вид компонента;</li>
+                *   <li>name - имя компонента, по которому можно получить элемент тулбара;</li>
+                *   <li>round - число-порядок сортировки элементов тулбара, по умолчанию 0;</li>
+                *   <li>basic - остаётся ли элемент тулбара видимым при переключении выдимости, по умолчанию false.</li>
+                * <ul>
                 * @example
-                * <options name="items" type="array">
-                *        <options>
-                *           <option name="name">myButton</option>
-                *           <option name="round">100</option>
-                *           <option name="basic">true</option>
-                *           <option name="componentType">SBIS3.CONTROLS.Button</option>
-                *           <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
-                *           <options name="handlers">
-                *              <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
-                *           </options>
-                *        </options>
-                * </options>
+                * <pre>
+                *    <options name="items" type="array">
+                *       <options>
+                *          <option name="name">myButton</option>
+                *          <option name="round">100</option>
+                *          <option name="basic">true</option>
+                *          <option name="componentType">SBIS3.CONTROLS.Button</option>
+                *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>
+                *          <options name="handlers">
+                *             <option name="onActivated" type="function">js!MyComponentName:prototype.myButtonClick</option>
+                *          </options>
+                *      </options>
+                *    </options>
+                * </pre>
                 */
                items: undefined,
                defaultConfig: defaultConfig,
@@ -242,6 +251,9 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                   verticalAlign: {
                      side: 'top',
                      offset: -4
+                  },
+                  horizontalAlign: {
+                     side: 'left'
                   },
                   element: $('<div></div>'),
                   fontSizes: [12, 14, 15, 18],

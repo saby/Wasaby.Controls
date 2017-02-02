@@ -18,7 +18,8 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Link",
-   "i18n!SBIS3.CONTROLS.Image"
+   "i18n!SBIS3.CONTROLS.Image",
+   'css!SBIS3.CONTROLS.Image'
 ], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var
@@ -37,10 +38,6 @@ define('js!SBIS3.CONTROLS.Image',
           * @ignoreEvents onAfterLoad onChange onStateChange
           * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
           *
-          * @demo SBIS3.CONTROLS.DEMO.IntImage <b>Пример 1.</b> Разные типы изображения + плагин.
-          * @demo SBIS3.CONTROLS.DEMO.IntImage2 <b>Пример 2.</b> Базовая линия.
-          * @demo SBIS3.CONTROLS.DEMO.IntImage3 <b>Пример 3.</b> Редактирование изображения при загрузке.
-          *
           * @public
           * @control
           * @category Decorate
@@ -52,11 +49,14 @@ define('js!SBIS3.CONTROLS.Image',
             /**
              * @event onBeginLoad Происходит перед началом загрузки изображения в компоненте.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {SBIS3.CONTROL.Image} control Экземпляр класса контрола, для которого произошло событие.
              * @returns {Boolean} В случае если из обработчика события возвращается результат false, то загрузка изображения отменяется.
              * @example
              * <pre>
-             *    Image.subscribe('onBeginLoad', function(eventObject){
-             *       event.setResult(false); // Отменим загрузку изображения
+             *    Image.subscribe('onBeginLoad', function(eventObject, control) {
+             *
+             *       // отмена загрузки изображения
+             *       event.setResult(false);
              *    });
              * </pre>
              */
@@ -145,16 +145,19 @@ define('js!SBIS3.CONTROLS.Image',
              * @param {Object} sendObject Параметры обрезки изображения
              * @example
              * <pre>
-             * onBeginSave: function(event, filter) {
-             *    delete filter.realHeight;
-             *    delete filter.realWidth;
-             *    event.setResult(filter);
+             * onBeginSave: function(eventObject, sendObject) {
+             *    delete sendObject.realHeight;
+             *    delete sendObject.realWidth;
+             *    event.setResult(sendObject);
              * }
              * </pre>
+             * @see onEndSave
              */
             /**
              * @event onEndSave Возникает после обрезки изображения
              * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {Object} response Ответ бизнес-логики.
+             * @see onBeginSave
              */
             _dotTplFn : dotTplFn,
             $protected: {

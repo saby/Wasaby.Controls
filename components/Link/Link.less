@@ -9,9 +9,7 @@
   box-sizing: border-box;
   font-family: @font-basic-name;
   font-size: @link-font-size;
-  &.ws-area{
-   height: auto;
-  }
+  height: auto;
 
   &.controls-Click__active {
     cursor: @link-cursor;
@@ -56,7 +54,9 @@
   }
 
   &.controls-Button__ellipsis {
-    &:extend(.controls-Button__ellipsis .controls-Button__text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     vertical-align: text-bottom;
   }
   .controls-Link-link {
@@ -77,14 +77,6 @@
       }
     }
   }
-}
-
-.ws-is-mobile-platform {
-   .controls-Link__withoutCaptionOnMobile {
-      .controls-Link__field {
-         display: none;
-      }
-   }
 }
 
 .staff-CardButtons__right{

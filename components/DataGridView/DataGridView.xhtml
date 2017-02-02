@@ -11,7 +11,7 @@
    </div>
    <table class="controls-DataGridView__table {{?it.stickyHeader && it.showHead}}ws-sticky-header__table{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
-      {{=it._headTpl(it._headData)}}
+      {{=it.headTpl(it._headData)}}
       <tbody class="controls-DataGridView__tbody">
       {{?it._serverRender}}
          {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
@@ -25,6 +25,14 @@
    {{?}}
    {{? it.showPaging}}
       <div class="controls-Pager-container"></div>
+   {{?}}
+   {{?it.infiniteScroll == 'demand'}}
+      <div class="controls-ListView__serviceFooter">
+         <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
+            <option name="caption">Еще...</option>
+            <option name="visible" type="boolean">false</option>
+         </component>
+      </div>
    {{?}}
    <div class="controls-ListView-scrollIndicator ws-hidden{{?it.infiniteScroll === 'up'}} controls-ListView-scrollIndicator__up {{?}}"></div>
    <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>

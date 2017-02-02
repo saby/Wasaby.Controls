@@ -144,11 +144,6 @@ define('js!SBIS3.CONTROLS.MergeAction', [
             testMergeMethodName: this._options.testMergeMethodName,
             titleCellTemplate: this._options.titleCellTemplate
          });
-      },
-      _getDialogConfig: function (meta) {
-         var cfg = MergeAction.superclass._getDialogConfig.apply(this, arguments);
-         cfg.title = rk('Объединение наименований');
-         return cfg;
       }
    });
 

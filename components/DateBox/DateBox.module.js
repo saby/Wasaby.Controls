@@ -209,28 +209,13 @@ define(
              * @variant 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
              * @variant 'change' тоже самое что и 'textChange' в будущем будет удалено
              */
-            notificationMode: 'textChange',
-
-            /**
-             * @cfg {String} Режим работы события onTextChange. Значение по умолчанию onTextEnter.
-             * Начиная с версии 3.7.5 опция будет убрана.
-             * Если установлена в onActiveChange, то опция notificationMode будет установлена в complete.
-             * Если опция notificationMode установлена в complete или dateChange, то события будут генерироваться в соответствии с опцией notificationMode.
-             * Используйте опцию notificationMode.
-             * @variant 'onActiveChange' событие стреляет на потере фокуса.
-             * @variant 'onTextEnter' событие стреляет по мере ввода текста.
-             * @deprecated
-             */
-            onTextChangeMode: 'onTextEnter'
+            notificationMode: 'textChange'
          }
       },
 
       _modifyOptions: function(options) {
          var options = DateBox.superclass._modifyOptions.apply(this, arguments);
 
-         if (options.onTextChangeMode === 'onActiveChange') {
-            options.notificationMode = 'complete';
-         }
          if (options.notificationMode === 'change') {
             options.notificationMode = 'textChange';
          }

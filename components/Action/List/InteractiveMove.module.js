@@ -137,9 +137,8 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             meta = meta || {};
             var movedItems = meta.movedItems || meta.records || this.getSelectedItems();
             meta.movedItems = movedItems;
-            this._opendEditComponent({
+            this._openComponent({
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               cssClassName: 'controls-moveDialog',
                opener: this._getListView(),
                movedItems: movedItems,
                componentOptions: meta.componentOptions || {}
