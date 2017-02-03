@@ -130,10 +130,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       init: function() {
          OperationsPanel.superclass.init.call(this);
 
-
          if(this._options.hasItemsMenu){
-            //TODO
             this._itemsMenu = this.getChildControlByName('itemsMenu');
+            this._checkCapacity();
+
+            //TODO
             this._itemsMenu._setPickerContent = function() {
                $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
             };

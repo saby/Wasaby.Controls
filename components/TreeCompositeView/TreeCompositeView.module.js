@@ -318,8 +318,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       redraw: function() {
          if (this._options.hierarchyViewMode) {
             if (!this._prevMode) {
-               this._prevMode = this._options.viewMode;
                this.setViewMode('table');
+               this._prevMode = this._options.viewMode;
             }
          }
          else {

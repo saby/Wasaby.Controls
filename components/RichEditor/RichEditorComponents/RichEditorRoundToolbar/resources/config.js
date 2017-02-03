@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             className: 'controls-IconButton__round-border',
             handlers: {
                onActivated: function(event, originalEvent) {
-                  this.getParent()._selectFile(originalEvent);
+                  this.getParent()._startFileLoad(this._container);
                }
             },
             order: 40

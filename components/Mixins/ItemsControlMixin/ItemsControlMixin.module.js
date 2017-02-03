@@ -630,7 +630,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
-            easyGroup: false
+            easyGroup: false,
+            task1173537554: false
          },
          _loader: null
 
@@ -1285,7 +1286,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this.redraw()
                }
             }
-            else if (this._dataSource) {
+            else if (this._dataSource && !(this._options.dataSource && this._options.dataSource.firstLoad === false)) {
                this.reload();
             }
             if (this._options._serverRender) {
@@ -1530,17 +1531,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(fHelpers.forAliveOnly(function (error) {
-                   if (!error.canceled) {
-                      self._toggleIndicator(false);
-                      if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-                         error.message = error.message.toString().replace('Error: ', '');
-                         fcHelpers.alert(error);
-                         error.processed = true;
-                      }
-                   }
-                   return error;
-                }, self));
+                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
@@ -1557,6 +1548,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _loadErrorProcess: function(error) {
+         if (!error.canceled) {
+            this._toggleIndicator(false);
+            if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+               error.message = error.message.toString().replace('Error: ', '');
+               fcHelpers.alert(error);
+               error.processed = true;
+            }
+         }
+         return error;
+      },
 
       _getFilterForReload: function() {
          return this._options.filter;
@@ -1759,6 +1762,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 data: this._options.items,
                 idProperty: this._options.idProperty
              });
+          }
+          else {
+             if (this._options.task1173537554) {
+                this._notifyOnPropertyChanged('items');
+             }
           }
           this.redraw();
       },

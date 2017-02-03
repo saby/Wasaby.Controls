@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/CommandDispatcher",
    "Core/constants",
    "Core/Deferred",
+   "Core/IoC",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.CompoundActiveFixMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -48,6 +49,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
+   'js!SBIS3.CONTROLS.CursorListNavigation',
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
@@ -58,11 +60,11 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
+   function ( cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation) {
 
      'use strict';
 
@@ -81,7 +83,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         START_NEXT_LOAD_OFFSET = 800,
+         START_NEXT_LOAD_OFFSET = 400,
          DRAG_META_INSERT = {
             on: 'on',
             after: 'after',
@@ -105,7 +107,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @mixes SBIS3.CONTROLS.MultiSelectable
        * @mixes SBIS3.CONTROLS.Selectable
        * @mixes SBIS3.CONTROLS.DataBindMixin
-       * @mixes SBIS3.CONTROLS.DragNDropMixin
+       * @mixes SBIS3.CONTROLS.DragNDropMixinNew
        * @mixes SBIS3.CONTROLS.CommonHandlers
        *
        * @cssModifier controls-ListView__orangeMarker Устанавливает отображение маркера активной строки у элементов списка. Модификатор актуален только для класса SBIS3.CONTROLS.ListView.
@@ -743,6 +745,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see showPaging
                 */
                partialPaging: true,
+               navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
                 * @cfg {String|Function(DragEntityOptions):SBIS3.CONTROLS.DragEntity.Entity} Конструктор перемещаемой сущности, должен вернуть элемент наследник класса {@link SBIS3.CONTROLS.DragEntity.Row}
@@ -786,6 +789,10 @@ define('js!SBIS3.CONTROLS.ListView',
             dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
             dispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
             dispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
+
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation = new CursorNavigation(this._options.navigation);
+            }
          },
 
          init: function () {
@@ -1073,7 +1080,11 @@ define('js!SBIS3.CONTROLS.ListView',
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
             var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
-               selectedItem = $('[data-id="' + id + '"]', this._getItemsContainer()),
+               recordItems = this.getItems(),
+               recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
+               itemsProjection = this._getItemsProjection(),
+               selectedInstanceId = itemsProjection.getItemBySourceIndex(recordIndex).getInstanceId(),
+               selectedItem = $('[data-hash="' + selectedInstanceId + '"]', this._getItemsContainer()),
                index = items.index(selectedItem),
                siblingItem;
             if (isNext) {
@@ -1304,12 +1315,33 @@ define('js!SBIS3.CONTROLS.ListView',
                       offset: event.pageX
                    }
                 };
-
-            if(itemsActions && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
-               event.preventDefault();
-               event.stopPropagation();
-               itemsActions.showItemActionsMenu(align);
+            if(itemsActions && itemsActions.hasVisibleActions()) {
+               if (!this._checkItemAction()) {
+                  if (this._hoveredItem && this._hoveredItem.container && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+                     event.preventDefault();
+                     itemsActions.showItemActionsMenu(align);
+                  }
+               } else {
+                  IoC.resolve('ILogger').info('ItemActionsGroup:', "Опция caption не задана у одного из элементов, для отображения контекстного меню укажите опцию");
+               }
             }
+            event.stopPropagation();
+         },
+
+         /*
+          * Метод проверяющий элементы операции над записью на не указанную опцию caption
+          */
+         _checkItemAction: function() {
+            var itemsActions = this.getItemsActions(),
+                result = false;
+
+            itemsActions.getItems().each(function(item){
+               if(!item.get('caption')){
+                  result = true;
+               }
+            });
+
+            return result;
          },
 
          _mouseDownHandler: function(event){
@@ -1548,7 +1580,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    <li>Порядковый номер записи в источнике, с которого будет производиться отбор записей для выборки. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#setOffset}.</li>
           *    <li>Масимальное число записей, которые будут присутствовать в выборке. Устанавливают с помощью метода {@link SBIS3.CONTROLS.ItemsControlMixin#pageSize}.</li>
           * </ol>
-          * В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
+          * Вызов метода инициирует событие {@link SBIS3.CONTROLS.ItemsControlMixin#onBeforeDataLoad}. В случае успешной перезагрузки набора записей происходит событие {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoad}, а в случае ошибки - {@link SBIS3.CONTROLS.ItemsControlMixin#onDataLoadError}.
           * Если источник данных не установлен, производит перерисовку установленного набора данных.
           * @return {Deferred}
           * @example
@@ -1767,6 +1799,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom = this._limit;
+            }
          },
 
          /**
@@ -2270,6 +2305,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
+            ListView.superclass._onResizeHandler.call(this);
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
@@ -2509,7 +2545,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._showLoadingIndicator();
             this._toggleEmptyData(false);
             //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', 
+            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
                this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
             this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
             this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
@@ -2553,10 +2589,32 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextOffset: function(){
-            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               return this._scrollOffset.bottom + this._limit;
+            if (this._getSourceNavigationType() == 'Offset') {
+               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
+                  return this._scrollOffset.bottom;
+               } else {
+                  return this._scrollOffset.top;
+               }
             } else {
-               return this._scrollOffset.top - this._limit;
+               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
+                  return this._scrollOffset.bottom + this._limit;
+               } else {
+                  return this._scrollOffset.top - this._limit;
+               }
+            }
+         },
+
+         _updateScrolOffset: function(){
+            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
+               if (this._getSourceNavigationType() != 'Offset') {
+                  this._scrollOffset.bottom += this._limit;
+               }
+            } else {
+               if (this._scrollOffset.top >= this._limit){
+                  this._scrollOffset.top -= this._limit;
+               } else {
+                  this._scrollOffset.top = 0;
+               }
             }
          },
 
@@ -2578,25 +2636,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this._drawItems(dataSet.toArray(), at);
             }
-            
+
             this._needScrollCompensation = false;
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
-         },
-
-         _updateScrolOffset: function(){
-            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               if (this._getSourceNavigationType() != 'Offset') {
-                  this._scrollOffset.bottom += this._limit;
-               }
-            } else {
-               if (this._scrollOffset.top >= this._limit){
-                  this._scrollOffset.top -= this._limit;
-               } else {
-                  this._scrollOffset.top = 0;
-               }
-            }
          },
 
          _setLoadMoreCaption: function(dataSet){
@@ -2895,7 +2939,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updatePaging();
          },
          _getQueryForCall: function(filter, sorting, offset, limit){
-            var query = new Query();
+            var
+               query = new Query(),
+               queryFilter = filter;
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               queryFilter = $ws.core.clone(filter);
+               var addParams = this._listNavigation.prepareQueryParams(this._options._getItemsProjection(), this._infiniteScrollState.mode);
+               $ws.core.merge(queryFilter, addParams);
+            }
             query.where(filter)
                .offset(offset)
                .limit(limit)
@@ -3210,6 +3261,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
+            }
+            if (this._listNavigation) {
+               this._listNavigation.destroy();
             }
             ListView.superclass.destroy.call(this);
          },

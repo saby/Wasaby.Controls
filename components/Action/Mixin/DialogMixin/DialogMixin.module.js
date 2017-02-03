@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed() && !this._dialog.isAutoHide();
+         return this._dialog && !this._dialog.isDestroyed() && (this._dialog.isAutoHide && !this._dialog.isAutoHide());
       },
 
       /**
