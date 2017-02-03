@@ -903,7 +903,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this._insertImg(URL, 'image-template-left', meta);
                   break;
                case "2":
-                  this._insertImg(URL, '', meta, '<p style="text-align: center;">', '</p><p></p>');
+                  this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
                   this._insertImg(URL, 'image-template-right ', meta);
@@ -1012,7 +1012,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._inputControl.attr('contenteditable') !== 'false') {
                      var target = e.target;
                      if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                      self._showImageOptionsPanel($(target));
+                        var
+                           selection = window.getSelection ? window.getSelection() : null;
+                        if (selection) {
+                           selection.removeAllRanges();
+                        }
+                        self._showImageOptionsPanel($(target));
                      }
                   }
                }.bind(this));
@@ -1543,7 +1548,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
                   maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
                   style = ' style="width: 25%"';
-               self.insertHtml(before + '<img class="controls-RichEditor__noneditable ' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
+               self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
             });
             if (cConstants.browser.isIE8) {
                $('body').append(img);
