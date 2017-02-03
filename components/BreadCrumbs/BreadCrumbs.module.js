@@ -130,10 +130,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             var target = $(e.target),
                crumb = target.closest('.js-controls-BreadCrumbs__crumb');
             if (crumb.hasClass('controls-BreadCrumbs__dots')) {
-               this._dotsClickHandler(crumb)
-            } else if (crumb.length) {
-               this._notify('onItemClick', crumb.data(this._options.idProperty));
-               this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.idProperty));
+               this._dotsClickHandler(crumb);
+               e.stopPropagation();
+            } else {
+               if (crumb.length) {
+                  this._notify('onItemClick', crumb.data(this._options.idProperty));
+                  this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.idProperty));
+                  e.stopPropagation();
+               }
             }
             if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
