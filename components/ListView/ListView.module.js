@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/CommandDispatcher",
    "Core/constants",
    "Core/Deferred",
+   "Core/IoC",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.CompoundActiveFixMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -59,7 +60,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function ( cFunctions, CommandDispatcher, constants, Deferred,CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
+   function ( cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -1314,12 +1315,33 @@ define('js!SBIS3.CONTROLS.ListView',
                       offset: event.pageX
                    }
                 };
-
-            if(this._hoveredItem && this._hoveredItem.container && itemsActions && itemsActions.hasVisibleActions() && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
-               event.preventDefault();
-               itemsActions.showItemActionsMenu(align);
+            if(itemsActions && itemsActions.hasVisibleActions()) {
+               if (!this._checkItemAction()) {
+                  if (this._hoveredItem && this._hoveredItem.container && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+                     event.preventDefault();
+                     itemsActions.showItemActionsMenu(align);
+                  }
+               } else {
+                  IoC.resolve('ILogger').info('ItemActionsGroup:', "Опция caption не задана у одного из элементов, для отображения контекстного меню укажите опцию");
+               }
             }
             event.stopPropagation();
+         },
+
+         /*
+          * Метод проверяющий элементы операции над записью на не указанную опцию caption
+          */
+         _checkItemAction: function() {
+            var itemsActions = this.getItemsActions(),
+                result = false;
+
+            itemsActions.getItems().each(function(item){
+               if(!item.get('caption')){
+                  result = true;
+               }
+            });
+
+            return result;
          },
 
          _mouseDownHandler: function(event){
