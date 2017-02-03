@@ -232,6 +232,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                return instance.isVisible() && instance.isEnabled();
             });
          },
+
          /**
           * Показывает операции над записью
           */
@@ -326,7 +327,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var mode = !!align;
             if(this._itemActionsMenu) {
                this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__contextMenu', Boolean(mode));
-               if(mode && this._menuAlign != 'context') {
+               if(mode) {
                   this.setMenuAlign(align, undefined);
                   this._menuAlign = 'context';
                } else if(this._menuAlign != 'standart') {
