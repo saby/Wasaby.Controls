@@ -1286,7 +1286,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this.redraw()
                }
             }
-            else if (this._dataSource) {
+            else if (this._dataSource && !(this._options.dataSource && this._options.dataSource.firstLoad === false)) {
                this.reload();
             }
             if (this._options._serverRender) {
