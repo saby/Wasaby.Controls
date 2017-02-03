@@ -1797,6 +1797,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
+            if (this._getSourceNavigationType() == 'Offset'){
+               this._scrollOffset.bottom = this._limit;
+            }
          },
 
          /**
@@ -2584,10 +2587,32 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextOffset: function(){
-            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               return this._scrollOffset.bottom + this._limit;
+            if (this._getSourceNavigationType() == 'Offset') {
+               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
+                  return this._scrollOffset.bottom;
+               } else {
+                  return this._scrollOffset.top;
+               }
             } else {
-               return this._scrollOffset.top - this._limit;
+               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
+                  return this._scrollOffset.bottom + this._limit;
+               } else {
+                  return this._scrollOffset.top - this._limit;
+               }
+            }
+         },
+
+         _updateScrolOffset: function(){
+            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
+               if (this._getSourceNavigationType() != 'Offset') {
+                  this._scrollOffset.bottom += this._limit;
+               }
+            } else {
+               if (this._scrollOffset.top >= this._limit){
+                  this._scrollOffset.top -= this._limit;
+               } else {
+                  this._scrollOffset.top = 0;
+               }
             }
          },
 
@@ -2614,20 +2639,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO Пытались оставить для совместимости со старыми данными, но вызывает onCollectionItemChange!!!
             this._dataLoadedCallback();
             this._toggleEmptyData();
-         },
-
-         _updateScrolOffset: function(){
-            if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               if (this._getSourceNavigationType() != 'Offset') {
-                  this._scrollOffset.bottom += this._limit;
-               }
-            } else {
-               if (this._scrollOffset.top >= this._limit){
-                  this._scrollOffset.top -= this._limit;
-               } else {
-                  this._scrollOffset.top = 0;
-               }
-            }
          },
 
          _setLoadMoreCaption: function(dataSet){
