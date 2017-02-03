@@ -1,9 +1,12 @@
-define('js!SBIS3.CONTROLS.Browser', [
-   'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.Browser',
-   'js!SBIS3.CONTROLS.ComponentBinder',
-   'Core/core-instance'
-], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl, cInstance){
+define('js!SBIS3.CONTROLS.Browser',
+   [
+      'js!SBIS3.CORE.CompoundControl',
+      'tmpl!SBIS3.CONTROLS.Browser',
+      'js!SBIS3.CONTROLS.ComponentBinder',
+      'Core/core-instance',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil'
+   ],
+   function(CompoundControl, dotTplFn, ComponentBinder, cInstance, tplUtil){
    'use strict';
 
    /**
@@ -103,8 +106,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
-            showCheckBoxes: false,
-            contentTpl : contentTpl
+            showCheckBoxes: false
          }
       },
 
@@ -182,6 +184,14 @@ define('js!SBIS3.CONTROLS.Browser', [
          if(this._options.pagingId && this._view.getProperty('showPaging')) {
             this._componentBinder.bindPagingHistory(this._view, this._options.pagingId);
          }
+      },
+
+      _modifyOptions: function() {
+         var options = Browser.superclass._modifyOptions.apply(this, arguments);
+
+         options.content = tplUtil.prepareTemplate(options.content);
+
+         return options;
       },
 
       _folderEditHandler: function(){
