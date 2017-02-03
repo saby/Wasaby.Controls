@@ -316,11 +316,15 @@ define('js!SBIS3.CONTROLS.FilterButton',
              }
 
              function updatePickerVisibility() {
-                var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function(result, element) {
-                   return result || element === false;
-                }, false);
+                var visibility = context.getValue(rootName + '/visibility');
 
-                context.setValue('additionalFilterVisible', showAdittionalBlock);
+                if(!Object.isEmpty(visibility)) {
+                   var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function (result, element) {
+                      return result || element === false;
+                   }, false);
+
+                   context.setValue('additionalFilterVisible', showAdittionalBlock);
+                }
              }
 
              this._pickerContext = context;
