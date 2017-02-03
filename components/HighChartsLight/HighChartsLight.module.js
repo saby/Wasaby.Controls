@@ -621,6 +621,21 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
          return this._options.highChartOptions;
       },
 
+      /**
+       * Обновляет размеры графика под размеры контейнера. Вызывает одноименный метод из highcharts
+       * http://api.highcharts.com/highcharts/Chart.reflow
+       */
+      reflow: function () {
+         // TODO: выделить в базовый класс однотипный функционал для SBIS3.CONTROLS.HighChartsLight и SBIS3.CONTROLS.HighCharts
+         if (this._chartObj) {
+            this._chartObj.reflow();
+         }
+      },
+
+      _onResizeHandler: function(){
+         this.reflow();
+      },
+
       destroy: function() {
          dcHelpers.trackElement(this._container, false);
          HighChartsLight.superclass.destroy.call(this);
