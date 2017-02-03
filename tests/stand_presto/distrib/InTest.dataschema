@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<settings cloud="44948cc5-b4df-4f3e-966e-273e4df3cd7f" deployment_mode="0" join_tables_mode="0" lock_mode="0" num_tries="1" template="9c69e54b-7b6a-4acb-8b7c-1b0439a7d662">
+  <database configuration="1" host="{host}" login="{login}" name="{db_name}" password="{password}" port="{port}" template="00fceca1-e956-49ce-b34e-dfb0486272cd"/>
+</settings>
