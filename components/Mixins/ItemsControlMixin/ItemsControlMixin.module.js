@@ -1005,7 +1005,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             needToRevive = markupExt.hasComponents;
 
-            this._groupFixOnRedrawItemInner(item, targetElement);
+            if (!Object.isEmpty(this._options.groupBy)) {
+               this._groupFixOnRedrawItemInner(item, targetElement);
+            }
          }
          return needToRevive;
       },
@@ -1021,7 +1023,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._options._canApplyGrouping(item, this._options)) {
             //если наружу
             behElement = targetElement.next();
-            if (behElement.length && behElement.hasClass('controls-GroupBy')) {/*TODO и группа соответсвует*/
+            if (behElement.length && behElement.hasClass('controls-GroupBy')) {/*TODO и редыдущий папка*/
                targetElement.before(behElement);
             }
          }
