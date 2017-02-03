@@ -161,7 +161,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
                   self.setText.call(self, self._formatText(self._getTextFromMarkup()));
-                  self._inputField.get(0).innerText = self._options.text;
                }
             }, 100)
          });
