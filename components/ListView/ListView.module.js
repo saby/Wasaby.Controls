@@ -2908,9 +2908,11 @@ define('js!SBIS3.CONTROLS.ListView',
                query = new Query(),
                queryFilter = filter;
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               queryFilter = $ws.core.clone(filter);
-               var addParams = this._listNavigation.prepareQueryParams(this._options._getItemsProjection(), this._infiniteScrollState.mode);
-               $ws.core.merge(queryFilter, addParams);
+               if (this._getItemsProjection()) {
+                  queryFilter = $ws.core.clone(filter);
+                  var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
+                  $ws.core.merge(queryFilter, addParams);
+               }
             }
             query.where(filter)
                .offset(offset)
