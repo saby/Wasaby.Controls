@@ -764,10 +764,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             _getFileLoader: function() {
-               if (!this._fileLoader) {
-                  return this._createFileLoader();
-               }
-               return Deferred.success(this._fileLoader);
+               return this._createFileLoader();
             },
 
             /**
