@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          "Перечисляемое" : true,
          "Флаги" : true,
          "Массив" : true,
+         "Array" : true,
          "Запись" : true,
          "Выборка" : true,
          "RecordSet" : true,

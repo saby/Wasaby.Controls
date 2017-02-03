@@ -381,6 +381,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._subscribeTargetMove();
          this.recalcPosition(true);
       },
+      /**
+       * Получить текущий  таргет
+       */
+      getTarget: function() {
+         return this._options.target
+      },
 
       /**
        * Устанавливает вертикальное выравнивание всплывающего окна относительно точки его построения.

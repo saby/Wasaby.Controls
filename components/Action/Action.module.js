@@ -75,8 +75,12 @@ define('js!SBIS3.CONTROLS.Action.Action',
             this._publish('onChangeCanExecute', 'onExecuted', 'onExecute', 'onError');
          },
          /**
-          * Метод запускающий выполнение Action'а
-          * @param {Object} meta объект содержащий мета параметры Action'а
+          * Метод, запускающий выполнение Action'а.
+          * @param {Object} meta Объект, содержащий мета-параметры Action'а. Набор мета-параметров фиксирован для каждого Action'а.
+          * <ul>
+          *     <li>Для класса {@link SBIS3.CONTROLS.DialogActionBase} список мета-параметров описан <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/DialogActionBase/typedefs/ExecuteMetaConfig/'>здесь</a>.</li>
+          *     <li>Для миксина {@link SBIS3.CONTROLS.Action.DialogMixin} список мета-параметров описан <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/Action/DialogMixin/typedefs/ExecuteMetaConfig/'>здесь</a>.</li>
+          * </ul>
           * @returns {Deferred}
           */
          execute: function (meta) {
@@ -92,9 +96,9 @@ define('js!SBIS3.CONTROLS.Action.Action',
             }
          },
          /**
-          * Устанавливает признак может ли выполнится Action
+          * Устанавливает признак может ли выполнится Action.
           * @param {Boolean} canExecute
-          * @private
+          * @see isCanExecute
           */
          setCanExecute: function (canExecute) {
             canExecute = !!canExecute;
@@ -104,7 +108,6 @@ define('js!SBIS3.CONTROLS.Action.Action',
             }
          },
          /**
-          *
           * Дает возможность пользоватeлю переопределить стандартное поведение(вызов метода method) через вызов события event
           * _callHandlerMethod подымает событие event и вызывает метод method, если из события возвращается false или custom то
           * method не вызывается, если из события возвращается deferred то method вызовется в коллбеке, так же
@@ -133,8 +136,9 @@ define('js!SBIS3.CONTROLS.Action.Action',
             return new Deferred().callback(evenResult);
          },
          /**
-          * Вовращает признак может ли выполниться Action
+          * Вовращает признак: может ли выполниться Action.
           * @returns {Boolean}
+          * @see setCanExecute
           */
          isCanExecute: function () {
             return this._canExecute;

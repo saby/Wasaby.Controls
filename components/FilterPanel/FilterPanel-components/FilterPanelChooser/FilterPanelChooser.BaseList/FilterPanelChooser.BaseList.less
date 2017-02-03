@@ -1,0 +1,67 @@
+.controls-FilterPanelChooser {
+   .controls-ListView {
+      .controls-ListView__itemsContainer {
+         .controls-ListView__item {
+            .flexbox();
+            cursor: @filter-panel-chooser-list-view-item-cursor;
+            padding: @filter-panel-chooser-list-view-item-padding;
+            background-color: @filter-panel-chooser-list-view-item-bg;
+
+            .controls-ListView__itemCheckBox {
+               position: absolute;
+               left: @filter-panel-chooser-list-view-check-box-left;
+               top: @filter-panel-chooser-list-view-check-box-top;
+            }
+
+            .controls-FilterPanelChooser__title {
+               width: 100%;
+               margin: 6px 0;
+               .flex-shrink(1);
+               color: @filter-panel-chooser-list-view-title-color;
+               max-height: @filter-panel-chooser-list-view-title-max-height;
+               overflow: hidden;
+               position: relative;
+               white-space: normal;
+               word-break: break-all;
+
+               .controls-FilterPanelChooser__titleShadow {
+                  position: absolute;
+                  right: @filter-panel-chooser-list-view-title-shadow-right;
+                  top: @filter-panel-chooser-list-view-title-shadow-top;
+                  width: @filter-panel-chooser-list-view-title-shadow-width;
+                  height: @filter-panel-chooser-list-view-title-shadow-height;
+                  box-shadow: @filter-panel-chooser-list-view-title-shadow-box-shadow;
+                  background-color: @filter-panel-chooser-list-view-title-shadow-bg;
+               }
+            }
+
+            &.controls-ListView__item__multiSelected {
+               background-color: @filter-panel-chooser-list-view-selected-item-bg;
+
+               .controls-FilterPanelChooser__title {
+                  color: @filter-panel-chooser-list-view-selected-title-color;
+
+                  .controls-FilterPanelChooser__titleShadow {
+                     box-shadow: @filter-panel-chooser-list-view-title-selected-shadow-box-shadow;
+                     background-color: @filter-panel-chooser-list-view-selected-title-shadow-bg;
+                  }
+               }
+            }
+
+            &.controls-ListView__hoveredItem {
+               background-color: @filter-panel-chooser-list-view-hovered-item-bg;
+
+               .controls-FilterPanelChooser__title {
+                  .controls-FilterPanelChooser__titleShadow {
+                     box-shadow: @filter-panel-chooser-list-view-title-hovered-shadow-box-shadow;
+                     background-color: @filter-panel-chooser-list-view-hovered-title-shadow-bg;
+                  }
+               }
+            }
+         }
+      }
+      .controls-ItemsToolbar {
+         background-color: @filter-panel-chooser-list-view-hovered-item-bg;
+      }
+   }
+}

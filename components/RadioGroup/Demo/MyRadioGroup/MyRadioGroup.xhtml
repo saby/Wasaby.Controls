@@ -4,6 +4,8 @@
          Группа горизонтально расположенных радиокнопок:
       </span>
       <component data-component="SBIS3.CONTROLS.RadioGroup" name="RadioGroup 1" class="ws-Label-content">
+         <option name="selectedKey" type="string">1</option>
+         <option name="idProperty">id</option>
          <option name="displayProperty">title</option>
          <options name="items" type="array">
             <options>
@@ -15,8 +17,6 @@
                <option name="title">RadioButton 2</option>
             </options>
          </options>
-         <option name="idProperty">id</option>
-          <option name="selectedKey" type="string">1</option>
       </component>
    </label>   
    <label data-lmtype="Label" class="ws-Label control-MyRadioGroup__position ws-Label-titleTop">
@@ -24,7 +24,9 @@
          Группа вертикально расположенных радиокнопок:
       </span>
       <component data-component="SBIS3.CONTROLS.RadioGroup" name="RadioGroup 2" class="ws-Label-content  controls-ButtonGroup__vertical">
+         <option name="idProperty">id</option>
          <option name="displayProperty">title</option>
+         <option name="selectedKey" type="string">2</option>
          <options name="items" type="array">
             <options>
                <option name="id" type="string">1</option>
@@ -35,8 +37,6 @@
                <option name="title">RadioButton 2</option>
             </options>
          </options>
-         <option name="idProperty">id</option>
-          <option name="selectedKey" type="string">2</option>
       </component>
    </label>
    <label data-lmtype="Label" class="ws-Label ws-Label-titleLeft control-MyRadioGroup__position">
@@ -44,7 +44,9 @@
          Группа радиокнопок без выбранного значения:
       </span>
       <component data-component="SBIS3.CONTROLS.RadioGroup" name="RadioGroup 3" class="ws-Label-content">
+         <option name="idProperty">id</option>
          <option name="displayProperty">title</option>
+         <option name="allowEmptySelection">true</option>
          <options name="items" type="array">
             <options>
                <option name="id" type="string">1</option>
@@ -55,7 +57,6 @@
                <option name="title">RadioButton 2</option>
             </options>
          </options>
-         <option name="idProperty">id</option>
       </component>
    </label>
 </div>

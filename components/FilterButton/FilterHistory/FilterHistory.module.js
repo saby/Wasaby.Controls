@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
    "html!SBIS3.CONTROLS.FilterHistory",
    "html!SBIS3.CONTROLS.FilterHistory/historyItemTpl",
    "html!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl",
-   "js!SBIS3.CONTROLS.ToggleButton",
+   "js!SBIS3.CONTROLS.CommandsSeparator",
    "js!SBIS3.CONTROLS.ListView",
    "i18n!SBIS3.CONTROLS.FilterButton"
 ],

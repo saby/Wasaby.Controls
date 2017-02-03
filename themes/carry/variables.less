@@ -14,7 +14,8 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 8px;
-@data-grid-first-content-cell-padding-left:     8px;
+@data-grid-side-cell-padding:                   8px;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
@@ -319,6 +320,12 @@
 @menu-button-header-left-bg-revert-vertical:            transparent;
 @menu-button-header-left-bg-revert-vertical-horizontal: transparent;
 
+// --------- //
+// Menu icon //
+// --------- //
+
+@menu-icon-menu-margin:                                 -5px 0 0 -9px;
+
 // ---- //
 // Menu //
 // ---- //
@@ -415,7 +422,7 @@
 @text-box-wrapper-padding:                      0 8px;
 @text-box-field-after-margin:                   0 32px 0 0;
 
-
+@text-area-field-line-height:                   36px;
 // ----------- //
 // Search form //
 // ----------- //
@@ -513,7 +520,7 @@
 @editdialog-applybutton-width:                  130px;
 @editdialog-applybutton-right:                  64px; /*ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:          194px; /*ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
-@editdialog-template-minwidth:                  460px;
+@editdialog-template-minwidth:                  510px;
 @editdialog-applybutton-top:                    10px;
 
 //MoveDialog
@@ -559,7 +566,6 @@
 @menu-link-line-height:                         38px;
 @menu-link-header-bg-color:                     #C1D7F0;
 @menu-link-menu-border-width:                   0;
-@menu-link-menu-item-container-padding:         0;
 @menu-link-menu-margin:                        -2px 0 0 -8px;
 @menu-link-menu-padding:                        0;
 // ---------- //
@@ -595,8 +601,8 @@
 @controls-FieldLink-linkItem-line-height:       40px;
 @controls-FieldLink-showAllLinks-lineHeight:    @controls-FieldLink-linkItem-line-height;
 
-@controls-FieldLink-linkItem-cross-right:       3px;
-@controls-FieldLink-linkItem-cross-top:         14px;
+@controls-FieldLink-linkItem-cross-right:       0;
+@controls-FieldLink-linkItem-cross-top:         9px;
 
 @controls-FieldLink-afterField-background:      transparent;
 

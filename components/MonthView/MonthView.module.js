@@ -34,8 +34,8 @@ define(
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
       var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _monthViewTableBodyTpl: MonthViewTableBodyTpl,
             _options: {
                /**

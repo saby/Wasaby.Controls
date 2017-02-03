@@ -3,6 +3,7 @@
  */
 
 define('js!SBIS3.CONTROLS.Menu', [
+   "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
    'html!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.hierarchyMixin',
@@ -10,11 +11,12 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.MenuItem',
    'js!WS.Data/Relation/Hierarchy',
+   'js!SBIS3.CONTROLS.CommandsSeparator',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
    "Core/IoC"
 
-], function(ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, mkpHelpers, Sanitize, IoC) {
+], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, IoC) {
 
    'use strict';
 
@@ -26,6 +28,8 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @mixes SBIS3.CONTROLS.TreeMixinDS
+    *
+    * @cssModifier controls-MenuPicker__resetIconColor Отменяет перекрашивание иконки в темно-синий цвет в заголовке меню.
     */
 
    var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
@@ -99,7 +103,11 @@ define('js!SBIS3.CONTROLS.Menu', [
              * @noShow
              */
             displayProperty : 'title',
-            expand: true
+            expand: true,
+            /**
+             * @cfg {String} Поле исходя из которого скрываются дополнительные элементы меню
+             */
+            additionalProperty: null
          }
       },
 
@@ -116,12 +124,19 @@ define('js!SBIS3.CONTROLS.Menu', [
 
       $constructor: function() {
          this._publish('onMenuItemActivate');
+         CommandDispatcher.declareCommand(this, 'toggleAdditionalItems', this._toggleAdditionalItems);
       },
       init: function() {
          Menu.superclass.init.apply(this, arguments);
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          this._container.on('mousedown focus', this._blockFocusEvents);
       },
+
+      _toggleAdditionalItems: function() {
+         this.getContainer().toggleClass('controls-Menu-showAdditionalItems');
+         this._notifyOnSizeChanged(this, this);
+      },
+
       _blockFocusEvents: function(event) {
          event.preventDefault();
          event.stopPropagation();
@@ -142,6 +157,9 @@ define('js!SBIS3.CONTROLS.Menu', [
                tooltip: item.get('tooltip'),
                allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
             };
+         if(this._options.additionalProperty && item.get(this._options.additionalProperty)){
+            options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
+         }
          return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
                '<option name="caption" type="string">' + caption + '</option>' +
              '</component>';

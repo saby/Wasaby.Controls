@@ -26,4 +26,7 @@
     {{?it.item.has('includedTemplates')}}
     <option name="includedTemplates" value="{{@it.item.get('includedTemplates')}}" type="ref"></option>
     {{?}}
+    {{?it.item.has('templateBinding')}}
+    <option name="templateBinding" value="{{@it.item.get('templateBinding')}}" type="ref"></option>
+    {{?}}
 </component>

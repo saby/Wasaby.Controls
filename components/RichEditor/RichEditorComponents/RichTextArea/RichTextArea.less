@@ -38,6 +38,9 @@
             margin-left: 0;
             margin-right: 16px;
          }
+         .mce-visual-caret {
+            margin: 0px;
+         }
       }
       li{
          margin-bottom:6px;
@@ -101,6 +104,10 @@
       table {
          margin-bottom: 5px;
       }
+   }
+   img {
+      //TODO: увелисчить вес селектора
+      outline: none !important;
    }
 }
 
@@ -239,5 +246,10 @@
       -webkit-text-size-adjust: 100%;
       -moz-text-size-adjust: none;
       -ms-text-size-adjust: 100%;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-RichEditor__sourceArea {
+      font-family: 'EmojiFont', 'TensorFont', sans-serif;
    }
 }

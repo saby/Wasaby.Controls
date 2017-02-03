@@ -17,8 +17,8 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
    function(CompoundControl, FastDataFilter, FilterButtonMainDemo, dotTplFn) {
       'use strict';
       var MyFastDataFilter = CompoundControl.extend([],{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _options: {
                data: [{
                   idProperty : 'key',
@@ -29,36 +29,28 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   dataSource: {
                      module: 'js!WS.Data/Source/Memory',
                      options: {
-                        data: [
-                           {
-                              key: 0,
-                              title: rk('Заголовок')
-                           },
-                           {
-                              key: 1,
-                              title: rk('Один')
-                           },
-                           {
-                              key: 2,
-                              title: rk('Два')
-                           },
-                           {
-                              key: 3,
-                              title: rk('Три')
-                           },
-                           {
-                              key: 4,
-                              title: rk('Четыре')
-                           },
-                           {
-                              key: 5,
-                              title: rk('Пять')
-                           }
-                        ]
+                        data: [{
+                           key: 0,
+                           title: rk('Заголовок')
+                        },{
+                           key: 1,
+                           title: rk('Один')
+                        },{
+                           key: 2,
+                           title: rk('Два')
+                        },{
+                           key: 3,
+                           title: rk('Три')
+                        },{
+                           key: 4,
+                           title: rk('Четыре')
+                        },{
+                           key: 5,
+                           title: rk('Пять')
+                        }]
                      }
                   }
-               },
-               {
+               },{
                   idProperty : 'secondKey',
                   multiselect : true,
                   name: 'second',
@@ -66,32 +58,25 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   dataSource: {
                      module: 'js!WS.Data/Source/Memory',
                      options: {
-                        data: [
-                           {
-                              secondKey: 0,
-                              user: rk('Все пользователи')
-                           },
-                           {
-                              secondKey: 1,
-                              user: rk('Пушкин')
-                           },
-                           {
-                              secondKey: 2,
-                              user: rk('Лермонтов')
-                           },
-                           {
-                              secondKey: 3,
-                              user: rk('Толстой')
-                           },
-                           {
-                              secondKey: 4,
-                              user: rk('Бродский')
-                           }
-                        ]
+                        data: [{
+                           secondKey: 0,
+                           user: rk('Все пользователи')
+                        },{
+                           secondKey: 1,
+                           user: rk('Пушкин')
+                        },{
+                           secondKey: 2,
+                           user: rk('Лермонтов')
+                        },{
+                           secondKey: 3,
+                           user: rk('Толстой')
+                        },{
+                           secondKey: 4,
+                           user: rk('Бродский')
+                        }]
                      }
                   }
-               },
-               {
+               },{
                   idProperty: 'key',
                   displayProperty: 'title',
                   name: 'selling',
@@ -99,37 +84,30 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                   dataSource: {
                      module: 'js!WS.Data/Source/Memory',
                      options: {
-                        data: [
-
-                           {
-                              key: 0,
-                              title: rk('Не выбрано')
-                           },
-                           {
-                              key: 1,
-                              title: rk('Все (для продажи и нет)')
-                           },
-                           {
-                              key: 2,
-                              title: rk('Не для продажи')
-                           },
-                           {
-                              key: 3,
-                              title: rk('Для продажи')
-                           }
-                        ]
+                        data: [{
+                           key: 0,
+                           title: rk('Не выбрано')
+                        },{
+                           key: 1,
+                           title: rk('Все (для продажи и нет)')
+                        },{
+                           key: 2,
+                           title: rk('Не для продажи')
+                        },{
+                           key: 3,
+                           title: rk('Для продажи')
+                        }]
                      }
                   }
                }]
             }
          },
-         $constructor: function(){
+         $constructor: function() {
             var context = this.getLinkedContext();
 
             context.subscribe('onFieldsChanged', function() {
-               var
-                     filter = this.getValue('filter'),
-                     filterDescr = this.getValue('filterDescr');
+               var filter = this.getValue('filter'),
+                   filterDescr = this.getValue('filterDescr');
                this.setValueSelf('filterJSON', JSON.stringify(filter));
                this.setValueSelf('filterDescrJSON', JSON.stringify(filterDescr));
             });
@@ -142,6 +120,7 @@ define('js!SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource',
                }
             });
          },
+
          init: function () {
             MyFastDataFilter.superclass.init.apply(this, arguments);
             this.getChildControlByName('FastDataFilter').setItems(this._options.data);

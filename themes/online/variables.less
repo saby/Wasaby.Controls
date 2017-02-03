@@ -125,7 +125,7 @@
 @filter-panel-chooser-default-text-color:                         #8991A9;
 @filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
 @filter-panel-chooser-list-view-item-cursor:                      pointer;
-@filter-panel-chooser-list-view-item-padding:                     6px 0 6px 24px;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
 @filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
@@ -133,7 +133,7 @@
 @filter-panel-chooser-list-view-check-box-left:                   0;
 @filter-panel-chooser-list-view-count-top:                        6px;
 @filter-panel-chooser-list-view-count-right:                      0;
-@filter-panel-chooser-list-view-count-padding:                    0 8px;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
 @filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-selected-title-color:             @black-color;
@@ -709,7 +709,7 @@
 @menu-item-icon-left-offset:              0px;
 @menu-item-icon-left-offset-big:          0px;
 
-@menu-item-icon24-top-offset:             3px;
+@menu-item-icon24-top-offset:             4px;
 @menu-item-icon24-top-offset-big:         -4px;
 
 @menu-item-icon24-left-offset:            0;
@@ -1059,7 +1059,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
-@text-area-field-line-height:                   normal;
+@text-area-field-line-height:                   18px;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -1101,7 +1101,7 @@
 
 @text-area-placeholder-color:              @text-box-placeholder-color;
 @text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
-@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-padding:     2px 0 0;
 @text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 // --------------- //
@@ -1618,7 +1618,7 @@
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
 @list-view-actions-menu-padding:                4px 0;
-@list-view-actions-menu-margin:                 3px 0 0 6px;
+@list-view-actions-menu-margin:                 4px 0 0 5px;
 @list-view-actions-menu-text-margin:            0 0 0 30px;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
@@ -1666,7 +1666,7 @@
 // --------- //
 
 @controls-toolbar-display:                      inline-block;
-@controls-toolbar-default-margin:               8px;
+@controls-toolbar-default-margin:               12px;
 @controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
 @controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
 @controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
@@ -1782,7 +1782,8 @@
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
-@data-grid-first-content-cell-padding-left:     8px;
+@data-grid-side-cell-padding:                   8px;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -2086,23 +2087,23 @@
 @controls-filterButton-history-title-color:       @blue-dark-color !important;
 @controls-filterButton-history-title-width:       100%;
 
-//FilterButtonToggleButton
-@controls-filterButton-toggleButton-lineHeight:   20px !important;
-@controls-filterButton-toggleButton-fontSize:     26px !important;
-@controls-filterButton-toggleButton-fontFamily:   acordion-font !important;
-@controls-filterButton-toggleButton-height:       24px;
+//CommandsSeparator
+@controls-commandsSeparator-lineHeight:   20px !important;
+@controls-commandsSeparator-fontSize:     26px !important;
+@controls-commandsSeparator-fontFamily:   acordion-font !important;
+@controls-commandsSeparator-height:       24px;
 
-@controls-filterButton-toggleButton-icon-width:   24px;
-@controls-filterButton-toggleButton-icon-height:  24px;
-@controls-filterButton-toggleButton-icon-top:     2px;
-@controls-filterButton-toggleButton-icon-left:    -1px;
-@controls-filterButton-toggleButton-icon-style:   normal;
-@controls-filterButton-toggleButton-icon-down:    "\e902";
-@controls-filterButton-toggleButton-icon-up:      "\e904";
-@controls-filterButton-toggleButton-color:        #CCCCCC !important;
+@controls-commandsSeparator-icon-width:   24px;
+@controls-commandsSeparator-icon-height:  24px;
+@controls-commandsSeparator-icon-top:     2px;
+@controls-commandsSeparator-icon-left:    -1px;
+@controls-commandsSeparator-icon-style:   normal;
+@controls-commandsSeparator-icon-down:    "\e902";
+@controls-commandsSeparator-icon-up:      "\e904";
+@controls-commandsSeparator-color:        #CCCCCC !important;
 
-@controls-filterButton-toggleButton-border:       none;
-@controls-filterButton-toggleButton-bgColor:      transparent;
+@controls-commandsSeparator-border:       none;
+@controls-commandsSeparator-bgColor:      transparent;
 
 //FilterLine
 @controls-filterLine-padding:                     8px 8px 8px 0;
@@ -2245,7 +2246,7 @@
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
 @controls-NotificationPopup-header-icon-right-margin:                        12px;
-@controls-NotificationPopup-header-icon-height:                              24px;
+@controls-NotificationPopup-max-width:                                       440px;
 
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:         351px;
