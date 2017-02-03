@@ -1004,8 +1004,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
             }
             needToRevive = markupExt.hasComponents;
+
+            this._groupFixOnRedrawItemInner(item, targetElement);
          }
          return needToRevive;
+      },
+
+      //TODO надо избавиться от этого метода
+      //если в списке есть группировка, при переносе в папку записи, следующей за ней
+      //не происходит события move, а только меняется запись
+      //мы просто перерисовываем ее, а должны еще перерисовать группу
+      //а так же обратная ситуация
+      _groupFixOnRedrawItemInner: function(item) {
+         var targetElement = this._getDomElementByItem(item);
+         var behElement;
+         if (this._options._canApplyGrouping(item, this._options)) {
+            //если наружу
+            behElement = targetElement.next();
+            if (behElement.length && behElement.hasClass('controls-GroupBy')) {/*TODO и группа соответсвует*/
+               targetElement.before(behElement);
+            }
+         }
+         else {
+            //если внутрь папки
+            behElement = targetElement.prev();
+            if (behElement.length && behElement.hasClass('controls-GroupBy')) {
+               targetElement.after(behElement);
+            }
+         }
       },
 
       _calculateDataBeforeRedraw: function(data) {
