@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          };
 
 
-      if (this._options.loadItemsStrategy == 'append') {
+      if (cfg.loadItemsStrategy == 'append') {
          projOptions.unique = false;
       }
 
