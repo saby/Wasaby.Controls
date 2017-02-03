@@ -36,8 +36,8 @@ define('js!SBIS3.CONTROLS.Pager', [
        * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.
        * @example
        */
+      _dotTplFn: dotTplFn,
       $protected: {
-         _dotTplFn: dotTplFn,
          _options: {
             pagingOptions: {}
          },

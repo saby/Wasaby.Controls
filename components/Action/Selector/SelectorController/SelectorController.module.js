@@ -73,8 +73,6 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              if(this._options.selectedItems) {
                 if(Array.isArray(this._options.selectedItems)) {
                    this._options.selectedItems = Di.resolve('collection.list', {items: this._options.selectedItems});
-                } else {
-                   this._options.selectedItems = this._options.selectedItems.clone(true);
                 }
              } else {
                 this._options.selectedItems = Di.resolve('collection.list');

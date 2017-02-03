@@ -50,15 +50,15 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
        * @public
        */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
-            _contextMode: false,
+            _menuAlign: 'standart',
             _options: {
                touchMode: false,
                linkedControl: undefined
@@ -324,13 +324,15 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          _setContextMenuMode: function(align) {
-            this._contextMode = !!align;
+            var mode = !!align;
             if(this._itemActionsMenu) {
-               this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__contextMenu', Boolean(this._contextMode));
-               if(this._contextMode) {
+               this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__contextMenu', Boolean(mode));
+               if(mode && this._menuAlign != 'context') {
                   this.setMenuAlign(align, undefined);
-               } else {
+                  this._menuAlign = 'context';
+               } else if(this._menuAlign != 'standart') {
                   this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
+                  this._menuAlign = 'standart';
                }
             }
          },
