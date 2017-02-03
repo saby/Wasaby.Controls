@@ -505,6 +505,9 @@ define('js!SBIS3.CONTROLS.Image',
             _onImageMouseEnter: function() {
                if (this._canDisplayImageBar()) {
                   this._imageBar.fadeIn(ANIMATION_DURATION);
+                  //NB! Вероятно хотим отредактировать.
+                  // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
+                  this._createFileLoader();
                }
             },
             _onImageMouseLeave: function() {
@@ -758,10 +761,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             _getFileLoader: function() {
-               if (!this._fileLoader) {
-                  return this._createFileLoader();
-               }
-               return Deferred.success(this._fileLoader);
+               return this._createFileLoader();
             },
 
             /**
@@ -769,6 +769,10 @@ define('js!SBIS3.CONTROLS.Image',
              * @private
              */
             _createFileLoader: function() {
+               if (this._fileLoader) {
+                  return Deferred.success(this._fileLoader);
+               }
+
                var def = new $ws.proto.Deferred();
                var self = this;
 
