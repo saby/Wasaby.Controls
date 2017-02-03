@@ -1138,8 +1138,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see root
        * @see getRoot
        */
-      setRoot: function(root){
+      setRoot: function(root) {
          this._options.root = root;
+         // при изменении корня, сбросим предыдущий, так как он теряет актуальность
+         this._previousRoot = undefined;
       },
 
 
