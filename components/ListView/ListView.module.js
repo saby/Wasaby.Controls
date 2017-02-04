@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.CursorListNavigation',
+   "js!WS.Data/Source/SbisService",
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
@@ -64,7 +65,7 @@ define('js!SBIS3.CONTROLS.ListView',
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
 
      'use strict';
 
@@ -2943,11 +2944,16 @@ define('js!SBIS3.CONTROLS.ListView',
                query = new Query(),
                queryFilter = filter;
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               queryFilter = $ws.core.clone(filter);
-               var addParams = this._listNavigation.prepareQueryParams(this._options._getItemsProjection(), this._infiniteScrollState.mode);
-               $ws.core.merge(queryFilter, addParams);
+               var options = this._dataSource.getOptions();
+               options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
+               this._dataSource.setOptions(options);
+               if (this._getItemsProjection()) {
+                  queryFilter = $ws.core.clone(filter);
+                  var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
+                  $ws.core.merge(queryFilter, addParams);
+               }
             }
-            query.where(filter)
+            query.where(queryFilter)
                .offset(offset)
                .limit(limit)
                .orderBy(sorting)
