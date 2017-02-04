@@ -6,9 +6,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "js!SBIS3.CORE.FloatArea",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
-   "Core/helpers/collection-helpers",
-   "Core/IoC"
-], function( cMerge, Deferred, Dialog, FloatArea, Model, Utils, colHelpers, IoC){
+   "Core/helpers/collection-helpers"
+], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers){
    'use strict';
 
    /**
@@ -45,15 +44,21 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             mode: 'dialog',
             /**
-             * @cfg {object} Объект содержащий опции компонента.
+             * @cfg {Object} Объект содержащий опции компонента.
              */
             componentOptions: null,
-            /**
-             * @cfg {object} Объект содержащий опции компонента.
+            /*
+             * @cfg {Object} Объкт содержащий опции диалога 
              */
             dialogOptions: null
          },
-         _dialog: undefined
+         _dialog: undefined,
+         /**
+          * Ключ модели из связного списка
+          * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
+          * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
+          */
+         _linkedModelKey: undefined
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -117,7 +122,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _buildComponentConfig: function(meta) {
-         return {};
+         var
+            config = cMerge({}, this._options.componentOptions || {}),
+            metaConfig = meta && meta.componentOptions ? meta.componentOptions : {};
+         return cMerge(config,  metaConfig )
       },
 
       _createComponent: function(config, meta, mode) {
