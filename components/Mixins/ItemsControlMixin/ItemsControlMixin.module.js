@@ -1016,22 +1016,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       //если в списке есть группировка, при переносе в папку записи, следующей за ней
       //не происходит события move, а только меняется запись
       //мы просто перерисовываем ее, а должны еще перерисовать группу
-      //а так же обратная ситуация
       _groupFixOnRedrawItemInner: function(item) {
          var targetElement = this._getDomElementByItem(item);
          var behElement;
-         if (this._options._canApplyGrouping(item, this._options)) {
-            //если наружу
-            behElement = targetElement.next();
-            if (behElement.length && behElement.hasClass('controls-GroupBy')) {/*TODO и редыдущий папка*/
-               targetElement.before(behElement);
-            }
-         }
-         else {
+         if (!this._options._canApplyGrouping(item, this._options)) {
             //если внутрь папки
             behElement = targetElement.prev();
+            //если предыдущий группировка, то переносим ее
             if (behElement.length && behElement.hasClass('controls-GroupBy')) {
                targetElement.after(behElement);
+               //если группа оказалась пустая, удаляем ее
+               var behNextElement = behElement.next();
+               if (behNextElement.length && !behNextElement.hasClass('js-controls-ListView__item')) {
+                  behElement.remove();
+               }
             }
          }
       },
