@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
           _buildComponentConfig: function(metaConfig) {
-             var cfg = metaConfig.componentOptions || {},
+             var cfg = SelectorAction.superclass._buildComponentConfig.call(this, metaConfig),
                  chooseCfg = {
                     handlers: {
                        onSelectComplete: function(event, meta) {
