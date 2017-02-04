@@ -1,0 +1,33 @@
+<div class="controls-ColumnsEditorArea">
+   <div class="controls-ColumnsEditorArea__head">
+      <div class="controls-ColumnsEditorArea__head-title">
+         <div class="controls-ColumnsEditorArea__head-title-left">{{ title }}</div>
+         <div class="controls-ColumnsEditorArea__head-title-right">
+            <ws:SBIS3.CONTROLS.Button class="controls-ColumnsEditorArea__ApplyColumnsButton" caption="Применить" command="applyColumns" primary="true" />
+         </div>
+      </div>
+   </div>
+   <div class="controls-ColumnsEditorArea__body">
+      <ws:SBIS3.CONTROLS.CheckBoxGroup
+              class="controls-ColumnsEditorArea__FixedView"
+              name="controls-ColumnsEditorArea__FixedView"
+              items="{{ _preparedItems.fixedItems }}"
+              idProperty="id"
+              displayProperty="title"
+              enabled="{{ false }}"
+              selectedKeys="{{ _preparedItems.fixedMarkedKeys }}"
+              multiselect="{{ true }}" />
+      <ws:SBIS3.CONTROLS.ListView
+              class="controls-ColumnsEditorArea__SelectableView"
+              name="controls-ColumnsEditorArea__SelectableView"
+              items="{{ _preparedItems.selectableItems }}"
+              itemsActions="{{ [] }}"
+              idProperty="id"
+              displayProperty="title"
+              selectedKeys="{{ _preparedItems.selectableMarkedKeys }}"
+              itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/ItemContentTpl"
+              multiselect="{{ true }}">
+         <ws:handlers onItemClick="{{_onItemClick}}" />
+      </ws:SBIS3.CONTROLS.ListView>
+   </div>
+</div>

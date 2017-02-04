@@ -1,0 +1,73 @@
+.controls-ColumnsEditorArea {
+   position: relative;
+   width: 388px;
+}
+
+.controls-ColumnsEditorArea__head {
+   height: 40px;
+   box-sizing: border-box;
+   padding: 8px 44px 8px 12px;
+   background-color: #f7f4f0;
+}
+
+.controls-ColumnsEditorArea__head-title {
+   height: 24px;
+}
+
+.controls-ColumnsEditorArea__head-title-left {
+   float: left;
+   color: #313E78;
+   font-size: 18px;
+   font-weight: bold;
+}
+
+.controls-ColumnsEditorArea__head-title-right {
+   float: right;
+}
+
+.controls-ColumnsEditorArea__body {
+   border-top: 1px solid #CCCCCC;
+}
+
+.controls-ColumnsEditorArea__view-item {
+   height: 32px;
+   display: inline-block;
+}
+
+.controls-ColumnsEditorArea__view-item .controls-ListView__itemCheckBox {
+   left: 4px;
+   top: 4px;
+}
+
+.controls-ColumnsEditorArea__FixedView {
+   .controls-CheckBox {
+      display: block;
+      padding: 7px 0;
+   }
+   .controls-CheckBox .controls-CheckBox__icon {
+      margin: 0 8px;
+   }
+   .controls-CheckBox .controls-CheckBox__caption {
+      color: @black-color !important;
+   }
+}
+
+.controls-ColumnsEditorArea__view-item-text {
+   display: inline-block;
+   padding-left: 36px;
+   line-height: 32px;
+   color: #8991a9;
+}
+.controls-ListView__item__multiSelected {
+   .controls-ColumnsEditorArea__view-item-text {
+      color: @black-color;
+   }
+}
+
+.controls-ColumnsEditorArea__SelectableView {
+   cursor: pointer;
+}
+
+.controls-ColumnsEditorArea__ApplyColumnsButton {
+   vertical-align: middle;
+}

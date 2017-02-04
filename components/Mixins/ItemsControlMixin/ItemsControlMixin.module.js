@@ -758,7 +758,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: this._options.items,
+                  data: cFunctions.clone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
