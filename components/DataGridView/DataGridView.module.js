@@ -241,6 +241,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *
     * @demo SBIS3.CONTROLS.Demo.MyDataGridView
     * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
+    * @demo SBIS3.DOCS.GroupByWrap Группировка записей.
     *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -248,6 +249,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    * @cssModifier controls-DataGridView__sidePadding-12 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 12px.
+    * @cssModifier controls-DataGridView__sidePadding-16 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 16px.
+    * @cssModifier controls-DataGridView__sidePadding-20 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 20px.
+    * @cssModifier controls-DataGridView__sidePadding-24 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 24px.
     *
     * @control
     * @public
@@ -1193,7 +1198,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
           /* При установке колонок, надо сбросить частичный скролл */
           this._currentScrollPosition = 0;
           checkColumns(this._options);
-          this._destroyEditInPlace();
+          this._destroyEditInPlaceController();
        },
 
       _oldRedraw: function() {

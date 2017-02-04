@@ -313,7 +313,8 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
       },
 
       _isNeedToRedrawDialog: function(){
-         return this._dialog && !this._dialog.isDestroyed() && !this._dialog.isAutoHide();
+         //в this._dialog может не быть метода isAutoHide, если это окно, а не флоат арея
+         return this._dialog && !this._dialog.isDestroyed() && (this._dialog.isAutoHide && !this._dialog.isAutoHide());
       },
 
       _setNewDialogConfig: function(config){

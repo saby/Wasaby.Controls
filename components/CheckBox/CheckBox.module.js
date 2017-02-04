@@ -10,13 +10,8 @@ define('js!SBIS3.CONTROLS.CheckBox', [
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
-      var newChecked;
-      if (!threeState) {
-         newChecked = !!(checked);
-      } else {
-         newChecked = (checked === false || checked === true) ? checked : null;
-      }
-      return newChecked;
+      //Портится контекст, когда приходит null при threeState = false checked, checked = null
+      return checked;
    };
    /**
     * Контрол, отображающий стандартный флажок.

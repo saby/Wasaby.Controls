@@ -8,23 +8,20 @@
       left: @controls-OperationsPanelButton-icon-left;
    }
 
-   /* стили для кнопки вверх-вниз */
-   &.controls-OperationsPanelButton__vertical {
-      width: @controls-OperationsPanelButton-width;
-      height: @controls-OperationsPanelButton-vert-height;
-      line-height: @controls-OperationsPanelButton-vert-height;
-      border-radius: @controls-OperationsPanelButton-vert-border-radius;
+   width: @controls-OperationsPanelButton-width;
+   height: @controls-OperationsPanelButton-vert-height;
+   line-height: @controls-OperationsPanelButton-vert-height;
+   border-radius: @controls-OperationsPanelButton-vert-border-radius;
 
-      &.controls-Checked__checked {
-         .controls-OperationsPanelButton__icon:before {
-            content: "\e012";
-         }
+   &.controls-Checked__checked {
+      .controls-OperationsPanelButton__icon:before {
+         content: "\e012";
       }
-      .controls-OperationsPanelButton__icon {
-         top: @controls-OperationsPanelButton-vertical-icon-top;
-         &:before {
-            content: "\e011";
-         }
+   }
+   .controls-OperationsPanelButton__icon {
+      top: @controls-OperationsPanelButton-vertical-icon-top;
+      &:before {
+         content: "\e011";
       }
    }
 }

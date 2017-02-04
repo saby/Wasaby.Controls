@@ -47,10 +47,15 @@
       height: auto;
    }
    -webkit-overflow-scrolling: touch;
+   isolation: isolate;
    
    &.ws-sticky-header__scrollable-container {
       width: auto;
    }
+}
+
+.controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
+   -webkit-overflow-scrolling: auto;
 }
 
 .controls-ScrollContainer__content-overflowHidden {

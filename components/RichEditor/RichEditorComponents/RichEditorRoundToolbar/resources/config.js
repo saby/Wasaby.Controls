@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             className: 'controls-IconButton__round-border',
             handlers: {
                onActivated: function(event, originalEvent) {
-                  this.getParent()._selectFile(originalEvent);
+                  this.getParent()._startFileLoad(this._container);
                }
             },
             order: 40
@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             className: 'controls-IconButton__round-border',
             handlers: {
                onMenuItemActivate: function(e, key) {
-                  this.getParent()._setText(this.getItems().getRecordByKey(key).get('value'));
+                  this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
                }
             },
             order: 60

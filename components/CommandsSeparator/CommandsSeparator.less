@@ -1,0 +1,52 @@
+.controls-CommandsSeparator {
+    border: @controls-commandsSeparator-border;
+    background-color: @controls-commandsSeparator-bgColor;
+    line-height: @controls-commandsSeparator-lineHeight;
+    font-size: @controls-commandsSeparator-fontSize;
+    font-family: @controls-commandsSeparator-fontFamily;
+    width: @controls-commandsSeparator-height;
+    color: #CCCCCC;
+    height: @controls-commandsSeparator-height;
+    margin: auto;
+    box-sizing: border-box;
+    display: block;
+    text-align: center;
+
+    .controls-CommandsSeparator-icon {
+      display: inline-block;
+      color: @controls-commandsSeparator-color;
+      width: @controls-commandsSeparator-icon-width;
+      height: @controls-commandsSeparator-icon-height;
+      position: relative;
+      top: auto;
+      left: auto;
+    }
+
+    .controls-CommandsSeparator-icon:before {
+      content: @controls-commandsSeparator-icon-down;
+      font-style: @controls-commandsSeparator-icon-style;
+      position: absolute;
+      top: @controls-commandsSeparator-icon-top;
+      left: @controls-commandsSeparator-icon-left;
+    }
+    &.controls-Checked__checked {
+      .controls-CommandsSeparator-icon:before {
+        content: @controls-commandsSeparator-icon-up;
+      }
+    }
+}
+
+.ws-is-desktop-platform {
+  .controls-CommandsSeparator {
+      &:hover {
+        /* Т.к. усиливать селектор уже некуда, а кнопка особая,
+           используется только в кнопке фильтров, то пишу !important.
+           Из-за постоянной смены селекторов базовой кнопки, это правило ломалосью */
+        background-color: @controls-commandsSeparator-bgColor !important;
+        border: @controls-commandsSeparator-border !important;
+        .controls-CommandsSeparator-icon {
+          color: @controls-filterButton-history-title-color;
+        }
+      }
+  }
+}

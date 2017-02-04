@@ -169,8 +169,25 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
 
          var
             curParentId = (typeof this._curRoot != 'undefined') ? this._curRoot : null,
+            curPath = [],
             curLvl = 0,
             hierIterate = function(root) {
+               if (Array.indexOf(curPath, root) > -1) {
+                  var error = 'Recursive hierarchy structure detected: node with id "' + root + '" has link to itself';
+                  if (curPath.map) {
+                     error += ' (';
+                     curPath.push(root);
+                     error += curPath
+                        .map(function(i) {
+                           return '' + i;
+                        })
+                        .join(' -> ');
+                     error += ')';
+                  }
+                  throw new Error(error);
+               }
+               curPath.push(root);
+
                var children = hierarchy.getChildren(root, DataSet);
                for (var i = 0; i < children.length; i++) {
                   var record = children[i];
@@ -180,6 +197,8 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
                   hierIterate(record.getId());
                   curLvl--;
                }
+
+               curPath.pop();
             };
 
          hierIterate(curParentId);

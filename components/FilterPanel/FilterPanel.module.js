@@ -34,16 +34,36 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
 
    'use strict';
    /**
-    * Класс контрола "Панель фильтрации".
-    * <br/>
-    * При создания компонента допускается использование только <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
+    * Класс компонента "Панель фильтра с набираемыми параметрами". Реализован по <a href='http://axure.tensor.ru/standarts/v7/%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C_%D1%84%D0%B8%D0%BB%D1%8C%D1%82%D1%80%D0%B0_%D1%81_%D0%BD%D0%B0%D0%B1%D0%B8%D1%80%D0%B0%D0%B5%D0%BC%D1%8B%D0%BC%D0%B8_%D0%BF%D0%B0%D1%80%D0%B0%D0%BC%D0%B5%D1%82%D1%80%D0%B0%D0%BC%D0%B8.html'>этому стандарту</a>.
+    *
+    * <h2>Разметка компонента</h2>
+    *
+    * При создании компонента допускается использование только <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
     * Т.е. разметка компонента описывается в TMPL-файле.
-    * <br/>
+    *
+    * <h2>Кнопки панели фильтров</h2>
+    *
+    * <h3>Кнопка открытия панели</h3>
+    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков.
+    * Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
+    * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), на кнопку открытию устанавливают классы "controls-IconButton__filter-left" (открытие панели влево) или "controls-IconButton__filter-right" (открытие панели вправо).
+    * Чтобы открыть панель, используйте метод {@link toggleExpanded}.
+    *
+    * <h3>Кнопка "Сбросить фильтр"</h3>
+    * По умолчанию присутствует в шаблоне компонента.
+    * В опции {@link $ws.proto.Control#name} для неё предустановлено имя "ResetFilterButton".
+    * При клике по кнопке выполняется команда {@link resetFilter}.
+    * Из пользовательского интерфейса кнопка доступна для взаимодействия, когда в опции {@link items} установлена структура полей фильтра.
+    *
+    * <h3>Кнопка "Скрыть панель"</h3>
+    * По умолчанию присутствует в шаблоне компонента "Панель фильтрации".
+    * При клике по кнопке выполняется команда {@link toggleFilter}.
+    *
+    * <h2>Конфигурация фильтров</h2>
+    * Чтобы установить структуру полей фильтра, используйте опцию {@link items}.
+    *
+    * <h2>Особенности компонента</h2>
     * При взаимодействии с контекстом привязка производится односторонняя.
-    * <br/>
-    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков. Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
-    * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), кнопку открытию устанавливают классы "controls-IconButton__filter-left" или "controls-IconButton__filter-right".
-    * Чтобы открыть панель фильтрации, используйте метод {@link toggleExpanded}.
     *
     * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.FilterPanel
@@ -78,20 +98,21 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
             collapsedClassName: 'controls-FilterPanel_collapsed',
             /**
              * @typedef {Object} FilterPanelItem
-             * @property {String|Number} id Идентификатор поля фильтрации.
-             * @property {String} caption Описание, используемое в редакторе поля фильтрации.
-             * @property {Boolean} expanded Признак: true - редактор поля фильтрации создается в развернутом состоянии, false - в свёрнутом.
-             * @property {*} value Текущее значение фильтра. Это значение будет записываться в поле фильтрации по идентификатору id.
-             * @property {*} resetValue Значение сброшенного фильтра.
-             * @property {String} textValue Тестовое значение поля фильтра.
-             * @property {String} template Шаблон редактора поля фильтрации.
+             * @property {String|Number} id Идентификатор редактора. Является полем фильтрации, в которое будут записаны выбранные значения редактора (см. *value* и *resetValue*).
+             * @property {String} caption Заголовок редактора.
+             * @property {Boolean} expanded Признак, что редактор раскрыт. Когда *expanded=true*, то при открытии Панели фильтров редактор будет раскрытым.
+             * @property {Array|Boolean|*} value Выбранное значение редактора, которое будет записано в поле фильтрации (см. *id*).
+             * Используйте опцию, чтобы предустановить выбранные значения редактора при открытии панели фильтрации.
+             * @property {*} resetValue Значение редактора, которое будет установлено при сбросе фильтра.
+             * @property {String} textValue Текстовое значение, используемое для отображения в строке выбранных фильтров, когда для редактора используются значения из *resetValue* и *value* (предустановленное).
+             * @property {String} template Шаблон редактора.
              * Возможные значения:
              * <ol>
-             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов, по которым будет формироваться значение поля фильтрации. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelChooser}.</li>
+             *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser</b><br/>Шаблон, реализующий выборку идентификаторов. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelChooser}.</li>
              *    <li><b>tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange</b><br/>Шаблон, реализующий выборку из числового диапазона. Подробнее о редакторе вы можете прочитать {@link SBIS3.CONTROLS.FilterPanelDataRange}.</li>
-             *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера, в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
+             *    <li><b>js!SBIS3.CONTROLS.FilterPanelBoolean</b> - обыкновенный чекбокс {@link SBIS3.CONTROLS.FilterPanelBoolean}. Данный редактор поля фильтрации отображается без спойлера (см. {@link SBIS3.CONTROLS.Spoiler}), в связи с чем рекомендуется размещать его в конце списка доступных фильтров.</li>
              * </ol>
-             * @property {Object} properties Опции, передаваемые в редактор.
+             * @property {Object} properties Опции, передаваемые в конфигурацию редактора.
              * @property {String} properties.editor Тип редактора. Применяется при использовании шаблона редактора "tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser". Когда опция не установлена, используется класс редактора "Список" (значение list).
              * Возможные значения:
              * <ul>
@@ -101,14 +122,14 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *     <li>radio - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup}.</li>
              *     <li>fieldLink - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.</li>
              * </ul>
-             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола SBIS3.CONTROLS.FieldLink, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
+             * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS.FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
              * Описание контрола и список его опций вы можете найти <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/dictionary/'>здесь</a>.
              * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа {@link SBIS3.CONTROLS.FilterPanelChooser}.
              */
             /**
-             * @cfg {WS.Data/Collection/RecordSet|Array.<FilterPanelItem>} Устанавливает структуру полей фильтра.
+             * @cfg {WS.Data/Collection/RecordSet|Array.<FilterPanelItem>} Устанавливает конфигурацию редакторов и структуру полей фильтра.
              * @remark
-             * Когда значение опции установлено через RecordSet, то при изменении значения в любой из записей изменяется соответствующее значение в контексте панели фильтрации.
+             * Когда значение опции установлено через {@link WS.Data/Collection/RecordSet}, то при изменении значения в любой из записей RecordSet'а изменяется соответствующее значение в контексте панели фильтрации.
              * @see setItems
              * @see getItems
              */

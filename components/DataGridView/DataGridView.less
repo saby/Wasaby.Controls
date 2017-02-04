@@ -41,7 +41,7 @@
       }
      &.controls-DataGridView__emptyTable {
        .controls-DataGridView__table {
-         border-color: transparent;
+         border-width: 0;
        }
      }
    }
@@ -144,6 +144,15 @@
          }
       }
 
+      .controls-DataGridView__th, .controls-DataGridView__td {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: @data-grid-side-cell-padding;
+         }
+         &:last-child {
+            padding-right: @data-grid-side-cell-padding;
+         }
+      }
+
       .controls-DataGridView__th {
          position: relative;
          font-weight: normal;
@@ -242,15 +251,33 @@
    }
 
    &.ws-disabled {
-      .controls-DataGridView__td,
       .controls-DataGridView__td__checkBox {
          cursor: @list-view-disabled-cursor;
       }
    }
 
+   .generate-side-class(@i: 1) when (@i =< length(@data-grid-side-cell-padding-variants)) {
+      @nval: extract(@data-grid-side-cell-padding-variants, @i);
+      @val: @nval * 1px;
+      &.controls-DataGridView__sidePadding-@{nval} {
+         .controls-DataGridView__th, .controls-DataGridView__td {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: @val;
+            }
+            &:last-child {
+               padding-right: @val;
+            }
+         }
+      }
+      .generate-side-class(@i + 1);
+   }
+   .generate-side-class();
+
   &.controls-ListView__multiselect {
-     .controls-DataGridView__firstContentCell {
-        padding-left: @data-grid-ms-first-content-cell-padding-left;
+     .controls-DataGridView__th, .controls-DataGridView__td {
+        &.controls-DataGridView__firstContentCell {
+           padding-left: @data-grid-ms-first-content-cell-padding-left;
+        }
      }
 
      > .controls-DataGridView__table {
@@ -264,12 +291,6 @@
         }
      }
   }
-
-   &.controls-ListView__multiselect__off {
-      .controls-DataGridView__firstContentCell {
-         padding-left: @data-grid-first-content-cell-padding-left;
-      }
-   }
 
    &.controls-ListView__hideCheckBoxes {
       &.controls-ListView__multiselect {

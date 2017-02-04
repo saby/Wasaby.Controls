@@ -1,6 +1,6 @@
 .controls-RichEditorToolbar {
    height: auto;
-
+   cursor: default;
    &.ws-disabled {
       display: none;
    }
@@ -204,6 +204,11 @@
       .controls-ListView__item {
          display: block;
          width: 34px;
+
+         .controls-MenuItem__content {
+            min-height: initial;
+         }
+
          .controls-MenuItem__text {
             margin: 0;
          }
@@ -309,7 +314,7 @@
    }
    .fre-smiles {
       width: 192px;
-      font-family: 'EmojiFont','TensorFont Regular', 'TensorFont', sans-serif;
+      font-family: 'EmojiFont','TensorFont', sans-serif;
       &.controls-MenuButton__Menu {
          .controls-ListView__item {
             font-size: 18px;
