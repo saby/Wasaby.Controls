@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'Core/helpers/collection-helpers',
     'js!WS.Data/Functor/Compute',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTpl',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemContentTpl',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTemplate',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserListFooter',
     'js!SBIS3.CONTROLS.Link',
@@ -66,7 +67,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
-                _itemTpl: itemTpl,
+                _itemContentTpl: itemContentTpl,
                 _chooserTemplate: chooserTpl,
                 _afterChooserWrapper: footerTpl,
                 /**
@@ -89,6 +90,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             var opts = FilterPanelChooserList.superclass._prepareProperties.apply(this, arguments);
             return cFunctions.merge(opts, {
                 itemsSortMethod: itemsSortMethod,
+                /*Сейчас признак мультивыбранности записи не рисуется на сервере, из-за этого происходит лютое моргание.
+                * Как временное решение, пока ListView сам не начнёт рисовать мультивыбранность на сервере, нарисуем её сами.*/
+                itemTpl: itemTemplate,
                 _getRecordsForRedraw: getRecordsForRedraw,
                 _showFullList: false
             });

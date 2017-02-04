@@ -74,6 +74,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
+            tplOptions.selectedKeys = cfg.selectedKeys;
 
             return tplOptions;
          },
