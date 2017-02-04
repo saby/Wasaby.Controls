@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'Core/helpers/collection-helpers',
    'js!SBIS3.CONTROLS.ItemsMoveController',
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
-   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/ItemContentTpl',
+   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CheckBoxGroup' ], 
