@@ -4,15 +4,14 @@
    box-sizing: @DropdownList-box-sizing;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
-      display: block; /* ie8/9 */
-      display: flex;
+      .flexbox();
       width: 100%;
       white-space: nowrap;
       font-size: 0;
       box-sizing: border-box;
       align-items: center;
       .controls-DropdownList__textWrapper{
-        flex-shrink: 1;
+        .flex-shrink(1);
         overflow: hidden;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
@@ -38,13 +37,13 @@
       display: none;
       position: relative;
       top: 2px;
-      flex-shrink: 0;
+      .flex-shrink(0);
    }
    .controls-DropdownList__afterCaptionWrapper {
       display: none;
       position: relative;
       top: 2px;
-      flex-shrink: 0;
+      .flex-shrink(0);
    }
    &.controls-DropdownList__type-fastDataFilter {
      .controls-DropdownList__beforeCaptionWrapper {
@@ -425,23 +424,6 @@
    }
 }
 
-/* Все ie без поддержки flexBox'a */
-.ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
-  .controls-DropdownList .controls-DropdownList__selectedItem{
-     vertical-align: top;
-    .controls-DropdownList__textWrapper{
-      display: inline-block;
-      vertical-align: top;
-    }
-    .controls-DropdownList__beforeCaptionWrapper{
-       vertical-align: top;
-    }
-    .controls-DropdownList__afterCaptionWrapper{
-       vertical-align: top;
-    }
-  }
-}
-
 .ws-is-firefox {
    .controls-DropdownList__picker {
       .controls-DropdownList__header .controls-DropdownList {
@@ -464,33 +446,6 @@
 .ws-is-ie, .ws-is-firefox {
   .controls-DropdownList .controls-DropdownList__selectedItem{
      display: inline-block;
-     display: inline-flex;
+     .inline-flexbox();
   }
-}
-
-/* Все ie без поддержки flexBox'a
-   TODO: Выпилить 1 января 2017 года
-*/
-.ws-is-ie8, .ws-is-ie9 {
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      .controls-DropdownList__header {
-         height: 24px;
-      }
-      .controls-DropdownList__body {
-         .controls-DropdownList__item .controls-DropdownList__itemTextWrapper {
-            .controls-DropdownList__item-text-shadow {
-               display: none;
-            }
-            .controls-DropdownList__item-text {
-               padding-right: 16px;
-            }
-         }
-      }
-
-      &.controls-popup-revert-horizontal {
-         .controls-DropdownList__body {
-            margin-top: @DropdownList-height;
-         }
-      }
-   }
 }
