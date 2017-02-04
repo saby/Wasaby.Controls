@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       $protected: {
          _options: {
             view: null,
-            paging: null
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -74,7 +73,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       _scrollToPage: function(page){
          // Если первая страница - проскролим к самому верху, не считая оффсет
          var offset = page.offset ? this._offsetTop : 0;
-         view._scrollWatcher.scrollTo(page.offset + offset);
+         var view = this._options.view
+         view._getScrollWatcher().scrollTo(page.offset + offset);
       },
 
       _scrollToLastPage: function(){
