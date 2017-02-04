@@ -8,11 +8,10 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
    'Core/Deferred',
    'Core/helpers/fast-control-helpers',
    'js!WS.Data/Entity/Record',
-   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    'js!WS.Data/Di',
    'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CORE.FloatArea'
-], function (DialogActionBase, cInstance, EventBus, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
+], function (DialogActionBase, cInstance, EventBus, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, Dialog, FloatArea) {
 
    'use strict';
 
@@ -157,12 +156,15 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = (templateComponent && templateComponent.getRecord) ? templateComponent.getRecord() : null; //Ярик говорит, что dialogActionBase используется не только для formController'a
          if (currentRecord && currentRecord.isChanged()){
-            InformationPopupManager.showConfirmDialog({
-                  message: rk('Сохранить изменения?')
-               },
-               this._positiveSaveConfirmDialogHandler.bind(this, templateComponent, args),
-               this._negativeSaveConfirmDialogHandler.bind(this, args)
-            );
+            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               InformationPopupManager.showConfirmDialog({
+                     message: rk('Сохранить изменения?')
+                  },
+                  self._positiveSaveConfirmDialogHandler.bind(self, templateComponent, args),
+                  self._negativeSaveConfirmDialogHandler.bind(self, args)
+               );
+            });
+
          }
          else{
             self._setConfig.apply(self, args);
@@ -262,10 +264,12 @@ define('js!SBIS3.CONTROLS.OpenDialogAction', [
                if (!error._isOfflineMode){
                   //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
                   error.processed = true;
-                  InformationPopupManager.showMessageDialog({
-                     message: error.message,
-                     status: 'error'
-                  })
+                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                     InformationPopupManager.showMessageDialog({
+                        message: error.message,
+                        status: 'error'
+                     });
+                  });
                }
             }).addBoth(function(){
                self._hideLoadingIndicator();
