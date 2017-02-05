@@ -1821,7 +1821,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
-            this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
          },
 
          _editInPlaceMouseDownHandler: function(event) {
@@ -1846,7 +1845,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlaceController: function() {
             if (this._hasEditInPlace()) {
-               this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
@@ -1894,6 +1892,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
                         this._toggleEmptyData(false);
+                        this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
                         if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
@@ -1912,6 +1911,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                         this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
+                        this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
                      onDestroy: function() {
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
