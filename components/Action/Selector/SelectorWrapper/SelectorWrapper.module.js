@@ -44,7 +44,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /**
              * @cfg {String} Фильтр выбранных записей
              */
-            selectedFilter: functionalHelpers.constant(true)
+            selectedFilter: functionalHelpers.constant(true),
+            selectionType: 'all'
+
          },
          _linkedObject: null
       },
@@ -179,7 +181,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
          if(hoveredItem.container) {
-            if (this._isBranch(hoveredItem.record)) {
+            if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
                if (linkedObject.getMultiselect() && !linkedObject.getSelectedKeys().length ||
                    linkedObject._isSearchMode()) {
                   selectAction.show();
@@ -237,7 +239,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          if(cInstance.instanceOfMixin(this._getLinkedObject(), 'SBIS3.CONTROLS.TreeMixin')) {
             var isBranch = this._isBranch(item);
 
-            if (!isBranch && _private.selectionType === 'node' || isBranch && _private.selectionType === 'leaf') {
+            if (!isBranch && this.getSelectionType() === 'node' || isBranch && this.getSelectionType() === 'leaf') {
                return false;
             }
          }
@@ -271,8 +273,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       setSelectionType: function(selectionType) {
-         _private.selectionType = selectionType;
+         this._options.selectionType = selectionType;
          this._getLinkedObject().getContainer().addClass(SELECTION_TYPE_CLASSES[selectionType]);
+      },
+
+      getSelectionType: function() {
+         return this._options.selectionType;
       },
 
       _getLinkedObject: function() {
@@ -289,8 +295,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             added: [],
             removed: []
          }
-      },
-      selectionType: 'all'
+      }
    };
 
    return SelectorWrapper;
