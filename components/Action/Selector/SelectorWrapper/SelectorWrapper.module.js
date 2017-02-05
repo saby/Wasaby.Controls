@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          }
 
          /* При единичном выборе, клик по записи должен её выбирать, даже если это папка */
-         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && this._isBranch(item)) {
              event.setResult(false);
              this._applyItemSelect(item);
          }
