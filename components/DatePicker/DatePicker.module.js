@@ -101,11 +101,11 @@ define(
                corner: 'tl',
                horizontalAlign: {
                   side: 'right',
-                  offset: 145
+                  offset: 143
                },
                verticalAlign: {
                   side: 'top',
-                  offset: -11
+                  offset: -9
                }
             }
          },
