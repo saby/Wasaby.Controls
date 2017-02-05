@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/Sanitize",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   "js!SBIS3.CONTROLS.Action.SelectorAction"
 ],
     function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers) {
 
@@ -112,7 +113,17 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              *    <options>
              * </pre>
              */
-            dictionaries: []
+            dictionaries: [],
+            /**
+             * @cfg {String} Устанавливает режим открытия компонента выбора.
+             * @variant dialog Открытие производится в новом диалоговом окне.
+             * @variant floatArea Открытие производится на всплывающей панели.
+             */
+            selectMode: 'floatArea',
+            /**
+             * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+             */
+            useSelectorAction: false
          },
          _text: null
       },
@@ -131,7 +142,17 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                   return list
                })
             }
-         })
+         });
+
+         if(this._options.useSelectorAction) {
+            this.subscribe('onInit', function () {
+               this.subscribeTo(this._getSelectorAction(), 'onExecuted', function (event, meta, result) {
+                  if (result) {
+                     self.setSelectedItems(result);
+                  }
+               });
+            });
+         }
       },
       _drawSelectedItems: function(keysArr) {
          var self = this,
@@ -213,6 +234,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
 
       _clickHandler: function(e) {
+         var selectedItems = this.getSelectedItems();
+
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
             //люди биндятся на опцию selectedItem. И при сбросе значения на крестик, selectedItem тоже должен сбрасываться.
@@ -220,11 +243,29 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          } else {
             //TODO Пока делаю выбор из одного справочника, в дальнейшем доработать выбор из нескольких
             var dic = this._options.dictionaries[0];
-            this._showChooser(
-                dic && dic.template,
-                dic && dic.componentOptions
-            )
+
+            if(this._options.useSelectorAction && dic.template) {
+               this._getSelectorAction().execute({
+                  template: dic.template,
+                  componentOptions: dic.componentOptions || {},
+                  multiselect: this.getMultiselect(),
+                  selectionType: dic.selectionType || 'all',
+                  selectedItems: selectedItems ? selectedItems.clone() : selectedItems
+               })
+            } else {
+               this._showChooser(
+                  dic && dic.template,
+                  dic && dic.componentOptions
+               )
+            }
          }
+      },
+
+      _getSelectorAction: function() {
+         if(!this._selectorAction) {
+            this._selectorAction = this.getChildControlByName('SelectorButtonSelectorAction')
+         }
+         return this._selectorAction;
       },
 
       /**
