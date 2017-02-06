@@ -459,8 +459,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
                if (isAdd) {
                   this._isAdd = false;
-                  this._addTarget.remove();
-                  this._addTarget = undefined;
+                  this._destroyAddTarget();
                }
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
@@ -551,6 +550,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                this._addTarget = addTarget;
             },
+
+            _destroyAddTarget: function() {
+               if (this._addTarget) {
+                  this._addTarget.remove();
+                  this._addTarget = undefined;
+               }
+            },
             /**
              * Обработчик потери фокуса областью редактирования по месту
              * @param event
@@ -603,6 +609,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _destroyEip: function() {
                if (this._eip) {
                   this._eip.destroy();
+                  //Необходимо разрушить фейковую строку добавления, при разрушении редакторов, т.к. редакторы разрушаются
+                  //например при вызове relaod, а DOM чистится только после того, как отработает списочный метод.
+                  //В указанном промежутке времени,в DOM будет лежать пустая строка, которая выглядит некрасиво.
+                  this._destroyAddTarget();
                   this._eip = null;
                }
             },
