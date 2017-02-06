@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                   closeByExternalClick: true,
                   verticalAlign: {
                      side: 'top',
-                     offset: -4
+                     offset: -10
                   },
                   horizontalAlign: {
                     side: 'right'
