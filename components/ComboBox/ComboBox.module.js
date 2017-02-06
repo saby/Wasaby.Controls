@@ -2,8 +2,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBox",
-   "html!SBIS3.CONTROLS.ComboBox",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
+   "tmpl!SBIS3.CONTROLS.ComboBox",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!WS.Data/Collection/RecordSet",
@@ -13,9 +13,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
    "js!SBIS3.CORE.MarkupTransformer",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    'css!SBIS3.CONTROLS.ComboBox'
 ], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
