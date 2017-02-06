@@ -400,8 +400,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _setSelectedEmptyRecord: function(){
             var oldKeys = this.getSelectedKeys();
-            this._drawSelectedValue(null, [this._emptyText]);
+            this._options.selectedItems.clear();
             this._options.selectedKeys = [null];
+            this._drawSelectedValue(null, [this._emptyText]);
             this._notifySelectedItems(this._options.selectedKeys,{
                added : [null],
                removed : oldKeys
