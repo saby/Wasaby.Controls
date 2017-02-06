@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             'rgb(128, 0, 128)': 'purple',
             'rgb(128, 128, 128)': 'grey'
          },
-         INLINE_TEMPLATE: 6
+         INLINE_TEMPLATE: '6'
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorRoundToolbar
