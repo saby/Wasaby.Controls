@@ -2679,10 +2679,11 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
+          * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
           */
-         scrollToItem: function(item){
+         scrollToItem: function(item, toBottom){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId());
+               this._scrollToItem(item.getId(), toBottom);
             }
          },
 
