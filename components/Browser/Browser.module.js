@@ -129,6 +129,7 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
+	         contentTpl: null,
             /**
              * @cfg {СolumnsConfigObject} columnsConfig Конфигурация колонок
              */
@@ -264,7 +265,9 @@ define('js!SBIS3.CONTROLS.Browser', [
       _modifyOptions: function() {
          var options = Browser.superclass._modifyOptions.apply(this, arguments);
 
-         options.content = tplUtil.prepareTemplate(options.content);
+	      if (!options.contentTpl) {
+		      options.contentTpl = tplUtil.prepareTemplate(options.content);
+	      }
 
          return options;
       },
