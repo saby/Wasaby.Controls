@@ -214,6 +214,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                caption: 'Выбрать',
                name: SELECT_ACTION_NAME,
                isMainAction: true,
+               allowChangeEnable: false,
                onActivated: function(container, key, item) {
                   self._onItemActivatedHandler(null, {
                      item: item,
