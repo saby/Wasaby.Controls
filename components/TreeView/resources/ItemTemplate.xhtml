@@ -6,9 +6,10 @@
          projection.getCollection()
       ),
       hasLoadedChild = children.length > 0,
-      loadedWithoutChilds = (it.projItem.isLoaded() || !hasLoadedChild) && nodePropertyValue != null,
+      hierField$ = it.projItem.getContents().get(it.parentProperty + '$'),
+      loadedWithoutChilds = !(it.projItem.isLoaded() || hasLoadedChild) && hierField$ != null,
       padding = it.paddingSize * (it.projItem.getLevel() - 1) + it.originallPadding,
-      drawExpandIcon = !!nodePropertyValue;
+      drawExpandIcon = nodePropertyValue === true || (nodePropertyValue === false && !loadedWithoutChilds);
       classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue == null ? 'leaf' : nodePropertyValue == true ? 'node' : 'hidden'),
       classNodeState = nodePropertyValue !== null ? (' controls-TreeView__item-' + (it.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '',
       classPresenceLoadedNodes = loadedWithoutChilds ? ' controls-ListView__item-without-child' : '',
