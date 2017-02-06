@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserListFooter',
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView'
-], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, ComputeFunctor, dotTplFn, itemTpl, chooserTpl, footerTpl) {
+], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         //TODO: выписана задача https://inside.tensor.ru/opendoc.html?guid=62947517-9859-4291-a899-42bacf350341 по которой
         //будет предоставлен функционал фильтрации на уровне проекции с учётом сортировки, и перебитие приватной опции
