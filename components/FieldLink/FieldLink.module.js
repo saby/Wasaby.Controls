@@ -379,11 +379,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           init: function() {
-             var self = this,
-                 linkCollection;
-
              FieldLink.superclass.init.apply(this, arguments);
-             linkCollection = this._getLinkCollection();
+
+             var self = this,
+                 linkCollection = this._getLinkCollection(),
+                 linkCollectionHide = linkCollection.hidePicker.bind(linkCollection);
+
+
+             /* По стандарту, если открыта выпадашка всех записей, то по уход фокуса/вводу текста она должна скрываться. */
+             this.subscribe('onTextChange', linkCollectionHide);
+             this.subscribe('onFocusOut', linkCollectionHide);
+
              this.subscribeTo(linkCollection, 'onDrawItems', this._onDrawItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onCrossClick', this._onCrossClickItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onItemActivate', this._onItemActivateItemsCollection.bind(this))
