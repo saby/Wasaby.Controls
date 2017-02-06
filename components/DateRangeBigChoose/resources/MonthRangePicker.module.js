@@ -206,7 +206,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       },
 
       _onItemCaptionMouseEnter: function (e) {
-         console.log('_onItemCaptionMouseEnter');
          var $target = $(e.target),
             target = $target.closest('.controls-RangeSelectable__item', this._getItemsContainer());
          // Если двинули мышкой во время прокрутки списка, то это событие могло выстрелить до того как
