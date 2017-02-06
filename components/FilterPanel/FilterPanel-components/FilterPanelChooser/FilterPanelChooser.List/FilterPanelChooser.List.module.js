@@ -4,13 +4,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'Core/core-functions',
     'Core/CommandDispatcher',
     'Core/helpers/collection-helpers',
+    'js!WS.Data/Functor/Compute',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTpl',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserListFooter',
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView'
-], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, dotTplFn, itemTpl, chooserTpl, footerTpl) {
+], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, ComputeFunctor, dotTplFn, itemTpl, chooserTpl, footerTpl) {
     var
         //TODO: выписана задача https://inside.tensor.ru/opendoc.html?guid=62947517-9859-4291-a899-42bacf350341 по которой
         //будет предоставлен функционал фильтрации на уровне проекции с учётом сортировки, и перебитие приватной опции
@@ -22,9 +23,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             }
             return records;
         },
-        itemsSortMethod = function(first, second) {
+        itemsSortMethod = new ComputeFunctor(function(first, second) {
             return second.collectionItem.get('count') - first.collectionItem.get('count');
-        };
+        }, ['count']);
     'use strict';
 
     /**

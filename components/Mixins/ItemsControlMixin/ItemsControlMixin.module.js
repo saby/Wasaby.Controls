@@ -758,7 +758,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: this._options.items,
+                  data: cFunctions.clone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
@@ -1004,8 +1004,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
             }
             needToRevive = markupExt.hasComponents;
+
+            if (!Object.isEmpty(this._options.groupBy)) {
+               this._groupFixOnRedrawItemInner(item, targetElement);
+            }
          }
          return needToRevive;
+      },
+
+      //TODO надо избавиться от этого метода
+      //если в списке есть группировка, при переносе в папку записи, следующей за ней
+      //не происходит события move, а только меняется запись
+      //мы просто перерисовываем ее, а должны еще перерисовать группу
+      _groupFixOnRedrawItemInner: function(item) {
+         var targetElement = this._getDomElementByItem(item);
+         var behElement;
+         if (!this._options._canApplyGrouping(item, this._options)) {
+            //если внутрь папки
+            behElement = targetElement.prev();
+            //если предыдущий группировка, то переносим ее
+            if (behElement.length && behElement.hasClass('controls-GroupBy')) {
+               targetElement.after(behElement);
+               //если группа оказалась пустая, удаляем ее
+               var behNextElement = behElement.next();
+               if (behNextElement.length && !behNextElement.hasClass('js-controls-ListView__item')) {
+                  behElement.remove();
+               }
+            }
+         }
       },
 
       _calculateDataBeforeRedraw: function(data) {
@@ -1286,7 +1312,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this.redraw()
                }
             }
-            else if (this._dataSource) {
+            else if (this._dataSource && !(this._options.dataSource && this._options.dataSource.firstLoad === false)) {
                this.reload();
             }
             if (this._options._serverRender) {

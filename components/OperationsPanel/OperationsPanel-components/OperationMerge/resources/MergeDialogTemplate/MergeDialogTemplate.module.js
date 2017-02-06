@@ -139,30 +139,32 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             }
             return keys;
         },
-        onSelectedItemChange: function(event, key) {
+        onSelectedItemChange: function(event, mergeTo) {
             var
+                id,
                 record,
                 self = this,
                 isAvailable,
                 showMergeButton,
-               idProperty = this._options.idProperty,
+                idProperty = this._options.idProperty,
                 items = this._treeView.getItems();
             this._treeView._toggleIndicator(true);
             this._options.dataSource.call(this._options.testMergeMethodName, {
-                'target': key,
-                'merged': this._getMergedKeys(key)
+                'target': mergeTo,
+                'merged': this._getMergedKeys(mergeTo)
             }).addCallback(function (data) {
                 data.getAll().each(function(rec) {
-                    record = items.getRecordById(rec.get(idProperty));
-                    if (rec.get(idProperty) == key) {
-                        isAvailable = true;
-                    } else {
+                    id = rec.get(idProperty);
+                    record = items.getRecordById(id);
+                    if (id !== mergeTo) {
                         isAvailable = rec.get(AVAILABLE_FIELD_NAME);
                         showMergeButton = showMergeButton || isAvailable;
                     }
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
                 }, self);
+                //Выбранной записи всегда выставляем AVAILABLE = true
+                items.getRecordById(mergeTo).set(AVAILABLE_FIELD_NAME, true);
                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
                 self._treeView._toggleIndicator(false);

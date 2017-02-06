@@ -44,10 +44,13 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             mode: 'dialog',
             /**
-             * @cfg {object} Объект содержащий опции компонента.
+             * @cfg {Object} Объект содержащий опции компонента.
              */
-            componentOptions: null
-
+            componentOptions: null,
+            /*
+             * @cfg {Object} Объкт содержащий опции диалога 
+             */
+            dialogOptions: null
          },
          _dialog: undefined,
          /**
@@ -136,6 +139,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _showDialog: function(config, meta, mode){
          var floatAreaCfg,
              Component;
+         if (this._options.dialogOptions) {
+            cMerge(config, this._options.dialogOptions);
+         }
          mode = mode || this._options.mode;
          if (mode == 'floatArea') {
             Component = FloatArea;
@@ -176,7 +182,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _buildComponentConfig: function(meta) {
-         return meta && meta.componentOptions ? meta.componentOptions : {};
+         var
+            config = cMerge({}, this._options.componentOptions || {}),
+            metaConfig = meta && meta.componentOptions ? meta.componentOptions : {};
+         return cMerge(config,  metaConfig );
       },
 
       setDialogComponent: function(val) {

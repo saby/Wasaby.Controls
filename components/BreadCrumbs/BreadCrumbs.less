@@ -78,19 +78,29 @@
       }
    }
 
+   &.controls-BreadCrumbs__home-hide {
+      .controls-BreadCrumbs__crumb-home {
+         display: none;
+      }
+      .controls-BreadCrumbs__itemsContainer {
+         margin-left: 0;
+      }
+   }
+
 	.controls-BreadCrumbs__hierWrapper{
 		height: 13px;
 		width: 14px;
-		display: inline-block;
+       .inline-flexbox();
+       .flex-shrink(0);
 		&:last-of-type{
 			background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
 			position: relative;
-  			top: -3px;
+  			top: -4px;
 		}
 	}
 
    .controls-MenuItem{
-      display: block;
+      .flexbox();
    }
    &.controls-Menu__Popup {
       padding: 4px 0;
