@@ -898,6 +898,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                meta = fileobj.id || '',
                URL = this._prepareImageURL(fileobj);
+            key = key + '';
             switch (key) {
                case "1":
                   this._insertImg(URL, 'image-template-left', meta);
