@@ -382,17 +382,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.init.apply(this, arguments);
 
              var self = this,
-                 linkCollection = this._getLinkCollection(),
-                 linkCollectionHide = linkCollection.hidePicker.bind(linkCollection);
-
+                 linkCollection = this._getLinkCollection();
 
              /* По стандарту, если открыта выпадашка всех записей, то по уход фокуса/вводу текста она должна скрываться. */
-             this.subscribe('onTextChange', linkCollectionHide);
-             this.subscribe('onFocusOut', function(event, isDestroyed, focusedControl) {
-                if((focusedControl && focusedControl !== linkCollection._picker) || !focusedControl) {
-                   linkCollectionHide();
-                }
-             });
+             this.subscribe('onTextChange', linkCollection.hidePicker.bind(linkCollection));
 
              this.subscribeTo(linkCollection, 'onDrawItems', this._onDrawItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onCrossClick', this._onCrossClickItemsCollection.bind(this))
@@ -1217,6 +1210,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                       }
                       break;
+                   case constants.key.tab:
+                      this._getLinkCollection().hidePicker();
                 }
              }
           },
