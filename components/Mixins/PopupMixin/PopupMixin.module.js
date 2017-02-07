@@ -170,7 +170,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
-            isHint: true
+            isHint: true,
+            parentContainer: ''
          }
       },
 
@@ -214,7 +215,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         container.appendTo('body');
+
+         if (this._options.parentContainer) {
+            container.appendTo($('.' + this._options.parentContainer));
+         }
+         else {
+            container.appendTo('body');
+         }
 
          this._saveDefault();
          this._resetToDefault();
@@ -267,6 +274,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
+            if (this._options.parentContainer && !element.hasClass(this._options.parentContainer)) {
+               break;
+            }
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                if (this._fixed){
@@ -561,6 +571,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
+
+            if (this._options.parentContainer) {
+               var parContainer = $('.'+this._options.parentContainer);
+               var parOffset = parContainer.offset();
+               this._targetSizes.offset.top = this._targetSizes.offset.top - parOffset.top + parContainer.scrollTop();
+               this._targetSizes.offset.left = this._targetSizes.offset.left - parOffset.left + parContainer.scrollLeft();
+            }
 
             /* task:1173219692
             im.dubrovin на Chrome on Android при получении offset необходимо учитывать scrollTop , scrollLeft */
