@@ -309,7 +309,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getPosition: function (target) {
              var position = target.position,
                  size = target.size,
-                 parentContainer = this.getParent().getContainer()[0],
+                 $parentContainer = this.getParent().getContainer(),
+                 parentContainer = $parentContainer[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
                  marginRight = parentContainer.offsetWidth - (position.left + size.width),
                  marginTop = position.top,
@@ -317,6 +318,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              if(marginRight < 0 && !isVertical) {
                 marginRight = 0;
+             }
+
+             if($parentContainer.hasClass('controls-ListView__bottomStyle')) {
+                marginBottom -= 30;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
