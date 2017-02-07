@@ -451,7 +451,13 @@
 }
 
 .ws-is-mobile-android {
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter .controls-DropdownList__body {
-      margin-top: -2px; //На андроиде поднимаю на 1px выше, иначе в портретной ориентации появляется полпикселя бордера
+   //На андроиде поднимаю на 1px выше, иначе в портретной ориентации появляется полпикселя бордера
+   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
+      &.controls-popup-revert-horizontal .controls-DropdownList__body { //при controls-popup-revert-horizontal margin положительный
+         margin-top: 23px;
+      }
+      .controls-DropdownList__body {
+         margin-top: -2px;
+      }
    }
 }
