@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
       'Core/ClientsGlobalConfig'
    ],
 
-   function(SBISStorageAdapter, IStorage, ClientsGlobalConfig) {
+   function(SBISStorageAdapter, ClientsGlobalConfig) {
 
       'use strict';
 
