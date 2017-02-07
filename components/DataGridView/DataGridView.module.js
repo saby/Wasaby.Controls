@@ -598,20 +598,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
+             columns = this.getColumns(),
              trs = [],
              cells = [],
-             index, hoveredColumn, cell, colValue, colValueText;
+             index, hoveredColumn, cell, colIndex, colValue, colValueText;
 
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
+            colIndex = index + (this.getMultiselect() ? 1 : 0);
 
-            if(!this.getColumns()[index + (this.getMultiselect() ? 1 : 0)].cellTemplate && !td[0].getAttribute('title')) {
+            if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
-               colValueText = colValue.innerText;
 
-               if(dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
-                  colValue.setAttribute('title', colValueText);
+               if(colValue) {
+                  colValueText = colValue.innerText;
+
+                  if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
+                     colValue.setAttribute('title', colValueText);
+                  }
                }
             }
 
