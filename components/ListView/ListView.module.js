@@ -1315,7 +1315,8 @@ define('js!SBIS3.CONTROLS.ListView',
                       offset: event.pageX
                    }
                 };
-            if(itemsActions && itemsActions.hasVisibleActions()) {
+
+            if(itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
                if (!this._checkItemAction()) {
                   if (this._hoveredItem && this._hoveredItem.container && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                      event.preventDefault();
@@ -3357,8 +3358,13 @@ define('js!SBIS3.CONTROLS.ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return this._options.enabled && !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return this._options.enabled && this._needProcessMouseEvent(e);
          },
+
+         _needProcessMouseEvent: function(e) {
+            return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+         },
+
          _beginDragHandler: function(dragObject, e) {
             var
                 target;
