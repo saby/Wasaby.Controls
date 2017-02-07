@@ -170,7 +170,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
-            isHint: true
+            isHint: true,
+            parentContainer: ''
          }
       },
 
