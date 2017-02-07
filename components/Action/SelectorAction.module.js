@@ -18,19 +18,31 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction', [
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
           _buildComponentConfig: function(metaConfig) {
-             var cfg = SelectorAction.superclass._buildComponentConfig.call(this, metaConfig),
-                 chooseCfg = {
-                    handlers: {
-                       onSelectComplete: function(event, meta) {
-                          this.sendCommand('close', meta);
-                       }
-                    },
-                    selectedItems: metaConfig.selectedItems,
-                    multiselect: metaConfig.multiselect,
-                    selectionType: metaConfig.selectionType
-                 };
+             var cfg = SelectorAction.superclass._buildComponentConfig.call(this, metaConfig);
 
-             return сMerge(cfg, chooseCfg);
+             function onSelectComplete(event, meta) {
+                this.sendCommand('close', meta);
+             }
+
+             сMerge(cfg, {
+                selectedItems: metaConfig.selectedItems,
+                multiselect: metaConfig.multiselect,
+                selectionType: metaConfig.selectionType
+             });
+
+             if(cfg.handlers) {
+                if (cfg.handlers.onSelectComplete) {
+                   cfg.handlers.onSelectComplete = [cfg.handlers.onSelectComplete, onSelectComplete];
+                } else {
+                   cfg.handlers.onSelectComplete = onSelectComplete;
+                }
+             } else {
+                cfg.handlers = {
+                   onSelectComplete: onSelectComplete
+                }
+             }
+
+             return cfg;
           },
           _doExecute: function(meta) {
              return this._opendEditComponent(meta, meta.template || this._options.template);
