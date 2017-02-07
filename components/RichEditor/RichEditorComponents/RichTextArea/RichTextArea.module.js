@@ -1023,6 +1023,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }.bind(this));
 
+               this._inputControl.bind('scroll', function(e) {
+                  if (this._imageOptionsPanel) {
+                     this._imageOptionsPanel.hide();
+                  }
+               }.bind(this));
 
                this._inputControl.attr('tabindex', 1);
 
