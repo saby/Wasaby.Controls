@@ -1882,6 +1882,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
+                        /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
+                        * а после удаления emptyData, тулбар визуально подскочит вверх*/
+                        this._toggleEmptyData(false);
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
@@ -1893,7 +1896,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                         this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
-                        this._toggleEmptyData(false);
                         this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
