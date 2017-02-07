@@ -550,6 +550,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
+          _showChooser: function() {
+             if(this._options.useSelectorAction) {
+                this.showSelector.apply(this, arguments);
+             } else {
+                FieldLink.superclass._showChooser.apply(this, arguments);
+             }
+          },
+
           _showSelector: function(key) {
              var config;
 
