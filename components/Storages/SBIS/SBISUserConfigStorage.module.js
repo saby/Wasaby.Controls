@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
       'Core/UserConfig'
    ],
 
-   function(SBISStorageAdapter, IStorage, UserConfig) {
+   function(SBISStorageAdapter, UserConfig) {
 
       'use strict';
 

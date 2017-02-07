@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.SessionStorage',
          },
 
          getItem: function (key) {
-            CSessionStorage.get(key);
+            return CSessionStorage.get(key);
          },
 
          removeItem: function (key) {
