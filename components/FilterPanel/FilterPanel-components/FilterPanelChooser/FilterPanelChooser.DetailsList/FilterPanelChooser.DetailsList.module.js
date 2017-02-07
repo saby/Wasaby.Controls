@@ -81,11 +81,21 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
             data: opts.properties.items.getRawData(),
             idProperty: opts.properties.idProperty
          });
-         properties.selectedKeys = [];
-         cHelpers.forEach(opts.value, function(item) {
-            properties.selectedKeys.push(item['id']);
-         });
+         properties.selectedKeys = this._prepareSelectedKeys(opts.value);
          return properties;
+      },
+
+      _prepareSelectedKeys: function(items) {
+         var
+            result = [];
+         cHelpers.forEach(items, function(item) {
+            result.push(item['id']);
+         });
+         return result;
+      },
+
+      _updateView: function(value) {
+         this._getListView().setSelectedKeys(this._prepareSelectedKeys(value));
       },
 
       _updateValue: function() {
