@@ -420,6 +420,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (!this._readyContolDeffered.isReady()) {
                this._readyContolDeffered.errback();
             }
+            this._inputControl.unbind('mouseup dblclick mousedown touchstart scroll');
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 
