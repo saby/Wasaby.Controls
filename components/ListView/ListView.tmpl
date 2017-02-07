@@ -7,6 +7,7 @@
             </div>
         </div>
     </div>
+    <div class="controls-ListView__virtualScrollTop"></div>
     <ws:if data="{{ _serverRender && _resultsRecord && resultsPosition == 'top' && resultsTpl}}">
        <ws:partial template="{{resultsTpl}}" item="{{_resultsRecord}}" multiselect="{{multiselect}}" />
     </ws:if>
@@ -37,5 +38,6 @@
     </ws:if>
     <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
+    <div class="controls-ListView__virtualScrollBottom"></div>
     <div class="controls-ListView__scrollPager{{ !infiniteScroll ? ' ws-hidden'}}"></div>
 </div>

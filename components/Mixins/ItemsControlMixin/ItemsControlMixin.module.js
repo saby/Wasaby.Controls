@@ -1972,17 +1972,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target) {
+      _scrollTo: function scrollTo(target, toBottom) {
          if (typeof target === 'string') {
             target = $(target);
          }
 
-         LayoutManager.scrollToElement(target);
+         LayoutManager.scrollToElement(target, toBottom);
       },
-      _scrollToItem: function(itemId) {
+      _scrollToItem: function(itemId, toBottom) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer);
+            this._scrollTo(itemContainer, toBottom);
          }
       },
       /**

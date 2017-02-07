@@ -795,6 +795,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            this._options.virtualScrolling = true;
             if (this._options.virtualScrolling){
                this._virtualScrollController = new VirtualScrollController({
                   view: this
@@ -1246,7 +1247,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hoveredItem = this.getHoveredItem(),
                 emptyHoveredItem;
 
-            if (hoveredItem.container === null) {
+            if (hoveredItem && hoveredItem.container === null) {
                return;
             }
 
@@ -2244,6 +2245,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.bottom -= this._getAdditionalOffset(items);
             }
             if (this.isInfiniteScroll()) {
+               // НЕ ЗАБЫТЬ ВЕРНУТЬ И РАЗОБРАТЬСЯ
                //this._preScrollLoading();
             }
          },
@@ -2253,6 +2255,24 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._getSourceNavigationType() == 'Offset'){
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
             }
+            if (this._options.virtualScrolling) {
+               this._virtualScrollController.addItems(newItems);
+            }
+         },
+
+         _getItemsForRedrawOnAdd: function(items, groupId){
+            var itemsToAdd = ListView.superclass._getItemsForRedrawOnAdd.apply(this, arguments),
+               index, range;
+            if (this._options.virtualScrolling) {
+               range = this._virtualScrollController.getCurrentRange();
+               for (var i = 0; i < itemsToAdd.length; i++) {
+                  index = this._getItemsProjection().getIndexByHash(itemsToAdd[i].getHash());
+                  if (index < range[0] && index > range[1]) {
+                     itemsToAdd.splice(i, 1);
+                  }
+               }
+            } 
+            return itemsToAdd;
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
@@ -2436,11 +2456,9 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
-               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
-            this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -2587,10 +2605,11 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
+          * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
           */
-         scrollToItem: function(item){
+         scrollToItem: function(item, toBottom){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId());
+               this._scrollToItem(item.getId(), toBottom);
             }
          },
 
