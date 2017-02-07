@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "js!SBIS3.CORE.FloatArea",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
-   "Core/helpers/collection-helpers"
-], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers){
+   "Core/helpers/collection-helpers",
+   'Core/IoC'
+], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers, IoC){
    'use strict';
 
    /**
