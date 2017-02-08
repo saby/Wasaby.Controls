@@ -381,11 +381,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           init: function() {
-             var self = this,
-                 linkCollection;
-
              FieldLink.superclass.init.apply(this, arguments);
-             linkCollection = this._getLinkCollection();
+
+             var self = this,
+                 linkCollection = this._getLinkCollection();
+
+             /* По стандарту, если открыта выпадашка всех записей, то по уход фокуса/вводу текста она должна скрываться. */
+             this.subscribe('onTextChange', linkCollection.hidePicker.bind(linkCollection));
+
              this.subscribeTo(linkCollection, 'onDrawItems', this._onDrawItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onCrossClick', this._onCrossClickItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onItemActivate', this._onItemActivateItemsCollection.bind(this))
@@ -547,6 +550,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 });
              } else {
                 this._showChooser(template, componentOptions);
+             }
+          },
+
+          _showChooser: function() {
+             if(this._options.useSelectorAction) {
+                this.showSelector.apply(this, arguments);
+             } else {
+                FieldLink.superclass._showChooser.apply(this, arguments);
              }
           },
 
@@ -1197,6 +1208,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                       }
                       break;
+                   case constants.key.tab:
+                      this._getLinkCollection().hidePicker();
                 }
              }
           },

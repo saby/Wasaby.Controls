@@ -421,6 +421,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (!this._readyContolDeffered.isReady()) {
                this._readyContolDeffered.errback();
             }
+            this._inputControl.unbind('mouseup dblclick mousedown touchstart scroll');
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 
@@ -904,7 +905,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this._insertImg(URL, 'image-template-left', meta);
                   break;
                case "2":
-                  this._insertImg(URL, '', meta, '<p style="text-align: center;">', '</p><p></p>');
+                  this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
                   this._insertImg(URL, 'image-template-right ', meta);
@@ -1009,15 +1010,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }.bind(this));
-               this._inputControl.bind('click', function(e) {
+               this._inputControl.bind('mousedown touchstart', function(e) {
                   if (this._inputControl.attr('contenteditable') !== 'false') {
                      var target = e.target;
                      if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                      self._showImageOptionsPanel($(target));
+                        e.preventDefault();
+                        self._showImageOptionsPanel($(target));
                      }
                   }
                }.bind(this));
 
+               this._inputControl.bind('scroll', function(e) {
+                  if (this._imageOptionsPanel) {
+                     this._imageOptionsPanel.hide();
+                  }
+               }.bind(this));
 
                this._inputControl.attr('tabindex', 1);
 
@@ -1301,6 +1308,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._imageOptionsPanel = new ImageOptionsPanel({
                   parent: self,
                   target: target,
+                  targetPart: true,
                   corner: 'bl',
                   closeByExternalClick: true,
                   element: $('<div></div>'),
@@ -1544,7 +1552,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
                   maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
                   style = ' style="width: 25%"';
-               self.insertHtml(before + '<img class="controls-RichEditor__noneditable ' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
+               self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
             });
             if (cConstants.browser.isIE8) {
                $('body').append(img);

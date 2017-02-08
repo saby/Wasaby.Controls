@@ -8,11 +8,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'Core/Deferred',
       'Core/helpers/fast-control-helpers',
       'js!WS.Data/Entity/Record',
-      'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'js!WS.Data/Di',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, InformationPopupManager, Di, Dialog, FloatArea) {
+   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, Dialog, FloatArea) {
    'use strict';
 
    /**
@@ -153,7 +152,9 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _saveRecord: function(){
-         var args = arguments, 
+         var
+             self = this,
+             args = arguments,
              resultDeferred = new Deferred(),
              templateComponent,
              currentRecord;
@@ -161,12 +162,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          templateComponent = this._dialog._getTemplateComponent();
          currentRecord = templateComponent ? templateComponent.getRecord() : null;
          if (currentRecord && currentRecord.isChanged()){
-            InformationPopupManager.showConfirmDialog({
-                  message: rk('Сохранить изменения?')
-               },
-               this._confirmDialogHandler.bind(this, true, resultDeferred, templateComponent, args),
-               this._confirmDialogHandler.bind(this, false, resultDeferred, templateComponent, args)
-            );
+            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               InformationPopupManager.showConfirmDialog({
+                     message: rk('Сохранить изменения?')
+                  },
+                  self._confirmDialogHandler.bind(self, true, resultDeferred, templateComponent, args),
+                  self._confirmDialogHandler.bind(self, false, resultDeferred, templateComponent, args)
+               );
+            });
             return resultDeferred;
          }
          else{
@@ -261,10 +264,12 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                if (!error._isOfflineMode){
                   //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
                   error.processed = true;
-                  InformationPopupManager.showMessageDialog({
-                     message: error.message,
-                     status: 'error'
-                  })
+                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                     InformationPopupManager.showMessageDialog({
+                        message: error.message,
+                        status: 'error'
+                     });
+                  });
                }
             });
             return def;
