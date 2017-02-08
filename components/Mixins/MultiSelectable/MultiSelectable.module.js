@@ -799,7 +799,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 		   }
          /* Если во время вычитки записей изменили ключи,
             загрузку надо отменять, иначе получим расхождение ключи <=> записи*/
-         if(this._loadItemsDeferred) {
+         if(this._loadItemsDeferred && (addedKeys.length || removedKeys.length)) {
             this._loadItemsDeferred.cancel();
          }
          this._notifySelectedItems(this._options.selectedKeys, {
