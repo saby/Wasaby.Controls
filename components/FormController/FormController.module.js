@@ -240,18 +240,21 @@ define('js!SBIS3.CONTROLS.FormController', [
          CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
       },
 
-      _processingRecordDeferred: function(){
+      _processingRecordDeferred: function() {
          var receiptRecordDeferred = this._options._receiptRecordDeferred,
              needUpdateKey = !this._options.key,
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
+             config = {
+               hideIndicator: true,
+               eventName: eventName
+             },
              self = this;
-         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
-            this._toggleOverlay(true);
-            receiptRecordDeferred.addCallback(function(record){
+         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')) {
+            receiptRecordDeferred.addCallback(function (record) {
                self.setRecord(record, needUpdateKey);
-               self._toggleOverlay(false);
-               self._actionNotify(eventName);
+               return record;
             });
+            this._prepareSyncOperation(receiptRecordDeferred, config, {});
          }
       },
 
