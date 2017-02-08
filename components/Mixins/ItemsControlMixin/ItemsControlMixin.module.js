@@ -2029,7 +2029,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _scrollToItem: function(itemId, toBottom) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer);
+            this._scrollTo(itemContainer, toBottom);
          }
       },
       /**
