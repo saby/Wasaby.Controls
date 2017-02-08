@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              }
 
              if($parentContainer.hasClass('controls-ListView__bottomStyle')) {
-                marginBottom -= 30;
+                marginBottom -= 33;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
