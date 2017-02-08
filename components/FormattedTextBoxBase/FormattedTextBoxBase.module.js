@@ -681,7 +681,7 @@ define(
              * нижнего подчёркивания.
              * !Важно: нельзя использовать знак вопроса.
              */
-            _maskReplacer: '_',
+            _maskReplacer: ' ',
             // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
             _maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
