@@ -421,6 +421,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (!this._readyContolDeffered.isReady()) {
                this._readyContolDeffered.errback();
             }
+            this._inputControl.unbind('mouseup dblclick mousedown touchstart scroll');
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 
@@ -1009,15 +1010,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }.bind(this));
-               this._inputControl.bind('click', function(e) {
+               this._inputControl.bind('mousedown touchstart', function(e) {
                   if (this._inputControl.attr('contenteditable') !== 'false') {
                      var target = e.target;
                      if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                        var
-                           selection = window.getSelection ? window.getSelection() : null;
-                        if (selection) {
-                           selection.removeAllRanges();
-                        }
+                        e.preventDefault();
                         self._showImageOptionsPanel($(target));
                      }
                   }
@@ -1311,6 +1308,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._imageOptionsPanel = new ImageOptionsPanel({
                   parent: self,
                   target: target,
+                  targetPart: true,
                   corner: 'bl',
                   closeByExternalClick: true,
                   element: $('<div></div>'),
