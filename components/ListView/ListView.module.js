@@ -2701,20 +2701,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Переопределённый метод itemsControlMixin'a
-          * Необходим, т.к. itemsControlMixin не знает, что может быть кастомный скролл
-          * @param target
-          * @private
-          */
-         _scrollTo: function(target) {
-            if(this.isInfiniteScroll()) {
-               this._getScrollWatcher().scrollToElement(target);
-            } else {
-               ListView.superclass._scrollTo.apply(this, arguments);
-            }
-         },
-
-         /**
           * Проверяет, нахдится ли скролл внизу
           * @param noOffset
           * @returns {*|*|boolean|Boolean}
