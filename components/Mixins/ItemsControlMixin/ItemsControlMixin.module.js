@@ -1281,6 +1281,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
+               this._container.addClass('controls-ListView__dataLoaded');
             }
          },
          destroy : function() {
@@ -2072,6 +2073,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       setDisplayProperty: function(displayProperty) {
          this._options.displayProperty = displayProperty;
+      },
+
+      /**
+       * Задаёт шаблон отображения содержимого каждого элемента коллекции
+       * @param {String} tpl Шаблон отображения содержимого каждого элемента коллекции
+       * @example
+       * <pre>
+       *    {{=it.item.get("title")}}
+       * </pre>
+       */
+      setItemContentTpl: function(tpl) {
+         this._options.itemContentTpl = tpl;
       },
 
 

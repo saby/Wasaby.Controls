@@ -4,7 +4,7 @@
          <option name="icon">sprite:icon-16 icon-Home2 icon-primary</option>
          <option name="activableByClick" type="boolean">false</option>
          <option name="tabindex">0</option>
-         <option name="tooltip">{{=rk('Поставить текущую дату'}}</option>
+         <option name="tooltip">{{=rk('Поставить текущую дату')}}</option>
       </component>
 
       <div class="controls-DateRangeBigChoose__header-date-pickers">
@@ -19,6 +19,7 @@
                <option name="date" bind="endValue"></option>
                <option name="onTextChangeMode">onTextEnter</option>
                <option name="tabindex">2</option>
+               <option name="mask">{{=it.mask}}</option>
             </component>
             <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
          </div>
@@ -26,6 +27,7 @@
             <option name="date" bind="startValue"></option>
             <option name="onTextChangeMode">onTextEnter</option>
             <option name="tabindex">1</option>
+            <option name="mask">{{=it.mask}}</option>
          </component>
       </div>
 
@@ -48,7 +50,7 @@
                   <option name="caption">...</option>
                   <option name="activableByClick" type="boolean">false</option>
                   <option name="tabindex">0</option>
-                  <option name="tooltip">{{=rk('Выбор нескольких лет'}}</option>
+                  <option name="tooltip">{{=rk('Выбор нескольких лет')}}</option>
                </component>
             </div>
             <div class="controls-DateRangeBigChoose__years-panel-wrapper">
@@ -64,7 +66,7 @@
                   <option name="visible" type="boolean">false</option>
                   <option name="activableByClick" type="boolean">false</option>
                   <option name="tabindex">0</option>
-                  <option name="tooltip">{{=rk('Смена режима календаря на годовой'}}</option>
+                  <option name="tooltip">{{=rk('Смена режима календаря на годовой')}}</option>
                </component>
             </div>
          </div>

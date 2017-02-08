@@ -31,11 +31,6 @@ define('js!SBIS3.Demo.FilterButton.FilterDropdown', // Устанавливае�
       }
    });
 
-   moduleClass.webPage = {
-           htmlTemplate: "/Тема Скрепка/Шаблоны/empty-template.html",
-           outFileName: "DemoFilterButtonFilterDropdown"
-       };
 
-   
    return moduleClass;
 });

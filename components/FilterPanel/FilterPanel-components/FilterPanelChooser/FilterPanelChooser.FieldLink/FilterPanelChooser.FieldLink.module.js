@@ -1,12 +1,8 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FieldLink/resources/FilterPanelChooserFieldLink',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FieldLink/resources/FilterPanelChooserFieldLinkTpl',
-    'Core/core-functions',
-    'Core/helpers/collection-helpers',
-    'Core/core-instance',
    'js!SBIS3.CONTROLS.FieldLink'
-], function(FilterPanelChooserBase, FieldLinkChooserTemplate, FilterPanelChooserFieldLinkTpl, cFunctions, colHelpers, cInstance) {
+], function(FilterPanelChooserBase, FieldLinkChooserTemplate) {
 
     'use strict';
 
@@ -25,8 +21,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
     var FilterPanelChooserFieldLink = FilterPanelChooserBase.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FieldLink.prototype */ {
         $protected: {
             _options: {
-                _defaultTemplate: FilterPanelChooserFieldLinkTpl,
-                chooserTemplate: FieldLinkChooserTemplate,
+                _chooserTemplate: FieldLinkChooserTemplate,
                 className: 'controls-FilterPanelChooser__FieldLink'
             },
             _selectorAction: undefined,
@@ -54,13 +49,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
             return this._fieldLink;
         },
         _updateTextValue: function() {
-            var
-               textValue = '',
-               selectedItems = this._getFieldLink().getSelectedItems();
-            selectedItems.each(function(item, idx) {
-                textValue += item.get(this._options.displayField) + (idx < selectedItems.getCount() - 1 ? ', ' : '');
-            }, this);
-            this.setTextValue(textValue);
+            this.setTextValue(this._getFieldLink().getTextValue());
         }
     });
 

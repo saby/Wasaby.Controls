@@ -44,37 +44,36 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }.bind(this));
          }
 
+         var scrollToPage = function(page){
+            // Если первая страница - проскролим к самому верху, не считая оффсет
+            var offset = page.offset ? this._offsetTop : 0;
+            view._scrollWatcher.scrollTo(page.offset + offset);
+         };
+
          paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
-         paging.subscribe('onSelectedItemChange', this._onSelectedItemChange.bind(this));
-         view._getScrollWatcher().subscribe('onScroll', this._onScroll.bind(this));
+
+         paging.subscribe('onSelectedItemChange', function(e, key, index){
+            if (index != this._currentScrollPage && this._scrollPages.length){
+               var view = this._options.view,
+                  page = this._scrollPages[index];
+               if (page){
+                  scrollToPage.call(this, page);
+               }
+            }
+         }.bind(this));
+
+         view.subscribe('onScrollPageChange', function(e, pageNumber){
+            var paging = this._options.paging;
+            if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
+               if (pageNumber > paging.getPagesCount()) {
+                  paging.setPagesCount(pageNumber);
+               }
+               this._currentScrollPage = pageNumber;
+               paging.setSelectedKey(pageNumber + 1);
+            }
+         }.bind(this));
+
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
-      },
-
-      _scrollToPage: function(page){
-         // Если первая страница - проскролим к самому верху, не считая оффсет
-         var offset = page.offset ? this._offsetTop : 0;
-         this._options.view._getScrollWatcher().scrollTo(page.offset + offset);
-      },
-
-      _onScroll: function(e, scrollTop) {
-         var paging = this._options.paging,
-            pageNumber = this.getScrollPage();
-         if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
-            this._currentScrollPage = pageNumber;
-            if (pageNumber > paging.getPagesCount()) {
-               paging.setPagesCount(pageNumber);
-            }
-            paging.setSelectedKey(pageNumber);
-         }
-      },
-
-      _onSelectedItemChange: function(event, key, index) {
-         if (key != this._currentScrollPage && this._scrollPages.length){
-            var page = this._scrollPages[key];
-            if (page && !this._pagesCountChanged){
-               this._scrollToPage(page);
-            }
-         }
       },
 
       _scrollToLastPage: function(){
@@ -126,18 +125,18 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             listItems = $('> *', view._getItemsContainer()).filter(':visible'),
             stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
 
-         //Если элементов в верстке то нечего и считать
-         if (!listItems.length){
-            this._options.paging.setVisible(false);
-            return;
-         }
+            //Если элементов в верстке то нечего и считать
+            if (!listItems.length){
+               this._options.paging.setVisible(false);
+               return;
+            }
 
-         // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
-         if (this._offsetTop === undefined){
-            var viewTop = view.getContainer().get(0).getBoundingClientRect().top,
-               viewportTop = viewport[0] == window ? 0 : viewport.get(0).getBoundingClientRect().top;
+            // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
+            if (this._offsetTop === undefined){
+               var viewTop = view.getContainer().get(0).getBoundingClientRect().top,
+                  viewportTop = viewport[0] == window ? 0 : viewport.get(0).getBoundingClientRect().top;
                this._offsetTop = viewTop - viewportTop;
-         }
+            }
          //Сбрасываем все для пересчета
          if (reset){
             this._scrollPages = [];
@@ -169,7 +168,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             // Если набралось записей на выстору viewport'a добавим еще страницу
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
             var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
-            var prevPageOffset = self._scrollPages[self._scrollPages.length - 1].offset;
+            var prevPageOffset = self._scrollPages.length ? self._scrollPages[self._scrollPages.length - 1].offset : 0;
             if (nextBottom - prevPageOffset > viewportHeight - offsetTop) {
                self._pageOffset = pageOffset;
                self._scrollPages.push({
@@ -185,12 +184,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             this._options.view.getContainer().css('padding-bottom', '32px');
          }
          if (this._options.paging.getSelectedKey() > pagesCount){
-            this._options.paging.setSelectedKey(pagesCount - 1);
+            this._options.paging.setSelectedKey(pagesCount);
          }
-         // После setPagesCount стеляет ненужный onSelectedItemChange, этот флаг для того, что бы его не обрабатывать
-         this._pagesCountChanged = true;
          this._options.paging.setPagesCount(pagesCount);
-         this._pagesCountChanged = false;
+
          //Если есть страницы - покажем paging
          this._options.paging.setVisible(pagesCount > 1);
       },

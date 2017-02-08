@@ -67,6 +67,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {
             if(self.isEnabled()) {
+               self.hidePicker();
                self.applySearch(true);
             }
          });
@@ -91,8 +92,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       },
 
       _chooseCallback: function(result) {
-         var item = result[0];
-         this._onListItemSelect(item.getId(), item);
+         var item = result && result[0];
+         if(item) {
+            this._onListItemSelect(item.getId(), item);
+         }
       },
 
       _onListItemSelect: function() {

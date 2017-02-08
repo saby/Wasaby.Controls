@@ -158,10 +158,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       $constructor: function() {
          var self = this;
          this._inputField = this._getInputField();
-         this._container.bind('keypress', this._keyPressBind.bind(this))
-                        .bind('keydown', this._keyDownBind.bind(this))
-                        .bind('keyup', this._keyUpBind.bind(this));
-
+         this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
          this._inputField.on('paste', function(){
             self._pasteProcessing++;
             window.setTimeout(function(){
@@ -236,6 +233,24 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._checkInputVal();
       },
 
+      _keyboardDispatcher: function(event){
+         return fHelpers.forAliveOnly(function(event){
+            var result = true;
+            switch (event.type) {
+               case 'keydown':
+                  result = this._keyDownBind.call(this, event);
+                  break;
+               case 'keyup':
+                  result = this._keyUpBind.call(this, event);
+                  break;
+               case 'keypress':
+                  result = this._keyPressBind.call(this, event);
+                  break;
+            }
+            return result;
+         }).call(this, event);
+      },
+
       _useNativePlaceHolder: function() {
          return constants.compatibility.placeholder;
       },
@@ -300,7 +315,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @param {String} text Текст подсказки.
        * @example
        * <pre>
-       *     if (control.getText() == "") {
+       *     if (control.getText() == '') {
        *        control.setPlaceholder("Введите ФИО полностью");
        *     }
        * </pre>

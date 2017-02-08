@@ -27,6 +27,7 @@
 @icon-color-disabled:                     #CCC;
 
 @float-area-border-color:                 #bdbdbd;
+@float-area-border:                       1px solid @float-area-border-color;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 
 @bg:                                      transparent;
@@ -124,7 +125,7 @@
 @filter-panel-chooser-default-text-color:                         #8991A9;
 @filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
 @filter-panel-chooser-list-view-item-cursor:                      pointer;
-@filter-panel-chooser-list-view-item-padding:                     6px 0 6px 24px;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
 @filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
@@ -132,7 +133,7 @@
 @filter-panel-chooser-list-view-check-box-left:                   0;
 @filter-panel-chooser-list-view-count-top:                        6px;
 @filter-panel-chooser-list-view-count-right:                      0;
-@filter-panel-chooser-list-view-count-padding:                    0 8px;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
 @filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
 @filter-panel-chooser-list-view-selected-title-color:             @black-color;
@@ -1058,7 +1059,7 @@
 // --------- //
 
 @text-area-field-font:                          inherit;
-@text-area-field-line-height:                   normal;
+@text-area-field-line-height:                   18px;
 @text-area-border-radius:                       0;
 
 @text-area-field-text-color:                    inherit;
@@ -1100,7 +1101,7 @@
 
 @text-area-placeholder-color:              @text-box-placeholder-color;
 @text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
-@text-area-compat-placeholder-padding:     @text-box-compat-placeholder-padding;
+@text-area-compat-placeholder-padding:     2px 0 0;
 @text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
 
 // --------------- //
@@ -2232,7 +2233,7 @@
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
-@controls-NotificationPopup-border:                                          1px solid @float-area-border-color;
+@controls-NotificationPopup-border:                                          @float-area-border;
 @controls-NotificationPopup-border-top:                                      none;
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
@@ -2255,12 +2256,12 @@
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;
+@controls-SubmitPopup-footer-border-top:           @float-area-border;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
-@controls-SubmitPopup-border:                      2px solid #E4E4E4;
+@controls-SubmitPopup-border:                      1px solid @float-area-border-color;
 @controls-SubmitPopup-border-top:                  none;
 @controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;

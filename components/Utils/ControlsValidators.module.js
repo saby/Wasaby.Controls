@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
          min = parseFloat(min);
          max = parseFloat(max);
 
-         if(value === '' || isNaN(min) || isNaN(max)){
+         if(value === '' || isNaN(value) || isNaN(min) || isNaN(max)){
             return true;
          }
 

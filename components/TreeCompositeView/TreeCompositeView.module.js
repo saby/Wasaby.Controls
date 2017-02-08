@@ -330,6 +330,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          TreeCompositeView.superclass.redraw.apply(this, arguments);
       },
 
+      setViewMode: function() {
+         this._prevMode = null;
+         TreeCompositeView.superclass.setViewMode.apply(this, arguments);
+      },
 
       //TODO для плитки. Надо переопределить шаблоны при отрисовке одного элемента, потому что по умолчанию будет строка таблицы
       //убирается по задаче https://inside.tensor.ru/opendoc.html?guid=4fd56661-ec80-46cd-aca1-bfa3a43337ae&des=

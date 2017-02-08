@@ -127,48 +127,49 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
             })
 
             .capture('bold', function (actions) {
+				actions.click(this.input);
 				actions.sendKeys(this.input, 'tensor');
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.bold);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('italic', function (actions) {
-				actions.click(this.bold);
 				actions.click(this.input);
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
+				actions.click(this.bold);
 				actions.click(this.italic);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('underline', function (actions) {
-				actions.click(this.italic);
 				actions.click(this.input);
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
+				actions.click(this.italic);
 				actions.click(this.underline);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('strikethrough', function (actions) {
-				actions.click(this.underline);
 				actions.click(this.input);
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
+				actions.click(this.underline);
 				actions.click(this.strikethrough);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('red', function (actions) {
-				actions.click(this.strikethrough);
 				actions.click(this.input);
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
+				actions.click(this.strikethrough);
 				actions.click(this.textColor);
 				actions.waitForElementToShow('.controls-RichEditorToolbar__colorRed', 2000);
 				actions.click('.controls-RichEditorToolbar__colorRed');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('green', function (actions) {
@@ -178,7 +179,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textColor);
 				actions.waitForElementToShow('.controls-RichEditorToolbar__colorGreen', 2000);
 				actions.click('.controls-RichEditorToolbar__colorGreen');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('blue', function (actions) {
@@ -188,7 +189,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textColor);
 				actions.waitForElementToShow('.controls-RichEditorToolbar__colorBlue', 2000);
 				actions.click('.controls-RichEditorToolbar__colorBlue');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('purple', function (actions) {
@@ -198,7 +199,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textColor);
 				actions.waitForElementToShow('.controls-RichEditorToolbar__colorPurple', 2000);
 				actions.click('.controls-RichEditorToolbar__colorPurple');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('grey', function (actions) {
@@ -208,7 +209,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textColor);
 				actions.waitForElementToShow('.controls-RichEditorToolbar__colorGrey', 2000);
 				actions.click('.controls-RichEditorToolbar__colorGrey');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('black', function (actions) {
@@ -218,7 +219,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textColor);
 				actions.waitForElementToShow('.controls-RichEditorToolbar__colorBlack', 2000);
 				actions.click('.controls-RichEditorToolbar__colorBlack');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('title', function (actions) {
@@ -228,8 +229,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textStyle);
 				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__title', 2000);
 				actions.click('.controls-RichEditorDropdown__itemText__title');
-				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('sub_title', function (actions) {
@@ -239,8 +239,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textStyle);
 				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__subTitle', 2000);
 				actions.click('.controls-RichEditorDropdown__itemText__subTitle');
-				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 
 			.capture('selected_main_text', function (actions) {
@@ -250,8 +249,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textStyle);
 				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__selectedMainText', 2000);
 				actions.click('.controls-RichEditorDropdown__itemText__selectedMainText');
-				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('additional_text', function (actions) {
@@ -261,8 +259,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textStyle);
 				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__additionalText', 2000);
 				actions.click('.controls-RichEditorDropdown__itemText__additionalText');
-				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('ordered', function (actions) {
@@ -274,7 +271,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textList);
 				actions.waitForElementToShow('[data-id="InsertOrderedList"]', 2000);
 				actions.click('[data-id="InsertOrderedList"]');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('unordered', function (actions) {
@@ -284,7 +281,7 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textList);
 				actions.waitForElementToShow('[data-id="InsertUnorderedList"]', 2000);
 				actions.click('[data-id="InsertUnorderedList"]');
-				actions.sendKeys(this.input, gemini.TAB);
+				actions.click(this.input2);
 			})
 			
 			.capture('center', function (actions) {
@@ -294,7 +291,6 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentCenter', 2000);
 				actions.click('.icon-AlignmentCenter');
-				actions.click(this.wrap);
 				actions.click(this.input2);
 			})
 			
@@ -305,7 +301,6 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentRight', 2000);
 				actions.click('.icon-AlignmentRight');
-				actions.click(this.wrap);
 				actions.click(this.input2);
 			})
 			
@@ -316,7 +311,6 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentWidth', 2000);
 				actions.click('.icon-AlignmentWidth');
-				actions.click(this.wrap);
 				actions.click(this.input2);
 			})
     });
