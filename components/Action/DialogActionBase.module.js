@@ -158,6 +158,8 @@ define('js!SBIS3.CONTROLS.DialogActionBase', [
                autoCloseOnHide: true,
                border: true,
                target: '',
+               canMaximize: false,
+               maximized: false,
                title: '',
                side: 'left',
                animation: 'slide'
