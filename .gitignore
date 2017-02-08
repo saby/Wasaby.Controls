@@ -2,6 +2,7 @@
 *.log
 /components/contents.json
 /components/contents.js
+/components/**/*.css
 /sbis3-ws
 /ws-data
 /node_modules

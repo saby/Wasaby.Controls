@@ -116,6 +116,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          }
       },
 
+      _useNativePlaceHolder: function () {
+        return false;
+      },
+
       _setNumericValue: function(value) {
          if (typeof(value) == 'string'){
             value = value.replace(/\s+/g,"");
@@ -131,6 +135,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setInputValue: function(value) {
+         this._updateCompatPlaceholderVisibility();
          this._inputField[0].innerHTML = value;
       },
 

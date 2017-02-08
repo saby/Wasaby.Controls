@@ -37,19 +37,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.idProperty);
       }
 
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
-      projection = new TreeProjection({
-         collection: items,
-         idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
-         parentProperty: cfg.parentProperty,
-         nodeProperty: cfg.nodeProperty,
-         loadedProperty: cfg.parentProperty + '$',
-         unique: true,
-         root: root,
-         rootEnumerable: rootAsNode,
-         filter: filterCallBack,
-         sort: cfg.itemsSortMethod
-      });
+      var
+         filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this),
+         projOptions = {
+            collection: items,
+            idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty,
+            loadedProperty: cfg.parentProperty + '$',
+            unique: true,
+            root: root,
+            rootEnumerable: rootAsNode,
+            filter: filterCallBack,
+            sort: cfg.itemsSortMethod
+         };
+
+
+      if (cfg.loadItemsStrategy == 'append') {
+         projOptions.unique = false;
+      }
+
+      projection = new TreeProjection(projOptions);
 
       return projection;
    },
@@ -1138,8 +1146,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see root
        * @see getRoot
        */
-      setRoot: function(root){
+      setRoot: function(root) {
          this._options.root = root;
+         // при изменении корня, сбросим предыдущий, так как он теряет актуальность
+         this._previousRoot = undefined;
       },
 
 

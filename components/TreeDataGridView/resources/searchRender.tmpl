@@ -1,5 +1,5 @@
 <td class="controls-DataGridView__td" colspan="{{viewCfg.colspan}}">
-   <ws:SBIS3.CONTROLS.BreadCrumbs class="controls-BreadCrumbs__smallItems controls-TreeView__searchBreadCrumbs"
+   <ws:SBIS3.CONTROLS.BreadCrumbs class="controls-BreadCrumbs__smallItems controls-BreadCrumbs__home-hide controls-TreeView__searchBreadCrumbs"
                                   items="{{path}}"
                                   highlightEnabled="{{viewCfg.highlightEnabled}}"
                                   highlightText="{{viewCfg.highlightText}}"
@@ -8,6 +8,7 @@
                                   enabled="{{viewCfg.allowEnterToFolder}}"
                                   idProperty="{{viewCfg.idProperty}}"
                                   displayProperty="{{viewCfg.displayProperty}}"
+                                  activableByClick="{{false}}"
                                   allowChangeEnable="{{false}}"
          />
    </td>
