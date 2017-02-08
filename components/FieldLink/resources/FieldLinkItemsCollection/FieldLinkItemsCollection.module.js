@@ -68,12 +68,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             FieldLinkItemsCollection.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 deleteAction = false,
-                itemContainer;
+                itemContainer, id;
 
             itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
             if(itemContainer.length) {
                deleteAction = $target.hasClass('controls-FieldLink__item-cross');
-               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
+               id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().getId();
+               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
             }
          },
 
