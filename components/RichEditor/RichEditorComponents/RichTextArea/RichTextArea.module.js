@@ -420,7 +420,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (!this._readyContolDeffered.isReady()) {
                this._readyContolDeffered.errback();
             }
-            this._inputControl.unbind('mouseup dblclick mousedown touchstart scroll');
+            this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 
@@ -1000,25 +1000,34 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //По инициализации tinyMCE
             editor.on('initContentBody', function(){
-               //По двойному клику на изображение внутри редактора - отображаем диалог редактирования размеров изображения
-               this._inputControl.bind('dblclick', function(e) {
-                  if (this._inputControl.attr('contenteditable') !== 'false') {
-                     var target = e.target;
-                     if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1 && target.className.indexOf('ws-fre__smile') === -1) {
-                        this._showImagePropertiesDialog(target);
-                     }
+               var
+                  bindImageEvent = function(event, callback) {
+                     self._inputControl.bind(event, function(e){
+                        if (self._inputControl.attr('contenteditable') !== 'false') {
+                           var
+                              target = e.target;
+                           if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
+                              callback(target);
+                           }
+                        }
+                     });
+                  };
+               //По двойному клику на изображение показывать диалог редактирования размеров
+               bindImageEvent('dblclick', function(target) {
+                  self._showImagePropertiesDialog(target);
+               });
+               //По нажатию на изображения показывать панель редактирования самого изображения
+               bindImageEvent('mousedown touchstart', function(target) {
+                  self._showImageOptionsPanel($(target));
+               });
+               //При клике на изображение снять с него выделение
+               bindImageEvent('click', function() {
+                  var
+                     selection = window.getSelection ? window.getSelection() : null;
+                  if (selection) {
+                     selection.removeAllRanges();
                   }
-               }.bind(this));
-               this._inputControl.bind('mousedown touchstart', function(e) {
-                  if (this._inputControl.attr('contenteditable') !== 'false') {
-                     var target = e.target;
-                     if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                        e.preventDefault();
-                        self._showImageOptionsPanel($(target));
-                     }
-                  }
-               }.bind(this));
-
+               });
                this._inputControl.bind('scroll', function(e) {
                   if (this._imageOptionsPanel) {
                      this._imageOptionsPanel.hide();
