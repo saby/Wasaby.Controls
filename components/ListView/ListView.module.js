@@ -859,11 +859,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix';
-            /* Надо проверять mousemove на срабатывание на touch устройствах,
-               т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
-                + добавляю проверку, что до этого мы были в touch режиме,
-               это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
+            this._setTouchSupport(
+               /* touch события - однозначно включаем touch режим */
+               Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 ||
+               /* IOS - однозначно включаем touch режим */
+               constants.browser.isMobileIOS ||
+               /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
+                  - mousemove срабатывает при клике пальцем (после touchStart), можно определить по координатам сдвига 0.0
+                  - mousemove срабатывает через случайный промежуток времени после touchEnd
+                  - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
+                  написана специальная проверка */
+               (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
+            );
 
             switch (e.type) {
                case 'mousemove':
