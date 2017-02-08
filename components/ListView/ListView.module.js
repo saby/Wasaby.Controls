@@ -795,13 +795,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
-            this._options.virtualScrolling = true;
+            this._prepareInfiniteScroll();
+            
+            this._options.virtualScrolling = this.getName() == 'ПерепискаПоЧату';
             if (this._options.virtualScrolling){
                this._virtualScrollController = new VirtualScrollController({
                   view: this
                });
             }
-            this._prepareInfiniteScroll();
+
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
@@ -1003,14 +1005,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Придрот для .150, чтобы хоткей del отрабатывал только если есть соответствующая операция над записью.
          _allowDelete: function() {
-            var
-                delInstance,
-                itemActions = this.getItemsActions();
-
-            if (itemActions) {
-               delInstance = itemActions.getItemInstance('delete');
-            }
-            return this.isEnabled() && !!delInstance && delInstance.isVisible();
+            var itemActions = this.getItemsActions();
+            return this.isEnabled() && !!itemActions && !!itemActions.getItemInstance('delete');
          },
          /**
           * Возвращает следующий элемент
@@ -2252,7 +2248,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this.isInfiniteScroll()) {
                // НЕ ЗАБЫТЬ ВЕРНУТЬ И РАЗОБРАТЬСЯ
-               //this._preScrollLoading();
+               this._preScrollLoading();
             }
          },
          
@@ -2262,7 +2258,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
             }
             if (this._options.virtualScrolling) {
-               this._virtualScrollController.addItems(newItems);
+               this._virtualScrollController.addItems(newItems, newItemsIndex);
             }
          },
 
@@ -2611,7 +2607,6 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
-          * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
           */
          scrollToItem: function(item, toBottom){
             if (item.getId && item.getId instanceof Function){
@@ -3576,7 +3571,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(movedItems, target, position);
+            return this._getMover().move(models, target.getModel(), position);
          },
          //endregion moveMethods
          /**
@@ -3725,23 +3720,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
-         },
-
-         getTextValue: function() {
-            var
-                selectedItem,
-                textValues = [];
-            if (this._options.multiselect) {
-               this.getSelectedItems().each(function(item) {
-                  textValues.push(item.get(this._options.displayProperty));
-               }, this);
-            } else {
-               selectedItem = this.getItems().getRecordById(this.getSelectedKey());
-               if (selectedItem) {
-                  textValues.push(selectedItem.get(this._options.displayProperty));
-               }
-            }
-            return textValues.join(', ');
          }
       });
 

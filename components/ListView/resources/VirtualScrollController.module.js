@@ -14,6 +14,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          _bottomIndex: null,
          _topWrapper: null,
          _bottomWrapper: null,
+         _newItemsCount: 0
       },
 
       init: function(){
@@ -34,7 +35,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          //this._onVirtualPageChangeDebounce = this._onVirtualPageChange.debounce(10);
          this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, 5);
-         view._getScrollWatcher().subscribe('onScroll', this._scrollHandler.bind(this));
+         view._scrollWatcher.subscribe('onScroll', this._scrollHandler.bind(this));
       },
 
       _scrollHandler: function(e, scrollTop){
@@ -143,7 +144,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
 
       _setWrappersHeight: function(page) {
          var pages = this._virtualPages,
-            bottomPage = page + 2,
+            bottomPage = page + 3,
             topPage = page - 2;
          if (this._virtualPages[bottomPage]) {
             this._bottomWrapperHeight = pages[pages.length - 1].offset - pages[bottomPage].offset;
@@ -252,7 +253,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
                top: top,
                bottom: bottom
             };
-         } 
+         }
+
          if (currentRange[0] > newRange[1]) {
             if (this._options.mode == 'down') {
                top = currentRange;
@@ -265,15 +267,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
                top: top,
                bottom: bottom
             };
-         }
-         {
-            if (currentRange[0] - newRange[0] < 0) {
-               top = [currentRange[0], newRange[0] - 1];
-               bottom = [currentRange[1] + 1, newRange[1]];
-            } else {
-               top = [newRange[0], currentRange[0] - 1];
-               bottom = [newRange[1] + 1, currentRange[1]];
-            }
+         } 
+
+         if (currentRange[0] - newRange[0] < 0) {
+            top = [currentRange[0], newRange[0] - 1];
+            bottom = [currentRange[1] + 1, newRange[1]];
+         } else {
+            top = [newRange[0], currentRange[0] - 1];
+            bottom = [newRange[1] + 1, currentRange[1]];
          }
 
          return {
@@ -351,19 +352,39 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
             if (++count == BATCH_SIZE) {
                self._virtualPages.push({
-                  offset: self._getElementOffset(this),
-                  element: this
+                  offset: self._getElementOffset(this)
                });
                count = 0;
             }
          });
       },
 
-      addItems: function(items){
-         // this._newItemsCount += items.length;
-         // if (this._newItemsCount >= BATCH_SIZE) {
-         //    var newPageHeight = 
-         // }
+      addItems: function(items, at) {
+         var additionalHeight = 0,
+            hash;
+         
+         if (this._newItemsCount == 0) {
+            this._virtualPages.unshift({offset: 0});
+         }
+
+
+         // Пока рассчитываем, что добавляется один элемент за раз
+         if (items.length == 1) {
+            this._newItemsCount += 1;
+            hash = items[0].getHash();
+            // кек
+            additionalHeight += $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
+            for (var i = 1; i < this._virtualPages.length; i++) {
+               this._virtualPages[i].offset += additionalHeight;
+               console.log(this._virtualPages[i], this._virtualPages.length, this._newItemsCount);
+            }
+         }
+
+         if (this._newItemsCount == BATCH_SIZE) {
+            this._newItemsCount = 0;
+            this._currentWindow[1] += BATCH_SIZE;
+            this._onVirtualPageChange(this._currentVirtualPage);
+         }
       },
 
       getCurrentRange: function(){
