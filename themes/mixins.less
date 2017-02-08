@@ -117,13 +117,13 @@
   background: -o-linear-gradient(top, @startColor, @endColor);
 }
 
-.horizontal-gradient(@startColor: #eee, @endColor: white) {
+.horizontal-gradient(@startColor: #eee, @endColor: white, @direction: left) {
   background-color: @startColor;
-  background-image: -webkit-gradient(linear, left top, right top, from(@startColor), to(@endColor));
-  background-image: -webkit-linear-gradient(left, @startColor, @endColor);
-  background-image: -moz-linear-gradient(left, @startColor, @endColor);
-  background-image: -ms-linear-gradient(left, @startColor, @endColor);
-  background-image: -o-linear-gradient(left, @startColor, @endColor);
+  background-image: -webkit-gradient(linear, @direction top, right top, from(@startColor), to(@endColor));
+  background-image: -webkit-linear-gradient(@direction, @startColor, @endColor);
+  background-image: -moz-linear-gradient(@direction, @startColor, @endColor);
+  background-image: -ms-linear-gradient(@direction, @startColor, @endColor);
+  background-image: -o-linear-gradient(@direction, @startColor, @endColor);
 }
 
 .animation(@name, @duration: 300ms, @delay: 0, @ease: ease) {
