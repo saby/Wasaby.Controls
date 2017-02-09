@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    "js!SBIS3.CORE.Control",
    "html!SBIS3.CONTROLS.HighChartsLight",
    "Core/helpers/dom&controls-helpers",
-   "browser!cdn!/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
    "css!SBIS3.CONTROLS.HighChartsLight"
 ],
 function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
