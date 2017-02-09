@@ -98,28 +98,42 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
 
-      _prepareSelectedConfig: function(index, key) {
+      _prepareSelectedKeyByIndex: function(index) {
          if (this._isEmptyIndex(index)) {
-            //Если передали пустой индекс и ключ, определяем индекс по ключу
-            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
-               this._options.selectedIndex = this._getItemIndexByKey(key);
-            }
-            else {
-               //если индекса нет, значит это сброс значения, и ключ надо тоже сбросить
-               //но есть отдельная ситуация, когда нет итемс - это когда ключи установлен раньше чем список загрузился, ничего сбрасывать не будем
-               //проверка дурацкая, правильно - разделить метод на два, и принимать решение ориентироваться на ключ или на индекс, потмоу что сейчас
-               //ненадежно
-               if (this.getItems()) {
-                  this._options.selectedKey = undefined;
-               }
-            }
+            this._options.selectedKey = null;
          }
          else {
-            //если индекс передали - вычисляем ключ
             if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
+         this._prepareOtherSelectedConfig();
+      },
+
+      _prepareSelectedIndexByKey: function(key) {
+         if (typeof key === 'undefined') {
+            this._options.selectedIndex = -1;
+         }
+         else {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+               this._options.selectedIndex = this._getItemIndexByKey(key);
+            }
+         }
+         this._prepareOtherSelectedConfig();
+      },
+
+      _prepareBothSelectedConfig: function(index, key) {
+         if (this._isEmptyIndex(index)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
+            this._prepareSelectedIndexByKey(key)
+         }
+         else {
+            //если индекс передали - вычисляем ключ
+            this._prepareSelectedKeyByIndex(index)
+         }
+      },
+
+      _prepareOtherSelectedConfig: function() {
          if (this._getItemsProjection()) {
             //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
             if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
@@ -180,7 +194,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
             //Если в результату вычисления параметров индекс поменялся, надо установить его в проекцию с сигнализированием изменений
             var oldIndex = this._options.selectedIndex;
-            this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            this._prepareBothSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
             //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
             if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
                this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
@@ -214,7 +228,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         this._prepareSelectedConfig(undefined, id);
+         this._prepareSelectedIndexByKey();
          if (this._getItemsProjection()) {
             this._selectInProjection();
          }
@@ -234,7 +248,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedIndex: function(index) {
          this._options.selectedIndex = index;
-         this._prepareSelectedConfig(this._options.selectedIndex);
+         this._prepareSelectedKeyByIndex();
          if (this._getItemsProjection()) {
             this._selectInProjection();
          }
