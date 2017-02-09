@@ -1339,7 +1339,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._setTrimmedText(self._getTinyEditorValue());
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function(){
-                  this.getTarget().remove();
+                  var
+                     $image = this.getTarget(),
+                     nodeForSelect = $image.parent()[0];
+                  $image.remove();
+                  //Проблема:
+                  //          После удаления изображения необходимо вернуть фокус в редактор,
+                  //          но тк выделение было на изображении при фокусе оно пытаетсыя восстановиться.
+                  //          Допустим в редакторе было только изображение, тогда выделение было вида:
+                  //             start/endContainer = <p>, endOffset = 1.
+                  //          После удаления <p>.childNodes.length = 0, попытается восстановиться 1 => ошибка
+                  //Решение:
+                  //          После удаления изображения ставить каретку в конец родительского для изображения блока
+                  self._tinyEditor.selection.select(nodeForSelect, false);
+                  self._tinyEditor.selection.collapse();
                   self._tinyEditor.undoManager.add();
                   self._setTrimmedText(self._getTinyEditorValue());
                });
