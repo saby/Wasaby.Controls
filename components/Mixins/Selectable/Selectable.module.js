@@ -99,6 +99,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
 
       _prepareSelectedKeyByIndex: function(index) {
+         //Вычисляем ключ по известному индексу
          if (this._isEmptyIndex(index)) {
             this._options.selectedKey = null;
          }
@@ -111,6 +112,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
       _prepareSelectedIndexByKey: function(key) {
+         //Вычисляем индекс по известному ключу
          if (typeof key === 'undefined') {
             this._options.selectedIndex = -1;
          }
@@ -123,6 +125,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
       _prepareBothSelectedConfig: function(index, key) {
+         //Вычисляем индекс или по ключ по известному другому параметру, в приоритете индекс
          if (this._isEmptyIndex(index)) {
             //Если передали пустой индекс и ключ, определяем индекс по ключу
             this._prepareSelectedIndexByKey(key)
