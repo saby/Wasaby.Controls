@@ -194,7 +194,9 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                      this._notifyOnEndValueChanged();
                   }
                }
-               this._notifyOnRangeChanged()
+               if (!silent) {
+                  this._notifyOnRangeChanged();
+               }
             }
          } else {
             changed = DateRangeSlider.superclass.setStartValue.apply(this, arguments);
@@ -216,7 +218,9 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                      this._notifyOnStartValueChanged();
                   }
                }
-               this._notifyOnRangeChanged()
+               if (!silent) {
+                  this._notifyOnRangeChanged();
+               }
             }
          } else {
             changed = DateRangeSlider.superclass.setEndValue.apply(this, arguments);
