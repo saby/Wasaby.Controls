@@ -156,6 +156,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                showOnControlsReady: false,
                autoCloseOnHide: true,
                border: true,
+               canMaximize: false,
+               maximized: false,
                target: '',
                title: '',
                side: 'left',
