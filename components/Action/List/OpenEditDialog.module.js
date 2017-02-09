@@ -215,9 +215,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          else if (initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE){
             this._showLoadingIndicator();
             require([dialogComponent], function(templateComponent) {
-               this._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function () {
+               this._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function (record) {
                   this._hideLoadingIndicator();
                   OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
+                  return record;
                }.bind(this))
             }.bind(this));
          }
