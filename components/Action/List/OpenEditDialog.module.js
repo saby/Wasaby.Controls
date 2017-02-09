@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return this._openInNewTab;
       },
 
-      _openComponent:function(meta, dialogComponent, mode) {
+      _openComponent:function(meta, mode) {
          var openUrl = meta.item && meta.item.get(this._options.urlProperty);
          if (this._needOpenInNewTab() && openUrl) {
             window.open(openUrl);
@@ -143,11 +143,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
          if (this._isNeedToRedrawDialog()) {
             this._saveRecord().addCallback(function () {
-               OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
+               OpenEditDialog.superclass._openComponent.call(this, meta, mode);
             }.bind(this));
          }
          else {
-            OpenEditDialog.superclass._openComponent.call(this, meta, dialogComponent, mode);
+            OpenEditDialog.superclass._openComponent.call(this, meta, mode);
          }
       },
 
