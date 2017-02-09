@@ -901,13 +901,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                URL = this._prepareImageURL(fileobj);
             switch (key) {
                case "1":
-                  this._insertImg(URL, 'image-template-left', meta);
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-left', meta, '', '<p>{$caret}</p>');
                   break;
                case "2":
                   this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
-                  this._insertImg(URL, 'image-template-right ', meta);
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-right ', meta, '', '<p>{$caret}</p>');
                   break;
                case "4":
                   //todo: сделать коллаж
