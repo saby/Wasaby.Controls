@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         this._prepareSelectedIndexByKey();
+         this._prepareSelectedIndexByKey(this._options.selectedKey);
          if (this._getItemsProjection()) {
             this._selectInProjection();
          }
