@@ -111,16 +111,16 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
          /* Обработка выбора из справочника со старым представлением данных */
          function oldConfirmSelectionCallback(event, result) {
+            /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
+            if(this && this !== window && this.close) {
+               this.close();
+            }
             self._chooseCallback(colHelpers.reduce(result, function(res, elem) {
                if(elem !== null) {
                   res.push(recordConverter.call(self, elem));
                   return res;
                }
             }, []));
-            /* Если обрабатываем результат deferred'a то в функции нету контекста, проверим на это */
-            if(this && this !== window && this.close) {
-               this.close();
-            }
          }
 
          clickResult = this._notify('onChooserClick', template);
