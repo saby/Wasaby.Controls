@@ -183,18 +183,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
-      _setHoveredStyles: function() {
-         if (this._options.tileMode === TILE_MODE.DYNAMIC) {
-               this._setStaticHoveredStyles($('.' + this._getFoldersClassName(), this._getFoldersContainer()));
+      _setHoveredStyles: function(item) {
+         if (item.hasClass('controls-ListView__item-type-node')) {
+            if (this._options.tileMode === TILE_MODE.DYNAMIC) {
+               this._setStaticHoveredStyles(item);
+            }
+         } else {
+            TreeCompositeView.superclass._setHoveredStyles.apply(this, arguments);
          }
-         TreeCompositeView.superclass._setHoveredStyles.apply(this, arguments);
-      },
-
-      _getItemsClassName: function() {
-         return 'js-controls-ListView__item:not(.controls-ListView__item-type-node)';
-      },
-      _getFoldersClassName: function() {
-         return 'controls-ListView__item-type-node';
       },
 
       _elemClickHandlerInternal: function(data, id, target, e) {

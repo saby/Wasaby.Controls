@@ -226,14 +226,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          var self = this;
 
          this.subscribe('onDrawItems', function(){
-            if (self._options.viewMode == 'tile') {
+            if (self._options.viewMode == 'tile' && !self._options.tileMode) {
                self._calculateTileWidth();
-               self._setHoveredStyles();
             }
          });
          //TODO:Нужен какой то общий канал для ресайза окна
          $(window).bind('resize', function(){
-            if (self._options.viewMode == 'tile'){
+            if (self._options.viewMode == 'tile' && !self._options.tileMode){
                self._calculateTileWidth();
             }
          });
@@ -246,40 +245,31 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
       },
 
-      _setHoveredStyles: function() {
-         var itemsContainer = this._getItemsContainer();
+      _setHoveredStyles: function(item) {
          if (this._options.tileMode === TILE_MODE.DYNAMIC) {
-            this._setDynamicHoveredStyles($('.' + this._getItemsClassName(), itemsContainer));
+            this._setDynamicHoveredStyles(item);
          } else if (this._options.tileMode === TILE_MODE.STATIC && !this._container.hasClass('controls-CompositeView-tile__static-smallImage')) {
-            this._setStaticHoveredStyles($('.' + this._getItemsClassName(), itemsContainer));
+            this._setStaticHoveredStyles(item);
          }
       },
 
-      _setDynamicHoveredStyles: function(items) {
+      _setDynamicHoveredStyles: function(item) {
          var
              margin,
              additionalWidth,
              additionalHeight;
-         collection.forEach(items, function (item) {
-            additionalWidth = $(item).outerWidth() / 2;
-            margin = $(item).outerWidth(true) / 2 - additionalWidth;
-            additionalHeight = $(item).outerHeight() / 2;
-            $(item).css('padding', '' + (additionalHeight / 2) + 'px ' + (additionalWidth / 2) + 'px').css('margin', '' + (-additionalHeight / 2) + 'px ' + (-(additionalWidth / 2 - margin)) + 'px');
-         }, this);
+         additionalWidth = item.outerWidth() / 2;
+         margin = item.outerWidth(true) / 2 - additionalWidth;
+         additionalHeight = item.outerHeight() / 2;
+         item.css('padding', (additionalHeight / 2) + 'px ' + (additionalWidth / 2) + 'px').css('margin', '' + (-additionalHeight / 2) + 'px ' + (-(additionalWidth / 2 - margin)) + 'px');
       },
 
-      _setStaticHoveredStyles: function(items) {
-         var offset, margins;
-         collection.forEach(items, function (item) {
-            offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - ($(item).hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
-            margins = $(item).outerHeight(true) - $(item).outerHeight();
-            $(item).css('padding-bottom', offset).css('margin-bottom', -(offset - margins / 2));
-            $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
-         }, this);
-      },
-
-      _getItemsClassName: function() {
-         return 'js-controls-ListView__item';
+      _setStaticHoveredStyles: function(item) {
+         var offset, margin;
+         offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
+         margin = (item.outerHeight(true) - item.outerHeight()) / 2;
+         item.css('padding-bottom', offset).css('margin-bottom', -(offset - margin));
+         $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
       },
 
       _updateHeadAfterInit: function() {
@@ -372,6 +362,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
             if (itemsContainerWidth - tiles.length * oldWidth < oldWidth) {
                tiles.outerWidth(newTileWidth);
+            }
+         }
+      },
+
+      before: {
+         _onChangeHoveredItem: function(hoveredItem) {
+            var container = arguments[0].container;
+            if (container && !container.hasClass('controls-CompositeView__hoverStylesInit')) {
+               this._setHoveredStyles(container);
+               container.addClass('controls-CompositeView__hoverStylesInit');
             }
          }
       },
