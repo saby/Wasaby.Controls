@@ -450,14 +450,20 @@
   }
 }
 
-.ws-is-mobile-android {
-   //На андроиде поднимаю на 1px выше, иначе в портретной ориентации появляется полпикселя бордера
+.ws-is-mobile-platform {
+   //На мобильной платформе при сглаживании появляется линия в пол пикселя в вертикальной ориентации. Перекрываю через псевдо-элемент
    .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      &.controls-popup-revert-horizontal .controls-DropdownList__body { //при controls-popup-revert-horizontal margin положительный
-         margin-top: 23px;
-      }
-      .controls-DropdownList__body {
-         margin-top: -2px;
+      .controls-DropdownList__header{
+         position: relative;
+         &:before {
+            content: '';
+            position: absolute;
+            right: 0;
+            left: 0;
+            bottom: -1px;
+            height: 2px;
+            background: @DropdownList-header-bg;
+         }
       }
    }
 }
