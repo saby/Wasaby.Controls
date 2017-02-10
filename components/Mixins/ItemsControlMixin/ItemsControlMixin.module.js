@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
-   "js!WS.Data/Query/Query",
+   "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CORE.MarkupTransformer",
    "js!WS.Data/Collection/ObservableList",
    "js!WS.Data/Display/Display",
@@ -25,7 +25,33 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers"
-], function ( cFunctions, constants, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager, cInstance, fcHelpers, fHelpers) {
+], function (
+   cFunctions,
+   constants,
+   Deferred,
+   IoC,
+   ConsoleLogger,
+   MemorySource,
+   SbisService,
+   RecordSet,
+   Query,
+   MarkupTransformer,
+   ObservableList,
+   Projection,
+   IBindCollection,
+   CollectionDisplay,
+   EnumDisplay,
+   FlagsDisplay,
+   TemplateUtil,
+   ItemsTemplate,
+   Utils,
+   Model,
+   ParserUtilities,
+   Sanitize,
+   LayoutManager,
+   cInstance,
+   fcHelpers,
+   fHelpers) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -1604,23 +1630,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!this._dataSource) {
             return;
          }
-         var query = this._getQueryForCall(filter, sorting, offset, limit);
 
-         return this._dataSource.query(query).addCallback((function(dataSet) {
+         return Query(this._dataSource, [filter, sorting, offset, limit]).addCallback((function(dataSet) {
             if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(this._options.idProperty);
             }
             return dataSet.getAll();
          }).bind(this));
-      },
-
-      _getQueryForCall: function(filter, sorting, offset, limit){
-         var query = new Query();
-         query.where(filter)
-            .offset(offset)
-            .limit(limit)
-            .orderBy(sorting);
-         return query;
       },
 
       _toggleIndicator:function(){

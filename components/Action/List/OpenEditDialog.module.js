@@ -9,9 +9,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'Core/helpers/fast-control-helpers',
       'js!WS.Data/Entity/Record',
       'js!WS.Data/Di',
+      'js!SBIS3.CONTROLS.Utils.IndicatorUtil',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, Dialog, FloatArea) {
+   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, IndicatorUtil, Dialog, FloatArea) {
    'use strict';
 
    /**
@@ -281,39 +282,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _showLoadingIndicator: function(){
-         this._showedLoading = true;
-         this._toggleOverlay(true);
-         window.setTimeout(function(){
-            if (this._showedLoading){
-               cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
-            }
-         }.bind(this), 2000);
+         IndicatorUtil.showLoadingIndicator();
       },
 
       _hideLoadingIndicator: function(){
-         this._showedLoading = false;
-         this._toggleOverlay(false);
-         cIndicator.hide();
-      },
-
-      _toggleOverlay: function(show){
-         //При вызове execute, во время начала асинхронных операций при выставленной опции initializingWay = 'remote' || 'delayedRemote',
-         //закрываем оверлеем весь боди, чтобы пользователь не мог взаимодействовать с интерфейсом, пока не загрузится диалог редактирования,
-         //иначе пока не загрузилась одна панель, мы можем позвать открытие другой, что приведет к ошибкам.
-         if (!this._overlay) {
-            this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
-            this._overlay.css({
-               position: 'absolute',
-               top: 0,
-               left: 0,
-               right: 0,
-               bottom: 0,
-               'z-index': 9999,
-               opacity: 0
-            });
-            this._overlay.appendTo('body');
-         }
-         this._overlay.toggleClass('ws-hidden', !show);
+         IndicatorUtil.hideLoadingIndicator();
       },
 
       _buildComponentConfig: function (meta) {
@@ -591,8 +564,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    OpenEditDialog.ACTION_ADD = '_createRecord';
    OpenEditDialog.ACTION_RELOAD = '_collectionReload';
    OpenEditDialog.ACTION_DELETE = '_destroyModel';
-   OpenEditDialog.INITIALIZING_WAY_LOCAL = 'local';
-   OpenEditDialog.INITIALIZING_WAY_REMOTE = 'remote';
-   OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE = 'delayedRemote';
+   OpenEditDialog.INITIALIZING_WAY_LOCAL = IInitializingWay.INITIALIZING_WAY_LOCAL;
+   OpenEditDialog.INITIALIZING_WAY_REMOTE =  IInitializingWay.INITIALIZING_WAY_LOCAL;
+   OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE = IInitializingWay.INITIALIZING_WAY_LOCAL;
    return OpenEditDialog;
 });

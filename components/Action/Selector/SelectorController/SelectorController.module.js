@@ -77,6 +77,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              } else {
                 this._options.selectedItems = Di.resolve('collection.list');
              }
+
+             if(this._options.items) {
+                this._setContextItems(this._options.items);
+             }
           },
 
           init: function() {
@@ -171,6 +175,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             */
           _selectComplete: function() {
              this._notify('onSelectComplete', this._options.selectedItems.clone());
+          },
+
+          _setContextItems: function(items){
+             this.getLinkedContext().setValue('items', items);
           }
        });
 

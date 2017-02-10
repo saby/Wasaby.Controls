@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
    "Core/SessionStorage",
    "Core/core-merge",
    "Core/Deferred",
-   "js!WS.Data/Query/Query",
+   "js!SBIS3.CONTROLS.Utils.Query",
    "Core/helpers/string-helpers",
    "js!SBIS3.CONTROLS.HistoryController",
    "Core/helpers/collection-helpers"
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
        * @param {String} historyId Уникальный id по которому хранится история фильтров, необязательный параметр.
        */
       setViewDataSource: function(source, browserName, filter, offset, limit, sorting, historyId) {
-         var query = new Query(),
+         var queryArgs = [],
              historyFilter = {},
              resultDef = new Deferred(),
              applyFilterOnLoad = true,
@@ -70,14 +70,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          /* Подготавливаем фильтр */
          queryFilter = cMerge(filter || {}, historyFilter);
 
-         /* Подготавливаем query */
-         query.where(queryFilter)
-              .offset(offset !== undefined ? offset : 0)
-              .limit(limit !== undefined ? limit : 25)
-              .orderBy(sorting || {});
-
-         queryDef = source.query(query);
-         queryDef.addErrback(function(e) {
+         queryDef = Query(source, [queryFilter, offset, limit, sorting]).addErrback(function(e) {
             return e
          });
 
