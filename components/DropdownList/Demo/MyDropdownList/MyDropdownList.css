@@ -1,11 +1,14 @@
+/*group*/
+/*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+/*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 .FilterButtonMain {
-  display: inline;
+  display: inline-block;
 }
-.controls-DropdownList.ws-area {
+.controls-DropdownList {
   height: auto;
 }
-.dropd-Demo_greyItem{
-    color: #999;
-    font-size: 12px;
-    padding-top: 2px;
+.dropd-Demo_greyItem {
+  color: #CCC;
+  font-size: 12px;
+  padding-top: 4px;
 }
