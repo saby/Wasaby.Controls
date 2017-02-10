@@ -1962,7 +1962,7 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsToolbar.lockToolbar();
             } else {
                if(this._touchSupport) {
-                  this._changeHoveredItem(this._getElementByModel(model));
+                  this._hideItemsToolbar();
                } else {
                   this._updateItemsToolbar();
                }
