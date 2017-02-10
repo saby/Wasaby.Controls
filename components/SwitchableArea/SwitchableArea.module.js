@@ -16,7 +16,12 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
 
    var SwitchableAreaOld = CoreSwitchableArea.extend(/** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
       /**
-       * @param items
+       * Устанавливает новый набор переключаемых областей.
+       * @param {Array.<Object>} items Набор новых областей. Свойства объекта:
+       * <ul>
+       *     <li>id - идентификатор новой области;</li>
+       *     <li>content - разметка контента новой области.</li>
+       * </ul>
        */
       setItems: function (items) {
          var tabControl = this.getParent();
