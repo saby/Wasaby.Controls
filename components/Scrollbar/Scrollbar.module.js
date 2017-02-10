@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
       'use strict';
 
-      var BROWSER_SCROLLBAR_MIN_HEIGHT = 0.15;
+      var BROWSER_SCROLLBAR_MIN_HEIGHT = 46;
 
       /**
        * Тонкий скролл.
@@ -122,16 +122,14 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Высчитываем и задаём высоту ползунка
          _setThumbHeight: function(){
-	         var k;
-	         if (this._viewportRatio < BROWSER_SCROLLBAR_MIN_HEIGHT) {
-		         k = BROWSER_SCROLLBAR_MIN_HEIGHT;
+            this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
+            this._thumbHeight = this._calcProjectionSize(this._containerHeight, this._viewportRatio);
+	         if (this._thumbHeight < BROWSER_SCROLLBAR_MIN_HEIGHT) {
+		         this._thumbHeight = BROWSER_SCROLLBAR_MIN_HEIGHT;
 		         this._isConstThumb = true;
 	         } else {
-		         k = this._viewportRatio;
 		         this._isConstThumb = false;
 	         }
-	         this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
-	         this._thumbHeight = this._calcProjectionSize(this._containerHeight, k);
             this._thumb.height(this._thumbHeight);
          },
 
