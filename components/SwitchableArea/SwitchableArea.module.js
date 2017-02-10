@@ -10,9 +10,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * Отображаемая область может переключаться при помощи команд.
     * @class SBIS3.CONTROLS.SwitchableArea
     * @extends $ws.proto.SwitchableArea
-    * @author Крайнов Дмитрий Олегович
-    * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.Selectable
+    * @author Авраменко Алексей Сергеевич
     * @public
     */
 
