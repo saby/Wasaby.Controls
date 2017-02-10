@@ -357,7 +357,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _onChangeHoveredItem: function() {
          /* Т.к. механизм отображения стрелки и операций над записью на ipad'e релизован с помощью свайпов,
             а на PC через mousemove, то и скрывать/показывать их надо по-разному */
-         if(!this._touchSupport) {
+         if(!this._touchSupport || !this._hasHoveredItem()) {
             this._updateEditArrow();
          }
          TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
@@ -365,7 +365,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _updateEditArrow: function() {
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
-            if(this.getHoveredItem().container) {
+            if(this._hasHoveredItem()) {
                this._showEditArrow();
             } else {
                this._hideEditArrow();
