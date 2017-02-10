@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          _bottomIndex: null,
          _topWrapper: null,
          _bottomWrapper: null,
-         _newItemsCount: 0
+         _newItemsCount: 0,
+         _additionalHeight: 0
       },
 
       init: function(){
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          for (var i = 0; i < this._virtualPages.length; i++){
             var pageOffset = this._virtualPages[i].offset;
-            if (pageOffset > scrollTop){
+            if (pageOffset + this._additionalHeight > scrollTop){
                return i;
             }
          }
@@ -152,17 +153,18 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             this._bottomWrapperHeight = 0;
          }
          if (this._virtualPages[topPage]) {
-            this._topWrapperHeight = pages[topPage].offset;
+            this._topWrapperHeight = pages[topPage].offset + this._additionalHeight;
          } else {
             this._topWrapperHeight = 0;
          }
-
+         console.log('top height', this._bottomWrapperHeight);
+         console.log('bottom height', this._topWrapperHeight);
          this._topWrapper.height(this._topWrapperHeight);
          this._bottomWrapper.height(this._bottomWrapperHeight);
       },
 
       /**
-       * по промежутку индексов получить номера страниц входящих в этот промежуток
+       * по двум индексам получить номера страниц входящих в этот промежуток
        * @param  {Array} range    индексы 
        * @param  {Number} pageSize размер страницы
        * @return {Array}          номера станиц в промежутке
@@ -305,6 +307,15 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          return true;
       },
 
+      _getOffsets: function(){
+         var offsets = []
+         for (var i = 0; i < this._virtualPages.length; i++){
+            offsets.push(this._virtualPages[i].offset);
+         }
+         console.log(offsets);
+         return offsets;
+      },
+
       _getElementOffset: function(element) {
          element = $(element);
          var view = this._options.view;
@@ -363,21 +374,20 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          var additionalHeight = 0,
             hash;
          
-         if (this._newItemsCount == 0) {
-            this._virtualPages.unshift({offset: 0});
-         }
-
-
          // Пока рассчитываем, что добавляется один элемент за раз
          if (items.length == 1) {
+            if (this._newItemsCount == 0) {
+               this._virtualPages.unshift({offset: 0});
+            }
             this._newItemsCount += 1;
             hash = items[0].getHash();
             // кек
-            additionalHeight += $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
-            for (var i = 1; i < this._virtualPages.length; i++) {
-               this._virtualPages[i].offset += additionalHeight;
-               console.log(this._virtualPages[i], this._virtualPages.length, this._newItemsCount);
-            }
+            this._additionalHeight += $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
+            this._virtualPages[0].offset = -this._additionalHeight;
+            // for (var i = 1; i < this._virtualPages.length; i++) {
+            //    this._virtualPages[i].offset += additionalHeight;
+            //    console.log(this._virtualPages[i], this._virtualPages.length, this._newItemsCount);
+            // }
          }
 
          if (this._newItemsCount == BATCH_SIZE) {
