@@ -21,6 +21,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    var HIER_WRAPPER_WIDTH = 16,
        //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
        ADDITIONAL_LEVEL_OFFSET = 19,
+       ADDITIONAL_LEVEL_OFFSET_SEARCH_MODE = 7,
       buildTplArgsTDG = function(cfg) {
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
@@ -266,7 +267,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          } else if (parentProj) {
             treeLevel = parentProj.getLevel();
          }
-         return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
+         return treeLevel * HIER_WRAPPER_WIDTH + (this._isSearchMode() ? ADDITIONAL_LEVEL_OFFSET_SEARCH_MODE : ADDITIONAL_LEVEL_OFFSET);
       },
 
       _keyboardHover: function(e) {
