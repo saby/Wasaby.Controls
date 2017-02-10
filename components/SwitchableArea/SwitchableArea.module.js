@@ -15,6 +15,9 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     */
 
    var SwitchableAreaOld = CoreSwitchableArea.extend(/** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
+      /**
+       * @param items
+       */
       setItems: function (items) {
          var tabControl = this.getParent();
          for (var id in this._areaHashMap){
