@@ -5,12 +5,13 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
     function () {
         return {
             checkMaxLength: function (value, maxLength) {
-                var length = value ? value.replace(/[\s-]/g, '').length : 0;
+                var length = value ? value.replace(/[\s.-]/g, '').length : 0;
                 return !(maxLength && length > maxLength);
             },
 
             numberPress: function(b, e, currentVal, delimiters, integers, decimals, keyCode, maxLength){
                 var dotPosition = currentVal.indexOf('.'),
+                    oldValue = currentVal,
                     symbol = String.fromCharCode(keyCode),
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
@@ -49,6 +50,10 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                     newCaretPosition = currentVal.indexOf('.');
                 }
                 currentVal = currentVal.replace(/\s/g, '');
+
+                if(!this.checkMaxLength(currentVal, maxLength)){
+                    currentVal = oldValue;
+                }
 
                 return {value: currentVal, caretPosition: newCaretPosition};
             },

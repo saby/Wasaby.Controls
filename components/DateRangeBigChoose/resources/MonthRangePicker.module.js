@@ -208,7 +208,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       _onItemCaptionMouseEnter: function (e) {
          var $target = $(e.target),
             target = $target.closest('.controls-RangeSelectable__item', this._getItemsContainer());
-
+         // Если двинули мышкой во время прокрутки списка, то это событие могло выстрелить до того как
+         // у элементов были установлены нужные атрибуты и классы. Перевызваем такие события чуть позже.
+         if (!target.length) {
+            // Если контрол был перерисован, то надо прервать обработку события.
+            if (!$target.closest('.controls-DateRangeBigChoose-MonthRangePicker', this._getItemsContainer()).length) {
+               return;
+            }
+            setTimeout(this._onItemCaptionMouseEnter.bind(this, e), 10);
+            return;
+         }
          if (!constants.browser.isMobileIOS) {
             target.addClass(this._css_classes.hovered);
          }

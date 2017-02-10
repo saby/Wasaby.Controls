@@ -4,15 +4,14 @@
    box-sizing: @DropdownList-box-sizing;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
-      display: block; /* ie8/9 */
-      display: flex;
+      .flexbox();
       width: 100%;
       white-space: nowrap;
       font-size: 0;
       box-sizing: border-box;
       align-items: center;
       .controls-DropdownList__textWrapper{
-        flex-shrink: 1;
+        .flex-shrink(1);
         overflow: hidden;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
@@ -38,13 +37,13 @@
       display: none;
       position: relative;
       top: 2px;
-      flex-shrink: 0;
+      .flex-shrink(0);
    }
    .controls-DropdownList__afterCaptionWrapper {
       display: none;
       position: relative;
       top: 2px;
-      flex-shrink: 0;
+      .flex-shrink(0);
    }
    &.controls-DropdownList__type-fastDataFilter {
      .controls-DropdownList__beforeCaptionWrapper {
@@ -91,6 +90,13 @@
        }
      }
    }
+
+   &.ws-validation-error {
+      outline: 1px solid @red-color;
+      outline-offset: -1px;
+      background-color: @text-box-error-bg;
+   }
+
    &.controls-DropdownList__defaultItem{
      .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper{
        color: #999;
@@ -422,23 +428,6 @@
    }
 }
 
-/* Все ie без поддержки flexBox'a */
-.ws-is-ie8, .ws-is-ie9, .ws-is-ie10 {
-  .controls-DropdownList .controls-DropdownList__selectedItem{
-     vertical-align: top;
-    .controls-DropdownList__textWrapper{
-      display: inline-block;
-      vertical-align: top;
-    }
-    .controls-DropdownList__beforeCaptionWrapper{
-       vertical-align: top;
-    }
-    .controls-DropdownList__afterCaptionWrapper{
-       vertical-align: top;
-    }
-  }
-}
-
 .ws-is-firefox {
    .controls-DropdownList__picker {
       .controls-DropdownList__header .controls-DropdownList {
@@ -461,6 +450,18 @@
 .ws-is-ie, .ws-is-firefox {
   .controls-DropdownList .controls-DropdownList__selectedItem{
      display: inline-block;
-     display: inline-flex;
+     .inline-flexbox();
   }
+}
+
+.ws-is-mobile-android {
+   //На андроиде поднимаю на 1px выше, иначе в портретной ориентации появляется полпикселя бордера
+   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
+      &.controls-popup-revert-horizontal .controls-DropdownList__body { //при controls-popup-revert-horizontal margin положительный
+         margin-top: 23px;
+      }
+      .controls-DropdownList__body {
+         margin-top: -2px;
+      }
+   }
 }

@@ -50,14 +50,15 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
        * @public
        */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
+            _menuAlign: 'standart',
             _options: {
                touchMode: false,
                linkedControl: undefined
@@ -189,12 +190,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Показывает меню для операций над записью
           */
-         showItemActionsMenu: function() {
+         showItemActionsMenu: function(align) {
             /* Создадим меню операций над записью, если его ещё нет */
             if(!this._itemActionsMenu) {
                this._createItemActionMenu();
             }
-
+            // при открытии контекстного меню необходимо устанавливать координаты точки начала построения popup
+            this._setContextMenuMode(align);
             this._onBeforeMenuShowHandler();
             this._itemActionsMenu.show();
             this._activeItem.container.addClass(this._activeCls);
@@ -202,6 +204,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             /*TODO фикс теста, для операций над записью должна быть особая иконка*/
             $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
          },
+
 
          /**
           * Срабатывает перед открытием меню
@@ -230,6 +233,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                return instance.isVisible() && instance.isEnabled();
             });
          },
+
          /**
           * Показывает операции над записью
           */
@@ -253,7 +257,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this._activeItem && this._activeItem.container && this._options.touchMode) {
                this._activeItem.container.removeClass(this._activeCls);
             }
-
+            this._itemActionsMenu && this.isItemActionsMenuVisible() && this._itemActionsMenu.hide();
             ItemActionsGroup.superclass.hide.call(this);
          },
          /**
@@ -313,20 +317,40 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this._itemActionsMenu) {
                this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__menu-touchMode', Boolean(mode));
                if(mode) {
-                  this._itemActionsMenu.setTarget(this._container);
-                  this._itemActionsMenu.setVerticalAlign(TOUCH_ALIGN.verticalAlign);
-                  this._itemActionsMenu.setHorizontalAlign(TOUCH_ALIGN.horizontalAlign);
+                  this.setMenuAlign(TOUCH_ALIGN, this._container);
                } else {
-                  this._itemActionsMenu.setTarget(this._itemActionsMenuButton);
-                  this._itemActionsMenu.setVerticalAlign(STANDART_ALIGN.verticalAlign);
-                  this._itemActionsMenu.setHorizontalAlign(STANDART_ALIGN.horizontalAlign);
+                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
                }
+            }
+         },
+
+         _setContextMenuMode: function(align) {
+            var mode = !!align;
+            if(this._itemActionsMenu) {
+               this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__contextMenu', Boolean(mode));
+               if(mode) {
+                  this.setMenuAlign(align, undefined);
+                  this._menuAlign = 'context';
+               } else if(this._menuAlign != 'standart') {
+                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
+                  this._menuAlign = 'standart';
+               }
+            }
+         },
+
+         setMenuAlign: function(align, target) {
+            if(this._itemActionsMenu){
+               this._itemActionsMenu.setTarget(target);
+
+               this._itemActionsMenu.setVerticalAlign(align.verticalAlign);
+               this._itemActionsMenu.setHorizontalAlign(align.horizontalAlign);
             }
          },
 
          _getItemTemplate : function(item) {
             var action = {
                isMainAction : item.get('isMainAction'),
+               isContextAction : item.get('isContextAction'),
                isVisible: true
                 },
                 onActivated = item.get('onActivated');

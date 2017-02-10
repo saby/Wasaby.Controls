@@ -127,7 +127,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * @remark
              * Нужен, например, для того, чтобы однозначно определить корешки вкладок после их фиксации в заголовке страницы.
              */
-            tabButtonsExtraClass: ''
+            tabButtonsExtraClass: '',
+            observeVisibleProperty: false //опция tabButtons
          }
       },
 

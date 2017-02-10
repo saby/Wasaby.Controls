@@ -630,7 +630,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
-            easyGroup: false
+            easyGroup: false,
+            task1173537554: false
          },
          _loader: null
 
@@ -757,7 +758,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: this._options.items,
+                  data: cFunctions.clone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
@@ -1003,8 +1004,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
             }
             needToRevive = markupExt.hasComponents;
+
+            if (!Object.isEmpty(this._options.groupBy)) {
+               this._groupFixOnRedrawItemInner(item, targetElement);
+            }
          }
          return needToRevive;
+      },
+
+      //TODO надо избавиться от этого метода
+      //если в списке есть группировка, при переносе в папку записи, следующей за ней
+      //не происходит события move, а только меняется запись
+      //мы просто перерисовываем ее, а должны еще перерисовать группу
+      _groupFixOnRedrawItemInner: function(item) {
+         var targetElement = this._getDomElementByItem(item);
+         var behElement;
+         if (!this._options._canApplyGrouping(item, this._options)) {
+            //если внутрь папки
+            behElement = targetElement.prev();
+            //если предыдущий группировка, то переносим ее
+            if (behElement.length && behElement.hasClass('controls-GroupBy')) {
+               targetElement.after(behElement);
+               //если группа оказалась пустая, удаляем ее
+               var behNextElement = behElement.next();
+               if (behNextElement.length && !behNextElement.hasClass('js-controls-ListView__item')) {
+                  behElement.remove();
+               }
+            }
+         }
       },
 
       _calculateDataBeforeRedraw: function(data) {
@@ -1285,7 +1312,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this.redraw()
                }
             }
-            else if (this._dataSource) {
+            else if (this._dataSource && !(this._options.dataSource && this._options.dataSource.firstLoad === false)) {
                this.reload();
             }
             if (this._options._serverRender) {
@@ -1530,17 +1557,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(fHelpers.forAliveOnly(function (error) {
-                   if (!error.canceled) {
-                      self._toggleIndicator(false);
-                      if (self._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-                         error.message = error.message.toString().replace('Error: ', '');
-                         fcHelpers.alert(error);
-                         error.processed = true;
-                      }
-                   }
-                   return error;
-                }, self));
+                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
@@ -1557,6 +1574,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _loadErrorProcess: function(error) {
+         if (!error.canceled) {
+            this._toggleIndicator(false);
+            if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+               error.message = error.message.toString().replace('Error: ', '');
+               fcHelpers.alert(error);
+               error.processed = true;
+            }
+         }
+         return error;
+      },
 
       _getFilterForReload: function() {
          return this._options.filter;
@@ -1759,6 +1788,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 data: this._options.items,
                 idProperty: this._options.idProperty
              });
+          }
+          else {
+             if (this._options.task1173537554) {
+                this._notifyOnPropertyChanged('items');
+             }
           }
           this.redraw();
       },
@@ -1989,17 +2023,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target) {
+      _scrollTo: function scrollTo(target, toBottom) {
          if (typeof target === 'string') {
             target = $(target);
          }
-
-         LayoutManager.scrollToElement(target);
+         LayoutManager.scrollToElement(target, toBottom);
       },
-      _scrollToItem: function(itemId) {
+      _scrollToItem: function(itemId, toBottom) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer);
+            this._scrollTo(itemContainer, toBottom);
          }
       },
       /**
@@ -2138,7 +2171,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getItemContainer: function(parent, item) {
-         return parent.find('>[data-id="' + item.getId() + '"]');
+         var projItem = this._getItemProjectionByItemId(item.get(this._options.idProperty));
+         return projItem ? parent.find('[data-hash="' + projItem.getHash() + '"]') : $();
       },
 
 

@@ -425,30 +425,33 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   deferred,
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
-                  deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
-                     eip.acceptChanges();
-                     if (self._editingRecord) {
-                        self._editingRecord.merge(eipRecord);
-                        self._editingRecord = undefined;
-                     }
-                     if (self._isAdd) {
-                        if (self._options.items && self._options.items.getFormat().getCount()) {
-                           self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
-                        } else {
-                           self._options.items.add(eipRecord);
-                        }
-                     }
-                  }).addErrback(function(error) {
-                     fcHelpers.alert(error);
-                  });
-               } else {
-                  if (this._isAdd && eipRecord.getId()) {
-                     deferred = this._options.dataSource.destroy(eipRecord.getId());
+                  if (this._options.dataSource) {
+                     deferred = this._options.dataSource.update(eipRecord).addCallback(function () {
+                        self._acceptChanges(eip, eipRecord);
+                     }).addErrback(function (error) {
+                        fcHelpers.alert(error);
+                     });
                   } else {
-                     deferred = Deferred.success()
+                     this._acceptChanges(eip, eipRecord);
+                  }
+               } else if (this._isAdd && eipRecord.getId() && this._options.dataSource) {
+                  deferred = this._options.dataSource.destroy(eipRecord.getId());
+               }
+               return deferred || Deferred.success();
+            },
+            _acceptChanges: function(eip, record) {
+               eip.acceptChanges();
+               if (this._editingRecord) {
+                  this._editingRecord.merge(record);
+                  this._editingRecord = undefined;
+               }
+               if (this._isAdd) {
+                  if (this._options.items && this._options.items.getFormat().getCount()) {
+                     this._options.items.add(DataBuilder.reduceTo(record, this._options.items.getFormat(), this._options.items.getModel()));
+                  } else {
+                     this._options.items.add(record);
                   }
                }
-               return deferred;
             },
             _afterEndEdit: function(eip, withSaving) {
                var isAdd = this._isAdd;
@@ -457,8 +460,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
                if (isAdd) {
                   this._isAdd = false;
-                  this._addTarget.remove();
-                  this._addTarget = undefined;
+                  this._destroyAddTarget();
                }
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
@@ -549,6 +551,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                this._addTarget = addTarget;
             },
+
+            _destroyAddTarget: function() {
+               if (this._addTarget) {
+                  this._addTarget.remove();
+                  this._addTarget = undefined;
+               }
+            },
             /**
              * Обработчик потери фокуса областью редактирования по месту
              * @param event
@@ -601,6 +610,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _destroyEip: function() {
                if (this._eip) {
                   this._eip.destroy();
+                  //Необходимо разрушить фейковую строку добавления, при разрушении редакторов, т.к. редакторы разрушаются
+                  //например при вызове relaod, а DOM чистится только после того, как отработает списочный метод.
+                  //В указанном промежутке времени,в DOM будет лежать пустая строка, которая выглядит некрасиво.
+                  this._destroyAddTarget();
                   this._eip = null;
                }
             },

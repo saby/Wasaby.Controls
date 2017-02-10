@@ -178,6 +178,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      }
                      text = newText;
                   }
+                  text = self._formatText(text);
                   self._drawText(text);
                   /* Событие paste может срабатывать:
                      1) При нажатии горячих клавиш
@@ -188,7 +189,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                      можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
                      которые на это рассчитывают.
                    */
-                  self._setTextByKeyboard(self._formatText(text));
+                  self._setTextByKeyboard(text);
                }
             }, 100);
          });

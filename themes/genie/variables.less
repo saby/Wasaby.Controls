@@ -697,7 +697,7 @@
 @menu-item-width:                         auto;
 @menu-item-height:                        24px;
 @menu-big-item-height:                    32px;
-@menu-item-line-height:                   @menu-item-height;
+@menu-item-line-height:                   20px;
 @menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 
@@ -720,7 +720,7 @@
 @menu-item-icon24-left-offset:              0px;
 @menu-item-icon24-left-offset-big:          0px;
 
-@menu-item-text-margin:                     0 0 0 22px;
+@menu-item-text-margin:                     6px 0 6px 0;
 
 
 
@@ -1623,8 +1623,8 @@
 @list-view-actions-menu-close-width:            16px;
 @list-view-actions-menu-item-padding-right:     24px;
 @list-view-actions-menu-padding:                4px 0;
-@list-view-actions-menu-margin:                 3px 0 0 6px;
-@list-view-actions-menu-text-margin:            0 0 0 30px;
+@list-view-actions-menu-margin:                 4px 0 0 5px;
+@list-view-actions-menu-text-margin:            6px 0 6px 30px;
 
 @list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
@@ -1725,6 +1725,7 @@
 @tree-view-ellipsis-copyArrow-shadow:           -10px 0 10px 0;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
+@tree-view-ellipsis-copyArrow-right:            -1px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1769,7 +1770,7 @@
 @data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               11px;
 
-@data-grid-header-cell-border-width:            1px 1px 0 1px;
+@data-grid-header-cell-border-width:            1px 0 0 0;
 @data-grid-header-cell-border-style:            solid;
 @data-grid-header-cell-border-color:            transparent;
 @data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
@@ -1786,7 +1787,8 @@
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-line-height:                    21px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-first-content-cell-padding-left:     @data-grid-header-cell-padding-side;
+@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -2091,24 +2093,23 @@
 @controls-filterButton-history-title-color:       #313e78;
 @controls-filterButton-history-title-width:       100%;
 
-//FilterButtonToggleButton
-@controls-filterButton-toggleButton-lineHeight:   20px !important;
-@controls-filterButton-toggleButton-fontSize:     26px !important;
-@controls-filterButton-toggleButton-fontFamily:   acordion-font!important;
-@controls-filterButton-toggleButton-height:       24px;
+//CommandsSeparator
+@controls-commandsSeparator-lineHeight:   20px !important;
+@controls-commandsSeparator-fontSize:     26px !important;
+@controls-commandsSeparator-fontFamily:   acordion-font !important;
+@controls-commandsSeparator-height:       24px;
 
-@controls-filterButton-toggleButton-icon-width:   24px;
-@controls-filterButton-toggleButton-icon-height:  24px;
-@controls-filterButton-toggleButton-icon-fontSize:41px !important;
-@controls-filterButton-toggleButton-icon-top:     3px;
-@controls-filterButton-toggleButton-icon-left:    -9px;
-@controls-filterButton-toggleButton-icon-style:   normal;
-@controls-filterButton-toggleButton-icon-down:    "\e902";
-@controls-filterButton-toggleButton-icon-up:      "\e904";
-@controls-filterButton-toggleButton-color:        #CCCCCC !important;
+@controls-commandsSeparator-icon-width:   24px;
+@controls-commandsSeparator-icon-height:  24px;
+@controls-commandsSeparator-icon-top:     2px;
+@controls-commandsSeparator-icon-left:    -1px;
+@controls-commandsSeparator-icon-style:   normal;
+@controls-commandsSeparator-icon-down:    "\e902";
+@controls-commandsSeparator-icon-up:      "\e904";
+@controls-commandsSeparator-color:        #CCCCCC !important;
 
-@controls-filterButton-toggleButton-border:       none;
-@controls-filterButton-toggleButton-bgColor:      transparent;
+@controls-commandsSeparator-border:       none;
+@controls-commandsSeparator-bgColor:      transparent;
 
 //FilterLine
 @controls-filterLine-padding:                     8px 8px 8px 0;

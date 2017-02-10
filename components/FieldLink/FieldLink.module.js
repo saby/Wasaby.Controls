@@ -355,16 +355,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                   self.resetSearch();
                }
 
-               /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
-                  этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
-                  становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
-               if(this.isActive() && !this._isInputVisible()) {
-                  this._getElementToFocus().focus();
-               }
                /* При добавлении элементов надо запустить валидацию,
                   если же элементы были удалены,
                   то валидация будет запущена либо эрией, либо по уходу фокуса из поля связи (По стандарту). */
                if(changed.added.length && !self._isEmptySelection()) {
+                  /* После добавления записи в поле связи с единичным выбором скрывается поле ввода(input), и если до
+                     этого компонент был активен, то нативный браузерный фокус с поля ввода (input), улетит на body. После этого
+                     становится невозможно обрабатывать клавиатурные события, поэтому вернём фокус обратно на компонент. */
+                  if(this.isActive() && !this._isInputVisible()) {
+                     this._getElementToFocus().focus();
+                  }
                   /* Надо дожидаться загрузки выбранных записей,
                      т.к. часто валидируют именно по ним,
                      или же по значениям в контексте */
@@ -381,19 +381,31 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           init: function() {
-             var self = this;
-
              FieldLink.superclass.init.apply(this, arguments);
 
+             var self = this,
+                 linkCollection = this._getLinkCollection();
+
+             /* По стандарту, если открыта выпадашка всех записей, то по уход фокуса/вводу текста она должна скрываться. */
+             this.subscribe('onTextChange', linkCollection.hidePicker.bind(linkCollection));
+
+             this.subscribeTo(linkCollection, 'onDrawItems', this._onDrawItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onCrossClick', this._onCrossClickItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onItemActivate', this._onItemActivateItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onClosePicker', this._onItemActivateItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onShowPicker', this._onItemActivateItemsCollection.bind(this))
+                 .subscribeTo(linkCollection, 'onFocusIn', function() {
+                    self.setActive(true);
+                 });
+
              if(this._options.useSelectorAction) {
-                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, meta, result) {
+                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, result) {
                    /* После выбора из панели выбора, надо фокус возвращать в поле связи:
                       после закрытия панели фокус будет проставляться на компонент, который был активным до этого (механизм WindowManager),
                       последним активным компонентом была кнопка открытия справочника/ссылка открывающая справочник,
                       но по стандарту курсор должен проставиться в поле ввода поля связи после выбора из панели,
                       поэтому руками устанавливаем фокус в поле связи  */
                    self.setActive(true);
-
                    if(result) {
                       self.setSelectedItems(result);
                    }
@@ -406,9 +418,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    которое стреляет раньше фокуса. В противном случае автодополнение будет мограть, если включена опиция autoShow,
                    потому что оно показывается по фокусу. */
                 showAllButton.getContainer().on('mousedown', function () {
-                      self._showAllItems();
-                   }
-                );
+                   self._showAllItems();
+                });
 
                 /* При клике на кнопку переводим нативный фокус обратно в поле ввода */
                 this.subscribeTo(showAllButton, 'onActivated', function() {
@@ -529,15 +540,24 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
+                var selectedItems = this.getSelectedItems();
                 this._getSelectorAction().execute({
                    template: template,
                    componentOptions: componentOptions,
                    multiselect: this.getMultiselect(),
                    selectionType: selectionType,
-                   selectedItems: this.getSelectedItems()
+                   selectedItems: selectedItems ? selectedItems.clone() : selectedItems
                 });
              } else {
                 this._showChooser(template, componentOptions);
+             }
+          },
+
+          _showChooser: function() {
+             if(this._options.useSelectorAction) {
+                this.showSelector.apply(this, arguments);
+             } else {
+                FieldLink.superclass._showChooser.apply(this, arguments);
              }
           },
 
@@ -793,13 +813,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }
              }
           },
-          _onCrossClickItemsCollection: function(key) {
+          _onCrossClickItemsCollection: function(event, key) {
              this.removeItemsSelection([key]);
              if(!this._options.multiselect && this._options.alwaysShowTextBox) {
                 this.setText('');
              }
+
+             if(this.isActive()) {
+                this._getElementToFocus().focus();
+             }
           },
-          _onItemActivateItemsCollection: function(key) {
+          _onItemActivateItemsCollection: function(event, key) {
              this.getSelectedItems(false).each(function(item) {
                 if(item.get(this._options.idProperty) == key) {
                    this._notify('onItemActivate', {item: item, id: key});
@@ -1063,11 +1087,27 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._getLinkCollection().isPickerVisible() || !this._isInputVisible()) {
                 return;
              }
+
+             // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
+             // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
+             if (constants.browser.isMobilePlatform) {
+                $('.controls-ScrollContainer').addClass('controls-ScrollContainer-overflow-scrolling-auto');
+             }
+
              FieldLink.superclass.showPicker.apply(this, arguments);
              /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
                 при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
                 поэтому при перевороте проскролим вниз автодополнение */
              this._processSuggestPicker();
+          },
+          
+          // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
+          // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
+          hidePicker: function(){
+             FieldLink.superclass.hidePicker.apply(this, arguments);
+             if (constants.browser.isMobilePlatform) {
+                $('.controls-ScrollContainer').removeClass('controls-ScrollContainer-overflow-scrolling-auto');
+             }
           },
 
           setEnabled: function() {
@@ -1168,6 +1208,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this.removeItemsSelection([selectedKeys[selectedKeys.length - 1]]);
                       }
                       break;
+                   case constants.key.tab:
+                      this._getLinkCollection().hidePicker();
                 }
              }
           },

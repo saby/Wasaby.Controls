@@ -25,9 +25,38 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
+   "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.DataGridView'
 ],
-   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, footTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemResultTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
+   function(
+      cFunctions,
+      cMerge,
+      constants,
+      Deferred,
+      ListView,
+      dotTplFn,
+      rowTpl,
+      colgroupTpl,
+      headTpl,
+      footTpl,
+      resultsTpl,
+      MarkupTransformer,
+      DragAndDropMixin,
+      ImitateEvents,
+      groupByTpl,
+      Ladder,
+      LadderDecorator,
+      TemplateUtil,
+      ItemTemplate,
+      ItemResultTemplate,
+      ItemContentTemplate,
+      cellTemplate,
+      GroupTemplate,
+      colHelpers,
+      strHelpers,
+      dcHelpers
+   ) {
+
    'use strict';
 
       var _prepareColumns = function(columns, cfg) {
@@ -250,6 +279,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
+    * @cssModifier controls-DataGridView__sidePadding-12 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 12px.
+    * @cssModifier controls-DataGridView__sidePadding-16 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 16px.
+    * @cssModifier controls-DataGridView__sidePadding-20 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 20px.
+    * @cssModifier controls-DataGridView__sidePadding-24 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 24px.
     *
     * @control
     * @public
@@ -565,13 +598,27 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
+             columns = this.getColumns(),
              trs = [],
              cells = [],
-             index, hoveredColumn, cell, resultTr;
+             index, hoveredColumn, cell, colIndex, colValue, colValueText;
 
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
+            colIndex = index + (this.getMultiselect() ? 1 : 0);
+
+            if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
+               colValue = td.find('.controls-DataGridView__columnValue')[0];
+
+               if(colValue) {
+                  colValueText = colValue.innerText;
+
+                  if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
+                     colValue.setAttribute('title', colValueText);
+                  }
+               }
+            }
 
             if (hoveredColumn.columnIndex !== index) {
                this._clearHoveredColumn();
@@ -1222,7 +1269,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
           /* При установке колонок, надо сбросить частичный скролл */
           this._currentScrollPosition = 0;
           checkColumns(this._options);
-          this._destroyEditInPlace();
+          this._destroyEditInPlaceController();
        },
 
       _oldRedraw: function() {

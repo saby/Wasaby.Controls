@@ -64,48 +64,17 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._parentFieldLink = this.getParent();
          },
 
-         _eventHandler: function(event, arg) {
-            var fieldLink = this._parentFieldLink;
-            switch (event.name) {
-               case 'onDrawItems':
-                  fieldLink._onDrawItemsCollection.call(fieldLink);
-                  break;
-               case 'onCrossClick':
-                  fieldLink._onCrossClickItemsCollection.call(fieldLink, arg);
-                  break;
-               case 'onItemActivate':
-                  fieldLink._onItemActivateItemsCollection.call(fieldLink, arg);
-                  break;
-            }
-         },
-
          _onClickHandler: function(e) {
             FieldLinkItemsCollection.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 deleteAction = false,
-                self = this,
-                itemContainer;
-
-            function focusFL() {
-               self._parentFieldLink.setActive(true);
-            }
+                itemContainer, id;
 
             itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
             if(itemContainer.length) {
                deleteAction = $target.hasClass('controls-FieldLink__item-cross');
-               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
-            }
-
-            /* При клике по элементам коллекции поля связи, надо, чтобы курсор отображался в поле ввода,
-               поэтому при клике вызываем setActive для поля связи, который переведёт курсор в поле ввода,
-               однако, если кликнули по крестику и в событии удаления фокус перевели,
-               то делать активным поле связи не надо */
-            if(deleteAction) {
-               if(this._parentFieldLink.isActive()) {
-                  focusFL();
-               }
-            } else {
-               focusFL();
+               id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().getId();
+               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
             }
          },
 
@@ -140,11 +109,15 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _setEnabled: function () {
+            var items = this.getItems();
             /* Т.к. при изменении состояния поля связи, для всех элементов появляются/исчезают крестики удаления,
                то надо вызывать перерисовку элементов, чтобы правильно проставилась ширина */
             this._clearItems();
             FieldLinkItemsCollection.superclass._setEnabled.apply(this, arguments);
-            this.redraw();
+
+            if(items && items.getCount()) {
+               this.redraw();
+            }
          },
 
          _getItemsContainer: function() {
@@ -223,14 +196,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                handlers: {
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
-                     self._notify('onClosePicker');
                      if(!self.isEnabled()) {
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
-                  },
-                  onShow: function() {
-                     self._notify('onShowPicker');
                   }
                }
             };

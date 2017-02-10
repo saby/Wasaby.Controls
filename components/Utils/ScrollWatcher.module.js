@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       getScrollHeight: function(element) {
          element = element || this.getScrollContainer()[0];
-         if (element.scrollHeight){
+         if (element.scrollHeight !== undefined){
             return element.scrollHeight;
          } else {
             // Get document height (cross-browser)

@@ -3,11 +3,14 @@
    border-left: @controls-NotificationPopup-border-left;
    border-right: @controls-NotificationPopup-border-right;
    border-bottom: @controls-NotificationPopup-border-bottom;
+   max-width: @controls-NotificationPopup-max-width;
 }
 
 .controls-NotificationPopup__header {
    height: @controls-NotificationPopup-header-height;
    padding: @controls-NotificationPopup-header-padding;
+   .flexbox();
+   .align-items(@align: center);
 }
 
 .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
@@ -15,16 +18,11 @@
 }
 
 .controls-NotificationPopup__header_icon.icon-24 {
-   float: left;
    background-size: cover;
-   position: relative;
-   top: 50%;
-   margin-top: -@controls-NotificationPopup-header-icon-height / 2;
    margin-right: @controls-NotificationPopup-header-icon-right-margin;
 }
 
 .controls-NotificationPopup__header_caption{
-   float: left;
-   line-height: @controls-NotificationPopup-header-height;
    font-size: @controls-NotificationPopup-header-caption-font-size;
+   .text-overflow();
 }

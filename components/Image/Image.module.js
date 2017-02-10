@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.Image',
    "js!WS.Data/Source/SbisService",
    "html!SBIS3.CONTROLS.Image",
    "js!SBIS3.CORE.Dialog",
+   "js!SBIS3.CORE.FileLoader",
    "js!SBIS3.CORE.LoadingIndicator",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.Image',
    "js!SBIS3.CONTROLS.Link",
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -37,10 +38,6 @@ define('js!SBIS3.CONTROLS.Image',
           * @ignoreOptions validators
           * @ignoreEvents onAfterLoad onChange onStateChange
           * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
-          *
-          * @demo SBIS3.CONTROLS.DEMO.IntImage <b>Пример 1.</b> Разные типы изображения + плагин.
-          * @demo SBIS3.CONTROLS.DEMO.IntImage2 <b>Пример 2.</b> Базовая линия.
-          * @demo SBIS3.CONTROLS.DEMO.IntImage3 <b>Пример 3.</b> Редактирование изображения при загрузке.
           *
           * @public
           * @control
@@ -762,10 +759,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             _getFileLoader: function() {
-               if (!this._fileLoader) {
-                  return this._createFileLoader();
-               }
-               return Deferred.success(this._fileLoader);
+               return this._createFileLoader();
             },
 
             /**
@@ -773,37 +767,37 @@ define('js!SBIS3.CONTROLS.Image',
              * @private
              */
             _createFileLoader: function() {
-               var def = new $ws.proto.Deferred();
+               if (this._fileLoader) {
+                  return Deferred.success(this._fileLoader);
+               }
+
+               //NB! Вероятно хотим отредактировать.
+               // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
                var self = this;
-
-               require(['js!SBIS3.CORE.FileLoader'], function (FileLoader) {
-                  var cont = $('<div class="controls-image__file-loader"></div>');
-                  self.getContainer().append(cont);
-                  self._fileLoader = new FileLoader({
-                     extensions: ['image'],
-                     element: cont,
-                     name: 'FileLoader',
-                     parent: self,
-                     showIndicator: false,
-                     handlers: {
-                        onLoadStarted: self._onBeginLoad,
-                        onLoaded: self._onEndLoad
-                     }
-                  });
-
-                  //todo Удалить, временная опция для поддержки смены логотипа компании
-                  var dataSource = self.getDataSource();
-                  if (dataSource) {
-                     self._fileLoader.setMethod((
-                        self._options.linkedObject || dataSource.getEndpoint().contract) +
-                        '.' + dataSource.getBinding().create
-                     );
+               var cont = $('<div class="controls-image__file-loader"></div>');
+               self.getContainer().append(cont);
+               self._fileLoader = new FileLoader({
+                  extensions: ['image'],
+                  element: cont,
+                  name: 'FileLoader',
+                  parent: self,
+                  showIndicator: false,
+                  handlers: {
+                     onLoadStarted: self._onBeginLoad,
+                     onLoaded: self._onEndLoad
                   }
-
-                  def.callback(self._fileLoader);
                });
 
-               return def;
+               //todo Удалить, временная опция для поддержки смены логотипа компании
+               var dataSource = self.getDataSource();
+               if (dataSource) {
+                  self._fileLoader.setMethod((
+                     self._options.linkedObject || dataSource.getEndpoint().contract) +
+                     '.' + dataSource.getBinding().create
+                  );
+               }
+
+               return Deferred.success(self._fileLoader)
             }
          });
 
