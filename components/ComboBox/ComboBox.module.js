@@ -143,6 +143,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
 
       $protected: {
+         //Проблема уйдёт после решения задачи https://inside.tensor.ru/opendoc.html?guid=eae86be7-2eed-4ff7-bd43-feae7b4b5b35&des=
+         _checkClickByTap: true,
          //если поменяли текст до того, как были установлены items. То мы не сможем проставить соответсвующий ключ из набора
          //это надо будет сделать после уставноки items, а этот флаг используем для понимания
          _delayedSettingTextByKey: false,

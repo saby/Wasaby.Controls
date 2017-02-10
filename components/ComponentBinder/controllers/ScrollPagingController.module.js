@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
    var ScrollPagingController = cAbstract.extend({
       $protected: {
          _options: {
-            view: null,
+            view: null
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы

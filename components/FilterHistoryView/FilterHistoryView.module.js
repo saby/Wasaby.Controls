@@ -18,7 +18,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
              _options: {
                 historyId: '',
                 itemsActions: [],
-                itemsDragNDrop: false
+                itemsDragNDrop: false,
+                itemContentTpl: itemTpl
              }
           },
 
@@ -35,7 +36,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
           _modifyOptions: function() {
              var opts = FilterHistoryView.superclass._modifyOptions.apply(this, arguments);
              opts.footerTpl = footerTpl;
-             opts.itemContentTpl = itemTpl;
              opts.idProperty = 'id';
              opts.className += ' controls-HistoryView';
              return opts;
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
              if(this._options.historyId) {
                 var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
-                historyController.subscribe('onHistoryUpdate', function (event, history) {
+                this.subscribeTo(historyController, 'onHistoryUpdate', function(event, history) {
                    this.setItems(history.clone());
                 }.bind(this));
 

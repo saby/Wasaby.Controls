@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    "js!SBIS3.CORE.Control",
    "html!SBIS3.CONTROLS.HighChartsLight",
    "Core/helpers/dom&controls-helpers",
-   "browser!cdn!/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
    "css!SBIS3.CONTROLS.HighChartsLight"
 ],
 function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
@@ -602,7 +602,9 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
       _drawHighChart : function() {
          var self = this;
          this._options.highChartOptions.chart.events = this._options.highChartOptions.chart.events || {};
-
+         if (this._chartObj) {
+            this._chartObj.destroy();
+         }
          this.getContainer().highcharts(this._options.highChartOptions);
          this._chartObj = this.getContainer().highcharts();
       },
@@ -638,6 +640,9 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
 
       destroy: function() {
          dcHelpers.trackElement(this._container, false);
+         if (this._chartObj) {
+            this._chartObj.destroy();
+         }
          HighChartsLight.superclass.destroy.call(this);
       }
    });
