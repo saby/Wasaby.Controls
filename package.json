@@ -12,7 +12,8 @@
     "gulp": "^3.9.1",
     "gulp-less": "^3.3.0",
     "humanize": "0.0.9",
-    "merge": "1.2.0"
+    "merge": "1.2.0",
+    "minimatch": "^3.0.3"
   },
   "devDependencies": {
     "chai": "3.5.0",
