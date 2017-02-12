@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
          for (var i = 0, l = items.length; i < l; i++){
             this.addArea(items[i].id, items[i].content);
          }
-         tabControl.setSelectedKey(tabControl.getSelectedKey());
+         tabControl._setActiveArea(tabControl.getSelectedKey()); //После новой установки итемов - делаем активной уже выбранную вкладку
       }
    });
    return SwitchableAreaOld;
