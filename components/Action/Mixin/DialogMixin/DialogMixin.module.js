@@ -129,6 +129,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _createComponent: function(config, meta, mode) {
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
          if (this._isNeedToRedrawDialog()){
+            //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.
+            //Производим открытие новой записи по новой конфигурации, все что лежало в опциях до этого не актуально и при текущем конфиге может поломать требуемое поведение.
+            //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
             this._dialog._options.componentOptions = {};
             cMerge(this._dialog._options, config);
             this._dialog.reload();
