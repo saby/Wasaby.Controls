@@ -83,27 +83,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       itemsProjection = cfg._getRecordsForRedrawSt.apply(this, arguments);
       if (cfg.emptyValue){
-         itemsProjection.unshift(getEmptyProjection(cfg));
+         itemsProjection.unshift(cfg._emptyRecordProjection);
       }
       return itemsProjection;
-   }
-
-   function getEmptyProjection(cfg) {
-      var rawData = {},
-         emptyItemProjection,
-         rs;
-      rawData[cfg.idProperty] = null;
-      rawData[cfg.displayProperty] = 'Не выбрано';
-      rawData.isEmptyValue = true;
-
-      rs = new RecordSet({
-         rawData: [rawData],
-         idProperty: cfg.idProperty
-      });
-
-      emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
-      cfg._emptyRecord = emptyItemProjection.getContents();
-      return emptyItemProjection;
    }
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
@@ -154,7 +136,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _isClearing: false,
          _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
-            _emptyRecord: undefined,
+            _emptyRecordProjection: undefined,
             _getRecordsForRedraw: getRecordsForRedrawCB,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -236,6 +218,27 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
+      },
+
+      _modifyOptions: function(){
+         var cfg = ComboBox.superclass._modifyOptions.apply(this, arguments);
+         if (cfg.emptyValue){
+            var rawData = {},
+               emptyItemProjection,
+               rs;
+            rawData[cfg.idProperty] = null;
+            rawData[cfg.displayProperty] = 'Не выбрано';
+            rawData.isEmptyValue = true;
+
+            rs = new RecordSet({
+               rawData: [rawData],
+               idProperty: cfg.idProperty
+            });
+
+            emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
+            cfg._emptyRecordProjection = emptyItemProjection;
+         }
+         return cfg;
       },
 
       init : function() {
@@ -428,7 +431,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedEmptyRecord: function(){
-         this._drawSelectedItemText(null, this._options._emptyRecord);
+         this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
          this._options.selectedKey = null;
          this.setSelectedIndex(-1);
          this.hidePicker();
