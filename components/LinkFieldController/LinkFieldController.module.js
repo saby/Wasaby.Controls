@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
             callArgs = [sourceBindings.read, {
                'ИдО': elem.value,
                'ИмяМетода': sourceBindings.format || null,
-               'Связь': field
+               'Связь': elem.field
             }];
          }
 
