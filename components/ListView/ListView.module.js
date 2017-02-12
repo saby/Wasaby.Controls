@@ -1353,10 +1353,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _mouseDownHandler: function(event){
-            var itemsActions = this.getItemsActions();
-           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
-              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
-              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           if(this._itemsToolbar && event.button === 2){
+              var itemsActions = this.getItemsActions();
+              if(itemsActions && itemsActions.isItemActionsMenuVisible()) {
+                 // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+                 this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+              }
            }
          },
 

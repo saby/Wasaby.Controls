@@ -9,8 +9,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    "js!WS.Data/Source/DataSet",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
+   "js!SBIS3.CONTROLS.Utils.DateUtil",
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
-], function ( constants, Deferred,ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, colHelpers, cInstance, ScrollWatcher) {
+], function ( constants, Deferred, ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, colHelpers, cInstance, dateUtils) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -67,6 +68,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    var MonthRangePicker = ListView.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBig.MonthRangePicker.prototype */{
       $protected: {
          _options: {
+            liveSelection: true,
+
             // x: monthSource,
             // dataSource: monthSource,
             idProperty: 'id',
@@ -117,6 +120,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
          container.on('mouseenter', '.controls-MonthView__caption', this._onItemCaptionMouseEnter.bind(this));
          container.on('mouseleave', '.controls-MonthView__caption', this._onItemCaptionMouseLeave.bind(this));
+         container.on('mouseleave', this._onRangeControlMouseLeave.bind(this));
       },
 
       _onScroll: function(event, type) {
@@ -221,7 +225,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          if (!constants.browser.isMobileIOS) {
             target.addClass(this._css_classes.hovered);
          }
-         this._onRangeItemElementMouseEnter(Date.fromSQL(target.attr(this._selectedRangeItemIdAtr)));
+         this._onRangeItemElementMouseEnter(dateUtils.getEndOfMonth(Date.fromSQL(target.attr(this._selectedRangeItemIdAtr))));
       },
 
       _onItemCaptionMouseLeave: function (e) {
@@ -232,12 +236,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
          target.removeClass(this._css_classes.hovered);
       },
 
+      _getEndValueOnMouseLeave: function () {
+         return dateUtils.getEndOfMonth(this.getStartValue());
+      },
+
       _onMonthActivated: function (e) {
          this._notify('onMonthActivated', e.getTarget().getMonth());
       },
 
       _selectedRangeItemToString: function (date) {
-         return date.toSQL();
+         return dateUtils.getStartOfMonth(date).toSQL();
       },
 
       _getSelectedRangeItemsIds: function (start, end) {

@@ -484,6 +484,7 @@ define('js!SBIS3.CONTROLS.Image',
                   image = this._image.get(0),
                   showButtons = this._imageUrl !== this._options.defaultImage;
                if (this._options.sizeMode === 'stretch') {
+                  this._image.css(image.naturalHeight > image.naturalWidth ? 'width': 'height', '');
                   this._image.css(image.naturalHeight > image.naturalWidth ? 'height': 'width', '100%');
                }
                if (this._options.imageBar) {

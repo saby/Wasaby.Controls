@@ -111,7 +111,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
              *     <opt name="newLineMode">enter</opt>
              * </pre>
              */
-            newLineMode: 'enter'
+            newLineMode: 'enter',
+            breakClickBySelect: false
          }
       },
 
