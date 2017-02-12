@@ -87,7 +87,6 @@ module.exports = function less1by1Task(grunt) {
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
                   let theme = resolveThemeName(filepath)
                     if (itIsControl(filepath)) {
-                      console.log('kekekek')
                       for (let themeName of themes) {
                         processLessFile(data, filepath, readFileError, themeName, true)
                       }
