@@ -1964,7 +1964,9 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsToolbar.lockToolbar();
             } else {
                if(this._touchSupport) {
-                  this._changeHoveredItem(this._getElementByModel(model));
+                  /* По стандарту перевод редактирования(без связных операций) на ipad'e
+                     должен скрывать операции и убирать ховер */
+                  this._mouseLeaveHandler();
                } else {
                   this._updateItemsToolbar();
                }
