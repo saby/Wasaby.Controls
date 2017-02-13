@@ -704,8 +704,8 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        * @see dataSource
        */
-      update: function(config){
-         return this._prepareUpdatingRecord(config);
+      update: function(config) {
+         return this._prepareUpdatingRecord(config || {});
       },
 
       _showConfirmDialog: function(){
