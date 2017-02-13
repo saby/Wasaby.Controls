@@ -209,12 +209,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.newStandtart
             );
          }
+
+	      options.className += ' controls-NumberTextBox';
+
          return options;
       },
 
       $constructor: function () {
          var self = this;
-         this.getContainer().addClass('controls-NumberTextBox');
          $('.js-controls-NumberTextBox__arrowDown', this.getContainer().get(0)).click(function () {
             if (self.isEnabled()) {
                self._arrowDownClick();

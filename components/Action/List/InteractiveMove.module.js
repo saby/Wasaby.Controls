@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                opener: this._getListView(),
                movedItems: movedItems,
                componentOptions: meta.componentOptions || {}
-            }, this._options.template);
+            });
          },
 
          _buildComponentConfig: function(meta) {

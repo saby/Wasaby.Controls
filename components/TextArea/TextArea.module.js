@@ -111,7 +111,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
              *     <opt name="newLineMode">enter</opt>
              * </pre>
              */
-            newLineMode: 'enter'
+            newLineMode: 'enter',
+            breakClickBySelect: false
          }
       },
 
@@ -162,7 +163,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
                   self.setText.call(self, self._formatText(self._getTextFromMarkup()));
-                  self._inputField.get(0).innerText = self._options.text;
                }
             }, 100)
          });
@@ -186,7 +186,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       _prepareTextBecauseFFBug: function(text) {
          //в файрфоксе есть баг с 2011 года при котором во время ввода и последующей очистки contenteditable там оказывается пустой фантомный br
-         if (cConst.browser.firefox && text.length == 1 && text == '\n') {
+         if (cConst.browser.firefox && text && text.length == 1 && text == '\n') {
             return '';
          }
          else {

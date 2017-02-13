@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        'use strict';
 
-       var MULTISELECT_CLASS = 'controls-SelectorWrapper__multiselect';
+       var MULTISELECT_CLASS = 'controls-SelectorController__multiselect';
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              function onChangeSelection() {
                 if(self._selectButton && multiselect) {
-                   self._selectButton.show();
+                   self._selectButton[currentItems.getCount() ? 'show' : 'hide']();
                 }
              }
 

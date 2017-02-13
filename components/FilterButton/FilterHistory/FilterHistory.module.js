@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
    "html!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl",
    "js!SBIS3.CONTROLS.CommandsSeparator",
    "js!SBIS3.CONTROLS.ListView",
+   'css!SBIS3.CONTROLS.CommandsSeparator',
    "i18n!SBIS3.CONTROLS.FilterButton"
 ],
     function( CommandDispatcher,CompoundControl, dotTpl) {
@@ -35,7 +36,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
       },
 
       $constructor: function() {
-         
+
          CommandDispatcher.declareCommand(this, 'toggleHistory', this.toggleHistoryBlock);
       },
 

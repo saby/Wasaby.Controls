@@ -42,8 +42,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _options: {
                itemTpl: ItemTpl,
                displayProperty: '',
