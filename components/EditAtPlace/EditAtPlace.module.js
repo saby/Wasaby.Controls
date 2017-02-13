@@ -138,8 +138,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             //Начальный текст может быть и не пустой строкой
             this._saveOldText();
 
-            editorComponent.subscribe('onFocusOut', function(){
-               if (!self._isEditInGroup && self.validate()){
+            editorComponent.subscribe('onFocusOut', function(event, destroyed, focusedControl){
+               if (!self._isEditInGroup && self.validate() && !self._isEditorChild(focusedControl, this)){
                   if (this.getText() !== self._oldText){
                      self._editorFocusOutHandler(true);
                   } else {
@@ -159,10 +159,23 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           * При потере полем редактирования фокуса вызываем завершение редактирования
           * @private
           */
-         _editorFocusOutHandler: function(apply){
+         _editorFocusOutHandler: function(apply) {
             if (!this._isEditInGroup && this._options.displayAsEditor){
                apply ? this._applyEdit() : this._cancelEdit();
             }
+         },
+
+         // Проверяем не ушел ли фокус на одного из детей редактора (например выпадашка у поля связи)
+         _isEditorChild: function(focusedControl, control){
+            var isChild = false;
+            while (focusedControl.getParent && focusedControl.getParent()){
+               if (focusedControl == control){
+                  isChild = true;
+                  break;
+               }
+               focusedControl = focusedControl.getParent();
+            }
+            return isChild;
          },
 
          /**
