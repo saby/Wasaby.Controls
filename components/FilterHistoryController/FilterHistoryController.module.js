@@ -237,6 +237,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 if(equalFilter && !equalFilter.isActiveFilter) {
                    equalFilter.isActiveFilter = true;
                    equalFilter.viewFilter = this.prepareViewFilter();
+                   equalFilter.filter = filterObject.filter;
 	               this.saveToUserParams()
                 }
                 return;
@@ -252,7 +253,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory.add({
                 id: genHelpers.randomId(),
                 linkText: filterObject.linkText,
-	            viewFilter: this.prepareViewFilter(),
+	             viewFilter: this.prepareViewFilter(),
                 filter: filterObject.filter,
                 isActiveFilter: true,
                 isMarked: false
