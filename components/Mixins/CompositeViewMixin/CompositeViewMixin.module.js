@@ -368,7 +368,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
       before: {
          _onChangeHoveredItem: function(hoveredItem) {
-            var container = arguments[0].container;
+            var container = hoveredItem.container;
             if (container && !container.hasClass('controls-CompositeView__hoverStylesInit')) {
                this._setHoveredStyles(container);
                container.addClass('controls-CompositeView__hoverStylesInit');
