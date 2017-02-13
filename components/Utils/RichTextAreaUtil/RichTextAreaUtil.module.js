@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             },
 
             getAttribute = function(node, atrrName){
-               if (node && node.attributes) {
+               if (node && node.attributes && node.attributes[atrrName]) {
                   return node.attributes[atrrName].value;
                }
                return false;
