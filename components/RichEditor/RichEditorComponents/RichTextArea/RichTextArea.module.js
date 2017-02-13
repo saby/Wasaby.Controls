@@ -413,6 +413,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
+            for (var key in this._tinyEditor) {
+               if (this._tinyEditor.hasOwnProperty(key)) {
+                  this._tinyEditor[key] = null;
+               }
+            }
             this._sourceContainer  = null;
             this._fakeArea = null;
             this._sourceArea = null;
