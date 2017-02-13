@@ -237,6 +237,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 if(equalFilter && !equalFilter.isActiveFilter) {
                    equalFilter.isActiveFilter = true;
                    equalFilter.viewFilter = this.prepareViewFilter();
+                   /* Если есть такой-же фильтр, обновим его структуру на свежую */
                    equalFilter.filter = filterObject.filter;
 	               this.saveToUserParams()
                 }
