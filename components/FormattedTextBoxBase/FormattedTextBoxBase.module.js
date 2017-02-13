@@ -5,11 +5,12 @@ define(
       'Core/ConsoleLogger',
       'Core/constants',
       'Core/core-extend',
+	   'Core/helpers/string-helpers',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'
    ],
-   function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
+   function (IoC, ConsoleLogger, constants, cExtend, strHelpers, TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
@@ -29,7 +30,7 @@ define(
        */
       _replaceCharacter = function(container, position, character) {
          var buffer = container.nodeValue.split('');
-         buffer[position] = character;
+         buffer[position] = strHelpers.unEscapeHtmlSpecialChars(character);
          container.nodeValue = buffer.join('');
          this._updateText();
       },
