@@ -199,6 +199,16 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          }
       },
+
+      _needShowEmptyData: function(items) {
+         var result;
+         if (items instanceof Array) {
+            result = TreeCompositeView.superclass._needShowEmptyData.apply(this, arguments);
+         } else {
+            result = !(items && (items.leafs.length || items.folders.length));
+         }
+         return result;
+      },
       
       _getItemTemplate: function(itemProj) {
          var resultTpl, dotTpl, item = itemProj.getContents();
