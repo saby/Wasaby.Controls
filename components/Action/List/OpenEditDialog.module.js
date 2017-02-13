@@ -275,8 +275,5 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    OpenEditDialog.ACTION_ADD = '_createRecord'; //что добавляем? сделал через create
    OpenEditDialog.ACTION_RELOAD = '_collectionReload';
    OpenEditDialog.ACTION_DELETE = '_destroyModel';
-   OpenEditDialog.INITIALIZING_WAY_LOCAL = 'local';
-   OpenEditDialog.INITIALIZING_WAY_REMOTE = 'remote';
-   OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE = 'delayedRemote';
    return OpenEditDialog;
 });
