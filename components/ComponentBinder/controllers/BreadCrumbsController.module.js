@@ -151,26 +151,3 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
    return BreadCrumbsController;
 
 });
-
-
-requirejs(['js!WS.Data/Chain', 'js!WS.Data/Collection/RecordSet'], function(Chain, RecordSet) {
-    var rs = new RecordSet({
-        rawData: [
-            {name: 'Philip J. Fry', gender: 'M'},
-            {name: 'Turanga Leela', gender: 'F'},
-            {name: 'Professor Farnsworth', gender: 'M'},
-            {name: 'Amy Wong', gender: 'F'},
-            {name: 'Bender Bending Rodríguez', gender: 'R'}
-        ]
-    });
-
-    console.log(
-        Chain(rs).filter(function(item) {
-            return item.get('gender') === 'F';
-        }).map(function(item) {
-            return item.get('name');
-        }).sort(function(a, b) {
-            return a > b;
-        }).value()
-    );//['Amy Wong', 'Turanga Leela']
-});
