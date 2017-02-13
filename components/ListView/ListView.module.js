@@ -3658,7 +3658,8 @@ define('js!SBIS3.CONTROLS.ListView',
                projection: this._getItemsProjection(),
                parentProperty: this._options.parentProperty,
                nodeProperty: this._options.nodeProperty,
-               invertOrder: this._options.invertOrder
+               invertOrder: this._options.invertOrder,
+               dataSource: this.getDataSource()
             }));
          },
          /**

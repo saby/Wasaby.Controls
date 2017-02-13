@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base',
+               moveStrategy: undefined,
                /**
                 * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
                 * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.

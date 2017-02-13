@@ -72,7 +72,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *    ...
        *    move = new InteractiveMove({
        *       linkedObject: this.getChildControlByName('MyListView')
-       *       moveStrategy: 'movestrategy.base'
        *    });
        *    ...
        * </pre>
