@@ -5,6 +5,7 @@ var fs = require('fs'),
    path = require('path'),
    jsModules = {},
    baseResources = path.join(__dirname, 'components'),
+   demoResources = path.join(__dirname, 'demo'),
    dataResources = path.join(__dirname, 'ws-data/WS.Data'),
    newPath = '',
    dirWalker = function(dir) {
@@ -29,6 +30,7 @@ var fs = require('fs'),
     };
 
 dirWalker(baseResources);
+dirWalker(demoResources);
 dirWalker(dataResources);
 
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify({jsModules: jsModules}, null, 3));
