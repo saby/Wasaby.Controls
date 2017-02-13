@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Utils.IndicatorUtil', ['Core/Indicator'], function (In
          }.bind(this), DEFAULT_DELAY);
       },
 
-      hideLoadingIndicaor: function() {
+      hideLoadingIndicator: function() {
          this._toggleOverLay(false);
          _private.indicatorShowed = false;
          Indicator.hide();

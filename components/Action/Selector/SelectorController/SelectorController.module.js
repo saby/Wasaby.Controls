@@ -6,10 +6,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
    "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/core-merge",
+   "js!WS.Data/Source/SbisService",
+   "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.SelectorWrapper",
    "js!WS.Data/Collection/List"
 ],
-    function ( CommandDispatcher,CompoundControl, Di, collectionHelpers) {
+    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, SbisService, Query) {
 
        'use strict';
 
@@ -58,7 +62,23 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 /**
                  * @cfg {String} Устанавливает имя кнопки (см. {@link $ws.proto.Control#name}), клик по которой завершает выбор отмеченных элементов.
                  */
-                selectButton: 'SelectorControllerButton'
+                selectButton: 'SelectorControllerButton',
+                /**
+                 * @cfg {WS.Data/Source/ISource|Function|Object} Источник данных. Требуется для предзапроса.
+                 */
+                dataSource: null,
+                /**
+                 * @cfg {Object} Устанавливает фильтр данных.
+                 * @example
+                 * Фильтрация будет произведена по полям creatingDate и documentType, значения для которых берутся из контекста из полей selectedDocumentDate и selectedDocumentType соответственно.
+                 * <pre class="brush:xml">
+                 *     <options name="filter">
+                 *        <option name="creatingDate" bind="selectedDocumentDate"></option>
+                 *        <option name="documentType" bind="selectedDocumentType"></option>
+                 *     </options>
+                 * </pre>
+                 */
+                filter: null
              },
              _selectButton: null
           },
@@ -181,6 +201,20 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              this.getLinkedContext().setValue('items', items);
           }
        });
+
+       SelectorController.prototype.getComponentOptions = function(opt){
+          var prototypeProtectedData = {};
+          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
+          cMerge(prototypeProtectedData._options, opt);
+          return prototypeProtectedData._options;
+       };
+
+       SelectorController.prototype.getItemsFromSource = function (opt) {
+          var options = this.getComponentOptions(opt),
+              dataSource = options.dataSource;
+
+          return Query(dataSource, [options.filter || {}]);
+       };
 
        return SelectorController;
 
