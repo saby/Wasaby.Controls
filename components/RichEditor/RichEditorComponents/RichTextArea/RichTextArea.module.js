@@ -902,13 +902,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                URL = this._prepareImageURL(fileobj);
             switch (key) {
                case "1":
-                  this._insertImg(URL, 'image-template-left', meta);
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-left', meta, '', '<p>{$caret}</p>');
                   break;
                case "2":
                   this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
-                  this._insertImg(URL, 'image-template-right ', meta);
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-right ', meta, '', '<p>{$caret}</p>');
                   break;
                case "4":
                   //todo: сделать коллаж
@@ -1339,7 +1341,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._setTrimmedText(self._getTinyEditorValue());
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function(){
-                  this.getTarget().remove();
+                  var
+                     $image = this.getTarget(),
+                     nodeForSelect = $image.parent()[0];
+                  $image.remove();
+                  //Проблема:
+                  //          После удаления изображения необходимо вернуть фокус в редактор,
+                  //          но тк выделение было на изображении при фокусе оно пытаетсыя восстановиться.
+                  //          Допустим в редакторе было только изображение, тогда выделение было вида:
+                  //             start/endContainer = <p>, endOffset = 1.
+                  //          После удаления <p>.childNodes.length = 0, попытается восстановиться 1 => ошибка
+                  //Решение:
+                  //          После удаления изображения ставить каретку в конец родительского для изображения блока
+                  self._tinyEditor.selection.select(nodeForSelect, false);
+                  self._tinyEditor.selection.collapse();
                   self._tinyEditor.undoManager.add();
                   self._setTrimmedText(self._getTinyEditorValue());
                });
@@ -1454,6 +1469,23 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             this._tinyReady.addCallback(function () {
                this._tinyEditor.setContent(this._prepareContent(this.getText()));
+               //Проблема:
+               //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
+               //                (если пусто то <p><br data-mce-bogus="1"><p>)
+               //          2) При открытиии задачи мы добавляем в историю действий текущий контент
+               //          После выполнения пункта 2 редактор стреляет 'change'(тк история не пустая(1) и в неё добавляют(2))
+               //          Далее мы стреляем изменением в контекст
+               //             а тк мы могли раздекорировать ссылку то портим значение в контексте
+               //Правильное решение:
+               //          В методе _setText сранивать текщуее значение опции и значение в редакторе
+               //          предварительно подготовив их через _prepareContent
+               //          N.B!  Данное решение не подходит тк заход в _setText идёт при каждом символе
+               //                и каждый раз разбирать контент на DOM-дерево не быстро =>
+               //                => будет тормозить ввод в редактор
+               //Решение:
+               //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
+               //          первым в истории изщменений и редактор не стрелял 'change'
+               this._tinyEditor.undoManager.clear();
                this._tinyEditor.undoManager.add();
             }.bind(this));
          },

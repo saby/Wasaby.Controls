@@ -1353,10 +1353,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _mouseDownHandler: function(event){
-            var itemsActions = this.getItemsActions();
-           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
-              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
-              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           if(this._itemsToolbar && event.button === 2){
+              var itemsActions = this.getItemsActions();
+              if(itemsActions && itemsActions.isItemActionsMenuVisible()) {
+                 // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+                 this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+              }
            }
          },
 
@@ -1964,7 +1966,9 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsToolbar.lockToolbar();
             } else {
                if(this._touchSupport) {
-                  this._changeHoveredItem(this._getElementByModel(model));
+                  /* По стандарту перевод редактирования(без связных операций) на ipad'e
+                     должен скрывать операции и убирать ховер */
+                  this._mouseLeaveHandler();
                } else {
                   this._updateItemsToolbar();
                }

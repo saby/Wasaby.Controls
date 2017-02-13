@@ -96,29 +96,26 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        *
       */
       _doExecute: function(meta) {
-         this._openComponent(meta, meta.template || this._options.template);
+         this._openComponent(meta);
          return false;
       },
 
-      _openDialog: function(meta, template) {
-         this._openComponent(meta, template, 'dialog');
+      _openDialog: function(meta) {
+         this._openComponent(meta, 'dialog');
       },
 
-      _openFloatArea: function(meta, template) {
-         this._openComponent(meta, template, 'floatArea');
+      _openFloatArea: function(meta) {
+         this._openComponent(meta, 'floatArea');
       },
 
-      _openComponent: function(meta, template, mode) {
-         var
-            config = this._getDialogConfig(meta, template, mode);
-         mode = mode || this._options.mode;
+      _openComponent: function(meta, mode) {
+         var config = this._getDialogConfig(meta);
          if (this._dialog && (typeof this._dialog.isAutoHide == 'function') && !this._dialog.isAutoHide()) {
             cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
          else {
-            cMerge(config, meta);
-            this._createComponent(config, meta, mode);
+            this._createComponent(config, meta, mode || this._options.mode);
          }
       },
 
@@ -132,6 +129,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _createComponent: function(config, meta, mode) {
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
          if (this._isNeedToRedrawDialog()){
+            //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.
+            //Производим открытие новой записи по новой конфигурации, все что лежало в опциях до этого не актуально и при текущем конфиге может поломать требуемое поведение.
+            //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
             this._dialog._options.componentOptions = {};
             cMerge(this._dialog._options, config);
             this._dialog.reload();
@@ -146,58 +146,32 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @returns {*}
        * @private
        */
-      _getDeafuiltDialogConfig: function(mode) {
+      _getDeafuiltDialogConfig: function() {
          var config = this._options.dialogOptions || {};
-         if (mode == 'floatArea') {
-            return cMerge({
-               isStack: true,
-               autoHide: true,
-               buildMarkupWithContext: true,
-               showOnControlsReady: false,
-               autoCloseOnHide: true,
-               border: true,
-               canMaximize: false,
-               maximized: false,
-               target: '',
-               title: '',
-               side: 'left',
-               animation: 'slide'
-               /* временнное решение проблемы описанной в надзадаче */
-               , block_by_task_1173286428: false
-            }, config)
-         } else {
-            return cMerge({}, config);
-         }
+         return cMerge({
+            isStack: true,
+            showOnControlsReady: false,
+            autoCloseOnHide: true,
+            block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
+         }, config)
       },
       /**
        * Возвращает конфигурацию диалога - всплывающей панели или окна.
        * @param {Object} meta
+       * @param {String} template
        * @param {String} mode
        * @returns {Object}
        * @private
        */
-      _getDialogConfig: function(meta, template, mode) {
-         mode = mode || this._options.mode;
-         var config = this._getDeafuiltDialogConfig(mode),
-            self = this,
-            compOptions = this._buildComponentConfig(meta);
+      _getDialogConfig: function(meta) {
+         var config = this._getDeafuiltDialogConfig(),
+             compOptions = this._buildComponentConfig(meta),
+             self = this;
 
-         meta.componentOptions = meta.componentOptions  ||  {};
-         meta.dialogOptions = meta.dialogOptions  ||  {};
-         colHelpers.forEach(config, function(defaultValue, key){
-            if (meta.hasOwnProperty(key)){
-               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + ' для диалога редактирования должна задаваться через meta.componentOptions');
-               config[key] = meta[key];
-            }
-            else {
-               config[key] = (meta.componentOptions[key] !== undefined) ? meta.componentOptions[key] : defaultValue;
-            }
-         });
-         cMerge(config, meta.dialogOptions);
-
+         cMerge(config, meta.dialogOptions  ||  {});
          cMerge(config, {
             opener: this,
-            template: template,
+            template: meta.template || this._options.template,
             componentOptions: compOptions,
             handlers: { 
                onAfterClose: function(e, meta){
@@ -250,8 +224,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        @deprecated
        **/
       _opendEditComponent: function(meta, dialogComponent, mode){
-         IoC.resolve('ILogger').info('SBIS3.CONTROLS.OpenEditDialog', 'method _opendEditComponent was deprecated please use _openComponent instead.');
-         this._openComponent.call(this, meta, dialogComponent, mode);
+         IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'Используйте публичный метод execute для работы с action\'ом открытия диалога редактирования');
+         meta.template = dialogComponent;
+         this._openComponent.call(this, meta, mode);
       }
 
    };
