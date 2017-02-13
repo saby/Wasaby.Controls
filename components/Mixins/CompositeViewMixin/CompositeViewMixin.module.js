@@ -246,6 +246,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       },
 
       _setHoveredStyles: function(item) {
+         if (item && !item.hasClass('controls-CompositeView__hoverStylesInit')) {
+            this._calculateHoveredStyles(item);
+            item.addClass('controls-CompositeView__hoverStylesInit');
+         }
+      },
+
+      _calculateHoveredStyles: function(item) {
          if (this._options.tileMode === TILE_MODE.DYNAMIC) {
             this._setDynamicHoveredStyles(item);
          } else if (this._options.tileMode === TILE_MODE.STATIC && !this._container.hasClass('controls-CompositeView-tile__static-smallImage')) {
@@ -362,16 +369,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
             if (itemsContainerWidth - tiles.length * oldWidth < oldWidth) {
                tiles.outerWidth(newTileWidth);
-            }
-         }
-      },
-
-      before: {
-         _onChangeHoveredItem: function(hoveredItem) {
-            var container = hoveredItem.container;
-            if (container && !container.hasClass('controls-CompositeView__hoverStylesInit')) {
-               this._setHoveredStyles(container);
-               container.addClass('controls-CompositeView__hoverStylesInit');
             }
          }
       },
