@@ -939,7 +939,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length));
+            this._toggleEmptyData(!this._getItemsProjection().getCount());
 
          }
          if (notRevive) {
