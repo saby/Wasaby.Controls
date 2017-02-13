@@ -8,8 +8,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
-   'js!WS.Data/Builder',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
@@ -20,7 +18,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/helpers/fast-control-helpers",
    'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
-   function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -447,11 +445,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._editingRecord = undefined;
                }
                if (this._isAdd) {
-                  if (this._options.items && this._options.items.getFormat().getCount()) {
-                     this._options.items.add(DataBuilder.reduceTo(record, this._options.items.getFormat(), this._options.items.getModel()));
-                  } else {
-                     this._options.items.add(record);
-                  }
+                  this._options.items.add(record);
                }
             },
             _afterEndEdit: function(eip, withSaving) {
