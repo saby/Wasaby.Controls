@@ -26,7 +26,6 @@
    height: @button-height;
    line-height: @button-line-height;
    padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
-   margin: @button-margin;
    overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
    border: @button-border;
    .border-radius(@button-border-radius);
@@ -191,7 +190,7 @@
             background: @button-primary-hover-bg;
          }
       }
-    
+
       &.controls-Button__big {
          &:hover {
             color: @button-big-hover-text-color;
