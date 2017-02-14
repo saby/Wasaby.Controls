@@ -4,12 +4,12 @@
 			<ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
 		</div>
 	</ws:if>
-	<ws:if data="{{afterFieldWrapper && enableArrows}}">
+	<ws:if data="{{afterFieldWrapper && enableArrows !== false}}">
       <div class="controls-TextBox__afterFieldWrapper">
          <ws:partial template="{{afterFieldWrapper}}" scope="{{...}}"/>
       </div>
    </ws:if>
-   <div class="controls-TextBox__fieldWrapper {{enableArrows ? 'controls-NumberTextBox__enable-arrow'}}">
+   <div class="controls-TextBox__fieldWrapper {{enableArrows !== false ? 'controls-NumberTextBox__enable-arrow'}}">
       <ws:partial template="{{textFieldWrapper}}" scope="{{...}}"/>
    </div>
 </div>
