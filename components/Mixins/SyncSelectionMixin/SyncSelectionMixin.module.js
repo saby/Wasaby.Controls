@@ -90,14 +90,14 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                         this._options.selectedKey = null;
                      }
 
-                     if(ArraySimpleValuesUtil([this._options.selectedKey], key) === -1) {
+                     if(!ArraySimpleValuesUtil.hasInArray([this._options.selectedKey], key)) {
                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      }
                      break;
                   case 'selectedKeys':
                      key = propValue.length ? propValue[0] : null;
 
-                     if(this._options.selectedKey !== key) {
+                     if(!ArraySimpleValuesUtil.hasInArray([this._options.selectedKey], key)) {
                         this._options.selectedKey = key;
                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      }
