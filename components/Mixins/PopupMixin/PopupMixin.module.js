@@ -913,7 +913,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             //При расчете свободного места, учитываем весь экран
             //так как на айпаде нужно открывать окна под клавиатуру что бы скролить не выпадашку, а все окно (для красоты)
             //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет
-            windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
+            windowHeight = this._windowSizes.height,
             windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,
