@@ -18,10 +18,11 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/collection-helpers",
+   'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Action.SelectorAction",
    'css!SBIS3.CONTROLS.SelectorButton'
 ],
-    function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers) {
+    function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers, strHelpers) {
 
    'use strict';
 
@@ -167,7 +168,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                list.each(function(item) {
                   linkTextArray.push(item.get(self._options.displayProperty));
                });
-               self._setCaption(linkTextArray.join(', '));
+               self._setCaption(strHelpers.escapeHtml(linkTextArray.join(', ')));
                return list;
             });
          } else {
