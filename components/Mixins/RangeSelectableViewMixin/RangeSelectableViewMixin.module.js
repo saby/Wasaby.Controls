@@ -16,7 +16,14 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
              * @cfg {Boolean} Если true, то включена возможность выделения диапазона,
              * иначе можно выделить только 1 элемент.
              */
-            rangeselect: true
+            rangeselect: true,
+
+            /**
+             * @cfg {Boolean} Если true, то диапазон обновляется по мере выделения, если false, то он обновляется после
+             * окончания выбора.
+             * @default false
+             */
+            liveSelection: false
          },
 
          _SELECTABLE_RANGE_CSS_CLASSES: {
@@ -70,6 +77,9 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
        */
       _onRangeItemElementMouseEnter: function (item) {
          if (this.isSelectionProcessing()) {
+            if (this._options.liveSelection) {
+               this.setEndValue(item);
+            }
             this._setSelectionRangeEndItem(item);
             this.validateRangeSelectionItemsView();
          }
@@ -103,8 +113,14 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
        */
       _onRangeControlMouseLeave: function () {
          if (this.isSelectionProcessing()) {
+            if (this._options.liveSelection) {
+               this.setEndValue(this._getEndValueOnMouseLeave());
+            }
             this._resetSelectionEndTmpItem();
          }
+      },
+      _getEndValueOnMouseLeave: function () {
+         this.getStartValue();
       },
       /**
        * Устанавливает последний элемет над которым была мышка

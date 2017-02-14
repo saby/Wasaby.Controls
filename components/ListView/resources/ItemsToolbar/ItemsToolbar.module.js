@@ -49,7 +49,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _target: null,            // Элемент - кандидат на отображение тулбара
              _currentTarget: null,     // Элемент, относительно которого сейчас отображается тулбар
              _lockingToolbar: false,    // Состояние заблокированности тулбара
-             _isVisible: false
+             _isVisible: false,
+             _cachedMargin: null
           },
           $constructor: function() {
              this._publish('onShowItemActionsMenu', 'onItemActionActivated');
@@ -310,14 +311,23 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getPosition: function (target) {
              var position = target.position,
                  size = target.size,
-                 parentContainer = this.getParent().getContainer()[0],
+                 $parentContainer = this.getParent().getContainer(),
+                 parentContainer = $parentContainer[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
                  marginRight = parentContainer.offsetWidth - (position.left + size.width),
                  marginTop = position.top,
-                 marginBottom = parentContainer.offsetHeight - (position.top + size.height);
+                 marginBottom = parentContainer.offsetHeight - (position.top + size.height),
+                 $container = this.getContainer();
 
              if(marginRight < 0 && !isVertical) {
                 marginRight = 0;
+             }
+
+             if(this._cachedMargin || $parentContainer.hasClass('controls-ListView__bottomStyle')) {
+                if(!this._cachedMargin) {
+                   this._cachedMargin = $container.height() + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
+                }
+                marginBottom -= this._cachedMargin;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');

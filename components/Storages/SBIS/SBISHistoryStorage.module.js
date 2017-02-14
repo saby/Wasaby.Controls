@@ -71,9 +71,9 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
 
          if(this._options.isGlobalUserConfig) {
             this._options.historyId = this._options.historyId + GLOBAL_POSTFIX;
-            this._SBISStorage = SBISUserConfigStorage;
-         } else {
             this._SBISStorage = SBISClientsGlobalConfigStorage;
+         } else {
+            this._SBISStorage = SBISUserConfigStorage;
          }
 
          /* Чтобы проинициализировать localStorage, требуется,

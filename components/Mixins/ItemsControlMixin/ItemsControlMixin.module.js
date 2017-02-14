@@ -496,6 +496,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /**
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
+             * @remark
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -1720,6 +1722,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          IoC.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
          return this.isLoading();
       },
+      /**
+       *
+       * @returns {*|Boolean}
+       */
       isLoading: function(){
          return this._loader && !this._loader.isReady();
       },
@@ -1735,7 +1741,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._loader = null;
       },
-      //TODO поддержка старого - обратная совместимость
+      /**
+       * Возвращает элементы коллекции.
+       * @returns {WS.Data/Collection/RecordSet}
+       * @see setItems
+       */
       getItems : function() {
          return this._options._items;
       },
@@ -1748,20 +1758,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @example
         * Для списка устанавливаем набор данных из трёх записей. Опция idProperty установлена в значение id, а parentProperty - parent.
         * <pre>
-        *     myView.setItems([
-        *        {
-        *           id: 1, // Поле с первичным ключом
-        *           title: 'Сообщения'
-        *        },{
-        *           id: 2,
-        *           title: 'Прочитанные',
-        *           parent: 1 // Поле иерархии
-        *        },{
-        *           id: 3,
-        *           title: 'Непрочитанные',
-        *           parent: 1
-        *        }
-        *     ]);
+        * myView.setItems([{
+        *
+        *    // Поле с первичным ключом
+        *    id: 1,
+        *    title: 'Сообщения'
+        * },{
+        *    id: 2,
+        *    title: 'Прочитанные',
+        *    parent: 1 // Поле иерархии
+        * },{
+        *    id: 3,
+        *    title: 'Непрочитанные',
+        *    parent: 1
+        * }]);
         * </pre>
         * @see items
         * @see addItem
@@ -1805,7 +1815,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          /*Method must be implemented*/
       },
       /**
-       * Метод перерисвоки списка без повторного получения данных
+       * Производит перерисовку списка без повторного получения данных от источника данных.
+       * @param {*}
+       * @see redrawItem
        */
       redraw: function(notRevive) {
          /*notRevive - врмеенный параметр для внутренних механизмов*/
@@ -1841,6 +1853,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Метод перерисовки определенной записи
        * @param {Object} item Запись, которую необходимо перерисовать
+       * @param {*}
+       * @see redraw
        */
       redrawItem: function(item, projItem) {
          if (!this._isSlowDrawing(this._options.easyGroup)) {
@@ -1923,11 +1937,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       },
       /**
-       * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
-       * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
-       * @remark Всем элементам группы добавляется css-класс controls-GroupBy
-       * @param group
-       * @param redraw
+       * Устанавливает группировку элементов коллекции.
+       * @remark
+       * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
+       * Всем элементам группы добавляется css-класс "controls-GroupBy".
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * @param {GroupBy} group Параметры группировки.
+       * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
+       * @see groupBy
+       * @see getGroupBy
        */
       setGroupBy : function(group, redraw){
          //TODO может перерисовку надо по-другому делать
@@ -1950,7 +1968,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       /**
-       * Возвращает значение опции groupBy
+       * Возвращает параметры группировки элементов коллекции.
+       * @remark
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * @return {GroupBy}
+       * @see groupBy
+       * @see setGroupBy
        */
       getGroupBy : function() {
          return this._options.groupBy;
@@ -2032,7 +2055,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _scrollToItem: function(itemId, toBottom) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer);
+            this._scrollTo(itemContainer, toBottom);
          }
       },
       /**

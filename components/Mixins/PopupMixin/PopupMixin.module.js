@@ -214,7 +214,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
 
          if (this._options.parentContainer) {
-            container.appendTo($('.' + this._options.parentContainer));
+            var appendContainer;
+            if (this._options.target) {
+               appendContainer = this._options.target.closest('.' + this._options.parentContainer)
+            }
+            else {
+               appendContainer = $('.' + this._options.parentContainer);
+            }
+            container.appendTo(appendContainer);
          }
          else {
             container.appendTo('body');
