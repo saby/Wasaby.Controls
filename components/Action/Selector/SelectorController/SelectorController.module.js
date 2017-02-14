@@ -132,7 +132,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              function onChangeSelection() {
                 if(self._selectButton && multiselect) {
-                   self._selectButton.show();
+                   self._selectButton[currentItems.getCount() ? 'show' : 'hide']();
                 }
              }
 

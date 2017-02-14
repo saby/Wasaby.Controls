@@ -94,7 +94,11 @@
 
       .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__th__topRow{
-           text-align: center;
+            text-align: center;
+            &.controls-DataGridView__th__topRow-has_text{
+               border-bottom: 1px solid @data-grid-cell-separator-color;
+               padding-bottom: 3px;
+            }
          }
          &.controls-DataGridView__notScrolledCell {
             background-color: @data-grid-partScroll-notScrolledCell-Color;
