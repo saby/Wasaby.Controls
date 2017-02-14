@@ -209,7 +209,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
          }.bind(this));
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
-            this._inputField.attr('placeholder', '');
             this._createCompatPlaceholder();
          }
 
@@ -328,7 +327,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setPlaceholder: function(text){
          text = text ? text : text == 0 ? text : '';
-         if (!this._useNativePlaceHolder()) {
+         if (!this._useNativePlaceHolder(text)) {
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
             }
@@ -463,6 +462,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          var self = this;
          this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
          this._updateCompatPlaceholderVisibility();
+         this._inputField.attr('placeholder', '');
          this._inputField.after(this._compatPlaceholder);
          this._compatPlaceholder.css({
             'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
