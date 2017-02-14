@@ -396,7 +396,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this.saveToHistory(this.getText());
             RichUtil.unmarkRichContentOnCopy(this._dataReview);
             RichUtil.unmarkRichContentOnCopy(this._inputControl);
-            //проверка на то созадвался ли tinyEditor
+            //Проблема утечки памяти через tinyMCE
+            //Проверка на то созадвался ли tinyEditor
             if (this._tinyEditor && this._tinyReady.isReady()) {
                this._tinyEditor.remove();
                this._tinyEditor.destroy();
@@ -407,7 +408,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
-               this._tinyEditor.theme = null;
+               for (var key in this._tinyEditor) {
+                  if (this._tinyEditor.hasOwnProperty(key)) {
+                     this._tinyEditor[key] = null;
+                  }
+               }
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');

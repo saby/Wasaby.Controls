@@ -806,9 +806,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(!this._isDynamicInputWidth) {
-                this._inputField[0].style.width = 0;
-
                 if(needResizeInput) {
+                   this._inputField[0].style.width = 0;
                    this._updateInputWidth();
                 }
              }
