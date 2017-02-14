@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "tmpl!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
    "Core/IoC",
-   "Core/constants"
-], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, cConst) {
+   "Core/constants",
+   'js!SBIS3.CONTROLS.TextBoxUtils'
+], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, cConst, tbUtils) {
 
    'use strict';
 
@@ -62,6 +63,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _inputField: null,
          _cachedW: null,
          _cachedH: null,
+         _pasteCommand: 'insertText',
          _compatPlaceholder: null,
          _options: {
              /**
@@ -130,6 +132,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
          this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
+         if(constants.browser.isIE || constants.browser.isMobilePlatform){
+            this._pasteCommand = 'paste';
+         }
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
@@ -156,15 +161,23 @@ define('js!SBIS3.CONTROLS.TextArea', [
             self._keyDownBind(event)
          });
 
-         this._inputField.bind('paste', function(){
-            self._pasteProcessing++;
-            window.setTimeout(function(){
-               self._pasteProcessing--;
-               if (!self._pasteProcessing) {
-                  self.setText.call(self, self._formatText(self._getTextFromMarkup()));
-               }
-            }, 100)
+         this._inputField.bind('paste drop', function(e){
+            if(constants.browser.isMobilePlatform) {
+               self._pasteProcessing++;
+               window.setTimeout(function(){
+                  self._pasteProcessing--;
+                  if (!self._pasteProcessing) {
+                     self.setText.call(self, self._formatText(self._getTextFromMarkup()));
+                  }
+               }, 100);
+            }else {
+               var pastedText = (e.type === 'drop' ? tbUtils.getTextFromDropEvent(e) : tbUtils.getTextFromPasteEvent(e));
+
+               document.execCommand(self._pasteCommand, false, pastedText);
+               e.preventDefault();
+            }
          });
+
       },
 
       init :function(){
