@@ -786,7 +786,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             var dispatcher = CommandDispatcher;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
             this._setScrollPagerPositionThrottled = this._setScrollPagerPosition.throttle(100, true).bind(this);
             this._bindEventHandlers(this._container);
 
@@ -3281,6 +3281,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._listNavigation) {
                this._listNavigation.destroy();
             }
+            if (this._mover) {
+               this._mover.destroy();
+            }
             ListView.superclass.destroy.call(this);
          },
          /**
@@ -3652,15 +3655,24 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _getMover: function() {
-            return this._mover || (this._mover = Di.resolve('listview.mover', {
-               moveStrategy: this.getMoveStrategy(),
-               items: this.getItems(),
-               projection: this._getItemsProjection(),
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty,
-               invertOrder: this._options.invertOrder,
-               dataSource: this.getDataSource()
-            }));
+            if (!this._mover) {
+               this._mover = Di.resolve('listview.mover', {
+                  moveStrategy: this.getMoveStrategy(),
+                  items: this.getItems(),
+                  projection: this._getItemsProjection(),
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty,
+                  invertOrder: this._options.invertOrder,
+                  dataSource: this.getDataSource()
+               });
+               colHelpers.forEach(['onBeginMove', 'onEndMove'], function (eventName) {
+                  this._mover.subscribe(eventName, function (e) {
+                     e.setResult(this._notify(eventName));
+                     return e;
+                  }.bind(this))
+               }, this);
+            }
+            return this._mover
          },
          /**
           * Перемещает переданные записи

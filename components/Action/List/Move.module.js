@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.List.ListMixin',
       'js!SBIS3.CONTROLS.ListView.Mover',
-      'js!WS.Data/Di'
+      'js!WS.Data/Di',
+      'Core/helpers/collection-helpers'
    ],
-   function (ActionBase, ListMixin, Mover, Di) {
+   function (ActionBase, ListMixin, Mover, Di, colHelpers) {
       'use strict';
       /**
        * Базовый класс перемещения элементов в списке
@@ -45,9 +46,12 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                 * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
                 * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
                 */
-               moveInvertOrder: false
+               invertOrder: false
             },
             _mover: null
+         },
+         $constructor: function () {
+            this._publish('onBeginMove', 'onEndMove');
          },
          /**
           * Перемещает елементы. Должен быть реализован в наследниках
@@ -73,7 +77,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
-         setMoveStrategy: function (strategy){
+         setMoveStrategy: function (strategy) {
             if(!cInstance.instanceOfMixin(strategy,'WS.Data/MoveStrategy/IMoveStrategy')){
                throw new Error('The strategy must implemented interfaces the WS.Data/MoveStrategy/IMoveStrategy.')
             }
@@ -81,12 +85,23 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
          },
 
          _getMover: function () {
-            return this._mover || (this._mover = Di.resolve('listview.mover', {
-               moveStrategy: this.getMoveStrategy(),
-               items: this._getItems(),
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty
-            }));
+            if (this._mover) {
+               this._mover = Di.resolve('listview.mover', {
+                  moveStrategy: this.getMoveStrategy(),
+                  items: this._getItems(),
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty,
+                  invertOrder: this._options.invertOrder,
+                  dataSource: this.getDataSource()
+               });
+               colHelpers.forEach(['onBeginMove', 'onEndMove'], function (eventName) {
+                  this._mover.subscribe(eventName, function (e) {
+                     e.setResult(this._notify(eventName));
+                     return e;
+                  }.bind(this))
+               }, this);
+            }
+            return this._mover;
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
