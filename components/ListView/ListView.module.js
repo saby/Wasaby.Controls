@@ -2652,7 +2652,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
-               this._drawItems(dataSet.toArray(), at);
+               var items = [];
+               dataSet.each(function(item) {
+                  items.push(item);
+               });
+               this._drawItems(items, at);
             }
 
             this._needScrollCompensation = false;
@@ -3582,7 +3586,11 @@ define('js!SBIS3.CONTROLS.ListView',
          selectedMoveTo: function(target) {
             var selectedItems = this.getSelectedItems(false);
             if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
-               selectedItems = selectedItems.toArray();
+               var list = selectedItems;
+               selectedItems = [];
+               list.each(function(item) {
+                  selectedItems.push(item);
+               });
             }
 
             this._getMover().move(selectedItems, target).addCallback(function(res){
@@ -3665,7 +3673,11 @@ define('js!SBIS3.CONTROLS.ListView',
       	 *	         name: 'moveSelected'
       	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
       	 *	         onActivated: function(tr, id, record) {
-      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
+      	 *	            var items = [];
+      	 *	            this.getSelectedItems().each(function(item) {
+      	 *	               items.push(item);
+      	 *	            });
+      	 *             this.move(items, record, 'on')
       	 *	         }
       	 *	      }
           *    })

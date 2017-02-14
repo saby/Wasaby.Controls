@@ -425,7 +425,10 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               var records = dataSet.toArray();
+               var records = [];
+               dataSet.each(function(record) {
+                  records.push(record);
+               });
                self._items.merge(dataSet, {remove: false});
                self._drawItemsFolderLoad(records, id);
                self._dataLoadedCallback();

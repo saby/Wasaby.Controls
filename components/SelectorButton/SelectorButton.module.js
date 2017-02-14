@@ -34,7 +34,9 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
           items = [opts.selectedItem];
        } else if (opts.selectedItems) {
-          items = opts.selectedItems.toArray();
+          opts.selectedItems.each(function(item) {
+             items.push(item);
+          });
        }
 
        if(items.length) {

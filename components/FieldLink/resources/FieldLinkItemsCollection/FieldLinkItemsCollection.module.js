@@ -29,7 +29,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
             items = [opts._preRenderValues.selectedItem];
          } else if (opts._preRenderValues.selectedItems) {
-            items = opts._preRenderValues.selectedItems.toArray();
+            opts._preRenderValues.selectedItems.each(function(item) {
+               items.push(item);
+            });
          }
 
          if(items.length) {

@@ -58,7 +58,11 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
              }.bind(this));
 
              selectButton.subscribe('onActivated', function () {
-                this.sendCommand('close', view.getSelectedItems().toArray());
+                var items = [];
+                view.getSelectedItems().each(function(item) {
+                   items.push(item);
+                });
+                this.sendCommand('close', items);
              });
 
           }
