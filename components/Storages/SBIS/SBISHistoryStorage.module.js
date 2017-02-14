@@ -117,6 +117,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          if(constants.userConfigSupport) {
             return this._SBISStorage.setItem(key, serializedValue);
          } else {
+            this._getLocalStorage().setItem(key, serializedValue);
             return Deferred.success();
          }
       },
