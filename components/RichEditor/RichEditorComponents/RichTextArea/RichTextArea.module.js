@@ -408,11 +408,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
-               for (var key in this._tinyEditor) {
-                  if (this._tinyEditor.hasOwnProperty(key)) {
-                     this._tinyEditor[key] = null;
-                  }
-               }
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
