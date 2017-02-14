@@ -27,6 +27,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
       /**
        * @class SBIS3.CONTROLS.EditInPlaceBaseController
        * @extends SBIS3.CORE.CompoundControl
+       * @author Сухоручкин Андрей Сергеевич
        * @control
        * @public
        */

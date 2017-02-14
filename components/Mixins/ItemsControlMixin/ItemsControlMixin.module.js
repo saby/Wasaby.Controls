@@ -2073,7 +2073,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @deprecated
        */
       setKeyField: function(keyField) {
@@ -2082,7 +2082,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @example
        * <pre class="brush:xml">
        *     <option name="idProperty">Идентификатор</option>
@@ -2097,7 +2097,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @deprecated
        */
       setDisplayField: function(displayField) {
@@ -2106,7 +2106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @example
        * <pre class="brush:xml">
        *     <option name="displayProperty">Название</option>

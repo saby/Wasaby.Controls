@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
+     * @extends SBIS3.CONTROLS.FilterPanelChooser.BaseList
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *

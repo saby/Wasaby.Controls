@@ -11,8 +11,6 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * @class SBIS3.CONTROLS.SwitchableArea
     * @extends $ws.proto.SwitchableArea
     * @author Крайнов Дмитрий Олегович
-    * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.Selectable
     * @public
     */
 
