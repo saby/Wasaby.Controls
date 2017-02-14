@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.FilterPanelBoolean', [
    'js!SBIS3.CONTROLS.IFilterItem',
    'tmpl!SBIS3.CONTROLS.FilterPanelBoolean',
    'tmpl!SBIS3.CONTROLS.FilterPanelBoolean/resources/ContentTemplate',
-   'js!SBIS3.CONTROLS.CheckBox'], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
+   'js!SBIS3.CONTROLS.CheckBox', 'css!SBIS3.CONTROLS.FilterPanelBoolean'], function (CompoundControl, IFilterItem, dotTplFn, ContentTemplate) {
 
 var
     /**
