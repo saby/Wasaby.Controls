@@ -396,7 +396,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this.saveToHistory(this.getText());
             RichUtil.unmarkRichContentOnCopy(this._dataReview);
             RichUtil.unmarkRichContentOnCopy(this._inputControl);
-            //проверка на то созадвался ли tinyEditor
+            //Проблема утечки памяти через tinyMCE
+            //Проверка на то созадвался ли tinyEditor
             if (this._tinyEditor && this._tinyReady.isReady()) {
                this._tinyEditor.remove();
                this._tinyEditor.destroy();
@@ -407,7 +408,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
-               this._tinyEditor.theme = null;
+               for (var key in this._tinyEditor) {
+                  if (this._tinyEditor.hasOwnProperty(key)) {
+                     this._tinyEditor[key] = null;
+                  }
+               }
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
@@ -900,17 +905,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                meta = fileobj.id || '',
                URL = this._prepareImageURL(fileobj);
+            //TODO: придумтаь как сделать без without-margin
             switch (key) {
                case "1":
                   //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
-                  this._insertImg(URL, 'image-template-left', meta, '', '<p>{$caret}</p>');
+                  this._insertImg(URL, 'image-template-left', meta, '<p class="without-margin">', '</p><p>{$caret}</p>');
                   break;
                case "2":
                   this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
                   break;
                case "3":
                   //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
-                  this._insertImg(URL, 'image-template-right ', meta, '', '<p>{$caret}</p>');
+                  this._insertImg(URL, 'image-template-right ', meta, '<p class="without-margin">', '</p><p>{$caret}</p>');
                   break;
                case "4":
                   //todo: сделать коллаж

@@ -21754,7 +21754,8 @@
                }
 
                caretNode = block;
-
+               //Необходимо чтобы новые абзацы были с правильными отступами
+               block.classList.remove('without-margin');
                // Clone any parent styles
                if (settings.keep_styles !== false) {
                   do {

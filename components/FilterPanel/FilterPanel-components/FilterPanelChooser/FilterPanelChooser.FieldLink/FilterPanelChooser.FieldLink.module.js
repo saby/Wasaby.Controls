@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FieldLink/resources/FilterPanelChooserFieldLinkTpl',
-   'js!SBIS3.CONTROLS.FieldLink'
+   'js!SBIS3.CONTROLS.FieldLink',
+   'css!SBIS3.CONTROLS.FilterPanelChooser.FieldLink'
 ], function(FilterPanelChooserBase, FieldLinkChooserTemplate) {
 
     'use strict';
