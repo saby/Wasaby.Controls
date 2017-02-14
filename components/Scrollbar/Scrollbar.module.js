@@ -34,10 +34,12 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             _beginClient: undefined,
             _thumbPosition: 0,
             _viewportRatio: undefined,
+	         //Отношение видимой части трека к невидимой части контента
             _scrollRatio: undefined,
             _thumbHeight: undefined,
             _containerHeight: undefined,
             _containerOuterHeight: undefined,
+	         //Является ли высота ползунка константой
 	         _isConstThumb: undefined
          },
 
@@ -149,6 +151,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
 	      _setScrollRatio: function() {
+		      //Если длинна ползунка константа, то мы расчитываем её по определению, иначе расчитываем по короткой формуле.
 		      if (this._isConstThumb) {
 			      this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
 		      } else {
