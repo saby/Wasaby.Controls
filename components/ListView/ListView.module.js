@@ -2334,6 +2334,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setScrollPagerPositionThrottled();
                }
             }
+            /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
+            if(this.isEdit()) {
+               this._getEditInPlace()._onResizeHandler();
+            }
          },
          _removeItems: function(items, groupId){
             this._checkDeletedItems(items);
