@@ -1152,8 +1152,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._revivePackageParams.light = false;
                }
             }
+            this._afterAddItems();
          }
       },
+
+      _afterAddItems: function() {},
 
       _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
          var
