@@ -167,15 +167,16 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          // Проверяем не ушел ли фокус на одного из детей редактора (например выпадашка у поля связи)
          _isEditorChild: function(focusedControl, control){
-            var isChild = false;
-            if (focusedControl) {
-               while (focusedControl.getParent && focusedControl.getParent()){
-                  if (focusedControl == control){
-                     isChild = true;
-                     break;
-                  }
-                  focusedControl = focusedControl.getParent();
+            var isChild = false,
+               parent, opener;
+            while (focusedControl && (focusedControl.getParent || focusedControl.getOpener)) {
+               parent = focusedControl.getParent();
+               opener = focusedControl.getOpener();
+               if (focusedControl == control) {
+                  isChild = true;
+                  break;
                }
+               focusedControl = parent || opener;
             }
             return isChild;
          },
