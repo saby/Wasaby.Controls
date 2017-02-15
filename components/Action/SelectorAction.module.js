@@ -2,13 +2,14 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
    [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
-      'js!SBIS3.CONTROLS.Utils.IndicatorUtil',
       'js!SBIS3.CONTROLS.Utils.Query',
+      'js!SBIS3.CONTROLS.Utils.OpenDialog',
       'Core/core-merge',
       'Core/Deferred',
-      'Core/Context'
+      'Core/Context',
+      'Core/Indicator'
    ],
-    function (Action, DialogMixin, IndicatorUtil, Query, cMerge, Deferred, Context) {
+    function (Action, DialogMixin, Query, OpenDialogUtil, cMerge, Deferred, Context, Indicator) {
        'use strict';
        /**
        * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
@@ -55,48 +56,45 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
                  compOptions = {},
                  initializingDeferred;
 
-
-             require([config.template], function(component) {
-                /* Если dataSource не передан в конфиге пробуем достать с прототипа */
-                if(!config.dataSource && component.prototype.getComponentOptions) {
-                   compOptions = component.prototype.getComponentOptions.call(component.prototype, config);
+             function initializeComplete(items) {
+                var componentContext = config.context || new Context().setPrevious(Context.global);
+                if(items) {
+                   componentContext.setValue('items', items);
+                   config.context = componentContext;
                 }
+                SelectorAction.superclass._createComponent.call(self, config, meta, mode);
+             }
+
+             function errorProcess(err) {
+                OpenDialogUtil.errorProcess(err);
+;             }
+
+             Indicator.setMessage('Загрузка...', true);
+             require([config.template], function(component) {
+                compOptions = OpenDialogUtil.getOptionsFromProto(component, config);
 
                 /* dataSource - передан, делаем запрос, а потом открываем */
-                if( (config.dataSource || compOptions.dataSource) && component.prototype.getItemsFromSource) {
-                   IndicatorUtil.showLoadingIndicator();
-                   initializingDeferred =
-                      component.prototype.getItemsFromSource.call(component.prototype, config)
-                         .addCallback(function(dataSet) {
-                            return dataSet.getAll();
-                         })
-                         .addErrback(function(err) {
-                            //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
-                            error.processed = true;
-                            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
-                               InformationPopupManager.showMessageDialog({
-                                  message: error.message,
-                                  status: 'error'
-                               });
-                            });
-                            return err;
-                         })
-                         .addBoth(function(res) {
-                            IndicatorUtil.hideLoadingIndicator();
-                            return res;
-                         });
+                if(compOptions.dataSource && component.prototype.getItemsFromSource) {
+                   initializingDeferred = component.prototype.getItemsFromSource.call(component.prototype, config)
+                      .addCallback(function(dataSet) {
+                         return dataSet.getAll();
+                      })
+                      .addErrback(function(err) {
+                         errorProcess(err);
+                         return err;
+                      })
+                      .addBoth(function(res) {
+                         Indicator.hide();
+                         return res;
+                      });
                 } else {
                    /* Если не передан - открываем сразу */
+                   Indicator.hide();
                    initializingDeferred = Deferred.success(config.componentOptions.items || []);
                 }
 
                 initializingDeferred.addCallback(function(items) {
-                   var componentContext = config.context || new Context().setPrevious(Context.global);
-                   if(items) {
-                      componentContext.setValue('items', items);
-                      config.context = componentContext;
-                   }
-                   SelectorAction.superclass._createComponent.call(self, config, meta, mode);
+                   initializeComplete(items);
                    return items;
                 });
              });

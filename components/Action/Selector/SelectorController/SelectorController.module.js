@@ -10,10 +10,11 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/core-merge",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.Query",
+   "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!SBIS3.CONTROLS.SelectorWrapper",
    "js!WS.Data/Collection/List"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, SbisService, Query) {
+    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, SbisService, Query, OpenDialogUtil) {
 
        'use strict';
 
@@ -203,10 +204,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
        });
 
        SelectorController.prototype.getComponentOptions = function(opt){
-          var prototypeProtectedData = {};
-          this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-          cMerge(prototypeProtectedData._options, opt);
-          return prototypeProtectedData._options;
+          return OpenDialogUtil.getOptionsFromProto(this, opt);
        };
 
        SelectorController.prototype.getItemsFromSource = function (opt) {

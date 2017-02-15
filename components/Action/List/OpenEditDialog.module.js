@@ -9,10 +9,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'Core/helpers/fast-control-helpers',
       'js!WS.Data/Entity/Record',
       'js!WS.Data/Di',
-      'js!SBIS3.CONTROLS.Utils.IndicatorUtil',
+      'js!SBIS3.CONTROLS.Utils.OpenDialog',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, IndicatorUtil, Dialog, FloatArea) {
+   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, OpenDialogUtil, Dialog, FloatArea) {
    'use strict';
 
    /**
@@ -202,28 +202,34 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _createComponent: function(config, meta, mode){
          var initializingWay = config.componentOptions.initializingWay,
-            dialogComponent = config.template;
+             dialogComponent = config.template,
+             self = this;
 
-         if (initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
-            this._showLoadingIndicator();
-            require([dialogComponent], function(templateComponent){
-               this._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function(){
-                  this._hideLoadingIndicator();
-                  OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
-               }.bind(this))
-            }.bind(this));
+         function wayRemote(templateComponent) {
+            self._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function () {
+               self._hideLoadingIndicator();
+               OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            });
          }
-         else if (initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE){
+
+         function wayDelayedRemove(templateComponent) {
+            self._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function (record) {
+               self._hideLoadingIndicator();
+               OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+               return record;
+            })
+         }
+
+         if(initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE || initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE) {
             this._showLoadingIndicator();
             require([dialogComponent], function(templateComponent) {
-               this._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function (record) {
-                  this._hideLoadingIndicator();
-                  OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
-                  return record;
-               }.bind(this))
-            }.bind(this));
-         }
-         else {
+               if(initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
+                  wayRemote(templateComponent);
+               } else {
+                  wayDelayedRemove(templateComponent);
+               }
+            })
+         } else {
             OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
          }
       },
@@ -258,21 +264,15 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                config.componentOptions.isNewRecord = isNewRecord;
                if (isNewRecord){
                   config.componentOptions.key = record.getId();
-                  options = templateComponent.prototype.getComponentOptions.call(templateComponent.prototype, config.componentOptions);
+                  options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
                   config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
             }).addErrback(function(error){
                //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
                if (!error._isOfflineMode){
-                  //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
-                  error.processed = true;
-                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
-                     InformationPopupManager.showMessageDialog({
-                        message: error.message,
-                        status: 'error'
-                     });
-                  });
+                  OpenDialogUtil.errorProcess(error);
                }
+               return error;
             });
             return def;
          }
@@ -282,11 +282,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _showLoadingIndicator: function(){
-         IndicatorUtil.showLoadingIndicator();
+         cIndicator.setMessage('Загрузка...', true);
       },
 
       _hideLoadingIndicator: function(){
-         IndicatorUtil.hideLoadingIndicator();
+         cIndicator.hide();
       },
 
       _buildComponentConfig: function (meta) {
