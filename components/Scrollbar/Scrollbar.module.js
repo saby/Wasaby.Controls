@@ -126,6 +126,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          _setThumbHeight: function(){
             this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
             this._thumbHeight = this._calcProjectionSize(this._containerHeight, this._viewportRatio);
+	         //Проверим не является ли высота ползунка меньше минимальной.
 	         if (this._thumbHeight < BROWSER_SCROLLBAR_MIN_HEIGHT) {
 		         this._thumbHeight = BROWSER_SCROLLBAR_MIN_HEIGHT;
 		         this._isConstThumb = true;
