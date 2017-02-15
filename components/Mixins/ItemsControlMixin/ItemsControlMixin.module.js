@@ -939,7 +939,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length));
+            this._toggleEmptyData(this._needShowEmptyData(data.records));
 
          }
          if (notRevive) {
@@ -950,6 +950,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._reviveItems();
          }
          this._container.addClass('controls-ListView__dataLoaded');
+      },
+
+      _needShowEmptyData: function(items) {
+         return !(items && items.length);
       },
 
       _redrawItem: function(item) {
