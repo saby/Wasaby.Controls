@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                parent, opener;
             while (focusedControl && (focusedControl.getParent || focusedControl.getOpener)) {
                parent = focusedControl.getParent();
-               opener = focusedControl.getOpener();
+               opener = focusedControl.getOpener ? focusedControl.getOpener() : null;
                if (focusedControl == control) {
                   isChild = true;
                   break;
