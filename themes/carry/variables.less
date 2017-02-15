@@ -210,7 +210,7 @@
 // Link //
 // ---- //
 
-@link-text-decoration:                          underline;
+@link-text-decoration:                          none;
 
 // ------ //
 // Button //
@@ -339,6 +339,7 @@
 // Menu item //
 // --------- //
 @menu-item-height:                              40px;
+@menu-item-line-height:                         40px;
 @menu-header-height:                            @menu-item-height;
 @menu-item-bg:                                  @menu-button-menu-bg;
 @menu-item-hover-bg:                            #F0F5FB;
@@ -503,7 +504,9 @@
 // Popup
 @font-popup-size:                               @font-basic-size;
 
-@menu-item-text-margin:                         0 0 0 34px;
+@menu-item-text-margin:                         0;
+@menu-item-icon-24-margin:                      0 0 0 34px;
+@menu-item-icon-32-margin:                      0 0 0 40px;
 @menu-item-icon-top-offset:                     14px;
 @menu-link-icon-24-top:                         2px;
 
@@ -518,8 +521,8 @@
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;
-@editdialog-applybutton-right:                  64px; /*ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:          194px; /*ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
+@editdialog-applybutton-right:                  64px; //ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:          194px; //ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними
 @editdialog-template-minwidth:                  510px;
 @editdialog-applybutton-top:                    10px;
 

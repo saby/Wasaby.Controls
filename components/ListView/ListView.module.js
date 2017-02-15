@@ -861,11 +861,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix';
-            /* Надо проверять mousemove на срабатывание на touch устройствах,
-               т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
-                + добавляю проверку, что до этого мы были в touch режиме,
-               это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
+            this._setTouchSupport(
+               /* touch события - однозначно включаем touch режим */
+               Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 ||
+               /* IOS - однозначно включаем touch режим */
+               constants.browser.isMobileIOS ||
+               /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
+                  - mousemove срабатывает при клике пальцем (после touchStart), можно определить по координатам сдвига 0.0
+                  - mousemove срабатывает через случайный промежуток времени после touchEnd
+                  - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
+                  написана специальная проверка */
+               (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
+            );
 
             switch (e.type) {
                case 'mousemove':
@@ -1079,7 +1086,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
-            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+            var items = this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden'),
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
@@ -1346,10 +1353,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _mouseDownHandler: function(event){
-            var itemsActions = this.getItemsActions();
-           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
-              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
-              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           if(this._itemsToolbar && event.button === 2){
+              var itemsActions = this.getItemsActions();
+              if(itemsActions && itemsActions.isItemActionsMenuVisible()) {
+                 // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+                 this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+              }
            }
          },
 
@@ -1957,7 +1966,9 @@ define('js!SBIS3.CONTROLS.ListView',
                itemsToolbar.lockToolbar();
             } else {
                if(this._touchSupport) {
-                  this._changeHoveredItem(this._getElementByModel(model));
+                  /* По стандарту перевод редактирования(без связных операций) на ipad'e
+                     должен скрывать операции и убирать ховер */
+                  this._mouseLeaveHandler();
                } else {
                   this._updateItemsToolbar();
                }
@@ -2324,6 +2335,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
                }
+            }
+            /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
+            if(this.isEdit()) {
+               this._getEditInPlace()._onResizeHandler();
             }
          },
          _removeItems: function(items, groupId){

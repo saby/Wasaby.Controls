@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     }
                     return self._openComponent({
                         item: item
-                    }, self._options.template);
+                    });
                 });
             },
             /**

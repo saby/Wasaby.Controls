@@ -71,14 +71,17 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
 
          if(this._options.isGlobalUserConfig) {
             this._options.historyId = this._options.historyId + GLOBAL_POSTFIX;
-            this._SBISStorage = SBISUserConfigStorage;
-         } else {
             this._SBISStorage = SBISClientsGlobalConfigStorage;
+         } else {
+            this._SBISStorage = SBISUserConfigStorage;
          }
 
          /* Чтобы проинициализировать localStorage, требуется,
-            чтобы отслеживать изменения в localStorage */
-         this._getLocalStorage();
+            чтобы отслеживать изменения в localStorage ,
+            Отключаю по задаче
+          https://inside.tensor.ru/opendoc.html?guid=d11b208e-6ae0-4147-bfa1-38792b7e5bf2&des=
+          Ошибка в разработку 14.02.2017 По умолчанию встает значение фильтра Все сотрудники. Сотрудники/ создать нового/ залогиниться под но…
+         this._getLocalStorage(); */
 
          this._history = this._getStorageValue();
 
@@ -98,7 +101,10 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
           которые хранятся в параметрах пользователя / SessionStorage. Для этого,
           при записи в пользовательские параметры, запишем значение и в SessionStorage.
           + надо записывать в LocalStorage, чтобы не было рассинхрона истории на разных вкладках. */
-         this._getLocalStorage().setItem(key, serializedValue);
+         /* Отключаю по задаче
+            https://inside.tensor.ru/opendoc.html?guid=d11b208e-6ae0-4147-bfa1-38792b7e5bf2&des=
+            Ошибка в разработку 14.02.2017 По умолчанию встает значение фильтра Все сотрудники. Сотрудники/ создать нового/ залогиниться под но…
+            this._getLocalStorage().setItem(key, serializedValue); */
          cSessionStorage.setItem(key, serializedValue);
 
          /* Пока нет нормального способа, используя некий интерфейс сохранять параметры,
@@ -111,6 +117,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          if(constants.userConfigSupport) {
             return this._SBISStorage.setItem(key, serializedValue);
          } else {
+            this._getLocalStorage().setItem(key, serializedValue);
             return Deferred.success();
          }
       },
@@ -136,9 +143,12 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
             this._localStorage.subscribe('onChange', function(event, key) {
                /* Пока нет нормального механизма хранения данных (хранилища),
                 в планах на январь фервраль. Пока просто подписываюсь на изменения LocalStorage. */
+                /*  Отключаю по задаче
+                    https://inside.tensor.ru/opendoc.html?guid=d11b208e-6ae0-4147-bfa1-38792b7e5bf2&des=
+                    Ошибка в разработку 14.02.2017 По умолчанию встает значение фильтра Все сотрудники. Сотрудники/ создать нового/ залогиниться под но…
                if(key === this._options.historyId) {
                   cSessionStorage.setItem(this._options.historyId, this._localStorage.getItem(key));
-               }
+               } */
             }.bind(this));
          }
          return this._localStorage;
