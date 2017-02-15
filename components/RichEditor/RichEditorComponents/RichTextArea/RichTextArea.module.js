@@ -1672,7 +1672,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {checkDataAttribute: false});
+            text = Sanitize(text, {
+               checkDataAttribute: false,
+               validNodes: {
+                  embed: {
+                     type: true,
+                     src: true
+                  }
+               }
+            });
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
