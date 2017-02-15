@@ -170,6 +170,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
 
             recalculateHeight: function() {
                var
+                   target,
                    newHeight = 0,
                    editorHeight;
                $.each(this._editors, function(id, editor) {
@@ -180,9 +181,20 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this.getTarget().outerHeight(newHeight, true);
+                  target = this.getTarget();
+                  this._outerHeight(target, newHeight);
                   this._notify('onChangeHeight', this._model);
                }
+            },
+            /*
+            * jquery ui перебивает стандартный outerHeight каким то нерабочим методом.
+            * Причём перебивает только на установку значения.
+            * Необходимо обновить версию jquery ui на cdn.
+            * */
+            _outerHeight: function(target, height) {
+               //Получаем сумму margin + border + padding (top и bottom);
+               var offsets = target.outerHeight() - target.height();
+               target.height(height - offsets);
             },
             _endTrackHeight: function() {
                clearInterval(this._trackerHeightInterval);
