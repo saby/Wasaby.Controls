@@ -1863,7 +1863,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       redrawItem: function(item, projItem) {
          if (!this._isSlowDrawing(this._options.easyGroup)) {
             projItem = projItem || this._getItemProjectionByItemId(item.getId());
-            this._redrawItem(projItem);
+            //Если элемента в проекции нет, то и не надо перерисовывать запись
+            if (projItem) {
+               this._redrawItem(projItem);
+            }
          }
          else {
             this._oldRedrawItemInner(item, projItem);
