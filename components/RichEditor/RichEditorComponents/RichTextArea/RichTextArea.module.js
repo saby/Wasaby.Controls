@@ -1675,9 +1675,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             text = Sanitize(text, {
                checkDataAttribute: false,
                validNodes: {
-                  object: {
+                  embed: {
                      type: true,
-                     data: true
+                     src: true
                   }
                }
             });
