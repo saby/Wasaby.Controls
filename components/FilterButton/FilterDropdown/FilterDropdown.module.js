@@ -46,6 +46,7 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
          this._options.selectedKeys = [this._options.resetKey];
          this._notifyOnPropertyChanged('selectedKeys');
          this.hide();
+         this._notifyOnPropertyChanged('visible'); // Убрать, как полечится https://inside.tensor.ru/opendoc.html?guid=552af000-7778-4e34-a177-7b704cdf5643&des=
       },
 
       setInvertedVisible: function (invertedVisible) {
