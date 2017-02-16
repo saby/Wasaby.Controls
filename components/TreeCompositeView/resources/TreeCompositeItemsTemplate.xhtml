@@ -1,5 +1,5 @@
 {{var stashTpl = it.tplData.itemTpl;}}
-<div class="controls-CompositeView__foldersContainer">
+<div class="controls-CompositeView__foldersContainer {{?it.tplData.viewMode === 'tile' && it.tplData.tileMode === 'dynamic'}} controls-CompositeView-tile__static {{?}}">
 {{?it.tplData.viewMode == 'list'}}
    {{it.tplData.itemTpl = it.tplData.listFolderTpl;}}
    {{=it.tplData._itemsTemplate({records : it.records.folders, tplData : it.tplData})}}
@@ -7,6 +7,9 @@
 {{?it.tplData.viewMode == 'tile'}}
    {{it.tplData.itemTpl = it.tplData.folderTpl;}}
    {{=it.tplData._itemsTemplate({records : it.records.folders, tplData : it.tplData})}}
+   {{?it.tplData.tileMode}}
+      {{=it.tplData.invisibleItemsTemplate({className: 'controls-ListView__item-type-node'})}}
+   {{?}}
 {{?}}
 </div>
 {{?it.tplData.viewMode == 'list'}}
@@ -16,5 +19,8 @@
 {{?it.tplData.viewMode == 'tile'}}
    {{it.tplData.itemTpl = it.tplData.tileTpl;}}
    {{=it.tplData._itemsTemplate({records : it.records.leafs, tplData : it.tplData})}}
+   {{?it.tplData.tileMode === 'static'}}
+      {{=it.tplData.invisibleItemsTemplate({})}}
+   {{?}}
 {{?}}
 {{it.tplData.itemTpl = stashTpl;}}

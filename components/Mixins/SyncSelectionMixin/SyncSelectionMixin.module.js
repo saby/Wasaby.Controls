@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
    'js!WS.Data/Entity/Model',
-   'Core/core-instance'
-], function(Model, cInstace) {
+   'Core/core-instance',
+   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
+], function(Model, cInstace, ArraySimpleValuesUtil) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -89,14 +90,14 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                         this._options.selectedKey = null;
                      }
 
-                     if(key !== this._options.selectedKey) {
+                     if(!ArraySimpleValuesUtil.hasInArray([this._options.selectedKey], key)) {
                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      }
                      break;
                   case 'selectedKeys':
                      key = propValue.length ? propValue[0] : null;
 
-                     if(this._options.selectedKey !== key) {
+                     if(!ArraySimpleValuesUtil.hasInArray([this._options.selectedKey], key)) {
                         this._options.selectedKey = key;
                         this._notify('onSelectedItemChange', this._options.selectedKey, this._options.selectedIndex);
                      }
