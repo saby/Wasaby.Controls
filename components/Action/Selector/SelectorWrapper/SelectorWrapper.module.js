@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                 index;
 
             if(hoveredItem.container) {
-               this._processSelectActionVisibility(hoveredItem);
+               self._processSelectActionVisibility(hoveredItem);
             }
 
             if(diff.added.length) {
