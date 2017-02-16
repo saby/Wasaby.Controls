@@ -17,7 +17,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     * Контрол задающий оформление выбора одного из нескольких значений в виде классических радиокнопок
     * @class SBIS3.CONTROLS.RadioGroup
     * @extends SBIS3.CONTROLS.RadioGroupBase
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    * @mixes SBIS3.CONTROLS.ITextValue
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     *

@@ -24,7 +24,7 @@ define(
     * Контрол выбор месяца и года, или только года, с выпадающей вниз панелью.
     * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод.
     * @class SBIS3.CONTROLS.MonthPicker
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker

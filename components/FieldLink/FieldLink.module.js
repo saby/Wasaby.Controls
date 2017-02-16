@@ -127,8 +127,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.MultiSelectable
         * @mixes SBIS3.CONTROLS.ActiveSelectable
         * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
-        * @mixes SBIS3.CONTROLS.ChooserMixin
-        * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @mixes SBIS3.CONTROLS.ItemsControlMixin
         *
@@ -647,7 +645,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * {String} Устанавливает поле элемента коллекции, из которого отображать данные
            * @deprecated
            */
           setDisplayField: function(displayProperty) {
@@ -656,7 +654,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * {String} Устанавливает поле элемента коллекции, из которого отображать данные
            * @example
            * <pre class="brush:xml">
            *     <option name="displayProperty">Название</option>

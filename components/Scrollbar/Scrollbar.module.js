@@ -18,8 +18,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
        * @mixin SBIS3.CONTROLS.DragNDropMixinNew
        *
        * @control
-       * @private
-       * @autor Крайнов Дмитрий Олегович
+       * @author Крайнов Дмитрий Олегович
        */
       var Scrollbar = CompoundControl.extend([DragNDropMixinNew], {
          _dotTplFn: dotTplFn,

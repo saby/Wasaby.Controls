@@ -13,45 +13,52 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
    var _startingOffset = 1000000;
 
-   var MonthSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthSource.prototype */{
-      _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.MonthSource',
-      $protected: {
-         _dataSetItemsProperty: 'items',
-         _dataSetTotalProperty: 'total'
-      },
+   /**
+    * @class SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker.MonthSource
+    * @extends WS.Data/Source/Base
+    * @author Миронов Александр Юрьевич
+    */
+   var MonthSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker.MonthSource.prototype */{
+           _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.MonthSource',
+           $protected: {
+               _dataSetItemsProperty: 'items',
+               _dataSetTotalProperty: 'total'
+           },
 
-      query: function (query) {
-         // throw new Error('Method must be implemented');
-         var adapter = this.getAdapter().forTable(),
-            offset = query.getOffset(),
-            limit = query.getLimit() || 1,
-            now = new Date(),
-            items = [];
-         offset = offset - _startingOffset;
+           query: function (query) {
+               // throw new Error('Method must be implemented');
+               var adapter = this.getAdapter().forTable(),
+                   offset = query.getOffset(),
+                   limit = query.getLimit() || 1,
+                   now = new Date(),
+                   items = [];
+               offset = offset - _startingOffset;
 
-         for (var i = 0; i < limit; i++) {
-            items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
-         }
+               for (var i = 0; i < limit; i++) {
+                   items.push({id: i, date: new Date(now.getFullYear(), offset + i, 1)});
+               }
 
-         this._each(
-            items,
-            function(item) {
-               adapter.add(item);
-            }
-         );
-         items = this._prepareQueryResult(
-            {items: adapter.getData(), total: 1000000000000}
-         );
-         return Deferred.success(items);
-      }
-   });
+               this._each(
+                   items,
+                   function(item) {
+                       adapter.add(item);
+                   }
+               );
+               items = this._prepareQueryResult(
+                   {items: adapter.getData(), total: 1000000000000}
+               );
+               return Deferred.success(items);
+           }
+       })
+   };
 
    /**
     * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
     * @class SBIS3.CONTROLS.DateRangeBig.DateRangePicker
-    * @extends SBIS3.CONTROLS.CompoundControl
+    * @extends SBIS3.CONTROLS.ListView
     * @author Миронов Александр Юрьевич
     * @control
+    * @mixes SBIS3.CONTROLS.RangeMixin
     */
 
    var monthSource = new MonthSource();

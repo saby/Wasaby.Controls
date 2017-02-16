@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Accordion', [
     * Отображаемая область может переключаться при клике на корневые пункты аккордеона.
     * @author Авраменко Алексей Сергеевич
     * @class SBIS3.CONTROLS.Accordion
-    * @extends SBIS3.CONTROLS.CompoundControl
+    * @extends $ws.proto.CompoundControl
     */
 
    var Accordion = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.Accordion.prototype */ {
