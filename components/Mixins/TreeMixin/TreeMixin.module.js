@@ -1038,6 +1038,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return currentRootItems;
       },
 
+      _afterAddItems: function() {
+         // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
+         if (this._isSearchMode()) {
+            this.redraw();
+         }
+      },
+
       before: {
          _modifyOptions: function(cfg) {
             if (cfg.hierField) {

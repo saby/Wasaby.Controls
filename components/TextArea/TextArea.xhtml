@@ -1,0 +1,5 @@
+<div class="controls-TextArea{{?it.autoResize.state}} controls-TextArea__autoheight{{??}} controls-TextArea__heightInit{{?}}">
+    <div class="controls-TextArea__disabled-wrapper{{?!it.text}} controls-TextArea__disabled-wrapper-empty{{?}}{{?it.heightclassName}} {{=it.heightclassName}}{{?}}">{{?it.text}}{{=$ws.helpers.wrapURLs($ws.helpers.escapeHtml(it.text))}}{{??}}{{? it.placeholder && it.enabled }}{{=it.placeholder}}{{?}}{{?}}</div>
+    <textarea class="controls-TextArea__inputField ws-invisible {{?it.heightclassName}} {{=it.heightclassName}}{{?}}" {{?it.minLinesCount}}rows="{{=it.minLinesCount}}"{{?}}
+    {{? it.placeholder }} placeholder="{{=it.placeholder}}"{{?}}{{? it.maxLength }} maxlength="{{=it.maxLength}}"{{?}}>{{?it.text}}{{=$ws.helpers.escapeHtml(it.text)}}{{?}}</textarea>
+</div>
