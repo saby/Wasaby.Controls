@@ -448,10 +448,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                return this._options.showAllConfig;
            },
 
-          _useNativePlaceHolder: function() {
+          _useNativePlaceHolder: function(text) {
              /* Если в placeholder положили компонент-ссылку, открывающую справочник,
                 то будем использовать не нативный placeholder */
-             return this.getProperty('placeholder').indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+             return (text || this.getProperty('placeholder')).indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           },
 
           _setPlaceholder: function() {
@@ -806,9 +806,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(!this._isDynamicInputWidth) {
-                this._inputField[0].style.width = 0;
-
                 if(needResizeInput) {
+                   this._inputField[0].style.width = 0;
                    this._updateInputWidth();
                 }
              }

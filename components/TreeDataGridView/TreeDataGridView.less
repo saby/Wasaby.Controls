@@ -165,10 +165,17 @@
 }
 .controls-GridView__searchMode{
    .controls-TreeView__hierWrapper{
-    width: 0;
-  }
+      width: 0;
+   }
+   &.controls-TreeDataGridView {
+      .controls-TreeView__expand {
+         display: none;
+      }
+      .controls-DataGridView__firstContentCell > .controls-DataGridView__columnValue {
+         margin-left: @tree-view-firstCell-margin-searchMode;
+      }
+   }
 }
-
 .controls-TreeView__folderFooterContainer {
    overflow: hidden;
 

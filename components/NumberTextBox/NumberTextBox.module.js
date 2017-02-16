@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    "Core/constants",
    "js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil",
    "js!SBIS3.CONTROLS.TextBox",
-   "html!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows",
+   "tmpl!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows",
    'css!SBIS3.CONTROLS.NumberTextBox'
 ], function ( cDefaultRenders, constants, NumberTextBoxUtil, TextBox, arrowTpl) {
 
@@ -522,16 +522,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _toggleMinus: function(){
-         var value;
+         var value,
+             step;
+
          if (!this._options.onlyPositive) {
             value = this._getInputValue();
+            // это надо т.к. при смене знака каретка должна остаться на месте
+            // если в поле ввода не было значения, то появится "-0" -> сдвиг 2 в остальных случаях сдвиг на 1
+            step = value ? 1 : 2;
 
             if(!value){
                value = '0';
             }
             if (this._options.text.indexOf('-') == -1) {
                this._setText('-' + value);
-               this._setCaretPosition(this._caretPosition[0] + 2);
+               this._setCaretPosition(this._caretPosition[0] + step);
             } else {
                this._setText(value.substr(1));
                this._setCaretPosition(this._caretPosition[0] - 1);

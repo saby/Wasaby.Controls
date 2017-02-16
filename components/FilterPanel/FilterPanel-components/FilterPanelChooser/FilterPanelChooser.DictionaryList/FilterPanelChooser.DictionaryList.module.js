@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'Core/core-instance',
     'js!WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
-    'js!SBIS3.CONTROLS.Action.SelectorAction'
+    'js!SBIS3.CONTROLS.Action.SelectorAction',
+    'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList'
 ], function(FilterPanelChooserList, CommandDispatcher, cFunctions, colHelpers, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';

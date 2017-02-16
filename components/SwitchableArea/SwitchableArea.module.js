@@ -10,13 +10,19 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * Отображаемая область может переключаться при помощи команд.
     * @class SBIS3.CONTROLS.SwitchableArea
     * @extends $ws.proto.SwitchableArea
-    * @author Крайнов Дмитрий Олегович
-    * @mixes SBIS3.CONTROLS.CollectionMixin
-    * @mixes SBIS3.CONTROLS.Selectable
+    * @author Авраменко Алексей Сергеевич
     * @public
     */
 
    var SwitchableAreaOld = CoreSwitchableArea.extend(/** @lends SBIS3.CONTROLS.SwitchableArea.prototype */ {
+      /**
+       * Устанавливает новый набор переключаемых областей.
+       * @param {Array.<Object>} items Набор новых областей. Свойства объекта:
+       * <ul>
+       *     <li>id - идентификатор новой области;</li>
+       *     <li>content - разметка контента новой области.</li>
+       * </ul>
+       */
       setItems: function (items) {
          var tabControl = this.getParent();
          for (var id in this._areaHashMap){
