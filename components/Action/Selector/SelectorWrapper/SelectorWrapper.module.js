@@ -88,8 +88,13 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          function onSelectionChanged() {
             var selectedItems = linkedObject.getSelectedItems(),
-               idProperty = linkedObject.getProperty('idProperty'),
+                idProperty = linkedObject.getProperty('idProperty'),
+                hoveredItem = linkedObject.getHoveredItem(),
                 index;
+
+            if(hoveredItem.container) {
+               this._processSelectActionVisibility(hoveredItem);
+            }
 
             if(diff.added.length) {
                collectionHelpers.forEach(diff.added, function(addedKey) {
@@ -175,15 +180,17 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       _onChangeHoveredItemHandler: function(event, hoveredItem) {
          /* Чтобы проинициализировать кнопку "Выбрать", если её нет */
          this._initSelectAction();
+         this._processSelectActionVisibility(hoveredItem);
+      },
 
+      _processSelectActionVisibility: function(hoveredItem) {
          var linkedObject = this._getLinkedObject(),
              selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
 
          /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
          if(hoveredItem.container) {
             if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
-               if (linkedObject.getMultiselect() && !linkedObject.getSelectedKeys().length ||
-                   linkedObject._isSearchMode()) {
+               if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
                   selectAction.show();
                } else {
                   selectAction.hide()
