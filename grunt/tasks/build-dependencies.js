@@ -11,7 +11,6 @@ module.exports = function(grunt) {
          jsModules = {},
          gruntFilePath = path.resolve(),
          componentsDir = path.join(gruntFilePath, 'components'),
-         wsdataDir = path.join(gruntFilePath, 'ws-data/WS.Data'),
          dirWalker = function(dir) {
             var pattern = /\.module\.js$/,
                files = fs.readdirSync(dir);
@@ -32,7 +31,6 @@ module.exports = function(grunt) {
          jsModules[name.replace(/js!/,'')] = '/' + path.relative(componentsDir, newPath).replace(/\\/g,'/');
       };
       dirWalker(componentsDir);
-      dirWalker(wsdataDir);
       global.define = restoreDefine;
 
       var jsModulesJsonString = JSON.stringify({jsModules: jsModules}, null, 3);
