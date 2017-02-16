@@ -1666,6 +1666,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _updateDataReview: function(text) {
             this._lastReview = this._lastReview == undefined ? this.getText() : this._lastReview;
             if (this._dataReview && !this.isEnabled() &&  this._lastReview != text) {
+               this._lastReview = text;
                this._dataReview.html(this._prepareReviewContent(text));
             }
          },
