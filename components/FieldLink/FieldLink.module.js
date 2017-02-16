@@ -1008,9 +1008,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _prepareItems: function() {
              return ToSourceModel(
                 FieldLink.superclass._prepareItems.apply(this, arguments),
-                this.getDataSource(),
-                this.getIdProperty(),
-                this._options.saveParentRecordChanges
+                this.getProperty('dataSource'),
+                this.getProperty('idProperty'),
+                this.getProperty('saveParentRecordChanges')
              );
           },
 
