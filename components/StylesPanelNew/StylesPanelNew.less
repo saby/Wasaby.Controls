@@ -16,17 +16,15 @@
       padding: 12px 4px 6px 4px;
       border-bottom: 1px solid #E4E4E4;
       .controls-Button {
-         padding: 0 2px;
-         border-radius: 2px;
-         border: 1px solid transparent;
-         margin: 0 2px;
          &.controls-Checked__checked {
             border: 1px solid #587AB0;
          }
-         .controls-Button__icon {
-            left:3px;
-            top:3px;
-         }
+      }
+      .controls-Button, .controls-Button.controls-Checked__checked {
+        .controls-Button__icon {
+          left:3px;
+          top:3px;
+        }
       }
       .controls-TextBox {
          margin-right: 6px;
@@ -39,30 +37,6 @@
    &__colors {
       padding: 6px 4px 6px 4px;
       font-size: 0px;
-   }
-}
-.controls-ColorRadioButton {
-   height: 32px;
-   width: 32px;
-   border-radius: 3px;
-   background: #fff;
-   text-align: center;
-   line-height: 30px;
-   padding: 0!important;
-   vertical-align: middle;
-   display: inline-block!important;
-   &.controls-Checked__checked{
-      background: #F3F3F3;
-   }
-   &:hover {
-      background: #F0F5FB;
-   }
-   &__color {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-      border-radius: 2px;
-      vertical-align: middle;
    }
 }
 .controls-StylesPanelNew {
@@ -114,28 +88,40 @@
       border: 1px solid transparent;
       margin: 0 0 0 8px;
 
-      &:hover {
-        border: 1px solid transparent;
-        .controls-Button__icon {
-          color: @blue-dark-color !important;
-        }
-      }
-
       &.controls-Checked__checked {
         border: 1px solid #587AB0;
         background: #F3F3F3;
-        &:hover {
-          border: 1px solid #587AB0;
-          .controls-Button__icon {
-            color: #587AB0 !important;
-          }
-        }
       }
     }
   }
 
   .controls-PopupMixin__closeButton {
     top: 8px;
+  }
+
+  .controls-ColorRadioButton {
+    height: 32px;
+    width: 32px;
+    border-radius: 3px;
+    background: #fff;
+    text-align: center;
+    line-height: 30px;
+    padding: 0!important;
+    vertical-align: middle;
+    display: inline-block!important;
+    &.controls-Checked__checked{
+      background: #F3F3F3;
+    }
+    &:hover {
+      background: #F0F5FB;
+    }
+    &__color {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      border-radius: 2px;
+      vertical-align: middle;
+    }
   }
 
   .controls-StylesPanel__colors {
@@ -153,4 +139,27 @@
   .controls-StylesPanel__checkBox {
     margin: 0 0 10px 10px;
   }
+}
+
+.ws-is-desktop-platform {
+  .controls-StylesPanelNew {
+    .controls-StylesPanel__buttons {
+      .controls-Button:not(.ws-disabled) {
+        &:hover {
+          border: 1px solid transparent;
+          .controls-Button__icon {
+            color: @blue-dark-color !important;
+          }
+          &.controls-Checked__checked {
+            border: 1px solid #587AB0 !important;
+            background-color: #F3F3F3;
+              .controls-Button__icon {
+                color: #587AB0 !important;
+              }
+          }
+        }
+      }
+    }
+  }
+
 }
