@@ -408,11 +408,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
-               for (var key in this._tinyEditor) {
-                  if (this._tinyEditor.hasOwnProperty(key)) {
-                     this._tinyEditor[key] = null;
-                  }
-               }
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
@@ -1678,7 +1673,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {checkDataAttribute: false});
+            text = Sanitize(text, {
+               checkDataAttribute: false,
+               validNodes: {
+                  embed: {
+                     type: true,
+                     src: true
+                  }
+               }
+            });
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
