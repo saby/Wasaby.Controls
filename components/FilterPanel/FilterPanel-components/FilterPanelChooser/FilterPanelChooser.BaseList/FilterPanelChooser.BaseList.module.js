@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
    var FilterPanelChooserBaseList = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.BaseList.prototype */ {
       $protected: {
          _options: {
-            _chooserTemplate: chooserTpl
+            chooserTemplate: chooserTpl
          },
          _listView: undefined
       },
