@@ -1,12 +1,9 @@
 .controls-DateRangeSlider {
+   display: inline-block;
    .user-select();
 
    font-family: @date-range-slider-font-family;
    font-size: @date-range-slider-font-size;
-
-   & > * {
-      vertical-align: middle;
-   }
 
    &.controls-DateRangeSlider__yearState {
       width: @date-range-slider-year-state-width;
@@ -17,22 +14,28 @@
    }
 
    .controls-DateRangeSlider__value {
-      cursor: pointer;
       display: inline-block;
       text-align: center;
       font-weight: @date-range-slider-value-font-weight;
       line-height: @date-range-slider-height;
       padding-top: @date-range-slider-value-padding;
       min-width: @date-range-slider-value-min-width;
-      &:hover {
-         color: @date-range-slider-hover-color;
-         text-decoration: @date-range-slider-hover-text-decoration;
+   }
+   &.ws-enabled{
+      .controls-DateRangeSlider__value {
+         cursor: pointer;
+         &:hover {
+            color: @date-range-slider-hover-color;
+            text-decoration: @date-range-slider-hover-text-decoration;
+         }
       }
    }
 
-   .controls-DateRangeSlider__prev,
-   .controls-DateRangeSlider__next {
-      cursor: pointer;
+   &.ws-enabled {
+      .controls-DateRangeSlider__prev,
+      .controls-DateRangeSlider__next {
+            cursor: pointer;
+      }
    }
 
    &.controls-DateRangeSlider__link {

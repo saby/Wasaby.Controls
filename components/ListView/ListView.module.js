@@ -766,7 +766,18 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base'
+               moveStrategy: 'movestrategy.base',
+               /**
+                * @cfg {Boolean} Устанавливает возможность показа контекстного меню при нажатии правой кнопки мыши.
+                * @remark
+                * Варианты значений:
+                * <ul>
+                *    <li> false - показ меню отключен;</li>
+                *    <li> true - контекстное меню отображается.</li>
+                * </ul>
+                * по умолчанию опция включена
+                */
+               contextMenu: true
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -1323,7 +1334,7 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
+            if(this._options.contextMenu && itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
                if (!this._checkItemAction()) {
                   if (this._hoveredItem && this._hoveredItem.container && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                      event.preventDefault();
@@ -2335,6 +2346,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
                }
+            }
+            /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
+            if(this.isEdit()) {
+               this._getEditInPlace()._onResizeHandler();
             }
          },
          _removeItems: function(items, groupId){

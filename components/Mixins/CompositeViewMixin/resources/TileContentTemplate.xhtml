@@ -8,7 +8,11 @@
    };
 }}
 <div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div>
-<img class="controls-CompositeView__tileImg" src="{{=src}}"/>
-<div class="controls-CompositeView__tileTitle" style="{{=it.decorators.apply(it.color, 'color')}}">
-{{=it.decorators.apply(it.item.get(it.description))}}
+<div class="controls-CompositeView__tileImg-container">
+   <img class="controls-CompositeView__tileImg" src="{{=src}}"/>
+</div>
+<div class="controls-CompositeView__tileTitle">
+   <div class="controls-CompositeView__tileTitle-text" style="{{=it.decorators.apply(it.color, 'color')}}">
+   {{=it.decorators.apply(it.item.get(it.description))}}
+   </div>
 </div>
