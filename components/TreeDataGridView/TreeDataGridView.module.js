@@ -57,6 +57,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает отображения треугольников, которые раскрывают содержимое только для записей типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
+    *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
