@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             cfg.maxLinesCount = cfg.autoResize.maxLinesCount;
             IoC.resolve('ILogger').log('TextArea', 'Опция cfg.autoResize устарела - используйте maxLinesCount');
          }
-         if (!cfg.maxLinesCount) {
+         if (cfg.autoResize && cfg.autoResize.state && !cfg.maxLinesCount) {
             cfg.maxLinesCount = 10;
          }
          if (cfg.minLinesCount > cfg.maxLinesCount) {
