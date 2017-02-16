@@ -572,6 +572,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
               * @cfg {Boolean}
               */
             hierarchyViewMode: false,
+            hierarchyViewModeItemTpl: '',
+            hierarchyViewModeItemContentTpl: '',
             /**
              * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
              * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
