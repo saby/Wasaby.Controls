@@ -39,13 +39,13 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
              */
             uncheckedIconCssClass: 'icon-Yes icon-disabled',
             /**
-             * @cfg {String} Подсказка которая будет отображаться у выделенных иконок. По умолчанию - 'Период отчетности закрыт'.
+             * @cfg {String} Подсказка которая будет отображаться у выделенных иконок. По умолчанию тултипа нет.
              */
-            checkedIconTitle: rk('Период отчетности закрыт'),
+            checkedIconTitle: null,
             /**
-             * @cfg {String} Подсказка которая будет отображаться у не выделенных иконок. По умолчанию - ''Период отчетности открыт'.
+             * @cfg {String} Подсказка которая будет отображаться у не выделенных иконок. По умолчанию тултипа нет.
              */
-            uncheckedIconTitle: rk('Период отчетности открыт'),
+            uncheckedIconTitle: null,
 
             /**
              * @typedef {Object} Icon
@@ -366,10 +366,10 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             if (typeof(icons[index]) === "boolean") {
                if (icons[index]) {
                   iconCssClass = self._options.checkedIconCssClass;
-                  iconTitle = self._options.checkedIconTitle;
+                  iconTitle = self._options.checkedIconTitle || '';
                } else {
                   iconCssClass = self._options.uncheckedIconCssClass;
-                  iconTitle = self._options.uncheckedIconTitle;
+                  iconTitle = self._options.uncheckedIconTitle || '';
                }
             } else {
                iconCssClass = icons[index].iconClass;
