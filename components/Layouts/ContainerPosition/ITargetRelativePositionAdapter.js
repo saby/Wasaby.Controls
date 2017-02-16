@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.ITargetRelativePositionAdapter', [], function () {
    'use strict';
    /**
     * Интерфейс адаптера, осуществляющиего операции c домом(виртуальным домом / произвольной моделью) в контексте позиционирования относительно таргета
-    * @mixin CONTROLS.ITargetRelativePositionAdapter
+    * @mixin SBIS3.CONTROLS.ITargetRelativePositionAdapter
     * @public
     * @author Дубровин Игорь
     */
