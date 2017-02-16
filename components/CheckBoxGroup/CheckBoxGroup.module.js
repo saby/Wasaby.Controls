@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
       'js!SBIS3.CONTROLS.CheckBoxGroupBase',
       'tmpl!SBIS3.CONTROLS.CheckBoxGroup',
       'tmpl!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate',
-      'js!SBIS3.CONTROLS.CheckBox'
+      'js!SBIS3.CONTROLS.CheckBox',
+      'css!SBIS3.CONTROLS.CheckBoxGroup'
    ],
    function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
 
