@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
       /**
        * @class SBIS3.CONTROLS.EditInPlaceHoverController
        * @extends SBIS3.CONTROLS.EditInPlaceBaseController
+       * @author Авраменко Алексей Сергеевич
        * @control
        * @public
        */

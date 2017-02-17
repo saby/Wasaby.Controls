@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.FilterSelect',
         * </pre>
         * @class SBIS3.CONTROLS.FilterSelect
         * @extends SBIS3.CORE.CompoundControl
-        * @mixes SBIS3.CORE.ItemsControlMixin
+        * @mixes SBIS3.CONTROLS.ItemsControlMixin
+        * @author Красильников Андрей Сергеевич
         * @control
         * @public
         */

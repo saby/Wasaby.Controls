@@ -8,12 +8,13 @@ define('js!SBIS3.CONTROLS.FilterLink', ['js!SBIS3.CONTROLS.Link'], function(Link
         * Компонент, отображающий ссылку. Умеет скрваться/отобрадаться в зависимости от опции {@link invertedVisible}
         * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
         * @class SBIS3.CONTROLS.FilterLink
-        * @extends SBIS3.CONTROLS.ButtonBase
+        * @extends SBIS3.CONTROLS.Link
+        * @author Герасимов Александр Максимович
         * @control
         * @public
         */
 
-       var FilterLink = Link.extend({
+       var FilterLink = Link.extend(/** @lends SBIS3.CONTROLS.FilterLink.prototype */{
           $protected: {
              _options: {
                 /**

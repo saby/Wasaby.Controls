@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
       /**
        * @class SBIS3.CONTROLS.EditInPlace
        * @extends SBIS3.CORE.CompoundControl
+       * @author Авраменко Алексей Сергеевич
        * @control
        * @public
        */
