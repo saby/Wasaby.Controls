@@ -962,18 +962,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _loadAndDrawItems: function(amount) {
              var linkCollection = this._getLinkCollection(),
-                 linkCollectionContainer = linkCollection.getContainer(),
-                 self = this;
+                 linkCollectionContainer = linkCollection.getContainer();
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
-                /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
-                   надо на это проверить */
-                if(!self.isVisibleWithParents()) {
-                   self._lastFieldLinkWidth = 0;
-                }
                 linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
@@ -1050,13 +1044,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          setEnabled: function() {
-             FieldLink.superclass.setEnabled.apply(this, arguments);
-             /* При изменении состояния поля связи, надо скинуть старую запомненую ширину,
-                если это произошло в скрытом состоянии, иначе поле показа не запустится перерисовка */
-             if(!this.isVisibleWithParents()) {
-                this._lastFieldLinkWidth = null;
-             }
+          _setEnabled: function() {
+             this._lastFieldLinkWidth = null;
+             FieldLink.superclass._setEnabled.apply(this, arguments);
+          },
+
+          _setVisibility: function() {
+             this._lastFieldLinkWidth = null;
+             FieldLink.superclass._setVisibility.apply(this, arguments);
           },
 
           /**
