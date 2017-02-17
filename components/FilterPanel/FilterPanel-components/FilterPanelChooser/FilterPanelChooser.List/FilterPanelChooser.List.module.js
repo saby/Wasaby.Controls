@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         $protected: {
             _options: {
                 _itemContentTpl: itemContentTpl,
-                _chooserTemplate: chooserTpl,
+                chooserTemplate: chooserTpl,
                 _afterChooserWrapper: footerTpl,
                 /**
                  * @cfg {String} Устанавливает текст, отображаемый на кнопке под списком.

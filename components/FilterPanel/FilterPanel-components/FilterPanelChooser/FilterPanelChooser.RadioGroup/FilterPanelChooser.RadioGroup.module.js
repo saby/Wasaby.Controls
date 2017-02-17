@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
       $protected: {
          _options: {
-            _chooserTemplate: chooserTpl
+            chooserTemplate: chooserTpl
          },
          _radioGroup: undefined
       },

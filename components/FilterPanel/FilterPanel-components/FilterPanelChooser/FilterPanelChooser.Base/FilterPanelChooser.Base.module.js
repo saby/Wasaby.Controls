@@ -37,7 +37,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
-                _chooserTemplate: undefined,
+                /**
+                 * @cfg {String} Устанавливает шаблон компонента, с помощью которого осуществляется выбор фильтра.
+                 */
+                chooserTemplate: undefined,
                 /**
                  * @cfg {Object} Конфигурация компонента, используемого для выборки данных
                  */
