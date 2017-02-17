@@ -69,11 +69,11 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                 * @see setCaption
                 */
                caption: null,
-               /*
+               /**
                 * @noShow
                 */
                template: template,
-               /*
+               /**
                 * @noShow
                 */
                activableByClick: false

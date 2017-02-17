@@ -58,7 +58,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @author Крайнов Дмитрий Олегович
     *
     * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
     * @mixes SBIS3.CONTROLS.Selectable
