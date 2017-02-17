@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             _beginClient: undefined,
             _thumbPosition: 0,
             _viewportRatio: undefined,
-            //Отношение видимой части трека к невидимой части контента
+	         //Отношение видимой части трека к невидимой части контента
             _scrollRatio: undefined,
             _thumbHeight: undefined,
             _containerHeight: undefined,
@@ -126,14 +126,14 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          _setThumbHeight: function(){
             this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
             this._thumbHeight = this._calcProjectionSize(this._containerHeight, this._viewportRatio);
-				//Проверим не является ли высота ползунка меньше минимальной.
-				if (this._thumbHeight < BROWSER_SCROLLBAR_MIN_HEIGHT) {
-					this._thumbHeight = BROWSER_SCROLLBAR_MIN_HEIGHT;
-					this._isConstThumb = true;
-				} else {
-					this._isConstThumb = false;
-				}
-         this._thumb.height(this._thumbHeight);
+	         //Проверим не является ли высота ползунка меньше минимальной.
+	         if (this._thumbHeight < BROWSER_SCROLLBAR_MIN_HEIGHT) {
+		         this._thumbHeight = BROWSER_SCROLLBAR_MIN_HEIGHT;
+		         this._isConstThumb = true;
+	         } else {
+		         this._isConstThumb = false;
+	         }
+            this._thumb.height(this._thumbHeight);
          },
 
          _calcProjectionSize: function(size, ratio) {
@@ -152,12 +152,12 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
 	      _setScrollRatio: function() {
-				//Если длинна ползунка константа, то мы расчитываем её по определению, иначе расчитываем по короткой формуле.
-				if (this._isConstThumb) {
-				   this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
-				} else {
-				   this._scrollRatio = this.getContainer().height() / this.getContentHeight();
-				}
+		      //Если длинна ползунка константа, то мы расчитываем её по определению, иначе расчитываем по короткой формуле.
+		      if (this._isConstThumb) {
+			      this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
+		      } else {
+			      this._scrollRatio = this.getContainer().height() / this.getContentHeight();
+		      }
 	      },
 
          _beginDragHandler: function(dragObject, e) {
