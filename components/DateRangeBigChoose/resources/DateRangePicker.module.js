@@ -49,8 +49,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
                );
                return Deferred.success(items);
            }
-       })
-   };
+       });
 
    /**
     * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
