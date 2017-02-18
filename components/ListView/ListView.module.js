@@ -1336,7 +1336,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if(this._options.contextMenu && itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
                if (!this._checkItemAction()) {
-                  if (this._hoveredItem && this._hoveredItem.container && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+                  if (this._hoveredItem && this._hoveredItem.container && !this._hoveredItem.container.hasClass('controls-editInPlace__editing') && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                      event.preventDefault();
                      itemsActions.showItemActionsMenu(align);
                   }
