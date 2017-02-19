@@ -68,26 +68,30 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       },
 
       startObserve: function() {
-         var view = this._options.view;
-
          if(!this._observed) {
-            this.subscribeTo(view.getDataSource(), 'onBeforeProviderCall', this._onBeforeDataLoadHandler);
-            this.subscribeTo(view, 'onDataLoad', this._onBeforeDataLoadHandler);
+            this._toggleViewEvents(true);
             this._observed = true;
          }
       },
 
       stopObserve: function() {
-         var view = this._options.view;
-
          if(this._observed) {
-            this.unsubscribeFrom(view.getDataSource(), 'onBeforeProviderCall', this._onBeforeDataLoadHandler);
-            this.unsubscribeFrom(view, 'onDataLoad', this._onViewDataLoadHandler);
+            this._toggleViewEvents(false);
             this._textBeforeTranslate = null;
             this._observed = false;
             this._oldSearchValue = '';
             this._toggleItemsEventRising(true);
          }
+      },
+
+      _toggleViewEvents: function (toggle) {
+         var view = this._options.view,
+             method = toggle ? 'subscribeTo' : 'unsubscribeFrom';
+
+         if(view.getDataSource()) {
+            this[method](view.getDataSource(), 'onBeforeProviderCall', this._onBeforeDataLoadHandler);
+         }
+         this[method](view, 'onDataLoad', this._onBeforeDataLoadHandler);
       },
 
       _onBeforeDataLoad: function() {
