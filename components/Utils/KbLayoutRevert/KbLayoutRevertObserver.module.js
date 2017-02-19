@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          if(view.getDataSource()) {
             this[method](view.getDataSource(), 'onBeforeProviderCall', this._onBeforeDataLoadHandler);
          }
-         this[method](view, 'onDataLoad', this._onBeforeDataLoadHandler);
+         this[method](view, 'onDataLoad', this._onViewDataLoadHandler);
       },
 
       _onBeforeDataLoad: function() {
