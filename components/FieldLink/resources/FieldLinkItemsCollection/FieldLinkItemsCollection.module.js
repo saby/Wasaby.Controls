@@ -200,6 +200,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
+                  },
+
+                  onShow: function() {
+                     var pickerContainer = self._picker.getContainer(),
+                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth - (pickerContainer.outerWidth() - pickerContainer.width());
+
+                     pickerContainer[0].style.maxWidth = pickerWidth + 'px';
+                     pickerContainer[0].style.minWidth = pickerWidth + 'px';
                   }
                }
             };
