@@ -3,12 +3,12 @@
  */
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
     [
-   "Core/core-extend",
+   "Core/Abstract",
    "Core/helpers/string-helpers",
    "Core/core-functions",
    "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
 ],
-    function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil) {
+    function (Abstract, strHelpers, cFunctions, KbLayoutRevertUtil) {
    'use strict';
 
    /* Вспомогательный класс, для посчёта времени запроса.
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
        Задача в разработку 25.03.2016 нужно обобщить появление ромашки ожидания. в FormController, в ListView логика ожидания должна быть … */
    var INDICATOR_DELAY = 750;
 
-   var KbLayoutRevertObserver = cExtend({}, {
+   var KbLayoutRevertObserver = Abstract.extend({
       $protected: {
          _options: {
             /**
@@ -69,21 +69,29 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
       startObserve: function() {
          if(!this._observed) {
-            this._options.view.subscribe('onDataLoad', this._onViewDataLoadHandler);
-            this._options.view.subscribe('onBeforeDataLoad', this._onBeforeDataLoadHandler);
+            this._toggleViewEvents(true);
             this._observed = true;
          }
       },
 
       stopObserve: function() {
          if(this._observed) {
-            this._options.view.unsubscribe('onDataLoad', this._onViewDataLoadHandler);
-            this._options.view.unsubscribe('onBeforeDataLoad', this._onBeforeDataLoadHandler);
+            this._toggleViewEvents(false);
             this._textBeforeTranslate = null;
             this._observed = false;
             this._oldSearchValue = '';
             this._toggleItemsEventRising(true, true);
          }
+      },
+
+      _toggleViewEvents: function (toggle) {
+         var view = this._options.view,
+             method = toggle ? 'subscribeTo' : 'unsubscribeFrom';
+
+         if(view.getDataSource()) {
+            this[method](view.getDataSource(), 'onBeforeProviderCall', this._onBeforeDataLoadHandler);
+         }
+         this[method](view, 'onDataLoad', this._onViewDataLoadHandler);
       },
 
       _onBeforeDataLoad: function() {
