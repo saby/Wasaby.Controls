@@ -8,7 +8,7 @@
    font-size: @back-button-font-size;
 
    &.controls-BackButton__orange {
-      span.controls-BackButton__caption {
+      .controls-BackButton__caption {
          color: @header-color;
       }
       &:before {
@@ -158,3 +158,21 @@
       right: 16px;
    }
 }
+.controls-BackButton {
+   &.controls-BackButton__orange {
+      .controls-BackButton__caption {
+         color: @header-color;
+      }
+      &:before {
+         color: @blue-dark-color;
+      }
+      &:hover {
+         .controls-BackButton__caption {
+            color: @primary-color;
+         }
+         &:before {
+            color: @primary-color;
+         }
+      }
+   }
+ }
