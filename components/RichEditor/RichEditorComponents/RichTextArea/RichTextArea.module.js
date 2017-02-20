@@ -170,7 +170,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _typeInProcess: false,
             _clipboardText: undefined,
             _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
-            _imageOptionsPanel: undefined
+            _imageOptionsPanel: undefined,
+            _lastReview: undefined
          },
 
          _modifyOptions: function(options) {
@@ -219,6 +220,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (cConstants.browser.isMobileAndroid) {
                this._notifyTextChanged = this._notifyTextChanged.debounce(300);
             }
+            this._lastReview = this.isEnabled() ? undefined : this.getText();
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
@@ -1664,7 +1666,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled()) {
+            if (this._dataReview && !this.isEnabled() &&  this._lastReview != text) {
+               this._lastReview = text;
                this._dataReview.html(this._prepareReviewContent(text));
             }
          },

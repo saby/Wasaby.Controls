@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             this._textBeforeTranslate = null;
             this._observed = false;
             this._oldSearchValue = '';
-            this._toggleItemsEventRising(true);
+            this._toggleItemsEventRising(true, true);
          }
       },
 
@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._options.textBox.setText(searchValue);
                view.setHighlightText(searchValue, false);
                this._textBeforeTranslate = null;
-               this._toggleItemsEventRising(true);
+               this._toggleItemsEventRising(true, true);
             }
             // если поиск произошел то запоминаем текущее значение
             this._oldSearchValue = searchValue;
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                viewFilter[this.getParam()] = this._textBeforeTranslate;
                view.setFilter(viewFilter, true);
                this._textBeforeTranslate = null;
-               this._toggleItemsEventRising(true);
+               this._toggleItemsEventRising(true, true);
             } else {
                /* Если количество символов в поисковом значении уменьшилось,
                   значит поисковое значение либо полностью изменилось, либо удалили часть символов,
@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
                this._textBeforeTranslate = searchValue;
                viewFilter[this.getParam()] = revertedSearchValue;
-               this._toggleItemsEventRising(false);
+               this._toggleItemsEventRising(false, false);
                /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                if(this._getTimer().getTime() > INDICATOR_DELAY) {
                   view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
@@ -184,14 +184,14 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
          чтобы избежать моргания данных, обработка событий включается,
          когда поиск точно закончен (уже была сменена раскладка, если требуется) */
-      _toggleItemsEventRising: function(enable) {
+      _toggleItemsEventRising: function(enable, analyze) {
          var items = this._options.view.getItems();
 
          if(items) {
             var isEqual = items.isEventRaising() === enable;
 
             if(!isEqual) {
-               items.setEventRaising(enable, true);
+               items.setEventRaising(enable, analyze);
             }
          }
       },

@@ -16,7 +16,12 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
    var _startingOffset = 1000000;
 
-   var YearSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.MonthsStartCurrentYearSource.prototype */{
+   /**
+    * @class SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.YearSource
+    * @extends WS.Data/Source/Base
+    * @author Миронов Александр Юрьевич
+    */
+   var YearSource = Base.extend(/** @lends SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.YearSource.prototype */{
       _moduleName: 'SBIS3.CONTROLS.DateRangeBigChoose.YearSource',
       $protected: {
          _dataSetItemsProperty: 'items',
@@ -56,16 +61,18 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    });
 
    /**
-    * SBIS3.CONTROLS.DateRangeBig.MonthRangePicker
-    * @class SBIS3.CONTROLS.DateRangeBig.MonthRangePicker
-    * @extends SBIS3.CONTROLS.CompoundControl
+    * SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
+    * @class SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
+    * @extends SBIS3.CONTROLS.ListView
     * @author Миронов Александр Юрьевич
     * @control
+    * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+    * @mixes SBIS3.CONTROLS.RangeMixin
     */
 
    var yearSource = new YearSource();
 
-   var MonthRangePicker = ListView.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBig.MonthRangePicker.prototype */{
+   var MonthRangePicker = ListView.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.prototype */{
       $protected: {
          _options: {
             liveSelection: true,

@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
    /**
     * Перемещает элементы
     * @class SBIS3.CONTROLS.ListView.Mover
-    * @private
     * @author Крайнов Дмитрий Олегович
     */
    var Mover = Abstract.extend(/**@lends SBIS3.CONTROLS.ListView.Mover.prototype*/{
@@ -27,7 +26,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
              * @cfg {WS.Data/Collection/IList} Список, в котором надо перемещать записи.
              */
             items: undefined,
-            /*
+            /**
              * @cfg {WS.Data/Display/Display} Проекция элементов.
              */
             projection: undefined,

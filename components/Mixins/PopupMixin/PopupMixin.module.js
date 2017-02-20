@@ -850,7 +850,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
-               if (spaces.top < spaces.bottom && !TouchKeyboardHelper.isKeyboardVisible()) {
+               spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
+               if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
                      this._container.css('height', height);
                      offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
@@ -923,7 +924,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             //При расчете свободного места, учитываем весь экран
             //так как на айпаде нужно открывать окна под клавиатуру что бы скролить не выпадашку, а все окно (для красоты)
             //на андроиде выезжающая клавиатура уменьшает реальный размер window, поэтому такой херни нет
-            windowHeight = this._windowSizes.height,
+            windowHeight = this._windowSizes.height + TouchKeyboardHelper.getKeyboardHeight(),
             windowWidth = this._windowSizes.width,
             spaces = {
                top: 0,

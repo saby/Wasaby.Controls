@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
     * Выпадающий список, позволяющий выбрать одно из предложенных значений.
     * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
     * @class SBIS3.CONTROLS.FilterDropdown
-    * @extends SBIS3.CORE.DropdownList
+    * @extends SBIS3.CONTROLS.DropdownList
+    * @author Красильников Андрей Сергеевич
     * @control
     * @public
     */

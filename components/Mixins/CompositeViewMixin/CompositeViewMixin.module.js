@@ -223,25 +223,23 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       $constructor: function() {
          //this._drawViewMode(this._options.mode);
          this._container.addClass('controls-CompositeView-' + this._options.viewMode);
-         var self = this;
 
-         this.subscribe('onDrawItems', function(){
-            if (self._options.viewMode == 'tile' && !self._options.tileMode) {
-               self._calculateTileWidth();
-            }
-         });
+         this._calculateTileHandler = this._calculateTile.bind(this);
+         this.subscribe('onDrawItems', this._calculateTileHandler);
          //TODO:Нужен какой то общий канал для ресайза окна
-         $(window).bind('resize', function(){
-            if (self._options.viewMode == 'tile' && !self._options.tileMode){
-               self._calculateTileWidth();
-            }
-         });
+         $(window).bind('resize', this._calculateTileHandler);
 
          if (this._options.tileTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
          }
          if (this._options.listTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан listTemplate');
+         }
+      },
+
+      _calculateTile: function() {
+         if (this._options.viewMode == 'tile' && !this._options.tileMode){
+            this._calculateTileWidth();
          }
       },
 
@@ -373,6 +371,23 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
       },
 
+      /**
+       * Устанавливает Шаблон отображения строки в режиме "Список".
+       * @see listTemplate
+       */
+      setListTemplate : function(tpl) {
+         this._options.listTemplate = tpl;
+      },
+
+
+      /**
+       * Устанавливает Шаблон отображения строки в режиме "Плитка".
+       * @see tileTemplate
+       */
+      setTileTemplate : function(tpl) {
+         this._options.tileTemplate = tpl;
+      },
+
       around : {
          _getItemTemplate: function(parentFnc, itemProj) {
             var resultTpl, dotTpl, item = itemProj.getContents();
@@ -468,21 +483,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             return flag;
          },
 
-         /**
-          * Устанавливает Шаблон отображения строки в режиме "Список".
-          * @see listTemplate
-          */
-         setListTemplate : function(tpl) {
-            this._options.listTemplate = tpl;
-         },
-
-
-         /**
-         * Устанавливает Шаблон отображения строки в режиме "Плитка".
-         * @see tileTemplate
-         */
-         setTileTemplate : function(tpl) {
-            this._options.tileTemplate = tpl;
+         destroy: function(parentFnc) {
+            $(window).unbind('resize', this._calculateTileHandler);
+            parentFnc.call(this);
          }
       }
 
