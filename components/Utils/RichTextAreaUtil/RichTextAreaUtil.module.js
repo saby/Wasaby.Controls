@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                   while (i < content.childNodes.length) {
                      var
                         className = getAttribute(content.childNodes[i], 'class');
-                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator') {
+                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink') {
                         replaceToHref(content, i);
                      } else if (className == 'LinkDecorator__decoratedLink'){
                         content.childNodes.splice(i, 1);
