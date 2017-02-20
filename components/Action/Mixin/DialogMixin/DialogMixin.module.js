@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              * @cfg {Object} Объект содержащий опции компонента.
              */
             componentOptions: null,
-            /*
+            /**
              * @cfg {Object} Объкт содержащий опции диалога 
              */
             dialogOptions: null
