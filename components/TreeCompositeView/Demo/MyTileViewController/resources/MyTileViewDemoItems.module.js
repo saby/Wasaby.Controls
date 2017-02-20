@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.MyTileViewDemoItems',[], function () {
             {width: 200, 'title': 'Красный кабриолет с таким же длинным названием модели, как у чёрного кабриолета', 'id':7, 'image': 'http://img7.autonavigator.ru/carsfoto/1600/15711/246162/Ferrari_California_Coupe-Cabriolet_2014.jpg', withTitle: false},
             {width: 260, 'title': 'Серебряный кабриолет', 'id':8,'image': 'http://carrrs.com/wp-content/uploads/2015/12/333.jpg', withTitle: false},
             {width: 200, 'title': 'Серебряный кабриолет', 'id':9, 'image': 'http://333v.ru/uploads/1c/1c0fa3e9cb64e010070c23bb8a02b6dc.jpg', withTitle: false},
-            {width: 200, 'title': 'Жёлтый кабриолет', 'id':10, 'image': 'http://fotoham.ru/img/picture/Oct/08/d060b50db3d6fe25bd48c0ba2484e60d/1.jpg', withTitle: false},
+            {width: 200, 'title': 'Жёлтый кабриолет', 'id':10, 'image': 'http://fotoham.ru/img/picture/Oct/08/d060b50db3d6fe25bd48c0ba2484e60d/1.jpg', withTitle: false}
             /*{'title': 'Красный кабриолет', 'id':11, 'image': 'http://s1.1zoom.ru/big3/339/337021-svetik.jpg', withTitle: false}*/],
         hierarhy: [
             {width: 120, 'title': 'Белые кабриолеты и не только', 'id':1, 'parent@': true, 'parent': null, 'image': 'http://333v.ru/uploads/1c/1c0fa3e9cb64e010070c23bb8a02b6dc.jpg'},
