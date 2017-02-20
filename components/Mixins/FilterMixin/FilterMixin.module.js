@@ -172,7 +172,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                   } else {
                      /* В эту ветку попадаем, если установлен value, и не установлен caption,
                         если caption не установлен, то его надо каждый раз обновлять из value. */
-                     if(element.caption && element.caption === element.value) {
+                     if(element.caption && element.caption === element.value && description === element.value) {
                         newElement.caption = newElement.value;
                      } else {
                         newElement.caption = description;

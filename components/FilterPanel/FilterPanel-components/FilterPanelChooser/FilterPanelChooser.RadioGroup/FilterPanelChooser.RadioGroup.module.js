@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'js!SBIS3.CONTROLS.RadioGroup',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
-   'Core/core-functions'
+   'Core/core-functions',
+   'css!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup'
 ], function(FilterPanelChooserBase, RadioGroup, chooserTpl, cFunctions) {
    'use strict';
    /**
@@ -29,7 +30,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    var FilterPanelChooserRadioGroup = FilterPanelChooserBase.extend( /** @lends SBIS3.CONTROLS.FilterPanelChooser.RadioGroup.prototype */ {
       $protected: {
          _options: {
-            _chooserTemplate: chooserTpl
+            chooserTemplate: chooserTpl
          },
          _radioGroup: undefined
       },

@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * @control
        * @public
        */
-      var ScrollContainer = CompoundControl.extend({ /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */
+      var ScrollContainer = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
 
          _dotTplFn: dotTplFn,
 

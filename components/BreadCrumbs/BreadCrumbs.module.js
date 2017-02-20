@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _homeIconWidth: 0,
          _dotsWidth: 0,
          _paddings: undefined,
-         _margins: undefined,
+         _BCmargins: undefined,
          _options: {
             idProperty: 'id',
             displayField: '',
@@ -130,10 +130,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             var target = $(e.target),
                crumb = target.closest('.js-controls-BreadCrumbs__crumb');
             if (crumb.hasClass('controls-BreadCrumbs__dots')) {
-               this._dotsClickHandler(crumb)
-            } else if (crumb.length) {
-               this._notify('onItemClick', crumb.data(this._options.idProperty));
-               this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.idProperty));
+               this._dotsClickHandler(crumb);
+               e.stopPropagation();
+            } else {
+               if (crumb.length) {
+                  this._notify('onItemClick', crumb.data(this._options.idProperty));
+                  this.sendCommand('BreadCrumbsItemClick', crumb.data(this._options.idProperty));
+                  e.stopPropagation();
+               }
             }
             if (this._picker && this._picker.isVisible() && fromDropdown){
                this._picker.hide();
@@ -243,7 +247,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _calculateSizes: function() {
          this._initNonTextElementSizes();
          this._paddings =  this._paddings === undefined ? this._container.innerWidth() - this._container.width() : this._paddings;
-         this._margins = this._margins === undefined ? this._container.outerWidth(true)  - this._container.outerWidth(): this._margins;
+         this._BCmargins = this._BCmargins === undefined ? this._container.outerWidth(true)  - this._container.outerWidth(): this._BCmargins;
 
          // Уберем троеточие, что бы оно не мешало при расчете размеров
          // или создадим его, если его нет
@@ -267,7 +271,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          var targetContainer = this._getTargetContainer(),
             maxWidth = parseFloat(this._container.css('max-width')),
             boundingClientRect = this._container[0].getBoundingClientRect(),
-             containerWidth = maxWidth ? maxWidth : Math.ceil(Math.abs(boundingClientRect.left - boundingClientRect.right) - this._paddings - this._margins),
+             containerWidth = maxWidth ? maxWidth : Math.ceil(Math.abs(boundingClientRect.left - boundingClientRect.right) - this._paddings - this._BCmargins),
             crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
             i = crumbs.length - 1;
 

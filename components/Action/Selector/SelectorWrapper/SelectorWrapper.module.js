@@ -44,7 +44,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /**
              * @cfg {String} Фильтр выбранных записей
              */
-            selectedFilter: functionalHelpers.constant(true)
+            selectedFilter: functionalHelpers.constant(true),
+            selectionType: 'all'
+
          },
          _linkedObject: null
       },
@@ -86,8 +88,13 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          function onSelectionChanged() {
             var selectedItems = linkedObject.getSelectedItems(),
-               idProperty = linkedObject.getProperty('idProperty'),
+                idProperty = linkedObject.getProperty('idProperty'),
+                hoveredItem = linkedObject.getHoveredItem(),
                 index;
+
+            if(hoveredItem.container) {
+               self._processSelectActionVisibility(hoveredItem);
+            }
 
             if(diff.added.length) {
                collectionHelpers.forEach(diff.added, function(addedKey) {
@@ -151,7 +158,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          }
 
          /* При единичном выборе, клик по записи должен её выбирать, даже если это папка */
-         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && this._isBranch(item)) {
              event.setResult(false);
              this._applyItemSelect(item);
          }
@@ -173,15 +180,17 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       _onChangeHoveredItemHandler: function(event, hoveredItem) {
          /* Чтобы проинициализировать кнопку "Выбрать", если её нет */
          this._initSelectAction();
+         this._processSelectActionVisibility(hoveredItem);
+      },
 
+      _processSelectActionVisibility: function(hoveredItem) {
          var linkedObject = this._getLinkedObject(),
              selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
 
          /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
          if(hoveredItem.container) {
-            if (this._isBranch(hoveredItem.record)) {
-               if (linkedObject.getMultiselect() && !linkedObject.getSelectedKeys().length ||
-                   linkedObject._isSearchMode()) {
+            if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
+               if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
                   selectAction.show();
                } else {
                   selectAction.hide()
@@ -212,6 +221,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                caption: 'Выбрать',
                name: SELECT_ACTION_NAME,
                isMainAction: true,
+               allowChangeEnable: false,
                onActivated: function(container, key, item) {
                   self._onItemActivatedHandler(null, {
                      item: item,
@@ -237,7 +247,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          if(cInstance.instanceOfMixin(this._getLinkedObject(), 'SBIS3.CONTROLS.TreeMixin')) {
             var isBranch = this._isBranch(item);
 
-            if (!isBranch && _private.selectionType === 'node' || isBranch && _private.selectionType === 'leaf') {
+            if (!isBranch && this.getSelectionType() === 'node' || isBranch && this.getSelectionType() === 'leaf') {
                return false;
             }
          }
@@ -271,8 +281,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       setSelectionType: function(selectionType) {
-         _private.selectionType = selectionType;
+         this._options.selectionType = selectionType;
          this._getLinkedObject().getContainer().addClass(SELECTION_TYPE_CLASSES[selectionType]);
+      },
+
+      getSelectionType: function() {
+         return this._options.selectionType;
       },
 
       _getLinkedObject: function() {
@@ -289,8 +303,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             added: [],
             removed: []
          }
-      },
-      selectionType: 'all'
+      }
    };
 
    return SelectorWrapper;

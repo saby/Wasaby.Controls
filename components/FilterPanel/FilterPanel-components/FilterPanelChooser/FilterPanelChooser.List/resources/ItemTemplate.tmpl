@@ -1,0 +1,5 @@
+<div class="controls-ListView__item js-controls-ListView__item {{selectedKeys.indexOf(item.getId()) !== -1 ? 'controls-ListView__item__multiSelected'}} {{selectedKey==item.getId() ? 'controls-ListView__item__selected'}} {{ className }}"
+     data-hash="{{ projItem.getHash() }}"
+     data-id="{{ item.getId() }}">
+    <ws:partial template="{{itemContent}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
+</div>

@@ -276,19 +276,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          var result = {
                 added: [],
                 removed: []
-             },
-             currElem;
+             };
 
          /* Найдём удаленные */
          result.removed = colHelpers.filter(arrayOne, function(item) {
-            currElem = item;
-            return !ArraySimpleValuesUtil.hasInArray(arrayTwo, currElem);
+            return !ArraySimpleValuesUtil.hasInArray(arrayTwo, item);
          });
 
          /* Найдём добавленные */
          result.added = colHelpers.filter(arrayTwo, function(item) {
-            currElem = item;
-            return !ArraySimpleValuesUtil.hasInArray(arrayOne, currElem);
+            return !ArraySimpleValuesUtil.hasInArray(arrayOne, item);
          });
 
          return result;
@@ -325,7 +322,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             });
             this.setSelectedKeys(keys);
          }
-
       },
 
       /**
@@ -657,7 +653,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             return new Deferred().callback(this._options.selectedItems);
          }
 
-         this._loadItemsDeferred = new Deferred();
+         this._loadItemsDeferred = new Deferred({cancelCallback: function() {
+            if(dMultiResult) {
+               dMultiResult.getResult().cancel();
+               dMultiResult = null;
+            }
+         }});
          itemsKeysArr = this._convertToKeys(this._options.selectedItems);
 
          /* Сфоримруем массив ключей записей, которые требуется вычитать с бл или взять из dataSet'a*/
@@ -801,6 +802,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 		   if (this._checkEmptySelection()) {
 			   this._setFirstItemAsSelected();
 		   }
+         /* Если во время вычитки записей изменили ключи,
+            загрузку надо отменять, иначе получим расхождение ключи <=> записи*/
+         if(this._loadItemsDeferred && (addedKeys.length || removedKeys.length)) {
+            this._loadItemsDeferred.cancel();
+         }
          this._notifySelectedItems(this._options.selectedKeys, {
             added : addedKeys,
             removed : removedKeys

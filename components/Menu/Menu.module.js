@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Menu', [
     * @class SBIS3.CONTROLS.Menu
     * @public
     * @author Крайнов Дмитрий Олегович
-    * @extends SBIS3.CONTROLS.ButtonGroupBase
+    * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @mixes SBIS3.CONTROLS.TreeMixinDS
     *

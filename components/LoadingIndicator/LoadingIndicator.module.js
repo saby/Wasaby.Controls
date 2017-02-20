@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.LoadingIndicator', ['js!SBIS3.CORE.Control'], function
     * @class SBIS3.CONTROLS.LoadingIndicator
     * @author Крайнов Дмитрий Олегович
     * @extends $ws.proto.Control
-    * @mixes SBIS3.CONTROLS.PopupMixin
     */
 
    var LoadingIndicator = Control.Control.extend( /** @lends SBIS3.CONTROLS.LoadingIndicator.prototype*/ {

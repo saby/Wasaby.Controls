@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
     * Выпадающий список, позволяющий выбрать одно из предложенных значений.
     * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
     * @class SBIS3.CONTROLS.FilterDropdown
-    * @extends SBIS3.CORE.DropdownList
+    * @extends SBIS3.CONTROLS.DropdownList
+    * @author Красильников Андрей Сергеевич
     * @control
     * @public
     */
@@ -46,6 +47,7 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
          this._options.selectedKeys = [this._options.resetKey];
          this._notifyOnPropertyChanged('selectedKeys');
          this.hide();
+         this._notifyOnPropertyChanged('visible'); // Убрать, как полечится https://inside.tensor.ru/opendoc.html?guid=552af000-7778-4e34-a177-7b704cdf5643&des=
       },
 
       setInvertedVisible: function (invertedVisible) {

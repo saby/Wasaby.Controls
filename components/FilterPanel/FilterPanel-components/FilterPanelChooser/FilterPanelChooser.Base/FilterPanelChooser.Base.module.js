@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
      * Для каждого типа редактора имя обозначено в описании класса.
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.Base
-     * @extends SBIS3.CONTROLS.CompoundControl
+     * @extends $ws.proto.CompoundControl
      * @author Сухоручкин Андрей Сергеевич
      *
      * @mixes SBIS3.CONTROLS.IFilterItem
@@ -37,7 +37,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
-                _chooserTemplate: undefined,
+                /**
+                 * @cfg {String} Устанавливает шаблон компонента, с помощью которого осуществляется выбор фильтра.
+                 */
+                chooserTemplate: undefined,
                 /**
                  * @cfg {Object} Конфигурация компонента, используемого для выборки данных
                  */

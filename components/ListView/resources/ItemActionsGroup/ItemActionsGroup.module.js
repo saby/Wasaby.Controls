@@ -50,8 +50,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
        * @public
        */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
@@ -233,6 +233,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                return instance.isVisible() && instance.isEnabled();
             });
          },
+
          /**
           * Показывает операции над записью
           */
@@ -327,7 +328,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var mode = !!align;
             if(this._itemActionsMenu) {
                this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__contextMenu', Boolean(mode));
-               if(mode && this._menuAlign != 'context') {
+               if(mode) {
                   this.setMenuAlign(align, undefined);
                   this._menuAlign = 'context';
                } else if(this._menuAlign != 'standart') {

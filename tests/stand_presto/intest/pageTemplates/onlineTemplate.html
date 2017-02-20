@@ -3,16 +3,16 @@
 
 	<head>
 		%{INCLUDE "/Тема Скрепка/Шаблоны/includes/common-meta.html"}
-		
+
 		<title>%{WINDOW_TITLE}</title>
-		
+
 		%{INCLUDE "/Тема Скрепка/Шаблоны/includes/favicon.html"}
 		%{INCLUDE "/Тема Скрепка/Шаблоны/includes/ws-styles.html"}
-		
+
 		<link rel="stylesheet" type="text/css" href="%{RESOURCE_ROOT}SBIS3.CONTROLS/themes/presto/presto.css"/>
-		
+
 		%{APPEND_STYLE}
-		
+
 		<script type="text/javascript">
 			// new config support
 			window.wsConfig = {
@@ -23,16 +23,17 @@
 				userConfigSupport: false,
 				globalConfigSupport: false,
 				saveLastState: false,
+				themeName: 'presto',
 				nostyle: true
 			};
 		</script>
-		
+
 		%{INCLUDE "/Тема Скрепка/Шаблоны/includes/ws.html"}
-		
+
 		%{APPEND_JAVASCRIPT}
-		
+
 		%{INCLUDE "/Тема Скрепка/Шаблоны/includes/common-data-providers.html"}
-		
+
 		<script type="text/javascript">
 			$ws.core.ready.addCallback(function() {
 				require(['bootup'], function() {

@@ -244,7 +244,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                   flag.setAttribute('Condition', fieldValue[number] + "");
                }
             }
-         } else if(typeName == 'Массив'){
+         } else if(typeName == 'Массив' || typeName == 'Array'){
             fieldElement.appendChild(element = document.createElement('Array'));
             element.setAttribute('DataType', typeof(column.type) == 'object' ? column.type.t : column.arrayType);
             var elem;

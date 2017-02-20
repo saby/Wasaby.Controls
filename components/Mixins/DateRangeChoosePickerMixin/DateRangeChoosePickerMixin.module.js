@@ -42,17 +42,40 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
             checkedEnd: null,
 
             /**
+             * @cfg {String} CSS класс который будет установлен у выделенных иконок. По умолчанию - зеленая галочка.
+             */
+            checkedIconCssClass: 'icon-Yes icon-done',
+            /**
+             * @cfg {String} CSS класс который будет установлен у не выделенных иконок. По умолчанию - серая галочка.
+             */
+            uncheckedIconCssClass: 'icon-Yes icon-disabled',
+            /**
+             * @cfg {String} Подсказка которая будет отображаться у выделенных иконок. По умолчанию тултипа нет.
+             */
+            checkedIconTitle: null,
+            /**
+             * @cfg {String} Подсказка которая будет отображаться у не выделенных иконок. По умолчанию тултипа нет.
+             */
+            uncheckedIconTitle: null,
+
+            /**
              * @cfg {Function} устанавливает функцию которая будет вызвана во время перерисовки компонента.
              * @remark
              * Аргументы функции:
              * <ol>
              *    <li>periods - Массив содержащий массивы из начала и конца периода</li>
              * </ol>
-             * Функция должна вернуть объект содержащий информацию об отображаемой иконке или $ws.proto.Deferred,
-             * стреляющий таким объектом.
+             * Функция должна вернуть массив элементов типа Boolean либо объект содержащих информацию об отображаемой
+             * иконке {@link Icon} или Deferred, стреляющий таким объектом.
+             * Если функция возвращает true, то будет отрисована иконка соответствующая опциям {@Link checkedIconCssClass} и
+             * {@Link checkedIconTitle}. Если возвращает false, то иконки будут соответствовать опциям
+             * {@Link uncheckedIconCssClass} и {@Link uncheckedIconTitle}. По умолчанию это зеленые и серые галочки.
+             * Функция может вернуть объект содержащий онформацию о кастомных оконках.
              * { iconClass: 'icon-Yes icon-done',
              *   title: 'Период отчетности закрыт'
              *   }
+             *
+             * @see updateIcons
              */
             iconsHandler: null,
 
@@ -84,6 +107,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
          showPicker: function () {
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
+               this._chooserControl.updateIcons();
             }
          }
       },
@@ -111,6 +135,10 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                showYears: this._options.showYears,
                checkedStart: this._options.checkedStart,
                checkedEnd: this._options.checkedEnd,
+               checkedIconCssClass: this._options.checkedIconCssClass,
+               uncheckedIconCssClass: this._options.uncheckedIconCssClass,
+               checkedIconTitle: this._options.checkedIconTitle,
+               uncheckedIconTitle: this._options.uncheckedIconTitle,
                iconsHandler: this._options.iconsHandler
             });
 

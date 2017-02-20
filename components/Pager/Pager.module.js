@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.Pager', [
    'use strict';
 
    /**
+    * @class SBIS3.CONTROLS.Pager
     * @extends $ws.proto.CompoundControl
     * @control
     * @category Decorate
@@ -26,7 +27,7 @@ define('js!SBIS3.CONTROLS.Pager', [
     * @author Крайнов Дмитрий Олегович
     */
 
-   var Pager = CompoundControl.extend(/** @lends $ws.proto.Paging.prototype */{
+   var Pager = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Pager.prototype */{
       /**
        * @event onPageChange При изменении страницы
        * <wiTag group="Управление">
@@ -36,8 +37,8 @@ define('js!SBIS3.CONTROLS.Pager', [
        * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.
        * @example
        */
+      _dotTplFn: dotTplFn,
       $protected: {
-         _dotTplFn: dotTplFn,
          _options: {
             pagingOptions: {}
          },

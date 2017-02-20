@@ -1,6 +1,7 @@
 <div class="controls-CompositeView controls-DataGridView controls-ListView
             {{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}
-            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}} controls-CompositeView-{{=it.viewMode}}">
+            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}} controls-CompositeView-{{=it.viewMode}}
+            {{?it.viewMode == 'tile'}} controls-CompositeView-tile__{{=it.tileMode}}{{?}}">
    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">

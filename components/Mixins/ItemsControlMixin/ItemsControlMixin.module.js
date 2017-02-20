@@ -496,6 +496,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /**
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
+             * @remark
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -758,7 +760,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: this._options.items,
+                  data: cFunctions.clone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
@@ -939,7 +941,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length));
+            this._toggleEmptyData(this._needShowEmptyData(data.records));
 
          }
          if (notRevive) {
@@ -950,6 +952,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._reviveItems();
          }
          this._container.addClass('controls-ListView__dataLoaded');
+      },
+
+      _needShowEmptyData: function(items) {
+         return !(items && items.length);
       },
 
       _redrawItem: function(item) {
@@ -1004,8 +1010,34 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
             }
             needToRevive = markupExt.hasComponents;
+
+            if (!Object.isEmpty(this._options.groupBy)) {
+               this._groupFixOnRedrawItemInner(item, targetElement);
+            }
          }
          return needToRevive;
+      },
+
+      //TODO надо избавиться от этого метода
+      //если в списке есть группировка, при переносе в папку записи, следующей за ней
+      //не происходит события move, а только меняется запись
+      //мы просто перерисовываем ее, а должны еще перерисовать группу
+      _groupFixOnRedrawItemInner: function(item) {
+         var targetElement = this._getDomElementByItem(item);
+         var behElement;
+         if (!this._options._canApplyGrouping(item, this._options)) {
+            //если внутрь папки
+            behElement = targetElement.prev();
+            //если предыдущий группировка, то переносим ее
+            if (behElement.length && behElement.hasClass('controls-GroupBy')) {
+               targetElement.after(behElement);
+               //если группа оказалась пустая, удаляем ее
+               var behNextElement = behElement.next();
+               if (behNextElement.length && !behNextElement.hasClass('js-controls-ListView__item')) {
+                  behElement.remove();
+               }
+            }
+         }
       },
 
       _calculateDataBeforeRedraw: function(data) {
@@ -1120,8 +1152,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._revivePackageParams.light = false;
                }
             }
+            this._afterAddItems();
          }
       },
+
+      _afterAddItems: function() {},
 
       _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
          var
@@ -1286,7 +1321,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this.redraw()
                }
             }
-            else if (this._dataSource) {
+            else if (this._dataSource && !(this._options.dataSource && this._options.dataSource.firstLoad === false)) {
                this.reload();
             }
             if (this._options._serverRender) {
@@ -1694,6 +1729,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          IoC.resolve('ILogger').log('ListView', 'Метод _isLoading() будет удален в 3.7.4 используйте isLoading()');
          return this.isLoading();
       },
+      /**
+       *
+       * @returns {*|Boolean}
+       */
       isLoading: function(){
          return this._loader && !this._loader.isReady();
       },
@@ -1709,7 +1748,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          this._loader = null;
       },
-      //TODO поддержка старого - обратная совместимость
+      /**
+       * Возвращает элементы коллекции.
+       * @returns {WS.Data/Collection/RecordSet}
+       * @see setItems
+       */
       getItems : function() {
          return this._options._items;
       },
@@ -1722,20 +1765,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @example
         * Для списка устанавливаем набор данных из трёх записей. Опция idProperty установлена в значение id, а parentProperty - parent.
         * <pre>
-        *     myView.setItems([
-        *        {
-        *           id: 1, // Поле с первичным ключом
-        *           title: 'Сообщения'
-        *        },{
-        *           id: 2,
-        *           title: 'Прочитанные',
-        *           parent: 1 // Поле иерархии
-        *        },{
-        *           id: 3,
-        *           title: 'Непрочитанные',
-        *           parent: 1
-        *        }
-        *     ]);
+        * myView.setItems([{
+        *
+        *    // Поле с первичным ключом
+        *    id: 1,
+        *    title: 'Сообщения'
+        * },{
+        *    id: 2,
+        *    title: 'Прочитанные',
+        *    parent: 1 // Поле иерархии
+        * },{
+        *    id: 3,
+        *    title: 'Непрочитанные',
+        *    parent: 1
+        * }]);
         * </pre>
         * @see items
         * @see addItem
@@ -1779,7 +1822,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          /*Method must be implemented*/
       },
       /**
-       * Метод перерисвоки списка без повторного получения данных
+       * Производит перерисовку списка без повторного получения данных от источника данных.
+       * @param {*}
+       * @see redrawItem
        */
       redraw: function(notRevive) {
          /*notRevive - врмеенный параметр для внутренних механизмов*/
@@ -1815,11 +1860,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Метод перерисовки определенной записи
        * @param {Object} item Запись, которую необходимо перерисовать
+       * @param {*}
+       * @see redraw
        */
       redrawItem: function(item, projItem) {
          if (!this._isSlowDrawing(this._options.easyGroup)) {
             projItem = projItem || this._getItemProjectionByItemId(item.getId());
-            this._redrawItem(projItem);
+            //Если элемента в проекции нет, то и не надо перерисовывать запись
+            if (projItem) {
+               this._redrawItem(projItem);
+            }
          }
          else {
             this._oldRedrawItemInner(item, projItem);
@@ -1897,11 +1947,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       },
       /**
-       * Установка группировки элементов. Если нужно, чтобы стандартаная группировка для этого элемента не вызывалась -
-       * нужно обязательно переопределить(передать) все опции (field, method, template, render) иначе в группировку запишутся стандартные параметры.
-       * @remark Всем элементам группы добавляется css-класс controls-GroupBy
-       * @param group
-       * @param redraw
+       * Устанавливает группировку элементов коллекции.
+       * @remark
+       * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
+       * Всем элементам группы добавляется css-класс "controls-GroupBy".
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * @param {GroupBy} group Параметры группировки.
+       * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
+       * @see groupBy
+       * @see getGroupBy
        */
       setGroupBy : function(group, redraw){
          //TODO может перерисовку надо по-другому делать
@@ -1924,7 +1978,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       /**
-       * Возвращает значение опции groupBy
+       * Возвращает параметры группировки элементов коллекции.
+       * @remark
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * @return {GroupBy}
+       * @see groupBy
+       * @see setGroupBy
        */
       getGroupBy : function() {
          return this._options.groupBy;
@@ -1997,17 +2056,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //Если offset отрицательный, значит запрашивали последнюю страницу
          return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
       },
-      _scrollTo: function scrollTo(target) {
+      _scrollTo: function scrollTo(target, toBottom) {
          if (typeof target === 'string') {
             target = $(target);
          }
-
-         LayoutManager.scrollToElement(target);
+         LayoutManager.scrollToElement(target, toBottom);
       },
-      _scrollToItem: function(itemId) {
+      _scrollToItem: function(itemId, toBottom) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer);
+            this._scrollTo(itemContainer, toBottom);
          }
       },
       /**
@@ -2048,7 +2106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @deprecated
        */
       setKeyField: function(keyField) {
@@ -2057,7 +2115,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @example
        * <pre class="brush:xml">
        *     <option name="idProperty">Идентификатор</option>
@@ -2072,7 +2130,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @deprecated
        */
       setDisplayField: function(displayField) {
@@ -2081,7 +2139,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @example
        * <pre class="brush:xml">
        *     <option name="displayProperty">Название</option>

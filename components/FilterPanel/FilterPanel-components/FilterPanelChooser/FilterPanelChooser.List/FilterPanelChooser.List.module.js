@@ -4,13 +4,16 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'Core/core-functions',
     'Core/CommandDispatcher',
     'Core/helpers/collection-helpers',
+    'js!WS.Data/Functor/Compute',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
-    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTpl',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemContentTpl',
+    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTemplate',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/FilterPanelChooserListFooter',
     'js!SBIS3.CONTROLS.Link',
-    'js!SBIS3.CONTROLS.ListView'
-], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, dotTplFn, itemTpl, chooserTpl, footerTpl) {
+    'js!SBIS3.CONTROLS.ListView',
+    'css!SBIS3.CONTROLS.FilterPanelChooser.List'
+], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         //TODO: выписана задача https://inside.tensor.ru/opendoc.html?guid=62947517-9859-4291-a899-42bacf350341 по которой
         //будет предоставлен функционал фильтрации на уровне проекции с учётом сортировки, и перебитие приватной опции
@@ -22,9 +25,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             }
             return records;
         },
-        itemsSortMethod = function(first, second) {
+        itemsSortMethod = new ComputeFunctor(function(first, second) {
             return second.collectionItem.get('count') - first.collectionItem.get('count');
-        };
+        }, ['count']);
     'use strict';
 
     /**
@@ -54,7 +57,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
+     * @extends SBIS3.CONTROLS.FilterPanelChooser.BaseList
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
@@ -65,8 +68,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
-                _itemTpl: itemTpl,
-                _chooserTemplate: chooserTpl,
+                _itemContentTpl: itemContentTpl,
+                chooserTemplate: chooserTpl,
                 _afterChooserWrapper: footerTpl,
                 /**
                  * @cfg {String} Устанавливает текст, отображаемый на кнопке под списком.
@@ -88,6 +91,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             var opts = FilterPanelChooserList.superclass._prepareProperties.apply(this, arguments);
             return cFunctions.merge(opts, {
                 itemsSortMethod: itemsSortMethod,
+                /*Сейчас признак мультивыбранности записи не рисуется на сервере, из-за этого происходит лютое моргание.
+                * Как временное решение, пока ListView сам не начнёт рисовать мультивыбранность на сервере, нарисуем её сами.*/
+                itemTpl: itemTemplate,
                 _getRecordsForRedraw: getRecordsForRedraw,
                 _showFullList: false
             });

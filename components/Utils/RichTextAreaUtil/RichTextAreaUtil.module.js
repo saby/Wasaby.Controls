@@ -79,8 +79,12 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                   i = 0;
                if (content.childNodes) {
                   while (i < content.childNodes.length) {
-                     if (getAttribute(content.childNodes[i], 'class') === 'LinkDecorator') {
+                     var
+                        className = getAttribute(content.childNodes[i], 'class');
+                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator') {
                         replaceToHref(content, i);
+                     } else if (className == 'LinkDecorator__decoratedLink'){
+                        content.childNodes.splice(i, 1);
                      } else {
                         replaceDecoratedLinks(content.childNodes[i]);
                      }
@@ -90,15 +94,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             },
 
             getAttribute = function(node, atrrName){
-               var
-                  j = 0;
-               if (node && node.attributes) {
-                  while (j < node.attributes.length) {
-                     if (node.attributes[j].name === atrrName ) {
-                        return node.attributes[j].value;
-                     }
-                     j++;
-                  }
+               if (node && node.attributes && node.attributes[atrrName]) {
+                  return node.attributes[atrrName].value;
                }
                return false;
             },
