@@ -772,7 +772,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
                 * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
                 */
-               moveInvertOrder: false
+               moveInvertOrder: false,
                /**
                 * @cfg {Boolean} Устанавливает возможность показа контекстного меню при нажатии правой кнопки мыши.
                 * @remark
