@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
    /**
     * Класс контрола, отображающий ссылку, при нажатии на которую произойдет звонок.
     * @class SBIS3.CONTROLS.PhoneTextBox
-    * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    * @extends SBIS3.CONTROLS.FormattedTextBox
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators

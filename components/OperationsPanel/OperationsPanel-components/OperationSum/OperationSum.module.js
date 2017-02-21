@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.OperationSum', [
      *
      * SBIS3.CONTROLS.OperationSum
      * @class SBIS3.CONTROLS.OperationSum
-     * @extends SBIS3.CONTROLS.Link
+     * @extends SBIS3.CONTROLS.IconButton
      * @control
      * @public
      * @author Крайнов Дмитрий Олегович
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.OperationSum', [
      *
      * </component>
      */
-    var OperationSum = IconButton.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
+    var OperationSum = IconButton.extend(/** @lends SBIS3.CONTROLS.OperationSum.prototype */{
 
         $protected: {
             _options: {
