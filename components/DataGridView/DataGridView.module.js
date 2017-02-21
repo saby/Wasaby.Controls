@@ -222,7 +222,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   resultsTpl: TemplateUtil.prepareTemplate(cfg.resultsTpl),
                   showHead: cfg.showHead
                },
-               value,
                column,
                columnTop,
                headColumns = prepareHeadColumns(cfg);
@@ -232,16 +231,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
                column = headData.content[0][i];
 
                if (columnTop) {
-                  columnTop.value = getDefaultHeadColumnTpl(columnTop.title);
+                  if (columnTop.rowspan > 1 && columnTop.headTemplate){ //Если колонка на 2 строки, то отрисуем headTemplate в ней
+                     columnTop.value = getHeadColumnTpl(columnTop);
+                  }
+                  else {
+                     columnTop.value = getDefaultHeadColumnTpl(columnTop.title);
+                  }
                }
+
                if (column.headTemplate) {
-                  value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
-                     column: column
-                  }));
+                  column.value = getHeadColumnTpl(column);
                } else {
-                  value = getDefaultHeadColumnTpl(column.title);
+                  column.value = getDefaultHeadColumnTpl(column.title);
                }
-               column.value = value;
             }
 
             if (cfg._items && cfg._items.getMetaData().results){
@@ -250,6 +252,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
 
             return headData;
+         },
+         getHeadColumnTpl = function (column){
+            return MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
+               column: column
+            }));
          },
          getDefaultHeadColumnTpl = function(title){
             return MarkupTransformer(headColumnTpl({title: title}));

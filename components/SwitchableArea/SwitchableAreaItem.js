@@ -6,6 +6,7 @@ define(['js!SBIS3.CORE.CompoundControl', 'Core/helpers/generate-helpers', 'Core/
       /**
        * @class SBIS3.CONTROLS.SwitchableAreaItem
        * @extends $ws.proto.CompoundControl
+       * @author Крайнов Дмитрий Олегович
        * @public
        * @ignoreOptions name, allowChangeEnable, className, contextRestriction, enabled, independentContext, tabIndex
        */

@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
     var FilterPanelChooserFieldLink = FilterPanelChooserBase.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FieldLink.prototype */ {
         $protected: {
             _options: {
-                _chooserTemplate: FieldLinkChooserTemplate,
+                chooserTemplate: FieldLinkChooserTemplate,
                 className: 'controls-FilterPanelChooser__FieldLink'
             },
             _selectorAction: undefined,

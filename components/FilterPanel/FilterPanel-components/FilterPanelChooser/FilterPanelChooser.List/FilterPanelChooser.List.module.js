@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
      * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.List
-     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base
+     * @extends SBIS3.CONTROLS.FilterPanelChooser.BaseList
      * @author Сухоручкин Андрей Сергеевич
      * @public
      *
@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         $protected: {
             _options: {
                 _itemContentTpl: itemContentTpl,
-                _chooserTemplate: chooserTpl,
+                chooserTemplate: chooserTpl,
                 _afterChooserWrapper: footerTpl,
                 /**
                  * @cfg {String} Устанавливает текст, отображаемый на кнопке под списком.
