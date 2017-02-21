@@ -913,6 +913,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
                case 'contextmenu':
                   this._contextMenuHandler(e);
+                  /* Выставляем этот флаг, чтобы не было имитации клика (см. метод _onActionHandler в Control.module.js).
+                     Сейчас проблема в том, что при клике двумя пальцами на touch устройствах событие contextmenu срабатывает,
+                     а click нет, поэтому в методе _onActionHandler происходит имитация клика, которая при срабатывании события contextmenu не нужна. */
+                  this._clickState.detected = true;
                   break;
                case 'mousedown':
                   this._mouseDownHandler(e);
