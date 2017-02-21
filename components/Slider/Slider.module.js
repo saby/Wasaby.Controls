@@ -26,6 +26,8 @@ define('js!SBIS3.CONTROLS.Slider',
           *
           * @class SBIS3.CONTROLS.Slider
           * @extends SBIS3.CORE.CompoundControl
+          * @public
+          * @control
           *
           * @mixes SBIS3.CONTROLS.DragNDropMixinNew
           * @mixes SBIS3.CONTROLS.RangeMixin

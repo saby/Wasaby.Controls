@@ -32,6 +32,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      *
      * @class SBIS3.CONTROLS.MoneyTextBox
      * @extends SBIS3.CONTROLS.NumberTextBox
+     * @public
+     * @control
      *
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
