@@ -10,12 +10,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
    'html!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
    'html!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
+   'html!SBIS3.CONTROLS.TreeCompositeView/resources/StaticFolderContentTemplate',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-merge',
-   'css!SBIS3.CONTROLS.CompositeView'
-], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
+   'css!SBIS3.CONTROLS.CompositeView',
+   'css!SBIS3.CONTROLS.TreeCompositeView'
+], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
 
@@ -48,6 +50,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     * </component>
     */
    var
+   TILE_MODE = CompositeViewMixin.TILE_MODE,
    buildTplArgs = function(cfg) {
       var parentOptions = cfg._buildTplArgsTDG(cfg), folderContentTpl, folderTpl, listFolderTpl, listFolderContentTpl;
       var myOptions = cfg._buildTplArgsComposite(cfg);
@@ -56,7 +59,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          folderContentTpl = cfg.folderContentTpl;
       }
       else {
-         folderContentTpl = cfg._defaultFolderContentTemplate;
+         folderContentTpl = cfg.tileMode === TILE_MODE.STATIC && cfg.className.indexOf('controls-CompositeView-tile__static-smallImage') === -1 ? TemplateUtil.prepareTemplate(StaticFolderContentTemplate) : cfg._defaultFolderContentTemplate;
       }
       parentOptions.folderContent = TemplateUtil.prepareTemplate(folderContentTpl);
       if (cfg.folderTpl) {
@@ -180,6 +183,21 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
+      _onChangeHoveredItem: function(hoveredItem) {
+         this._setHoveredStyles(hoveredItem.container);
+         TreeCompositeView.superclass._onChangeHoveredItem.apply(this, arguments);
+      },
+
+      _calculateHoveredStyles: function(item) {
+         if (item.hasClass('controls-ListView__item-type-node')) {
+            if (this._options.tileMode === TILE_MODE.DYNAMIC) {
+               this._setStaticHoveredStyles(item);
+            }
+         } else {
+            TreeCompositeView.superclass._calculateHoveredStyles.apply(this, arguments);
+         }
+      },
+
       _elemClickHandlerInternal: function(data, id, target, e) {
          if (this._options.viewMode == 'table') {
             TreeCompositeView.superclass._elemClickHandlerInternal.apply(this, arguments);
@@ -199,6 +217,16 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                this._activateItem(id);
             }
          }
+      },
+
+      _needShowEmptyData: function(items) {
+         var result;
+         if (items instanceof Array) {
+            result = TreeCompositeView.superclass._needShowEmptyData.apply(this, arguments);
+         } else {
+            result = !(items && (items.leafs.length || items.folders.length));
+         }
+         return result;
       },
       
       _getItemTemplate: function(itemProj) {
@@ -549,6 +577,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
    });
 
+   TreeCompositeView.TILE_MODE = TILE_MODE;
    return TreeCompositeView;
 
 });

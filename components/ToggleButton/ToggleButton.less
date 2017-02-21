@@ -2,13 +2,11 @@
 @import "../Button/Button";
 .controls-Button {
   &.controls-Checked__checked {
-    &.controls-Button {
-      color: @button-checked-text-color;
-      border: @button-checked-border;
-      font-weight: @button-checked-font-weight;
-      .box-shadow(@button-checked-shadow);
-      background: @button-checked-bg;
-    }
+    color: @button-checked-text-color;
+    border: @button-checked-border;
+    font-weight: @button-checked-font-weight;
+    .box-shadow(@button-checked-shadow);
+    background: @button-checked-bg;
 
     &.controls-Button__primary {
       color: @button-primary-checked-text-color;
@@ -67,16 +65,16 @@
   .controls-Button:not(.ws-disabled) {
     &:hover {
       &.controls-Checked__checked {
-        border: @button-checked-border !important;
+        border: @button-checked-border;
 
         &.controls-Button__primary {
-          border: @button-primary-checked-border !important;
+          border: @button-primary-checked-border;
         }
         &.controls-Button__big {
-          border: @button-big-checked-border !important;
+          border: @button-big-checked-border;
 
           &.controls-Button__primary {
-            border: @button-big-primary-checked-border !important;
+            border: @button-big-primary-checked-border;
           }
         }
       }

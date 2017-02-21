@@ -33,10 +33,15 @@ define('js!SBIS3.CONTROLS.CompositeView', ['js!SBIS3.CONTROLS.DataGridView', 'js
 
       $protected: {
 
+      },
+
+      _onChangeHoveredItem: function(hoveredItem) {
+         this._setHoveredStyles(hoveredItem.container);
+         CompositeView.superclass._onChangeHoveredItem.apply(this, arguments);
       }
 
    });
-
+   CompositeView.TILE_MODE = CompositeViewMixin.TILE_MODE;
    return CompositeView;
 
 });

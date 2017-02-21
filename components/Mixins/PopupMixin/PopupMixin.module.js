@@ -577,7 +577,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             };
 
             if (this._options.parentContainer) {
-               var parContainer = $('.'+this._options.parentContainer);
+               var parContainer;
+               if (this._options.target) {
+                  parContainer = this._options.target.closest('.' + this._options.parentContainer)
+               }
+               else {
+                  parContainer = $('.' + this._options.parentContainer);
+               }
                var parOffset = parContainer.offset();
                this._targetSizes.offset.top = this._targetSizes.offset.top - parOffset.top + parContainer.scrollTop();
                this._targetSizes.offset.left = this._targetSizes.offset.left - parOffset.left + parContainer.scrollLeft();
@@ -844,6 +850,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+               spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
                if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
                      this._container.css('height', height);

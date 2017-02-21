@@ -681,7 +681,7 @@ define(
              * нижнего подчёркивания.
              * !Важно: нельзя использовать знак вопроса.
              */
-            _maskReplacer: '_',
+            _maskReplacer: ' ',
             // ! в файле маски (FormattedTextBoxBase_mask.xhtml) не оставлять пробелы и переносы строк
             _maskTemplateFn: maskTemplateFn,
             //упрощенная модель для вставки в xhtml-шаблон
@@ -740,6 +740,10 @@ define(
             }
             e.preventDefault();
          });
+         //предотвращаем вырезание маски
+         this._inputField.bind('cut', function(e) {
+            e.preventDefault();
+         });
          this._chromeCaretBugFix();
       },
       //FF зачем то кидает событие keypress для управляющих символов(charCode === 0), в отличии от всех остальных браузеров.
@@ -791,8 +795,6 @@ define(
             this._clearCommandHandler('backspace');
          } else if (key == constants.key.pageUp || key == constants.key.pageDown) {
             // предотвращаем проскроливание страницы по нажатию на pageUp и pageDown
-         } else if (key == 88 && isCtrl) {
-            //предотвращаем вырезание Ctrl+X
          } else if (key == constants.key.enter && constants.browser.firefox) {
             //в firefox по нажатию на enter в вёрстку добавляется <br> и начинает ехать вёрстка
             event.preventDefault();

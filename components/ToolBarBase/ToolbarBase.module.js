@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ToolbarBase', ['js!SBIS3.CORE.Control'], function(Cont
     * Тулбар представляет из себя набор кнопок, объединенных в группу по наличию схожего поведения.
     * Например, несколько кнопок, управляющих одним реестром.
     * @class SBIS3.CONTROLS.ToolbarBase
-    * @mixes SBIS3.CONTROLS.CollectionMixin
     * @extends $ws.proto.Control
     * @author Крайнов Дмитрий Олегович
     */
