@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.CursorListNavigation',
+   "js!WS.Data/Source/SbisService",
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    "js!SBIS3.CONTROLS.DragEntity.Row",
    "js!WS.Data/Collection/RecordSet",
@@ -64,7 +65,7 @@ define('js!SBIS3.CONTROLS.ListView',
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation) {
+             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
 
      'use strict';
 
@@ -75,6 +76,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.decorators = cfg._decorators;
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
+            tplOptions.selectedKeys = cfg.selectedKeys;
 
             return tplOptions;
          },
@@ -764,7 +766,18 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: 'movestrategy.base'
+               moveStrategy: 'movestrategy.base',
+               /**
+                * @cfg {Boolean} Устанавливает возможность показа контекстного меню при нажатии правой кнопки мыши.
+                * @remark
+                * Варианты значений:
+                * <ul>
+                *    <li> false - показ меню отключен;</li>
+                *    <li> true - контекстное меню отображается.</li>
+                * </ul>
+                * по умолчанию опция включена
+                */
+               contextMenu: true
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -859,11 +872,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix';
-            /* Надо проверять mousemove на срабатывание на touch устройствах,
-               т.к. оно стреляет после тапа. После тапа событие mousemove имеет нулевой сдвиг, поэтому обрабатываем его как touch событие
-                + добавляю проверку, что до этого мы были в touch режиме,
-               это надо например для тестов, в которых эмулирется событие mousemove так же без сдвига, как и на touch устройствах. */
-            this._setTouchSupport(Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 || (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)));
+            this._setTouchSupport(
+               /* touch события - однозначно включаем touch режим */
+               Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 ||
+               /* IOS - однозначно включаем touch режим */
+               constants.browser.isMobileIOS ||
+               /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
+                  - mousemove срабатывает при клике пальцем (после touchStart), можно определить по координатам сдвига 0.0
+                  - mousemove срабатывает через случайный промежуток времени после touchEnd
+                  - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
+                  написана специальная проверка */
+               (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
+            );
 
             switch (e.type) {
                case 'mousemove':
@@ -946,13 +966,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onScrollHandler: function(event, scrollTop){
-            var scrollPage = this._scrollBinder._getScrollPage(scrollTop),
-                itemActions = this.getItemsActions();
+            var itemActions = this.getItemsActions();
 
-            if(itemActions && itemActions.isItemActionsMenuVisible()){
+            if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
-            this._notify('onScrollPageChange', scrollPage);
          },
          _setScrollPagerPosition: function(){
             var right;
@@ -1079,7 +1097,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
-            var items = $('.js-controls-ListView__item', this._getItemsContainer()).not('.ws-hidden'),
+            var items = this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden'),
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
@@ -1315,9 +1333,10 @@ define('js!SBIS3.CONTROLS.ListView',
                       offset: event.pageX
                    }
                 };
-            if(itemsActions && itemsActions.hasVisibleActions()) {
+
+            if(this._options.contextMenu && itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
                if (!this._checkItemAction()) {
-                  if (this._hoveredItem && this._hoveredItem.container && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
+                  if (this._hoveredItem && this._hoveredItem.container && !this._hoveredItem.container.hasClass('controls-editInPlace__editing') && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                      event.preventDefault();
                      itemsActions.showItemActionsMenu(align);
                   }
@@ -1345,10 +1364,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _mouseDownHandler: function(event){
-            var itemsActions = this.getItemsActions();
-           if(this._itemsToolbar && event.button === 2 && itemsActions && itemsActions.isItemActionsMenuVisible()){
-              // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
-              this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+           if(this._itemsToolbar && event.button === 2){
+              var itemsActions = this.getItemsActions();
+              if(itemsActions && itemsActions.isItemActionsMenuVisible()) {
+                 // необходимо скрывать операции над записью при клике правой кнопкой мыши, т.к. иначе операции мигают
+                 this._itemsToolbar.getContainer().addClass('controls-ItemsToolbar__hidden');
+              }
            }
          },
 
@@ -1822,7 +1843,6 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
             this._editInPlace = new controller(this._getEditInPlaceConfig());
-            this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
          },
 
          _editInPlaceMouseDownHandler: function(event) {
@@ -1847,7 +1867,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlaceController: function() {
             if (this._hasEditInPlace()) {
-               this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                this._editInPlace.destroy();
                this._editInPlace = null;
             }
@@ -1883,6 +1902,9 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
+                        /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
+                        * а после удаления emptyData, тулбар визуально подскочит вверх*/
+                        this._toggleEmptyData(false);
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
@@ -1894,7 +1916,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                         this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));
-                        this._toggleEmptyData(false);
+                        this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
                      onChangeHeight: function(event, model) {
                         if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
@@ -1913,6 +1935,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
                         this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
+                        this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
                      onDestroy: function() {
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
@@ -1953,7 +1976,13 @@ define('js!SBIS3.CONTROLS.ListView',
                this._showItemsToolbar(editedItem);
                itemsToolbar.lockToolbar();
             } else {
-               this._updateItemsToolbar();
+               if(this._touchSupport) {
+                  /* По стандарту перевод редактирования(без связных операций) на ipad'e
+                     должен скрывать операции и убирать ховер */
+                  this._mouseLeaveHandler();
+               } else {
+                  this._updateItemsToolbar();
+               }
             }
          },
          _hideToolbar: function() {
@@ -2318,6 +2347,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setScrollPagerPositionThrottled();
                }
             }
+            /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
+            if(this.isEdit()) {
+               this._getEditInPlace()._onResizeHandler();
+            }
          },
          _removeItems: function(items, groupId){
             this._checkDeletedItems(items);
@@ -2679,10 +2712,11 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
+          * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
           */
-         scrollToItem: function(item){
+         scrollToItem: function(item, toBottom){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId());
+               this._scrollToItem(item.getId(), toBottom);
             }
          },
 
@@ -2696,20 +2730,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createScrollWatcher();
             }
             return this._scrollWatcher;
-         },
-
-         /**
-          * Переопределённый метод itemsControlMixin'a
-          * Необходим, т.к. itemsControlMixin не знает, что может быть кастомный скролл
-          * @param target
-          * @private
-          */
-         _scrollTo: function(target) {
-            if(this.isInfiniteScroll()) {
-               this._getScrollWatcher().scrollToElement(target);
-            } else {
-               ListView.superclass._scrollTo.apply(this, arguments);
-            }
          },
 
          /**
@@ -2943,11 +2963,16 @@ define('js!SBIS3.CONTROLS.ListView',
                query = new Query(),
                queryFilter = filter;
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               queryFilter = $ws.core.clone(filter);
-               var addParams = this._listNavigation.prepareQueryParams(this._options._getItemsProjection(), this._infiniteScrollState.mode);
-               $ws.core.merge(queryFilter, addParams);
+               var options = this._dataSource.getOptions();
+               options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
+               this._dataSource.setOptions(options);
+               if (this._getItemsProjection()) {
+                  queryFilter = $ws.core.clone(filter);
+                  var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
+                  $ws.core.merge(queryFilter, addParams);
+               }
             }
-            query.where(filter)
+            query.where(queryFilter)
                .offset(offset)
                .limit(limit)
                .orderBy(sorting)
@@ -3351,8 +3376,13 @@ define('js!SBIS3.CONTROLS.ListView',
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
             //Необходимо разобраться можно ли на уровне TextBoxBase или Control для события mousedown
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
-            return this._options.enabled && !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+            return this._options.enabled && this._needProcessMouseEvent(e);
          },
+
+         _needProcessMouseEvent: function(e) {
+            return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+         },
+
          _beginDragHandler: function(dragObject, e) {
             var
                 target;

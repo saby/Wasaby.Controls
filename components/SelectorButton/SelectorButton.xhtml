@@ -4,4 +4,10 @@
     {{?it.icon}}<i class="controls-SelectorButton__icon {{=it._iconClass}}"></i>{{?}}
     <span class="controls-SelectorButton__text{{? !it.caption && !it.defaultCaption && !caption}} ws-hidden{{?}}">{{? caption}}{{=caption}}{{??}}{{? it.caption}}{{=it.caption}}{{??}}{{=it.defaultCaption}}{{?}}{{?}}</span>
     <i class="controls-SelectorButton__cross icon-16 icon-Close icon-disabled action-hover {{? (!it.caption || it.caption === it.defaultCaption) && !caption}}ws-hidden{{?}}"></i>
+        {{? it.useSelectorAction}}
+            <component data-component="SBIS3.CONTROLS.Action.SelectorAction" name="SelectorButtonSelectorAction">
+                <option name="mode">{{=it.selectMode}}</option>
+                <option name="visible">false</option>
+            </component>
+        {{?}}
 </span>

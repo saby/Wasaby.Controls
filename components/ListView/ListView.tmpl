@@ -18,7 +18,7 @@
     <ws:if data="{{ _serverRender && _resultsRecord && resultsPosition == 'bottom' && resultsTpl}}">
        <ws:partial template="{{resultsTpl}}" item="{{_resultsRecord}}" multiselect="{{multiselect}}" />
     </ws:if>
-    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !it.emptyHTML) ? 'ws-hidden'}}">{{emptyHTML}}</div>
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden'}}">{{emptyHTML|sanitize}}</div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />

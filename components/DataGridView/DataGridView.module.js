@@ -22,12 +22,43 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
+   "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.DataGridView'
 ],
-   function( cFunctions, cMerge, constants, Deferred,ListView, dotTplFn, rowTpl, colgroupTpl, headTpl, footTpl, resultsTpl, MarkupTransformer, DragAndDropMixin, ImitateEvents, groupByTpl, Ladder, LadderDecorator, TemplateUtil, ItemTemplate, ItemResultTemplate, ItemContentTemplate, cellTemplate, GroupTemplate, colHelpers, strHelpers) {
+   function(
+      cFunctions,
+      cMerge,
+      constants,
+      Deferred,
+      ListView,
+      dotTplFn,
+      rowTpl,
+      colgroupTpl,
+      headTpl,
+      footTpl,
+      resultsTpl,
+      MarkupTransformer,
+      DragAndDropMixin,
+      ImitateEvents,
+      groupByTpl,
+      Ladder,
+      LadderDecorator,
+      TemplateUtil,
+      ItemTemplate,
+      ItemResultTemplate,
+      ItemContentTemplate,
+      cellTemplate,
+      headColumnTpl,
+      GroupTemplate,
+      colHelpers,
+      strHelpers,
+      dcHelpers
+   ) {
+
    'use strict';
 
       var _prepareColumns = function(columns, cfg) {
@@ -141,12 +172,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
                      supportDouble.colspan++;
                   }
                   else{
+                     if (supportDouble.title){
+                        if (!supportDouble.className) {
+                           supportDouble.className = '';
+                        }
+                        supportDouble.className += ' controls-DataGridView__th__topRow-has_text';
+                     }
                      rowData.content[1].push(supportDouble);
                      supportDouble = null;
                   }
                   rowData.countRows = 2;
                }
-               else{
+               else {
+                  supportDouble.rowspan = curCol.rowspan = 2;
                   rowData.content[1].push(supportDouble);
                   supportDouble = null;
                }
@@ -154,10 +192,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
                if (!supportUnion){
                   supportUnion = cFunctions.clone(curCol);
                }
-               if (nextCol && (supportUnion.title == nextCol.title)){
+               if (nextCol && (supportUnion.title == nextCol.title)) {
+                  if (curCol.rowspan) {
+                     rowData.content[1].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
+                  }
                   supportUnion.colspan = ++supportUnion.colspan || 2;
                }
-               else{
+               else {
+                  if (curCol.rowspan) {
+                     var topRow = rowData.content[1].pop();
+                     topRow.colspan = supportUnion.colspan;
+                     topRow.value = topRow.title = supportUnion.title;
+                     rowData.content[1].push(topRow);
+                     supportUnion.ignore = true; //Игнорируем колонку в случае, если в шапке 2 строки (от верхней строки установится rowspan).
+                  }
                   rowData.content[0].push(supportUnion);
                   supportUnion = null;
                }
@@ -174,21 +222,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   resultsTpl: TemplateUtil.prepareTemplate(cfg.resultsTpl),
                   showHead: cfg.showHead
                },
-               value,
                column,
+               columnTop,
                headColumns = prepareHeadColumns(cfg);
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[0].length; i++) {
+               columnTop = headData.content[1][i];
                column = headData.content[0][i];
 
-               if (column.headTemplate) {
-                  value = MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
-                     column: column
-                  }));
-               } else {
-                  value = '<div class="controls-DataGridView__th-content">' + (strHelpers.escapeHtml(column.title) || '') + '</div>';
+               if (columnTop) {
+                  if (columnTop.rowspan > 1 && columnTop.headTemplate){ //Если колонка на 2 строки, то отрисуем headTemplate в ней
+                     columnTop.value = getHeadColumnTpl(columnTop);
+                  }
+                  else {
+                     columnTop.value = getDefaultHeadColumnTpl(columnTop.title);
+                  }
                }
-               column.value = value;
+
+               if (column.headTemplate) {
+                  column.value = getHeadColumnTpl(column);
+               } else {
+                  column.value = getDefaultHeadColumnTpl(column.title);
+               }
             }
 
             if (cfg._items && cfg._items.getMetaData().results){
@@ -197,6 +252,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
 
             return headData;
+         },
+         getHeadColumnTpl = function (column){
+            return MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
+               column: column
+            }));
+         },
+         getDefaultHeadColumnTpl = function(title){
+            return MarkupTransformer(headColumnTpl({title: title}));
          },
          prepareResultsData = function (cfg, headData, resultsRecord) {
             var data = [], value, column;
@@ -569,13 +632,27 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
          var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
+             columns = this.getColumns(),
              trs = [],
              cells = [],
-             index, hoveredColumn, cell, resultTr;
+             index, hoveredColumn, cell, colIndex, colValue, colValueText;
 
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
+            colIndex = index + (this.getMultiselect() ? 1 : 0);
+
+            if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
+               colValue = td.find('.controls-DataGridView__columnValue')[0];
+
+               if(colValue) {
+                  colValueText = colValue.innerText;
+
+                  if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
+                     colValue.setAttribute('title', colValueText);
+                  }
+               }
+            }
 
             if (hoveredColumn.columnIndex !== index) {
                this._clearHoveredColumn();

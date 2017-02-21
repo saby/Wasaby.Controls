@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.FieldLink.Link', [
         * то нужно задать опцию {@link owner}, чтобы комманду обработало поле связи с имененем, указанном в {@link owner}.
         * @class SBIS3.CONTROLS.FieldLink.Link
         * @extends SBIS3.CONTROLS.Link
+        * @author Герасимов Александр Максимович
         *
         * @cssModifier controls-FieldLink-Link__filterButton Стилизация ссылки для кнопки фильтров.
         *

@@ -97,9 +97,9 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
          left: 0
       },
 
-      /*
-      * @cfg {Offset} реалиация ITargetRelativePositionAdapter
-      * */
+      /**
+       * @cfg {Offset} реалиация ITargetRelativePositionAdapter
+       */
       _adapter: null,
 
 

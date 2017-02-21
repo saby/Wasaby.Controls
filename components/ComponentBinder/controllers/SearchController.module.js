@@ -29,7 +29,8 @@ define('js!SBIS3.CONTROLS.SearchController',
          _searchReload: true,
          _searchMode: false,
          _searchForm: undefined,
-         _lastRoot: undefined
+         _lastRoot: undefined,
+         _lastDepth: null
       },
 
       _breakSearch: function(withReload) {
@@ -43,8 +44,13 @@ define('js!SBIS3.CONTROLS.SearchController',
       },
 
       _startHierSearch: function(text) {
+         var curFilter = this._options.view.getFilter();
+         if (!this._lastDepth) {
+            this._lastDepth = curFilter['Разворот'] ? curFilter['Разворот'] : 'Без разворота'
+         }
+
          var searchParamName = this._options.searchParamName,
-             filter = cMerge(this._options.view.getFilter(), {
+             filter = cMerge(curFilter, {
                 'Разворот': 'С разворотом',
                 'usePages': 'full'
              }),
@@ -99,11 +105,13 @@ define('js!SBIS3.CONTROLS.SearchController',
             if (self._options.searchMode === 'root') {
                root = view._options.root !== undefined ? view._options.root : null;
                //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-               callProjectionMethod('setEventRaising',[false, true]);
+               // Attention! Achtung! Uwaga! Не трогать аргументы setEventRaising! Иначе перерисовка вызывается до мержа
+               // данных (см. очередность события onDataLoad - оно стреляет до помещения новых данных в items).
+               callProjectionMethod('setEventRaising',[false]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
                view._options._curRoot = root;
-               callProjectionMethod('setEventRaising', [true, true]);
+               callProjectionMethod('setEventRaising', [true]);
             }
          });
 
@@ -143,9 +151,10 @@ define('js!SBIS3.CONTROLS.SearchController',
          var
             view = this._options.view,
             filter = cMerge(view.getFilter(), {
-               'Разворот': 'Без разворота'
+               'Разворот': this._lastDepth
             }),
             self = this;
+         this._lastDepth = null;
          delete(filter[this._options.searchParamName]);
          //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)

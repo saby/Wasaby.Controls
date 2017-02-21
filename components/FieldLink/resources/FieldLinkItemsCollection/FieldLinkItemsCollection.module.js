@@ -68,12 +68,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             FieldLinkItemsCollection.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 deleteAction = false,
-                itemContainer;
+                itemContainer, id;
 
             itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
             if(itemContainer.length) {
                deleteAction = $target.hasClass('controls-FieldLink__item-cross');
-               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', itemContainer.data('id'));
+               id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().getId();
+               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
             }
          },
 
@@ -164,12 +165,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _setPickerContent: function () {
-            var pickerContainer = this._picker.getContainer(),
-                pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth - pickerContainer.outerWidth();
-            pickerContainer.on('click', '.controls-FieldLink__item', this._onClickHandler.bind(this));
-            /* Не очень правильное решение, пикер может сам менять ширину, поэтому устанавливаю минимальну и максимальную */
-            pickerContainer[0].style.maxWidth = pickerWidth + 'px';
-            pickerContainer[0].style.minWidth = pickerWidth + 'px';
+            this._picker.getContainer().on('click', '.controls-FieldLink__item', this._onClickHandler.bind(this));
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
@@ -199,6 +195,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
+                  },
+
+                  onShow: function() {
+                     var pickerContainer = self._picker.getContainer(),
+                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth - (pickerContainer.outerWidth() - pickerContainer.width());
+
+                     pickerContainer[0].style.maxWidth = pickerWidth + 'px';
+                     pickerContainer[0].style.minWidth = pickerWidth + 'px';
                   }
                }
             };

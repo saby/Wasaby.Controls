@@ -1,4 +1,6 @@
-<div class="controls-ListView__item-type-node controls-CompositeView__tileItem js-controls-CompositeView__verticalItemActions controls-CompositeView__verticalItemActions controls-ListView__item js-controls-ListView__item{{?it.className}} {{=it.className}}{{?}}" data-hash="{{=it.projItem.getHash()}}"
+<div class="controls-ListView__item-type-node controls-CompositeView__tileItem {{?!it.tileMode}}controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions{{?}} controls-ListView__item js-controls-ListView__item{{?it.className}} {{=it.className}}{{?}}" data-hash="{{=it.projItem.getHash()}}"
      data-id="{{=it.item.getId()}}">
-   {{=it.folderContent(it)}}
+    <div class="controls-CompositeView__tileContainer">
+        {{=it.folderContent(it)}}
+    </div>
 </div>

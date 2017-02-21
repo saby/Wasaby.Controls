@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FieldLink/resources/FilterPanelChooserFieldLinkTpl',
-   'js!SBIS3.CONTROLS.FieldLink'
+   'js!SBIS3.CONTROLS.FieldLink',
+   'css!SBIS3.CONTROLS.FilterPanelChooser.FieldLink'
 ], function(FilterPanelChooserBase, FieldLinkChooserTemplate) {
 
     'use strict';
@@ -28,7 +29,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
     var FilterPanelChooserFieldLink = FilterPanelChooserBase.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.FieldLink.prototype */ {
         $protected: {
             _options: {
-                _chooserTemplate: FieldLinkChooserTemplate,
+                chooserTemplate: FieldLinkChooserTemplate,
                 className: 'controls-FilterPanelChooser__FieldLink'
             },
             _selectorAction: undefined,

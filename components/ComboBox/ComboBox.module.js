@@ -2,8 +2,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBox",
-   "html!SBIS3.CONTROLS.ComboBox",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
+   "tmpl!SBIS3.CONTROLS.ComboBox",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!WS.Data/Collection/RecordSet",
@@ -13,9 +13,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
    "js!SBIS3.CORE.MarkupTransformer",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    'css!SBIS3.CONTROLS.ComboBox'
 ], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
@@ -83,27 +83,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       itemsProjection = cfg._getRecordsForRedrawSt.apply(this, arguments);
       if (cfg.emptyValue){
-         itemsProjection.unshift(getEmptyProjection(cfg));
+         itemsProjection.unshift(cfg._emptyRecordProjection);
       }
       return itemsProjection;
-   }
-
-   function getEmptyProjection(cfg) {
-      var rawData = {},
-         emptyItemProjection,
-         rs;
-      rawData[cfg.idProperty] = null;
-      rawData[cfg.displayProperty] = 'Не выбрано';
-      rawData.isEmptyValue = true;
-
-      rs = new RecordSet({
-         rawData: [rawData],
-         idProperty: cfg.idProperty
-      });
-
-      emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
-      cfg._emptyRecord = emptyItemProjection.getContents();
-      return emptyItemProjection;
    }
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
@@ -143,6 +125,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
        */
 
       $protected: {
+         //Проблема уйдёт после решения задачи https://inside.tensor.ru/opendoc.html?guid=eae86be7-2eed-4ff7-bd43-feae7b4b5b35&des=
+         _checkClickByTap: true,
          //если поменяли текст до того, как были установлены items. То мы не сможем проставить соответсвующий ключ из набора
          //это надо будет сделать после уставноки items, а этот флаг используем для понимания
          _delayedSettingTextByKey: false,
@@ -152,7 +136,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _isClearing: false,
          _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
-            _emptyRecord: undefined,
+            _emptyRecordProjection: undefined,
             _getRecordsForRedraw: getRecordsForRedrawCB,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
@@ -234,6 +218,27 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
+      },
+
+      _modifyOptions: function(){
+         var cfg = ComboBox.superclass._modifyOptions.apply(this, arguments);
+         if (cfg.emptyValue){
+            var rawData = {},
+               emptyItemProjection,
+               rs;
+            rawData[cfg.idProperty] = null;
+            rawData[cfg.displayProperty] = 'Не выбрано';
+            rawData.isEmptyValue = true;
+
+            rs = new RecordSet({
+               rawData: [rawData],
+               idProperty: cfg.idProperty
+            });
+
+            emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
+            cfg._emptyRecordProjection = emptyItemProjection;
+         }
+         return cfg;
       },
 
       init : function() {
@@ -426,7 +431,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedEmptyRecord: function(){
-         this._drawSelectedItemText(null, this._options._emptyRecord);
+         this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
          this._options.selectedKey = null;
          this.setSelectedIndex(-1);
          this.hidePicker();

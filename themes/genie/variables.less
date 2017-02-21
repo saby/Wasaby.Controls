@@ -34,10 +34,10 @@
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
-@font-basic-name:                         Tahoma, Geneva, sans-serif;
-@font-basic-size:                         13px;
+@font-basic-name:                         'TensorFont', sans-serif;
+@font-basic-size:                         14px;
 @font-popup-size:                         13px;
-@font-folder-size:                        13px;
+@font-folder-size:                        14px;
 @font-basic-line-height:                  20px;
 
 @closeButtonImage:                        url('img/areaCloseButton.png') -30px 0;
@@ -721,6 +721,8 @@
 @menu-item-icon24-left-offset-big:          0px;
 
 @menu-item-text-margin:                     6px 0 6px 0;
+@menu-item-icon-24-margin:                  6px 0 6px 30px;
+@menu-item-icon-32-margin:                  6px 0 6px 38px;
 
 
 
@@ -1725,6 +1727,8 @@
 @tree-view-ellipsis-copyArrow-shadow:           -10px 0 10px 0;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
+@tree-view-ellipsis-copyArrow-right:            -1px;
+@tree-view-firstCell-margin-searchMode:         6px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1868,7 +1872,7 @@
 
 @controls-OperationsPanel-actions-margin:           0 4px;
 
-@controls-OperationsPanel-separator-margin-left:    8px;
+@controls-OperationsPanel-separator-margin-left:    4px;
 @controls-OperationsPanel-separator-margin-right:   0;
 @controls-OperationsPanel-separator-bg:             #CCCCCC;
 @controls-OperationsPanel-separator-width:          1px;
@@ -1902,7 +1906,7 @@
 // --------------- //
 // OperationsMark //
 // --------------- //
-@controls-OperationsMark-checkBox-margin:     0 4px;
+@controls-OperationsMark-checkBox-margin:     4px;
 
 // --------------- //
 // OperationMerge  //
@@ -2210,8 +2214,8 @@
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
-@editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
+@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:             128px; ///*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 

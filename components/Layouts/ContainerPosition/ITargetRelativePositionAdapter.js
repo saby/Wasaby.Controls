@@ -2,12 +2,12 @@ define('js!SBIS3.CONTROLS.ITargetRelativePositionAdapter', [], function () {
    'use strict';
    /**
     * Интерфейс адаптера, осуществляющиего операции c домом(виртуальным домом / произвольной моделью) в контексте позиционирования относительно таргета
-    * @mixin CONTROLS.ITargetRelativePositionAdapter
+    * @mixin SBIS3.CONTROLS.ITargetRelativePositionAdapter
     * @public
     * @author Дубровин Игорь
     */
 
-   /*
+   /**
     * @typedef {String} ContainerName - один из контейнеров учавствующий в позиционировании
     * @variant target - обозначение контейнера выступающего в качестве таргета (относительно какого контейнера позиционируем)
     * @variant targetRelative справа - обозначение позиционируемого контейнера
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ITargetRelativePositionAdapter', [], function () {
     * @variant height - высота
     *
     * @typedef {Object} Coordinates - координаты вида {top: 10, left:10} в зависимости от выбранного способа позиционирования
-   * */
+    */
 
 
    return {

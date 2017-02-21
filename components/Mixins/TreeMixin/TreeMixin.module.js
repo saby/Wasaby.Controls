@@ -37,19 +37,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.idProperty);
       }
 
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
-      projection = new TreeProjection({
-         collection: items,
-         idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
-         parentProperty: cfg.parentProperty,
-         nodeProperty: cfg.nodeProperty,
-         loadedProperty: cfg.parentProperty + '$',
-         unique: true,
-         root: root,
-         rootEnumerable: rootAsNode,
-         filter: filterCallBack,
-         sort: cfg.itemsSortMethod
-      });
+      var
+         filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this),
+         projOptions = {
+            collection: items,
+            idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty,
+            loadedProperty: cfg.parentProperty + '$',
+            unique: true,
+            root: root,
+            rootEnumerable: rootAsNode,
+            filter: filterCallBack,
+            sort: cfg.itemsSortMethod
+         };
+
+
+      if (cfg.loadItemsStrategy == 'append') {
+         projOptions.unique = false;
+      }
+
+      projection = new TreeProjection(projOptions);
 
       return projection;
    },
@@ -1028,6 +1036,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
          return currentRootItems;
+      },
+
+      _afterAddItems: function() {
+         // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
+         if (this._isSearchMode()) {
+            this.redraw();
+         }
       },
 
       before: {
