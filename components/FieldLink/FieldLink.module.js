@@ -203,10 +203,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
                  * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
-                 * - использование компонента {@link SBIS3.CONTROLS.DataGridView}:
-                 * ![](/FieldLink00.png)
-                 * - использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}:
-                 * ![](/FieldLink01.png)
+                 * <ul>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
+                 * </ul>
                  * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
