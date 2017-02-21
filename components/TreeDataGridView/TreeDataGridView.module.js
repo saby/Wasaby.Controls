@@ -527,11 +527,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return config;
       },
 
-      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
+      _canStartEditOnItemClick: function(target) {
          //При клике на треугольник раскрытия папки начинать редактирование записи не нужно
-         if (!$(target).hasClass('js-controls-TreeView__expand')) {
-            TreeDataGridView.superclass._startEditOnItemClick.apply(this, arguments);
-         }
+         return !$(target).hasClass('js-controls-TreeView__expand') && TreeDataGridView.superclass._canStartEditOnItemClick.apply(this, arguments);
       },
 
       _onDragHandler: function (dragObject, e) {
