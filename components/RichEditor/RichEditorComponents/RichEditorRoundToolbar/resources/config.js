@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,
-            pickerClassName: 'controls-RichEditorRoundToolbar__smilesPicker',
+            pickerClassName: 'controls-Menu__hide-menu-header controls-RichEditorRoundToolbar__smilesPicker',
             multiselect: false,
             className: 'controls-IconButton__round-border',
             handlers: {
