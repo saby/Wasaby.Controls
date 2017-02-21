@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
         * @extends $ws.proto.CompoundControl
         */
 
-       var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FilterHistory.prototype*/ {
+       var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.AdditionalFilterParams.prototype */ {
           _dotTplFn : dotTpl,
           $protected: {
              _options: {

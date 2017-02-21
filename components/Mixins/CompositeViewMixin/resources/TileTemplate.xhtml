@@ -1,5 +1,14 @@
-<div class="controls-CompositeView__tileItem controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions controls-ListView__item js-controls-ListView__item{{?it.className}} {{=it.className}}{{?}}"
+<div class="controls-CompositeView__tileItem {{?!it.tileMode}}controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions{{?}} controls-ListView__item js-controls-ListView__item{{?it.className}} {{=it.className}}{{?}}"
      data-hash="{{=it.projItem.getHash()}}"
-     data-id="{{=it.item.getId()}}">
-   {{=it.tileContent(it)}}
+     data-id="{{=it.item.getId()}}"
+     {{var style = '';}}
+     {{?it.viewMode == 'tile' && it.tileMode == 'dynamic'}}
+     {{var origWidth = it.item.get(it.widthProperty); }}
+     {{var width = origWidth > it.maxWidth ? it.maxWidth : (origWidth < it.minWidth ? it.minWidth : origWidth);}}
+     {{style = 'max-width: ' + width + 'px;' + ' flex-basis: ' + (width + it.minWidth) / 2 + 'px;';}}
+     {{?}}
+     style="{{=style}}">
+    <div class="controls-CompositeView__tileContainer">
+        {{=it.tileContent(it)}}
+    </div>
 </div>

@@ -941,7 +941,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                }
 
             }
-            this._toggleEmptyData(!(data.records && data.records.length));
+            this._toggleEmptyData(this._needShowEmptyData(data.records));
 
          }
          if (notRevive) {
@@ -952,6 +952,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._reviveItems();
          }
          this._container.addClass('controls-ListView__dataLoaded');
+      },
+
+      _needShowEmptyData: function(items) {
+         return !(items && items.length);
       },
 
       _redrawItem: function(item) {
@@ -1148,8 +1152,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   this._revivePackageParams.light = false;
                }
             }
+            this._afterAddItems();
          }
       },
+
+      _afterAddItems: function() {},
 
       _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
          var
@@ -1859,7 +1866,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       redrawItem: function(item, projItem) {
          if (!this._isSlowDrawing(this._options.easyGroup)) {
             projItem = projItem || this._getItemProjectionByItemId(item.getId());
-            this._redrawItem(projItem);
+            //Если элемента в проекции нет, то и не надо перерисовывать запись
+            if (projItem) {
+               this._redrawItem(projItem);
+            }
          }
          else {
             this._oldRedrawItemInner(item, projItem);
@@ -2096,7 +2106,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
 
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @deprecated
        */
       setKeyField: function(keyField) {
@@ -2105,7 +2115,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @example
        * <pre class="brush:xml">
        *     <option name="idProperty">Идентификатор</option>
@@ -2120,7 +2130,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @deprecated
        */
       setDisplayField: function(displayField) {
@@ -2129,7 +2139,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @example
        * <pre class="brush:xml">
        *     <option name="displayProperty">Название</option>

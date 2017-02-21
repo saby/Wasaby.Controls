@@ -1,0 +1,46 @@
+.controls-CompositeView {
+   &.controls-CompositeView-tile__dynamic, &.controls-CompositeView-tile__static {
+      .controls-CompositeView__foldersContainer {
+         width: 100%;
+         .flexbox();
+         .flex-wrap(wrap);
+      }
+   }
+   &.controls-CompositeView-tile__static:not(.controls-CompositeView-tile__static-smallImage) {
+      .controls-ListView__item-type-node {
+         height: 40px;
+
+         .controls-CompositeView__tileContainer {
+            .inline-flexbox();
+
+            .controls-ListView__itemCheckBox {
+               top: 10px
+            }
+            .controls-CompositeView__folderIcon {
+               margin: 4px 0 4px 3px;
+            }
+            .controls-CompositeView__tileTitle {
+               .text-overflow();
+               width: 100%;
+               line-height: 34px;
+               font-weight: normal;
+               font-size: 18px;
+               color: #000;
+               border-top: none;
+            }
+         }
+
+         &:not(.controls-ListView__item__selected) {
+            border-color: transparent;
+         }
+         &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
+            background-color: #E1ECF6 !important;;
+         }
+      }
+   }
+   &.controls-CompositeView-tile__dynamic {
+      .controls-ListView__item-type-node {
+         height: auto;
+      }
+   }
+}

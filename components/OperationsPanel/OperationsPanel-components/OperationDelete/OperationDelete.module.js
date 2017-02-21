@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
     *
     * SBIS3.CONTROLS.OperationDelete
     * @class SBIS3.CONTROLS.OperationDelete
-    * @extends SBIS3.CONTROLS.Link
+    * @extends SBIS3.CONTROLS.IconButton
     * @author Сухоручкин Андрей Сергеевич
     * @public
     */

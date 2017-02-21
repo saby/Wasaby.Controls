@@ -1,0 +1,57 @@
+.MyTileViewController {
+    width: 50%;
+    overflow: visible;
+    margin-left: 50px;
+}
+
+img {
+    height: 100%;
+}
+
+/*COMPOSITE_VIEW*/
+.MyCompositeView1 .controls-CompositeView__itemsContainer .controls-ListView__item {
+    flex-basis: 200px;
+}
+
+.MyCompositeView2 .controls-CompositeView__itemsContainer .controls-ListView__item {
+    flex-basis: 308px;
+}
+
+.MyCompositeView2 .controls-CompositeView__itemsContainer .controls-ListView__item .controls-CompositeView__tileImg-container {
+
+}
+
+.MyCompositeView3 .controls-CompositeView__itemsContainer .controls-ListView__item {
+    height: 150px;
+}
+
+/*TREE_COMPOSITE_VIEW*/
+.MyTreeCompositeView1 .controls-CompositeView__itemsContainer .controls-CompositeView__tileItem {
+    flex-basis: 200px;
+}
+
+.MyTreeCompositeView1 .controls-CompositeView__itemsContainer .controls-CompositeView__tileItem .controls-CompositeView__tileImg-container {
+    width: 70%;
+}
+
+.MyTreeCompositeView1 .controls-CompositeView__itemsContainer .controls-ListView__item-type-node {
+    flex-basis: 300px;
+}
+
+.MyTreeCompositeView1 .controls-CompositeView__itemsContainer .controls-ListView__item-type-node .controls-CompositeView__tileImg-container {
+    width: 70%;
+}
+
+.MyTreeCompositeView2 .controls-CompositeView__itemsContainer .controls-ListView__item {
+    flex-basis: 200px;
+}
+
+.MyTreeCompositeView3 .controls-CompositeView__itemsContainer .controls-ListView__item {
+    height: 150px;
+}
+
+.MyTreeCompositeView3 .controls-CompositeView__itemsContainer .controls-ListView__item.controls-ListView__item-type-node {
+    flex-basis: 200px;
+}
+
+
