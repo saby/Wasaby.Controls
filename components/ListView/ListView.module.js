@@ -913,6 +913,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
                case 'contextmenu':
                   this._contextMenuHandler(e);
+                  /* Выставляем этот флаг, чтобы не было имитации клика (см. метод _onActionHandler в Control.module.js).
+                     При срабатывании этого события, событие click не происходит.  */
+                  this._clickState.detected = true;
                   break;
                case 'mousedown':
                   this._mouseDownHandler(e);
