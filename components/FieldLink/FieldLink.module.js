@@ -189,8 +189,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @variant node выбираются только узлы
                  * @variant leaf выбираются только листья
                  * @variant all выбираются все записи
-                 *
-                 * @typedef {Object} Dictionaries
+                 */
+                /** @typedef {Object} Dictionaries
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
