@@ -81,6 +81,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                   while (i < content.childNodes.length) {
                      var
                         className = getAttribute(content.childNodes[i], 'class');
+                     //3 if-блока для поддержки разных версий декорированных ссылок
                      if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink') {
                         replaceToHref(content, i);
                      } else if (className == 'LinkDecorator__decoratedLink'){
@@ -117,7 +118,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             },
 
             //Поиск тега a с классом LinkDecorator__linkWrap внутри блока блока с номером index,
-            //забена блока с номером index на href найденной ссылки
+            //замена блока с номером index на href найденной ссылки
             replaceWrapToHref = function(content, index){
                var
                   href,
