@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
                 var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
                 this.subscribeTo(historyController, 'onHistoryUpdate', function(event, history) {
-                   this.setItems(history.clone());
+                   this.setItems(history.clone(true));
                 }.bind(this));
 
                 this.setItems(historyController.getHistory());
