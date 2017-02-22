@@ -118,8 +118,8 @@ define('js!SBIS3.CONTROLS.MergeAction', [
          return MergeAction.superclass._modifyOptions.apply(this, arguments);
       },
 
-      _notifyOnExecuted: function (meta) {
-         this._notify('onExecuted', meta)
+      _notifyOnExecuted: function (meta, result) {
+         this._notify('onExecuted', result)
       },
       /**
        * Устанавливает источник данных для окна объединения записей.
