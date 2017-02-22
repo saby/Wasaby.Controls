@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
-   "js!SBIS3.CONTROLS.Utils.Query",
+   "js!WS.Data/Query/Query",
    "js!SBIS3.CORE.MarkupTransformer",
    "js!WS.Data/Collection/ObservableList",
    "js!WS.Data/Display/Display",
