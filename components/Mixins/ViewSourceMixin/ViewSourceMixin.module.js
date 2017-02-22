@@ -70,7 +70,12 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          /* Подготавливаем фильтр */
          queryFilter = cMerge(filter || {}, historyFilter);
 
-         queryDef = Query(source, [queryFilter, offset, limit, sorting]).addErrback(function(e) {
+         queryDef = Query(source, [
+            queryFilter,
+            sorting,
+            offset !== undefined ? offset : 0,
+            limit !== undefined ? limit : 25
+         ]).addErrback(function(e) {
             return e
          });
 

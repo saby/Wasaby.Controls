@@ -13,8 +13,8 @@ define('js!SBIS3.CONTROLS.Utils.Query', [
       var query = new Query();
 
       query.where(filter || {})
-           .offset(offset !== undefined ? offset : 0)
-           .limit(limit !== undefined ? limit : 25)
+           .offset(offset)
+           .limit(limit)
            .orderBy(sorting || {});
 
       return query;

@@ -211,7 +211,11 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           var options = this.getComponentOptions(opt),
               dataSource = options.dataSource;
 
-          return Query(dataSource, [options.filter || {}]);
+          return Query(dataSource, [
+             options.filter || {},
+             {},
+             0,
+             25]);
        };
 
        return SelectorController;
