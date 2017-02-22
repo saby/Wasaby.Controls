@@ -116,6 +116,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                content.childNodes[index] = node;
             },
 
+            //Поиск тега a с классом LinkDecorator__linkWrap внутри блока блока с номером index,
+            //забена блока с номером index на href найденной ссылки
             replaceWrapToHref = function(content, index){
                var
                   href,
