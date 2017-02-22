@@ -2,12 +2,17 @@
    <ws:if data="{{ showPrevArrow }}">
       <span class="controls-DateRangeSlider__prev{{ type === 'link' ? ' icon-16 icon-ViewBack icon-primary action-hover' : ''}}"></span>
    </ws:if>
-   <ws:if data="{{ type == 'normal' }}">
-      <span class="controls-DateRangeSlider__value">{{'&nbsp;'|sanitize}}</span>
-   </ws:if>
-   <ws:else>
-      <ws:SBIS3.CONTROLS.Link name="Link"/>
-   </ws:else>
+   <span class="controls-DateRangeSlider__value-wrapper">
+      <ws:if data="{{ showLock }}">
+         <span class="controls-DateRangeSlider__lock controls-DateRangeSlider__lock-locked icon-16 icon-Lock icon-primary"></span>
+      </ws:if>
+      <ws:if data="{{ type == 'normal' }}">
+         <span class="controls-DateRangeSlider__value">{{'&nbsp;'|sanitize}}</span>
+      </ws:if>
+      <ws:else>
+         <ws:SBIS3.CONTROLS.Link name="Link"/>
+      </ws:else>
+   </span>
    <ws:if data="{{ showNextArrow }}">
       <span class="controls-DateRangeSlider__next{{ type === 'link' ? ' icon-16 icon-View icon-primary action-hover' : ''}}"></span>
    </ws:if>

@@ -37,8 +37,15 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             // Пока что не уверен стоит ли выпиливать ее в будущих версиях.
             // Этот функционал скорее всего будет пересен с миксин DateRangeChoosePickerMixin, и тогда опция будет
             // полезна что бы можно было отключить это поведдение по умолчанию для некоторых компонентов.
-            autoValue: true
-         }
+            autoValue: true,
+
+            /**
+             * @cfg {Boolean} включает или отключает отображение замка.
+             */
+            showLock: false
+         },
+
+         _locked: true
       },
 
       $constructor: function () {
@@ -176,6 +183,67 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       showPicker: function () {
          if (this.isEnabled()) {
             DateRangeSlider.superclass.showPicker.apply(this, arguments);
+         }
+      },
+
+      _onClickHandler: function(event) {
+         var target = $(event.target);
+         DateRangeSlider.superclass._onClickHandler.apply(this, arguments);
+         if (this.isEnabled()) {
+            if (target.hasClass('controls-DateRangeSlider__lock')) {
+               this._onLockBtnClick();
+            }
+         }
+      },
+
+      _onLockBtnClick: function () {
+         this.toggleLocked();
+      },
+
+      isLocked: function () {
+         return this._locked;
+      },
+      setLocked: function (value) {
+         var btnContainer;
+         if (value === this._locked) {
+            return;
+         }
+         this._locked = value;
+         if (this.isShowLock()) {
+            btnContainer = this.getContainer().find('.controls-DateRangeSlider__lock');
+            this._updateLockButtonClasses(btnContainer);
+            this._notify('onLockedChanged', value);
+         }
+      },
+      toggleLocked: function () {
+         this.setLocked(!this.isLocked());
+      },
+
+      isShowLock: function () {
+         return this._options.showLock;
+      },
+      setShowLock: function (value) {
+         var btnContainer;
+         if (value === this._options.showLock) {
+            return;
+         }
+         this._options.showLock = value;
+         if (value) {
+            btnContainer = $('<span class="controls-DateRangeSlider__lock icon-16"></span>');
+            this._updateLockButtonClasses(btnContainer);
+            this.getContainer().find('.controls-DateRangeSlider__value-wrapper').prepend(btnContainer);
+         } else {
+            this.getContainer().find('.controls-DateRangeSlider__lock').remove();
+         }
+      },
+
+      _updateLockButtonClasses: function (btnContainer) {
+         if (this._locked) {
+            btnContainer.removeClass('icon-Unlock icon-disabled');
+            btnContainer.addClass('controls-DateRangeSlider__lock-locked icon-Lock icon-primary');
+         } else {
+            btnContainer.removeClass('.controls-DateRangeSlider__lock-locked icon-Lock icon-primary');
+            btnContainer.addClass('icon-Unlock icon-disabled');
          }
       }
    });
