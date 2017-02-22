@@ -8,7 +8,7 @@ var global = (0, eval)('this'),
     requirejs = require('requirejs'),
     unit = require('./unit'),
     report = unit.report;
-
+global.isMochaRunned = true;
 /**
  * Запускает тестирование
  * @param {Object} config Конфигурация тестирования
