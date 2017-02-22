@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             key: key,
             item: model,
             level: item.getLevel(),
-            padding: cfg._paddingSize * item.getLevel() + cfg._originallPadding,
             footerTpl: cfg.folderFooterTpl,
             multiselect: cfg.multiselect,
             pagerOptions: cfg._getFolderPagerOptions(cfg, item, key)

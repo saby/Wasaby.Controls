@@ -45,7 +45,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
             parentProperty: cfg.parentProperty,
             nodeProperty: cfg.nodeProperty,
-            loadedProperty: cfg.parentProperty + '$',
+            // todo временное решение, т.к. с бизнес-логики прилетает инвертированное значение признака загруженности ветки
+            loadedProperty: '!' + cfg.parentProperty + '$',
             unique: true,
             root: root,
             rootEnumerable: rootAsNode,
@@ -309,8 +310,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.hierField = cfg.hierField;
       tplOptions.parentProperty = cfg.parentProperty;
       tplOptions.nodeProperty = cfg.nodeProperty;
-      tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
-      tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hasNodes = cfg.hasNodes;
       tplOptions.hierarchy = new HierarchyRelation({
@@ -423,8 +422,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getSearchCfgTv: getSearchCfg,
             _getSearchCfg: getSearchCfg,
             _searchFolders: {},
-            _paddingSize: 16,
-            _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _curRoot: null,
