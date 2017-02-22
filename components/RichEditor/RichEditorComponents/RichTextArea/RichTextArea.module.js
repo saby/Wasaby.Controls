@@ -23,10 +23,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
+   'Core/EventBus',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
    'css!SBIS3.CONTROLS.RichTextArea'
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
@@ -171,7 +172,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _clipboardText: undefined,
             _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
             _imageOptionsPanel: undefined,
-            _lastReview: undefined
+            _lastReview: undefined,
+            _fromTouch: false
          },
 
          _modifyOptions: function(options) {
@@ -1309,6 +1311,22 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('NodeChange', function(e) {
                self._notify('onNodeChange', e)
             });
+            //todo: delete this
+            editor.on('focusin', function(e) {
+               if (self._fromTouch){
+                  EventBus.globalChannel().notify('MobileInputFocus');
+               }
+            });
+            editor.on('focusout', function(e) {
+               if (self._fromTouch){
+                  EventBus.globalChannel().notify('MobileInputFocusOut');
+                  self._fromTouch = false;
+               }
+            });
+            editor.on('touchstart', function(e) {
+               self._fromTouch = true;
+            });
+
          },
 
          _showImageOptionsPanel: function(target) {
