@@ -2982,7 +2982,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._getItemsProjection()) {
                   queryFilter = $ws.core.clone(filter);
                   var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
-                  $ws.core.merge(queryFilter, addParams);
+                  $ws.core.merge(queryFilter, addParams.filter);
                }
             }
             query.where(queryFilter)
