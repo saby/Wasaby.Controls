@@ -1631,7 +1631,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return;
          }
 
-         return Query(this._dataSource, [filter, sorting, offset, limit]).addCallback((function(dataSet) {
+         var query = this._getQueryForCall(filter, sorting, offset, limit);
+
+         return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(this._options.idProperty);
             }
