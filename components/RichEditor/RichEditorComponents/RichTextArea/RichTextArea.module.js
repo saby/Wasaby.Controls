@@ -320,6 +320,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          insertHtml: function(html) {
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
+                  html = this._prepareContent(html);
                   this._tinyEditor.insertContent(html);
                }.bind(this));
             }
