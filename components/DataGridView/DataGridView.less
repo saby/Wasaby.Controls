@@ -28,13 +28,9 @@
           .controls-DataGridView__td {
             border-top-color: @data-grid-edge-cell-separator-color;
           }
-        }
-        &.ws-sticky-header__table {
-          &.ws-sticky-header__fixed {
-            .controls-DataGridView__tr:first-child {
-              .controls-DataGridView__td {
-                border-top-color: transparent;
-              }
+          &.controls-GroupBy {
+            .controls-DataGridView__td {
+              border-top: none;
             }
           }
         }
@@ -401,4 +397,25 @@
       padding-bottom: 7px;
       background-clip: content-box;
    }
+}
+
+.ws-sticky-header__header-container {
+  .controls-DataGridView {
+    &.controls-DataGridView__hasSeparator {
+      &.controls-ListView__dataLoaded {
+        .controls-DataGridView__table {
+          border-width: 0;
+        }
+      }
+    }
+  }
+}
+.ws-sticky-header__wrapper-scrolled {
+  .ws-sticky-header__header-container {
+    .controls-DataGridView.controls-DataGridView__hasSeparator.controls-ListView__dataLoaded {
+       .controls-DataGridView__table {
+          border-width: 0 0 1px 0;
+       }
+    }
+  }
 }
