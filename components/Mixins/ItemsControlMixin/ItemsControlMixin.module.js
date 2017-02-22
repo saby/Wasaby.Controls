@@ -1641,6 +1641,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }).bind(this));
       },
 
+      _getQueryForCall: function(filter, sorting, offset, limit){
+         var query = new Query();
+         query.where(filter)
+            .offset(offset)
+            .limit(limit)
+            .orderBy(sorting);
+         return query;
+      },
+
       _toggleIndicator:function(){
          /*Method must be implemented*/
       },
