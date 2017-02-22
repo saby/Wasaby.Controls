@@ -85,6 +85,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                         replaceToHref(content, i);
                      } else if (className == 'LinkDecorator__decoratedLink'){
                         content.childNodes.splice(i, 1);
+                     } else if (className == 'LinkDecorator__wrap'){
+                        replaceWrapToHref(content, i);
                      } else {
                         replaceDecoratedLinks(content.childNodes[i]);
                      }
@@ -111,6 +113,26 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                var
                   href = getAttribute(content.childNodes[index], 'href'),
                   node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
+               content.childNodes[index] = node;
+            },
+
+            replaceWrapToHref = function(content, index){
+               var
+                  href,
+                  node,
+                  linkNode,
+                  i = 0;
+               while (i < content.childNodes[index].childNodes.length) {
+                  var
+                     className = getAttribute(content.childNodes[index].childNodes[i], 'class');
+                  if (className == 'LinkDecorator__linkWrap'){
+                     linkNode = content.childNodes[index].childNodes[i];
+                     break;
+                  }
+                  i++;
+               }
+               href = getAttribute(linkNode, 'href');
+               node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
                content.childNodes[index] = node;
             };
 
