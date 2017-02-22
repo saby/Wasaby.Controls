@@ -336,9 +336,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * Начало перемещения.
          * @param {Event} e Браузерное событие.
          */
-        _beginDrag: function(e) {
+        _beginDrag: function (e) {
             if (this._options.itemsDragNDrop) {
-                DragObject.reset();
+                DragObject.setDragging(true);
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     $('body').addClass('dragdropBody ws-unSelectable');
@@ -347,6 +347,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
                     }
+                } else {
+                    DragObject.reset();
                 }
             }
 
