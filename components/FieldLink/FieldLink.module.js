@@ -968,10 +968,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
+                /* Если поле связи отрисовывается скрытым, необходимо сбросить запомненную ширину,
+                   чтобы при отображении пересчитались размеры. */
+                if(!this.isVisibleWithParents()) {
+                   this._lastFieldLinkWidth = null;
+                }
                 linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
-             });
+             }.bind(this));
           },
 
           _drawSelectedItems: function(keysArr) {
