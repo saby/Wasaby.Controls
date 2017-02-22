@@ -1,6 +1,6 @@
 @import "../online/theme";
 
-@globalFontFamily :                       'TensorFont Regular', 'TensorFont';
+@globalFontFamily :                       'TensorFont', sans-serif;
 @carry-big-height:                        60px;
 @text-box-height-carryFont:               42px;
 @float-area-top-offset:                   10px;
@@ -252,7 +252,10 @@
       .controls-MenuItem {
          min-height: @carry-big-height;
          max-height: 2 * @carry-big-height;
-         line-height: @carry-big-height;
+
+         .controls-MenuItem__text {
+            line-height: @carry-big-height;
+         }
       }
    }
 }
@@ -266,7 +269,6 @@
          .controls-MenuItem__content {
             .controls-MenuItem__text {
                margin: 0 0 0 40px;
-               width: 100%;
             }
 
             .icon-size {

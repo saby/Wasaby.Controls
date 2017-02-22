@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "html!SBIS3.CONTROLS.HighCharts",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
-   "browser!cdn!/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
@@ -830,6 +830,9 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
 
       _drawHighChart : function() {
          var plotCont = $('.ws-HighCharts__plot', this.getContainer().get(0));
+         if (this._chartObj) {
+            this._chartObj.destroy();
+         }
          plotCont.highcharts(this._options.highChartOptions);
          this._chartObj = plotCont.highcharts();
       },
@@ -1175,6 +1178,9 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
          if (this._isRefresh) {
             this.getLinkedContext().unsubscribe('onFieldChange', this._ctxFieldChangeHandler);
             this.getLinkedContext().unsubscribe('onDataBind', this._ctxDataBindHandler);
+         }
+         if (this._chartObj) {
+            this._chartObj.destroy();
          }
          dcHelpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);

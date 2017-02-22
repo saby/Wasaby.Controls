@@ -14,11 +14,12 @@ define('js!SBIS3.CONTROLS.FilterText',
         * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
         * @class SBIS3.CONTROLS.FilterText
         * @extends SBIS3.CONTROLS.ButtonBase
+        * @author Герасимов Александр Максимович
         * @control
         * @public
         */
 
-       var FilterText = ButtonBase.extend([ITextValue], {
+       var FilterText = ButtonBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.FilterText.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {

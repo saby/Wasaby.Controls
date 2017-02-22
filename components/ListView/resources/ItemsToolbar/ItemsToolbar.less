@@ -1,5 +1,4 @@
 @bottomStyle-items-toolbar-height:        30px;
-@bottomStyle-items-toolbar-margin-bottom: -30px;
 @bottomStyle-items-toolbar-border-color:  #F3F3F3;
 
 .controls-ListView {
@@ -56,7 +55,7 @@
             }
          }
       }
-      .controls-Button__closeButton {
+      .controls-Button__closeButton.controls-IconButton {
          display: inline-block;
          margin-right: 0;
       }
@@ -71,6 +70,11 @@
             }
          }
 
+      }
+
+
+      &.controls-ItemsToolbar__hidden {
+         visibility: hidden;
       }
    }
 
@@ -125,17 +129,16 @@
          &.controls-ItemsToolbar__edit {
             background-color: @list-view-items-toolbar-locked-bg;
             &:before {
-               background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 -30px;
+               background: @items-toolbar-bottom-style-background no-repeat 0 -30px;
             }
          }
-         bottom: @bottomStyle-items-toolbar-margin-bottom;
          height: @bottomStyle-items-toolbar-height - 1;
          border-bottom: 1px solid @bottomStyle-items-toolbar-border-color;
          &:before {
             content: '';
             position: absolute;
             display: block;
-            background: url('img/items-toolbar-bottom-style-background.png') no-repeat 0 0;
+            background: @items-toolbar-bottom-style-background no-repeat 0 0;
             width: 24px;
             height: @bottomStyle-items-toolbar-height;
             left: -24px;
@@ -221,6 +224,12 @@
                   top: 50%;
                   margin-top: @touch-mode-items-toolbar-icon-margin-top;
                }
+            }
+         }
+
+         &.controls-ItemsToolbar__edit {
+            .controls-ItemsToolbar__container {
+               background-color: @list-view-items-toolbar-locked-bg;
             }
          }
 

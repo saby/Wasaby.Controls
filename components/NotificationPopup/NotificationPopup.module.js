@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.NotificationPopup', [
       'js!SBIS3.CONTROLS.InformationPopup',
       'html!SBIS3.CONTROLS.NotificationPopup/resources/template',
-      'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl'
+      'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl',
+      'css!SBIS3.CONTROLS.NotificationPopup'
    ],
 
    /**
@@ -68,11 +69,11 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                 * @see setCaption
                 */
                caption: null,
-               /*
+               /**
                 * @noShow
                 */
                template: template,
-               /*
+               /**
                 * @noShow
                 */
                activableByClick: false

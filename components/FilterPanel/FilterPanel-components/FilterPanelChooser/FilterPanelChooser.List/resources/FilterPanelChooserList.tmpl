@@ -1,17 +1,6 @@
-<ws:SBIS3.CONTROLS.ListView name="controls-FilterPanelChooser__ListView"
-                            className="controls-ListView__withoutMarker"
-                            displayProperty="{{ displayProperty }}"
-                            idProperty="{{ idProperty }}"
-                            items="{{ items }}"
-                            showHead="{{ false }}"
-                            multiselect="{{ true }}"
-                            itemsDragNDrop="{{ false }}"
-                            itemsActions="{{ [] }}"
-                            _getRecordsForRedraw="{{ _getRecordsForRedraw }}"
-                            _showFullList="{{ false }}"
-                            itemsSortMethod="{{ _itemsSortMethod }}"
-                            selectedKeys="{{ value || [] }}">
+<ws:SBIS3.CONTROLS.ListView scope="{{ _preparedProperties }}">
+    <!-- Переопределяем шаблон, чтобы в itemContentTpl прокинуть опцию countField, другого способа это сделать не существует-->
     <ws:itemContentTpl>
-        <ws:partial template="{{ _itemTpl }}" scope="{{ itemContentTpl }}" countField="{{ countField }}" />
+        <ws:partial template="{{ _itemContentTpl }}" scope="{{ itemContentTpl }}" countField="{{ countField }}" />
     </ws:itemContentTpl>
 </ws:SBIS3.CONTROLS.ListView>

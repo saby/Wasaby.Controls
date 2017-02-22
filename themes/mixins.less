@@ -117,13 +117,13 @@
   background: -o-linear-gradient(top, @startColor, @endColor);
 }
 
-.horizontal-gradient(@startColor: #eee, @endColor: white) {
+.horizontal-gradient(@startColor: #eee, @endColor: white, @direction: left) {
   background-color: @startColor;
-  background-image: -webkit-gradient(linear, left top, right top, from(@startColor), to(@endColor));
-  background-image: -webkit-linear-gradient(left, @startColor, @endColor);
-  background-image: -moz-linear-gradient(left, @startColor, @endColor);
-  background-image: -ms-linear-gradient(left, @startColor, @endColor);
-  background-image: -o-linear-gradient(left, @startColor, @endColor);
+  background-image: -webkit-gradient(linear, @direction top, right top, from(@startColor), to(@endColor));
+  background-image: -webkit-linear-gradient(@direction, @startColor, @endColor);
+  background-image: -moz-linear-gradient(@direction, @startColor, @endColor);
+  background-image: -ms-linear-gradient(@direction, @startColor, @endColor);
+  background-image: -o-linear-gradient(@direction, @startColor, @endColor);
 }
 
 .animation(@name, @duration: 300ms, @delay: 0, @ease: ease) {
@@ -202,7 +202,7 @@
 }
 
 .marker(@position: left top, @image: 'img/rowSelect.png') {
-  background-image: url(@image);
+  background-image: url("@{themeName}/@{image}");
   background-position: @position;
   background-repeat: repeat-y;
 }
@@ -219,6 +219,95 @@
   display: -ms-flexbox;
   display: flex;
 }
+.flex-direction(@direction: row){
+  -webkit-flex-direction: @direction;
+  -moz-flex-direction: @direction;
+  -ms-flex-direction: @direction;
+  flex-direction: @direction;
+}
+.flex-wrap(@wrap) {
+  flex-wrap: @wrap;
+  -ms-flex-wrap: @wrap;
+  -webkit-flex-wrap: @wrap;
+}
+.flex-shrink(@shrink: 1) {
+   -webkit-flex-shrink: @shrink;
+   -ms-flex-negative: @shrink; //ie10
+   -ms-flex-shrink: @shrink;
+   flex-shrink: @shrink;
+}
+// Cross-axis Alignment
+// - applies to: flex items
+// auto | flex-start | flex-end | center | baseline | stretch
+.align-self(@align: auto) {
+  -webkit-align-self: @align;
+      -ms-align-self: @align;
+          align-self: @align;
+}
+// Flex Direction and Wrap
+// - applies to: flex containers
+// <flex-direction> || <flex-wrap>
+.flex-flow(@flow) {
+  -webkit-flex-flow: @flow;
+      -ms-flex-flow: @flow;
+          flex-flow: @flow;
+}
+// Flex basis
+// - the initial main size of the flex item
+// - applies to: flex itemsnitial main size of the flex item
+// <width>
+.flex-basis(@width: auto) {
+  -webkit-flex-basis: @width;
+      -ms-flex-basis: @width;
+          flex-basis: @width;
+}
+// Display Order
+// - applies to: flex items
+// <integer>
+.flex-order(@order: 0) {
+  -webkit-order: @order;
+      -ms-order: @order;
+          order: @order;
+}
+.flex-grow(@grow: 0) {
+   -webkit-flex-grow: @grow;
+   -ms-flex-positive: @grow;//ie10
+   -ms-flex-grow: @grow;
+   flex-grow: @grow;
+}
+// Packing Flex Lines
+// - applies to: multi-line flex containers
+// flex-start | flex-end | center | space-between | space-around | stretch
+.align-content(@align: stretch) {
+  -webkit-align-content: @align;
+      -ms-align-content: @align;
+          align-content: @align;
+}
+
+.justify-content(@justify: flex-start) {
+   -webkit-justify-content: @justify;
+   -ms-flex-pack: @justify; //ie 10
+   -ms-justify-content: @justify;
+   justify-content: @justify;
+   //ie 10 fix space-between
+   & when (@justify = space-between) {
+      -ms-flex-pack: justify;
+   }
+}
+.align-items(@align: stretch) {
+   -webkit-align-items: @align;
+   -ms-flex-align: @align; //ie10
+   -ms-align-items: @align;
+   align-items: @align;
+}
+
+.order(@val) {
+  -webkit-box-ordinal-group: @val;
+  -moz-box-ordinal-group: @val;
+  -ms-flex-order: @val;
+  -webkit-order: @val;
+  order: @val;
+}
 //Решаем проблему лишних отступов между inline-block элементами лежащими друг за другом.
 //ВАЖНО: Если не задано значение @child-font-size то у всех дочерних элементов блока, с данным стилем, должен быть указан собственный font-size.
 .inline-block-bug-fix(@child-font-size: 0) {
@@ -233,16 +322,16 @@
 
 .ws-header-mixin(@padding-left, @padding-right, @font, @color) {
   display: inline-block;
-  padding-left: @padding-left;
-  padding-right: @padding-right;
-  font: @font;
-  color: @color;
+  padding-left: @padding-left !important;
+  padding-right: @padding-right !important;
+  font: @font !important;
+  color: @color !important;
 }
 
 .ws-header-content-mixin(@content, @font, @color) {
-  content: @content;
-  font: @font;
-  color: @color;
+  content: @content !important;
+  font: @font !important;
+  color: @color !important;
 }
 .link-hover-mixin(@textColor, @iconColor, @textSelector) {
   &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {

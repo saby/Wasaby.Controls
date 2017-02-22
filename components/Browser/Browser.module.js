@@ -2,9 +2,12 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
+   'js!SBIS3.CONTROLS.ColumnsController',
+   'Core/core-merge',
    'html!SBIS3.CONTROLS.Browser/resources/contentTpl',
-   'Core/core-instance'
-], function(CompoundControl, dotTplFn, ComponentBinder, contentTpl, cInstance){
+   'Core/core-instance',
+   'css!SBIS3.CONTROLS.Browser'
+], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, contentTpl, cInstance){
    'use strict';
 
    /**
@@ -43,6 +46,18 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @param {SBIS3.CONTROLS.Record} item Редактируемая запись
        * @example
        */
+      /**
+       * @typedef {Object} СolumnsConfigObject
+       * @property {WS.Data/Collection/RecordSet} columns Рекордсет с полным списком возможных колонок табличного представления.
+       * Содержит следующие обязательные поля:
+       * <ol>
+       *    <li><b>id</b> - идентификатор колонки.</li>
+       *    <li><b>title</b> - описание колонки.</li>
+       *    <li><b>fixed</b> - признак фиксированности колонки. Фиксированная колонка отображается вне зависимости от присутсвия её в списке колонок для отображения.</li>
+       *    <li><b>columnConfig</b> - конфигурация колонки. Данный {Object} используется в связанном табличном представлении в качестве настроек колонки.</li>
+       * </ol>
+       * @property {Array} selectedColumns Массив идентификаторов колонок, используемых в представлении данных.
+       */
       _dotTplFn : dotTplFn,
       $protected: {
          _view: null,
@@ -52,7 +67,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          _operationsPanel: null,
          _filterButton: null,
          _fastDataFilter: null,
-
+         _columnsController: null,
+         _columnsEditor: null,
          _hierMode : false,
          _componentBinder : null,
          _options: {
@@ -78,6 +94,15 @@ define('js!SBIS3.CONTROLS.Browser', [
              * </pre>
              */
             searchMode: 'current',
+            /**
+             * @cfg {Boolean} При неудачной попытке поиска (нет результатов), изменяет раскладку
+             * и пробует поискать в другой раскладке
+             * @example
+             * <pre>
+             *     <option name="keyboardLayoutRevert">false</option>
+             * </pre>
+             */
+            keyboardLayoutRevert: true,
             /**
              * @cfg {String} Устанавливает Id для работы с историей фильтров.
              * @remark
@@ -105,16 +130,21 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
-            contentTpl : contentTpl
+            contentTpl : contentTpl,
+            /**
+             * @cfg {СolumnsConfigObject} columnsConfig Конфигурация колонок
+             */
+            columnsConfig: null
          }
       },
 
       $constructor: function () {
-
       },
 
       init: function() {
-         var self = this;
+         var
+            self = this,
+            columnsState;
          this._publish('onEdit', 'onEditCurrentFolder', 'onFiltersReady');
          Browser.superclass.init.apply(this, arguments);
          this._view = this._getView();
@@ -122,6 +152,20 @@ define('js!SBIS3.CONTROLS.Browser', [
             self._notifyOnEditByActivate(itemMeta);
          });
 
+         if (this._options.columnsConfig) {
+            this._columnsController = new ColumnsController();
+            columnsState = this._columnsController.getState();
+            if (!columnsState) {
+               this._columnsController.setState(this._options.columnsConfig.selectedColumns);
+            }
+            this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+            this._getView().redraw();
+            this._columnsEditor = this._getColumnsEditor();
+            if (this._columnsEditor) {
+               this._columnsEditor.subscribe('onSelectedColumnsChange', this._onSelectedColumnsChange.bind(this));
+               this._columnsEditor.subscribe('onColumnsEditorShow', this._onColumnsEditorShow.bind(this));
+            }
+         }
 
          this._hierMode = checkViewType(this._view);
 
@@ -152,7 +196,13 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._searchForm = this._getSearchForm();
          if (this._searchForm) {
-            this._componentBinder.bindSearchGrid(this._options.searchParam, this._options.searchCrumbsTpl, this._searchForm, this._options.searchMode);
+            this._componentBinder.bindSearchGrid(
+               this._options.searchParam,
+               this._options.searchCrumbsTpl,
+               this._searchForm,
+               this._options.searchMode,
+               false,
+               this._options.keyboardLayoutRevert);
          }
 
 
@@ -169,16 +219,10 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._filterButton = this._getFilterButton();
          this._fastDataFilter = this._getFastDataFilter();
+
          if (this._filterButton) {
             if(this._options.historyId) {
-               this._componentBinder.bindFilterHistory(
-                   this._filterButton,
-                   this._fastDataFilter,
-                   this._options.searchParam,
-                   this._options.historyId,
-                   this._options.ignoreFiltersList,
-                   this._options.applyHistoryFilterOnLoad,
-                   this);
+               this._bindFilterHistory();
             } else {
                this._notifyOnFiltersReady();
             }
@@ -189,6 +233,34 @@ define('js!SBIS3.CONTROLS.Browser', [
          if(this._options.pagingId && this._view.getProperty('showPaging')) {
             this._componentBinder.bindPagingHistory(this._view, this._options.pagingId);
          }
+      },
+
+      _onSelectedColumnsChange: function(event, columns) {
+         this._columnsController.setState(columns);
+         this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+         this._getView().redraw();
+      },
+      /**
+       * Задает конфигурацию колонок
+       * @param config {Object} Конфигурация редактора колонок
+       */
+      setColumnsConfig: function(config) {
+         this._options.columnsEditorConfig = config;
+         this._notifyOnPropertyChanged('columnsEditorConfig');
+      },
+      /**
+       * Возвращает конфигурацию колонок
+       * @returns {Object} Конфигурация редактора колонок
+       */
+      getColumnsConfig: function() {
+         return this._options.columnsConfig;
+      },
+
+      _onColumnsEditorShow: function(event) {
+         event.setResult({
+            columns: this._options.columnsConfig.columns,
+            selectedColumns: this._columnsController.getState()
+         });
       },
 
       _folderEditHandler: function(){
@@ -210,6 +282,28 @@ define('js!SBIS3.CONTROLS.Browser', [
        */
       setPath: function(path){
          this._componentBinder.setPath(path);
+      },
+
+      /**
+       * Устанавливает занчение идентификатора истории
+       * @param id
+       */
+      setHistoryId: function(id) {
+         this._options.historyId = id;
+         this._bindFilterHistory();
+      },
+
+      _bindFilterHistory: function() {
+         if(this._filterButton && this._options.historyId) {
+            this._componentBinder.bindFilterHistory(
+               this._filterButton,
+               this._fastDataFilter,
+               this._options.searchParam,
+               this._options.historyId,
+               this._options.ignoreFiltersList,
+               this._options.applyHistoryFilterOnLoad,
+               this);
+         }
       },
 
       _notifyOnFiltersReady: function() {
@@ -239,6 +333,9 @@ define('js!SBIS3.CONTROLS.Browser', [
       _getSearchForm: function() {
          return this._getLinkedControl('browserSearch');
       },
+      _getColumnsEditor: function() {
+         return this._getLinkedControl('browserColumnsEditor');
+      },
       _getBackButton: function() {
          return this._getLinkedControl('browserBackButton');
       },
@@ -254,8 +351,15 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       _notifyOnEditByActivate: function(itemMeta) {
          this._notify('onEdit', itemMeta)
-      }
+      },
 
+      destroy: function() {
+         if (this._columnsController) {
+            this._columnsController.destroy();
+            this._columnsController = null;
+         }
+         Browser.superclass.destroy.apply(this, arguments);
+      }
    });
 
    return Browser;

@@ -10,9 +10,11 @@ define(
       'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'Core/ParserUtilities',
-      'js!SBIS3.CONTROLS.TabButton'
+      'Core/core-instance',
+      'js!SBIS3.CONTROLS.TabButton',
+      'css!SBIS3.CONTROLS.TabButtons'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil, ParserUtilities) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil, ParserUtilities, cInstance) {
 
    'use strict';
 
@@ -82,6 +84,7 @@ define(
              * </pre>
              */
             tabSpaceTemplate: undefined,
+            observeVisibleProperty: false, //Временное решение
             _getRecordsForRedraw: getRecordsForRedraw,
             _buildTplArgs: buildTplArgs
          }
@@ -117,16 +120,15 @@ define(
          return opts;
       },
 
-      _redrawItems : function() {
+      _redrawItems: function () {
+         var
+            data = this._prepareItemsData(),
+            markupLeft, markupRight;
 
-            var
-               data = this._prepareItemsData(),
-               markupLeft, markupRight;
+         data.tplData = this._prepareItemData();
 
-            data.tplData = this._prepareItemData();
-
-         markupLeft = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records : data.records.left, tplData : data.tplData})), this._options);
-         markupRight = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records : data.records.right, tplData : data.tplData})), this._options);
+         markupLeft = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records: data.records.left, tplData: data.tplData})), this._options);
+         markupRight = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records: data.records.right, tplData: data.tplData})), this._options);
 
          this._destroyInnerComponents(this._leftContainer);
          this._destroyInnerComponents(this._rightContainer);
@@ -139,9 +141,29 @@ define(
          }
          this._reviveItems();
          this._container.addClass('controls-ListView__dataLoaded');
+      },
+
+      setItems: function (items) {
+         var itemsRawData = cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet') ? items.getRawData() : items;
+         //TODO временное решение. Если бинд был сделан на опцию visible у итема, то не перерисовывает все вкладки. подробности https://inside.tensor.ru/opendoc.html?guid=52beaec0-1f23-4e10-a9ff-b2902e18707a&des=
+         //Сделал через доп.опцию observeVisibleProperty, чтобы поведение включили там, где это нужно
+         if (this._options.observeVisibleProperty && this.getItems().getCount() == itemsRawData.length) {
+            var currentItems = this.getItems();
+            for (var i = 0, l = itemsRawData.length; i < l; i++) {
+               var projection = this._options._itemsProjection,
+                   id = itemsRawData[i][this._options.idProperty],
+                   currentItem = currentItems.getRecordById(id),
+                   projItem = projection.getItemBySourceItem(currentItem),
+                   hash = projItem && projItem.getHash();
+               if (currentItem && currentItem.get('visible') !== itemsRawData[i]['visible']) {
+                  this.getItemsInstances()[hash].setVisible(itemsRawData[i]['visible']);
+               }
+            }
          }
-
-
+         else {
+            TabButtons.superclass.setItems.apply(this, arguments);
+         }
+      }
    });
    return TabButtons;
 });

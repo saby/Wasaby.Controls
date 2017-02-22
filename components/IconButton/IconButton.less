@@ -98,39 +98,36 @@
       cursor: default;
       color: @icon-color-disabled !important;
    }
-   &.ws-area{
-      height: auto;
+}
+.controls-IconButton__filter {
+   &-left-open, &-left-close, &-right-open, &-right-close {
+      height: 24px;
+      width: 35px;
+      cursor: pointer;
+      display: inline-block;
    }
-   &.controls-IconButton__filter {
-      &-left-open, &-left-close, &-right-open, &-right-close {
-         height: 24px;
-         width: 35px;
-         cursor: pointer;
-         display: inline-block;
+   &-left-close {
+      background: @FilterPanelButtonLeftClose;
+      &:hover {
+         background: @FilterPanelButtonHoverLeftClose;
       }
-      &-left-close {
-         background: @FilterPanelButtonLeftClose;
-         &:hover {
-            background: @FilterPanelButtonHoverLeftClose;
-         }
+   }
+   &-right-close {
+      background: @FilterPanelButtonRightClose;
+      &:hover {
+         background: @FilterPanelButtonHoverRightClose;
       }
-      &-right-close {
-         background: @FilterPanelButtonRightClose;
-         &:hover {
-            background: @FilterPanelButtonHoverRightClose;
-         }
+   }
+   &-left-open {
+      background: @FilterPanelButtonLeftOpen;
+      &:hover {
+         background: @FilterPanelButtonHoverLeftOpen;
       }
-      &-left-open {
-         background: @FilterPanelButtonLeftOpen;
-         &:hover {
-            background: @FilterPanelButtonHoverLeftOpen;
-         }
-      }
-      &-right-open {
-         background: @FilterPanelButtonRightOpen;
-         &:hover {
-            background: @FilterPanelButtonHoverRightOpen;
-         }
+   }
+   &-right-open {
+      background: @FilterPanelButtonRightOpen;
+      &:hover {
+         background: @FilterPanelButtonHoverRightOpen;
       }
    }
 }

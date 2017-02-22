@@ -13,7 +13,8 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
       'html!SBIS3.CONTROLS.MonthPicker',
-      'i18n!SBIS3.CONTROLS.MonthPicker'
+      'i18n!SBIS3.CONTROLS.MonthPicker',
+      'css!SBIS3.CONTROLS.MonthPicker'
    ],
    function(constants, CompoundControl, PickerMixin, DateUtil, DropdownTpl, dotTplFn) {
 
@@ -23,7 +24,7 @@ define(
     * Контрол выбор месяца и года, или только года, с выпадающей вниз панелью.
     * Не наследуется от поля ввода, потому что там в принципе не требуется текстовый ввод.
     * @class SBIS3.CONTROLS.MonthPicker
-    * @extends $ws.proto.Control
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyMonthPicker
@@ -165,7 +166,7 @@ define(
          });
 
          //TODO из-за Витиной ошибки прилетает класс ws-area, хотя наследуемся от контррла
-         this._container.removeClass('ws-area');
+         
       },
 
       _initializePicker: function(){

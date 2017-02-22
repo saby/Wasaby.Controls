@@ -1,13 +1,12 @@
 .controls-MenuItem {
   position: relative;
-  display: block;
+  .flexbox();
   overflow: hidden;
   align-items: center;
   .box-sizing(border-box);
   cursor: @menu-item-cursor;
   width: @menu-item-width;
   height: @menu-item-height;
-  line-height: @menu-item-line-height;
   padding: @menu-item-default-padding;
   color: @menu-item-text-color;
   background: @menu-item-bg;
@@ -22,9 +21,19 @@
   
   .controls-MenuItem__content {
     position: relative;
+    width: 100%;
+    min-height: @menu-item-height;
+
+    .icon-16 ~ .controls-MenuItem__text{
+      margin: 6px 0 6px 22px;
+    }
 
     .icon-24 ~ .controls-MenuItem__text{
-    	margin: 0 0 0 30px;
+    	margin: @menu-item-icon-24-margin;
+    }
+
+    .icon-32 ~ .controls-MenuItem__text{
+      margin: @menu-item-icon-32-margin;
     }
 
     .controls-MenuItem__icon {
@@ -39,6 +48,7 @@
 
     .controls-MenuItem__text {
        margin: @menu-item-text-margin;
+       line-height: @menu-item-line-height;
        display: block;
     }
   }

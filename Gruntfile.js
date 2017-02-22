@@ -14,7 +14,7 @@ module.exports = function(grunt) {
    grunt.loadTasks('grunt/tasks');
 
    grunt.registerTask('css', [
-      'less:normal'
+      'less1by1:online'
    ]);
 
    grunt.registerTask('js', [

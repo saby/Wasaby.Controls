@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
    "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
    function( constants,CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers) {
@@ -41,8 +42,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _options: {
                itemTpl: ItemTpl,
                displayProperty: '',
@@ -106,7 +107,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
-            this._container.removeClass('ws-area');
+            
          },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();

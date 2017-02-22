@@ -92,21 +92,21 @@
                   border: 1px solid @date-range-big-choose-month-range-picker-today-border-color;
                }
 
-               &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
-                  &.controls-RangeSelectable__item-selected {
-                     color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-                     background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
-
-                     &:hover {
-                        color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-                        background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
-                     }
-
-                     &.controls-MonthView__weekend {
-                        color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-                     }
-                  }
-               }
+               //&.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
+               //   &.controls-RangeSelectable__item-selected {
+               //      color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+               //      background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
+               //
+               //      &:hover {
+               //         color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+               //         background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
+               //      }
+               //
+               //      &.controls-MonthView__weekend {
+               //         color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+               //      }
+               //   }
+               //}
 
                &.controls-RangeSelectable__item-selected {
                   color: @date-range-big-choose-month-range-picker-color;
@@ -121,6 +121,33 @@
                      color: @date-range-big-choose-month-range-picker-weekend-color;
                   }
                }
+            }
+         }
+      }
+   }
+
+   &:not(.controls-RangeSelectable__selecting) {
+      .controls-DateRangeBigChoose-MonthView.controls-MonthView {
+         .controls-MonthView__dayTable {
+            .controls-MonthView__tableElement {
+               &.controls-RangeSelectable__item {
+                  &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
+                     &.controls-RangeSelectable__item-selected {
+                        color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+                        background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
+
+                        &:hover {
+                           color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+                           background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
+                        }
+
+                        &.controls-MonthView__weekend {
+                           color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+                        }
+                     }
+                  }
+               }
+
             }
          }
       }

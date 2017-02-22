@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "js!SBIS3.CORE.FloatArea",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
-   "Core/helpers/collection-helpers"
-], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers){
+   "Core/helpers/collection-helpers",
+   'Core/IoC'
+], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, colHelpers, IoC){
    'use strict';
 
    /**
@@ -44,10 +45,13 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             mode: 'dialog',
             /**
-             * @cfg {object} Объект содержащий опции компонента.
+             * @cfg {Object} Объект содержащий опции компонента.
              */
-            componentOptions: null
-
+            componentOptions: null,
+            /**
+             * @cfg {Object} Объкт содержащий опции диалога 
+             */
+            dialogOptions: null
          },
          _dialog: undefined,
          /**
@@ -70,10 +74,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       $constructor: function() {
 
          if ( this._options.dialogComponent && !this._options.template) {
-            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.4.100', 1);
+            Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
             this._options.template = this._options.dialogComponent;
          }
-
+         this._publish('onAfterShow', 'onBeforeShow');
       },
       /**
        * Открывает диалог редактирования записи.
@@ -92,61 +96,43 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        *
       */
       _doExecute: function(meta) {
-         return this._opendEditComponent(meta, this._options.template);
-      },
-      _openDialog: function(meta, template) {
-         this._opendEditComponent(meta, template, 'dialog');
-      },
-      _openFloatArea: function(meta, template) {
-         this._opendEditComponent(meta, template, 'floatArea');
+         this._openComponent(meta);
+         return false;
       },
 
-      _opendEditComponent: function(meta, template, mode) {
-         //Производим корректировку идентификатора только в случае, когда идентификатор передан
-         if (meta.hasOwnProperty('id')) {
-            meta.id = this._getEditKey(meta.item) || meta.id;
+      _openDialog: function(meta) {
+         this._openComponent(meta, 'dialog');
+      },
+
+      _openFloatArea: function(meta) {
+         this._openComponent(meta, 'floatArea');
+      },
+
+      _openComponent: function(meta, mode) {
+         var config = this._getDialogConfig(meta);
+         if (this._dialog && (typeof this._dialog.isAutoHide == 'function') && !this._dialog.isAutoHide()) {
+            cMerge(this._dialog._options, config);
+            this._dialog.reload();
          }
-
-         var self = this,
-            compOptions = this._buildComponentConfig(meta),
-            editDeferred = new Deferred(),
-            config = {
-               opener: this,
-               template: template||this._options.template,
-               componentOptions: compOptions
-            };
-
-         if (meta.title) {
-            config.title = meta.title;
+         else {
+            this._createComponent(config, meta, mode || this._options.mode);
          }
-
-
-         config.handlers = {
-            onAfterClose: function (e, meta) {
-               self._dialog = undefined;
-               editDeferred.callback(meta, this._record);
-            }
-         };
-
-         this._showDialog(config, meta, mode);
-
-         return editDeferred;
       },
 
-      _showDialog: function(config, meta, mode){
-         var floatAreaCfg,
-             Component;
-         mode = mode || this._options.mode;
-         if (mode == 'floatArea') {
-            Component = FloatArea;
-            floatAreaCfg = this._getFloatAreaConfig(meta);
-            cMerge(config, floatAreaCfg);
-         } else if (mode == 'dialog') {
-            Component = Dialog;
-            cMerge(config, meta);
-         }
+      _buildComponentConfig: function(meta) {
+         var
+            config = cMerge({}, this._options.componentOptions || {}),
+            metaConfig = meta && meta.componentOptions ? meta.componentOptions : {};
+         return cMerge(config,  metaConfig )
+      },
 
-         if (this._dialog && !this._dialog.isAutoHide()){
+      _createComponent: function(config, meta, mode) {
+         var Component = (mode == 'floatArea') ? FloatArea : Dialog;
+         if (this._isNeedToRedrawDialog()){
+            //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.
+            //Производим открытие новой записи по новой конфигурации, все что лежало в опциях до этого не актуально и при текущем конфиге может поломать требуемое поведение.
+            //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
+            this._dialog._options.componentOptions = {};
             cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
@@ -154,35 +140,95 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             this._dialog = new Component(config);
          }
       },
+      /**
+       * Возвращает конфигурацию диалога по умолчанию.
+       * @param mode
+       * @returns {*}
+       * @private
+       */
+      _getDeafuiltDialogConfig: function() {
+         var config = this._options.dialogOptions || {};
+         return cMerge({
+            isStack: true,
+            showOnControlsReady: false,
+            autoCloseOnHide: true,
+            block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
+         }, config)
+      },
+      /**
+       * Возвращает конфигурацию диалога - всплывающей панели или окна.
+       * @param {Object} meta
+       * @param {String} template
+       * @param {String} mode
+       * @returns {Object}
+       * @private
+       */
+      _getDialogConfig: function(meta) {
+         var config = this._getDeafuiltDialogConfig(),
+             compOptions = this._buildComponentConfig(meta),
+             self = this;
 
-      _getFloatAreaConfig: function(meta){
-         var defaultConfig = {
-               isStack: true,
-               autoHide: true,
-               buildMarkupWithContext: false,
-               showOnControlsReady: true,
-               autoCloseOnHide: true,
-               target: '',
-               side: 'left',
-               animation: 'slide'
-            },
-            floatAreaCfg = {};
-
-         colHelpers.forEach(defaultConfig, function(value, prop){
-            floatAreaCfg[prop] = meta[prop] !== undefined ? meta[prop] : defaultConfig[prop];
+         cMerge(config, meta.dialogOptions  ||  {});
+         cMerge(config, {
+            opener: this,
+            template: meta.template || this._options.template,
+            componentOptions: compOptions,
+            handlers: { 
+               onAfterClose: function(e, result){
+                  self._notifyOnExecuted(meta, result);
+                  self._dialog = undefined;
+               },
+               onBeforeShow: function(){
+                  self._notify('onBeforeShow');
+               },
+               onAfterShow: function(){
+                  self._notify('onAfterShow');
+               }
+            }
          });
 
-         return floatAreaCfg;
+         return config;
       },
 
-      _buildComponentConfig: function(meta) {
-         return meta && meta.componentOptions ? meta.componentOptions : {};
+      /**
+       * Установить режим открытия диалога редактирования компонента.
+       * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       */
+      setMode: function(mode) {
+         this._options.mode = mode;
+      },
+      /**
+       * Получить режим открытия диалога редактирования компонента.
+       * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
+       */
+      getMode: function() {
+         return this._options.mode;
+      },
+      /**
+       * Устанавливает название шаблона
+       * @param {String} Название модуля шаблона.
+       * @deprecated
+       */
+      setDialogComponent: function (template) {
+         //нужно для того чтобы работал метод setProperty(dialogComponent)
+         Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
+         this._options.template = template;
+
       },
 
-      setDialogComponent: function(val) {
-         Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.7.4.100', 1);
-         this._options.template = val;
+      _isNeedToRedrawDialog: function(){
+         return this._dialog && !this._dialog.isDestroyed() && (this._dialog.isAutoHide && !this._dialog.isAutoHide());
+      },
+
+      /**
+       @deprecated
+       **/
+      _opendEditComponent: function(meta, dialogComponent, mode){
+         IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'Используйте публичный метод execute для работы с action\'ом открытия диалога редактирования');
+         meta.template = dialogComponent;
+         this._openComponent.call(this, meta, mode);
       }
+
    };
 
    return DialogMixin;

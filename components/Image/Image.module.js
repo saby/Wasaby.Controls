@@ -12,15 +12,16 @@ define('js!SBIS3.CONTROLS.Image',
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Source/SbisService",
    "html!SBIS3.CONTROLS.Image",
-   "js!SBIS3.CORE.FileLoader",
    "js!SBIS3.CORE.Dialog",
+   "js!SBIS3.CORE.FileLoader",
    "js!SBIS3.CORE.LoadingIndicator",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Link",
-   "i18n!SBIS3.CONTROLS.Image"
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, FileLoader, Dialog, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
+   "i18n!SBIS3.CONTROLS.Image",
+   'css!SBIS3.CONTROLS.Image'
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -38,10 +39,6 @@ define('js!SBIS3.CONTROLS.Image',
           * @ignoreEvents onAfterLoad onChange onStateChange
           * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
           *
-          * @demo SBIS3.CONTROLS.DEMO.IntImage <b>Пример 1.</b> Разные типы изображения + плагин.
-          * @demo SBIS3.CONTROLS.DEMO.IntImage2 <b>Пример 2.</b> Базовая линия.
-          * @demo SBIS3.CONTROLS.DEMO.IntImage3 <b>Пример 3.</b> Редактирование изображения при загрузке.
-          *
           * @public
           * @control
           * @category Decorate
@@ -53,11 +50,14 @@ define('js!SBIS3.CONTROLS.Image',
             /**
              * @event onBeginLoad Происходит перед началом загрузки изображения в компоненте.
              * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {SBIS3.CONTROL.Image} control Экземпляр класса контрола, для которого произошло событие.
              * @returns {Boolean} В случае если из обработчика события возвращается результат false, то загрузка изображения отменяется.
              * @example
              * <pre>
-             *    Image.subscribe('onBeginLoad', function(eventObject){
-             *       event.setResult(false); // Отменим загрузку изображения
+             *    Image.subscribe('onBeginLoad', function(eventObject, control) {
+             *
+             *       // отмена загрузки изображения
+             *       event.setResult(false);
              *    });
              * </pre>
              */
@@ -146,16 +146,19 @@ define('js!SBIS3.CONTROLS.Image',
              * @param {Object} sendObject Параметры обрезки изображения
              * @example
              * <pre>
-             * onBeginSave: function(event, filter) {
-             *    delete filter.realHeight;
-             *    delete filter.realWidth;
-             *    event.setResult(filter);
+             * onBeginSave: function(eventObject, sendObject) {
+             *    delete sendObject.realHeight;
+             *    delete sendObject.realWidth;
+             *    event.setResult(sendObject);
              * }
              * </pre>
+             * @see onEndSave
              */
             /**
              * @event onEndSave Возникает после обрезки изображения
              * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {Object} response Ответ бизнес-логики.
+             * @see onBeginSave
              */
             _dotTplFn : dotTplFn,
             $protected: {
@@ -355,12 +358,9 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                 //todo Удалить, временная опция для поддержки смены логотипа компании
-                  if (dataSource) {
-                     this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
-                  }
                   if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
                      this._buttonUpload.setCaption('');
+                     this._buttonUpload.setTooltip('Загрузить');
                   }
                   this._bindToolbarEvents();
                }
@@ -484,6 +484,7 @@ define('js!SBIS3.CONTROLS.Image',
                   image = this._image.get(0),
                   showButtons = this._imageUrl !== this._options.defaultImage;
                if (this._options.sizeMode === 'stretch') {
+                  this._image.css(image.naturalHeight > image.naturalWidth ? 'width': 'height', '');
                   this._image.css(image.naturalHeight > image.naturalWidth ? 'height': 'width', '100%');
                }
                if (this._options.imageBar) {
@@ -622,9 +623,12 @@ define('js!SBIS3.CONTROLS.Image',
               * @see resetImage
               */
             _uploadImage: function(originalEvent) {
-               if (this.getDataSource()) {
-                  this._getFileLoader().selectFile(originalEvent, false);
+               if (!this.getDataSource()) {
+                  return;
                }
+               this._getFileLoader().addCallback(function (loader){
+                  loader.selectFile(originalEvent, false);
+               });
             },
              /**
               * Инициирует вызов диалога редактирования изображения.
@@ -708,8 +712,16 @@ define('js!SBIS3.CONTROLS.Image',
             setDataSource: function(dataSource, noReload) {
                if (dataSource instanceof SbisService) {
                   this._options.dataSource = dataSource;
+
                   //todo Удалить, временная опция для поддержки смены логотипа компании
-                  this._getFileLoader().setMethod((this._options.linkedObject || dataSource.getEndpoint().contract) + '.' + dataSource.getBinding().create);
+                  var self = this;
+                  if (this._fileLoader) {
+                     this._fileLoader.setMethod(
+                           (self._options.linkedObject || dataSource.getEndpoint().contract) +
+                           '.' + dataSource.getBinding().create
+                     );
+                  }
+
                   if (!noReload) {
                      this._setImage(this._getSourceUrl());
                   }
@@ -748,22 +760,24 @@ define('js!SBIS3.CONTROLS.Image',
             },
 
             _getFileLoader: function() {
-               if (!this._fileLoader) {
-                  this._createFileLoader();
-               }
-               return this._fileLoader;
+               return this._createFileLoader();
             },
 
             /**
              * Создание загрузчика файлов
              * @private
              */
-            _createFileLoader: function(){
-               var
-                  self = this,
-                  cont = $('<div class="controls-image__file-loader"></div>');
-               this.getContainer().append(cont);
-               this._fileLoader = new FileLoader({
+            _createFileLoader: function() {
+               if (this._fileLoader) {
+                  return Deferred.success(this._fileLoader);
+               }
+
+               //NB! Вероятно хотим отредактировать.
+               // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
+               var self = this;
+               var cont = $('<div class="controls-image__file-loader"></div>');
+               self.getContainer().append(cont);
+               self._fileLoader = new FileLoader({
                   extensions: ['image'],
                   element: cont,
                   name: 'FileLoader',
@@ -774,8 +788,19 @@ define('js!SBIS3.CONTROLS.Image',
                      onLoaded: self._onEndLoad
                   }
                });
-            }
 
+               //todo Удалить, временная опция для поддержки смены логотипа компании
+               var dataSource = self.getDataSource();
+               if (dataSource) {
+                  self._fileLoader.setMethod((
+                     self._options.linkedObject || dataSource.getEndpoint().contract) +
+                     '.' + dataSource.getBinding().create
+                  );
+               }
+
+               return Deferred.success(self._fileLoader)
+            }
          });
+
       return Image;
    });

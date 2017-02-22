@@ -8,8 +8,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
-   'js!WS.Data/Builder',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
@@ -17,15 +15,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
-   function ( cContext, constants, Deferred, IoC, ConsoleLogger, DataBuilder, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
       /**
        * @class SBIS3.CONTROLS.EditInPlaceBaseController
        * @extends SBIS3.CORE.CompoundControl
+       * @author Сухоручкин Андрей Сергеевич
        * @control
        * @public
        */
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (options && options.isEdit) {
                   return this.edit(model, withoutActivateFirstControl);
                } else {
-                  return this.add(options);
+                  return this.add(options, withoutActivateFirstControl);
                }
             },
             edit: function (model, withoutActivateFirstControl) {
@@ -401,16 +401,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
 
                if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
-                  // TODO: errback без обработчика кидает ошибку в консоль https://inside.tensor.ru/opendoc.html?guid=5aba818a-4764-4c2b-b6d0-767abd2add7e&des=
-                  this._savingDeferred.addErrback(function(res) {return res;}).errback();
+                  this._savingDeferred.errback();
                   return Deferred.fail();
                } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
                   this._afterEndEdit(eip, withSaving);
                   return Deferred.success();
                } else {
-                  this._updateModel(eip, withSaving).addBoth(function () {
+                  this._updateModel(eip, withSaving).addCallback(function () {
                      self._removePendingOperation();
                      self._afterEndEdit(eip, withSaving);
+                  }).addErrback(function() {
+                     self._savingDeferred.errback();
                   });
                   return this._savingDeferred;
                }
@@ -421,33 +422,30 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _updateModel: function(eip, withSaving) {
                var
                   self = this,
-                  deferred,
+                  deferred = Deferred.success(),
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
-                  deferred = this._options.dataSource.update(eipRecord).addCallback(function() {
-                     eip.acceptChanges();
-                     if (self._editingRecord) {
-                        self._editingRecord.merge(eipRecord);
-                        self._editingRecord = undefined;
-                     }
-                     if (self._isAdd) {
-                        if (self._options.items && self._options.items.getFormat().getCount()) {
-                           self._options.items.add(DataBuilder.reduceTo(eipRecord, self._options.items.getFormat(), self._options.items.getModel()));
-                        } else {
-                           self._options.items.add(eipRecord);
-                        }
-                     }
-                  }).addErrback(function(error) {
-                     fcHelpers.alert(error);
-                  });
-               } else {
-                  if (this._isAdd && eipRecord.getId()) {
-                     deferred = this._options.dataSource.destroy(eipRecord.getId());
+                  if (this._options.dataSource) {
+                     deferred = this._options.dataSource.update(eipRecord).addCallback(function () {
+                        self._acceptChanges(eip, eipRecord);
+                     }).addErrback(function (error) {
+                        fcHelpers.alert(error);
+                     });
                   } else {
-                     deferred = Deferred.success()
+                     this._acceptChanges(eip, eipRecord);
                   }
                }
                return deferred;
+            },
+            _acceptChanges: function(eip, record) {
+               eip.acceptChanges();
+               if (this._editingRecord) {
+                  this._editingRecord.merge(record);
+                  this._editingRecord = undefined;
+               }
+               if (this._isAdd) {
+                  this._options.items.add(record);
+               }
             },
             _afterEndEdit: function(eip, withSaving) {
                var isAdd = this._isAdd;
@@ -456,8 +454,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
                if (isAdd) {
                   this._isAdd = false;
-                  this._addTarget.remove();
-                  this._addTarget = undefined;
+                  this._destroyAddTarget();
                }
                eip.endEdit();
                this._notify('onAfterEndEdit', eip.getOriginalRecord(), eip.getTarget(), withSaving);
@@ -473,47 +470,52 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.callback();
                }
             },
-            add: function(options) {
+            add: function(options, withoutActivateFirstControl) {
                var
                   self = this,
-                  beginAddResult = this._notify('onBeginAdd'),
-                  modelOptions = options.model || beginAddResult,
-                  preparedModel = options.preparedModel,
-                  editingRecord;
-               this._lastTargetAdding = options.target;
-               return this.endEdit(true).addCallback(function() {
-                  return self._createModel(modelOptions, preparedModel).addCallback(function (createdModel) {
-                     return self._prepareEdit(createdModel).addCallback(function(model) {
-                        if (self._options.parentProperty) {
-                           model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
-                        }
-                        //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
-                        //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
-                        //Так же мы пытались находить запись в текущем рекордсете, но например при поиске надор данных изменяется и вызывается
-                        //завершение редактирования, но записи уже может не быть в рекордсете.
-                        self._isAdd = true;
-                        self._createAddTarget(model, options);
-                        self._getEip().edit(model);
-                        editingRecord = self._getEip().getEditingRecord();
-                        self._notify('onAfterBeginEdit', editingRecord);
-                        if (!self._pendingOperation) {
-                           self._subscribeToAddPendingOperation(editingRecord);
-                        }
-                        return editingRecord;
+                  modelOptions,
+                  editingRecord,
+                  beginAddResult;
+
+               if (!this._addLock) {
+                  this._addLock = true;
+                  beginAddResult = this._notify('onBeginAdd');
+                  modelOptions = options.model || beginAddResult;
+                  this._lastTargetAdding = options.target;
+                  return this.endEdit(true).addCallback(function() {
+                     return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
+                        return self._prepareEdit(createdModel).addCallback(function(model) {
+                           if (self._options.parentProperty) {
+                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
+                           }
+                           //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
+                           //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
+                           //Так же мы пытались находить запись в текущем рекордсете, но например при поиске надор данных изменяется и вызывается
+                           //завершение редактирования, но записи уже может не быть в рекордсете.
+                           self._isAdd = true;
+                           self._createAddTarget(model, options);
+                           self._getEip().edit(model, undefined, withoutActivateFirstControl);
+                           editingRecord = self._getEip().getEditingRecord();
+                           self._notify('onAfterBeginEdit', editingRecord);
+                           if (!self._pendingOperation) {
+                              self._subscribeToAddPendingOperation(editingRecord);
+                           }
+                           return editingRecord;
+                        });
                      });
+                  }).addBoth(function(result){
+                     self._addLock = false;
+                     return result;
                   });
-               });
+               } else {
+                  return Deferred.fail();
+               }
             },
             _createModel: function(modelOptions, preparedModel) {
-               var self = this;
-               if (this._addLock) {
-                  return Deferred.fail();
-               } else if (preparedModel instanceof Model) {
+               if (preparedModel instanceof Model) {
                   return Deferred.success(preparedModel);
                } else {
-                  this._addLock = true;
                   return this._options.dataSource.create(modelOptions).addBoth(function(model) {
-                     self._addLock = false;
                      return model;
                   });
                }
@@ -542,6 +544,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   addTarget[options.addPosition === 'top' ? 'prependTo': 'appendTo'](this._options.itemsContainer);
                }
                this._addTarget = addTarget;
+            },
+
+            _destroyAddTarget: function() {
+               if (this._addTarget) {
+                  this._addTarget.remove();
+                  this._addTarget = undefined;
+               }
             },
             /**
              * Обработчик потери фокуса областью редактирования по месту
@@ -595,6 +604,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _destroyEip: function() {
                if (this._eip) {
                   this._eip.destroy();
+                  //Необходимо разрушить фейковую строку добавления, при разрушении редакторов, т.к. редакторы разрушаются
+                  //например при вызове relaod, а DOM чистится только после того, как отработает списочный метод.
+                  //В указанном промежутке времени,в DOM будет лежать пустая строка, которая выглядит некрасиво.
+                  this._destroyAddTarget();
                   this._eip = null;
                }
             },

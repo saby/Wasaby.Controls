@@ -2,8 +2,8 @@
    font:  @font-popup-size @font-basic-name;
    padding: @menu-padding;
    margin: @menu-margin;
-   display: flex;
-   flex-direction: column;
+   .flexbox();
+   .flex-direction(column);
    border-width: @menu-border-width;
    border-style: @menu-border-style;
    border-color: @menu-border-color;
@@ -52,14 +52,22 @@
    .controls-Menu__header{
       box-sizing: @menu-header-box-sizing;
       padding: @menu-header-padding;
-      flex-shrink: 0;
+      .flex-shrink(0);
       .icon-16, .icon-24{
          padding-right: @menu-header-icon-padding;
       }
    }
+   .controls-MenuItem-additional {
+      display: none;
+   }
+   &.controls-Menu-showAdditionalItems {
+      .controls-MenuItem-additional {
+         .flexbox();
+      }
+   }
+
    .controls-MenuItem {
       min-height: @menu-item-height;
-      max-height: 2 * @menu-item-height;
       height: auto;
       padding: @menu-item-default-padding;
    }
@@ -67,7 +75,7 @@
       padding: @menu-link-menu-item-container-padding;
    }
    &.controls-popup-revert-vertical {
-      flex-direction: column-reverse;
+      .flex-direction(column-reverse);
       padding: 0;
 
       .controls-Menu__header + .controls-Menu__itemsContainer {
@@ -76,11 +84,16 @@
    }
    &.controls-popup-revert-horizontal {
       .controls-Menu__header {
-         flex-direction: row-reverse;
+         .flex-direction(row-reverse);
       }
    }
 }
 
+.controls-Menu__Popup:not(.controls-MenuPicker__resetIconColor) {
+   .controls-Menu__header-icon {
+      color: @blue-dark-color !important;
+   }
+}
 .controls-Menu__submenu {
    display: none;
 }

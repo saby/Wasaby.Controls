@@ -19,7 +19,7 @@
             }
         }
     }
-    options.commandArgs = item.get('commandArgs');
+    options.commandArgs = item.get('commandArgs') || [];
 }}
 <component data-component="{{=item.get('componentType').substr(3)}}" config="{{=$ws.helpers.encodeCfgAttr(options)}}"
            data-hash="{{=it.projItem.getHash()}}"

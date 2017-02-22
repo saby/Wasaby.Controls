@@ -9,9 +9,12 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.FloatArea',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.StylesPanelNew',
+   'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
+   'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel, Di) {
 
    'use strict';
    var
@@ -23,7 +26,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             'rgb(0, 0, 255)': 'blue',
             'rgb(128, 0, 128)': 'purple',
             'rgb(128, 128, 128)': 'grey'
-         }
+         },
+         INLINE_TEMPLATE: '6'
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorRoundToolbar
@@ -204,7 +208,18 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                this._options.linkedEditor._getFileLoader().selectFile(originalEvent);
             }
          },
-
+         getFileLoader: function() {
+            return Di.resolve('ImageUploader').getFileLoader();
+         },
+         _startFileLoad: function(target) {
+            var
+               self = this;
+            if (self._options.linkedEditor) {
+               this.getFileLoader().startFileLoad(target, false, 'images').addCallback(function (fileobj) {
+                  self._options.linkedEditor.insertImageTemplate(constants.INLINE_TEMPLATE, fileobj);
+               }.bind(this))
+            }
+         },
          _insertSmile: function(smile) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertSmile(smile);
@@ -248,6 +263,9 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                   verticalAlign: {
                      side: 'top',
                      offset: -4
+                  },
+                  horizontalAlign: {
+                     side: 'left'
                   },
                   element: $('<div></div>'),
                   fontSizes: [12, 14, 15, 18],

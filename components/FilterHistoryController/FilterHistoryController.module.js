@@ -23,6 +23,16 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
        var LAST_FILTER_NUMBER = 9;
        var HISTORY_CHANNEL = EventBus.channel('FilterHistoryChannel');
 
+       function listToArray(list) {
+          var arr = [];
+
+          list.each(function(elem) {
+             arr.push(elem);
+          });
+
+          return arr;
+       }
+
        var FilterHistoryController = HistoryController.extend({
           $protected: {
              _options: {
@@ -74,7 +84,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return;
              }
 
-             var isHistoryEqual = colHelpers.isEqualObject(this._listHistory.toArray(), newHistory.toArray()),
+             var isHistoryEqual = colHelpers.isEqualObject(this.getHistoryArr(), listToArray(newHistory)),
                  filterButton = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
@@ -93,7 +103,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Запишем новую историю */
              /* Надо обязательно клонировать историю, чтобы по ссылке не передавались изменения */
-             this._listHistory.assign(cFunctions.clone(newHistory.toArray()));
+             this._listHistory.assign(cFunctions.clone(listToArray(newHistory)));
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
@@ -227,6 +237,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 if(equalFilter && !equalFilter.isActiveFilter) {
                    equalFilter.isActiveFilter = true;
                    equalFilter.viewFilter = this.prepareViewFilter();
+                   /* Если есть такой-же фильтр, обновим его структуру на свежую */
+                   equalFilter.filter = filterObject.filter;
 	               this.saveToUserParams()
                 }
                 return;
@@ -242,7 +254,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory.add({
                 id: genHelpers.randomId(),
                 linkText: filterObject.linkText,
-	            viewFilter: this.prepareViewFilter(),
+	             viewFilter: this.prepareViewFilter(),
                 filter: filterObject.filter,
                 isActiveFilter: true,
                 isMarked: false
@@ -336,7 +348,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           getHistoryArr: function() {
-             return this._listHistory.toArray();
+             return listToArray(this._listHistory);
           },
 
           getFilterButton: function() {

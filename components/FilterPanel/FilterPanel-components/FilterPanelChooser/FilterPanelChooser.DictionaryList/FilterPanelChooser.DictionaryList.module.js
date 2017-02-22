@@ -4,21 +4,49 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'Core/core-functions',
     'Core/helpers/collection-helpers',
     'Core/core-instance',
+    'js!WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
-    'js!SBIS3.CONTROLS.Action.SelectorAction'
-], function(FilterPanelChooserList, CommandDispatcher, cFunctions, colHelpers, cInstance, footerTpl, SelectorAction) {
+    'js!SBIS3.CONTROLS.Action.SelectorAction',
+    'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList'
+], function(FilterPanelChooserList, CommandDispatcher, cFunctions, colHelpers, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
     /**
      * Класс редактора "Список со справочником".
-     * Применяется для панели фильтрации (см. {@link SBIS3.CONTROLS.OperationsPanel/FilterPanelItem.typedef FilterPanelItem}).
-     * <br/>
-     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Все" под списком или командой {@link showDictionary}.
-     * По умолчанию отображается 3 записи в списке. Чтобы подгрузить все, используйте кнопку "Ещё" под списком или команду {@link showFullList}.
-     * <br/>
-     * Чтобы изменить шаблон отображения кнопок "Все" и "Ещё", измените опцию {@link afterChooserWrapper}.
-     * Если вы используете шаблон по умолчанию, то подпись кнопки "Все" можно изменить через опцию {@link captionFullList}.
+     * Применяется для панели фильтра с набираемыми параметрами (см. {@link SBIS3.CONTROLS.FilterPanel}).
+     * Реализует выборку идентификаторов как из списка {@link SBIS3.CONTROLS.ListView}, так и из справочника (см. {@link dictionaryOptions}), вызов которого производится по кнопке "Ещё" под списком или командой {@link showDictionary}.
+     *
+     * <h2>Особенности отображения редактора</h2>
+     * По умолчанию отображается 3 записи в списке.
+     * Чтобы подгрузить все, используйте кнопку "Все" под списком или команду {@link showFullList}.
+     * Чтобы открыть справочник и произвести выбор записей, используйте кнопку "Ещё" или команду {@link showDictionary}.
+     *
+     * <h2>Конфигурация редактора</h2>
+     * Чтобы изменить конфигурацию редактора, используют подопцию *properties* (см. {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}) в {@link SBIS3.CONTROLS.FilterPanel#items}.
+     * По умолчанию для списка вы можете переопределить следующие опции: {@link SBIS3.CONTROLS.ItemsControlMixin#idProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#displayProperty}, {@link SBIS3.CONTROLS.ItemsControlMixin#items} и {@link SBIS3.CONTROLS.MultiSelectable#selectedKeys}.
+     * Опции, для которых конфигурация фиксирована: {@link SBIS3.CONTROLS.ListView#multiselect}=true, {@link SBIS3.CONTROLS.ListView#itemsDragNDrop}=false и {@link  SBIS3.CONTROLS.ListView#itemsActions}=&#91;&#93;.
+     *
+     * <h2>Кнопка "Все"</h2>
+     * Отображается под списком, когда записей списка больше 3.
+     * Применяется, чтобы подгрузить все записи списка.
+     * При клике по кнопке выполняется команда {@link showFullList}.
+     * По умолчанию для кнопки установлено имя "controls-FilterPanelChooser__allButton".
+     * Шаблон кнопки "Все" устанавливают в опции {@link afterChooserWrapper}.
+     * При использовании шаблона по умолчанию, вы можете изменить подпись на кнопке через опцию {@link captionFullList}.
+     *
+     * <h2>Кнопка "Ещё"</h2>
+     * Отображается всегда, под списком.
+     * Применяется, чтобы открыть справочник с полным списком записей.
+     * При клике по кнопке выполняется команда {@link showDictionary}.
+     * По умолчанию для кнопки установлено имя "controls-FilterPanelChooser__dictionaryButton".
+     * Шаблон кнопки "Ещё" устанавливают в опции {@link afterChooserWrapper}.
+     *
+     * <h2>Создание пользовательского редактора</h2>
+     * Вы можете создать собственный класс редактора, на основе класса редактора "Список со справочником".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
+     *
+     *
      * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
      * @extends SBIS3.CONTROLS.FilterPanelChooser.List
      * @author Сухоручкин Андрей Сергеевич
@@ -30,7 +58,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     var FilterPanelChooserDictionary = FilterPanelChooserList.extend(/** @lends SBIS3.CONTROLS.FilterPanelChooser.DictionaryList.prototype */ {
         $protected: {
             _options: {
-                afterChooserWrapper: footerTpl,
+                _afterChooserWrapper: footerTpl,
                 className: 'controls-FilterPanelChooser__dictionary',
                 /**
                  * @typedef {Object} dictionaryOptions
@@ -50,7 +78,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                  * @remark
                  * Открытие справочника происходит при клике по кнопке под списком или командой {@link showDictionary}.
                  */
-                dictionaryOptions: {}
+                dictionaryOptions: {},
+                defaultItems: undefined
             },
             _selectorAction: undefined,
             _afterSelection: false
@@ -60,10 +89,18 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             CommandDispatcher.declareCommand(this, 'showDictionary', this._showDictionary.bind(this))
         },
 
+        _modifyOptions: function() {
+            var
+                opts = FilterPanelChooserDictionary.superclass._modifyOptions.apply(this, arguments);
+            opts.defaultItems = opts.defaultItems || new RecordSet();
+            return opts;
+        },
+
         init: function() {
             FilterPanelChooserDictionary.superclass.init.apply(this, arguments);
             this._getListView().subscribe('onSelectedItemsChange', this._selectedItemsChangeHandler.bind(this));
         },
+
         /**
          * Инициирует открытие справочника.
          * @param {Object} meta Мета-данные.
@@ -87,15 +124,34 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                         items.remove(item);
                     }
                 }, this);
+                this._addItemsFromDefault();
+                this._toggleAllButton();
             }
         },
 
-        _toggleFullState: function(toggle) {
-            FilterPanelChooserDictionary.superclass._toggleFullState.apply(this, arguments);
-            this._getAllButton().setCaption('Ещё' + ' ' + (this._options.items.getCount() - 3));
+        _addItemsFromDefault: function() {
+            var
+                items = this._getListView().getItems(),
+                defaultItems = this._options.defaultItems,
+                idProperty = defaultItems.getIdProperty(),
+                difference = defaultItems.getCount() - items.getCount();
+
+            if (difference > 0) {
+                defaultItems.each(function(item) {
+                    if (difference > 0 && !items.getRecordById(item.get(idProperty))) {
+                        items.add(item);
+                        difference--;
+                    }
+                });
+            }
         },
 
-        _onExecutedHandler: function(event, meta, result) {
+        _toggleAllButton: function() {
+            FilterPanelChooserDictionary.superclass._toggleAllButton.apply(this, arguments);
+            this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
+        },
+
+        _onExecutedHandler: function(event, result) {
             var
                 listView = this._getListView(),
                 items = listView.getItems();
@@ -107,8 +163,10 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                 }
                 listView.setSelectedItemsAll();
                 this._updateValue();
+                this._addItemsFromDefault();
                 this._toggleFullState(false);
                 this._afterSelection = true;
+                this._container.addClass('controls-FilterPanelChooser__dictionaryAfterSelection');
             }
         },
 

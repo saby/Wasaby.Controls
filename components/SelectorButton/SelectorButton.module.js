@@ -17,9 +17,31 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/Sanitize",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   'Core/helpers/string-helpers',
+   'js!SBIS3.CONTROLS.ToSourceModel',
+   "js!SBIS3.CONTROLS.Action.SelectorAction",
+   'css!SBIS3.CONTROLS.SelectorButton'
 ],
-    function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers) {
+    function(
+       constants,
+       dotTplFn,
+       ButtonBase,
+       DSMixin,
+       MultiSelectable,
+       ActiveMultiSelectable,
+       Selectable,
+       ActiveSelectable,
+       SyncSelectionMixin,
+       ChooserMixin,
+       IconMixin,
+       Sanitize,
+       cInstance,
+       fHelpers,
+       colHelpers,
+       strHelpers,
+       ToSourceModel
+    ) {
 
    'use strict';
 
@@ -55,7 +77,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @author Крайнов Дмитрий Олегович
     *
     * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
     * @mixes SBIS3.CONTROLS.Selectable
@@ -112,7 +133,17 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              *    <options>
              * </pre>
              */
-            dictionaries: []
+            dictionaries: [],
+            /**
+             * @cfg {String} Устанавливает режим открытия компонента выбора.
+             * @variant dialog Открытие производится в новом диалоговом окне.
+             * @variant floatArea Открытие производится на всплывающей панели.
+             */
+            selectMode: 'floatArea',
+            /**
+             * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+             */
+            useSelectorAction: false
          },
          _text: null
       },
@@ -131,7 +162,17 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                   return list
                })
             }
-         })
+         });
+
+         if(this._options.useSelectorAction) {
+            this.subscribe('onInit', function () {
+               this.subscribeTo(this._getSelectorAction(), 'onExecuted', function (event, meta, result) {
+                  if (result) {
+                     self.setSelectedItems(result);
+                  }
+               });
+            });
+         }
       },
       _drawSelectedItems: function(keysArr) {
          var self = this,
@@ -145,7 +186,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                list.each(function(item) {
                   linkTextArray.push(item.get(self._options.displayProperty));
                });
-               self._setCaption(linkTextArray.join(', '));
+               self._setCaption(strHelpers.escapeHtml(linkTextArray.join(', ')));
                return list;
             });
          } else {
@@ -213,6 +254,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
 
       _clickHandler: function(e) {
+         var selectedItems = this.getSelectedItems();
+
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
             //люди биндятся на опцию selectedItem. И при сбросе значения на крестик, selectedItem тоже должен сбрасываться.
@@ -220,11 +263,29 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          } else {
             //TODO Пока делаю выбор из одного справочника, в дальнейшем доработать выбор из нескольких
             var dic = this._options.dictionaries[0];
-            this._showChooser(
-                dic && dic.template,
-                dic && dic.componentOptions
-            )
+
+            if(this._options.useSelectorAction && dic.template) {
+               this._getSelectorAction().execute({
+                  template: dic.template,
+                  componentOptions: dic.componentOptions || {},
+                  multiselect: this.getMultiselect(),
+                  selectionType: dic.selectionType || 'all',
+                  selectedItems: selectedItems ? selectedItems.clone() : selectedItems
+               })
+            } else {
+               this._showChooser(
+                  dic && dic.template,
+                  dic && dic.componentOptions
+               )
+            }
          }
+      },
+
+      _getSelectorAction: function() {
+         if(!this._selectorAction) {
+            this._selectorAction = this.getChildControlByName('SelectorButtonSelectorAction')
+         }
+         return this._selectorAction;
       },
 
       /**
@@ -249,6 +310,15 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                 this.addSelectedItems(result) :
                 this.addItemsSelection(result);
          }
+      },
+
+      _prepareItems: function() {
+         return ToSourceModel(
+            SelectorButton.superclass._prepareItems.apply(this, arguments),
+            this.getDataSource(),
+            this._options.idProperty,
+            this._options.saveParentRecordChanges
+         );
       },
 
       _getAdditionalChooserConfig: function() {

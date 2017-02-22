@@ -49,14 +49,9 @@ input[type="reset"]::-moz-focus-inner {
   color: @icon-color-disabled !important;
 }
 
-@media @ie8 {
-  /* Для IE8 */
-  .icon-primary[disabled] {
-    color: @icon-color-disabled !important;
-  }
-}
 
-/* HOVER styles */
+
+//HOVER styles
 .icon-hover{
   color: @icon-color-hover !important;
 }
@@ -68,28 +63,28 @@ input[type="reset"]::-moz-focus-inner {
 .blue-color {
   color: @darkcyan-color;
 }
-
+.controls-Link {
 // Модификаторы цвета ссылки
-.mainLink__2 {
-  color: @gray-lamantin-color;
-}
+  &.mainLink__2 {
+    color: @gray-lamantin-color;
+  }
 
-.additionalLink {
-  color: @gray-color;
+  &.additionalLink {
+    color: @gray-color;
+  }
+  &.additionalLink__2 {
+    color: @black-color;
+  }
+  &.additionalLink__3 {
+    color: @red-color;
+  }
+  &.additionalLink__4 {
+    color: @green-color;
+  }
+  &.additionalLink__5 {
+    color: @purple-color;
+  }
 }
-.additionalLink__2 {
-  color: @black-color;
-}
-.additionalLink__3 {
-  color: @red-color;
-}
-.additionalLink__4 {
-  color: @green-color;
-}
-.additionalLink__5 {
-  color: @purple-color;
-}
-
 .blue-dark-color {
   color: @blue-dark-color;
 }

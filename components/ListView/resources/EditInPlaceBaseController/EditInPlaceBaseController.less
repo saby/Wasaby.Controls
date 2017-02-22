@@ -7,3 +7,28 @@
     }
   }
 }
+
+.generate-side-class(@i: 1) when (@i =< length(@data-grid-side-cell-padding-variants)) {
+  @nval: extract(@data-grid-side-cell-padding-variants, @i);
+  @val: (@nval - 5) * 1px;
+  .controls-DataGridView__sidePadding-@{nval} {
+    .add-editors-style(@val);
+  }
+  .generate-side-class(@i + 1);
+}
+.add-editors-style(@val) {
+  .controls-editInPlace__withEditor {
+    &:first-child {
+      .controls-editInPlace__editor {
+        padding-left: @val;
+      }
+    }
+    &:last-child {
+      .controls-editInPlace__editor {
+        padding-right: @val;
+      }
+    }
+  }
+}
+.add-editors-style(@controls-editInPlace-first-editor-padding-left);
+.generate-side-class();

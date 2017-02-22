@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DropdownListMixin",
+   "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
@@ -32,10 +33,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
    "Core/helpers/dom&controls-helpers",
-   "i18n!SBIS3.CONTROLS.DropdownList"
+   "i18n!SBIS3.CONTROLS.DropdownList",
+   'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -107,7 +109,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          return emptyItemProjection.at(0);
       }
 
-      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
           * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
@@ -398,8 +400,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _setSelectedEmptyRecord: function(){
             var oldKeys = this.getSelectedKeys();
-            this._drawSelectedValue(null, [this._emptyText]);
+            this._options.selectedItems && this._options.selectedItems.clear();
             this._options.selectedKeys = [null];
+            this._drawSelectedValue(null, [this._emptyText]);
             this._notifySelectedItems(this._options.selectedKeys,{
                added : [null],
                removed : oldKeys

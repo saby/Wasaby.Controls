@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.Expandable', ['Core/CommandDispatcher'], function(Comm
                .toggleClass(this._options.collapsedClassName, !this._options.expanded);
             this._notify('onExpandedChange', this._options.expanded);
             this._notifyOnPropertyChanged('expanded');
+            this._notifyOnSizeChanged();
          }
       },
       /**

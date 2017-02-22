@@ -26,6 +26,7 @@
                     {{? it.additionalFilterParamsTemplate}}
                     <component data-component="SBIS3.CONTROLS.AdditionalFilterParams" name="additionalFilterParams">
                         <opt name="template" type="ref">{{@it.additionalFilterParamsTemplate}}</opt>
+                        <opt name="visible" bind="additionalFilterVisible"></opt>
                     </component>
                     {{?}}
                     {{? it.historyController}}

@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
+   'Core/helpers/collection-helpers',
    'html!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -9,9 +10,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
+   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, cMerge) {
+], function(constants, collection, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -19,6 +21,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
     * @public
     * @author Крайнов Дмитрий Олегович
     */
+   var
+       TILE_MODE = { // Возможные результаты режима отображения плитки
+          DYNAMIC: 'dynamic', // плитка с изменяемой шириной
+          STATIC: 'static' // плитка с постоянной шириной
+       };
    var canServerRenderOther = function(cfg) {
       return !(cfg.itemTemplate || cfg.listTemplate || cfg.tileTemplate);
    },
@@ -28,10 +35,17 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          var tileContentTpl, tileTpl, listContentTpl, listTpl;
 
          parentOptions.image = cfg.imageField;
+         parentOptions.widthProperty = cfg.widthProperty;
          parentOptions.description = cfg.displayProperty;
          parentOptions.viewMode = cfg.viewMode;
          parentOptions._itemsTemplate = cfg._itemsTemplate;
          parentOptions.resourceRoot = constants.resourceRoot;
+         parentOptions.tileMode =  cfg.tileMode;
+         parentOptions.invisibleItemsTemplate = TemplateUtil.prepareTemplate(cfg._invisibleItemsTemplate);
+         if (cfg.itemsHeight) {
+            parentOptions.minWidth = cfg.itemsHeight / 1.4; //Формат A4
+            parentOptions.maxWidth = cfg.itemsHeight * 1.5;
+         }
 
          if (cfg.tileContentTpl) {
             tileContentTpl = cfg.tileContentTpl;
@@ -83,6 +97,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _defaultTileTemplate: TileTemplate,
             _defaultListContentTemplate: ListContentTemplate,
             _defaultListTemplate: ListTemplate,
+            _invisibleItemsTemplate: InvisibleItemsTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
             /*TODO для лечения тестов пришлось закоппипастить шаблон*/
@@ -98,6 +113,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              */
             viewMode : 'table',
             /**
+             * @cfg {String} Устанавливает режим отображения в режиме плитки
+             * @variant static
+             * @variant dynamic
+             */
+            tileMode: '',
+            /**
              * @cfg {String} Устанавливает файловое поле элемента коллекции, которое предназначено для хранения изображений.
              * @remark
              * Файловое поле используется в шаблоне для построения отображения элементов коллекции.
@@ -108,6 +129,22 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              * @see listTemplate
              */
             imageField : null,
+            /**
+             * @cfg {String} Устанавливает файловое поле элемента коллекции, которое предназначено для хранения ширины изображения.
+             * @remark
+             * Файловое поле используется для режима viewMode = tile и tileMode = dynamic.
+             * @see viewMode
+             * @see tileMode
+             */
+            widthProperty: null,
+            /**
+             * @cfg {Number} Высота элементов.
+             * @remark
+             * Необхоимо указывать для режима viewMode = tile и tileMode = dynamic.
+             * @see viewMode
+             * @see tileMode
+             */
+            itemsHeight: undefined,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Список".
              * @deprecated
@@ -186,19 +223,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       $constructor: function() {
          //this._drawViewMode(this._options.mode);
          this._container.addClass('controls-CompositeView-' + this._options.viewMode);
-         var self = this;
 
-         this.subscribe('onDrawItems', function(){
-            if (self._options.viewMode == 'tile'){
-               self._calculateTileWidth();
-            }
-         });
+         this._calculateTileHandler = this._calculateTile.bind(this);
+         this.subscribe('onDrawItems', this._calculateTileHandler);
          //TODO:Нужен какой то общий канал для ресайза окна
-         $(window).bind('resize', function(){
-            if (self._options.viewMode == 'tile'){
-               self._calculateTileWidth();
-            }
-         });
+         $(window).bind('resize', this._calculateTileHandler);
 
          if (this._options.tileTemplate) {
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан tileTemplate');
@@ -207,6 +236,47 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             IoC.resolve('ILogger').log('CompositeView', 'Контрол ' + this.getName() + ' отрисовывается по неоптимальному алгоритму. Задан listTemplate');
          }
       },
+
+      _calculateTile: function() {
+         if (this._options.viewMode == 'tile' && !this._options.tileMode){
+            this._calculateTileWidth();
+         }
+      },
+
+      _setHoveredStyles: function(item) {
+         if (item && !item.hasClass('controls-CompositeView__hoverStylesInit')) {
+            this._calculateHoveredStyles(item);
+            item.addClass('controls-CompositeView__hoverStylesInit');
+         }
+      },
+
+      _calculateHoveredStyles: function(item) {
+         if (this._options.tileMode === TILE_MODE.DYNAMIC) {
+            this._setDynamicHoveredStyles(item);
+         } else if (this._options.tileMode === TILE_MODE.STATIC && !this._container.hasClass('controls-CompositeView-tile__static-smallImage')) {
+            this._setStaticHoveredStyles(item);
+         }
+      },
+
+      _setDynamicHoveredStyles: function(item) {
+         var
+             margin,
+             additionalWidth,
+             additionalHeight;
+         additionalWidth = item.outerWidth() / 2;
+         margin = item.outerWidth(true) / 2 - additionalWidth;
+         additionalHeight = item.outerHeight() / 2;
+         item.css('padding', (additionalHeight / 2) + 'px ' + (additionalWidth / 2) + 'px').css('margin', '' + (-additionalHeight / 2) + 'px ' + (-(additionalWidth / 2 - margin)) + 'px');
+      },
+
+      _setStaticHoveredStyles: function(item) {
+         var offset, margin;
+         offset = $('.controls-CompositeView__tileTitle', item).outerHeight(true) - (item.hasClass('controls-CompositeView__item-withTitle') ? 25 : 0);
+         margin = (item.outerHeight(true) - item.outerHeight()) / 2;
+         item.css('padding-bottom', offset).css('margin-bottom', -(offset - margin));
+         $('.controls-CompositeView__tileContainer', item).css('margin-bottom', offset);
+      },
+
       _updateHeadAfterInit: function() {
          if (this._options.viewMode == 'table') {
             this._redrawTheadAndTfoot();
@@ -252,9 +322,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       },
 
       _drawViewMode : function(mode) {
+         var tileMode = this._options.tileMode;
          this._container.toggleClass('controls-CompositeView-table', mode == 'table')
-                        .toggleClass('controls-CompositeView-list', mode == 'list')
-                        .toggleClass('controls-CompositeView-tile', mode == 'tile');
+             .toggleClass('controls-CompositeView-list', mode == 'list')
+             .toggleClass('controls-CompositeView-tile', mode == 'tile')
+             .toggleClass('controls-CompositeView-tile__static', mode == 'tile' && tileMode == TILE_MODE.STATIC)
+             .toggleClass('controls-CompositeView-tile__dynamic', mode == 'tile' && tileMode == TILE_MODE.DYNAMIC);
          if (this._options.viewMode == 'table') {
             $('.controls-DataGridView__table', this._container.get(0)).removeClass('ws-hidden');
             $('.controls-CompositeView__itemsContainer', this._container.get(0)).addClass('ws-hidden');
@@ -296,6 +369,23 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                tiles.outerWidth(newTileWidth);
             }
          }
+      },
+
+      /**
+       * Устанавливает Шаблон отображения строки в режиме "Список".
+       * @see listTemplate
+       */
+      setListTemplate : function(tpl) {
+         this._options.listTemplate = tpl;
+      },
+
+
+      /**
+       * Устанавливает Шаблон отображения строки в режиме "Плитка".
+       * @see tileTemplate
+       */
+      setTileTemplate : function(tpl) {
+         this._options.tileTemplate = tpl;
       },
 
       around : {
@@ -393,26 +483,14 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             return flag;
          },
 
-         /**
-          * Устанавливает Шаблон отображения строки в режиме "Список".
-          * @see listTemplate
-          */
-         setListTemplate : function(tpl) {
-            this._options.listTemplate = tpl;
-         },
-
-
-         /**
-         * Устанавливает Шаблон отображения строки в режиме "Плитка".
-         * @see tileTemplate
-         */
-         setTileTemplate : function(tpl) {
-            this._options.tileTemplate = tpl;
+         destroy: function(parentFnc) {
+            $(window).unbind('resize', this._calculateTileHandler);
+            parentFnc.call(this);
          }
       }
 
    };
-
+   MultiView.TILE_MODE = TILE_MODE;
    return MultiView;
 
 });

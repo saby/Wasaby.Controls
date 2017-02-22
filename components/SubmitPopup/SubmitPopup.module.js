@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
    "js!SBIS3.CONTROLS.InformationPopup",
    "html!SBIS3.CONTROLS.SubmitPopup/resources/template",
    "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.Link"
+   "js!SBIS3.CONTROLS.Link",
+   'css!SBIS3.CONTROLS.SubmitPopup'
 ],
 
    /**
@@ -125,19 +126,16 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 * @see messageTemplate
                 */
                detailsTemplate: null,
-
-               /*
+               /**
                 * @noShow
                 */
                template: template,
-
-               /*
+               /**
                 * cfg {Number} Устанавливает максимальный размер сообщения, превышая который, окно увеличит свой размер.
                 * @see detailsMaxLength
                 */
                messageMaxLength: 100,
-
-               /*
+               /**
                 * cfg {Number} Устанавливает максимальный размер описания, превышая который, окно увеличит свой размер.
                 * @see messageMaxLength
                 */
@@ -188,7 +186,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
             });
          },
 
-         /*
+         /**
           * @private
           */
          _choose: function(value){

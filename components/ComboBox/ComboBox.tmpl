@@ -1,0 +1,23 @@
+<div class="controls-TextBox controls-ComboBox {{editable ? '' : 'controls-ComboBox__editable-false'}} {{selectedKey ? '' : 'controls-ComboBox_emptyValue'}}">
+   <ws:if data="{{beforeFieldWrapper}}">
+      <div class="controls-TextBox__beforeFieldWrapper">
+         <ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
+      </div>
+   </ws:if>
+   <ws:if data="{{afterFieldWrapper}}">
+      <div class="controls-TextBox__afterFieldWrapper">
+         <ws:partial template="{{afterFieldWrapper}}" scope="{{...}}"/>
+      </div>
+   </ws:if>
+   <div class="controls-TextBox__fieldWrapper">
+      <span class="controls-TextBox__field controls-ComboBox__fieldNotEditable js-controls-ComboBox__fieldNotEditable
+         {{it.text ? '' : 'controls-ComboBox__fieldNotEditable__placeholder'}}">{{(text || placeholder || '&nbsp;')|sanitize}}</span>
+      <input
+         class="controls-TextBox__field controls-ComboBox__field js-controls-TextBox__field {{textTransform === 'uppercase' ? 'controls-TextBox__field-uppercase'}} {{textTransform === 'lowercase' ? 'controls-TextBox__field-lowercase'}}"
+         type="text"
+         value="{{text}}"
+         placeholder="{{placeholder}}"
+         maxlength="{{maxLength}}"
+      />
+   </div>
+</div>

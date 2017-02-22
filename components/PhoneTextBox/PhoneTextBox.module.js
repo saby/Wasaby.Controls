@@ -1,12 +1,11 @@
-define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl) {
+define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox', 'css!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl) {
 
    'use strict';
 
    /**
-    * Контрол, отображающий ссылку при нажатии на которую произойдет звонок
-    * Сторонние пользователи скорее предпочтут использовать просто <a></a>
-    * @class SBIS3.CONTROLS.PhoneCall
-    * @extends SBIS3.CONTROLS.Link
+    * Класс контрола, отображающий ссылку, при нажатии на которую произойдет звонок.
+    * @class SBIS3.CONTROLS.PhoneTextBox
+    * @extends SBIS3.CONTROLS.FormattedTextBox
     * @author Крайнов Дмитрий Олегович
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
@@ -66,7 +65,7 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
       return fullText;
    };
 
-   var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS.PhoneCall.prototype */ {
+   var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS.PhoneTextBox.prototype */ {
       _dotTplFn: dotTpl,
       $protected: {
          _options: {

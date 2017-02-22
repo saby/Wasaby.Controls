@@ -18,8 +18,11 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl",
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl",
    "html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl",
-   "i18n!!SBIS3.CONTROLS.MergeDialogTemplate"
+   "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
+   'css!SBIS3.CONTROLS.MergeDialogTemplate',
+   'css!SBIS3.CONTROLS.RadioButton'
 ], function( CommandDispatcher,Control, dotTplFn, SbisServiceSource, MemorySource, SbisAdapter, Query, RecordSet, fcHelpers) {
+
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
@@ -59,7 +62,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             _applyContainer: undefined
         },
         $constructor: function() {
-            this._container.removeClass('ws-area');
+            
             CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
         },
         onSearchPathClick: function(event) {
@@ -150,30 +153,32 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             }
             return keys;
         },
-        onSelectedItemChange: function(event, key) {
+        onSelectedItemChange: function(event, mergeTo) {
             var
+                id,
                 record,
                 self = this,
                 isAvailable,
                 showMergeButton,
-               idProperty = this._options.idProperty,
+                idProperty = this._options.idProperty,
                 items = this._treeView.getItems();
             this._treeView._toggleIndicator(true);
             this._options.dataSource.call(this._options.testMergeMethodName, {
-                'target': key,
-                'merged': this._getMergedKeys(key)
+                'target': mergeTo,
+                'merged': this._getMergedKeys(mergeTo)
             }).addCallback(function (data) {
                 data.getAll().each(function(rec) {
-                    record = items.getRecordById(rec.get(idProperty));
-                    if (rec.get(idProperty) == key) {
-                        isAvailable = true;
-                    } else {
+                    id = rec.get(idProperty);
+                    record = items.getRecordById(id);
+                    if (id !== mergeTo) {
                         isAvailable = rec.get(AVAILABLE_FIELD_NAME);
                         showMergeButton = showMergeButton || isAvailable;
                     }
                     record.set(AVAILABLE_FIELD_NAME, isAvailable);
                     record.set(COMMENT_FIELD_NAME, rec.get(COMMENT_FIELD_NAME));
                 }, self);
+                //Выбранной записи всегда выставляем AVAILABLE = true
+                items.getRecordById(mergeTo).set(AVAILABLE_FIELD_NAME, true);
                 self._applyContainer.toggleClass('ws-hidden', !showMergeButton);
             }).addBoth(function() {
                 self._treeView._toggleIndicator(false);

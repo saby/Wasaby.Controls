@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu', 'css!SBIS3.CONTROLS.MenuLink', 'css!SBIS3.CONTROLS.MenuButtonMixin'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
 
    'use strict';
 
@@ -71,14 +71,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
          this.reload();
          this._options.pickerClassName += ' controls-MenuLink__Menu';
          MenuLink.superclass.init.call(this);
-      },
-
-      setCaption: function(caption){
-         MenuLink.superclass.setCaption.call(this, caption);
-         $('.controls-Link__field', this._container).html(caption);
-         if (this._picker){
-            $('.controls-Menu__header-caption', this._picker._container).html(caption);
-         }
       },
 
       _setWidth: function(){

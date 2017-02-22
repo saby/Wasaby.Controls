@@ -1,13 +1,23 @@
 .controls-TabControl {
+  position: relative;
    .ws-SwitchableArea__item {
       background-color: @tab-control-background-color;
       z-index: 100;
-   }
-   >.controls-TabButtons{
-     position: absolute;
    }
    >.ws-SwitchableArea {
      padding-top: @tab-control-padding-top;
      box-sizing: @tab-control-box-sizing;
    }
+}
+
+//За пределами .controls-TabControl, т.к. контейнер с вкладками может быть "вырван" stickyHeader'ом за пределы компонента
+.controls-TabControl-tabButtons{
+   position: absolute;
+   /* При масштабировании высота бордера вместо 1px становится ~0.55, что вызывает скачек вкладок вверх.
+      Ставлю высоту контейнера на 1px меньше чем может быть, в случае чего его увеличит по высоте содержимое,
+      но при маштабировании он не будет прыгать */
+   height: 29px;
+   overflow: hidden;
+   width: 100%;
+   display: table;
 }

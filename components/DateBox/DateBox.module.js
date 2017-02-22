@@ -9,7 +9,7 @@ define(
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'html!SBIS3.CONTROLS.DateBox',
+      'tmpl!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
@@ -575,8 +575,9 @@ define(
                switch (item.mask) {
                   case 'YY' :
                      value = Number(value);
-                     //Если год задаётся двумя числами, то считаем что это текущий век если год меньше текущего года + 10, иначе это прошлый век.
-                     yyyy = value < shortCurYear + 10 ? curCentury + value : (curCentury - 100) + value;
+                     //Если год задаётся двумя числами, то считаем что это текущий век
+                     // если год меньше или равен текущему году + 10, иначе это прошлый век.
+                     yyyy = value <= shortCurYear + 10 ? curCentury + value : (curCentury - 100) + value;
                      break;
                   case 'YYYY' :
                      yyyy = value;

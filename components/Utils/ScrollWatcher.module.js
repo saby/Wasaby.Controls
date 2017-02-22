@@ -8,6 +8,12 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
    'Core/detection'
 ], function( cAbstract, strHelpers, LayoutManager, cDetection) {
    'use strict';
+
+   /**
+    * @class SBIS3.CONTROLS.ScrollWatcher
+    * @extends $ws.proto.Abstract
+    * @author Крайнов Дмитрий Олегович
+    */
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
@@ -156,7 +162,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        */
       getScrollHeight: function(element) {
          element = element || this.getScrollContainer()[0];
-         if (element.scrollHeight){
+         if (element.scrollHeight !== undefined){
             return element.scrollHeight;
          } else {
             // Get document height (cross-browser)

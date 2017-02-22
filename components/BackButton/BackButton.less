@@ -7,24 +7,7 @@
    font-weight: 700;
    font-size: @back-button-font-size;
 
-   &.controls-BackButton__orange {
-      .controls-BackButton__caption {
-         color: @header-color;
-      }
-      &:before {
-         color: @blue-dark-color;
-      }
-      &:hover {
-         .controls-BackButton__caption {
-            color: @primary-color;
-         }
-         &:before {
-            color: @primary-color;
-         }
-      }
-   }
-
-   .controls-BackButton__caption {
+   .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @blue-dark-color;
       overflow: hidden;
@@ -83,15 +66,20 @@
    .controls-BackButton__arrow{
       display: none;
    }
-   
+
    .controls-BackButton__caption.controls-Link{
       &:hover:not(.ws-disabled):not(.controls-Click__active):hover{
-         text-decoration: none;
          color: @primary-color;
+         .controls-Link-link {
+            text-decoration: none;
+         }
       }
       &.controls-Click__active {
          text-decoration: none;
-         color: @primary-color;
+         .controls-Link-link {
+            text-decoration: none;
+            color: @primary-color;
+         }
       }
    }
    &.controls-BackButton__empty {
@@ -153,3 +141,24 @@
       right: 16px;
    }
 }
+
+// ALERT: Расположение этого кода в конце файла - важно! Сделано для того чтобы перебить селектор с такой же силой. Не нагородив при этом кучи каскада
+// По правилам применяется селектор, который описан "позже". Т.е. самый последний
+.controls-BackButton {
+   &.controls-BackButton__orange {
+      .controls-BackButton__caption {
+         color: @header-color;
+      }
+      &:before {
+         color: @blue-dark-color;
+      }
+      &:hover {
+         .controls-BackButton__caption {
+            color: @primary-color;
+         }
+         &:before {
+            color: @primary-color;
+         }
+      }
+   }
+ }

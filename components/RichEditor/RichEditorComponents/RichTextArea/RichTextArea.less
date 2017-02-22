@@ -38,6 +38,9 @@
             margin-left: 0;
             margin-right: 16px;
          }
+         .mce-visual-caret {
+            margin: 0px;
+         }
       }
       li{
          margin-bottom:6px;
@@ -101,6 +104,15 @@
       table {
          margin-bottom: 5px;
       }
+   }
+   img {
+      //TODO: увелисчить вес селектора
+      outline: none !important;
+      cursor: pointer;
+   }
+   .controls-RichEditor__noneditable {
+      //TODO: увелисчить вес селектора
+      outline: none !important;
    }
 }
 
@@ -166,7 +178,7 @@
 //Стили для окна добавления/редактирования ссылки
 .controls-RichEditor__insertLinkHrefLabel,
 .controls-RichEditor__insertLinkHref.ws-field-string,
-.controls-RichEditor__insertLinkButton {
+.controls-RichEditor__insertLinkButton.controls-Button {
    display: block;
    position: absolute;
 }
@@ -190,7 +202,7 @@
    top: 8px;
 }
 
-.controls-RichEditor__insertLinkButton {
+.controls-RichEditor__insertLinkButton.controls-RichEditor__insertLinkButton {
    right: 36px;
    top: 8px;
    width: 90px;
@@ -200,7 +212,7 @@
 .controls-RichEditor__pasteWithStyles{
    text-align: center;
    .controls-RichEditor__pasteWithStylesLabel {
-      font-family:  'TensorFont Regular', 'TensorFont';
+      font-family:  'TensorFont', sans-serif;
       color: #000000;
       font-size: 15px;
       margin: 20px;
@@ -239,5 +251,10 @@
       -webkit-text-size-adjust: 100%;
       -moz-text-size-adjust: none;
       -ms-text-size-adjust: 100%;
+   }
+}
+.ws-is-desktop-platform {
+   .controls-RichEditor__sourceArea {
+      font-family: 'EmojiFont', 'TensorFont', sans-serif;
    }
 }

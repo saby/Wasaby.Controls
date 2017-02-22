@@ -170,7 +170,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
-            isHint: true
+            isHint: true,
+            parentContainer: ''
          }
       },
 
@@ -184,9 +185,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             'left': '-10000px'
          });
 
-         //TODO: Придрот
-         container.removeClass('ws-area');
-         /********************************/
 
          this._initOppositeCorners();
 
@@ -214,7 +212,20 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         container.appendTo('body');
+
+         if (this._options.parentContainer) {
+            var appendContainer;
+            if (this._options.target) {
+               appendContainer = this._options.target.closest('.' + this._options.parentContainer)
+            }
+            else {
+               appendContainer = $('.' + this._options.parentContainer);
+            }
+            container.appendTo(appendContainer);
+         }
+         else {
+            container.appendTo('body');
+         }
 
          this._saveDefault();
          this._resetToDefault();
@@ -267,6 +278,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
+            if (this._options.parentContainer && !element.hasClass(this._options.parentContainer)) {
+               break;
+            }
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                if (this._fixed){
@@ -380,6 +394,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._checkFixed(target);
          this._subscribeTargetMove();
          this.recalcPosition(true);
+      },
+      /**
+       * Получить текущий  таргет
+       */
+      getTarget: function() {
+         return this._options.target
       },
 
       /**
@@ -555,6 +575,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                border: (target.outerWidth() - target.innerWidth()) / 2,
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
+
+            if (this._options.parentContainer) {
+               var parContainer;
+               if (this._options.target) {
+                  parContainer = this._options.target.closest('.' + this._options.parentContainer)
+               }
+               else {
+                  parContainer = $('.' + this._options.parentContainer);
+               }
+               var parOffset = parContainer.offset();
+               this._targetSizes.offset.top = this._targetSizes.offset.top - parOffset.top + parContainer.scrollTop();
+               this._targetSizes.offset.left = this._targetSizes.offset.left - parOffset.left + parContainer.scrollLeft();
+            }
 
             /* task:1173219692
             im.dubrovin на Chrome on Android при получении offset необходимо учитывать scrollTop , scrollLeft */
@@ -817,6 +850,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+               spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
                if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
                      this._container.css('height', height);
@@ -868,8 +902,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._container.css('width', '');
                this._overflowedH = false;
             }
-            if (this._options.bodyBounds && offset.left < 0) {
-               offset.left = 0;
+            if (this._options.bodyBounds) {
+               if (offset.left < 0) {
+                  offset.left = 0;
+               }
+               if (this._containerSizes.requiredOffset.left > this._windowSizes.width) {
+                  offset.left = this._windowSizes.width - this._containerSizes.originWidth;
+               }
             }
             return offset.left;
          }

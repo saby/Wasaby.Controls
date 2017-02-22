@@ -7,11 +7,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.RichEditorToolbarBase",
    "html!SBIS3.CONTROLS.RichEditorToolbar",
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
+   'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown"
-], function( cMerge,RichEditorToolbarBase, dotTplFn, defaultConfig) {
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   'css!SBIS3.CONTROLS.RichEditorToolbar',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton'
+], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
 
@@ -267,6 +271,32 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
+         getImagePanel: function(button){
+            var
+               self = this;
+            if (!this._imagePanel) {
+               this._imagePanel = new ImagePanel({
+                  parent: button,
+                  target: button.getContainer(),
+                  corner: 'tr',
+                  closeByExternalClick: true,
+                  verticalAlign: {
+                     side: 'top',
+                     offset: -10
+                  },
+                  horizontalAlign: {
+                    side: 'right'
+                  },
+                  element: $('<div></div>'),
+                  imageFolder: self.getLinkedEditor()._options.imageFolder
+               });
+               this._imagePanel.subscribe('onImageChange', function(event, key, fileobj){
+                  self._insertImageTemplate(key, fileobj);
+               });
+            }
+            return this._imagePanel;
+         },
+
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
          _execCommand : function(name) {
             if (this._options.linkedEditor) {
@@ -298,12 +328,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
-         _selectFile: function(originalEvent) {
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor._getFileLoader().selectFile(originalEvent);
-            }
-         },
-
          _insertSmile: function(smile) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertSmile(smile);
@@ -320,6 +344,17 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             if (this._options.linkedEditor) {
                this._options.linkedEditor.toggleContentSource();
             }
+         },
+         _insertImageTemplate: function(key, fileobj) {
+            if (this._options.linkedEditor) {
+               this._options.linkedEditor.insertImageTemplate(key, fileobj);
+            }
+         },
+
+         _openImagePanel: function(button){
+            var
+               imagePanel = this.getImagePanel(button);
+            imagePanel.show();
          },
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
 

@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        'use strict';
 
-       var MULTISELECT_CLASS = 'controls-SelectorWrapper__multiselect';
+       var MULTISELECT_CLASS = 'controls-SelectorController__multiselect';
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
@@ -73,8 +73,6 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              if(this._options.selectedItems) {
                 if(Array.isArray(this._options.selectedItems)) {
                    this._options.selectedItems = Di.resolve('collection.list', {items: this._options.selectedItems});
-                } else {
-                   this._options.selectedItems = this._options.selectedItems.clone(true);
                 }
              } else {
                 this._options.selectedItems = Di.resolve('collection.list');
@@ -134,7 +132,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              function onChangeSelection() {
                 if(self._selectButton && multiselect) {
-                   self._selectButton.show();
+                   self._selectButton[currentItems.getCount() ? 'show' : 'hide']();
                 }
              }
 

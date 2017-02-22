@@ -12,13 +12,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    "Core/ConsoleLogger",
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.Link',
+   'css!SBIS3.CONTROLS.TreeDataGridView',
+   'css!SBIS3.CONTROLS.TreeView'
 ], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
        //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
        ADDITIONAL_LEVEL_OFFSET = 19,
+       ADDITIONAL_LEVEL_OFFSET_SEARCH_MODE = 7,
       buildTplArgsTDG = function(cfg) {
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
@@ -53,6 +56,8 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @extends SBIS3.CONTROLS.DataGridView
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @mixes SBIS3.CONTROLS.TreeViewMixin
+    *
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
@@ -264,7 +269,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          } else if (parentProj) {
             treeLevel = parentProj.getLevel();
          }
-         return treeLevel * HIER_WRAPPER_WIDTH + ADDITIONAL_LEVEL_OFFSET;
+         return treeLevel * HIER_WRAPPER_WIDTH + (this._isSearchMode() ? ADDITIONAL_LEVEL_OFFSET_SEARCH_MODE : ADDITIONAL_LEVEL_OFFSET);
       },
 
       _keyboardHover: function(e) {
@@ -355,7 +360,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _onChangeHoveredItem: function() {
          /* Т.к. механизм отображения стрелки и операций над записью на ipad'e релизован с помощью свайпов,
             а на PC через mousemove, то и скрывать/показывать их надо по-разному */
-         if(!this._touchSupport) {
+         if(!this._touchSupport || !this._hasHoveredItem()) {
             this._updateEditArrow();
          }
          TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
@@ -363,7 +368,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _updateEditArrow: function() {
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
-            if(this.getHoveredItem().container) {
+            if(this._hasHoveredItem()) {
                this._showEditArrow();
             } else {
                this._hideEditArrow();
@@ -522,11 +527,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return config;
       },
 
-      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
+      _canStartEditOnItemClick: function(target) {
          //При клике на треугольник раскрытия папки начинать редактирование записи не нужно
-         if (!$(target).hasClass('js-controls-TreeView__expand')) {
-            TreeDataGridView.superclass._startEditOnItemClick.apply(this, arguments);
-         }
+         return !$(target).hasClass('js-controls-TreeView__expand') && TreeDataGridView.superclass._canStartEditOnItemClick.apply(this, arguments);
       },
 
       _onDragHandler: function (dragObject, e) {

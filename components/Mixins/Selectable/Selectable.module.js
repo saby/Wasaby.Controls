@@ -98,31 +98,53 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
 
-      _prepareSelectedConfig: function(index, key) {
+      _prepareSelectedKeyByIndex: function(index) {
+         //Вычисляем ключ по известному индексу
          if (this._isEmptyIndex(index)) {
-            //Если передали пустой индекс и ключ, определяем индекс по ключу
-            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet') && typeof key != 'undefined') {
-               this._options.selectedIndex = this._getItemIndexByKey(key);
-            }
-            else {
-               //если ключа нет, значит это сброс значения, и ключ надо тоже сбросить
-               this._options.selectedKey = undefined;
-            }
+            this._options.selectedKey = null;
          }
          else {
-            //если индекс передали - вычисляем ключ
             if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
                this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
             }
          }
-         //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
-         if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
-            if (this._getItemsProjection().getCount()) {
-               this._options.selectedIndex = 0;
-               this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+         this._prepareOtherSelectedConfig();
+      },
+
+      _prepareSelectedIndexByKey: function(key) {
+         //Вычисляем индекс по известному ключу
+         if (typeof key === 'undefined') {
+            this._options.selectedIndex = -1;
+         }
+         else {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+               this._options.selectedIndex = this._getItemIndexByKey(key);
             }
          }
+         this._prepareOtherSelectedConfig();
+      },
+
+      _prepareBothSelectedConfig: function(index, key) {
+         //Вычисляем индекс или по ключ по известному другому параметру, в приоритете индекс
+         if (this._isEmptyIndex(index)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
+            this._prepareSelectedIndexByKey(key)
+         }
+         else {
+            //если индекс передали - вычисляем ключ
+            this._prepareSelectedKeyByIndex(index)
+         }
+      },
+
+      _prepareOtherSelectedConfig: function() {
          if (this._getItemsProjection()) {
+            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
+            if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
+               if (this._getItemsProjection().getCount()) {
+                  this._options.selectedIndex = 0;
+                  this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+               }
+            }
             var curItem = this._getItemsProjection().at(this._options.selectedIndex);
             if (curItem) {
                this._curHash = curItem.getHash();
@@ -175,7 +197,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
             //Если в результату вычисления параметров индекс поменялся, надо установить его в проекцию с сигнализированием изменений
             var oldIndex = this._options.selectedIndex;
-            this._prepareSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            this._prepareBothSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
             //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
             if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
                this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
@@ -187,7 +209,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
       //TODO переписать метод
       _setSelectedIndex: function(index, id) {
          this._drawSelectedItem(id, index);
-         this._notifySelectedItem(id, index)
+         this._notifySelectedItem(id, index);
       },
       /**
        * Устанавливает выбранным элемент коллекции по переданному идентификатору.
@@ -209,7 +231,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         this._prepareSelectedConfig(undefined, id);
+         this._prepareSelectedIndexByKey(this._options.selectedKey);
          if (this._getItemsProjection()) {
             this._selectInProjection();
          }
@@ -229,7 +251,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedIndex: function(index) {
          this._options.selectedIndex = index;
-         this._prepareSelectedConfig(this._options.selectedIndex);
+         this._prepareSelectedKeyByIndex(index);
          if (this._getItemsProjection()) {
             this._selectInProjection();
          }

@@ -6,14 +6,17 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'html!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/collection-helpers',
+   "Core/helpers/functional-helpers",
    'Core/helpers/markup-helpers',
    'Core/core-instance',
+   'js!SBIS3.StickyHeaderManager',
    /*TODO это должна подключать не панель а прекладники, потом убрать*/
    'js!SBIS3.CONTROLS.OperationDelete',
    'js!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.OperationMove',
-   'js!SBIS3.CONTROLS.MenuIcon'
-], function(Control, dotTplFn, DSMixin, colHelpers, mkpHelpers, cInstance) {
+   'js!SBIS3.CONTROLS.MenuIcon',
+   'css!SBIS3.CONTROLS.OperationsPanel'
+], function(Control, dotTplFn, DSMixin, colHelpers, fHelpers, mkpHelpers, cInstance, StickyHeaderManager) {
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
@@ -122,15 +125,16 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       $constructor: function() {
          this._initBlocks();
          this._publish('onToggle');
-         this._container.removeClass('ws-area');
+         
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);
 
-
          if(this._options.hasItemsMenu){
-            //TODO
             this._itemsMenu = this.getChildControlByName('itemsMenu');
+            this._checkCapacity();
+
+            //TODO
             this._itemsMenu._setPickerContent = function() {
                $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
             };
@@ -229,10 +233,20 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             this._isVisible = show;
             // убрал анимацию т.к. в Engine браузере панель находится в фиксированном заголовке и при анимации перекрывает контент
             // TODO вернуть анимацию, так чтобы контент в Engine браузере также был анимирован
+            // на страницах с внутренними скролами панель операций может находиться не в фиксированном заголовке и для этого случая можно вернуть старый алгоритм анимации
             this._container.toggleClass('ws-hidden', !show);
+            // Если контрол находится в фиксированном заголовке, то обновляем размеры заголовков
+            if (this._isSticky()) {
+               StickyHeaderManager.checkStickyHeaderSize();
+            }
             this._notify('onToggle');
          }
       },
+
+      _isSticky: fHelpers.memoize(function () {
+         return !!this.getContainer().closest('.ws-sticky-header__block').length;
+      }, '_isSticky'),
+
       _initBlocks: function() {
          if (!this._blocks) {
             this._blocks = {

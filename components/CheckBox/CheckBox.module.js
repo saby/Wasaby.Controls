@@ -5,18 +5,14 @@ define('js!SBIS3.CONTROLS.CheckBox', [
    "js!SBIS3.CONTROLS.Checkable",
    "tmpl!SBIS3.CONTROLS.CheckBox",
    "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
-   "js!SBIS3.CONTROLS.ITextValue"
+   "js!SBIS3.CONTROLS.ITextValue",
+   'css!SBIS3.CONTROLS.CheckBox'
 ], function( constants,ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
-      var newChecked;
-      if (!threeState) {
-         newChecked = !!(checked);
-      } else {
-         newChecked = (checked === false || checked === true) ? checked : null;
-      }
-      return newChecked;
+      //Портится контекст, когда приходит null при threeState = false checked, checked = null
+      return checked;
    };
    /**
     * Контрол, отображающий стандартный флажок.

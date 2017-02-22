@@ -12,8 +12,10 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.FontStyle',
    'js!SBIS3.CONTROLS.ColorStyle',
    'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.CheckBox'
+   'js!SBIS3.CONTROLS.CheckBox',
+   'css!SBIS3.CONTROLS.StylesPanelNew'
 ], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+
 
    'use strict';
 

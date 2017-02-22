@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "js!SBIS3.CONTROLS.TextBoxBase",
    "html!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
-   "js!SBIS3.CORE.FileStorageLoader",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    "js!SBIS3.CORE.PluginManager",
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
@@ -23,12 +22,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
-   'js!WS.Data/Di',
+   'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    "css!SBIS3.CORE.RichContentStyles",
-   "i18n!SBIS3.CONTROLS.RichEditor"
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, FileLoader, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, Di) {
+   "i18n!SBIS3.CONTROLS.RichEditor",
+   'css!SBIS3.CONTROLS.RichTextArea'
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel) {
       'use strict';
-
+      //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          constants = {
             maximalPictureSize: 120,
@@ -101,15 +101,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 */
                maximalHeight: 300,
                /**
-                * @cfg {Boolean} Загрузка файлов в хранилище при их дропе (с десктопа) в поле редактора
-                * <wiTag group="Управление">
-                * @example
-                * <pre>
-                *     <option name="uploadImageOnDrop">true</option>
-                * </pre>
-                */
-               uploadImageOnDrop: true,
-               /**
                 * @cfg {Object} Объект с настройками для tinyMCE
                 * <wiTag group="Управление">
                 *
@@ -134,7 +125,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   menubar: false,
                   browser_spellcheck: true,
                   smart_paste: true,
-                  noneditable_noneditable_class: "controls-RichEditor__noneditable"
+                  noneditable_noneditable_class: "controls-RichEditor__noneditable",
+                  object_resizing: false
                },
                /**
                 * @cfg {String} Значение Placeholder`а
@@ -158,7 +150,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Если декоратор не укзан, то сыылки будут оборачиваться в <a>
                 * @cfg {String} имя декоратора
                 */
-               decoratorName: '' // engine - 'linkDecorator'
+               decoratorName: '', // engine - 'linkDecorator',
+               /**
+                * Имя каталога, в который будут загружаться изображения
+                * @cfg {String} имя декоратора
+                */
+               imageFolder: 'images'
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -168,24 +165,25 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _saveBeforeWindowClose: null,
             _sourceArea: undefined,
             _sourceContainer: undefined, //TODO: избавиться от _sourceContainer
-            _fileLoader: undefined,
             _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
             _enabled: undefined, //TODO: подумать как избавиться от этого
             _typeInProcess: false,
             _clipboardText: undefined,
-            _mouseIsPressed: false //Флаг того что мышь была зажата в редакторе
+            _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
+            _imageOptionsPanel: undefined,
+            _lastReview: undefined
          },
 
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
 
          $constructor: function() {
             var
-               self = this,
-               editorHeight;
+               self = this;
             this._publish('onInitEditor', 'onUndoRedoChange','onNodeChange', 'onFormatChange', 'onToggleContentSource');
             this._sourceContainer = this._container.find('.controls-RichEditor__sourceContainer');
             this._sourceArea = this._sourceContainer.find('.controls-RichEditor__sourceArea').bind('input', this._onChangeAreaValue.bind(this));
@@ -219,6 +217,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             this._togglePlaceholder();
+            if (cConstants.browser.isMobileAndroid) {
+               this._notifyTextChanged = this._notifyTextChanged.debounce(300);
+            }
+            this._lastReview = this.isEnabled() ? undefined : this.getText();
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
@@ -396,7 +398,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this.saveToHistory(this.getText());
             RichUtil.unmarkRichContentOnCopy(this._dataReview);
             RichUtil.unmarkRichContentOnCopy(this._inputControl);
-            //проверка на то созадвался ли tinyEditor
+            //Проблема утечки памяти через tinyMCE
+            //Проверка на то созадвался ли tinyEditor
             if (this._tinyEditor && this._tinyReady.isReady()) {
                this._tinyEditor.remove();
                this._tinyEditor.destroy();
@@ -407,7 +410,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
-               this._tinyEditor.theme = null;
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
@@ -421,6 +423,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (!this._readyContolDeffered.isReady()) {
                this._readyContolDeffered.errback();
             }
+            this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 
@@ -894,6 +897,32 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             container.toggleClass('ws-hidden', sourceVisible);
             this._notify('onToggleContentSource', sourceVisible);
          },
+
+         insertImageTemplate: function(key, fileobj) {
+            var
+               meta = fileobj.id || '',
+               URL = this._prepareImageURL(fileobj);
+            //TODO: придумтаь как сделать без without-margin
+            switch (key) {
+               case "1":
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-left', meta, '<p class="without-margin">', '</p><p>{$caret}</p>');
+                  break;
+               case "2":
+                  this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
+                  break;
+               case "3":
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-right ', meta, '<p class="without-margin">', '</p><p>{$caret}</p>');
+                  break;
+               case "4":
+                  //todo: сделать коллаж
+                  break;
+               case "6":
+                  this._insertImg(URL, '', meta);
+                  break;
+            }
+         },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
          /*БЛОК ПРИВАТНЫХ МЕТОДОВ*/
@@ -908,13 +937,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._options.text = text;
                this._notify('onTextChange', text);
-               this._notifyOnPropertyChanged('text');
+               this._notifyTextChanged();
                this._updateDataReview(text);
                this.clearMark();
             }
             //При нажатии enter передаётся trimmedText поэтому updateHeight text === this.getText() и updateHeight не зовётся
             this._updateHeight();
             this._togglePlaceholder(text);
+         },
+         _notifyTextChanged: function() {
+            this._notifyOnPropertyChanged('text');
          },
          _showImagePropertiesDialog: function(target) {
             var
@@ -952,13 +984,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
          },
 
-         _smileHtml: function(smile, name, alt) {
+         _smileHtml: function(smile) {
             return '&#' + smile.code + ';';
          },
 
          /**
           * JavaScript function to match (and return) the video Id
-          * of any valid Youtube Url, given as input string.
+          * of any valid Youtube URL, given as input string.
           * @author: Stephan Schmitz <eyecatchup@gmail.com>
           * @url: http://stackoverflow.com/a/10315969/624466
           */
@@ -974,19 +1006,39 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //По инициализации tinyMCE
             editor.on('initContentBody', function(){
-               //По двойному клику на изображение внутри редактора - отображаем диалог редактирования размеров изображения
-               this._inputControl.bind('dblclick', function(e) {
-                  if (this._inputControl.attr('contenteditable') !== 'false') {
-                     var target = e.target;
-                     if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1 && target.className.indexOf('ws-fre__smile') === -1) {
-                        this._showImagePropertiesDialog(target);
-                     }
+               var
+                  bindImageEvent = function(event, callback) {
+                     self._inputControl.bind(event, function(e){
+                        if (self._inputControl.attr('contenteditable') !== 'false') {
+                           var
+                              target = e.target;
+                           if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
+                              callback(target);
+                           }
+                        }
+                     });
+                  };
+               //По двойному клику на изображение показывать диалог редактирования размеров
+               bindImageEvent('dblclick', function(target) {
+                  self._showImagePropertiesDialog(target);
+               });
+               //По нажатию на изображения показывать панель редактирования самого изображения
+               bindImageEvent('mousedown touchstart', function(target) {
+                  self._showImageOptionsPanel($(target));
+               });
+               //При клике на изображение снять с него выделение
+               bindImageEvent('click', function() {
+                  var
+                     selection = window.getSelection ? window.getSelection() : null;
+                  if (selection) {
+                     selection.removeAllRanges();
+                  }
+               });
+               this._inputControl.bind('scroll', function(e) {
+                  if (this._imageOptionsPanel) {
+                     this._imageOptionsPanel.hide();
                   }
                }.bind(this));
-
-               if (self._options.uploadImageOnDrop) {
-                  self._getFileLoader();
-               }
 
                this._inputControl.attr('tabindex', 1);
 
@@ -1041,12 +1093,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
                   content = e.content;
                e.content =  content.replace('orphans: 31415;','');
+               //Необходимо заменять декорированные ссылки обратно на url
+               //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+               e.content = self._prepareContent( e.content);
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                if (!self._mouseIsPressed) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
@@ -1059,8 +1114,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //если данные не из БТР и не из word`a, то вставляем как текст
                      //В Костроме юзают БТР с другим конфигом, у них всегда форматная вставка
                      if (self._clipboardText !== false) {
-                        //взял строку из метода pasteText, благодаря ей вставка сохраняет спецсимволы
-                        e.content = strHelpers.escapeHtml(editor.dom.encode(self._clipboardText).replace(/\r\n/g, '\n'));
+                        e.content = self._getTextBeforePaste();
                      }
                   }
                }
@@ -1160,6 +1214,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   e.stopImmediatePropagation();
                   e.preventDefault();
+                  //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
+                  self._typeInProcess = false;
                   return false;
                } else if (e.which === cConstants.key.enter && e.ctrlKey) {
                   e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
@@ -1255,6 +1311,71 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
          },
 
+         _showImageOptionsPanel: function(target) {
+            var
+               imageOptionsPanel = this._getImageOptionsPanel(target);
+            imageOptionsPanel.show();
+         },
+
+         _getImageOptionsPanel: function(target){
+            var
+               self = this;
+            if (!this._imageOptionsPanel) {
+               this._imageOptionsPanel = new ImageOptionsPanel({
+                  parent: self,
+                  target: target,
+                  targetPart: true,
+                  corner: 'bl',
+                  closeByExternalClick: true,
+                  element: $('<div></div>'),
+                  imageFolder: self._options.imageFolder,
+                  verticalAlign: {
+                     side: 'top'
+                  },
+                  horizontalAlign: {
+                     side: 'left'
+                  }
+               });
+               this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
+                  var
+                     URL = self._prepareImageURL(fileobj);
+                  this.getTarget().attr('src', URL);
+                  this.getTarget().attr('data-mce-src', URL);
+                  this.getTarget().attr('alt', fileobj.id);
+                  self._tinyEditor.undoManager.add();
+                  self._setTrimmedText(self._getTinyEditorValue());
+               });
+               this._imageOptionsPanel.subscribe('onImageDelete', function(){
+                  var
+                     $image = this.getTarget(),
+                     nodeForSelect = $image.parent()[0];
+                  $image.remove();
+                  //Проблема:
+                  //          После удаления изображения необходимо вернуть фокус в редактор,
+                  //          но тк выделение было на изображении при фокусе оно пытаетсыя восстановиться.
+                  //          Допустим в редакторе было только изображение, тогда выделение было вида:
+                  //             start/endContainer = <p>, endOffset = 1.
+                  //          После удаления <p>.childNodes.length = 0, попытается восстановиться 1 => ошибка
+                  //Решение:
+                  //          После удаления изображения ставить каретку в конец родительского для изображения блока
+                  self._tinyEditor.selection.select(nodeForSelect, false);
+                  self._tinyEditor.selection.collapse();
+                  self._tinyEditor.undoManager.add();
+                  self._setTrimmedText(self._getTinyEditorValue());
+               });
+            } else {
+               this._imageOptionsPanel.setTarget(target);
+            }
+            return this._imageOptionsPanel;
+         },
+            
+         _prepareImageURL: function(fileobj) {
+            //todo: preview
+            var
+               URL = fileobj.filePath ? fileobj.filePath : fileobj.url;
+            return URL;
+         },
+            
          _replaceWhitespaces: function(text) {
             var
                out = '',
@@ -1353,6 +1474,23 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             this._tinyReady.addCallback(function () {
                this._tinyEditor.setContent(this._prepareContent(this.getText()));
+               //Проблема:
+               //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
+               //                (если пусто то <p><br data-mce-bogus="1"><p>)
+               //          2) При открытиии задачи мы добавляем в историю действий текущий контент
+               //          После выполнения пункта 2 редактор стреляет 'change'(тк история не пустая(1) и в неё добавляют(2))
+               //          Далее мы стреляем изменением в контекст
+               //             а тк мы могли раздекорировать ссылку то портим значение в контексте
+               //Правильное решение:
+               //          В методе _setText сранивать текщуее значение опции и значение в редакторе
+               //          предварительно подготовив их через _prepareContent
+               //          N.B!  Данное решение не подходит тк заход в _setText идёт при каждом символе
+               //                и каждый раз разбирать контент на DOM-дерево не быстро =>
+               //                => будет тормозить ввод в редактор
+               //Решение:
+               //          Очистить историю редактора (clear) после его построения, чтобы пункт 2 был
+               //          первым в истории изщменений и редактор не стрелял 'change'
+               this._tinyEditor.undoManager.clear();
                this._tinyEditor.undoManager.add();
             }.bind(this));
          },
@@ -1418,8 +1556,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this._tinyEditor && this._tinyEditor.initialized && this.isEnabled() ? this._getTinyEditorValue() : this.getText();
          },
 
-         _prepareContent: function(value) {
-            return typeof value === 'string' ? value : value === null || value === undefined ? '' : value + '';
+         _prepareContent: function(text) {
+            text = typeof text === 'string' ? text : text === null || text === undefined ? '' : text + '';
+            //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+            return RichUtil.unDecorateLinks(text);
          },
 
          //метод показа плейсхолдера по значению//
@@ -1438,7 +1578,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function(path, name) {
+         _insertImg: function(path, className, meta,  before, after) {
             var
                self = this,
                img =  $('<img src="' + path + '"></img>').css({
@@ -1447,6 +1587,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   bottom: 0,
                   left: 0
                });
+            className = className ? className: '';
+            before = before ? before: '';
+            after = after ? after: '';
             img.on('load', function() {
                var
                   isIEMore8 = cConstants.browser.isIE && !cConstants.browser.isIE8,
@@ -1454,14 +1597,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
                   maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
-                  style = '';
-               if (maxSide[1] > constants.maximalPictureSize) {
-                  style = ' style="'+ maxSide[0] +': ' + constants.maximalPictureSize + 'px;"';
-               }
-               if (cConstants.browser.isIE8) {
-                  img.remove();
-               }
-               self.insertHtml('<img src="' + path + '"' + style + ' alt="' + name + '"></img>');
+                  style = ' style="width: 25%"';
+               self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
             });
             if (cConstants.browser.isIE8) {
                $('body').append(img);
@@ -1472,44 +1609,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (this._sourceContainerIsActive()) {
                this.setText(this._sourceArea.val());
             }
-         },
-
-         /**
-          * Создание загрузчика файлов
-          * @private
-          */
-         _createFileLoader: function(){
-            var
-               self = this,
-               imgName,
-               cont = $('<div class="ws-field-rich-editor-file-loader"></div>');
-            this._container.append(cont);
-            this._fileLoader = new FileLoader({
-               fileStorage: true,
-               extensions: ['image'],
-               element: cont,
-               dropElement: self._inputControl,
-               linkedContext: self.getLinkedContext(),
-               handlers: {
-                  onLoaded: function(e, json) {
-                     if (json.result && json.result.code === 201) {
-                        self._insertImg(json.result.filePath, imgName);
-                     } else {
-                        fcHelpers.alert(decodeURIComponent(json.result ? json.result.message : json.error ? json.error.message : ''));
-                     }
-                  },
-                  onChange: function(e, filePath) {
-                     imgName = filePath.substring(filePath.lastIndexOf('\\') + 1, filePath.length);
-                  }
-               }
-            });
-         },
-
-         _getFileLoader: function() {
-            if (!this._fileLoader) {
-               this._createFileLoader();
-            }
-            return this._fileLoader;
          },
 
          /**
@@ -1569,7 +1668,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled()) {
+            if (this._dataReview && !this.isEnabled() &&  this._lastReview != text) {
+               this._lastReview = text;
                this._dataReview.html(this._prepareReviewContent(text));
             }
          },
@@ -1578,7 +1678,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text);
+            text = Sanitize(text, {
+               checkDataAttribute: false,
+               validNodes: {
+                  embed: {
+                     type: true,
+                     src: true
+                  }
+               }
+            });
             return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
          },
 
@@ -1587,9 +1695,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
-            if (text && this._options.decoratorName && Di.isRegistered(this._options.decoratorName)) {
-               text = Di.resolve(this._options.decoratorName).unDecorateLinks(text)
-            }
             if (!this._typeInProcess && text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
@@ -1608,7 +1713,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._tinyReady.isReady()) {
                      this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(Sanitize(text));
+                     this._inputControl.html(Sanitize(text, {checkDataAttribute: false}));
                   }
                }
             }
@@ -1660,7 +1765,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return false;
             }
             return true;
+         },
+         _getTextBeforePaste: function(){
+            //Проблема:
+            //          после вставки текста могут возникать пробелы после <br> в начале строки
+            //Решение:
+            //          разбить метод _tinyEditor.plugins.paste.clipboard.pasteText:
+            //             a)Подготовка текста
+            //             b)Вставка текста
+            //          использовать метод подготовки текста - _tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste
+            var
+               text = this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
+            return text;
          }
+
       });
 
       return RichTextArea;

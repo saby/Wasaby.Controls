@@ -13,7 +13,8 @@ define(
       'html!SBIS3.CONTROLS.MonthView/resources/MonthViewTableBody',
       'html!SBIS3.CONTROLS.MonthView',
       'js!SBIS3.CONTROLS.MonthPicker',
-      'i18n!SBIS3.CONTROLS.Calendar'
+      'i18n!SBIS3.CONTROLS.Calendar',
+      'css!SBIS3.CONTROLS.MonthView'
    ],
    function (constants, CompoundControl, ControlHierarchyManager, RangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
 
@@ -34,8 +35,8 @@ define(
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
       var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _monthViewTableBodyTpl: MonthViewTableBodyTpl,
             _options: {
                /**
@@ -88,7 +89,7 @@ define(
 
          $constructor: function () {
             this._publish('onSelectionChange');
-            this._container.removeClass('ws-area');
+            
          },
 
          init: function () {

@@ -17,7 +17,8 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.OpenDialogAction",
-   "i18n!SBIS3.CONTROLS.FormController"
+   "i18n!SBIS3.CONTROLS.FormController",
+   'css!SBIS3.CONTROLS.FormController'
 ],
    function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
    /**
@@ -239,18 +240,21 @@ define('js!SBIS3.CONTROLS.FormController', [
          CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
       },
 
-      _processingRecordDeferred: function(){
+      _processingRecordDeferred: function() {
          var receiptRecordDeferred = this._options._receiptRecordDeferred,
              needUpdateKey = !this._options.key,
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
+             config = {
+               hideIndicator: true,
+               eventName: eventName
+             },
              self = this;
-         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
-            this._toggleOverlay(true);
-            receiptRecordDeferred.addCallback(function(record){
+         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')) {
+            receiptRecordDeferred.addCallback(function (record) {
                self.setRecord(record, needUpdateKey);
-               self._toggleOverlay(false);
-               self._actionNotify(eventName);
+               return record;
             });
+            this._prepareSyncOperation(receiptRecordDeferred, config, {});
          }
       },
 
@@ -700,8 +704,8 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        * @see dataSource
        */
-      update: function(config){
-         return this._prepareUpdatingRecord(config);
+      update: function(config) {
+         return this._prepareUpdatingRecord(config || {});
       },
 
       _showConfirmDialog: function(){

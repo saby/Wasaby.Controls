@@ -10,7 +10,8 @@ define(
       'html!SBIS3.CONTROLS.Calendar/resources/CalendarTableBody',
       'html!SBIS3.CONTROLS.Calendar',
       'js!SBIS3.CONTROLS.MonthPicker',
-      'i18n!SBIS3.CONTROLS.Calendar'
+      'i18n!SBIS3.CONTROLS.Calendar',
+      'css!SBIS3.CONTROLS.Calendar'
    ],
    function (CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
 
@@ -65,8 +66,9 @@ define(
            * @see setDate
            * @see date
            */
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
+
             _CalendarTableBodyTpl: CalendarTableBodyTpl,
             /**
              * Контролл MonthPicker
@@ -94,7 +96,7 @@ define(
 
          $constructor: function () {
             this._publish('onDateChange');
-            this._container.removeClass('ws-area');
+            
          },
 
          init: function(){

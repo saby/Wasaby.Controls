@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceClickController',
 
       /**
        * @class SBIS3.CONTROLS.EditInPlaceClickController
-       * @extends SBIS3.CORE.CompoundControl
+       * @extends SBIS3.CONTROLS.EditInPlaceBaseController
+       * @author Сухоручкин Андрей Сергеевич
        * @control
        * @public
        */

@@ -7,7 +7,8 @@ define('js!SBIS3.CONTROLS.SliderInput',
       'js!SBIS3.CONTROLS.Slider',
       'html!SBIS3.CONTROLS.SliderInput',
       'Core/constants',
-      'js!SBIS3.CONTROLS.NumberTextBox'
+      'js!SBIS3.CONTROLS.NumberTextBox',
+      'css!SBIS3.CONTROLS.SliderInput'
    ], function(Slider, dotTplFn, cConstants) {
       'use strict';
       var
