@@ -110,6 +110,8 @@ define('js!SBIS3.CONTROLS.DragObject', [
          this._owner = undefined;
          this._meta = undefined;
          this._jsEvent = undefined;
+         this._targetsControl = undefined;
+         this._dragging = false;
          this.setAvatar(null);
       },
       /**
@@ -246,7 +248,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
 
       onDragHandler: function (e) {
-         if (this._jsEvent !== e) {
+         if (this.isDragging() && this._jsEvent !== e) {
             this._jsEvent = e;
             this._targetsControl = this._getTargetsControl();
             this._setAvatarPosition(e);
