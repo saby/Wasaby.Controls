@@ -1,25 +1,40 @@
+.link-mixin(@icon-width) {
+  & + .controls-Button__text {
+    margin-left: @icon-width + @button-icon-gap;
+  }
+}
+
 .controls-Link {
-  display: inline-block;
-  cursor: @link-cursor;
   color: @link-text-color;
   text-decoration: @link-text-decoration;
-  text-align: @link-text-alignment;
   line-height: @link-line-height;
   padding: @link-padding;
-  box-sizing: border-box;
-  font-family: @font-basic-name;
-  font-size: @link-font-size;
-  height: auto;
+  height: 24px;
 
   &.controls-Click__active {
     cursor: @link-cursor;
     color: @link-active-text-color;
     text-decoration: @link-active-text-decoration;
 
-    .controls-Link__icon {
+    .controls-Button__icon {
       &.icon-primary {
         color: @link-active-text-color !important;
       }
+    }
+  }
+
+  // Button's icon
+  .controls-Button__icon {
+    position: absolute;
+    top: 7px;
+    .link-mixin(16px;);
+
+    &.icon-24 {
+      top: 3px;
+      .link-mixin(24px;);
+    }
+    &.icon-32 {
+      .link-mixin(32px;);
     }
   }
 
@@ -28,18 +43,18 @@
   }
 
   &.ws-disabled {
-    color: @link-disabled-text-color;
+    color: @default-disabled-color;
     cursor: default;
     text-decoration: none;
-    .controls-Link__icon{
-      color: @icon-color-disabled !important;
+    .controls-Button__icon{
+      color: @default-disabled-color !important;
     }
     &.controls-Link__underline {
       text-decoration: none;
     }
   }
 
-  .controls-Link__icon {
+  .controls-Button__icon {
     vertical-align: @link-icon-vertical-alignment;
     margin: @link-icon-margin;
   }
@@ -57,10 +72,12 @@
   }
 
   &.controls-Button__ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
     vertical-align: text-bottom;
+    .controls-Button__text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .controls-Link-link {
      color: inherit;
@@ -94,9 +111,9 @@
 
 .ws-is-firefox {
   .controls-Link {
-   .controls-Link__icon {
+   .controls-Button__icon {
      &.icon-24 {
-       margin: -5px 0 0;
+       margin: -4px 0 0;
      }
    }
   }
@@ -104,6 +121,6 @@
 
 .ws-is-desktop-platform {
   .controls-Link {
-    .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-Link-link);
+    .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-Button__text);
   }
 }

@@ -5,9 +5,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    "html!SBIS3.CONTROLS.Toolbar",
    "html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
    "Core/core-instance",
+   "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.CommandsButton",
-   'css!SBIS3.CONTROLS.Toolbar',
-   'css!SBIS3.CONTROLS.MenuButtonMixin'
+   'css!SBIS3.CONTROLS.Toolbar'
 ], function( IoC, ConsoleLogger,ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
@@ -178,7 +178,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          for (var i in itemsInstances) {
             if (itemsInstances.hasOwnProperty(i)) {
                var item = itemsInstances[i];
-               if (cInstance.instanceOfMixin(item, 'SBIS3.CONTROLS.MenuButtonMixin')) {
+               if (cInstance.instanceOfMixin(item, 'SBIS3.CONTROLS.MenuButton')) {
                   item.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
                }
             }
