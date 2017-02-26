@@ -596,7 +596,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._targetSizes.offset.left-=$(window).scrollLeft();
             };
 
-            // Для фиксированого таргета считаем оффсеты как boundingClientRect, кроме айпада, на котором это приводит к ошибкам позиционирования
+            // Для фиксированого таргета считаем оффсеты как boundingClientRect
+            // Но на айпаде это неправильно, так как fixed слой там сдвигается вместе с клавиатурой
             if (this._fixed && !detection.isMobileIOS) {
                this._targetSizes.offset = this._targetSizes.boundingClientRect
             }
