@@ -297,7 +297,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (targetContainer.outerWidth(true) + this._homeIconWidth >= containerWidth) {
             //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки
             var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
-               width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,
+               width = this._homeIconWidth + dotsWidth + this._arrowWidth,
                halfWidth = Math.floor((containerWidth - width) / 2);
             //Если два элемента
             if (crumbs.length == 2){
