@@ -13,9 +13,6 @@
 			.icon-16{
 				color: #FF7033!important;
 			}
-         .controls-BreadCrumbs__title{
-            color: #FF7033;
-         }
 		}
       &:first-child{
          margin-left: 0;
@@ -108,6 +105,14 @@
    &.ws-disabled {
       .controls-BreadCrumbs__crumb, .controls-BreadCrumbs__crumb:hover {
          cursor: default;
+      }
+      .controls-BreadCrumbs__crumb:hover{
+         .controls-BreadCrumbs__title{
+            color: #0055BB;
+         }
+         .icon-16{
+            color: #0055BB!important;
+         }
       }
    }
 }
