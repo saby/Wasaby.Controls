@@ -289,11 +289,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _itemActivatedHandler: function(item) {
-            this._itemActionsButtons[item]['handler'].call(this._options.linkedControl,
-                this._activeItem.container,
-                this._activeItem.key,
-                this._activeItem.record);
-
+            //хэндлер на пункте может быть и не задан
+            var actionHandler = this._itemActionsButtons[item]['handler'];
+            if (actionHandler) {
+               actionHandler.call(this._options.linkedControl,
+                  this._activeItem.container,
+                  this._activeItem.key,
+                  this._activeItem.record);
+            }
             /* В обработчике могут вызвать destroy */
             if(!this.isDestroyed()) {
                this._notify('onActionActivated', this._activeItem.key);
