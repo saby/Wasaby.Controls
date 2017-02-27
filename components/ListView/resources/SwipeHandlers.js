@@ -1,6 +1,5 @@
-define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', ['browser!jquery'], function (jQuery) {
-   (function($) {
-
+define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', ['browser!jquery'], function ($) {
+   if ($) {
       $.event.special.swipe = {
 
          xTreshold: 40,
@@ -223,6 +222,5 @@ define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', ['browser!jquery'],
             $(this).unbind('tap');
          }
       };
-
-   })(jQuery);
+   }
 });
