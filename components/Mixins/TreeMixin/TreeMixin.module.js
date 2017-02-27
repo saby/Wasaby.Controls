@@ -93,9 +93,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var lastFolder = path[path.length - 1];
             defaultCfg.projItem = lastFolder.projItem;
             defaultCfg.item = defaultCfg.projItem.getContents();
-            defaultCfg.className = 'controls-HierarchyDataGridView__path'
+            defaultCfg.className = 'controls-HierarchyDataGridView__path';
             cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
+            if (cfg.hierarchyViewModeItemTpl || cfg.hierarchyViewModeItemContentTpl) {
+               defaultCfg.itemTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemTpl);
+               defaultCfg.itemContentTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemContentTpl);
+            }
             cMerge(defaultCfg, {
                path: cFunctions.clone(path),
                viewCfg: cfg._getSearchCfg(cfg)
@@ -572,6 +576,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
               * @cfg {Boolean}
               */
             hierarchyViewMode: false,
+            hierarchyViewModeItemTpl: '',
+            hierarchyViewModeItemContentTpl: '',
             /**
              * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
              * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
