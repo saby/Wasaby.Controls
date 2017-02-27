@@ -28,19 +28,19 @@
 
 .ws-linkHeader, .controls-Link.ws-linkHeader {
   .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font, @link-header-color);
-  text-decoration: @link-header-text-decoration !important;
+  text-decoration: @link-header-text-decoration;
 
   &:after {
     display: inline-block;
     width: 8px;
     .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
-    margin-left: @link-header-after-margin-left !important;
+    margin-left: @link-header-after-margin-left;
   }
 
   &:hover {
-    color: @link-header-hover-color !important;
+    color: @link-header-hover-color;
     &:after {
-      color: @link-header-hover-after-color !important;
+      color: @link-header-hover-after-color;
     }
   }
 }
@@ -100,13 +100,13 @@
         text-decoration: @link-header-text-decoration;
       }
     }
-    &.ws-linkHeader:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+    &.ws-linkHeader:not(.controls-Link__disabledHover) {
       &:hover {
         color: @link-header-hover-color;
       }
     }
     &.ws-header,  &.ws-bigSubheader, &.ws-subheader {
-      &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
+      &:not(.controls-Link__disabledHover):hover {
         color: @primary-color;
       }
     }
