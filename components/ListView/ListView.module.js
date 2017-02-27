@@ -1107,7 +1107,7 @@ define('js!SBIS3.CONTROLS.ListView',
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
-               selectedInstanceId = itemsProjection.getItemBySourceIndex(recordIndex).getInstanceId(),
+               selectedInstanceId = recordIndex !== -1 ? itemsProjection.getItemBySourceIndex(recordIndex).getInstanceId() : -1,
                selectedItem = $('[data-hash="' + selectedInstanceId + '"]', this._getItemsContainer()),
                index = items.index(selectedItem),
                siblingItem;
