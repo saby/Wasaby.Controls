@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          }
 
          /* При единичном выборе, клик по записи должен её выбирать, даже если это папка */
-         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && this._isBranch(item)) {
+         if(!linkedObject.getMultiselect() && this._isBranch(item)) {
              event.setResult(false);
              this._applyItemSelect(item);
          }
@@ -259,7 +259,13 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _isBranch: function(item) {
-         return item.get(this._getLinkedObject().getParentProperty() + '@');
+         var linkedObject = this._getLinkedObject();
+
+         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+            return item.get(linkedObject.getParentProperty() + '@');
+         }
+         return false;
+
       },
 
       setSelectedItems: function(items) {
