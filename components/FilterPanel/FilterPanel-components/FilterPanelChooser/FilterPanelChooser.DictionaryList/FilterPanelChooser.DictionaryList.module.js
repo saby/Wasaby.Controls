@@ -174,6 +174,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             if (!this._selectorAction) {
                 this._selectorAction = new SelectorAction({
                     mode: 'floatArea',
+                    parent: this,
                     handlers: {
                         onExecuted: this._onExecutedHandler.bind(this)
                     }
