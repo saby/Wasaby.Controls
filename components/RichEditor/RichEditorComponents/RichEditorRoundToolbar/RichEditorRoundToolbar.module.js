@@ -124,7 +124,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          },
 
          _formatChangeHandler : function(event, obj, state) {
-            if (['bold', 'italic', 'underline', 'strikethrough'].includes(obj.format)) {
+            if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._toggleState(state, obj);
             }
          },
