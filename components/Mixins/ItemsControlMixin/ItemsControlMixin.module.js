@@ -25,7 +25,33 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers"
-], function ( cFunctions, constants, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, CollectionDisplay, EnumDisplay, FlagsDisplay, TemplateUtil, ItemsTemplate, Utils, Model, ParserUtilities, Sanitize, LayoutManager, cInstance, fcHelpers, fHelpers) {
+], function (
+   cFunctions,
+   constants,
+   Deferred,
+   IoC,
+   ConsoleLogger,
+   MemorySource,
+   SbisService,
+   RecordSet,
+   Query,
+   MarkupTransformer,
+   ObservableList,
+   Projection,
+   IBindCollection,
+   CollectionDisplay,
+   EnumDisplay,
+   FlagsDisplay,
+   TemplateUtil,
+   ItemsTemplate,
+   Utils,
+   Model,
+   ParserUtilities,
+   Sanitize,
+   LayoutManager,
+   cInstance,
+   fcHelpers,
+   fHelpers) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -1604,6 +1630,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!this._dataSource) {
             return;
          }
+
          var query = this._getQueryForCall(filter, sorting, offset, limit);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
