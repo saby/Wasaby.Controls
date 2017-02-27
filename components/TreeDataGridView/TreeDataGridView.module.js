@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @mixes SBIS3.CONTROLS.TreeMixin
     * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
-    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает отображения треугольников, которые раскрывают содержимое только для записей типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
+    * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
@@ -527,11 +527,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return config;
       },
 
-      _startEditOnItemClick: function(event, id, record, target, originalEvent) {
+      _canStartEditOnItemClick: function(target) {
          //При клике на треугольник раскрытия папки начинать редактирование записи не нужно
-         if (!$(target).hasClass('js-controls-TreeView__expand')) {
-            TreeDataGridView.superclass._startEditOnItemClick.apply(this, arguments);
-         }
+         return !$(target).hasClass('js-controls-TreeView__expand') && TreeDataGridView.superclass._canStartEditOnItemClick.apply(this, arguments);
       },
 
       _onDragHandler: function (dragObject, e) {

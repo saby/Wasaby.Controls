@@ -15,11 +15,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 ], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
    'use strict';
    if (typeof window !== 'undefined') {
-      var eventsChannel = EventBus.channel('WindowChangeChannel');
-
-      $(document).bind('mousedown touchstart', function (e) {
-         eventsChannel.notify('onDocumentClick', e);
-      });
+      var
+         eventsChannel = EventBus.channel('WindowChangeChannel'),
+         clickCallback = function (e) {
+            eventsChannel.notify('onDocumentClick', e);
+         };
+      // Отлавливаем mousedown + touchstart в захватывающей фазе, т.к. всплытие до document может быть остановлено
+      // через stopPropagation (https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04)
+      document.addEventListener('mousedown', clickCallback, true);
+      document.addEventListener('touchstart', clickCallback, true);
 
       $(window).blur(function(e) {
          if(document.activeElement && document.activeElement.tagName == "IFRAME"){

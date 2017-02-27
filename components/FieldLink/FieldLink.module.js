@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  });
 
              if(this._options.useSelectorAction) {
-                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, result) {
+                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, meta, result) {
                    /* После выбора из панели выбора, надо фокус возвращать в поле связи:
                       после закрытия панели фокус будет проставляться на компонент, который был активным до этого (механизм WindowManager),
                       последним активным компонентом была кнопка открытия справочника/ссылка открывающая справочник,
@@ -968,10 +968,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
+                /* Если поле связи отрисовывается скрытым, необходимо сбросить запомненную ширину,
+                   чтобы при отображении пересчитались размеры. */
+                if(!this.isVisibleWithParents()) {
+                   this._lastFieldLinkWidth = null;
+                }
                 linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
-             });
+             }.bind(this));
           },
 
           _drawSelectedItems: function(keysArr) {

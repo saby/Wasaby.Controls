@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'tmpl!SBIS3.CONTROLS.ColumnsEditor',
    'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.ColumnsEditorArea' ],
+   'js!SBIS3.CONTROLS.ColumnsEditorArea',
+   'css!SBIS3.CONTROLS.ColumnsEditor'],
    function(CompoundControl, CommandDispatcher, PickerMixin, dotTplFn) {
    
       'use strict';

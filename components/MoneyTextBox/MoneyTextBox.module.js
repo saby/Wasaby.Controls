@@ -27,7 +27,16 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       return value || '';
    }
 
-   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
+    /**
+     * Класс контрола "Поле ввода денег".
+     *
+     * @class SBIS3.CONTROLS.MoneyTextBox
+     * @extends SBIS3.CONTROLS.NumberTextBox
+     * @public
+     * @control
+     *
+     */
+   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
          _decimalsContainer: null,
          _options: {

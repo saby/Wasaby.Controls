@@ -320,6 +320,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          insertHtml: function(html) {
             if (typeof html === 'string' && this._tinyEditor) {
                this._performByReady(function() {
+                  html = this._prepareContent(html);
                   this._tinyEditor.insertContent(html);
                }.bind(this));
             }
@@ -1214,6 +1215,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   e.stopImmediatePropagation();
                   e.preventDefault();
+                  //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
+                  self._typeInProcess = false;
                   return false;
                } else if (e.which === cConstants.key.enter && e.ctrlKey) {
                   e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
