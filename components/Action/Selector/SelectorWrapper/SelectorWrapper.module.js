@@ -184,19 +184,22 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _processSelectActionVisibility: function(hoveredItem) {
-         var linkedObject = this._getLinkedObject(),
-             selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+         var linkedObject = this._getLinkedObject();
 
-         /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
-         if(hoveredItem.container) {
-            if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
-               if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
-                  selectAction.show();
+         if(linkedObject.getItemsActions()) {
+            var selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+
+            /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
+            if (hoveredItem.container) {
+               if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
+                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
+                     selectAction.show();
+                  } else {
+                     selectAction.hide()
+                  }
                } else {
-                  selectAction.hide()
+                  selectAction.hide();
                }
-            } else {
-               selectAction.hide();
             }
          }
       },
