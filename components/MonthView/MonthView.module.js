@@ -167,7 +167,7 @@ define(
             } else {
                if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY_TITLE)) {
                   this._onDayTitleMouseClick(t, event);
-               } else if (this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER) {
+               } else if (t.hasClass(this._MONTH_VIEW_CSS_CLASSES.DAY_BORDER)) {
                   this._onDayBorderMouseClick(t, event);
                }
             }
