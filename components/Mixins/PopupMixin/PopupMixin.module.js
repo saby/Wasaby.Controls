@@ -263,9 +263,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
-      _onTargetMove: function(){
-         // Если fixed не надо двигаться за таргетом
-         if (this.isVisible() && !this._fixed) {
+      _onTargetMove: function () {
+         if (this.isVisible()) {
+            if (this.isFixed()) {
+               this._initSizes();
+            }
             this.recalcPosition();
             this._checkTargetPosition();
          } else {
