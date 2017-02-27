@@ -110,13 +110,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
       _openComponent: function(meta, mode) {
          var config = this._getDialogConfig(meta);
-         if (this._dialog && (typeof this._dialog.isAutoHide == 'function') && !this._dialog.isAutoHide()) {
-            cMerge(this._dialog._options, config);
-            this._dialog.reload();
-         }
-         else {
-            this._createComponent(config, meta, mode || this._options.mode);
-         }
+         this._createComponent(config, meta, mode || this._options.mode);
       },
 
       _buildComponentConfig: function(meta) {
