@@ -99,6 +99,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (!cfg.items || cfg.length !== 0) {
             newCfg.visible = false;
          }
+
+         //TODO перевести хлебные крошки на ITEMSControl!
+         if (cfg.itemTpl) {
+            cfg.itemTemplate = cfg.itemTpl;
+         }
+
+
          if (cfg.keyField) {
             IoC.resolve('ILogger').log('BreadCrumbs', 'Опция keyField является устаревшей, используйте idProperty');
             cfg.idProperty = cfg.keyField;
