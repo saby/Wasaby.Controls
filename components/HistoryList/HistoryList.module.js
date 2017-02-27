@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'js!SBIS3.CONTROLS.HistoryController',
       'js!WS.Data/Collection/IList',
       'js!WS.Data/Collection/IEnumerable',
+      'js!WS.Data/Collection/IIndexedCollection',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Entity/Record',
       'Core/Serializer',
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'Core/helpers/collection-helpers'
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, genHelpers, colHelpers) {
+   function(HistoryController, IList, IEnumerable, IIndexedCollection, RecordSet, Record, Serializer, genHelpers, colHelpers) {
 
       'use strict';
 
@@ -153,9 +154,11 @@ define('js!SBIS3.CONTROLS.HistoryList',
          },
 
          removeAt: function(index) {
-            var result = this.getHistory().removeAt(index);
+            var history = this.getHistory(),
+                result;
 
-            if(result) {
+            if(index < history.getCount()) {
+               this.getHistory().removeAt(index);
                this.saveHistory();
             }
             return result;
@@ -186,6 +189,18 @@ define('js!SBIS3.CONTROLS.HistoryList',
          },
 
          //endregion WS.Data/Collection/IEnumerable
+
+         //region WS.Data/Collection/IIndexedCollection
+
+         getIndexByValue: function(property, value) {
+            return this.getHistory().getIndexByValue(property, value);
+         },
+
+         getIndicesByValue: function(property, value) {
+            return this.getHistory().getIndicesByValue(property, value);
+         },
+
+         //endregion WS.Data/Collection/IIndexedCollection
 
          //region Protected methods
 
