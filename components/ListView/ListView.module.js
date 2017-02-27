@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
+         NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable',
          START_NEXT_LOAD_OFFSET = 400,
          DRAG_META_INSERT = {
             on: 'on',
@@ -121,6 +122,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
+       * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
        *
        * @ignoreEvents onAfterLoad onChange onStateChange
        * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
@@ -913,6 +915,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
                case 'contextmenu':
                   this._contextMenuHandler(e);
+                  /* Выставляем этот флаг, чтобы не было имитации клика (см. метод _onActionHandler в Control.module.js).
+                     Сейчас проблема в том, что при клике двумя пальцами на touch устройствах событие contextmenu срабатывает,
+                     а click нет, поэтому в методе _onActionHandler происходит имитация клика, которая при срабатывании события contextmenu не нужна. */
+                  this._clickState.detected = true;
                   break;
                case 'mousedown':
                   this._mouseDownHandler(e);
@@ -1777,16 +1783,23 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlaceController();
          },
 
-         _startEditOnItemClick: function(event, id, model, originalEvent) {
+         _canStartEditOnItemClick: function(target) {
+            return !$(target).closest(NOT_EDITABLE_SELECTOR).length;
+         },
+
+         _startEditOnItemClick: function(event, id, model, target, originalEvent) {
             var
+               result;
+            if (this._canStartEditOnItemClick(target)) {
                result = this.showEip(model, { isEdit: true }, false);
-            if (originalEvent.type === 'click') {
-               result.addCallback(function(res) {
-                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
-                  return res;
-               });
+               if (originalEvent.type === 'click') {
+                  result.addCallback(function(res) {
+                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                     return res;
+                  });
+               }
+               event.setResult(result);
             }
-            event.setResult(result);
          },
 
          _onChangeHoveredItemHandler: function(event, hoveredItem) {
@@ -2969,7 +2982,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._getItemsProjection()) {
                   queryFilter = $ws.core.clone(filter);
                   var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
-                  $ws.core.merge(queryFilter, addParams);
+                  $ws.core.merge(queryFilter, addParams.filter);
                }
             }
             query.where(queryFilter)

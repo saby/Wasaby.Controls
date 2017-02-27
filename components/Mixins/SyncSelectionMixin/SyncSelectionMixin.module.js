@@ -36,6 +36,8 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
          /* Если уже в конструкторе есть selectedKey, то синхронизируем с selectedKeys */
          if(this._options.selectedKey) {
             this._options.selectedKeys = [this._options.selectedKey];
+         } else if (this._options.selectedKeys.length) {
+            this._options.selectedKey = this._options.selectedKeys[0];
          }
 
          /* Почему событие onPropertyChanged: если изменить св-во контрола в событии onPropertyChanged,

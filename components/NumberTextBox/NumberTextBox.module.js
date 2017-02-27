@@ -489,8 +489,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                  e,
                  currentVal,
                  this._options.delimiters,
-                 this._options.decimals,
-                 this._options.onlyInteger
+                 this._options.decimals
              );
 
          this._setText(newState.value);
