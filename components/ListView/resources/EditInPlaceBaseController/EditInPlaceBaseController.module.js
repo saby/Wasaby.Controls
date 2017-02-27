@@ -430,6 +430,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._acceptChanges(eip, eipRecord);
                      }).addErrback(function (error) {
                         fcHelpers.alert(error);
+                        return error;
                      });
                   } else {
                      this._acceptChanges(eip, eipRecord);
