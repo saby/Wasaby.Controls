@@ -5,11 +5,12 @@
             <div class="controls-SumDialogTemplate__row">
                 {{title = it.fields[field] || field;}}
                 {{index = format.getFieldIndex(field);}}
-                {{value = model.get(field);}}
-                {{?format.at(index).getType() === "Money"}}
-                    {{value = $ws.render.defaultColumn.money(model.get(field));}}
-                {{??format.at(index).getType() === "Integer"}}
-                    {{value = $ws.render.defaultColumn.integer(model.get(field));}}
+                {{type = format.at(index).getType();}}
+                {{type = type ? type.toLowerCase() : '';}}
+                {{?type === "money"}}
+                    {{value = it._defaultRenders.money(model.get(field));}}
+                {{??type === "integer"}}
+                    {{value = it._defaultRenders.integer(model.get(field));}}
                 {{?}}
                 <div class="controls-SumDialogTemplate__row-title" title="{{=title}}">{{=title}}</div>
                 <div class="controls-SumDialogTemplate__row-value" title="{{=value}}">{{=value}}</div>
