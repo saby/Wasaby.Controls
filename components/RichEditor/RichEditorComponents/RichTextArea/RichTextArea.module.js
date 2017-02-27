@@ -1311,7 +1311,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('NodeChange', function(e) {
                self._notify('onNodeChange', e)
             });
-            //todo: delete this
             editor.on('focusin', function(e) {
                if (self._fromTouch){
                   EventBus.globalChannel().notify('MobileInputFocus');
