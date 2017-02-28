@@ -799,7 +799,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              if(!this._isDynamicInputWidth) {
                 if(needResizeInput) {
-                   this._inputField[0].style.width = 0;
+                   this._setInputWidth(0);
                    this._updateInputWidth();
                 }
              }
@@ -1219,7 +1219,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              } else  {
                 inputWidth = 0;
              }
-             this._inputField[0].style.width = (inputWidth === 'auto' ? inputWidth : inputWidth + 'px');
+             this._setInputWidth(inputWidth);
+          },
+
+          _setInputWidth: function(width) {
+             this._inputField[0].style.width = (width === 'auto' ? width : width + 'px');
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */
