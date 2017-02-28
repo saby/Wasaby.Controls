@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
       var dataSourceModel, dataSourceModelInstance, parent, changedFields, newRec;
 
       if(items) {
-         if(dataSource && cInstance.instanceOfMixin(items, 'WS.Data/Source/ISource')) {
+         if(dataSource && cInstance.instanceOfMixin(dataSource, 'WS.Data/Source/ISource')) {
             dataSourceModel = dataSource.getModel();
             /* Создадим инстанс модели, который указан в dataSource,
                чтобы по нему проверять модели которые выбраны в поле связи */
