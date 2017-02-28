@@ -3800,6 +3800,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._deleteRecords(idArray, beginDeleteResult);
                   }
                }
+               return res;
             });
          },
 
