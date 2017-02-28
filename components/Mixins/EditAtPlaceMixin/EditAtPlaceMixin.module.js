@@ -186,6 +186,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
                this._okButton = new IconButton({
                   parent: self._picker,
                   element: $ok,
+                  primary: true, //Нужно, чтобы кнопка была дефолтной в своей области. иначе ctrl+enter вызовет обработчик дефолтной кнопки, расположенной выше.
                   icon: 'sprite:icon-16 icon-Yes icon-done action-hover'
                });
                container.append(this._cntrlPanel);
