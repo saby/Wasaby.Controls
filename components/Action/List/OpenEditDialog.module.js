@@ -293,17 +293,28 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          this._setModelId(meta);
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
-            result = {
+             componentConfig = {
                isNewRecord: !!meta.isNewRecord,
                source: meta.source,
-               key: meta.id,
-               initValues: meta.filter,
-               readMetaData: meta.readMetaData,
                record: record,
                handlers: this._getFormControllerHandlers(),
                initializingWay: meta.initializingWay || this._options.initializingWay
             };
-         cMerge(result, meta.componentOptions);
+
+         //Если этих опций нет в meta - не добавляем их, т.к. они могут быть объявлены на опциях FC. Иначе опции FC перетрутся пустыми значениями при получении записи с прототипного метода.
+         if (meta.readMetaData){
+            componentConfig.readMetaData = meta.readMetaData;
+         }
+         if (meta.id){
+            componentConfig.key = meta.id;
+         }
+         if (meta.filter){
+            componentConfig.initValues = meta.filter;
+         }
+         if (meta.dataSource){
+            componentConfig.dataSource = meta.dataSource;
+         }
+         cMerge(componentConfig, meta.componentOptions);
          //Мы передаем клон записи из списка. После того, как мы изменим ее поля и сохраним, запись из связного списка будет помечена измененной,
          //т.к. при синхронизации мы изменили ее поля. При повторном открытии этой записи на редактирование, она уже будет помечена как измененная =>
          //ненужный вопрос о сохранении, если пользователь сразу нажмет на крест.
@@ -311,11 +322,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (record) {
             record.acceptChanges();
          }
-         //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
-         //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
-         if (meta.dataSource)
-            result.dataSource = meta.dataSource;
-         return result;
+         return componentConfig;
       },
       /**
        * Возвращает обработчики на события formController'a
