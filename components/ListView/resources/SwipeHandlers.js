@@ -1,5 +1,5 @@
-define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', ['browser!jquery'], function ($) {
-   if ($) {
+define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', [], function () {
+   if (typeof $ != 'undefined') {
       $.event.special.swipe = {
 
          xTreshold: 40,
