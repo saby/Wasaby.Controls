@@ -602,7 +602,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._targetSizes.offset.left-=$(window).scrollLeft();
             };
 
-            if (this._fixed) this._targetSizes.offset = this._targetSizes.boundingClientRect;
+            // Для фиксированого таргета считаем оффсеты как boundingClientRect
+            // Но на айпаде это неправильно, так как fixed слой там сдвигается вместе с клавиатурой
+            if (this._fixed && !detection.isMobileIOS) {
+               this._targetSizes.offset = this._targetSizes.boundingClientRect
+            }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
