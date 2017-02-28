@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    "Core/defaultRenders",
    "Core/constants",
    "js!SBIS3.CONTROLS.NumberTextBox",
-   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper'
+   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
+   'css!SBIS3.CONTROLS.MoneyTextBox'
 ], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
 
    'use strict';
