@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    "js!SBIS3.CONTROLS.PickerMixin",
    "html!SBIS3.CONTROLS.SearchForm",
    "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
-   'css!SBIS3.CONTROLS.SearchForm'
+   'css!SBIS3.CONTROLS.SearchForm',
+   'css!SBIS3.CONTROLS.Suggest'
 ], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, dotTplFn, buttonsTpl) {
 
    'use strict';
