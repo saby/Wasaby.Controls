@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.ActiveSelectable', [
    "Core/Deferred",
    "js!WS.Data/Entity/Model",
-   "Core/core-instance"
-], function( Deferred,Model, cInstance) {
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.ToSourceModel"
+], function( Deferred,Model, cInstance, ToSourceModel) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -36,10 +37,14 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
             /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
                требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
             if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.idProperty] && opts.selectedItem[opts.displayProperty]) {
-               opts.selectedItem = new Model({
-                  idProperty: opts.idProperty,
-                  rawData: opts.selectedItem
-               });
+               opts.selectedItem = ToSourceModel(
+                  [new Model({
+                     idProperty: opts.idProperty,
+                     rawData: opts.selectedItem
+                  })],
+                  opts.dataSource,
+                  opts.idProperty
+               )[0];
                opts.selectedKey = opts.selectedItem.get(opts.idProperty);
             }
 
