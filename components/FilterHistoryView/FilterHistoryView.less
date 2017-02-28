@@ -1,49 +1,4 @@
 .controls-HistoryView {
-   .controls-HistoryView__toggle {
-      margin: 0 auto;
-      border: none !important;
-      background-color: transparent !important;
-      line-height: 20px !important;
-      font-size: 26px !important;
-      font-family: acordion-font !important;
-      width: auto;
-      color: #CCCCCC;
-      height: 24px;
-      box-sizing: border-box;
-      display: block;
-      text-align: center;
-
-      &:hover {
-         color: #313e78;
-      }
-
-      .controls-HistoryView__toggleIcon {
-         display: inline-block;
-         color: #cccccc !important;
-         width: 24px;
-         height: 24px;
-         position: relative;
-         top: auto;
-         left: auto;
-
-         &:before {
-            content: "\e902";
-            font-style: normal;
-            position: absolute;
-            top: 2px;
-            left: 0;
-         }
-      }
-
-      &.controls-Checked__checked {
-         .controls-HistoryView__toggleIcon {
-            &:before {
-               content: "\e904";
-            }
-         }
-      }
-   }
-
    .controls-ListView__item:nth-child(n+6) {
       display: none;
    }
