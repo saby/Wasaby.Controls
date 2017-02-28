@@ -96,9 +96,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             defaultCfg.className = 'controls-HierarchyDataGridView__path';
             cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
+
+            defaultCfg.bcTpls = {};
             if (cfg.hierarchyViewModeItemTpl || cfg.hierarchyViewModeItemContentTpl) {
-               defaultCfg.itemTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemTpl);
-               defaultCfg.itemContentTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemContentTpl);
+               defaultCfg.bcTpls.itemTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemTpl);
+               defaultCfg.bcTpls.itemContentTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemContentTpl);
             }
             cMerge(defaultCfg, {
                path: cFunctions.clone(path),
