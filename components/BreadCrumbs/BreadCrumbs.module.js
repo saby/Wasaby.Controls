@@ -304,24 +304,26 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (targetContainer.outerWidth(true) + this._homeIconWidth >= containerWidth) {
             //ширина декоротивных элементов -  блок с домиком, троеточие, стрелки
             var dotsWidth = $('.controls-BreadCrumbs__dots', this._container).outerWidth(true) || 0,
-               width = this._homeIconWidth + dotsWidth + this._arrowWidth * 2,
+               width = this._homeIconWidth + dotsWidth + this._arrowWidth,
                halfWidth = Math.floor((containerWidth - width) / 2);
             //Если два элемента
             if (crumbs.length == 2){
-               var first = crumbs.eq(0), firstWidth = first.width(),
-                  last = crumbs.eq(1), lastWidth = last.width();
+               var first = crumbs.eq(0), 
+                  firstWidth = first.width(),
+                  last = crumbs.eq(1), 
+                  lastWidth = last.width();
 
                if (firstWidth > halfWidth && lastWidth > halfWidth){
                   $('.controls-BreadCrumbs__title', crumbs).css('max-width', halfWidth);
                } else {
                   if (firstWidth > halfWidth) {
-                     $('.controls-BreadCrumbs__title', first).css('max-width', containerWidth - width - lastWidth);
+                     $('.controls-BreadCrumbs__title', first).css('max-width', containerWidth - width - lastWidth - this._getAdditionalCrumbWidth(first));
                   } else {
-                     $('.controls-BreadCrumbs__title', last).css('max-width', containerWidth - width - firstWidth);
+                     $('.controls-BreadCrumbs__title', last).css('max-width', containerWidth - width - firstWidth - this._getAdditionalCrumbWidth(last));
                   }
                }
             } else {
-               $('.controls-BreadCrumbs__title', crumbs).css('max-width', containerWidth - width);
+               $('.controls-BreadCrumbs__title', crumbs).css('max-width', containerWidth - width - this._getAdditionalCrumbWidth(crumbs));
             }
          }
 
@@ -337,6 +339,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                dots.detach();
             }
          }
+      },
+
+      _getAdditionalCrumbWidth: function(crumb){
+         return crumb.width() - $('.controls-BreadCrumbs__title', crumb).width(); 
       },
 
       _redraw: function(){
