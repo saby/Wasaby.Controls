@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          }
 
          /* При единичном выборе, клик по записи должен её выбирать, даже если это папка */
-         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && this._isBranch(item)) {
+         if(!linkedObject.getMultiselect() && this._isBranch(item)) {
              event.setResult(false);
              this._applyItemSelect(item);
          }
@@ -184,19 +184,22 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _processSelectActionVisibility: function(hoveredItem) {
-         var linkedObject = this._getLinkedObject(),
-             selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+         var linkedObject = this._getLinkedObject();
 
-         /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
-         if(hoveredItem.container) {
-            if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
-               if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
-                  selectAction.show();
+         if(linkedObject.getItemsActions()) {
+            var selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+
+            /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
+            if (hoveredItem.container) {
+               if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
+                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
+                     selectAction.show();
+                  } else {
+                     selectAction.hide()
+                  }
                } else {
-                  selectAction.hide()
+                  selectAction.hide();
                }
-            } else {
-               selectAction.hide();
             }
          }
       },
@@ -256,7 +259,13 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _isBranch: function(item) {
-         return item.get(this._getLinkedObject().getParentProperty() + '@');
+         var linkedObject = this._getLinkedObject();
+
+         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+            return item.get(linkedObject.getNodeProperty());
+         }
+         return false;
+
       },
 
       setSelectedItems: function(items) {
