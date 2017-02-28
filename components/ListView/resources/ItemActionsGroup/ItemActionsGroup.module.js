@@ -290,16 +290,24 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          _itemActivatedHandler: function(item) {
             //хэндлер на пункте может быть и не задан
-            var actionHandler = this._itemActionsButtons[item]['handler'];
-            if (actionHandler) {
-               actionHandler.call(this._options.linkedControl,
-                  this._activeItem.container,
-                  this._activeItem.key,
-                  this._activeItem.record);
+            var actionCommand = this._itemActionsButtons[item]['command'],
+                actionHandler;
+
+            if(actionCommand){
+               CommandDispatcher.sendCommand(this, actionCommand, this._activeItem);
             }
-            /* В обработчике могут вызвать destroy */
-            if(!this.isDestroyed()) {
-               this._notify('onActionActivated', this._activeItem.key);
+            else {
+               actionHandler = this._itemActionsButtons[item]['handler'];
+               if (actionHandler) {
+                  actionHandler.call(this._options.linkedControl,
+                      this._activeItem.container,
+                      this._activeItem.key,
+                      this._activeItem.record);
+               }
+               /* В обработчике могут вызвать destroy */
+               if (!this.isDestroyed()) {
+                  this._notify('onActionActivated', this._activeItem.key);
+               }
             }
          },
 
@@ -354,7 +362,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var action = {
                isMainAction : item.get('isMainAction'),
                isContextAction : item.get('isContextAction'),
-               isVisible: true
+               isVisible: true,
+               command: item.get('command')
                 },
                 onActivated = item.get('onActivated');
 
