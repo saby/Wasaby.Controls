@@ -81,6 +81,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          projection.setGroup(method);
       }
+      else {
+         projection.setGroup(null);
+      }
       return projection;
    },
 
@@ -1999,6 +2002,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options.groupBy.render = this._groupByDefaultRender;
             }
 
+         }
+         if (this._options.easyGroup && this._getItemsProjection()) {
+            applyGroupingToProjection(this._getItemsProjection(), this._options);
          }
          if (redraw){
             this._redraw();
