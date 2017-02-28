@@ -19,7 +19,7 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
          });
 
          it('Input first symbol in first section', function (){
-            inputField.text('a__:__:__');
+            inputField.text('a  :  :  ');
             assert.deepEqual(FTB._getTextDiff(), {
                char: 'a',
                position: 0
@@ -27,7 +27,7 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
          });
 
          it('Input first symbol in second section', function (){
-            inputField.text('__:b__:__');
+            inputField.text('  :b  :  ');
             assert.deepEqual(FTB._getTextDiff(), {
                char: 'b',
                position: 0
@@ -35,7 +35,7 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
          });
 
          it('Input second symbol in third section', function (){
-            inputField.text('__:__:_c_');
+            inputField.text('  :  : c ');
             assert.deepEqual(FTB._getTextDiff(), {
                char: 'c',
                position: 1

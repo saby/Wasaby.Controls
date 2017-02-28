@@ -422,7 +422,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _updateModel: function(eip, withSaving) {
                var
                   self = this,
-                  deferred,
+                  deferred = Deferred.success(),
                   eipRecord = eip.getEditingRecord();
                if (withSaving) {
                   if (this._options.dataSource) {
@@ -434,10 +434,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   } else {
                      this._acceptChanges(eip, eipRecord);
                   }
-               } else if (this._isAdd && eipRecord.getId() && this._options.dataSource) {
-                  deferred = this._options.dataSource.destroy(eipRecord.getId());
                }
-               return deferred || Deferred.success();
+               return deferred;
             },
             _acceptChanges: function(eip, record) {
                eip.acceptChanges();

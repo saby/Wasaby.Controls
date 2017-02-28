@@ -143,6 +143,11 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             assert.equal(newState.value, '12.3');
             assert.equal(newState.caretPosition, 4);
          });
+         it('123|4 => 12|4', function (){
+            newState = NumberTextBoxUtil.backspacePressed(3, 3, '1234', false, 3);
+            assert.equal(newState.value, '124');
+            assert.equal(newState.caretPosition, 2);
+         });
       });
    });
 });

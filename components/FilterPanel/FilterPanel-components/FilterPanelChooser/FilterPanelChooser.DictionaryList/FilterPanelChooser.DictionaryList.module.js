@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
         },
 
-        _onExecutedHandler: function(event, meta, result) {
+        _onExecutedHandler: function(event, result) {
             var
                 listView = this._getListView(),
                 items = listView.getItems();

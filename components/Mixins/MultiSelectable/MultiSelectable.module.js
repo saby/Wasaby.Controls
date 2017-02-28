@@ -656,7 +656,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          this._loadItemsDeferred = new Deferred({cancelCallback: function() {
             if(dMultiResult) {
                dMultiResult.getResult().cancel();
-               dMultiResult = null;
             }
          }});
          itemsKeysArr = this._convertToKeys(this._options.selectedItems);

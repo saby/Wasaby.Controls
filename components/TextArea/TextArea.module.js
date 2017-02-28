@@ -231,6 +231,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
                $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('controls-TextArea__disabled-wrapper-empty');
             }
          }
+         this._container.addClass('controls-TextArea__heightInit');
       },
 
       _autosizeTextArea: function(hard){
@@ -242,7 +243,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
 
          this._removeAutoSizeDognail();
-         this._container.addClass('controls-TextArea__heightInit');
       },
 
       _getElementToFocus: function() {

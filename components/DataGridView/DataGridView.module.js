@@ -915,22 +915,24 @@ define('js!SBIS3.CONTROLS.DataGridView',
          var
             targetColumn,
             targetColumnIndex;
-         if (!this._options.editingTemplate) {
-            targetColumn = $(target).closest('.controls-DataGridView__td');
-            if (targetColumn.length) {
-               targetColumnIndex = targetColumn.index();
-            }
-         }
-         event.setResult(this.showEip(record, { isEdit: true }, false, targetColumnIndex)
-            .addCallback(function(result) {
-               if (originalEvent.type === 'click') {
-                  ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+         if (this._canStartEditOnItemClick(target)) {
+            if (!this._options.editingTemplate) {
+               targetColumn = $(target).closest('.controls-DataGridView__td');
+               if (targetColumn.length) {
+                  targetColumnIndex = targetColumn.index();
                }
-               return !result;
-            })
-            .addErrback(function() {
-               return true;
-            }));
+            }
+            event.setResult(this.showEip(record, {isEdit: true}, false, targetColumnIndex)
+               .addCallback(function (result) {
+                  if (originalEvent.type === 'click') {
+                     ImitateEvents.imitateFocus(originalEvent.clientX, originalEvent.clientY);
+                  }
+                  return !result;
+               })
+               .addErrback(function () {
+                  return true;
+               }));
+         }
       },
       showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
          return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
