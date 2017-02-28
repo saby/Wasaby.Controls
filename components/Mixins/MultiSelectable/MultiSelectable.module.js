@@ -42,16 +42,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    var MultiSelectable = /**@lends SBIS3.CONTROLS.MultiSelectable.prototype  */{
        /**
         * @typedef {Object} ChangedKeys
-        * @property {Array.<String>} added ключи, которые добавились
-        * @property {Array.<String>} removed ключи, которые удалились
-        *
+        * @property {Array.<String>} added Ключи, которые были добавлены.
+        * @property {Array.<String>} removed Ключи, которые были удалены.
+        */
+       /**
         * @event onSelectedItemsChange Происходит при смене выбранных элементов коллекции.
         * @remark
-        * Событие происходит сразу после изменения списка выбранных коллекции элементов, когда хотя бы один элемент был
-        * добавлен либо удален из списка.
+        * Событие происходит сразу после изменения списка выбранных коллекции элементов, когда хотя бы один элемент был добавлен либо удален из списка.
         * @param {$ws.proto.EventObject} Дескриптор события.
         * @param {Array.<String>} idArray Массив ключей выбранных элементов.
-        * @param {ChangedKeys} changedKeys Измененные ключи
+        * @param {ChangedKeys} changed Измененные ключи.
         * @example
         * <pre>
         *     var itemsChanged = function() {
