@@ -157,8 +157,8 @@ define('js!SBIS3.CONTROLS.CheckBox', [
          else {
             this._options.textValue = '';
          }
-         this._container.toggleClass('controls-Checked__checked', this._options.checked);
-         this._container.toggleClass('controls-ToggleButton__null', this._options.checked == null);
+         this._container.toggleClass('controls-Checked__checked', !!this._options.checked);
+         this._container.toggleClass('controls-ToggleButton__null', !!(this._options.threeState && this._options.checked == null));
          this.validate();
          this._notify('onCheckedChange', this._options.checked);
          this._notifyOnPropertyChanged('checked');
