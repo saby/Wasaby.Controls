@@ -281,7 +281,11 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          });
 
          if(keys.length) {
-            linkedObject.setSelectedKeys(keys);
+            if(linkedObject.getMultiselect()) {
+               linkedObject.setSelectedKeys(keys);
+            } else {
+               linkedObject.setSelectedKey(keys[0]);
+            }
          }
       },
 
