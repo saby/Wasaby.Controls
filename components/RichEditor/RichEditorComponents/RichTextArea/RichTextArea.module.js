@@ -404,7 +404,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Проблема утечки памяти через tinyMCE
             //Проверка на то созадвался ли tinyEditor
             if (this._tinyEditor && this._tinyReady.isReady()) {
-               this._tinyEditor.remove();
                this._tinyEditor.destroy();
                if (this._tinyEditor.theme ) {
                   if (this._tinyEditor.theme.panel) {
@@ -413,6 +412,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
+               for (var key in this._tinyEditor) {
+                  if (this._tinyEditor.hasOwnProperty(key)) {
+                     this._tinyEditor[key] = null;
+                  }
+               }
+               this._tinyEditor.destroyed = true;
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
@@ -1074,12 +1079,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
-               self._notify('onInitEditor');
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
                editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,selectedMainText,additionalText', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
+               self._notify('onInitEditor');
+               self.destroy();
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
