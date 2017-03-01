@@ -601,7 +601,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {jQuery | String} Отступ в пикселях до нижней/верхней границы контейнера, при достижении которого, начинается загрузка следующей страницы
                 */
-               infiniteScrollOffset: 400,
+               infiniteScrollPreloadOffset: 400,
                /**
                 * @cfg {Boolean} Устанавливает режим постраничной навигации.
                 * @remark
@@ -2499,7 +2499,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createScrollWatcher: function(){
             var scrollWatcherConfig = {
-               totalScrollOffset: this._options.infiniteScrollOffset,
+               totalScrollOffset: this._options.infiniteScrollPreloadOffset,
                opener: this,
                element: this.getContainer().closest(this._options.infiniteScrollContainer),
                initOnBottom: this._options.infiniteScroll == 'up'
