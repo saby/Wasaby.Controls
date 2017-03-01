@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Query/Query",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!WS.Data/Collection/ObservableList",
    "js!WS.Data/Display/Display",
    "js!WS.Data/Collection/IBind",
@@ -16,7 +15,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/fast-control-helpers"
-], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, MarkupTransformer, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, fcHelpers) {
+], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, fcHelpers) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -1317,7 +1316,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var dotTemplate = TemplateUtil.prepareTemplate(itemTpl);
 
          if (typeof dotTemplate == 'function') {
-            return $(MarkupTransformer(dotTemplate(this._buildTplArgs(item))));
+            return $(dotTemplate(this._buildTplArgs(item)));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }

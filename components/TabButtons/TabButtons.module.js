@@ -7,14 +7,13 @@ define(
       'js!SBIS3.CONTROLS.RadioGroupBase',
       'html!SBIS3.CONTROLS.TabButtons',
       'html!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
-      'js!SBIS3.CORE.MarkupTransformer',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'Core/ParserUtilities',
       'Core/core-instance',
       'js!SBIS3.CONTROLS.TabButton',
       'css!SBIS3.CONTROLS.TabButtons'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, MarkupTransformer, TemplateUtil, ParserUtilities, cInstance) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, TemplateUtil, ParserUtilities, cInstance) {
 
    'use strict';
 
@@ -104,15 +103,15 @@ define(
       _modifyOptions: function (opts) {
          opts = TabButtons.superclass._modifyOptions.apply(this, arguments);
          if (opts.tabSpaceTemplate) {
-            opts.tabSpaceTemplate = MarkupTransformer(TemplateUtil.prepareTemplate(opts.tabSpaceTemplate));
+            opts.tabSpaceTemplate = TemplateUtil.prepareTemplate(opts.tabSpaceTemplate);
          }
          var items = opts.items;
          if (items){
             for (var i = 0, l = opts.items.length; i < l; i++){
-               var tmpl = MarkupTransformer(TemplateUtil.prepareTemplate(items[i][opts.displayProperty] || '')({
+               var tmpl = TemplateUtil.prepareTemplate(items[i][opts.displayProperty] || '')({
                   item: items[i],
                   options: opts
-               }));
+               });
                items[i][opts.displayProperty] = tmpl;
             }
          }
@@ -127,8 +126,8 @@ define(
 
          data.tplData = this._prepareItemData();
 
-         markupLeft = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records: data.records.left, tplData: data.tplData})), this._options);
-         markupRight = ParserUtilities.buildInnerComponents(MarkupTransformer(this._options._itemsTemplate({records: data.records.right, tplData: data.tplData})), this._options);
+         markupLeft = ParserUtilities.buildInnerComponents(this._options._itemsTemplate({records: data.records.left, tplData: data.tplData}), this._options);
+         markupRight = ParserUtilities.buildInnerComponents(this._options._itemsTemplate({records: data.records.right, tplData: data.tplData}), this._options);
 
          this._destroyInnerComponents(this._leftContainer);
          this._destroyInnerComponents(this._rightContainer);

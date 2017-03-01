@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.Spoiler', [
    'js!SBIS3.CONTROLS.ButtonBase',
    'js!SBIS3.CONTROLS.Expandable',
-   'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.Spoiler',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
@@ -9,7 +8,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'Core/helpers/collection-helpers',
    'Core/helpers/dom&controls-helpers',
    'css!SBIS3.CONTROLS.Spoiler'
-], function(ButtonBase, Expandable, MarkupTransformer, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
+], function(ButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
 
    'use strict';
 
@@ -150,7 +149,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          }
       },
       _initializeContent: function() {
-         this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options)));
+         this._getContentContainer().html(this._options._contentTpl(this._options));
          this.reviveComponents();
       },
       _destroyContent: function() {
