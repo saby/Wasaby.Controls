@@ -12,7 +12,5 @@
     {{? icon && viewMode !== 'caption'}}<option name="icon">{{=icon}} controls-ItemActions__icon</option>{{?}}
     {{? (caption && !icon) || (caption && viewMode === 'caption')}}<option name="caption">{{= caption }}</option>{{?}}
     {{? it.item.get('tooltip') }}<option name="tooltip">{{= it.item.get('tooltip')}}</option>{{?}}
-    {{? it.item.get('command') }}<option name="command">{{= it.item.get('command')}}</option>{{?}}
-    {{? it.item.get('commandArgs') }}<option name="commandArgs">{{= it.item.get('commandArgs')}}</option>{{?}}
 </component>
 WS-EXPERT-->
