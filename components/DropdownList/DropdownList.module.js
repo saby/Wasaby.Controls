@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
+   "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ScrollContainer",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
@@ -36,7 +37,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -106,6 +107,22 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          emptyItemProjection = Projection.getDefaultDisplay(rs);
          return emptyItemProjection.at(0);
+      }
+
+      function getSelectedItems(items, keys, idProperty) {
+         //Подготавливаем данные для построения на шаблоне
+         var list;
+         if (items && keys && keys.length > 0){
+            list = new List({
+               ownerShip: false
+            });
+            items.each(function(value, key){
+               if (keys.indexOf(value.get(idProperty)) > -1){
+                  list.add(value);
+               }
+            })
+         }
+         return list;
       }
 
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
@@ -307,14 +324,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
          init: function(){
             DropdownList.superclass.init.apply(this, arguments);
          },
-         _modifyOptions: function(cfg, parsedCfg) {
+         _modifyOptions: function() {
+            var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;
             }
             cfg.pickerClassName += ' controls-DropdownList__picker';
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
-            return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
+            if (!cfg.selectedItems) {
+               cfg.selectedItems = getSelectedItems(cfg._items, cfg.selectedKeys, cfg.idProperty);
+            }
+            return cfg;
          },
 
          _setPickerContent : function () {
