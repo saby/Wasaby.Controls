@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
       'js!SBIS3.CORE.FloatAreaManager',
+      'js!SBIS3.StickyHeaderManager',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager) {
 
       'use strict';
 
@@ -160,6 +161,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
+               this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
             }
          },
 
