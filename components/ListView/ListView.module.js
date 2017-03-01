@@ -86,7 +86,6 @@ define('js!SBIS3.CONTROLS.ListView',
          };
       var
          NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable',
-         START_NEXT_LOAD_OFFSET = 400,
          DRAG_META_INSERT = {
             on: 'on',
             after: 'after',
@@ -599,6 +598,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setInfiniteScroll
                 */
                infiniteScrollContainer: undefined,
+               /**
+                * @cfg {jQuery | String} Отступ в пикселях до нижней/верхней границы контейнера, при достижении которого, начинается загрузка следующей страницы
+                */
+               infiniteScrollOffset: 400,
                /**
                 * @cfg {Boolean} Устанавливает режим постраничной навигации.
                 * @remark
@@ -2496,7 +2499,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createScrollWatcher: function(){
             var scrollWatcherConfig = {
-               totalScrollOffset: START_NEXT_LOAD_OFFSET,
+               totalScrollOffset: this._options.infiniteScrollOffset,
                opener: this,
                element: this.getContainer().closest(this._options.infiniteScrollContainer),
                initOnBottom: this._options.infiniteScroll == 'up'
