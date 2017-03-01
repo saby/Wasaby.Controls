@@ -112,6 +112,9 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
             if (this._options.moveStrategy) {
                return Di.resolve(this._options.moveStrategy, {
                   dataSource: this.getDataSource(),
+                  hierField: this._options.parentProperty,
+                  parentProperty: this._options.parentProperty,
+                  nodeProperty: this._options.nodeProperty,
                   listView: this._getListView()
                });
             }
