@@ -109,10 +109,12 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
           * @private
           */
          _makeMoveStrategy: function () {
-            return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource(),
-               listView: this._getListView()
-            });
+            if (this._options.moveStrategy) {
+               return Di.resolve(this._options.moveStrategy, {
+                  dataSource: this.getDataSource(),
+                  listView: this._getListView()
+               });
+            }
          }
 
       });
