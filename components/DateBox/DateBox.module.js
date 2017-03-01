@@ -608,7 +608,7 @@ define(
          }
          if (this._dateIsValid(yyyy, mm, dd, hh, ii, ss)) {
             if (this._getFormatModel().isFilled()) {
-               return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+               return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu);
             } else if (autoComplete) {
                //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
                //автодополнение работает только если 1) заполнен день и не заполнены месц и год; 2) заполнены день и месяц и не заполнен год;
@@ -622,11 +622,30 @@ define(
                   }
                } else if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
                   ii = this._getFormatModel().getGroupValueByMask("II", '0');
-                  return new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+                  return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu);
                }
             }
          }
          return null;
+      },
+      /**
+       * Создает дату. В отличии от конструктора Date если задан год < 100, то не преобразует его в 19хх.
+       * @param yyyy
+       * @param mm
+       * @param dd
+       * @param hh
+       * @param ii
+       * @param ss
+       * @param uuu
+       * @returns {Date}
+       * @private
+       */
+      _createDate: function (yyyy, mm, dd, hh, ii, ss, uuu) {
+         var date = new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+         if (yyyy < 100) {
+            date.setFullYear(yyyy);
+         }
+         return date;
       },
       _dateIsValid: function(yyyy, mm, dd, hh, ii, ss) {
          var lastMonthDay = (new Date(yyyy, mm)).setLastMonthDay().getDate();
