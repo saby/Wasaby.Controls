@@ -4,9 +4,8 @@ define('js!SBIS3.CONTROLS.TreeView', [
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'html!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
    'html!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
-   'js!SBIS3.CORE.MarkupTransformer',
    'css!SBIS3.CONTROLS.TreeView'
-], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, MarkupTransformer) {
+], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate) {
    'use strict';
 
    /**

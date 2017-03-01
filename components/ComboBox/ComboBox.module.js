@@ -12,13 +12,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
-   "js!SBIS3.CORE.MarkupTransformer",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, MarkupTransformer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -494,7 +493,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             closeByExternalClick: true,
             targetPart: true,
             activableByClick: false,
-            template : MarkupTransformer(this._dotTplFnPicker)({})
+            template : this._dotTplFnPicker({})
          };
       },
 
