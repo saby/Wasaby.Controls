@@ -161,7 +161,12 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          var config = this._getDeafuiltDialogConfig(),
              compOptions = this._buildComponentConfig(meta),
              self = this;
-
+         colHelpers.forEach(config, function(defaultValue, key){
+            if (meta.hasOwnProperty(key)){
+               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + 'должна задаваться через meta.dialogOptions');
+               config[key] = meta[key];
+            }
+         });
          cMerge(config, meta.dialogOptions  ||  {});
          cMerge(config, {
             opener: this,
