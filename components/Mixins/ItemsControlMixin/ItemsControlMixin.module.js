@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Query/Query",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!WS.Data/Collection/ObservableList",
    "js!WS.Data/Display/Display",
    "js!WS.Data/Collection/IBind",
@@ -35,7 +34,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    SbisService,
    RecordSet,
    Query,
-   MarkupTransformer,
    ObservableList,
    Projection,
    IBindCollection,
@@ -208,7 +206,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       })
    },
    extendedMarkupCalculate = function(markup, cfg) {
-      return ParserUtilities.buildInnerComponentsExtended(MarkupTransformer(markup, cfg));
+      return ParserUtilities.buildInnerComponentsExtended(markup, cfg);
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -2338,9 +2336,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                buildedTpl = buildedTpl.get(0).outerHTML;
             }
             if (buildedTpl.hasOwnProperty('html')) {
-               return $(MarkupTransformer(buildedTpl.html));
+               return $(buildedTpl.html);
             }
-            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this._options));
+            return $(ParserUtilities.buildInnerComponents(buildedTpl, this._options));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
