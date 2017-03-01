@@ -594,7 +594,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _lastPath : [],
          _loadedNodes: {},
          _previousRoot: null,
-         _hier: []
+         _hier: [],
+         _hierPages: {}
       },
 
       $constructor : function(cfg) {
@@ -1053,6 +1054,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
 
+      _getReloadOffset: function(){
+         var offset;
+         if (this._hierPages[this.getCurrentRoot()] !== undefined) {
+            offset = this._hierPages[this.getCurrentRoot()] * this._limit;
+         } else {
+            offset = 0;
+         }
+         return offset;
+      },
+
       before: {
          _modifyOptions: function(cfg) {
             if (cfg.hierField) {
@@ -1063,7 +1074,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
          },
-         reload : function() {
+         reload: function() {
+            // сохраняем текущую страницу при проваливании в папку
+            if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
+               this._hierPages[this._previousRoot] = this._getCurrentPage();
+            }
             this._folderOffsets['null'] = 0;
             this._lastParent = undefined;
             this._lastDrawn = undefined;
