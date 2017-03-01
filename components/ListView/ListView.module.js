@@ -2673,14 +2673,15 @@ define('js!SBIS3.CONTROLS.ListView',
                at = {at: 0};
             }
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
+            var items;
             if (this._infiniteScrollState.mode == 'down') {
-               this.getItems().append(dataSet);
+               items = this.getItems().append(dataSet);
             } else {
-               this.getItems().prepend(dataSet);
+               items = this.getItems().prepend(dataSet);
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
-               this._drawItems(dataSet.toArray(), at);
+               this._drawItems(items, at);
             }
 
             this._needScrollCompensation = false;
