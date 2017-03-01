@@ -1085,7 +1085,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
-               self.destroy();
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
