@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             isNodeTo = true,
             isChangeOrder = position !== 'on';
 
-         if (!cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
+         if (target !== null && !cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
             target = this.getItems().getRecordById(target);
          }
 
@@ -235,7 +235,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             if (dataSource) {
                return dataSource.move(
                   idArray,
-                  target.getId(), {
+                  target === null ? null : target.getId(), {
                      position: this._options.invertOrder ? invert[position] : position,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty
