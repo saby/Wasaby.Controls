@@ -1,14 +1,11 @@
 .controls-EditAtPlace {
-   &.controls-TextBox,
    &.controls-TextBox:hover {
      border: none;
    }
    position: relative;
    &:hover,
-   &.ws-disabled {
+   &.controls-TextBox.ws-disabled {
       border: none;
-   }
-   &.ws-disabled {
       .controls-EditAtPlace__fieldWrapper {
          .controls-EditAtPlace__textField {
             cursor: @edit-at-place-field-disabled-cursor;
