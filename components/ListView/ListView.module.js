@@ -1620,16 +1620,16 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
-            this._reloadInfiniteScrollParams();
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
-               this._scrollOffset.top = reloadOffset - this._limit;
-               this._scrollOffset.bottom = reloadOffset + this._limit;
+               this._scrollOffset.top = reloadOffset;
+               this._scrollOffset.bottom = reloadOffset;
                if (reloadOffset > 0) {
                   this.setInfiniteScroll('both', true);
                }
             }
+            this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
             this._hoveredItem = {};
@@ -2380,7 +2380,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
-               if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
+               if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._scrollLoadNextPage();
                }
                if (this._scrollPager){
@@ -2669,9 +2669,9 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               return this._scrollOffset.bottom;
+               return this._scrollOffset.bottom + this._limit;
             } else {
-               return this._scrollOffset.top;
+               return this._scrollOffset.top - this._limit;
             }
          },
 
