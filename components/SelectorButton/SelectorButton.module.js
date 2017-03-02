@@ -47,19 +47,15 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
     /* Функция рендера текста в шаблоне компонента */
     function itemTemplateRender(opts) {
-       var items = [],
-           res = [];
+       var collector = function(item) {
+             res.push(item.get(opts.displayProperty));
+          },
+          res = [];
 
        if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
-          items = [opts.selectedItem];
+          colHelpers.forEach([opts.selectedItem], collector);
        } else if (opts.selectedItems) {
-          items = opts.selectedItems.toArray();
-       }
-
-       if(items.length) {
-          colHelpers.forEach(items, function(item) {
-             res.push(item.get(opts.displayProperty));
-          })
+          opts.selectedItems.each(collector);
        }
 
        return res.join('');

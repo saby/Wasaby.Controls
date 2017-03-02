@@ -1085,6 +1085,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._reviveItems();
       },
 
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
+      },
+
       _reviveItems : function() {
          this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
             throw e;
