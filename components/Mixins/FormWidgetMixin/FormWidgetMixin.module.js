@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          }
 
          if (vResult.errors.length > 0) {
-            this.markControl(vResult.errors);
+            this.markControl(vResult.errors, true);
          }
          this._calcPrevValidationResult();
 
