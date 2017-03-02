@@ -245,9 +245,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._options.touchMode = mode;
              if(!mode) {
                 this.getContainer()[0].style.height = 'auto';
+             }else {
+                this._setHeightInTouchMode();
              }
              if(this._itemsActions) {
                 this._itemsActions.setTouchMode(mode);
+             }
+          },
+          _setHeightInTouchMode: function(){
+             if(this._currentTarget) {
+                this.getContainer()[0].style.height = this._currentTarget.size.height + 'px';
              }
           },
           /**
@@ -392,7 +399,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if (animate) {
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
-                   container.style.height = target.size.height + 'px';
+                   this._setHeightInTouchMode();
                    toolbarContent.animate({right: 0}, 350);
                 }
              }
