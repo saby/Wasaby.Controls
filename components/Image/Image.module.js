@@ -397,6 +397,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (!noReload) {
                   this.reload();
                }
+               this._container.toggleClass('controls-image__normal', sizeMode == 'normal');
             },
             /**
              * Возвращает текущий способ отображения изображения в контейнере.

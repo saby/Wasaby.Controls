@@ -1,5 +1,5 @@
 {{var alt = it.tooltip ? it.tooltip : it.name;}}
-<div class="controls-image"><div class="controls-image__wrapper">
+<div class="controls-image{{? it.sizeMode == 'normal'}} controls-image__normal{{?}}"><div class="controls-image__wrapper">
    <img class="controls-image__image ws-hidden"{{? it.tooltip}} tooltip="{{=it.tooltip}}"{{?}}{{? alt}} alt="{{=alt}}"{{?}}/>
    {{? it.imageBar}}
       <div class="controls-image__image-bar" style="display: none;">
