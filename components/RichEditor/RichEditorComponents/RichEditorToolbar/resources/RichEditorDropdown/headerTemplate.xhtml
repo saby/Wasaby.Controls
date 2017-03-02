@@ -1,9 +1,9 @@
+{{model = it.selectedItems.at(0);}}
 <div class="controls-RichEditorDropdown__head">
-   {{? !it.icon}}
-   <div class="controls-RichEditorDropdown__headText controls-RichEditorDropdown__headText__{{=it.key}}">{{=it.title}}</div>
+   {{? !model.get('icon')}}
+      <div class="controls-RichEditorDropdown__headText controls-RichEditorDropdown__headText__{{=model.get('key')}}">{{=model.get('title')}}</div>
+   {{??}}
+      <i class="controls-RichEditorDropdown__headIcon {{=model.get('icon')}}"></i>
    {{?}}
-   {{? it.icon}}
-   <i class="controls-RichEditorDropdown__headIcon {{=it.icon}}"></i>
-   {{?}}
-   {{?(arguments[1] && arguments[1].type === 'fastDataFilter')}}<div class="controls-RichEditorDropdown__headArrow"></div>{{?}}
+   {{?it.type === 'fastDataFilter'}}<div class="controls-RichEditorDropdown__headArrow"></div>{{?}}
 </div>
