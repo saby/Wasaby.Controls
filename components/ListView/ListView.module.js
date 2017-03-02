@@ -3690,12 +3690,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * <pre>
           *    new ListView({
           *       itemsActions: {
-      	 *	         name: 'moveSelected'
-      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
-      	 *	         onActivated: function(tr, id, record) {
-      	 *	            this.move(this.getSelectedItems().toArray(), record, 'on')
-      	 *	         }
-      	 *	      }
+          *          name: 'moveSelected'
+          *          tooltip: 'Переместить выделленые записи внутрь папки'
+          *          onActivated: function(tr, id, record) {
+          *             this.move(this.getSelectedItems().toArray(), record, 'on')
+          *          }
+          *       }
           *    })
           * </pre>
           */
