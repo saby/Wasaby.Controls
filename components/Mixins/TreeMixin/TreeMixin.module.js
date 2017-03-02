@@ -785,6 +785,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemParent = item.getParent();
          return itemParent ? itemParent.isExpanded() ? this._isVisibleItem(itemParent) : false : true;
       },
+
+      _getGroupItems: function(groupId) {
+         var
+            rootItems = [],
+            fullItems = this._getItemsProjection().getGroupItems(groupId);
+
+         for (var i = 0; i < fullItems.length; i++) {
+            if (this._canApplyGrouping(fullItems[i])) {
+               rootItems.push(fullItems[i]);
+            }
+         }
+         return rootItems;
+      },
+
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
          if (this._options.hierarchyViewMode) {
@@ -796,7 +810,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
                      prevGroupId = groupId;
-                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                     if (this._getGroupItems(groupId).length <= items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
                      }
                   }
