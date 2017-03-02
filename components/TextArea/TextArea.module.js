@@ -124,6 +124,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
             cfg.maxLinesCount = cfg.autoResize.maxLinesCount;
             IoC.resolve('ILogger').log('TextArea', 'Опция cfg.autoResize устарела - используйте maxLinesCount');
          }
+         if (cfg.autoResize && cfg.autoResize.state && !cfg.maxLinesCount) {
+            cfg.maxLinesCount = 10;
+         }
+         if (cfg.minLinesCount > cfg.maxLinesCount) {
+            cfg.maxLinesCount = cfg.minLinesCount;
+         }
          newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.maxLinesCount);
          return newCfg;
       },
@@ -175,17 +181,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
          if (this._options.placeholder && !constants.compatibility.placeholder) {
             this._createCompatPlaceholder();
          }
-         if (this._options.autoResize.state) {
-            this._options.minLinesCount = parseInt(this._options.minLinesCount, 10);
-            if (!this._options.autoResize.maxLinesCount) {
-               this._options.autoResize.maxLinesCount = 100500;
-            }
-            this._options.autoResize.maxLinesCount = parseInt(this._options.autoResize.maxLinesCount, 10);
-            if (this._options.minLinesCount > this._options.autoResize.maxLinesCount) {
-               this._options.autoResize.maxLinesCount = this._options.minLinesCount;
-            }
+         if (this._options.maxLinesCount != this._options.minLinesCount) {
+
             this._inputField.data('minLinesCount', this._options.minLinesCount);
-            this._inputField.data('maxLinesCount', this._options.autoResize.maxLinesCount);
+            this._inputField.data('maxLinesCount', this._options.maxLinesCount);
 
             this._cachedW = this._inputField.width();
             this._cachedH = this._inputField.height();
@@ -232,6 +231,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
                $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('controls-TextArea__disabled-wrapper-empty');
             }
          }
+         this._container.addClass('controls-TextArea__heightInit');
       },
 
       _autosizeTextArea: function(hard){
@@ -243,7 +243,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
 
          this._removeAutoSizeDognail();
-         this._container.addClass('controls-TextArea__heightInit');
       },
 
       _getElementToFocus: function() {

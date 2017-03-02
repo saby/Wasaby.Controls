@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              * @cfg {Object} Объект содержащий опции компонента.
              */
             componentOptions: null,
-            /*
+            /**
              * @cfg {Object} Объкт содержащий опции диалога 
              */
             dialogOptions: null
@@ -174,8 +174,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             template: meta.template || this._options.template,
             componentOptions: compOptions,
             handlers: { 
-               onAfterClose: function(e, meta){
-                  self._notifyOnExecuted(meta);
+               onAfterClose: function(e, result){
+                  self._notifyOnExecuted(meta, result);
                   self._dialog = undefined;
                },
                onBeforeShow: function(){

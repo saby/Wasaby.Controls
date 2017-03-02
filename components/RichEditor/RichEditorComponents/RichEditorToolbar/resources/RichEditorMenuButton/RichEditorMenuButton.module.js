@@ -4,7 +4,14 @@
 define('js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton', ['js!SBIS3.CONTROLS.MenuButton', 'html!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton'], function(MenuButton, dotTplFn) {
    'use strict';
    var
-      RichEditorMenuButton = MenuButton.extend(/** @lends $ws.proto.FieldRichEditorMenuButton.prototype */{
+      /**
+       * @class SBIS3.CONTROLS.RichEditor.RichEditorMenuButton
+       * @extends SBIS3.CONTROLS.MenuButton
+       * @author Борисов П.С.
+       * @public
+       * @control
+       */
+      RichEditorMenuButton = MenuButton.extend(/** @lends SBIS3.CONTROLS.RichEditor.RichEditorMenuButton.prototype */{
       $protected: {
          _options: {
             /**

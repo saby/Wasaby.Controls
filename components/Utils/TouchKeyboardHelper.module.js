@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [
       getKeyboardHeight: function(){
          if (this.isKeyboardVisible()){
             if (constants.browser.isMobileIOS){
-               return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
+               return $(window).height() * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
          }
          return 0;

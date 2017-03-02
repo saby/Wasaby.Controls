@@ -1,13 +1,10 @@
 define('js!SBIS3.CONTROLS.FieldLink',
     [
-       "Core/helpers/collection-helpers",
        "Core/CommandDispatcher",
        "Core/constants",
        "Core/IoC",
-       "Core/ConsoleLogger",
        "Core/core-instance",
        "Core/helpers/functional-helpers",
-       "Core/helpers/dom&controls-helpers",
        "Core/helpers/string-helpers",
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -22,8 +19,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.Utils.DialogOpener",
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-       "js!WS.Data/Di",
-       "Core/core-functions",
+       "js!SBIS3.CONTROLS.ToSourceModel",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -34,14 +30,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
     ],
     function (
-        colHelpers,
         CommandDispatcher,
         constants,
         IoC,
-        ConsoleLogger,
         cInstance,
         fHelpers,
-        dcHelpers,
         strHelpers,
         SuggestTextBox,
         ItemsControlMixin,
@@ -66,8 +59,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         DialogOpener,
         ITextValue,
         TemplateUtil,
-        Di,
-        cFunc
+        ToSourceModel
     ) {
 
        'use strict';
@@ -127,8 +119,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @mixes SBIS3.CONTROLS.MultiSelectable
         * @mixes SBIS3.CONTROLS.ActiveSelectable
         * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
-        * @mixes SBIS3.CONTROLS.ChooserMixin
-        * @mixes SBIS3.CONTROLS.FormWidgetMixin
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @mixes SBIS3.CONTROLS.ItemsControlMixin
         *
@@ -399,7 +389,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  });
 
              if(this._options.useSelectorAction) {
-                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, result) {
+                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, meta, result) {
                    /* После выбора из панели выбора, надо фокус возвращать в поле связи:
                       после закрытия панели фокус будет проставляться на компонент, который был активным до этого (механизм WindowManager),
                       последним активным компонентом была кнопка открытия справочника/ссылка открывающая справочник,
@@ -647,7 +637,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * {String} Устанавливает поле элемента коллекции, из которого отображать данные
            * @deprecated
            */
           setDisplayField: function(displayProperty) {
@@ -656,7 +646,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           /**
-           * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+           * {String} Устанавливает поле элемента коллекции, из которого отображать данные
            * @example
            * <pre class="brush:xml">
            *     <option name="displayProperty">Название</option>
@@ -972,22 +962,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           _loadAndDrawItems: function(amount) {
              var linkCollection = this._getLinkCollection(),
-                 linkCollectionContainer = linkCollection.getContainer(),
-                 self = this;
+                 linkCollectionContainer = linkCollection.getContainer();
 
              /* Нужно скрыть контрол отображающий элементы, перед загрузкой, потому что часто бл может отвечать >500мс и
               отображаемое значение в поле связи долго не меняется, особенно заметно в редактировании по месту. */
              linkCollectionContainer.addClass(classes.HIDDEN);
              this.getSelectedItems(true, amount).addCallback(function(list){
-                /* Т.к. операция загрузки записей асинхронная, то за это время поле связи может скрыться,
-                   надо на это проверить */
-                if(!self.isVisibleWithParents()) {
-                   self._lastFieldLinkWidth = 0;
+                /* Если поле связи отрисовывается скрытым, необходимо сбросить запомненную ширину,
+                   чтобы при отображении пересчитались размеры. */
+                if(!this.isVisibleWithParents()) {
+                   this._lastFieldLinkWidth = null;
                 }
                 linkCollectionContainer.removeClass(classes.HIDDEN);
                 linkCollection.setItems(list);
                 return list;
-             });
+             }.bind(this));
           },
 
           _drawSelectedItems: function(keysArr) {
@@ -1014,61 +1003,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           _prepareItems: function() {
-             var items = FieldLink.superclass._prepareItems.apply(this, arguments),
-                 self = this,
-                 newRec, dataSource, dataSourceModel, dataSourceModelInstance,
-                 parent, changedFields;
-
-             function getModel(model, config) {
-                return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
-             }
-
-             if(items) {
-                dataSource = this.getDataSource();
-
-                if(dataSource) {
-                   dataSourceModel = dataSource.getModel();
-                   /* Создадим инстанс модели, который указан в dataSource,
-                      чтобы по нему проверять модели которые выбраны в поле связи */
-                   dataSourceModelInstance = getModel(dataSourceModel, {});
-
-                   /* FIXME гразный хак, чтобы изменение рекордсета не влекло за собой изменение родительского рекорда
-                      Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
-                      Задача:
-                      https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
-                   if(this._options.saveParentRecordChanges) {
-                      parent = items._getMediator().getParent(items);
-
-                      if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
-                         changedFields = cFunc.clone(parent._changedFields);
-                      }
-                   }
-
-                   items.each(function(rec, index) {
-                      /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
-                         чтобы не было конфликтов при мерже полей этих записей */
-                      if( dataSourceModelInstance._moduleName !==  rec._moduleName) {
-                         (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
-                         rec = newRec;
-                         items.replace(rec, index);
-                      }
-                   });
-
-                   if(changedFields) {
-                      parent._changedFields = changedFields;
-                   }
-                }
-
-                /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
-                   отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
-                   и не обязательному по первичному ключу у записей в списке. */
-                items.each(function(rec) {
-                   if(rec.getIdProperty() !== self._options.idProperty && rec.get(self._options.idProperty) !== undefined) {
-                      rec.setIdProperty(self._options.idProperty);
-                   }
-                });
-             }
-             return items;
+             return ToSourceModel(
+                FieldLink.superclass._prepareItems.apply(this, arguments),
+                this.getProperty('dataSource'),
+                this.getProperty('idProperty'),
+                this.getProperty('saveParentRecordChanges')
+             );
           },
 
           setListFilter: function() {
@@ -1109,13 +1049,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          setEnabled: function() {
-             FieldLink.superclass.setEnabled.apply(this, arguments);
-             /* При изменении состояния поля связи, надо скинуть старую запомненую ширину,
-                если это произошло в скрытом состоянии, иначе поле показа не запустится перерисовка */
-             if(!this.isVisibleWithParents()) {
-                this._lastFieldLinkWidth = null;
-             }
+          _setEnabled: function() {
+             this._lastFieldLinkWidth = null;
+             FieldLink.superclass._setEnabled.apply(this, arguments);
+          },
+
+          _setVisibility: function() {
+             this._lastFieldLinkWidth = null;
+             FieldLink.superclass._setVisibility.apply(this, arguments);
           },
 
           /**

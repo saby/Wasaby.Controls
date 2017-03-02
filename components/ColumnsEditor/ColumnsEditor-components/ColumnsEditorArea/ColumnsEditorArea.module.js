@@ -11,9 +11,11 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.ListView',
-   'js!SBIS3.CONTROLS.CheckBoxGroup' ], 
+   'js!SBIS3.CONTROLS.CheckBoxGroup',
+   'css!SBIS3.CONTROLS.ColumnsEditorArea'
+ ],
    function(CompoundControl, CommandDispatcher, cHelpers, ItemsMoveController, dotTplFn, ItemContentTpl) {
-   
+
       'use strict';
       /**
        * Класс контрола "Редактор колонок".

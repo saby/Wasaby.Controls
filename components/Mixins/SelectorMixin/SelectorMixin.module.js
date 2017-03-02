@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
       /**
        * Описание логики выбора из диалога/панели.
        * SelectorMixin используется полем связи.
-       * @mixin
+       * @mixin SBIS3.CONTROLS.SelectorMixin
        * @public
        * @author Крайнов Дмитрий Олегович
        */

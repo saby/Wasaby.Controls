@@ -19,10 +19,29 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/helpers/functional-helpers",
    "Core/helpers/collection-helpers",
    'Core/helpers/string-helpers',
+   'js!SBIS3.CONTROLS.ToSourceModel',
    "js!SBIS3.CONTROLS.Action.SelectorAction",
    'css!SBIS3.CONTROLS.SelectorButton'
 ],
-    function( constants, dotTplFn, ButtonBase, DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin, Sanitize, cInstance, fHelpers, colHelpers, strHelpers) {
+    function(
+       constants,
+       dotTplFn,
+       ButtonBase,
+       DSMixin,
+       MultiSelectable,
+       ActiveMultiSelectable,
+       Selectable,
+       ActiveSelectable,
+       SyncSelectionMixin,
+       ChooserMixin,
+       IconMixin,
+       Sanitize,
+       cInstance,
+       fHelpers,
+       colHelpers,
+       strHelpers,
+       ToSourceModel
+    ) {
 
    'use strict';
 
@@ -60,7 +79,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @author Крайнов Дмитрий Олегович
     *
     * @mixes SBIS3.CONTROLS.IconMixin
-    * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.MultiSelectable
     * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
     * @mixes SBIS3.CONTROLS.Selectable
@@ -294,6 +312,15 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                 this.addSelectedItems(result) :
                 this.addItemsSelection(result);
          }
+      },
+
+      _prepareItems: function() {
+         return ToSourceModel(
+            SelectorButton.superclass._prepareItems.apply(this, arguments),
+            this.getDataSource(),
+            this._options.idProperty,
+            this._options.saveParentRecordChanges
+         );
       },
 
       _getAdditionalChooserConfig: function() {
