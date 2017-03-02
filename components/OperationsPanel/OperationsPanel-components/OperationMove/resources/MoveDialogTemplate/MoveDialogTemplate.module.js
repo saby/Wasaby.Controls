@@ -30,8 +30,8 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
             displayProperty: undefined,
             filter: undefined,
             infiniteScroll: null,
-            pageSize: undefined
-
+            pageSize: undefined,
+            buttonCaption: 'Перенести'
          },
          treeView: undefined
       },

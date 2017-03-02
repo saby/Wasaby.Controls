@@ -135,15 +135,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _doExecute: function(meta) {
             meta = meta || {};
-            var movedItems = meta.movedItems || meta.records || this.getSelectedItems();
-            meta.movedItems = movedItems;
-            meta.dialogOptions = meta.dialogOptions || {};
-            cMerge(meta.dialogOptions, {
-               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               opener: this._getListView(),
-               movedItems: movedItems,
-               componentOptions: meta.componentOptions || {}
-            });
+            meta.movedItems = meta.movedItems || meta.records || this.getSelectedItems();
             this._openComponent(meta);
          },
 
@@ -179,6 +171,16 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             }.bind(this)).addBoth(function() {
                Indicator.hide();
             });
+         },
+
+         _getDialogConfig: function (meta) {
+            var config = InteractiveMove.superclass._getDialogConfig.call(this, meta),
+               movedItems = meta.movedItems;
+            cMerge(config, {
+               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
+               opener: this._getListView()
+            }, {preferSource: true});
+            return config;
          },
 
          _makeMoveStrategy: function () {
