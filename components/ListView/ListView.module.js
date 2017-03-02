@@ -1863,7 +1863,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
-            this._scrollOffset.bottom = this._limit;
+
             this._getScrollWatcher().scrollTo(0);
          },
 
@@ -2676,9 +2676,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateScrollOffset: function(){ 
-            //Если навигация по оффсетам, сдвиг произойдет в _onCollectionAddMoveRemove по общему механизму
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               if (this._getSourceNavigationType() == 'Page') {
+               //Если навигация по оффсетам, сдвиг произойдет в _onCollectionAddMoveRemove по общему механизму
+               if (this._getSourceNavigationType() !== 'Offset') {
                   this._scrollOffset.bottom += this._limit;
                }
             } else {
