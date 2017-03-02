@@ -2283,6 +2283,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
+      },
+
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;

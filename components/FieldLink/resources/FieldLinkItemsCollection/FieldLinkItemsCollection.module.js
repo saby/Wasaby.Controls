@@ -22,26 +22,32 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        */
 
       function itemTemplateRender(opts) {
-         var items = [],
-             tplArgs ={},
-             res = [];
+         var collector = function(item) {
+               tplArgs.item = item;
+               res.push(tplArgs.defaultItemTpl(tplArgs));
+            },
+            items = [],
+            itemsCount,
+            tplArgs = {},
+            res = [];
 
          if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
             items = [opts._preRenderValues.selectedItem];
+            itemsCount = items.length;
          } else if (opts._preRenderValues.selectedItems) {
-            opts._preRenderValues.selectedItems.each(function(item) {
-               items.push(item);
-            });
+            items = opts._preRenderValues.selectedItems;
+            itemsCount = items.getCount();
          }
 
-         if(items.length) {
+         if(itemsCount) {
             tplArgs = opts._buildTplArgs(opts);
             tplArgs.className = 'controls-ListView__item';
             tplArgs.itemTemplate = opts.itemTemplate;
-            colHelpers.forEach(items, function(item) {
-               tplArgs.item = item;
-               res.push(tplArgs.defaultItemTpl(tplArgs));
-            })
+            if (typeof items.each === 'function') {
+               items.each(collector);
+            } else {
+               colHelpers.forEach(items, collector);
+            }
          }
 
          return res.join('');

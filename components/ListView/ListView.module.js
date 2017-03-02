@@ -2680,11 +2680,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
-               var items = [];
-               dataSet.each(function(item) {
-                  items.push(item);
-               });
-               this._drawItems(items, at);
+               this._drawItems(dataSet.toArray(), at);
             }
 
             this._needScrollCompensation = false;
@@ -3612,16 +3608,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
-            var selectedItems = this.getSelectedItems(false);
-            if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
-               var list = selectedItems;
-               selectedItems = [];
-               list.each(function(item) {
-                  selectedItems.push(item);
-               });
-            }
-
-            this._getMover().move(selectedItems, target).addCallback(function(res){
+            this._getMover().move(
+               this._normalizeItems(this.getSelectedItems(false)),
+               target
+            ).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3701,11 +3691,7 @@ define('js!SBIS3.CONTROLS.ListView',
       	 *	         name: 'moveSelected'
       	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
       	 *	         onActivated: function(tr, id, record) {
-      	 *	            var items = [];
-      	 *	            this.getSelectedItems().each(function(item) {
-      	 *	               items.push(item);
-      	 *	            });
-      	 *             this.move(items, record, 'on')
+      	 *	            this.move(this.getSelectedItems().toArray(), record, 'on')
       	 *	         }
       	 *	      }
           *    })
