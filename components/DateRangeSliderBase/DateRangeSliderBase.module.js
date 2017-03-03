@@ -1,13 +1,14 @@
 define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.DateRangeSliderBase',
+   'tmpl!SBIS3.CONTROLS.DateRangeSliderBase/resources/LockIcon',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.DateRangeSliderBase'
-], function (CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, PickerMixin, dateHelpers) {
+], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, dateHelpers) {
    'use strict';
 
    /**
@@ -29,6 +30,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            lockIconTemplate: lockIconTemplate,
             // year: null,
             /**
              * @cfg {String} тип комопонента
@@ -46,6 +48,11 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
              */
             showPrevArrow: true,
 
+            /**
+             * @cfg {Boolean} включает или отключает отображение замка.
+             */
+            showLock: false,
+
             pickerConfig: {
                corner: 'tl',
                horizontalAlign: {
@@ -56,7 +63,9 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
                   side: 'top',
                   offset: -6
                }
-            }
+            },
+
+            locked: true
          },
          _cssRangeSlider: {
             value: 'controls-DateRangeSlider__value',
@@ -100,6 +109,66 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
             this.getChildControlByName('Link').setCaption(caption);
          }
 
+      },
+
+      _onClickHandler: function(event) {
+         var target = $(event.target);
+         DateRangeSlider.superclass._onClickHandler.apply(this, arguments);
+         if (this.isEnabled()) {
+            if (target.hasClass('controls-DateRangeSlider__lock')) {
+               this._onLockBtnClick();
+            }
+         }
+      },
+
+      _onLockBtnClick: function () {
+         this.toggleLocked();
+      },
+
+      isLocked: function () {
+         return this._options.locked;
+      },
+      setLocked: function (value) {
+         var btnContainer;
+         if (value === this._options.locked) {
+            return;
+         }
+         this._options.locked = value;
+         if (this.isShowLock()) {
+            btnContainer = this.getContainer().find('.controls-DateRangeSlider__lock');
+            this._updateLockButtonClasses(btnContainer);
+            this._notify('onLockedChanged', value);
+         }
+      },
+      toggleLocked: function () {
+         this.setLocked(!this.isLocked());
+      },
+
+      isShowLock: function () {
+         return this._options.showLock;
+      },
+      setShowLock: function (value) {
+         var btnContainer;
+         if (value === this._options.showLock) {
+            return;
+         }
+         this._options.showLock = value;
+         if (value) {
+            btnContainer = $(this._options.lockIconTemplate(this._options));
+            this.getContainer().find('.controls-DateRangeSlider__value-wrapper').prepend(btnContainer);
+         } else {
+            this.getContainer().find('.controls-DateRangeSlider__lock').remove();
+         }
+      },
+
+      _updateLockButtonClasses: function (btnContainer) {
+         if (this.isLocked()) {
+            btnContainer.removeClass('icon-Unlock icon-disabled');
+            btnContainer.addClass('controls-DateRangeSlider__lock-locked icon-Lock icon-primary');
+         } else {
+            btnContainer.removeClass('.controls-DateRangeSlider__lock-locked icon-Lock icon-primary');
+            btnContainer.addClass('icon-Unlock icon-disabled');
+         }
       }
    });
 

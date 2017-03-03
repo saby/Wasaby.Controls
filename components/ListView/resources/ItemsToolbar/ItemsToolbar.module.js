@@ -9,13 +9,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'html!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
-       'js!SBIS3.CORE.MarkupTransformer',
        'Core/helpers/dom&controls-helpers',
        'Core/helpers/collection-helpers',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
        'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers, colHelpers) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, dcHelpers, colHelpers) {
 
        'use strict';
        /**
@@ -63,7 +62,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getEditActions: function() {
              var toolbarContent;
              if (!this._editActions) {
-                (toolbarContent = this._getToolbarContent()).append(MarkupTransformer(editActionsTpl()));
+                (toolbarContent = this._getToolbarContent()).append(editActionsTpl());
                 this.reviveComponents();
                 this._editActions = toolbarContent.find('.controls-ItemsToolbar__editActions');
              }
@@ -246,9 +245,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._options.touchMode = mode;
              if(!mode) {
                 this.getContainer()[0].style.height = 'auto';
+             }else {
+                this._setHeightInTouchMode();
              }
              if(this._itemsActions) {
                 this._itemsActions.setTouchMode(mode);
+             }
+          },
+          _setHeightInTouchMode: function(){
+             if(this._currentTarget) {
+                this.getContainer()[0].style.height = this._currentTarget.size.height + 'px';
              }
           },
           /**
@@ -393,7 +399,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if (animate) {
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
-                   container.style.height = target.size.height + 'px';
+                   this._setHeightInTouchMode();
                    toolbarContent.animate({right: 0}, 350);
                 }
              }

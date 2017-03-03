@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/ParallelDeferred",
    "Core/helpers/collection-helpers",
    "Core/IoC",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
@@ -40,8 +39,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         TemplateUtil,
         ParallelDeferred,
         colHelpers,
-        IoC,
-        MarkupTransformer
+        IoC
     ) {
 
        'use strict';
@@ -295,7 +293,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 config[template] = components[template] ? getCompTpl(templateProperty) : getTpl(templateProperty);
              });
 
-             return MarkupTransformer(prepTpl(dotTplForPicker)(config));
+             return prepTpl(dotTplForPicker)(config);
           },
 
           _setPickerConfig: function () {

@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/footTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
@@ -41,7 +40,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       headTpl,
       footTpl,
       resultsTpl,
-      MarkupTransformer,
       DragAndDropMixin,
       ImitateEvents,
       groupByTpl,
@@ -254,12 +252,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return headData;
          },
          getHeadColumnTpl = function (column){
-            return MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
+            return TemplateUtil.prepareTemplate(column.headTemplate)({
                column: column
-            }));
+            });
          },
          getDefaultHeadColumnTpl = function(title){
-            return MarkupTransformer(headColumnTpl({title: title}));
+            return headColumnTpl({title: title});
          },
          prepareResultsData = function (cfg, headData, resultsRecord) {
             var data = [], value, column;
@@ -284,7 +282,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                };
                //TODO в рамках совместимости, выпилить как все перейдут на отрисовку колонки через функцию в resultsTpl
                //{{=column.resultTemplate(column.resultTemplateData)}}
-               data.push(MarkupTransformer(TemplateUtil.prepareTemplate(column.resultTemplate)(column.resultTemplateData)));
+               data.push(TemplateUtil.prepareTemplate(column.resultTemplate)(column.resultTemplateData));
             }
             headData.results = data;
             headData.item = resultsRecord;//тоже в рамках совместимости для 230 версии, что с этим делать написано чуть выше
@@ -752,7 +750,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData = prepareHeadData(this._options);
          headData.columnsScrollPosition = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
-         headMarkup = MarkupTransformer(this._options.headTpl(headData));
+         headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
@@ -779,7 +777,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _redrawFoot: function(){
          var footData = prepareHeadData(this._options),
-             newTFoot = $(MarkupTransformer(this._options._footTpl(footData)));
+             newTFoot = $(this._options._footTpl(footData));
 
          if (this._tfoot && this._tfoot.length){
             this._destroyControls(this._tfoot);
@@ -1396,7 +1394,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
             }
-            value = MarkupTransformer((cellTpl)(tplOptions));
+            value = (cellTpl)(tplOptions);
          } else {
             if (
                Array.indexOf(this._options.ladder, column.field) > -1 &&

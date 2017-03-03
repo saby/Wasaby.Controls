@@ -55,7 +55,6 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             var linkedObject = this._getLinkedObject();
 
             this.subscribeTo(linkedObject, 'onSelectedItemsChange', this._onSelectedItemsChangeHandler.bind(this))
-                .subscribeTo(linkedObject, 'onItemActivate', this._onItemActivatedHandler.bind(this))
                 .subscribeTo(linkedObject, 'onItemClick', this._onItemClickHandler.bind(this));
 
             /* Обработка кнопки "Выбрать" для иерархических представлений */
@@ -126,30 +125,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       /**
-       * Обработчик активации записи
-       * @private
-       */
-      _onItemActivatedHandler: function(e, meta) {
-         var linkedObject = this._getLinkedObject();
-
-         if(!this._checkItemForSelect(meta.item)) {
-            return
-         }
-
-         if(linkedObject.getMultiselect() && !linkedObject._isEmptySelection()) {
-            linkedObject.addItemsSelection([meta.id]);
-            return;
-         }
-
-         this._applyItemSelect(meta.item);
-      },
-
-      /**
        * Обработчик клика по записи
        * @private
        */
       _onItemClickHandler: function(event, id, item, target) {
-         var linkedObject = this._getLinkedObject();
+         var linkedObject = this._getLinkedObject(),
+             isBranch = this._isBranch(item);
 
          /* Если клик произошёл по стрелке разворота папки или запись выбрать нельзя,
             то не обрабатываем это событие */
@@ -157,10 +138,24 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             return;
          }
 
-         /* При единичном выборе, клик по записи должен её выбирать, даже если это папка */
-         if(!linkedObject.getMultiselect() && this._isBranch(item)) {
-             event.setResult(false);
-             this._applyItemSelect(item);
+         if(linkedObject.getMultiselect()) {
+            /* При множественном выборе:
+             1) Если есть выделенная чекбоксом запись, то клик по листу должен выделять, а по папке вызывать проваливание
+             2) Если запись не выделена, клик по листу должен его выбирать, по записи должно происходить проваливание */
+            if(!linkedObject._isEmptySelection()) {
+               if(!isBranch) {
+                  linkedObject.addItemsSelection([id]);
+               }
+            } else if(!isBranch) {
+               this._applyItemSelect(item);
+            }
+         } else {
+            /* При единичном выборе запись всегда должна выбираться при клике,
+             не важно, папка это или лист */
+            if(isBranch) {
+               event.setResult(false);
+            }
+            this._applyItemSelect(item);
          }
       },
 
@@ -226,10 +221,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                isMainAction: true,
                allowChangeEnable: false,
                onActivated: function(container, key, item) {
-                  self._onItemActivatedHandler(null, {
-                     item: item,
-                     id: key
-                  })
+                  self._applyItemSelect(item);
                }
             });
             linkedObject.setItemsActions(itemsActionsArray);

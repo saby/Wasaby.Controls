@@ -95,16 +95,17 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
+            this._showScrollbar = !cDetection.isMobileSafari && !cDetection.isMobileAndroid;
             //Под android оставляем нативный скролл
-            if (!cDetection.isMobileSafari && !cDetection.isMobileAndroid){
+            if (this._showScrollbar){
                this._initScrollbar = this._initScrollbar.bind(this);
                if (!cDetection.isIE8){
                   this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                }
                this._container.one('mousemove', this._initScrollbar);
                this._hideScrollbar();
-               this._subscribeOnScroll();
             }
+            this._subscribeOnScroll();
 
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
@@ -120,7 +121,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onScroll: function(){
             var scrollTop = this._getScrollTop();
-            if (this._scrollbar){
+            if (this._showScrollbar && this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);

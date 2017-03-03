@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CORE.BreakClickBySelectMixin",
    "js!SBIS3.CONTROLS.ItemsToolbar",
-   "js!SBIS3.CORE.MarkupTransformer",
    "tmpl!SBIS3.CONTROLS.ListView",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
@@ -62,7 +61,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, MarkupTransformer, dotTplFn,
+             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
              TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
@@ -86,7 +85,6 @@ define('js!SBIS3.CONTROLS.ListView',
          };
       var
          NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable',
-         START_NEXT_LOAD_OFFSET = 400,
          DRAG_META_INSERT = {
             on: 'on',
             after: 'after',
@@ -599,6 +597,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see setInfiniteScroll
                 */
                infiniteScrollContainer: undefined,
+               /**
+                * @cfg {jQuery | String} Отступ в пикселях до нижней/верхней границы контейнера, при достижении которого, начинается загрузка следующей страницы
+                */
+               infiniteScrollPreloadOffset: 400,
                /**
                 * @cfg {Boolean} Устанавливает режим постраничной навигации.
                 * @remark
@@ -2496,7 +2498,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createScrollWatcher: function(){
             var scrollWatcherConfig = {
-               totalScrollOffset: START_NEXT_LOAD_OFFSET,
+               totalScrollOffset: this._options.infiniteScrollPreloadOffset,
                opener: this,
                element: this.getContainer().closest(this._options.infiniteScrollContainer),
                initOnBottom: this._options.infiniteScroll == 'up'
@@ -3742,7 +3744,7 @@ define('js!SBIS3.CONTROLS.ListView',
                resultsRow.remove();
             }
             if (resultsRecord && this._options.resultsTpl && this._options.resultsPosition !== 'none'){
-               markup = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.resultsTpl)({item: resultsRecord, multiselect: this._options.multiselect}));
+               markup = TemplateUtil.prepareTemplate(this._options.resultsTpl)({item: resultsRecord, multiselect: this._options.multiselect});
                this._getItemsContainer()[insertMethod](markup);
             }
 
