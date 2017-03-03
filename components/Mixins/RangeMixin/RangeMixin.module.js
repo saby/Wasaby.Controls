@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * @param {Boolean} silent Если True, то события изменения свойства не генерируются.
        * @see startValue
        */
-      setStartValue: propertySetter('startValue', undefined, '_notifyOnRangeChangedAfterSetters'),
+      setStartValue: propertySetter('startValue', undefined, '_notifyOnRangeChangedAfterStartValueChanged'),
 
       /**
        * Получить начальное значение диапазона.
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * @param {Boolean} silent Если True, то события изменения свойства не генерируются.
        * @see endValue
        */
-      setEndValue: propertySetter('endValue', undefined, '_notifyOnRangeChangedAfterSetters'),
+      setEndValue: propertySetter('endValue', undefined, '_notifyOnRangeChangedAfterEndValueChanged'),
 
       /**
        * Получить конечное значение диапазона.
@@ -114,46 +114,53 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * @param endValue Конечное значение диапазона.
        */
       setRange: function(startValue, endValue, silent) {
-         var changed = false;
+         var changed = false,
+            oldStart = this.getStartValue(),
+            oldEnd = this.getEndValue();
 
          if (this.setStartValue(startValue, true)) {
             if (!silent) {
-               this._notifyOnStartValueChanged();
+               this._notifyOnStartValueChanged(oldStart);
             }
             changed = true;
          }
 
          if (this.setEndValue(endValue, true)) {
             if (!silent) {
-               this._notifyOnEndValueChanged();
+               this._notifyOnEndValueChanged(oldEnd);
             }
             changed = true;
          }
 
          if (changed && !silent) {
-            this._notifyOnRangeChanged();
+            this._notifyOnRangeChanged(oldStart, oldEnd);
          }
          return changed;
       },
 
-      _notifyOnRangeChangedAfterSetters: function (value, oldValue, silent) {
+      _notifyOnRangeChangedAfterStartValueChanged: function (value, oldValue, silent) {
          if (!silent) {
-            this._notifyOnRangeChanged();
+            this._notifyOnRangeChanged(oldValue, this._options.endValue);
+         }
+      },
+      _notifyOnRangeChangedAfterEndValueChanged: function (value, oldValue, silent) {
+         if (!silent) {
+            this._notifyOnRangeChanged(this._options.startValue, oldValue);
          }
       },
 
-      _notifyOnStartValueChanged: function () {
+      _notifyOnStartValueChanged: function (oldValue) {
          this._notifyOnPropertyChanged('startValue');
-         this._notify('onStartValueChange', this._options.startValue);
+         this._notify('onStartValueChange', this._options.startValue, oldValue);
       },
       
-      _notifyOnEndValueChanged: function () {
+      _notifyOnEndValueChanged: function (oldValue) {
          this._notifyOnPropertyChanged('endValue');
-         this._notify('onEndValueChange', this._options.endValue);
+         this._notify('onEndValueChange', this._options.endValue, oldValue);
       },
 
-      _notifyOnRangeChanged: function () {
-         this._notify('onRangeChange', this._options.startValue, this._options.endValue);
+      _notifyOnRangeChanged: function (oldStartValue, oldEndValue) {
+         this._notify('onRangeChange', this._options.startValue, this._options.endValue, oldStartValue, oldEndValue);
       }
    };
 
