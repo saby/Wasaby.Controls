@@ -26,7 +26,19 @@
    .controls-RichEditor__editorFrame {
       z-index: 1;
       border: 1px solid #EAEAEA;
-      position: relative;
+      /* Проблема:
+                  tinyMCE при клике на contenteditable="false" элемент внутри поля ввода
+                  создают копию всего контента(блок "mce-offscreen-selection") внутри поля ввода
+                  mce-offscreen-selection имеет  стили:
+                     position: absolute;
+                     left: -9999999999px;
+                     width: 100px;
+                     height: 100px;
+                  в Firefox данный блок приводит к появлению скрола у поля ввода
+         Решение:
+                  убрать position:relative с поля ввода
+                  чтобы блок mce-offscreen-selection не вызывал изменение размерров поля ввода в Firefox
+      /*position: relative;*/
 
       &:empty{
          padding-bottom: 6px;
