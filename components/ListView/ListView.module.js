@@ -948,7 +948,10 @@ define('js!SBIS3.CONTROLS.ListView',
               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
             } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
-               scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
+               // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
+               // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
+               // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
+               scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
                $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
