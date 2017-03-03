@@ -62,13 +62,15 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             result, selProjItem;
          if (this._options.selectedIndex !== null && this._options.selectedIndex !== undefined && this._options.selectedIndex >= 0) {
             selProjItem = this._getItemsProjection().at(this._options.selectedIndex);
-            if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
-               result = selProjItem.getContents().getId();
-            }
-            else {
-               var selParentItem = selProjItem.getParent();
-               if (selParentItem && selParentItem.getContents() && cInstance.instanceOfModule(selParentItem.getContents(), 'WS.Data/Entity/Model')) {
-                  result = selParentItem.getContents().getId();
+            if (selProjItem) {
+               if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
+                  result = selProjItem.getContents().getId();
+               }
+               else {
+                  var selParentItem = selProjItem.getParent();
+                  if (selParentItem && selParentItem.getContents() && cInstance.instanceOfModule(selParentItem.getContents(), 'WS.Data/Entity/Model')) {
+                     result = selParentItem.getContents().getId();
+                  }
                }
             }
          }

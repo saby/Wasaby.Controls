@@ -28,11 +28,11 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
             var
                pickerContainer;
             this._dataSource.read(id[0]).addCallback(function(record) {
-               record = record.getRawData();
+               this._syncSelectedItems();
                pickerContainer = this._getPickerContainer();
                pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                pickerContainer.find('[data-id="' + id[0] + '"]').addClass('controls-DropdownList__item__selected');
-               var headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, record, this._options))();
+               var headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options))();
                this._pickerHeadContainer.html(headTpl);
                this._selectedItemContainer.html(headTpl);
                this._setHasMoreButtonVisibility();

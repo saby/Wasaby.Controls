@@ -388,7 +388,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                adapter: record.getAdapter()
             }),
             changedFields = record.getChanged();
-         changedFields.push(record.getIdProperty());
+         if (changedFields.indexOf(record.getIdProperty()) === -1){
+            changedFields.push(record.getIdProperty());
+         }
 
          $.each(changedFields, function(i, key){
             var formatIndex = record.getFormat().getFieldIndex(key);
