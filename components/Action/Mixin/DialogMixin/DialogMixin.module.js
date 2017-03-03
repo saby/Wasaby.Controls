@@ -146,6 +146,14 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
+            opener: undefined,
+            side: 'left',
+            direction: '',
+            target: undefined,
+            offset: {
+               x: 0,
+               y: 0
+            },
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
          }, config)
       },
