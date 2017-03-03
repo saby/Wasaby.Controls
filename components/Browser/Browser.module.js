@@ -1,13 +1,13 @@
 define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Browser',
+   'tmpl!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
    'js!SBIS3.CONTROLS.ColumnsController',
    'Core/core-merge',
-   'html!SBIS3.CONTROLS.Browser/resources/contentTpl',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-instance',
    'css!SBIS3.CONTROLS.Browser'
-], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, contentTpl, cInstance){
+], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance){
    'use strict';
 
    /**
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
-            contentTpl : contentTpl,
+	         contentTpl: null,
             /**
              * @cfg {СolumnsConfigObject} columnsConfig Конфигурация колонок
              */
@@ -261,6 +261,16 @@ define('js!SBIS3.CONTROLS.Browser', [
             columns: this._options.columnsConfig.columns,
             selectedColumns: this._columnsController.getState()
          });
+      },
+
+      _modifyOptions: function() {
+         var options = Browser.superclass._modifyOptions.apply(this, arguments);
+
+	      if (!options.contentTpl) {
+		      options.contentTpl = tplUtil.prepareTemplate(options.content);
+	      }
+
+         return options;
       },
 
       _folderEditHandler: function(){
