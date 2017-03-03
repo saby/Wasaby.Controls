@@ -143,9 +143,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
-                target,
                 menuClassName = '',
-                parentContainer = this.getParent().getContainer();
+                parentContainer = this.getParent().getContainer(),
+                items = this.getItems().clone(),
+                target;
+
+            /* В меню комманды передавать нельзя, т.к. агрументы для комманды формируются динамически(выделенная строка),
+               поэтому надо клик обработать нам, и послать комманду с аргументами */
+            items.removeField('command');
 
             if(this._options.touchMode) {
                verticalAlign = TOUCH_ALIGN.verticalAlign;
@@ -162,7 +167,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
-               items: this.getItems(),
+               items: items,
                idProperty: this._options.idProperty,
                allowChangeEnable: false,
                displayProperty: 'caption',
