@@ -463,20 +463,22 @@ define('js!SBIS3.CONTROLS.Image',
             _onEndLoad: function(event, response) {
                var
                   imageInstance = this.getParent();
-               if (response.hasOwnProperty('error')) {
+               if (response instanceof Error) {
                   fcHelpers.toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
-                  imageInstance._onErrorLoad(response.error, true);
-                  fcHelpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
-               } else {
-                  imageInstance._notify('onEndLoad', response);
-                  if (imageInstance._options.edit) {
-                     imageInstance._showEditDialog('new');
-                  } else {
-                     imageInstance._setImage(imageInstance._getSourceUrl());
-                     fcHelpers.toggleLocalIndicator(imageInstance._container, false);
-                     this._hideIndicator();
+                  // игнорируем HTTPError офлайна, если они обработаны
+                  if (!(response._isOfflineMode && response.processed)){
+                      fcHelpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
                   }
+                  return imageInstance._onErrorLoad(response, true);
+               }
+               imageInstance._notify('onEndLoad', response);
+               if (imageInstance._options.edit) {
+                  imageInstance._showEditDialog('new');
+               } else {
+                  imageInstance._setImage(imageInstance._getSourceUrl());
+                  fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                  this._hideIndicator();
                }
             },
             _onChangeImage: function() {
