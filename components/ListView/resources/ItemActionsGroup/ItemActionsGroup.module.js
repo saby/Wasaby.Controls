@@ -150,7 +150,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             /* В меню комманды передавать нельзя, т.к. агрументы для комманды формируются динамически(выделенная строка),
                поэтому надо клик обработать нам, и послать комманду с аргументами */
-            items.removeField('command');
+
+            if (items.getFormat && items.getFormat().getFieldIndex('command') > 0) {
+               items.removeField('command');
+            }
 
             if(this._options.touchMode) {
                verticalAlign = TOUCH_ALIGN.verticalAlign;
