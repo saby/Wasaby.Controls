@@ -3702,7 +3702,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(movedItems, target, position);
+            return this._getMover().move(movedItems, target, position).addCallback(function(){
+               //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
+               //и рассинхронизурутся записи в items и selectItems 💩
+               this.setSelectedKeys(this.getSelectedKeys());
+            }.bind(this));
          },
          //endregion moveMethods
          /**
