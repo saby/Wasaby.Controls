@@ -68,12 +68,6 @@
    }
 
    .controls-BackButton__caption.controls-Link{
-      &:hover:not(.ws-disabled):not(.controls-Click__active):hover{
-         color: @primary-color;
-         .controls-Link-link {
-            text-decoration: none;
-         }
-      }
       &.controls-Click__active {
          text-decoration: none;
          .controls-Link-link {
@@ -105,6 +99,17 @@
       &:active{
          .controls-BackButton__caption {
             color: @primary-color;
+         }
+      }
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-BackButton__caption.controls-Link {
+      &:hover:not(.ws-disabled):not(.controls-Click__active):hover {
+         color: @primary-color;
+         .controls-Link-link {
+            text-decoration: none;
          }
       }
    }
