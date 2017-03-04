@@ -95,11 +95,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
       },
       _getHistoryRecordSet: function(){
-         var historyRecordSet = new RecordSet({
-            adapter: this.getDataSource().getAdapter(),
-            rawData: [],
-            idProperty: this._list.getProperty('idProperty')
-         });
+         var listSource = this.getList().getDataSource(),
+            historyRecordSet = new RecordSet({
+               adapter: listSource.getAdapter(),
+               rawData: [],
+               idProperty: this._list.getProperty('idProperty'),
+               model: listSource.getModel()
+            });
          historyRecordSet.assign(this._prepareHistoryData());
          return historyRecordSet;
       },
