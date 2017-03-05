@@ -948,7 +948,10 @@ define('js!SBIS3.CONTROLS.ListView',
               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
             } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
-               scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
+               // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
+               // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
+               // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
+               scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
                $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
@@ -1620,6 +1623,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
+            if (this._scrollBinder && this._options.saveReloadPosition){
+               var reloadOffset = this._getReloadOffset();
+               this._offset = reloadOffset;
+               this._scrollOffset.top = reloadOffset;
+               this._scrollOffset.bottom = reloadOffset;
+               if (reloadOffset > 0) {
+                  this.setInfiniteScroll('both', true);
+               }
+            }
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
@@ -1629,6 +1641,25 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
+         },
+         /**
+          * Необходимо для того, что бы перезагружать список в той же позиции до которой доскролили
+          * @return {Number} оффсет, который будет отправлен в запросе для reload
+          */
+         _getReloadOffset: function(){
+            return this._limit * this._getCurrentPage();
+         },
+         /**
+          * Возвращает страницу навигации, до которой досткролили
+          */
+         _getCurrentPage: function() {
+            var page = 0;
+            if (this._scrollBinder) {
+               var scrollPage = this._scrollBinder._getScrollPage();
+               page = Math.floor(scrollPage.element.index() / this._limit);
+            }
+            // прибавим к полученой странице количество еще не загруженных страниц
+            return page + Math.floor((this._scrollOffset.top + this._limit) / this._limit);
          },
          /**
           * Метод установки/замены обработчика клика по строке.
@@ -1835,9 +1866,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
-            if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom = this._limit;
-            }
+
+            this._getScrollWatcher().scrollTo(0);
          },
 
          /**
@@ -2353,7 +2383,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
-               if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
+               if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._scrollLoadNextPage();
                }
                if (this._scrollPager){
@@ -2378,10 +2408,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _addItems: function(newItems, newItemsIndex, groupId){
-            ListView.superclass._addItems.apply(this, arguments);
+         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId){
+            ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
+               if (action == IBindCollection.ACTION_ADD) {
+                  this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
+               } else if (action == IBindCollection.ACTION_REMOVE) {
+                  this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
+               }
             }
          },
 
@@ -2580,7 +2614,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _hasNextPage: function(more, offset) {
             if (this._infiniteScrollState.mode == 'up'){
-               return this._scrollOffset.top > 0;
+               return this._scrollOffset.top >= 0;
             } else {
                // Если загружена последняя страница, то вниз грузить больше не нужно
                // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
@@ -2604,7 +2638,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                   var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
 
-                  this._updateScrolOffset();
+                  this._updateScrollOffset();
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
                   this._hideLoadingIndicator();
@@ -2639,32 +2673,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getNextOffset: function(){
-            if (this._getSourceNavigationType() == 'Offset') {
-               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-                  return this._scrollOffset.bottom;
-               } else {
-                  return this._scrollOffset.top;
-               }
+            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
+               return this._scrollOffset.bottom + this._limit;
             } else {
-               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-                  return this._scrollOffset.bottom + this._limit;
-               } else {
-                  return this._scrollOffset.top - this._limit;
-               }
+               return this._scrollOffset.top - this._limit;
             }
          },
 
-         _updateScrolOffset: function(){
+         _updateScrollOffset: function(){ 
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               if (this._getSourceNavigationType() != 'Offset') {
+               //Если навигация по оффсетам, сдвиг произойдет в _onCollectionAddMoveRemove по общему механизму
+               if (this._getSourceNavigationType() !== 'Offset') {
                   this._scrollOffset.bottom += this._limit;
                }
             } else {
-               if (this._scrollOffset.top >= this._limit){
-                  this._scrollOffset.top -= this._limit;
-               } else {
-                  this._scrollOffset.top = 0;
-               }
+               this._scrollOffset.top -= this._limit;
             }
          },
 
@@ -3704,7 +3727,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(movedItems, target, position);
+            return this._getMover().move(movedItems, target, position).addCallback(function(){
+               //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
+               //и рассинхронизурутся записи в items и selectItems 💩
+               this.setSelectedKeys(this.getSelectedKeys());
+            }.bind(this));
          },
          //endregion moveMethods
          /**
