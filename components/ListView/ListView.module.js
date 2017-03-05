@@ -2623,51 +2623,53 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _loadNextPage: function() {
-            var offset = this._getNextOffset();
-            this._showLoadingIndicator();
-            this._toggleEmptyData(false);
-            //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
-               this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
-            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
-            this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
-               //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
-               //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
-               this._loader = null;
-               //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-               var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+            if (this._dataSource) {
+               var offset = this._getNextOffset();
+               this._showLoadingIndicator();
+               this._toggleEmptyData(false);
+               //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
+                  this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
+               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
+                  //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+                  //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+                  this._loader = null;
+                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+                  var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
 
-               this._updateScrollOffset();
-               //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-               this.getItems().setMetaData(dataSet.getMetaData());
-               this._hideLoadingIndicator();
-               if (!hasNextPage) {
-                  this._toggleEmptyData(!this.getItems().getCount());
-               }
-               this._notify('onDataMerge', dataSet);
-               //Если данные пришли, нарисуем
-               if (dataSet.getCount()) {
-                  //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
-                  //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                  if (this._isSlowDrawing(this._options.easyGroup)) {
-                     this._needToRedraw = false;
+                  this._updateScrollOffset();
+                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                  this.getItems().setMetaData(dataSet.getMetaData());
+                  this._hideLoadingIndicator();
+                  if (!hasNextPage) {
+                     this._toggleEmptyData(!this.getItems().getCount());
                   }
-                  this._drawPage(dataSet);
-                  //И выключаем после отрисовки
-                  if (this._isSlowDrawing(this._options.easyGroup)) {
-                     this._needToRedraw = true;
+                  this._notify('onDataMerge', dataSet);
+                  //Если данные пришли, нарисуем
+                  if (dataSet.getCount()) {
+                     //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                     if (this._isSlowDrawing(this._options.easyGroup)) {
+                        this._needToRedraw = false;
+                     }
+                     this._drawPage(dataSet);
+                     //И выключаем после отрисовки
+                     if (this._isSlowDrawing(this._options.easyGroup)) {
+                        this._needToRedraw = true;
+                     }
+                  } else {
+                     // Если пришла пустая страница, но есть еще данные - догрузим их
+                     if (hasNextPage){
+                        this._scrollLoadNextPage();
+                     }
                   }
-               } else {
-                  // Если пришла пустая страница, но есть еще данные - догрузим их
-                  if (hasNextPage){
-                     this._scrollLoadNextPage();
-                  }
-               }
-            }, this)).addErrback(function (error) {
-               this._hideLoadingIndicator();
-               //Здесь при .cancel приходит ошибка вида DeferredCanceledError
-               return error;
-               }.bind(this));
+               }, this)).addErrback(function (error) {
+                  this._hideLoadingIndicator();
+                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                  return error;
+                  }.bind(this));
+            }
          },
 
          _getNextOffset: function(){
