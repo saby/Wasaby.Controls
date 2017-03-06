@@ -28,11 +28,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    /*методы для поиска*/
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
+      var visible = operationPanel.isVisible();
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
             gridView.toggleCheckboxes(operationPanel.isVisible());
-            gridView.removeItemsSelectionAll();
+            if (!visible) {
+               if (gridView._options.useSelectAll) {
+                  gridView.setSelectedAllNew(false);
+               } else {
+                  gridView.removeItemsSelectionAll();
+               }
+            }
          }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
