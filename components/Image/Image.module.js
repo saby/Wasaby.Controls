@@ -18,10 +18,11 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
+   "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "js!SBIS3.CONTROLS.Link",
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -345,7 +346,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
                this._image = this._container.find('.controls-image__image');
                if (this._options.dataSource) {
-                  this._options.dataSource = this._prepareSource(this._options.dataSource);
+                  this._options.dataSource = SourceUtil.prepareSource.call(this, this._options.dataSource);
                }
             },
             init: function() {
@@ -415,24 +416,6 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
-            _prepareSource: function(sourceOpt) {
-               var result;
-               switch (typeof sourceOpt) {
-                  case 'function':
-                     result = sourceOpt.call(this);
-                     break;
-                  case 'object':
-                     if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
-                        result = sourceOpt;
-                     }
-                     if ('module' in sourceOpt) {
-                        var DataSourceConstructor = require(sourceOpt.module);
-                        result = new DataSourceConstructor(sourceOpt.options || {});
-                     }
-                     break;
-               }
-               return result;
-            },
             _getSourceUrl: function() {
                var
                   dataSource = this.getDataSource();
