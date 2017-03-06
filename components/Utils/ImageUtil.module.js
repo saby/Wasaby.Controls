@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
                   if (mostSidePer > perIndent) {
                      mostSidePer -= perIndent;
                   }
-                  $(target).css(isHeightMostSide ? 'height' : 'width', '100%');
                }
                return mostSidePer;
             },
