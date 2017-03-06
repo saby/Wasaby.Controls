@@ -487,7 +487,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
-                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
+                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : null);
                            }
                            //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
                            //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
