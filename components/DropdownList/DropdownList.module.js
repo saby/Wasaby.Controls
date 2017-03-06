@@ -115,11 +115,17 @@ define('js!SBIS3.CONTROLS.DropdownList',
             list = new List({
                ownerShip: false
             });
-            items.each(function(value, key){
-               if (keys.indexOf(value.get(idProperty)) > -1){
-                  list.add(value);
+            items.each(function (record, index) {
+               var id = record.get(idProperty);
+               for (var i = 0, l = keys.length; i < l; i++) {
+                  //Сравниваем с приведением типов, т.к. ключи могут отличаться по типу (0 !== '0')
+                  //Зачем такое поведение поддерживалось изначально не знаю. Подобные проверки есть и в других методах (к примеру setSelectedKeys)
+                  if (keys[i] == id) {
+                     list.add(record);
+                     return;
+                  }
                }
-            })
+            });
          }
          return list;
       }
