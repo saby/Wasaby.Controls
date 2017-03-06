@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
    "js!SBIS3.CONTROLS.Pager",
+   'js!SBIS3.CONTROLS.MassSelectionController',
    "js!SBIS3.CONTROLS.EditInPlaceHoverController",
    "js!SBIS3.CONTROLS.EditInPlaceClickController",
    "js!SBIS3.CONTROLS.ImitateEvents",
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
-             TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
+             TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
 
@@ -781,7 +782,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </ul>
                 * по умолчанию опция включена
                 */
-               contextMenu: true
+               contextMenu: true,
+               /**
+                * @cfg {Boolean} Использовать функционал выбора всех записей
+                * @remark Начиная с версии 3.7.5.100 данная опция будет удалена.
+                * Стандартным будет считаться поведение, useSelectAll = true.
+                * @deprecated
+                */
+               useSelectAll: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -1531,6 +1539,36 @@ define('js!SBIS3.CONTROLS.ListView',
                this.setSelectedItemsAll.call(this);
             }
          },
+
+         /*MASS SELECTION START*/
+         /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
+         setSelectedAllNew: function(selected) {
+            this._getMassSelectionController().setSelectedAll(selected);
+         },
+
+         toggleSelectedAll: function() {
+            this._getMassSelectionController().toggleSelectedAll();
+         },
+
+         _getMassSelectionController: function() {
+            if (!this._massSelectionController) {
+               this._makeMassSelectionController();
+            }
+            return this._massSelectionController;
+         },
+
+         _makeMassSelectionController: function() {
+            this._massSelectionController = new MassSelectionController(this._getMassSelectorConfig());
+         },
+
+         _getMassSelectorConfig: function() {
+            return {
+               linkedObject: this,
+               idProperty: this._options.idProperty
+            }
+         },
+
+         /*MASS SELECTION END*/
 
          _loadFullData: function() {
             return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
@@ -3330,6 +3368,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._listNavigation) {
                this._listNavigation.destroy();
+            }
+            if (this._massSelectionController) {
+               this._massSelectionController.destroy();
             }
             ListView.superclass.destroy.call(this);
          },
