@@ -644,7 +644,7 @@ define(
          var date = new Date(yyyy, mm, dd, hh, ii, ss, uuu);
          //TODO возможно надо переделать но ошибку по смокам лечит
          //когда контрол с вводом времени, то в yyyy приходит 0 и ставится 0 год, потом валится БЛ
-         if (yyyy < 100 && y > 0) {
+         if (yyyy < 100 && yyyy > 0) {
             date.setFullYear(yyyy);
          }
          return date;
