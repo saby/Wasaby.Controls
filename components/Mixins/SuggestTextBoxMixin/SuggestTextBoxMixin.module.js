@@ -212,9 +212,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var self = this;
 
             if(this._options.searchParam) {
-               var showPicker = function() {
+               var togglePicker = function() {
                      if(self._checkPickerState(!self._options.showEmptyList)) {
                         self.showPicker();
+                     } else {
+                        self.hidePicker();
                      }
                   },
                   list = this.getList(),
@@ -228,9 +230,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                if( (dataSet && !dataSet.getCount()) && (listItems && !listItems.getCount()) ) {
                   /* Если был пустой список и после загрузки пустой, то события onDrawItems не стрельнёт,
                    т.к. ничего не рисовалось */
-                  showPicker();
+                  togglePicker();
                } else {
-                  this.subscribeOnceTo(list, 'onDrawItems', showPicker);
+                  this.subscribeOnceTo(list, 'onDrawItems', togglePicker);
                }
             }
          },
