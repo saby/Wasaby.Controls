@@ -501,7 +501,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             if (data.get(this._options.nodeProperty)) {
-               this.toggleNode(id);
+               //В режиме "поиска" ветки не надо разворачивать
+               if (!this._options.hierarchyViewMode) {
+                  this.toggleNode(id);
+               }
             }
             else {
                this._activateItem(id);
