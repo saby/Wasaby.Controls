@@ -1401,10 +1401,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
             
          _prepareImageURL: function(fileobj) {
-            //todo: preview
-            var
-               URL = fileobj.filePath ? fileobj.filePath : fileobj.url;
-            return URL;
+            return'/previewer' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
          },
             
          _replaceWhitespaces: function(text) {
