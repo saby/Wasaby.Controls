@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
    "Core/Deferred",
    "js!WS.Data/Entity/Model",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.ToSourceModel"
-], function( Deferred,Model, cInstance, ToSourceModel) {
+   "js!SBIS3.CONTROLS.ToSourceModel",
+   "js!SBIS3.CONTROLS.Utils.SourceUtil"
+], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -42,7 +43,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
                      idProperty: opts.idProperty,
                      rawData: opts.selectedItem
                   })],
-                  opts.dataSource,
+                  SourceUtil.prepareSource(opts.dataSource),
                   opts.idProperty
                )[0];
                opts.selectedKey = opts.selectedItem.get(opts.idProperty);
