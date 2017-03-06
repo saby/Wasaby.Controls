@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       };
       this.getTime = function() {
          /* Возвращаем время в мс */
-         return new Date().getTime() - this.startTime.getTime();
+         return this.startTime ? new Date().getTime() - this.startTime.getTime() : 0; //startTime может не быть, если memory source
       };
    }
 
