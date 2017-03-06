@@ -80,11 +80,15 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
         _initItems: function() {
             var
                 self = this,
-                dataSource = this._options.dataSource,
-                binding = dataSource.getBinding(),
-                queryMethodName = binding.query;
-            binding.query = this._options.queryMethodName || queryMethodName;
-            dataSource.query((new Query).where({
+                originalDataSource = this._options.dataSource,
+                binding = originalDataSource.getBinding(),
+                mergeDataSource = new SbisServiceSource({
+                    endpoint: originalDataSource.getEndpoint(),
+                    binding: {
+                        query: this._options.queryMethodName || binding.query
+                    }
+                });
+            mergeDataSource.query((new Query()).where({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',
                 'mergeIds': this._options.items
@@ -107,7 +111,6 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                     self._treeView.setSelectedKey(self._options.selectedKey);
                 }
             });
-            binding.query = queryMethodName;
         },
         onMergeButtonActivated: function() {
             var self = this,
