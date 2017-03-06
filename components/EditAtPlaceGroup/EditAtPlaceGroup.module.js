@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             var self = this;
             this.reviveComponents();
             if (this._options.displayAsEditor) {
-               this.setInPlaceEditMode();
+               this.setInPlaceEditMode(true);
             } else {
                // всем EditAtPlace задаем свой обработчик клика
                this._iterateChildEditAtPlaces(function(child){
