@@ -948,6 +948,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setDataSource: function(ds, noLoad) {
+             var source = this.getDataSource();
+
              this.once('onListReady', function(event, list) {
                 if(!list.getDataSource()) {
                    list.setDataSource(ds, noLoad);
@@ -956,8 +958,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.setDataSource.apply(this, arguments);
 
              /* Если в поле связи есть выбранные ключи, то после установки сорса надо
-                загрузить записи и отрисовать их */
-             if(!this._isEmptySelection()) {
+                загрузить записи и отрисовать их.
+                Если source был, то не будем вызывать лишнюю перерисовку. */
+             if(!this._isEmptySelection() && !source) {
                 this._loadAndDrawItems();
              }
           },

@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Query/Query",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!WS.Data/Collection/ObservableList",
    "js!WS.Data/Display/Display",
    "js!WS.Data/Collection/IBind",
@@ -35,7 +34,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    SbisService,
    RecordSet,
    Query,
-   MarkupTransformer,
    ObservableList,
    Projection,
    IBindCollection,
@@ -208,7 +206,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       })
    },
    extendedMarkupCalculate = function(markup, cfg) {
-      return ParserUtilities.buildInnerComponentsExtended(MarkupTransformer(markup, cfg));
+      return ParserUtilities.buildInnerComponentsExtended(markup, cfg);
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -864,7 +862,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getGroupContainers: function(groupId) {
          var containers = $([]);
          if (this._getItemsProjection()) {
-            var items = this._getItemsProjection().getGroupItems(groupId);
+            var items = this._getGroupItems(groupId);
             for (var i = 0; i < items.length; i++) {
                containers.push(this._getDomElementByItem(items[i]).get(0))
             }
@@ -1086,7 +1084,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (!Object.isEmpty(this._options.groupBy)) {
 
                   if (this._options.easyGroup) {
-                     if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
+                     if (this._getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
@@ -1127,7 +1125,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+            if (this._getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -2338,9 +2336,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                buildedTpl = buildedTpl.get(0).outerHTML;
             }
             if (buildedTpl.hasOwnProperty('html')) {
-               return $(MarkupTransformer(buildedTpl.html));
+               return $(buildedTpl.html);
             }
-            return $(ParserUtilities.buildInnerComponents(MarkupTransformer(buildedTpl), this._options));
+            return $(ParserUtilities.buildInnerComponents(buildedTpl, this._options));
          } else {
             throw new Error('Ошибка в itemTemplate');
          }
@@ -2350,6 +2348,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
              itemParent = projItem.getParent && projItem.getParent();
          return !Object.isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
+      },
+
+      _getGroupItems: function(groupId) {
+         return this._getItemsProjection().getGroupItems(groupId);
       },
 
       _addItem: function (projItem, at, withoutNotify) {

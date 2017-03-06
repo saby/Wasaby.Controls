@@ -206,28 +206,36 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
              self = this;
 
          function wayRemote(templateComponent) {
-            self._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function () {
-               self._hideLoadingIndicator();
+            return self._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function () {
                OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
             });
          }
 
          function wayDelayedRemove(templateComponent) {
-            self._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function (record) {
-               self._hideLoadingIndicator();
-               OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
-               return record;
-            })
+            var def = self._getRecordDeferred(config, meta, mode, templateComponent);
+            OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            return def;
          }
 
          if(initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE || initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE) {
             this._showLoadingIndicator();
             require([dialogComponent], function(templateComponent) {
+               var def;
                if(initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
-                  wayRemote(templateComponent);
+                  def = wayRemote(templateComponent);
                } else {
-                  wayDelayedRemove(templateComponent);
+                  def = wayDelayedRemove(templateComponent);
                }
+               def.addErrback(function (error) {
+                  //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+                  if (!error._isOfflineMode) {
+                     OpenDialogUtil.errorProcess(error);
+                  }
+                  return error;
+               }).addBoth(function (record) {
+                  self._hideLoadingIndicator();
+                  return record;
+               });
             })
          } else {
             OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
@@ -267,12 +275,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
                   config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
-            }).addErrback(function(error){
-               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-               if (!error._isOfflineMode){
-                  OpenDialogUtil.errorProcess(error);
-               }
-               return error;
+               return record;
             });
             return def;
          }
@@ -536,7 +539,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
          return undefined;
       },
-      
+
       _getRecordId: function(record, idProperty){
          if (idProperty) {
             return record.get(idProperty);

@@ -138,7 +138,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             } else {
                this._isConstThumb = false;
             }
-            this._thumb.height(this._thumbHeight - this._headerHeight);
+            if (this._thumb) {
+               this._thumb.height(this._thumbHeight - this._headerHeight);
+            }
          },
 
          _calcProjectionSize: function (size, ratio) {
