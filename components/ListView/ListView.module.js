@@ -1345,17 +1345,28 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(this._options.contextMenu && itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
+            if(this._needShowContextMenu()) {
                if (!this._checkItemAction()) {
-                  if (this._hoveredItem && this._hoveredItem.container && !this._hoveredItem.container.hasClass('controls-editInPlace__editing') && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                      event.preventDefault();
                      itemsActions.showItemActionsMenu(align);
-                  }
                } else {
                   IoC.resolve('ILogger').info('ItemActionsGroup:', "Опция caption не задана у одного из элементов, для отображения контекстного меню укажите опцию");
                }
+               (this._hoveredItem && this._hoveredItem.container) && event.stopPropagation();
             }
-            event.stopPropagation();
+         },
+
+         _needShowContextMenu: function () {
+            var itemsActions = this.getItemsActions();
+
+            return this._options.contextMenu
+                && itemsActions
+                && itemsActions.hasVisibleActions()
+                && this._needProcessMouseEvent(event)
+                && this._hoveredItem
+                && this._hoveredItem.container
+                && !this._hoveredItem.container.hasClass('controls-editInPlace__editing')
+                && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false'
          },
 
          /*
