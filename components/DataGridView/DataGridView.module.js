@@ -643,8 +643,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
 
-               if(colValue) {
-                  colValueText = colValue.innerText;
+               if(colValue && !colValue.getAttribute('title')) {
+                  colValueText = strHelpers.escapeHtml(colValue.innerText);
 
                   if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
