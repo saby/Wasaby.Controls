@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
         * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
+        * @cssModifier controls-FieldLink__big-fontSize Выбранные записи в поле связи отображаются с увеличенным (15px) и жирным шрифтом.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
