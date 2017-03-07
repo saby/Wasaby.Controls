@@ -1915,8 +1915,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
-
-            this._getScrollWatcher().scrollTo(0);
+            if (this._options.saveReloadPosition) {
+               this._getScrollWatcher().scrollTo(0);
+            }
          },
 
          /**
