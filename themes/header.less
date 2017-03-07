@@ -126,9 +126,10 @@
         background: @toggle-header-background;
         font: @toggle-header-font;
       }
-
-      &:hover {
+      // TODO избавиться от каскада при переходе на абстрактную кнопку
+      &:hover.controls-Button {
         color: @toggle-header-hover-color;
+        border: none;
       }
     }
   }
