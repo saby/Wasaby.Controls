@@ -381,7 +381,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          if(list.getDataSource()) {
             this._delayTimer = setTimeout(function () {
                self._showLoadingIndicator();
-               self.hidePicker();
                self._loadDeferred = list.reload(self._options.listFilter).addCallback(function () {
                   if (self._checkPickerState(!self._options.showEmptyList)) {
                      self.showPicker();
@@ -674,7 +673,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _onListDrawItems: function () {
          if (this._picker) {
             this._picker.getContainer().height('auto');
-            this._picker.recalcPosition(true);
+            this._picker.recalcPosition(true, true);
          }
       },
 
