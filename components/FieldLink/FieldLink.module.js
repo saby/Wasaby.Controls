@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
         * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
+        * @cssModifier controls-FieldLink__big-fontSize Выбранные записи в поле связи отображаются с увеличенным (15px) и жирным шрифтом.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
@@ -191,8 +192,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @variant node выбираются только узлы
                  * @variant leaf выбираются только листья
                  * @variant all выбираются все записи
-                 *
-                 * @typedef {Object} Dictionaries
+                 */
+                /** @typedef {Object} Dictionaries
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
@@ -205,10 +206,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
                  * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
-                 * - использование компонента {@link SBIS3.CONTROLS.DataGridView}:
-                 * ![](/FieldLink00.png)
-                 * - использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}:
-                 * ![](/FieldLink01.png)
+                 * <ul>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
+                 * </ul>
                  * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.

@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             deepReload: false,
             idProperty: 'name'
          },
+         _useSelectAll: false,
          _markCheckBox: undefined
       },
       $constructor: function() {
@@ -103,6 +104,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       setLinkedView: function(linkedView) {
          if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
+            this._useSelectAll = linkedView._options.useSelectAll;
             //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
             this.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
             this.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
@@ -164,7 +166,9 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Выбрать все элементы.
        */
       selectAll: function() {
-         if (this._options.useSelectAll) {
+         if (this._useSelectAll) {
+            this._options.linkedView.setSelectedAllNew(true);
+         } else if (this._options.useSelectAll) {
             this._options.linkedView.setSelectedAll(this._options.deepReload);
          } else {
             this._options.linkedView.setSelectedItemsAll();
@@ -180,13 +184,21 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Снять выделение со всех элементов.
        */
       removeSelection: function() {
-         this._options.linkedView.setSelectedKeys([]);
+         if (this._useSelectAll) {
+            this._options.linkedView.setSelectedAllNew(false);
+         } else {
+            this._options.linkedView.setSelectedKeys([]);
+         }
       },
       /**
        * Инвертировать выделение всех элементов.
        */
       invertSelection: function() {
-         this._options.linkedView.toggleItemsSelectionAll();
+         if (this._useSelectAll) {
+            this._options.linkedView.toggleSelectedAll();
+         } else {
+            this._options.linkedView.toggleItemsSelectionAll();
+         }
       },
       _createMarkCheckBox: function() {
          if (!this._markCheckBox) {//TODO костыль для ЭДО, чтоб не создавалось 2 раза

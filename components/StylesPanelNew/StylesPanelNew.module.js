@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'Core/helpers/collection-helpers',
    'Core/helpers/generate-helpers',
    'html!SBIS3.CONTROLS.StylesPanelNew',
+   'Core/EventBus',
    'html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemTemplate',
    'html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemContentTpl',
    'js!SBIS3.CONTROLS.ListView',
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
    'css!SBIS3.CONTROLS.StylesPanelNew'
-], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -179,6 +180,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                }
             }
             $('.controls-PopupMixin__closeButton', container).addClass('ws-hidden');
+         } else {
+            this._container.find('.controls-StylesPanel__applyButton, .controls-PopupMixin__closeButton').on('mousedown focus', this._blockFocusEvents);
          }
       },
 
@@ -474,6 +477,17 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                this._italic.setChecked(styles.italic);
                this._underline.setChecked(styles.underline);
                this._strikethrough.setChecked(styles.strikethrough);
+         }
+      },
+
+      //TODO: убрать метод после закртытия задачи: https://inside.tensor.ru/opendoc.html?guid=b67f7f5b-8b91-4fcb-8f83-74fd29d64db4
+      _blockFocusEvents: function(event) {
+         var eventsChannel = EventBus.channel('WindowChangeChannel');
+         event.preventDefault();
+         event.stopPropagation();
+         //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
+         if(event.type === 'mousedown') {
+            eventsChannel.notify('onDocumentClick', event);
          }
       }
 

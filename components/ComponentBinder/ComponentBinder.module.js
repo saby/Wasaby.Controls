@@ -11,11 +11,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.BreadCrumbsController',
        'js!SBIS3.CONTROLS.FilterHistoryController',
        'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
+       'js!SBIS3.CONTROLS.DateRangeRelationController',
        "Core/helpers/collection-helpers",
        "Core/core-instance",
        "Core/helpers/functional-helpers"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, colHelpers, cInstance, fHelpers) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, colHelpers, cInstance, fHelpers) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -27,11 +28,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    /*методы для поиска*/
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
+      var visible = operationPanel.isVisible();
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
             gridView.toggleCheckboxes(operationPanel.isVisible());
-            gridView.removeItemsSelectionAll();
+            if (!visible) {
+               if (gridView._options.useSelectAll) {
+                  gridView.setSelectedAllNew(false);
+               } else {
+                  gridView.removeItemsSelectionAll();
+               }
+            }
          }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
@@ -86,7 +94,11 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             /**
              * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
              */
-            paging: undefined
+            paging: undefined,
+            /**
+             * @cfg {SBIS3.CONROLS.DateRangeSlider[]} массив из контролов диапазонов дат.
+             */
+            dateRanges: undefined
          },
          _historyController: null,
          _searchController: null,
@@ -94,7 +106,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          _pagingController: null,
          _breadCrumbsController: null,
          _filterHistoryController: null,
-         _pagingHistoryController: null
+         _pagingHistoryController: null,
+         _dateRangeRelationController: null
       },
 
       /**
@@ -315,6 +328,28 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             })
          }
          this._scrollPagingController.bindScrollPaging();
+      },
+      /**
+       *
+       * @param dateRanges {SBIS3.CONTROLS.DateRangeSlider[]} массив из контролов диапазонов дат, если не передан используется тот, что задан в опциях.
+       * @param step {Number} шаг в месяцах с которым устанавливаются периоды в контролах. Если не установлен, то в контролах
+       * устанавливаются смежные периоды.
+       * @param showLock {Boolean} включает или отключает отображение замка на всех связанных контроллах.
+       * Если равен null или undefined, то оставляет отображение замочка без изменений.
+       * @param onlyByCapacity {Boolean} только по разрядности. Т.е., выбирая новый период в одном контроле,
+       * новые значения присвоятся в других контролах только если произошла смена разрядности или нарушено
+       * условие I < II < III < IV< ... .
+       */
+      bindDateRanges: function(dateRanges, step, showLock, onlyByCapacity) {
+         if (!this._dateRangeRelationController) {
+            this._dateRangeRelationController = new DateRangeRelationController({
+               dateRanges: dateRanges || this._options.dateRanges,
+               step: step,
+               showLock: showLock,
+               onlyByCapacity: onlyByCapacity
+            });
+         }
+         this._dateRangeRelationController.bindDateRanges();
       },
 
       destroy: function(){

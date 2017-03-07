@@ -23,7 +23,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
    constants,
@@ -49,7 +50,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    LayoutManager,
    cInstance,
    fcHelpers,
-   fHelpers) {
+   fHelpers,
+   SourceUtil) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -578,8 +580,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="array">
-             *        <option name="date" value="ASC"></option>
-             *        <option name="name" value="DESC"></option>
+             *        <options>
+             *           <option name="date" value="ASC"></option>
+             *        </options>
+             *        <options>
+             *           <option name="name" value="DESC"></option>
+             *        </options>
              *     </options>
              * </pre>
              */
@@ -757,7 +763,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
-            this._dataSource = this._prepareSource(this._options.dataSource);
+            this._dataSource =  SourceUtil.prepareSource.call(this, this._options.dataSource);
          }
          /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
          if (this._options._itemsProjection) {
@@ -797,7 +803,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          if (sourceOpt) {
-            this._dataSource = this._prepareSource(sourceOpt);
+            this._dataSource =  SourceUtil.prepareSource.call(this, sourceOpt);
          }
 
          if (itemsOpt) {
@@ -1367,25 +1373,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             this._clearItems();
          }
-      },
-
-      _prepareSource: function(sourceOpt) {
-         var result;
-         switch (typeof sourceOpt) {
-            case 'function':
-               result = sourceOpt.call(this);
-               break;
-            case 'object':
-               if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
-                  result = sourceOpt;
-               }
-               if ('module' in sourceOpt) {
-                  var DataSourceConstructor = require(sourceOpt.module);
-                  result = new DataSourceConstructor(sourceOpt.options || {});
-               }
-               break;
-         }
-         return result;
       },
 
       /**

@@ -18,10 +18,11 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
+   "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "js!SBIS3.CONTROLS.Link",
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil) {
       'use strict';
       var
          //Продолжительность анимации при отображения панели изображения
@@ -345,7 +346,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
                this._image = this._container.find('.controls-image__image');
                if (this._options.dataSource) {
-                  this._options.dataSource = this._prepareSource(this._options.dataSource);
+                  this._options.dataSource = SourceUtil.prepareSource.call(this, this._options.dataSource);
                }
             },
             init: function() {
@@ -397,6 +398,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (!noReload) {
                   this.reload();
                }
+               this._container.toggleClass('controls-image__normal', sizeMode == 'normal');
             },
             /**
              * Возвращает текущий способ отображения изображения в контейнере.
@@ -414,24 +416,6 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
-            _prepareSource: function(sourceOpt) {
-               var result;
-               switch (typeof sourceOpt) {
-                  case 'function':
-                     result = sourceOpt.call(this);
-                     break;
-                  case 'object':
-                     if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
-                        result = sourceOpt;
-                     }
-                     if ('module' in sourceOpt) {
-                        var DataSourceConstructor = require(sourceOpt.module);
-                        result = new DataSourceConstructor(sourceOpt.options || {});
-                     }
-                     break;
-               }
-               return result;
-            },
             _getSourceUrl: function() {
                var
                   dataSource = this.getDataSource();
@@ -463,20 +447,22 @@ define('js!SBIS3.CONTROLS.Image',
             _onEndLoad: function(event, response) {
                var
                   imageInstance = this.getParent();
-               if (response.hasOwnProperty('error')) {
+               if (response instanceof Error) {
                   fcHelpers.toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
-                  imageInstance._onErrorLoad(response.error, true);
-                  fcHelpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
-               } else {
-                  imageInstance._notify('onEndLoad', response);
-                  if (imageInstance._options.edit) {
-                     imageInstance._showEditDialog('new');
-                  } else {
-                     imageInstance._setImage(imageInstance._getSourceUrl());
-                     fcHelpers.toggleLocalIndicator(imageInstance._container, false);
-                     this._hideIndicator();
+                  // игнорируем HTTPError офлайна, если они обработаны
+                  if (!(response._isOfflineMode && response.processed)){
+                      fcHelpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
                   }
+                  return imageInstance._onErrorLoad(response, true);
+               }
+               imageInstance._notify('onEndLoad', response);
+               if (imageInstance._options.edit) {
+                  imageInstance._showEditDialog('new');
+               } else {
+                  imageInstance._setImage(imageInstance._getSourceUrl());
+                  fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                  this._hideIndicator();
                }
             },
             _onChangeImage: function() {

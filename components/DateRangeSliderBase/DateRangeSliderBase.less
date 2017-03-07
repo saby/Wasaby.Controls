@@ -12,36 +12,55 @@
          min-width: 0;
       }
    }
-
-   .controls-DateRangeSlider__value {
+   .controls-DateRangeSlider__value-wrapper {
       display: inline-block;
       text-align: center;
+
+      min-width: @date-range-slider-value-min-width;
+   }
+
+   .controls-DateRangeSlider__lock {
+      margin-right: 4px;
+   }
+
+   .controls-DateRangeSlider__value {
       font-weight: @date-range-slider-value-font-weight;
       line-height: @date-range-slider-height;
       padding-top: @date-range-slider-value-padding;
-      min-width: @date-range-slider-value-min-width;
-   }
-   &.ws-enabled{
-      .controls-DateRangeSlider__value {
-         cursor: pointer;
-         &:hover {
-            color: @date-range-slider-hover-color;
-            text-decoration: @date-range-slider-hover-text-decoration;
-         }
-      }
    }
 
-   &.ws-enabled {
+   &.ws-enabled{
+      .controls-DateRangeSlider__value,
       .controls-DateRangeSlider__prev,
-      .controls-DateRangeSlider__next {
+      .controls-DateRangeSlider__next,
+      .controls-DateRangeSlider__lock {
             cursor: pointer;
       }
+      .controls-DateRangeSlider__value {
+         &:hover {
+            color: @date-range-slider-hover-color;
+         }
+      }
+      .controls-DateRangeSlider__lock.icon-primary {
+         &:hover {
+            color: @date-range-slider-hover-color !important;
+         }
+      }
+      .controls-DateRangeSlider__lock.icon-disabled {
+         &:hover {
+            color: @date-range-slider-unlocked-icon-hover-color !important;
+         }
+      }
+      .controls-DateRangeSlider__value {
+         text-decoration: @date-range-slider-hover-text-decoration;
+      }
+
    }
 
    &.controls-DateRangeSlider__link {
-      .controls-Link {
+      .controls-DateRangeSlider__prev,
+      .controls-DateRangeSlider__next {
          margin: 0 4px;
-         min-width: 95px;
       }
    }
 
