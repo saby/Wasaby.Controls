@@ -317,7 +317,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
        * Пересчитать положение и размеры
        * @param recalcFlag
        */
-      recalcPosition: function (recalcFlag) {
+      recalcPosition: function (recalcFlag, saveSide) {
          if (this._isVisible) {
             this._currentAlignment = {
                verticalAlign : this._options.verticalAlign,
@@ -335,7 +335,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   maxHeight = parseFloat(this._container.css('max-height'), 10) || scrollHeight,
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._resetToDefault();
+               if (!saveSide) {
+                  this._resetToDefault();
+               } else {
+                  this._isMovedV = false;
+               }
 
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
@@ -343,7 +347,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
             }
-            this._initSizes();
+            this._initSizes(saveSide);
             if (!this._originsInited){
                return;
             }
@@ -570,7 +574,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       //Кэшируем размеры
-      _initSizes: function () {
+      _initSizes: function (saveSide) {
          var target = this._options.target,
             container = this._container;
          if (target) {
@@ -609,7 +613,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
-         var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         var buff;
+         if (saveSide) {
+            buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner, true);
+         } else {
+            buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         }
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requiredOffset = {
@@ -1125,12 +1134,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   if (res !== false) {
                      parentHide.call(self);
                      clearZIndex();
+                     self._fixedOffset = null;
                      deactivateWindow.call(this);
                   }
                });
             } else if (result !== false) {
                parentHide.call(this);
                clearZIndex();
+               self._fixedOffset = null;
                deactivateWindow.call(this);
             }
          }

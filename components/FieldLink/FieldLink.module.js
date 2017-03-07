@@ -1084,19 +1084,21 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    side: 'left'
                 },
                 handlers: {
-                   onShow: function() {
-                      if (this._isSuggestPickerRevertedVertical()) {
-                         if (!this._listReversed) {
-                            this._reverseList();
-                         }
-                      } else {
-                         if (this._listReversed) {
-                            this._reverseList();
-                         }
-                      }
-                   }.bind(this)
+                   onShow: this._onShowPicker.bind(this)
                 }
              };
+          },
+
+          _onShowPicker: function(){
+            if (this._isSuggestPickerRevertedVertical()) {
+                if (!this._listReversed) {
+                   this._reverseList();
+                }
+             } else {
+                if (this._listReversed) {
+                   this._reverseList();
+                }
+             }
           },
 
           _isSuggestPickerRevertedVertical: function() {
@@ -1117,6 +1119,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              после перерисовки надо вызвать метод, обрабатывающий положение автодополнение */
           _onListDrawItems: function() {
              FieldLink.superclass._onListDrawItems.apply(this, arguments);
+             this._onShowPicker();
              this._processSuggestPicker();
           },
           /**

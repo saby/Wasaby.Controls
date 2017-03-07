@@ -143,6 +143,24 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          this._picker.show();
          this._notify('onPickerOpen');
       },
+
+      /**
+       * Возвращает выпадающий блок.
+       * @example
+       * <pre>
+       *     FieldLink.getPicker().recalcPosition(true);
+       * </pre>
+       * @see hidePicker
+       * @see showPicker
+       * @see togglePicker
+       */
+      getPicker: function(){
+         if (!this._picker || this._picker.isDestroyed()) {
+            this._initializePicker();
+         }
+         return this._picker;
+      },
+
       /**
        * Метод скрывает выпадающий блок.
        * @example
