@@ -580,8 +580,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="array">
-             *        <option name="date" value="ASC"></option>
-             *        <option name="name" value="DESC"></option>
+             *        <options>
+             *           <option name="date" value="ASC"></option>
+             *        </options>
+             *        <options>
+             *           <option name="name" value="DESC"></option>
+             *        </options>
              *     </options>
              * </pre>
              */
