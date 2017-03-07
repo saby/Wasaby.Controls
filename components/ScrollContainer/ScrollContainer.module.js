@@ -162,7 +162,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
-               this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
+               if (this._options.stickyContainer) {
+                  this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
+               }
             }
          },
 
