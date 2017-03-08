@@ -640,9 +640,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
+            size = size + 'px';
             //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
-            this._removeFormat('fontsize')
-            this._tinyEditor.execCommand('FontSize',false,  size + 'px');
+            this._removeFormat('fontsize', size);
+            this._tinyEditor.execCommand('FontSize', false,  size);
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
@@ -1769,9 +1770,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * функция взята из textColor плагина для tinyMCE:
           * https://github.com/tinymce/tinymce/commit/2adfc8dc5467c4af77ff0e5403d00ae33298ed52
           */
-         _removeFormat : function(format) {
+         _removeFormat : function(format, value) {
             this._tinyEditor.focus();
-            this._tinyEditor.formatter.remove(format, {value: null}, null, true);
+            this._tinyEditor.formatter.remove(format, {value: value}, null, true);
             this._tinyEditor.nodeChanged();
          },
 
