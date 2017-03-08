@@ -56,6 +56,10 @@
   &.controls-Checked__checked:before {
     content: @toggle-header-checked-before-content;
   }
+   
+   &.ws-disabled {
+      border: @toggle-header-border;
+   } 
 
   &, &.controls-Checked__checked {
     .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
