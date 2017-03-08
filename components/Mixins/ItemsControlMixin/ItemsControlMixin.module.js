@@ -727,7 +727,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             light: true
          };
 
-         var debouncedDrawItemsCallback = this._drawItemsCallback.bind(this).debounce(0);
+         var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = fHelpers.forAliveOnly(function() {
             debouncedDrawItemsCallback();
