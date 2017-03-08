@@ -29,6 +29,8 @@
       }
    }
 }
+//TODO: объединить стили по смайлам со стандартным редактором, дабы избежать дублирования
+// по завдаче: https://inside.tensor.ru/opendoc.html?guid=5020752a-8f72-4adf-b13d-d80e0971787c
 .controls-RichEditorRoundToolbar__smilesPicker {
    width: 200px;
    .controls-Menu__header{
@@ -37,6 +39,10 @@
    &.controls-MenuIcon__Menu.controls-Menu__Popup.controls-Menu__hide-menu-header.controls-IconButton__round-border{
       .controls-ListView__item{
          padding: 2px 4px 0 4px;
+         width: 33px; // 25 ширина смайла на 10 ios + 8 отступ
+         &:hover {
+            color: #313E78
+         }
       }
    }
    .controls-Menu__itemsContainer {
@@ -60,6 +66,11 @@
       &.controls-MenuIcon__Menu {
          .controls-ListView__item {
             font-size: 18px;
+         }
+         &.controls-Menu__hide-menu-header.controls-IconButton__round-border{
+            .controls-ListView__item{
+               width: 31px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
+            }
          }
       }
    }
