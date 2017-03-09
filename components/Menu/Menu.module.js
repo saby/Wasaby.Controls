@@ -88,6 +88,8 @@ define('js!SBIS3.CONTROLS.Menu', [
       $protected: {
          _subContainers : {},
          _subMenus : {},
+         _toggleAdditionalButton: null,
+         _needShowToggleButton: false,
          _options: {
             /**
              * @cfg {Number} Задержка перед открытием
@@ -129,13 +131,17 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       init: function() {
          Menu.superclass.init.apply(this, arguments);
+         if(this._options.additionalProperty){
+            this._toggleAdditionalButton = this.getChildControlByName('toggleAdditionalItems');
+            this._toggleAdditionalButton[this._needShowToggleButton ? 'show' : 'hide']();
+         }
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          this._container.on('mousedown focus', this._blockFocusEvents);
       },
 
       _toggleAdditionalItems: function() {
          this.getContainer().toggleClass('controls-Menu-showAdditionalItems');
-         this._notifyOnSizeChanged(this, this);
+         this.recalcPosition(true);
       },
 
       _blockFocusEvents: function(event) {
@@ -160,6 +166,7 @@ define('js!SBIS3.CONTROLS.Menu', [
             };
          if(this._options.additionalProperty && item.get(this._options.additionalProperty)){
             options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
+            this._needShowToggleButton = true;
          }
          return '<component data-component="SBIS3.CONTROLS.MenuItem" config="' + mkpHelpers.encodeCfgAttr(options) + '">' +
                '<option name="caption" type="string">' + caption + '</option>' +
