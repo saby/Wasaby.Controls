@@ -82,7 +82,10 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 self = this,
                 originalDataSource = this._options.dataSource,
                 binding = originalDataSource.getBinding(),
+                //TODO: из-за того что есть опция queryMethodName приходится создавать новый DataSource для запроса данных.
+                //Нужно отказаться от этой опции, и настраивать action сразу правильным DataSource.
                 mergeDataSource = new SbisServiceSource({
+                    idProperty: originalDataSource.getIdProperty(),
                     endpoint: originalDataSource.getEndpoint(),
                     binding: {
                         query: this._options.queryMethodName || binding.query
