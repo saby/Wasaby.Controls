@@ -696,7 +696,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                   if(loadKeysArr[j] !== null) {
                      dMultiResult.push(self._dataSource.read(loadKeysArr[j]).addCallbacks(
                          function (record) {
-                            self._options.selectedItems.add(record);
+                            /* Проверка на случай отмены загрузки, т.к. parallelDeferred не отменяет зависимые дефереды */
+                            if(!dMultiResult.getResult().isReady()) {
+                               self._options.selectedItems.add(record);
+                            }
                             return record;
                          },
                          function(err) {
