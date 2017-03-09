@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
                Прикладной программист может увеличить ширину автодополнения установив min-width. */
             pickerContainer.style.maxWidth = textBoxWidth + 'px';
-            this._picker.recalcPosition(true);
+            this._picker.recalcPosition(true, true);
             pickerContainer.style.width = textBoxWidth + 'px';
          }
       }
