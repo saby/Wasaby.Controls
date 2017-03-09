@@ -177,7 +177,11 @@ define('js!SBIS3.CONTROLS.Selectable', [
             this.subscribeTo(this._getItemsProjection(), 'onCollectionChange', this._onProjectionChange);
          },
          _drawItemsCallback: function(lightVer) {
-            this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex, lightVer);
+            //Медленная отрисовка настолько медленная, что в некоторых случаях успевают задестроить компонент, который сейчас отрисовывается
+            //Подробности в https://inside.tensor.ru/opendoc.html?guid=9a83c03c-1058-48ef-8f62-d3f6cf32d793&des=
+            if (!this.isDestroyed()){
+               this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex, lightVer);
+            }
          },
          _unsetItemsEventHandlers : function() {
             if (this._getItemsProjection() && this._onProjectionCurrentChange) {
