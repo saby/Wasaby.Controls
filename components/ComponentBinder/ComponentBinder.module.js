@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                breadCrumbs: this._options.breadCrumbs,
                backButton: this._options.backButton,
                keyboardLayoutRevert: keyboardLayoutRevert,
-               hierarchyViewMode: hierarchyViewMode
+               hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
             });
          }
          this._searchController.bindSearch();
