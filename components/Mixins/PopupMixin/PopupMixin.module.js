@@ -349,8 +349,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
             if (this._options.target) {
                var offset = {
-                     top: this._fixed ? this._targetSizes.boundingClientRect.top : this._targetSizes.offset.top,
-                     left: this._fixed ? this._targetSizes.boundingClientRect.left : this._targetSizes.offset.left
+                     top: this._targetSizes.offset.top,
+                     left: this._targetSizes.offset.left
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
