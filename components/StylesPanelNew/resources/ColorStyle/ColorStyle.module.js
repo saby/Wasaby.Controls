@@ -33,19 +33,6 @@ define('js!SBIS3.CONTROLS.ColorStyle', [
             allowEmptySelection: false,
             _defaultItemTemplate: ItemTemplate
          }
-      },
-      $constructor: function() {
-         this._container.on('mousedown focus', this._blockFocusEvents);
-      },
-      //TODO: убрать метод после закртытия задачи: https://inside.tensor.ru/opendoc.html?guid=b67f7f5b-8b91-4fcb-8f83-74fd29d64db4
-      _blockFocusEvents: function(event) {
-         var eventsChannel = EventBus.channel('WindowChangeChannel');
-         event.preventDefault();
-         event.stopPropagation();
-         //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
-         if(event.type === 'mousedown') {
-            eventsChannel.notify('onDocumentClick', event);
-         }
       }
    });
    return ColorGroup;
