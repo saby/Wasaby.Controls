@@ -5,22 +5,27 @@
        <option name="displayProperty">value</option>
        <option name="selectedKey">{{=it.style['font-size'].substr(0, it.style['font-size'].length - 2 )}}</option>
        <option name="editable">false</option>
+       <option name="activableByClick">false</option>
     </component>
 
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Bold">
         <option name="icon">sprite:icon-16 icon-Bold icon-primary</option>
         <option name="checked">{{=!!it.style['font-weight']}}</option>
+        <option name="activableByClick">false</option>
     </component>
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Italic">
         <option name="icon">sprite:icon-16 icon-Italic icon-primary</option>
         <option name="checked">{{=!!it.style['font-style']}}</option>
+        <option name="activableByClick">false</option>
     </component>
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Underline">
         <option name="icon">sprite:icon-16 icon-Underline icon-primary</option>
         <option name="checked">{{=(it.style['text-decoration'] && it.style['text-decoration'].indexOf('underline') !== -1)}}</option>
+        <option name="activableByClick">false</option>
     </component>
     <component data-component="SBIS3.CONTROLS.ToggleButton" name="Strikethrough">
         <option name="icon">sprite:icon-16 icon-Stroked icon-primary</option>
         <option name="checked">{{=(it.style['text-decoration'] && it.style['text-decoration'].indexOf('line-through') !== -1)}}</option>
+        <option name="activableByClick">false</option>
     </component>
 </div>
