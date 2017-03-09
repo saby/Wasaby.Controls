@@ -305,6 +305,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @depreacted
                  */
                 saveParentRecordChanges: false,
+                /* FIXME до перехода на переворот на проекции
+                 https://inside.tensor.ru/opendoc.html?guid=7ec62a96-9fdc-4295-b6f0-8afda6de5190&des=
+                 Задача в разработку 05.09.2016 R! В 3.7.4.200 Мальцев сделал более правильный и универсальный способ переворота на проекции. Нужно …
+                 */
+                reverseItemsOnListRevert: true,
                 /**
                  * @noshow
                  * @depreacted
@@ -1047,7 +1052,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
                 при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
                 поэтому при перевороте проскролим вниз автодополнение */
-             this._processSuggestPicker();
+             this._scrollListToBottom();
           },
           
           // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
@@ -1088,13 +1093,17 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    side: 'left'
                 },
                 handlers: {
-                   onShow: this._onShowPicker.bind(this)
+                   onShow: this._checkListItemRevert.bind(this)
                 }
              };
           },
 
-          _onShowPicker: function(){
-            if (this._isSuggestPickerRevertedVertical()) {
+          _checkListItemRevert: function(){
+             if(!this._options.reverseItemsOnListRevert) {
+                return;
+             }
+
+             if (this._isSuggestPickerRevertedVertical()) {
                 if (!this._listReversed) {
                    this._reverseList();
                 }
@@ -1112,7 +1121,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
              при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
              поэтому при перевороте проскролим вниз автодополнение */
-          _processSuggestPicker: function() {
+          _scrollListToBottom: function() {
              if(this._picker && this._isSuggestPickerRevertedVertical()) {
                 var pickerContainer = this._picker.getContainer();
                 pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
@@ -1123,8 +1132,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              после перерисовки надо вызвать метод, обрабатывающий положение автодополнение */
           _onListDrawItems: function() {
              FieldLink.superclass._onListDrawItems.apply(this, arguments);
-             this._onShowPicker();
-             this._processSuggestPicker();
+             this._checkListItemRevert();
+             this._scrollListToBottom();
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи
