@@ -180,13 +180,12 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                }
             }
             $('.controls-PopupMixin__closeButton', container).addClass('ws-hidden');
-         } else {
-            this._container.find('.controls-StylesPanel__applyButton, .controls-PopupMixin__closeButton').on('mousedown focus', this._blockFocusEvents);
          }
       },
 
       init: function() {
-         var self = this;
+         var
+            self = this;
 
          StylesPanel.superclass.init.call(this);
 
@@ -233,6 +232,10 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                   self._historyInit();
                }
             }
+            self._container.on('mousedown focus', self._blockFocusEvents);
+            self._size.once('onPickerOpen', function(){
+               this._picker._container.on('mousedown focus', self._blockFocusEvents);
+            });
          }
 
          if (this._options.instantFireMode === true) {
