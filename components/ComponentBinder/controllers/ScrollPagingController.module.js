@@ -31,6 +31,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          if (isTree){
             view.subscribe('onSetRoot', function(){
                var curRoot = view.getCurrentRoot();
+               this._options.paging.setSelectedKey(0);
                this._options.paging.setPagesCount(0);
                this._currentScrollPage = 0;
                this.updateScrollPages(true);
