@@ -133,7 +133,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          _bold: null,
          _italic: null,
          _underline: null,
-         _strikethrough: null
+         _strikethrough: null,
+         _pickerOpenHandler: undefined
       },
 
       $constructor: function() {
@@ -180,13 +181,12 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                }
             }
             $('.controls-PopupMixin__closeButton', container).addClass('ws-hidden');
-         } else {
-            this._container.find('.controls-StylesPanel__applyButton, .controls-PopupMixin__closeButton').on('mousedown focus', this._blockFocusEvents);
          }
       },
 
       init: function() {
-         var self = this;
+         var
+            self = this;
 
          StylesPanel.superclass.init.call(this);
 
@@ -233,6 +233,14 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                   self._historyInit();
                }
             }
+            self._pickerOpenHandler = function() {
+               self._size._picker._container.on('mousedown focus', self._blockFocusEvents);
+            }.bind(self);
+            self._container.on('mousedown focus', self._blockFocusEvents);
+            //TODO: наилютейший костыль чтобы combobox не брал на себя фокус при открытии/закрытии popup`a
+            self._size._scrollToItem = function(){};
+            self._size.setActive = function(){};
+            self._size.once('onPickerOpen', self._pickerOpenHandler);
          }
 
          if (this._options.instantFireMode === true) {
@@ -489,8 +497,14 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          if(event.type === 'mousedown') {
             eventsChannel.notify('onDocumentClick', event);
          }
+      },
+      destroy: function() {
+         StylesPanel.superclass.destroy.apply(this, arguments);
+         if (!this._options.paletteRenderStyle) {
+            this._container.off('mousedown focus', this._blockFocusEvents);
+            this._size.unsubscribe('onPickerOpen', this._pickerOpenHandler);
+         }
       }
-
    });
 
    return StylesPanel;

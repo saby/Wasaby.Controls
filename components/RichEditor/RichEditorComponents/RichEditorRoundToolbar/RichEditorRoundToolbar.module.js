@@ -284,7 +284,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      {color:'blue'},
                      {color:'purple'},
                      {color:'grey'}
-                  ]
+                  ],
+                  activableByClick: false
                });
 
                this._stylesPanel.subscribe('changeFormat', function(){
