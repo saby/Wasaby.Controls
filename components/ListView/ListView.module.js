@@ -230,9 +230,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
           */
          /**
-          * @event onBeginAdd Происходит перед началом добавления записи по месту.
+          * @event onBeginAdd Происходит перед созданием в списке нового элемента коллекции.
+          * @remark
+          * Событие происходит при вызове команды {@link beginAdd} и при <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>добавлении по месту</a> из пользовательского интерфейса.
+          * В обработчике события можно установить инициализирующие значения полей для создаваемого элемента коллекции.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @returns {Object|WS.Data/Entity/Model} Инициализирующе данные для создаваемой записи.
+          * @example
+          * В качестве результата события передают Object или экземпляр класса {@link WS.Data/Entity/Model}.
+          * <pre>
+          *    myView.subscribe('onBeginAdd', function(eventObject) {
+          *
+          *       // инициализирующее значение для поля "Новинка"
+          *       eventObject.setResult({ 'Новинка': true });
+          *    });
+          * </pre>
+          * @see beginAdd
           */
          /**
           * @event onAfterBeginEdit Происходит после начала редактирования.
@@ -3252,38 +3264,36 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          /**
-          * Добавляет новый элемента коллекции.
+          * Создаёт в списке новый элемент коллекции.
           * @remark
-          * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
-          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
-          * <br/>
-          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
-          * <br/>
-          * Команда поддерживает инициацию добавления по месту для заранее подготовленной записи (см. примеры).
-          * @param {BeginEditOptions} [options] Параметры вызова команды.
-          * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
+          * Команда инициирует создание в списке нового элемента коллекции через функционал <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>Добавление по месту</a>.
+          * При создании элемента коллекции происходит событие {@link onBeginAdd}.
+          * @param {Object} [options] Параметры вызова команды.
+          * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
+          * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
+          * <ul>
+          *     <li>top - отображается в начале списка;</li>
+          *     <li>bottom - отображается в конце списка.</li>
+          * </ul>
+          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
+          * @param {Boolean} [withoutActivateEditor=false] В значении true в режиме редактирования созданного элемента коллекции фокус не установлен ни на один из редакторов (см. {@link SBIS3.CONTROLS.DataGridView/Columns.typedef editor}).
           * @example
-          * <u>Пример 1.</u> Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
+          * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
-          * this.sendCommand('beginAdd', {parentId: 'parentBranchId'});
-          * </pre>
-          * <u>Пример 2.</u> Добавления по месту для заранее подготовленной записи. Таким образом добавление по месту запускается синхронно и без единого запроса к бизнес-логике.
-          * <i>Вариант 1.</i>
-          * <pre>
-          * ListView.getDataSource().create().addCallback(function(preparedModel){...};
-          * </pre>
-          * <i>Вариант 2.</i>
-          * <pre>
-          * ListView.beginAdd({ preparedModel: preparedModel });
+          * var commandParams = {
+          *     parentId: myView.getCurrentRoot(),
+          *     preparedModel: {
+          *         'Наименование': 'ООО "Тензор"',
+          *     },
+          *     withoutActivateEditor: true
+          * };
+          * myView.sendCommand('beginAdd', commandParams);
           * </pre>
           * @returns {*|Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @private
           * @command beginAdd
+          * @see onBeginAdd
           * @see sendCommand
-          * @see activateItem
-          * @see beginEdit
-          * @see cancelEdit
-          * @see commitEdit
           */
          _beginAdd: function(options, withoutActivateEditor) {
             if (!options) {
