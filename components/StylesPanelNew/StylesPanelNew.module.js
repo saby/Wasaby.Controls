@@ -233,6 +233,9 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                }
             }
             self._container.on('mousedown focus', self._blockFocusEvents);
+            //TODO: наилютейший костыль чтобы combobox не брал на себя фокус при открытии/закрытии popup`a
+            self._size._scrollToItem = function(){};
+            self._size.setActive = function(){};
             self._size.once('onPickerOpen', function(){
                this._picker._container.on('mousedown focus', self._blockFocusEvents);
             });
