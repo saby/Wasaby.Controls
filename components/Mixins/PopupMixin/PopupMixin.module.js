@@ -548,7 +548,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (self._options.target && self._options.targetPart) {
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
-            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target) && !this._isLinkedPanel(target)) {
                if ($(target).hasClass('ws-window-overlay')) {
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
@@ -558,6 +558,24 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                }
             }
          }
+      },
+
+      _isLinkedPanel: function (target) {
+         //По ошибке https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04 убрали всплытие события при mousedown (для чего описано в ошибке)
+         //FloatArea теперь не может превентить событие, поэтому при клике по панели закрывается попап, из которого была открыта floatArea.
+         //Если клик был по скроллу - то target.wsControl вернет null, т.к. скролл находится на родительском контейнере floatArea
+         //Пытаюсь найти панель вручную. Использую closest, т.к. клик может быть в ws-float-area-panel-external-jeans, который лежит на 1 уровне с floatarea
+         var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area'),
+             opener;
+         if (floatArea.length){
+            target = floatArea.wsControl().getOpener();
+            do {
+               target = target.getParent() || target.getOpener();
+            }
+            while (target && target !== this);
+            return target === this;
+         }
+         return false;
       },
 
       _checkTargetPosition: function () {
