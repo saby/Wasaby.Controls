@@ -128,7 +128,7 @@ define([
             }
          });
 
-         describe('updating range with period type < step', function () {
+         describe('updating range with period type less than step', function () {
             let dates = createDates(new Date(2016, 0, 1), 6, 3);
             for (let controlNumber of dates.keys()) {
                it(`should be update all controls after ${controlNumber} control updated`, function () {
