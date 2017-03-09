@@ -134,7 +134,11 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {СolumnsConfigObject} columnsConfig Конфигурация колонок
              */
-            columnsConfig: null
+            columnsConfig: null,
+            /**
+             * @cfg {Boolean} hierarchyViewMode Включать группировку при поиске.
+             */
+            hierarchyViewMode: true
          }
       },
 
@@ -202,7 +206,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._searchForm,
                this._options.searchMode,
                false,
-               this._options.keyboardLayoutRevert);
+               this._options.keyboardLayoutRevert,
+               this._options.hierarchyViewMode);
          }
 
 
