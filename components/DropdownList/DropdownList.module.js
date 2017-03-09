@@ -399,7 +399,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _onReviveItems: function(){
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
-            this._removeOldKeys();
+            //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
+            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
+               this._removeOldKeys();
+            }
             DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
