@@ -1,5 +1,13 @@
-@import "../IconButton/IconButton";
-@import "../Button/Button";
+.button-mixin(@icon-top, @icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+   left: @icon-left - @border-width;
+   top: @icon-top - @border-width;
+
+   & + .controls-Button__text {
+      margin-right: @margin-right - @border-width;
+      margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+   }
+}
+
 .controls-Button {
   &.controls-Checked__checked {
     color: @button-checked-text-color;
