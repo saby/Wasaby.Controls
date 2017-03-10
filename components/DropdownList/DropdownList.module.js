@@ -359,7 +359,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload(); //todo - убрать в 375. Если нужен reload, должны позвать сами. Наша логика перерисовки содержится в itemsControlMixin'e
+            //В 375.20 оставляю проверку, в 375.30 выпилил
+            if (this.getItems() && this.getDataSource()){
+               this.reload();
+            }
             this._bindItemSelect();
 
             if(this._isHoverMode()) {
