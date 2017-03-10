@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          "array" : true,
          "запись" : true,
          "выборка" : true,
-         "recordSet" : true,
+         "recordset" : true,
          "record" : true
       },
       _wordsToTranslate: {
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
-               if(typeName === "дата и время" || typeName === 'dateTime')
+               if(typeName === "дата и время" || typeName === 'datetime')
                   fieldValue = fieldValue.toSQL() + "T" + fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
                if(typeName === 'дата' || typeName === 'date')
                   fieldValue = fieldValue.toSQL();
@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
                elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
-         } else if (typeName == 'recordSet' || typeName == 'record') {
+         } else if (typeName == 'recordset' || typeName == 'record') {
             this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));
          }
       },
