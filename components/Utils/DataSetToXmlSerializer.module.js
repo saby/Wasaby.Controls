@@ -254,7 +254,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
                elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
-         } else if (typeName == 'recordSet' || typeName == 'record') {
+         } else if (typeName == 'recordset' || typeName == 'record') {
             this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));
          }
       },
