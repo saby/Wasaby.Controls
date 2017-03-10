@@ -460,6 +460,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this.setActive(true, false, true);
             e.stopPropagation();
          }
+         // убираем курсор на ipad'e при нажатии на readonly поле ввода
+         if(!this.isEnabled() && constants.browser.isMobilePlatform){
+            this._inputField.blur();
+         }
       },
 
       _createCompatPlaceholder : function() {
