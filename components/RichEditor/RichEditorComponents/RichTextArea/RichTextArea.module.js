@@ -1054,8 +1054,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (!cConstants.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
                      if (e.ctrlKey) {
-                        var target = e.target;
-                        if (target.nodeName === 'A' && target.href) {
+                         //По ctrl+click по ссылке внутри редктора открывается ссылка в новой вкладке
+                         //если перед этим текст делали зеленым то выходит вёрстка
+                         //<a><span green>text</span></a>
+                         //в момент ctrl+click необходимо смотреть на тег и на его родителя
+                        var
+                           target = e.target.nodeName === 'A' ? e.target :$(e.target).parent('a')[0]; //ccылка может быть отформатирована
+                        if (target && target.nodeName === 'A' && target.href) {
                            window.open(target.href, '_blank');
                         }
                      }
