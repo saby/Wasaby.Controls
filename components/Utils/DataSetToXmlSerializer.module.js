@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
-               if(typeName === "дата и время" || typeName === 'dateTime')
+               if(typeName === "дата и время" || typeName === 'datetime')
                   fieldValue = fieldValue.toSQL() + "T" + fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
                if(typeName === 'дата' || typeName === 'date')
                   fieldValue = fieldValue.toSQL();
