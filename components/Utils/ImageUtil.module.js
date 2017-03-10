@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
       getNaturalSizes: function(DOMelement) {
          var img = new Image();
          img.src = DOMelement.src;
-         return {width: img.width, height: img.height};
+         return {width: img.width || DOMelement.naturalWidth, height: img.height || DOMelement.naturalHeight};
       }
    };
 
