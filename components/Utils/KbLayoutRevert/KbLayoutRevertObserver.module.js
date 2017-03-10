@@ -6,10 +6,9 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    "Core/Abstract",
    "Core/helpers/string-helpers",
    "Core/core-functions",
-   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
-   "Core/core-instance"
+   "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil"
 ],
-    function (Abstract, strHelpers, cFunctions, KbLayoutRevertUtil, cInstance) {
+    function (Abstract, strHelpers, cFunctions, KbLayoutRevertUtil) {
    'use strict';
 
    /* Вспомогательный класс, для посчёта времени запроса.
@@ -105,17 +104,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
       _getTimer: function() {
           if(!this._timer) {
-             if(cInstance.instanceOfModule(this._options.view.getDataSource(), 'js!WS.Data/Source/Remote')) {
-                this._timer = new Timer();
-             } else {
-                /* Заглушка, так как у источников, которые не наследованы от WS.Data/Source/Remote нет события
-                   перед запросом, и таймер будет запускаться неверно */
-                this._timer = {
-                   start: function(){},
-                   stop: function(){},
-                   getTime: function() {return 0;}
-                };
-             }
+             this._timer = new Timer();
           }
           return this._timer;
       },
