@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
 
       $protected: {
          _options: {
-            name: 'moveDialog',
+            name: 'dialogForSelect',
             autoHeight: false,
             width: '400px',
             height: '400px',
