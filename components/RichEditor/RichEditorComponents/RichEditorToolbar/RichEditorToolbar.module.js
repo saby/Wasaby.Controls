@@ -11,8 +11,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown"
-], function( cMerge,RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
+   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   'css!SBIS3.CONTROLS.RichEditorToolbar',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton'
+], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
 
@@ -279,7 +282,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                   closeByExternalClick: true,
                   verticalAlign: {
                      side: 'top',
-                     offset: -4
+                     offset: -10
                   },
                   horizontalAlign: {
                     side: 'right'

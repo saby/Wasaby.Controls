@@ -18,7 +18,6 @@
           border-width: 0 0 1px 0;
           border-color: @data-grid-edge-cell-separator-color;
         }
-
         .controls-DataGridView__tr {
           .controls-DataGridView__td {
             border-top-color: @data-grid-cell-separator-color;
@@ -28,20 +27,28 @@
           .controls-DataGridView__td {
             border-top-color: @data-grid-edge-cell-separator-color;
           }
-        }
-        &.ws-sticky-header__table {
-          &.ws-sticky-header__fixed {
-            .controls-DataGridView__tr:first-child {
-              .controls-DataGridView__td {
-                border-top-color: transparent;
-              }
+          &.controls-GroupBy {
+            .controls-DataGridView__td {
+              border-top: none;
             }
           }
         }
-      }
+       &.controls-DataGridView__resultsBottom {
+         .controls-DataGridView__table {
+           border-width: 0;
+         }
+          .controls-DataGridView__results {
+            td {
+              border-width: 1px 0 0 0;
+              border-color: @data-grid-edge-cell-separator-color;
+              border-style: solid;
+            }
+          }
+       }
+     }
      &.controls-DataGridView__emptyTable {
        .controls-DataGridView__table {
-         border-color: transparent;
+         border-width: 0;
        }
      }
    }
@@ -94,7 +101,11 @@
 
       .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__th__topRow{
-           text-align: center;
+            text-align: center;
+            &.controls-DataGridView__th__topRow-has_text{
+               border-bottom: 1px solid @data-grid-cell-separator-color;
+               padding-bottom: 3px;
+            }
          }
          &.controls-DataGridView__notScrolledCell {
             background-color: @data-grid-partScroll-notScrolledCell-Color;
@@ -141,6 +152,15 @@
                color: @data-grid-row-hover-cell-text-color;
                background-color: @data-grid-row-hover-cell-bg;
             }
+         }
+      }
+
+      .controls-DataGridView__th, .controls-DataGridView__td {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: @data-grid-side-cell-padding;
+         }
+         &:last-child {
+            padding-right: @data-grid-side-cell-padding;
          }
       }
 
@@ -242,15 +262,33 @@
    }
 
    &.ws-disabled {
-      .controls-DataGridView__td,
       .controls-DataGridView__td__checkBox {
          cursor: @list-view-disabled-cursor;
       }
    }
 
+   .generate-side-class(@i: 1) when (@i =< length(@data-grid-side-cell-padding-variants)) {
+      @nval: extract(@data-grid-side-cell-padding-variants, @i);
+      @val: @nval * 1px;
+      &.controls-DataGridView__sidePadding-@{nval} {
+         .controls-DataGridView__th, .controls-DataGridView__td {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: @val;
+            }
+            &:last-child {
+               padding-right: @val;
+            }
+         }
+      }
+      .generate-side-class(@i + 1);
+   }
+   .generate-side-class();
+
   &.controls-ListView__multiselect {
-     .controls-DataGridView__firstContentCell {
-        padding-left: @data-grid-ms-first-content-cell-padding-left;
+     .controls-DataGridView__th, .controls-DataGridView__td {
+        &.controls-DataGridView__firstContentCell {
+           padding-left: @data-grid-ms-first-content-cell-padding-left;
+        }
      }
 
      > .controls-DataGridView__table {
@@ -264,12 +302,6 @@
         }
      }
   }
-
-   &.controls-ListView__multiselect__off {
-      .controls-DataGridView__firstContentCell {
-         padding-left: @data-grid-first-content-cell-padding-left;
-      }
-   }
 
    &.controls-ListView__hideCheckBoxes {
       &.controls-ListView__multiselect {
@@ -371,9 +403,30 @@
 /****************************************/
 
 .ws-sticky-header__header-container {
-   >.controls-DataGridView__with-partScroll {
+   >.controls-ListView.controls-DataGridView.controls-DataGridView__with-partScroll {
       overflow-y: hidden;
       padding-bottom: 7px;
       background-clip: content-box;
    }
+}
+
+.ws-sticky-header__header-container {
+  .controls-DataGridView {
+    &.controls-DataGridView__hasSeparator {
+      &.controls-ListView__dataLoaded {
+        .controls-DataGridView__table {
+          border-width: 0;
+        }
+      }
+    }
+  }
+}
+.ws-sticky-header__wrapper-scrolled {
+  .ws-sticky-header__header-container {
+    .controls-DataGridView.controls-DataGridView__hasSeparator.controls-ListView__dataLoaded {
+       .controls-DataGridView__table {
+          border-width: 0 0 1px 0;
+       }
+    }
+  }
 }

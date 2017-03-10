@@ -1,6 +1,7 @@
+@import "../RichTextArea/RichTextArea";
 .controls-RichEditorToolbar {
    height: auto;
-
+   cursor: default;
    &.ws-disabled {
       display: none;
    }
@@ -54,10 +55,10 @@
 
 //Стили для элементов тулбара богатого редактора
 .controls-RichEditorToolbar__item {
-   margin: 0 2px;
-   float: left;
+   margin: 0 2px !important;
+   float: left !important;
 
-   &.controls-Button {
+   &.controls-Button.controls-ListView__item {
       display: inline-block;
       overflow: hidden;
       .controls-Button__icon {
@@ -107,14 +108,14 @@
       &:hover{
          &:not(.ws-disabled){
             &:not(.controls-Click__active) {
-               border: none;
-               background: none;
+               border: none !important;
+               background: none !important;
                &.controls-Checked__checked {
-                  background: @fieldRichEditorButtonsCheckedColor;
+                  background: @fieldRichEditorButtonsCheckedColor !important;
                }
             }
             &.controls-Checked__checked {
-               border: none;
+               border: none !important;
             }
          }
       }
@@ -144,7 +145,7 @@
 .controls-RichEditorToolbar__itemsContainer .controls-RichEditorToolbar__item {
    &.controls-MenuButton {
       width:24px;
-      margin: 0;
+      margin: 0 !important;
       text-align: left;
       .controls-Button__icon {
          padding-left:4px;
@@ -165,13 +166,14 @@
    &.controls-MenuButton__Menu {
       width: 200px;
       padding: 0 0 4px 0 !important;
-      .controls-ListView__item {
+      .controls-ListView__item.controls-MenuItem {
          color: #587ab0;
          font-size: 24px;
          display: inline-block;
          padding: 2px 4px 0 4px;
          height: 20px;
          vertical-align: bottom;
+         width: 33px; // 25 ширина смайла на 10 ios + 8 отступ
          &:hover {
             color: #313E78
          }
@@ -204,6 +206,11 @@
       .controls-ListView__item {
          display: block;
          width: 34px;
+
+         .controls-MenuItem__content {
+            min-height: initial;
+         }
+
          .controls-MenuItem__text {
             margin: 0;
          }
@@ -309,10 +316,11 @@
    }
    .fre-smiles {
       width: 192px;
-      font-family: 'EmojiFont','TensorFont Regular', 'TensorFont', sans-serif;
+      font-family: 'EmojiFont','TensorFont', sans-serif;
       &.controls-MenuButton__Menu {
          .controls-ListView__item {
             font-size: 18px;
+            width: 31px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
          }
       }
    }

@@ -3,9 +3,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    "Core/IoC",
    "Core/core-functions",
    "Core/ConsoleLogger",
-   "js!SBIS3.CORE.Infobox",
+   "Core/Deferred",
    "Core/helpers/string-helpers"
-], function ( constants, IoC, cFunctions, ConsoleLogger,Infobox, strHelpers) {
+], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, strHelpers) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/index/">Валидация вводимых данных</a>.
@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          _prevValidationResult: true,
          _vResultErrors: [],
          _errorMessage: '',
+         _infobox: undefined,
          _options: {
             /**
              * @typedef {Object} Validator
@@ -111,8 +112,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
       },
       before: {
           destroy: function () {
-            if (Infobox.hasTarget() && Infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
-               Infobox.hide();
+            if (this._infobox && this._infobox.hasTarget() && this._infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
+               this._infobox.hide();
             }
          }
       },
@@ -215,7 +216,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          }
 
          if (vResult.errors.length > 0) {
-            this.markControl(vResult.errors);
+            this.markControl(vResult.errors, true);
          }
          this._calcPrevValidationResult();
 
@@ -334,9 +335,23 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          this._calcValidationErrorCount(message);
          this._createErrorMessage(message);
          if (showInfoBox === true) {
-            Infobox.show(this._getExtendedTooltipTarget(), this._alterTooltipText(), 'auto');
+            this._getInfoBox().addCallback(function(){
+               this._infobox.show(this._getExtendedTooltipTarget(), this._alterTooltipText(), 'auto');
+            }.bind(this));
          }
          this._container.addClass('ws-validation-error');
+      },
+      _getInfoBox: function(){
+         var infoboxDeferred = new Deferred();
+         if (this._infobox){
+            return infoboxDeferred.callback();
+         }
+
+         require(['js!SBIS3.CORE.Infobox'], function(Infobox){
+            this._infobox = Infobox;
+            infoboxDeferred.callback();
+         }.bind(this));
+         return infoboxDeferred;
       },
       /**
        * Снимает с контрола маркировку об ошибке валидации.
@@ -373,15 +388,17 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             this._validationErrorCount = 0;
             this._container.removeClass('ws-validation-error');
             this._errorMessage = '';
-            // Если на нас сейчас висит подсказка
-            if (Infobox.hasTarget() && Infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
-               // надо или поменять текст (убрать ошибки валидации), или убрать совсем (если текста помощи нет)
-               if (this._isCanShowExtendedTooltip()) {
-                  this._showExtendedTooltip(true);
-               } else {
-                  Infobox.hide(0);
+            this._getInfoBox().addCallback(function () {
+               // Если на нас сейчас висит подсказка
+               if (this._infobox.hasTarget() && this._infobox.isCurrentTarget(this._getExtendedTooltipTarget())) {
+                  // надо или поменять текст (убрать ошибки валидации), или убрать совсем (если текста помощи нет)
+                  if (this._isCanShowExtendedTooltip()) {
+                     this._showExtendedTooltip(true);
+                  } else {
+                     this._infobox.hide(0);
+                  }
                }
-            }
+            }.bind(this));
          }
       },
       /**

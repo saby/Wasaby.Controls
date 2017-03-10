@@ -1,12 +1,12 @@
+@import "../IconButton/IconButton";
+@import "../Button/Button";
 .controls-Button {
   &.controls-Checked__checked {
-    &.controls-Button {
-      color: @button-checked-text-color;
-      border: @button-checked-border;
-      font-weight: @button-checked-font-weight;
-      .box-shadow(@button-checked-shadow);
-      background: @button-checked-bg;
-    }
+    color: @button-checked-text-color;
+    border: @button-checked-border;
+    font-weight: @button-checked-font-weight;
+    .box-shadow(@button-checked-shadow);
+    background: @button-checked-bg;
 
     &.controls-Button__primary {
       color: @button-primary-checked-text-color;
@@ -47,23 +47,24 @@
   }
 }
 
-.controls-Button__big.controls-Checked__checked {
-  .controls-Button__text {
-    margin-left: @button-big-checked-text-margin-left;
-    margin-right: @button-big-checked-text-margin-right;
-  }
-  .controls-Button__icon {
-    .button-mixin(@button-big-icon-top-offset, @button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
-  }
-  .controls-Button__icon.icon-24 {
-    .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
-  }
+.controls-Button.controls-Button__big.controls-Checked__checked {
+    .controls-Button__text {
+      margin-left: @button-big-checked-text-margin-left;
+      margin-right: @button-big-checked-text-margin-right;
+    }
+    .controls-Button__icon {
+      .button-mixin(@button-big-icon-top-offset, @button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
+    .controls-Button__icon.icon-24 {
+      .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
 }
+
 
 .ws-is-desktop-platform {
   .controls-Button:not(.ws-disabled) {
     &:hover {
-      &.controls-Checked__checked {
+      &.controls-Checked__checked.controls-Button {
         border: @button-checked-border;
 
         &.controls-Button__primary {

@@ -2,8 +2,9 @@
  * Created by ps.borisov on 03.12.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
-   'Core/constants'
-], function (constants) {
+   'Core/constants',
+   'Core/markup/ParserUtilitiesNew'
+], function (constants, Parser) {
    'use strict';
    /**
     * Утилиты для работы с контентом полученным из Богатого текстового редактора
@@ -66,6 +67,74 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                event.target.style.orphans = oldOrphans;
             });
          }
+      },
+
+      //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
+      unDecorateLinks: function(text) {
+         var
+            parsed = Parser.parse(text),
+
+            replaceDecoratedLinks = function(content) {
+               var
+                  i = 0;
+               if (content.childNodes) {
+                  while (i < content.childNodes.length) {
+                     var
+                        className = getAttribute(content.childNodes[i], 'class');
+                     //3 if-блока для поддержки разных версий декорированных ссылок
+                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink') {
+                        replaceToHref(content, i);
+                     } else if (className == 'LinkDecorator__decoratedLink'){
+                        content.childNodes.splice(i, 1);
+                     } else if (className == 'LinkDecorator__wrap'){
+                        replaceWrapToHref(content, i);
+                     } else {
+                        replaceDecoratedLinks(content.childNodes[i]);
+                     }
+                     i++;
+                  }
+               }
+            },
+
+            getAttribute = function(node, atrrName){
+               if (node && node.attributes && node.attributes[atrrName]) {
+                  return node.attributes[atrrName].value;
+               }
+               return false;
+            },
+
+            replaceToHref = function(content, index){
+               var
+                  href = getAttribute(content.childNodes[index], 'href'),
+                  node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
+               content.childNodes[index] = node;
+            },
+
+            //Поиск тега a с классом LinkDecorator__linkWrap внутри блока блока с номером index,
+            //замена блока с номером index на href найденной ссылки
+            replaceWrapToHref = function(content, index){
+               var
+                  href,
+                  node,
+                  linkNode,
+                  i = 0;
+               while (i < content.childNodes[index].childNodes.length) {
+                  var
+                     className = getAttribute(content.childNodes[index].childNodes[i], 'class');
+                  if (className == 'LinkDecorator__linkWrap'){
+                     linkNode = content.childNodes[index].childNodes[i];
+                     break;
+                  }
+                  i++;
+               }
+               href = getAttribute(linkNode, 'href');
+               node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
+               content.childNodes[index] = node;
+            };
+
+         replaceDecoratedLinks(parsed);
+
+         return parsed.innerHTML();
       }
    };
 

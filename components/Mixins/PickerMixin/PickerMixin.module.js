@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
       },
 
       $constructor: function() {
-
+         this._publish('onPickerOpen', 'onPickerClose');
       },
 
       _initializePicker: function () {
@@ -141,7 +141,26 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          }
          this._container.addClass('controls-Picker__show');
          this._picker.show();
+         this._notify('onPickerOpen');
       },
+
+      /**
+       * Возвращает выпадающий блок.
+       * @example
+       * <pre>
+       *     FieldLink.getPicker().recalcPosition(true);
+       * </pre>
+       * @see hidePicker
+       * @see showPicker
+       * @see togglePicker
+       */
+      getPicker: function(){
+         if (!this._picker || this._picker.isDestroyed()) {
+            this._initializePicker();
+         }
+         return this._picker;
+      },
+
       /**
        * Метод скрывает выпадающий блок.
        * @example
@@ -157,6 +176,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          if(this._picker) {
             this._container.removeClass('controls-Picker__show');
             this._picker.hide();
+            this._notify('onPickerClose');
          }
       },
      /**

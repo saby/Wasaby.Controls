@@ -4,12 +4,18 @@
 define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/constants",
    'js!SBIS3.CONTROLS.SearchController',
+   'js!SBIS3.CONTROLS.HistoryList',
+   'js!WS.Data/Collection/RecordSet',
+   'js!WS.Data/Di',
    "Core/core-instance",
    "Core/CommandDispatcher",
    "Core/core-functions"
 ], function (
    constants,
    SearchController,
+   HistoryList,
+   RecordSet,
+   Di,
    cInstance,
    CommandDispatcher,
    cFunctions ) {
@@ -35,6 +41,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             что список находится в body, а блокировать всплытие события надо на уровне поля ввода,
             поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
          _selectedFromList: false,
+         _historyController: null,
 
          _options: {
             /**
@@ -81,6 +88,43 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
       },
 
+      _showHistory: function () {
+         if (this._historyController.getCount()) {
+            this.getList().setItems(this._getHistoryRecordSet());
+            this.showPicker();
+         }
+      },
+      _getHistoryRecordSet: function(){
+         var listSource = this.getList().getDataSource(),
+            historyRecordSet = new RecordSet({
+               adapter: listSource.getAdapter(),
+               rawData: [],
+               idProperty: this._list.getProperty('idProperty'),
+               model: listSource.getModel()
+            });
+         historyRecordSet.assign(this._prepareHistoryData());
+         return historyRecordSet;
+      },
+      _prepareHistoryData: function(){
+         var history = this._historyController,
+            rawData = [];
+         for (var i = 0, l = history.getCount(); i < l; i++){
+            rawData.push(this._getHistoryRecord(history.at(i).get('data')));
+         }
+         return rawData;
+      },
+      _getHistoryRecord: function(item){
+         var list = this.getList();
+         return Di.resolve(list.getDataSource().getModel(), {
+            adapter: list.getDataSource().getAdapter(),
+            idProperty: list.getProperty('idProperty'),
+            rawData: item.getRawData()
+         });
+      },
+      _needShowHistory: function(){
+         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
+      },
+
       /**
        * Изменяет параметр поиска
        * @param {String} paramName
@@ -101,6 +145,16 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
                чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
             this._changedByKeyboard = true;
+         },
+         _observableControlFocusHandler: function(){
+            if (this._needShowHistory()){
+               this._showHistory();
+            }
+         },
+         _onListItemSelectNotify: function(item){
+            if (this._historyController) {
+               this._historyController.prepend(item.getRawData());
+            }
          }
       },
 
@@ -158,15 +212,16 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var self = this;
 
             if(this._options.searchParam) {
-               var showPicker = function() {
+               var togglePicker = function() {
                      if(self._checkPickerState(!self._options.showEmptyList)) {
                         self.showPicker();
+                     } else {
+                        self.hidePicker();
                      }
                   },
                   list = this.getList(),
                   listItems = list.getItems();
 
-               self.hidePicker();
                /* В событии onDataLoad момент нельзя показывать пикер т.к. :
                 1) Могут возникнуть проблемы, когда после отрисовки пикер меняет своё положение.
                 2) Данных в рекордсете ещё нет.
@@ -175,13 +230,24 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                if( (dataSet && !dataSet.getCount()) && (listItems && !listItems.getCount()) ) {
                   /* Если был пустой список и после загрузки пустой, то события onDrawItems не стрельнёт,
                    т.к. ничего не рисовалось */
-                  showPicker();
+                  togglePicker();
                } else {
-                  this.subscribeOnceTo(list, 'onDrawItems', showPicker);
+                  this.subscribeOnceTo(list, 'onDrawItems', togglePicker);
                }
             }
          },
+         _initList: function(){
+            if (this._options.historyId){
+               this._historyController = new HistoryList({
+                  historyId: this._options.historyId
+               });
+            }
+         },
          _resetSearch: function() {
+            if (this._needShowHistory()){
+               this._showHistory();
+            }
+
             if(this._options.searchParam) {
                /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
                 то просто удалим параметр поиска из фильтра */

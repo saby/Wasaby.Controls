@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'js!SBIS3.CONTROLS.HistoryController',
       'js!WS.Data/Collection/IList',
       'js!WS.Data/Collection/IEnumerable',
+      'js!WS.Data/Collection/IIndexedCollection',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Entity/Record',
       'Core/Serializer',
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'Core/helpers/collection-helpers'
    ],
 
-   function(HistoryController, IList, IEnumerable, RecordSet, Record, Serializer, genHelpers) {
+   function(HistoryController, IList, IEnumerable, IIndexedCollection, RecordSet, Record, Serializer, genHelpers, colHelpers) {
 
       'use strict';
 
@@ -36,6 +37,51 @@ define('js!SBIS3.CONTROLS.HistoryList',
          model[item instanceof Record ? 'set' : 'setRawData'](rawData);
 
          return model;
+      }
+
+      /* Скорее всего надо вынести в отдельный модуль и написать тесты */
+      function compare(value1, value2) {
+         var isEqual = value1 === value2;
+
+         function deepCompare(val1, val2) {
+            var eq = false;
+            colHelpers.forEach(val1, function(val, key) {
+               eq &= compare(val1[key], val2[key]);
+            });
+            return eq;
+         }
+
+         /* cInstance.instanceOfMixin(value, 'WS.Data/Entity/IEquatable') - правильно, но медленно */
+         if(!isEqual && value1.isEqual && value2.isEqual) {
+            isEqual = value1.isEqual(value2);
+         }
+
+         /* cInstance.instanceOfMixin(value1, 'WS.Data/Entity/FormattableMixin') - правильно, но медленно */
+         if(!isEqual && value1.getRawData && value2.getRawData) {
+            isEqual = colHelpers.isEqualObject(value1.getRawData(), value2.getRawData());
+         }
+
+         if(!isEqual &&  isPlainArray(value1) && isPlainArray(value2)) {
+            if(value1.length === value2.length) {
+               isEqual = colHelpers.isEqualObject(value1, value2);
+
+               if(!isEqual) {
+                  isEqual = deepCompare(value1, value2);
+               }
+            }
+         }
+
+         if(!isEqual && isPlainObject(value1) && isPlainObject(value2)) {
+            if(Object.keys(value1).length === Object.keys(value2).length) {
+               isEqual = colHelpers.isEqualObject(value1, value2);
+
+               if(!isEqual) {
+                  isEqual = deepCompare(value1, value2);
+               }
+            }
+         }
+
+         return isEqual;
       }
 
       /**
@@ -108,9 +154,11 @@ define('js!SBIS3.CONTROLS.HistoryList',
          },
 
          removeAt: function(index) {
-            var result = this.getHistory().removeAt(index);
+            var history = this.getHistory(),
+                result;
 
-            if(result) {
+            if(index < history.getCount()) {
+               this.getHistory().removeAt(index);
                this.saveHistory();
             }
             return result;
@@ -142,6 +190,18 @@ define('js!SBIS3.CONTROLS.HistoryList',
 
          //endregion WS.Data/Collection/IEnumerable
 
+         //region WS.Data/Collection/IIndexedCollection
+
+         getIndexByValue: function(property, value) {
+            return this.getHistory().getIndexByValue(property, value);
+         },
+
+         getIndicesByValue: function(property, value) {
+            return this.getHistory().getIndicesByValue(property, value);
+         },
+
+         //endregion WS.Data/Collection/IIndexedCollection
+
          //region Protected methods
 
          /**
@@ -158,7 +218,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
                 index = -1;
 
             this.each(function(rec, i) {
-               if(index === -1 && rec.get(DATA_FIELD).isEqual(data)) {
+               if(index === -1 && compare(rec.get(DATA_FIELD), data)) {
                   index = i;
                }
             });

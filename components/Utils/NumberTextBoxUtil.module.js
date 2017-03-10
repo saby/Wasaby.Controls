@@ -5,12 +5,13 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
     function () {
         return {
             checkMaxLength: function (value, maxLength) {
-                var length = value ? value.replace(/[\s-]/g, '').length : 0;
+                var length = value ? value.replace(/[\s.-]/g, '').length : 0;
                 return !(maxLength && length > maxLength);
             },
 
             numberPress: function(b, e, currentVal, delimiters, integers, decimals, keyCode, maxLength){
                 var dotPosition = currentVal.indexOf('.'),
+                    oldValue = currentVal,
                     symbol = String.fromCharCode(keyCode),
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
@@ -49,6 +50,10 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                     newCaretPosition = currentVal.indexOf('.');
                 }
                 currentVal = currentVal.replace(/\s/g, '');
+
+                if(!this.checkMaxLength(currentVal, maxLength)){
+                    currentVal = oldValue;
+                }
 
                 return {value: currentVal, caretPosition: newCaretPosition};
             },
@@ -97,7 +102,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                 return {value: currentVal, caretPosition: newCaretPosition, step: step};
             },
 
-            backspacePressed: function (b, e, currentVal, delimiters, decimals, onlyInteger) {
+            backspacePressed: function (b, e, currentVal, delimiters, decimals) {
                 var dotPosition = currentVal.indexOf('.'),
                     newCaretPosition = b, step;
 
@@ -110,7 +115,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                             currentVal = currentVal.substr(0, b - step) + currentVal.substr(e);
                             // При удалении последнего символа целой части дроби каретку нужно оставить после 0
                             // т.к. если каретку установить перед 0, то при вводе 0 не затрется; было |0.12 стало 0|.12
-                            if(this._getIntegersCount(currentVal) !== 0 && !onlyInteger) {
+                            if(this._getIntegersCount(currentVal) !== 0) {
                                 (delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition -= 2 : newCaretPosition--;
                             }
                         } else {

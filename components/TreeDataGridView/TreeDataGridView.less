@@ -1,3 +1,13 @@
+.copyArrowGradient() {
+   content: '';
+   width: @tree-view-ellipsis-copyArrow-width;
+   left: -@tree-view-ellipsis-copyArrow-width;
+   top: 0;
+   bottom: 0;
+   position: absolute;
+   background-color: transparent;
+}
+
 .controls-DataGridView__td {
    .controls-TreeView__expand--inside {
       display: none;
@@ -89,7 +99,11 @@
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
             background-color: @white-color;
-            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @white-color);
+
+            &:after {
+               .horizontal-gradient(@white-color, rgba(255, 255, 255, 0), right);
+               .copyArrowGradient();
+            }
          }
       }
    }
@@ -98,7 +112,11 @@
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
             background-color: @data-grid-row-selected-bg;
-            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-selected-bg);
+
+            &:after {
+               .horizontal-gradient(@data-grid-row-selected-bg, rgba(255, 255, 255, 0), right);
+               .copyArrowGradient();
+            }
          }
       }
    }
@@ -107,7 +125,11 @@
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
             background-color: @data-grid-row-hover-bg;
-            .box-shadow(@tree-view-ellipsis-copyArrow-shadow @data-grid-row-hover-bg);
+
+            &:after {
+               .horizontal-gradient(@data-grid-row-hover-bg, rgba(255, 255, 255, 0), right);
+               .copyArrowGradient();
+            }
          }
       }
    }
@@ -125,9 +147,14 @@
          float: right;
          position: relative;
          top: -@tree-view-ellipsis-wrapper-height;
+         right: @tree-view-ellipsis-copyArrow-right;
          padding: @tree-view-ellipsis-copyArrow-padding;
          background-color: @tree-view-copy-arrow-background;
-         .box-shadow(@tree-view-ellipsis-copyArrow-shadow @tree-view-copy-arrow-background);
+
+         &:after {
+            .horizontal-gradient(@tree-view-copy-arrow-background, rgba(255, 255, 255, 0), right);
+            .copyArrowGradient();
+         }
 
          .controls-TreeView__editArrow {
             width: @tree-view-ellipsis-copyArrow-width;
@@ -138,10 +165,23 @@
 }
 .controls-GridView__searchMode{
    .controls-TreeView__hierWrapper{
-    width: 0;
-  }
-}
+      width: 0;
+   }
+   &.controls-TreeDataGridView {
+      .controls-TreeView__expand {
+         display: none;
+      }
+      .controls-DataGridView__firstContentCell > .controls-DataGridView__columnValue {
+         margin-left: @tree-view-firstCell-margin-searchMode;
+      }
+   }
 
+   &.controls-ListView__multiselect__off {
+      .controls-TreeView__searchBreadCrumbs {
+         margin-left: @tree-view-firstCell-margin-searchMode;
+      }
+   }
+}
 .controls-TreeView__folderFooterContainer {
    overflow: hidden;
 

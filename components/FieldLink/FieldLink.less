@@ -159,18 +159,20 @@
          }
       }
    }
+   &.controls-TextBox {
+      .controls-TextBox__afterFieldWrapper {
+         order: 2;
+         .inline-flexbox();
+         .align-items(center);
+         height: @controls-FieldLink-afterField-height;
+         width: auto;
 
-   .controls-TextBox__afterFieldWrapper {
-      order: 2;
-      .inline-flexbox();
-      .align-items(center);
-      height: @controls-FieldLink-afterField-height;
-      width: auto;
-
-      > * {
-         padding: @controls-FieldLink-afterField-padding;
+         > * {
+            padding: @controls-FieldLink-afterField-padding;
+         }
       }
    }
+
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
          background-color: @text-box-error-bg;
@@ -209,6 +211,12 @@
    }
 }
 
+.ws-invisible > .controls-TextBox__field {
+   //!important используется, чтобы перебить ширину, которая задана в style,
+   //перебить её можно, т.к. input скрыт, но скрыт он через visibility: hidden (чтобы не ломать базовую линию)
+   width: 0 !important;
+}
+
 .controls-Link.controls-FieldLink__Link {
 
    &:not(.controls-FieldLink-Link__filterButton) {
@@ -232,15 +240,17 @@
    }
 }
 
-.controls-FieldLink__showAllLinks {
-   position: relative;
-   width: 20px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   padding: @controls-FieldLink-showAllLinks-padding;
-   float: left;
+.controls-TextBox__beforeFieldWrapper {
+   .controls-FieldLink__showAllLinks {
+      position: relative;
+      width: 20px;
+      line-height: @controls-FieldLink-showAllLinks-lineHeight;
+      padding: @controls-FieldLink-showAllLinks-padding;
+      float: left;
+   }
 }
 
-.controls-FieldLink__copyShowAll {
+.controls-FieldLink__copyShowAll.controls-Link {
    float: left;
    position: relative;
    top: -22px;
@@ -287,7 +297,7 @@
       width: @controls-FieldLink-showAll-shadow-width;
       top: 0;
       bottom: 0;
-      .horizontal-gradient(@white-color, rgba(0, 0, 0, 0));
+      .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
       background-color: transparent;
    }
 }
@@ -352,7 +362,7 @@
 }
 /* Почему то сафари неправильно рендерит шрифт и считает  1px === 2px, т.е. при прибавлении ширины в 1px
    реальная ширина увеличивается на 2px */
-.ws-is-desktop-safari, .ws-is-mobile-safari {
+.ws-is-desktop-safari, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls-FieldLink.controls-FieldLink__selected-single.ws-disabled .controls-FieldLink__item{
       max-width: ~'calc(100% - '(@controls-FieldLink-linkContainer-padding * 2) - 1~')';
    }

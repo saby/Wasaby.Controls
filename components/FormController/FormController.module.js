@@ -16,10 +16,12 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
+   "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!SBIS3.CONTROLS.OpenDialogAction",
-   "i18n!SBIS3.CONTROLS.FormController"
+   "i18n!SBIS3.CONTROLS.FormController",
+   'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -33,11 +35,6 @@ define('js!SBIS3.CONTROLS.FormController', [
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    'use strict';
-
-   //Открыли FormController в новой вкладке
-   function isOpenedFromNewTab(){
-      return !cInstance.instanceOfModule(this, 'SBIS3.CORE.FloatArea') && !cInstance.instanceOfModule(this, 'SBIS3.CORE.Dialog');
-   }
 
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
@@ -135,6 +132,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          _syncOperationCallback: undefined,
          _panelReadyDeferred: undefined,
          _overlay: undefined,
+         _onBeforeCloseHandler: undefined,
+         _onAfterShowHandler: undefined,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи {@link record}.
@@ -191,7 +190,6 @@ define('js!SBIS3.CONTROLS.FormController', [
              * }
              * </pre>
              * @see getDataSource
-             * @see setDataSource
              */
             dataSource: {
             }
@@ -209,6 +207,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._newRecord = this._options.isNewRecord;
          this._panelReadyDeferred = new Deferred();
          this._panel = this.getTopParent();
+         this._onBeforeCloseHandler = this._onBeforeClose.bind(this);
+         this._onAfterShowHandler = this._onAfterShow.bind(this);
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
          this._setPanelRecord(this.getRecord());
@@ -240,18 +240,21 @@ define('js!SBIS3.CONTROLS.FormController', [
          CommandDispatcher.declareCommand(this, 'activateChildControl', this._createChildControlActivatedDeferred);
       },
 
-      _processingRecordDeferred: function(){
+      _processingRecordDeferred: function() {
          var receiptRecordDeferred = this._options._receiptRecordDeferred,
              needUpdateKey = !this._options.key,
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
+             config = {
+               hideIndicator: true,
+               eventName: eventName
+             },
              self = this;
-         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')){
-            this._toggleOverlay(true);
-            receiptRecordDeferred.addCallback(function(record){
+         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')) {
+            receiptRecordDeferred.addCallback(function (record) {
                self.setRecord(record, needUpdateKey);
-               self._toggleOverlay(false);
-               self._actionNotify(eventName);
+               return record;
             });
+            this._prepareSyncOperation(receiptRecordDeferred, config, {});
          }
       },
 
@@ -267,15 +270,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          return null;
       },
 
-      _onAfterShowHandler: function() {
-         //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)) {
-            this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
-            return;
-         }
-         var self = this._getTemplateComponent();
-         self._updateIndicatorZIndex();
-         self._notifyOnAfterFormLoadEvent();
+      _onAfterShow: function() {
+         this._updateIndicatorZIndex();
+         this._notifyOnAfterFormLoadEvent();
       },
 
       _notifyOnAfterFormLoadEvent: function(){
@@ -289,8 +286,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _onBeforeCloseHandler: function(event, result){
-         //Обработчик _onBeforeCloseHandler универсален: при фактической операции закрытия панели мы можем попасть сюда несколько раз, т.к.
+      _onBeforeClose: function(event, result){
+         //Обработчик _onBeforeClose универсален: при фактической операции закрытия панели мы можем попасть сюда несколько раз, т.к.
          //при определенных условиях прерываем логику закрытия панели и/или сами вызываем команду на закрытие.
          //Есть 2 типовых операции, когда мы попадаем сюда несколько раз, прежде чем закрыться:
          //1: Открыли существующую запись, изменили в ней поля, пытаемся закрыться по крестику. Сначала мы прервем логику закрытия, чтобы показать диалог о сохранении.
@@ -299,11 +296,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          //ждем когда задестроится запись и после этого сами вызываем закрытие панели.
          //TODO: Сейчас нет механизма, позволяющего работать с панелью не через события и влиять на ее работу. хорошо бы такой иметь
 
-         //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)){
-            return;
-         }
-         var self = this._getTemplateComponent(),
+         var self = this,
              record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
          //Если нет записи или она была удалена, то закрываем панель
@@ -384,7 +377,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                adapter: record.getAdapter()
             }),
             changedFields = record.getChanged();
-         changedFields.push(record.getIdProperty());
+         if (changedFields.indexOf(record.getIdProperty()) === -1){
+            changedFields.push(record.getIdProperty());
+         }
 
          $.each(changedFields, function(i, key){
             var formatIndex = record.getFormat().getFieldIndex(key);
@@ -479,7 +474,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @deprecated
        * @return {Object} Объект с конфигурацией источника данных.
        * @remark
-       * Чтобы установить источник данных, используют метод {@link setDataSource}.
        * Также для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при его вызове через {@link SBIS3.CONTROLS.DialogActionBase}.
        * @example
        * В примере продемонстрирована задача изменения списочного метода источника данных
@@ -502,36 +496,8 @@ define('js!SBIS3.CONTROLS.FormController', [
       isNewRecord: function(){
          return this._newRecord;
       },
-      /**
-       * Устанавливает источник данных диалогу редактирования.
-       * @deprecated
-       * @remark
-       * Для диалога редактирования может быть по умолчанию установлен источник данных. Это происходит при вызове диалога через {@link SBIS3.CONTROLS.DialogActionBase}.
-       * Чтобы получить объект источника данных, используют метод {@link getDataSource}.
-       * @param {DataSource} source Источник данных.
-       * @param {Object} config
-       *    Структура конфига:
-       *    {
-       *      hideErrorDialog: Boolean,            //Не показывать сообещние при ошибке
-       *      hideIndicator: Boolean               //Не показывать индикатор
-       *    }
-       * @example
-       * <pre>
-       *    var dataSource = new SbisService({ // Инициализация источника данных
-       *       endpoint: 'Товар' // Устанавливаем объект бизнес-логики
-       *    });
-       *    this.setDataSource(dataSource); // Устанавливаем источник данных диалогу редактирования
-       * </pre>
-       * @see dataSource
-       * @see getDataSource
-       */
-      setDataSource: function(source, config){
-         IoC.resolve('ILogger').error('FormController', 'Метод setDataSource в скором времени будет удален, задать источник данных необходимо через конфигурацию dataSource');
-         this._dataSource = source;
-         return this._getRecordFromSource(config)
-      },
-      _setDataSource: function(source){
-         this._dataSource = source;
+      setDataSource: function (source, config) {
+         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/create/');
       },
       /**
        * Устанавливает запись, по данным которой производится инициализация данных диалога.
@@ -688,19 +654,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onReadModel'
             },
             self = this,
-            readDeferred,
-            key;
+            key = (config && config.key) || this._options.key,
+            readDeferred;
 
-         //TODO Выпилить в 200, все должны уже блыи перейти на объект
-         if (typeof(config) !== 'object'){
-            key = config;
-            config = {};
-            IoC.resolve('ILogger').log('FormController', 'команда read в качестве аргумента принимает объект');
-         }
-         else {
-            key = config.key;
-         }
-         key = key || this._options.key;
          readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
@@ -740,14 +696,8 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see onFail
        * @see dataSource
        */
-      update: function(config){
-         if (typeof(config) !== 'object'){
-            config = {
-               closePanelAfterSubmit: config
-            };
-            IoC.resolve('ILogger').log('FormController', 'команда update в качестве аргумента принимает объект');
-         }
-         return this._prepareUpdatingRecord(config);
+      update: function(config) {
+         return this._prepareUpdatingRecord(config || {});
       },
 
       _showConfirmDialog: function(){
@@ -968,7 +918,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
-      //todo Костыль, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
+      //Функционал, позволяющий с прототипа компонента вычитать запись до инициализации компонента и прокинуть ее в опции. Сделано в рамках ускорения
       FormController.prototype.getRecordFromSource = function (opt) {
          var options = this.getComponentOptions(opt),
              dataSource,
@@ -998,15 +948,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          return options.source;
       };
 
-      FormController.prototype.getComponentOptions = function(mergeOptions){
-         var prototypeProtectedData = {},
-             options;
-
-         this._initializer.call(prototypeProtectedData); //На прототипе опции не доступны, получаем их через initializer
-         options = prototypeProtectedData._options;
-         cMerge(options, mergeOptions);
-
-         return options;
+      FormController.prototype.getComponentOptions = function(mergeOptions) {
+         return OpenDialogUtil.getOptionsFromProto(this, mergeOptions)
       };
    return FormController;
 

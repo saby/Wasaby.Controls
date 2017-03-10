@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
    var ScrollPagingController = cAbstract.extend({
       $protected: {
          _options: {
-            view: null,
-            paging: null
+            view: null
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -32,23 +31,16 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          if (isTree){
             view.subscribe('onSetRoot', function(){
                var curRoot = view.getCurrentRoot();
-               if (this._currentRoot !== curRoot){
-                  this._options.paging.setPagesCount(0);
-                  this.updateScrollPages(true);
-                  this._currentRoot = curRoot;
-               }
+               this._options.paging.setSelectedKey(0);
+               this._options.paging.setPagesCount(0);
+               this._currentScrollPage = 0;
+               this.updateScrollPages(true);
             }.bind(this));
 
             view.subscribe('onNodeExpand', function(){
                this.updateScrollPages(true);
             }.bind(this));
          }
-
-         var scrollToPage = function(page){
-            // Если первая страница - проскролим к самому верху, не считая оффсет
-            var offset = page.offset ? this._offsetTop : 0;
-            view._scrollWatcher.scrollTo(page.offset + offset);
-         };
 
          paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
@@ -57,12 +49,13 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                var view = this._options.view,
                   page = this._scrollPages[index];
                if (page){
-                  scrollToPage.call(this, page);
+                  this._scrollToPage(page);
                }
             }
          }.bind(this));
 
-         view.subscribe('onScrollPageChange', function(e, pageNumber){
+         view._getScrollWatcher().subscribe('onScroll', function(){
+            var pageNumber = this._calculateScrollPage();
             var paging = this._options.paging;
             if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
                if (pageNumber > paging.getPagesCount()) {
@@ -74,6 +67,13 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }.bind(this));
 
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
+      },
+
+      _scrollToPage: function(page){
+         // Если первая страница - проскролим к самому верху, не считая оффсет
+         var offset = page.offset ? this._offsetTop : 0;
+         var view = this._options.view
+         view._getScrollWatcher().scrollTo(page.offset + offset);
       },
 
       _scrollToLastPage: function(){
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
       },
 
-      getScrollPage: function(){
+      _calculateScrollPage: function(){
          var view = this._options.view;
          if (this._options.view.isScrollOnBottom(true)){
             return this._scrollPages.length - 1;
@@ -112,6 +112,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                return i;
             }
          }
+      },
+
+      getScrollPage: function(){
+         return this._scrollPages[this._currentScrollPage];
       },
 
       updateScrollPages: function(reset){
@@ -167,7 +171,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             pageOffset = curBottom;
             // Если набралось записей на выстору viewport'a добавим еще страницу
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
-            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : stickyHeaderHeight;
+            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
             var prevPageOffset = self._scrollPages.length ? self._scrollPages[self._scrollPages.length - 1].offset : 0;
             if (nextBottom - prevPageOffset > viewportHeight - offsetTop) {
                self._pageOffset = pageOffset;

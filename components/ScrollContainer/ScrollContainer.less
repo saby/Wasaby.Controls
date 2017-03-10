@@ -7,7 +7,6 @@
       right: 0;
       top: 0;
       opacity: 0;
-      transition: opacity 0.1s ease;
       padding: 4px 2px;
       height: calc(~"100% - 8px");
    }
@@ -47,10 +46,15 @@
       height: auto;
    }
    -webkit-overflow-scrolling: touch;
+   isolation: isolate;
    
    &.ws-sticky-header__scrollable-container {
       width: auto;
    }
+}
+
+.controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
+   -webkit-overflow-scrolling: auto!important;
 }
 
 .controls-ScrollContainer__content-overflowHidden {

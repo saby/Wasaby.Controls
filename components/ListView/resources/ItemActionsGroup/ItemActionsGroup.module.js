@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "html!SBIS3.CONTROLS.ItemActionsGroup",
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/collection-helpers",
-   "Core/helpers/markup-helpers"
+   "Core/helpers/markup-helpers",
+   'css!SBIS3.CONTROLS.ItemActionsGroup'
 ],
    function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
 
@@ -49,14 +50,15 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
        * @public
        */
       var ItemActionsGroup = ButtonGroupBaseDS.extend( /** @lends SBIS3.CONTROLS.ItemActionsGroup.prototype */ {
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
             _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
+            _menuAlign: 'standart',
             _options: {
                touchMode: false,
                linkedControl: undefined
@@ -141,9 +143,17 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
-                target,
                 menuClassName = '',
-                parentContainer = this.getParent().getContainer();
+                parentContainer = this.getParent().getContainer(),
+                items = this.getItems().clone(),
+                target;
+
+            /* В меню комманды передавать нельзя, т.к. агрументы для комманды формируются динамически(выделенная строка),
+               поэтому надо клик обработать нам, и послать комманду с аргументами */
+
+            if (items.getFormat && items.getFormat().getFieldIndex('command') > 0) {
+               items.removeField('command');
+            }
 
             if(this._options.touchMode) {
                verticalAlign = TOUCH_ALIGN.verticalAlign;
@@ -160,7 +170,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
-               items: this.getItems(),
+               items: items,
                idProperty: this._options.idProperty,
                allowChangeEnable: false,
                displayProperty: 'caption',
@@ -188,12 +198,13 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          /**
           * Показывает меню для операций над записью
           */
-         showItemActionsMenu: function() {
+         showItemActionsMenu: function(align) {
             /* Создадим меню операций над записью, если его ещё нет */
             if(!this._itemActionsMenu) {
                this._createItemActionMenu();
             }
-
+            // при открытии контекстного меню необходимо устанавливать координаты точки начала построения popup
+            this._setContextMenuMode(align);
             this._onBeforeMenuShowHandler();
             this._itemActionsMenu.show();
             this._activeItem.container.addClass(this._activeCls);
@@ -201,6 +212,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             /*TODO фикс теста, для операций над записью должна быть особая иконка*/
             $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
          },
+
 
          /**
           * Срабатывает перед открытием меню
@@ -229,6 +241,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                return instance.isVisible() && instance.isEnabled();
             });
          },
+
          /**
           * Показывает операции над записью
           */
@@ -252,7 +265,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this._activeItem && this._activeItem.container && this._options.touchMode) {
                this._activeItem.container.removeClass(this._activeCls);
             }
-
+            this._itemActionsMenu && this.isItemActionsMenuVisible() && this._itemActionsMenu.hide();
             ItemActionsGroup.superclass.hide.call(this);
          },
          /**
@@ -284,14 +297,25 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _itemActivatedHandler: function(item) {
-            this._itemActionsButtons[item]['handler'].call(this._options.linkedControl,
-                this._activeItem.container,
-                this._activeItem.key,
-                this._activeItem.record);
+            //хэндлер на пункте может быть и не задан
+            var actionCommand = this._itemActionsButtons[item]['command'],
+                actionHandler;
 
-            /* В обработчике могут вызвать destroy */
-            if(!this.isDestroyed()) {
-               this._notify('onActionActivated', this._activeItem.key);
+            if(actionCommand){
+               CommandDispatcher.sendCommand(this, actionCommand, this._activeItem);
+            }
+            else {
+               actionHandler = this._itemActionsButtons[item]['handler'];
+               if (actionHandler) {
+                  actionHandler.call(this._options.linkedControl,
+                      this._activeItem.container,
+                      this._activeItem.key,
+                      this._activeItem.record);
+               }
+               /* В обработчике могут вызвать destroy */
+               if (!this.isDestroyed()) {
+                  this._notify('onActionActivated', this._activeItem.key);
+               }
             }
          },
 
@@ -312,21 +336,42 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this._itemActionsMenu) {
                this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__menu-touchMode', Boolean(mode));
                if(mode) {
-                  this._itemActionsMenu.setTarget(this._container);
-                  this._itemActionsMenu.setVerticalAlign(TOUCH_ALIGN.verticalAlign);
-                  this._itemActionsMenu.setHorizontalAlign(TOUCH_ALIGN.horizontalAlign);
+                  this.setMenuAlign(TOUCH_ALIGN, this._container);
                } else {
-                  this._itemActionsMenu.setTarget(this._itemActionsMenuButton);
-                  this._itemActionsMenu.setVerticalAlign(STANDART_ALIGN.verticalAlign);
-                  this._itemActionsMenu.setHorizontalAlign(STANDART_ALIGN.horizontalAlign);
+                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
                }
+            }
+         },
+
+         _setContextMenuMode: function(align) {
+            var mode = !!align;
+            if(this._itemActionsMenu) {
+               this._itemActionsMenu.getContainer().toggleClass('controls-ItemActions__contextMenu', Boolean(mode));
+               if(mode) {
+                  this.setMenuAlign(align, undefined);
+                  this._menuAlign = 'context';
+               } else if(this._menuAlign != 'standart') {
+                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
+                  this._menuAlign = 'standart';
+               }
+            }
+         },
+
+         setMenuAlign: function(align, target) {
+            if(this._itemActionsMenu){
+               this._itemActionsMenu.setTarget(target);
+
+               this._itemActionsMenu.setVerticalAlign(align.verticalAlign);
+               this._itemActionsMenu.setHorizontalAlign(align.horizontalAlign);
             }
          },
 
          _getItemTemplate : function(item) {
             var action = {
                isMainAction : item.get('isMainAction'),
-               isVisible: true
+               isContextAction : item.get('isContextAction'),
+               isVisible: true,
+               command: item.get('command')
                 },
                 onActivated = item.get('onActivated');
 

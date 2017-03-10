@@ -9,12 +9,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'html!SBIS3.CONTROLS.ItemsToolbar',
        'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
-       'js!SBIS3.CORE.MarkupTransformer',
        'Core/helpers/dom&controls-helpers',
        'Core/helpers/collection-helpers',
-       'i18n!SBIS3.CONTROLS.ItemsToolbar'
+       'i18n!SBIS3.CONTROLS.ItemsToolbar',
+       'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, MarkupTransformer, dcHelpers, colHelpers) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, dcHelpers, colHelpers) {
 
        'use strict';
        /**
@@ -27,8 +27,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
         * @public
         */
        var ItemsToolbar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ItemsToolbar.prototype */ {
+          _dotTplFn: dotTplFn,
           $protected: {
-             _dotTplFn: dotTplFn,
              _options: {
                 /**
                  * @cfg {Boolean} Отображать тулбар для touсh устройств
@@ -48,7 +48,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _target: null,            // Элемент - кандидат на отображение тулбара
              _currentTarget: null,     // Элемент, относительно которого сейчас отображается тулбар
              _lockingToolbar: false,    // Состояние заблокированности тулбара
-             _isVisible: false
+             _isVisible: false,
+             _cachedMargin: null
           },
           $constructor: function() {
              this._publish('onShowItemActionsMenu', 'onItemActionActivated');
@@ -61,7 +62,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getEditActions: function() {
              var toolbarContent;
              if (!this._editActions) {
-                (toolbarContent = this._getToolbarContent()).append(MarkupTransformer(editActionsTpl()));
+                (toolbarContent = this._getToolbarContent()).append(editActionsTpl());
                 this.reviveComponents();
                 this._editActions = toolbarContent.find('.controls-ItemsToolbar__editActions');
              }
@@ -244,9 +245,16 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this._options.touchMode = mode;
              if(!mode) {
                 this.getContainer()[0].style.height = 'auto';
+             }else {
+                this._setHeightInTouchMode();
              }
              if(this._itemsActions) {
                 this._itemsActions.setTouchMode(mode);
+             }
+          },
+          _setHeightInTouchMode: function(){
+             if(this._currentTarget) {
+                this.getContainer()[0].style.height = this._currentTarget.size.height + 'px';
              }
           },
           /**
@@ -309,14 +317,23 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getPosition: function (target) {
              var position = target.position,
                  size = target.size,
-                 parentContainer = this.getParent().getContainer()[0],
+                 $parentContainer = this.getParent().getContainer(),
+                 parentContainer = $parentContainer[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
                  marginRight = parentContainer.offsetWidth - (position.left + size.width),
                  marginTop = position.top,
-                 marginBottom = parentContainer.offsetHeight - (position.top + size.height);
+                 marginBottom = parentContainer.offsetHeight - (position.top + size.height),
+                 $container = this.getContainer();
 
              if(marginRight < 0 && !isVertical) {
                 marginRight = 0;
+             }
+
+             if(this._cachedMargin || $parentContainer.hasClass('controls-ListView__bottomStyle')) {
+                if(!this._cachedMargin) {
+                   this._cachedMargin = $container.height() + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
+                }
+                marginBottom -= this._cachedMargin;
              }
 
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
@@ -382,7 +399,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if (animate) {
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
-                   container.style.height = target.size.height + 'px';
+                   this._setHeightInTouchMode();
                    toolbarContent.animate({right: 0}, 350);
                 }
              }

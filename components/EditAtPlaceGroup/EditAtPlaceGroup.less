@@ -1,5 +1,6 @@
 // TODO: inspect and define in variables
 .controls-EditAtPlaceGroup {
+  position: relative;
   .controls-EditAtPlace {
     .controls-EditAtPlace__fieldWrapper {
       &.controls-EditAtPlace__textAreaWrapper {
@@ -10,13 +11,9 @@
 }
 
 .controls-EditAtPlaceGroup__editorOverlay {
-  &:extend(.controls-EditAtPlace__editorOverlay);
-}
-
-.controls-EditAtPlaceGroup__controlPanel {
-  float: right;
-   line-height: 24px;
-  .controls-EditAtPlace__cancel {
-    &:extend(.controls-EditAtPlace__controlPanel .controls-EditAtPlace__cancel all);
-  }
+   margin: @edit-at-place-editor-overlay-margin;
+   padding: @edit-at-place-editor-overlay-padding;
+   border: @edit-at-place-editor-overlay-border;
+   background: @edit-at-place-editor-overlay-bg;
+   .border-radius(@edit-at-place-editor-overlay-border-radius);
 }

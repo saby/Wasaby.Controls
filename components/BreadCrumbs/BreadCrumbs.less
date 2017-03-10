@@ -5,17 +5,14 @@
 	&__crumb{
 		cursor: pointer;
 		position: relative;
-      margin-left: -1px;
+      margin-left: -2px;
 		&:hover{
 			.controls-BreadCrumbs__title{
-				color: #FF7033;
-			}
-			.icon-16{
 				color: #FF7033!important;
 			}
-         .controls-BreadCrumbs__title{
-            color: #FF7033;
-         }
+			.controls-BreadCrumbs__arrow, .controls-BreadCrumbs__home {
+				color: #FF7033!important;
+			}
 		}
       &:first-child{
          margin-left: 0;
@@ -31,7 +28,6 @@
 	.controls-BreadCrumbs__title{
 		text-decoration: none;
 		color: #0055BB;
-		padding-right: 1px;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -78,32 +74,44 @@
       }
    }
 
+   &.controls-BreadCrumbs__home-hide {
+      .controls-BreadCrumbs__crumb-home {
+         display: none;
+      }
+      .controls-BreadCrumbs__itemsContainer {
+         margin-left: 0;
+      }
+   }
+
 	.controls-BreadCrumbs__hierWrapper{
 		height: 13px;
 		width: 14px;
-		display: inline-block;
+       .inline-flexbox();
+       .flex-shrink(0);
 		&:last-of-type{
-			background: url('img/BreadCrumbs_hierWrapper.png') no-repeat;
+			background: @bread-crumbs-hier-wrapper-bg no-repeat;
 			position: relative;
-  			top: -3px;
+  			top: -4px;
 		}
 	}
 
    .controls-MenuItem{
-      display: block;
+      .flexbox();
    }
    &.controls-Menu__Popup {
       padding: 4px 0;
    }
    &.ws-disabled {
       .controls-BreadCrumbs__crumb, .controls-BreadCrumbs__crumb:hover {
-         .controls-BreadCrumbs__title, .icon-16, .controls-BreadCrumbs__title{
-            color: @gray-ccc-color!important;
-         }
          cursor: default;
       }
-      .controls-BreadCrumbs__arrow{
-         color: @gray-ccc-color!important;
+      .controls-BreadCrumbs__crumb:hover{
+         .controls-BreadCrumbs__title{
+            color: #0055BB!important;
+         }
+         .controls-BreadCrumbs__arrow, .controls-BreadCrumbs__home {
+            color: #587AB0!important;
+         }
       }
    }
 }

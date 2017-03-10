@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
    "Core/SessionStorage",
    "Core/core-merge",
    "Core/Deferred",
-   "js!WS.Data/Query/Query",
+   "js!SBIS3.CONTROLS.Utils.Query",
    "Core/helpers/string-helpers",
    "js!SBIS3.CONTROLS.HistoryController",
    "Core/helpers/collection-helpers"
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
        * @param {String} historyId Уникальный id по которому хранится история фильтров, необязательный параметр.
        */
       setViewDataSource: function(source, browserName, filter, offset, limit, sorting, historyId) {
-         var query = new Query(),
+         var queryArgs = [],
              historyFilter = {},
              resultDef = new Deferred(),
              applyFilterOnLoad = true,
@@ -70,14 +70,12 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          /* Подготавливаем фильтр */
          queryFilter = cMerge(filter || {}, historyFilter);
 
-         /* Подготавливаем query */
-         query.where(queryFilter)
-              .offset(offset !== undefined ? offset : 0)
-              .limit(limit !== undefined ? limit : 25)
-              .orderBy(sorting || {});
-
-         queryDef = source.query(query);
-         queryDef.addErrback(function(e) {
+         queryDef = Query(source, [
+            queryFilter,
+            sorting,
+            offset !== undefined ? offset : 0,
+            limit !== undefined ? limit : 25
+         ]).addErrback(function(e) {
             return e
          });
 
@@ -95,30 +93,33 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             /* Источник устанавливаем сразу : во время выполнения запроса, могут менять фильтр.
                Фильтр может меняться как пользователем, так и прикладным программистом */
             view.setDataSource(source, true);
+            queryDef
+               .addErrback(function(error) {
+                  return view._loadErrorProcess(error);
+               })
+               .addCallback(function(dataSet) {
+                  var idProperty = view.getProperty('idProperty'),
+                     recordSet;
 
-            queryDef.addCallback(function(dataSet) {
-               var idProperty = view.getProperty('idProperty'),
-                   recordSet;
+                  if (idProperty && idProperty !== dataSet.getIdProperty()) {
+                     dataSet.setIdProperty(idProperty);
+                  }
 
-               if (idProperty && idProperty !== dataSet.getIdProperty()) {
-                  dataSet.setIdProperty(idProperty);
-               }
+                  recordSet = dataSet.getAll();
 
-               recordSet = dataSet.getAll();
+                  /* Пока выполнялся запрос - view уже мог успеть уничтожиться или могли загружаться новые данные.
+                   В таком случае не трогаем view. */
+                  if (!view.isDestroyed() && !view.isLoading() && !view.getItems()) { /* Не устанавливаем данные, если они загружаются или уже есть */
+                     view._toggleIndicator(false);
+                     //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
+                     view._notify('onDataLoad', recordSet);
+                     view.setItems(recordSet);
+                  }
 
-               /* Пока выполнялся запрос - view уже мог успеть уничтожиться или могли загружаться новые данные.
-                  В таком случае не трогаем view. */
-               if (!view.isDestroyed() && !view.isLoading() && !view.getItems()) { /* Не устанавливаем данные, если они загружаются или уже есть */
-                  view._toggleIndicator(false);
-                  //FIXME это временный придрод, уйдёт, как будет сделана отрисовка на сервере (3.7.3.200 - 3.7.4)
-                  view._notify('onDataLoad', recordSet);
-                  view.setItems(recordSet);
-               }
+                  resultDef.callback(recordSet);
 
-               resultDef.callback(recordSet);
-
-               return recordSet;
-            });
+                  return recordSet;
+               });
          });
          return resultDef;
       }

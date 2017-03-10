@@ -6,7 +6,7 @@
    // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
    // т.к. браузер неправильно делал расчет ширины контента
    &:after {
-      font-family: 'TensorFont Regular', 'TensorFont';
+      font-family: 'TensorFont', sans-serif;
       font-weight: bold;
       content: '';
    }
@@ -19,9 +19,6 @@
    border-width: @menu-link-menu-border-width;
    .controls-Menu__header {
       background-color: @menu-link-header-bg-color;
-   }
-   &.controls-Menu__hide-menu-header .controls-MenuItem{
-      padding: @menu-item-default-padding;
    }
 }
 

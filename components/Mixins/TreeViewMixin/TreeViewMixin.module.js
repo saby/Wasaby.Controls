@@ -12,8 +12,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
     * @author Крайнов Дмитрий Олегович
     *
     * @cssModifier controls-ListView__item-without-child Класс добавляется к визуальному представлению папки, у которой отсутствуют дочерние элементы.
-    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
-    * @cssModifier controls-ListView__hideCheckBoxes-node Скрывает чекбоксы у папок (узлов и скрытых узлов). Подробнее о данном типе записей списка читайте в разделе [Иерархия](https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy).
+    * @cssModifier controls-ListView__hideCheckBoxes-leaf Скрывает отображение чекбоксов у листьев. Подробнее о данном типе записей списка читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+    * @cssModifier controls-ListView__hideCheckBoxes-node Скрывает чекбоксы у папок (узлов и скрытых узлов). Подробнее о данном типе записей списка читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
     */
 
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
@@ -62,13 +62,15 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             result, selProjItem;
          if (this._options.selectedIndex !== null && this._options.selectedIndex !== undefined && this._options.selectedIndex >= 0) {
             selProjItem = this._getItemsProjection().at(this._options.selectedIndex);
-            if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
-               result = selProjItem.getContents().getId();
-            }
-            else {
-               var selParentItem = selProjItem.getParent();
-               if (selParentItem && selParentItem.getContents() && cInstance.instanceOfModule(selParentItem.getContents(), 'WS.Data/Entity/Model')) {
-                  result = selParentItem.getContents().getId();
+            if (selProjItem) {
+               if (selProjItem.isNode() && selProjItem.isExpanded() && cInstance.instanceOfModule(selProjItem.getContents(), 'WS.Data/Entity/Model')) {
+                  result = selProjItem.getContents().getId();
+               }
+               else {
+                  var selParentItem = selProjItem.getParent();
+                  if (selParentItem && selParentItem.getContents() && cInstance.instanceOfModule(selParentItem.getContents(), 'WS.Data/Entity/Model')) {
+                     result = selParentItem.getContents().getId();
+                  }
                }
             }
          }

@@ -1,6 +1,7 @@
 <div class="controls-CompositeView controls-DataGridView controls-ListView
             {{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}
-            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}} controls-CompositeView-{{=it.viewMode}}">
+            {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}} controls-CompositeView-{{=it.viewMode}}
+            {{?it.viewMode == 'tile'}} controls-CompositeView-tile__{{=it.tileMode}}{{?}}">
    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
@@ -19,7 +20,7 @@
    </div>
    <table class="controls-DataGridView__table{{?it.viewMode != 'table'}} ws-hidden{{?}} {{?it.stickyHeader}}ws-sticky-header__table{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
-      {{=it._headTpl(it._headData)}}
+      {{=it.headTpl(it._headData)}}
       <tbody class="controls-DataGridView__tbody">
       {{?it._serverRender && it.viewMode == 'table'}}
       {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}

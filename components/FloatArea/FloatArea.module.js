@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
       },
 
       $constructor: function() {
-         this._container.removeClass('ws-area');
+         
       },
 
       //TODO должен быть нормально переписан в новом Control

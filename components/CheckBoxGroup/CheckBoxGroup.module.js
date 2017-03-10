@@ -2,7 +2,15 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase', 'html!SBIS3.CONTROLS.CheckBoxGroup', 'html!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate', 'js!SBIS3.CONTROLS.CheckBox'], function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
+define('js!SBIS3.CONTROLS.CheckBoxGroup',
+   [
+      'js!SBIS3.CONTROLS.CheckBoxGroupBase',
+      'tmpl!SBIS3.CONTROLS.CheckBoxGroup',
+      'tmpl!SBIS3.CONTROLS.CheckBoxGroup/resources/ItemTemplate',
+      'js!SBIS3.CONTROLS.CheckBox',
+      'css!SBIS3.CONTROLS.CheckBoxGroup'
+   ],
+   function(CheckBoxGroupBase, dotTplFn, ItemTemplate) {
 
    'use strict';
 
@@ -10,7 +18,6 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup', ['js!SBIS3.CONTROLS.CheckBoxGroupBase'
     * Контрол, отображающий группу чекбоксов
     * @class SBIS3.CONTROLS.CheckBoxGroup
     * @extends SBIS3.CONTROLS.CheckBoxGroupBase
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @demo SBIS3.CONTROLS.Demo.MyCheckBoxGroup
     * @author Крайнов Дмитрий Олегович
     * @cssModifier controls-ButtonGroup__vertical Задаёт вертикальное расположение элементов в группе.

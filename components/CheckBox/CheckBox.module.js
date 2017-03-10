@@ -5,18 +5,14 @@ define('js!SBIS3.CONTROLS.CheckBox', [
    "js!SBIS3.CONTROLS.Checkable",
    "tmpl!SBIS3.CONTROLS.CheckBox",
    "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
-   "js!SBIS3.CONTROLS.ITextValue"
+   "js!SBIS3.CONTROLS.ITextValue",
+   'css!SBIS3.CONTROLS.CheckBox'
 ], function( constants,ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
-      var newChecked;
-      if (!threeState) {
-         newChecked = !!(checked);
-      } else {
-         newChecked = (checked === false || checked === true) ? checked : null;
-      }
-      return newChecked;
+      //Портится контекст, когда приходит null при threeState = false checked, checked = null
+      return checked;
    };
    /**
     * Контрол, отображающий стандартный флажок.
@@ -161,8 +157,8 @@ define('js!SBIS3.CONTROLS.CheckBox', [
          else {
             this._options.textValue = '';
          }
-         this._container.toggleClass('controls-Checked__checked', this._options.checked);
-         this._container.toggleClass('controls-ToggleButton__null', this._options.checked == null);
+         this._container.toggleClass('controls-Checked__checked', !!this._options.checked);
+         this._container.toggleClass('controls-ToggleButton__null', !!(this._options.threeState && this._options.checked == null));
          this.validate();
          this._notify('onCheckedChange', this._options.checked);
          this._notifyOnPropertyChanged('checked');

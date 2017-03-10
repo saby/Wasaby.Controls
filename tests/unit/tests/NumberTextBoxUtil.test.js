@@ -23,9 +23,9 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             assert.equal(newState.caretPosition, 5);
          });
          it('maxLengh: 1.23 => 1.23', function (){
-            newState = NumberTextBoxUtil.numberPress(0, 0, '0.12', true, 16, 2, 51, 3); // press digit 3
-            assert.equal(newState.value, '0.12');
-            assert.equal(newState.caretPosition, 0);
+            newState = NumberTextBoxUtil.numberPress(0, 0, '1.23', true, 16, 2, 51, 3); // press digit 3
+            assert.equal(newState.value, '1.23');
+            assert.equal(newState.caretPosition, 1);
          });
          it('maxInteger: 123.12 => 123.12', function (){
             newState = NumberTextBoxUtil.numberPress(1, 1, '123.12', true, 3, 2, 52, 10); // press digit 4
@@ -142,6 +142,11 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             newState = NumberTextBoxUtil.backspacePressed(4, 6, '12.345', true, 3);
             assert.equal(newState.value, '12.3');
             assert.equal(newState.caretPosition, 4);
+         });
+         it('123|4 => 12|4', function (){
+            newState = NumberTextBoxUtil.backspacePressed(3, 3, '1234', false, 3);
+            assert.equal(newState.value, '124');
+            assert.equal(newState.caretPosition, 2);
          });
       });
    });

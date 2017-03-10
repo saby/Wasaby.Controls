@@ -8,16 +8,17 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.EditInPlace",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
-   'js!WS.Data/Builder',
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/fast-control-helpers",
+   'css!SBIS3.CONTROLS.EditInPlace'
 ],
-   function(Deferred, Control, dotTplFn, CompoundFocusMixin, DataBuilder, cInstance, fcHelpers) {
+   function(Deferred, Control, dotTplFn, CompoundFocusMixin, cInstance, fcHelpers) {
       'use strict';
 
       /**
        * @class SBIS3.CONTROLS.EditInPlace
        * @extends SBIS3.CORE.CompoundControl
+       * @author Авраменко Алексей Сергеевич
        * @control
        * @public
        */
@@ -83,11 +84,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                         }, 100);
                         this._editingDeferred = result.addBoth(function () {
                            clearTimeout(loadingIndicator);
-                           this._previousModelState = this._cloneWithFormat(this._editingModel);
+                           this._previousModelState = this._editingModel.clone();
                            fcHelpers.toggleIndicator(false);
                         }.bind(this));
                      } else {
-                        this._previousModelState = this._cloneWithFormat(this._editingModel);
+                        this._previousModelState = this._editingModel.clone();
                      }
                   }
                }
@@ -126,8 +127,8 @@ define('js!SBIS3.CONTROLS.EditInPlace',
              */
             setModel: function(model) {
                this._model = model;
-               this._previousModelState = this._cloneWithFormat(model);
-               this._editingModel = this._cloneWithFormat(model);
+               this._previousModelState = model.clone();
+               this._editingModel = model.clone();
                this.getContext().setValue(CONTEXT_RECORD_FIELD, this._editingModel);
             },
             /**
@@ -169,6 +170,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
 
             recalculateHeight: function() {
                var
+                   target,
                    newHeight = 0,
                    editorHeight;
                $.each(this._editors, function(id, editor) {
@@ -179,9 +181,20 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }.bind(this));
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  this.getTarget().outerHeight(newHeight, true);
+                  target = this.getTarget();
+                  this._outerHeight(target, newHeight);
                   this._notify('onChangeHeight', this._model);
                }
+            },
+            /*
+            * jquery ui перебивает стандартный outerHeight каким то нерабочим методом.
+            * Причём перебивает только на установку значения.
+            * Необходимо обновить версию jquery ui на cdn.
+            * */
+            _outerHeight: function(target, height) {
+               //Получаем сумму margin + border + padding (top и bottom);
+               var offsets = target.outerHeight() - target.height();
+               target.height(height - offsets);
             },
             _endTrackHeight: function() {
                clearInterval(this._trackerHeightInterval);
@@ -284,22 +297,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             destroy: function() {
                this._container.unbind('keypress keydown keyup mousedown');
                EditInPlace.superclass.destroy.call(this);
-            },
-            //TODO: метод нужен для того, чтобы подогнать формат рекорда под формат рекордсета.
-            //Выписана задача Мальцеву, который должен убрать этот метод отсюда, и предаставить механизм выполняющий необходимую задачу.
-            //https://inside.tensor.ru/opendoc.html?guid=85d18197-2094-4797-b823-5406424881e5&description=
-            _cloneWithFormat: function(record) {
-               var
-                  recordSet = this.getParent()._options.items,
-                  format = record.getFormat(),
-                  clone;
-               if (!format.getCount() && recordSet && recordSet.getFormat().getCount()) {
-                  format = recordSet.getFormat();
-               }
-               // Нужно передавать модель, чтобы опредлелять в клоне авторасчётные поля
-               clone = DataBuilder.reduceTo(record, format, recordSet && recordSet.getModel());
-               clone.setState(record.getState());
-               return clone;
             }
          });
 

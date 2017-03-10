@@ -9,9 +9,12 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.FloatArea',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.StylesPanelNew',
+   'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
+   'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel, Di) {
 
    'use strict';
    var
@@ -23,7 +26,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             'rgb(0, 0, 255)': 'blue',
             'rgb(128, 0, 128)': 'purple',
             'rgb(128, 128, 128)': 'grey'
-         }
+         },
+         INLINE_TEMPLATE: '6'
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorRoundToolbar
@@ -120,7 +124,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          },
 
          _formatChangeHandler : function(event, obj, state) {
-            if (['bold', 'italic', 'underline', 'strikethrough'].includes(obj.format)) {
+            if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._toggleState(state, obj);
             }
          },
@@ -171,22 +175,30 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                };
             if (this.getItems().getRecordById('history')) {
                this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
-                  var
-                     items = [],
-                     history = this.getItemInstance('history');
-                  for (var i in arrBL) {
-                     if (arrBL.hasOwnProperty(i)) {
-                        items.push({
-                           key: items.length,
-                           title: prepareHistory(arrBL[i]),
-                           value: arrBL[i]
-                        })
+                  //Проблема:
+                  //          После прихода данных тулбар уже может быть уничтожен
+                  //Решение 1:
+                  //          Хранить deferred вызова и убивать его в destroy
+                  //Решение 2:
+                  //          Проверять на isDestroyed
+                  if (!this.isDestroyed()) {
+                     var
+                        items = [],
+                        history = this.getItemInstance('history');
+                     for (var i in arrBL) {
+                        if (arrBL.hasOwnProperty(i)) {
+                           items.push({
+                              key: items.length,
+                              title: prepareHistory(arrBL[i]),
+                              value: arrBL[i]
+                           })
+                        }
                      }
+                     if (!arrBL.length) {
+                        history.setEnabled(false);
+                     }
+                     history.setItems(items);
                   }
-                  if (!arrBL.length) {
-                     history.setEnabled(false);
-                  }
-                  history.setItems(items)
                }.bind(this));
             }
          },
@@ -204,7 +216,18 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                this._options.linkedEditor._getFileLoader().selectFile(originalEvent);
             }
          },
-
+         getFileLoader: function() {
+            return Di.resolve('ImageUploader').getFileLoader();
+         },
+         _startFileLoad: function(target) {
+            var
+               self = this;
+            if (self._options.linkedEditor) {
+               this.getFileLoader().startFileLoad(target, false, 'images').addCallback(function (fileobj) {
+                  self._options.linkedEditor.insertImageTemplate(constants.INLINE_TEMPLATE, fileobj);
+               }.bind(this))
+            }
+         },
          _insertSmile: function(smile) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.insertSmile(smile);
@@ -249,6 +272,9 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      side: 'top',
                      offset: -4
                   },
+                  horizontalAlign: {
+                     side: 'left'
+                  },
                   element: $('<div></div>'),
                   fontSizes: [12, 14, 15, 18],
                   colors: [
@@ -258,7 +284,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      {color:'blue'},
                      {color:'purple'},
                      {color:'grey'}
-                  ]
+                  ],
+                  activableByClick: false
                });
 
                this._stylesPanel.subscribe('changeFormat', function(){

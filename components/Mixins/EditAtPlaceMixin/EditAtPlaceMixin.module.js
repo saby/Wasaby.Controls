@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.EditAtPlaceMixin', 
+define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
    [
    "js!SBIS3.CORE.ModalOverlay",
    "Core/constants",
@@ -180,12 +180,13 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
                var self = this,
                   $ok = $('<span class="controls-EditAtPlace__okButton controls-IconButton__round-border-24"></span>'),
                   $cancelCross = $('<span class="controls-EditAtPlace__cancel"></span>');
-               this._cntrlPanel = $('<span class="controls-EditAtPlaceGroup__controlPanel"></span>').append($ok).append($cancelCross);
+               this._cntrlPanel = $('<span class="controls-EditAtPlace__controlPanel"></span>').append($ok).append($cancelCross);
 
                // Добавляем кнопки
                this._okButton = new IconButton({
-                  parent: self._picker,
+                  parent: self._picker || self,
                   element: $ok,
+                  primary: true, //Нужно, чтобы кнопка была дефолтной в своей области. иначе ctrl+enter вызовет обработчик дефолтной кнопки, расположенной выше.
                   icon: 'sprite:icon-16 icon-Yes icon-done action-hover'
                });
                container.append(this._cntrlPanel);

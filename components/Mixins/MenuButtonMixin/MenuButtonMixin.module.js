@@ -94,6 +94,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
             parentProperty: this._options.parentProperty,
             nodeProperty: this._options.nodeProperty,
             idProperty: this._options.idProperty,
+            additionalProperty: this._options.additionalProperty,
             allowChangeEnable: this._options.allowChangeEnable,
             //title задано для совместимости со старыми контролами, когда люди не указывали displayField
             displayProperty: this._options.displayProperty || 'title',
@@ -223,6 +224,12 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
                } else {
                   $icon && $icon.remove();
                }
+            }
+         },
+
+         setCaption: function(caption){
+            if (this._picker){
+               $('.controls-Menu__header-caption', this._picker._container).html(caption);
             }
          }
       },

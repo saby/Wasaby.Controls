@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
    'js!SBIS3.CONTROLS.Clickable',
    'js!SBIS3.CONTROLS.Checkable',
    'html!SBIS3.CONTROLS.OperationsPanelButton',
-   'Core/core-instance'
+   'Core/core-instance',
+   'css!SBIS3.CONTROLS.OperationsPanelButton'
 ], function(Control, Clickable, Checkable, dotTplFn, cInstance) {
 
    /**
@@ -37,13 +38,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
              * </pre>
              * @see getLinkedPanel
              */
-            linkedPanel: undefined,
-            /**
-             * @cfg {String} Направление стрелки в кнопки
-             * @variant vertical стрелка раскрытия панели смотрит вниз, стрелка закрытия - вверх
-             * @variant horizontal стрелка раскрытия панели смотрит вправо, стрелка закрытия - влево
-             */
-            panelFloatDirection: 'vertical'
+            linkedPanel: undefined
          },
          _internalHandlers: undefined
       },

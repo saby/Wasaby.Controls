@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
    "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
-   "Core/helpers/collection-helpers"
+   "Core/helpers/collection-helpers",
+   'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
    function( constants,CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers) {
@@ -41,8 +42,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @category Filtering
        */
       var FastDataFilter = CompoundControl.extend([FilterMixin, ItemsControlMixin],/** @lends SBIS3.CONTROLS.FastDataFilter.prototype */{
+         _dotTplFn: dotTplFn,
          $protected: {
-            _dotTplFn: dotTplFn,
             _options: {
                itemTpl: ItemTpl,
                displayProperty: '',
@@ -106,7 +107,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          init: function () {
             FastDataFilter.superclass.init.apply(this, arguments);
-            this._container.removeClass('ws-area');
+            
          },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();
@@ -239,25 +240,30 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
             this._setSelectionToItemsInstances();
          },
-         _setSelectionToItemsInstances : function(){
+         _setSelectionToItemsInstances: function () {
             var instances = this.getItemsInstances();
-               for (var i in instances) {
-                  if (instances.hasOwnProperty(i)){
-                     var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
-                           value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ?  instances[i]._options.multiselect ?  fsObject.value : [fsObject.value]: [instances[i].getDefaultId()];
-                     this._prepareValue(instances[i], value).addCallback(function(instance, value){
-                        if (!this._isSimilarArrays(instance.getSelectedKeys(), value) && !instance.isDestroyed()) {
-                           if(instance.getItems()){
-                              instance.setSelectedKeys(value);
-                           }else {
-                              instance.once('onItemsReady', function () {
-                                 instance.setSelectedKeys(value);
-                              });
-                           }
-                        }
-                     }.bind(this, instances[i]));
+            for (var i in instances) {
+               if (instances.hasOwnProperty(i)) {
+                  var fsObject = this._filterStructure[this._getFilterSctructureItemIndex(instances[i].getContainer().attr('data-id'))],
+                     value = (fsObject.hasOwnProperty('value') && fsObject.value !== undefined) ? instances[i]._options.multiselect ? fsObject.value : [fsObject.value] : [instances[i].getDefaultId()];
+                  if (instances[i].getItems()) {
+                     this._setSelectedKeyByFilterStructure(instances[i], value);
+                  }
+                  else {
+                     instances[i].once('onItemsReady', function (instance, val) {
+                        this._setSelectedKeyByFilterStructure(instance, val);
+                     }.bind(this, instances[i], value));
                   }
                }
+            }
+         },
+
+         _setSelectedKeyByFilterStructure: function (instance, value) {
+            this._prepareValue(instance, value).addCallback(function (value) {
+               if (!this._isSimilarArrays(instance.getSelectedKeys(), value) && !instance.isDestroyed()) {
+                  instance.setSelectedKeys(value);
+               }
+            }.bind(this));
          },
 
          _prepareValue: function(instance, newKeys){

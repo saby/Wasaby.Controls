@@ -18,15 +18,16 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    return cExtend({}, {
 
       _complexFields: {
-         "Связь" : true,
-         "Иерархия" : true,
-         "Перечисляемое" : true,
-         "Флаги" : true,
-         "Массив" : true,
-         "Запись" : true,
-         "Выборка" : true,
-         "RecordSet" : true,
-         "Record" : true
+         "связь" : true,
+         "иерархия" : true,
+         "перечисляемое" : true,
+         "флаги" : true,
+         "массив" : true,
+         "array" : true,
+         "запись" : true,
+         "выборка" : true,
+         "recordset" : true,
+         "record" : true
       },
       _wordsToTranslate: {
          "Дата" : "Date",
@@ -41,9 +42,9 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          'Идентификатор': 'ID'
       },
       _colNameToTag: {
-         "Число целое" : "Integer",
-         "Число вещественное" : "Double",
-         "Дата и время" : "DateTime"
+         "число целое" : "Integer",
+         "число вещественное" : "Double",
+         "дата и время" : "DateTime"
       },
       _branchTypes: {
          "true": "Node",
@@ -164,7 +165,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          }
          column.type = format ? format.getType() : column.type || 'Text';
          var typeName =  typeof(column.type) == 'object' ? column.type.n : column.type;
-         if(!this._complexFields[typeName] && !column.s && !this._complexFields[column.s]){
+         typeName = typeName.toLowerCase();
+         if(!this._complexFields[typeName] && !column.s){
             tagName = this._colNameToTag[typeName] || typeName;
             tagName = this._wordsToTranslate[tagName] || tagName;
             var resultTest = cyrillicTest.test(tagName);
@@ -173,11 +175,11 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             }
             element = document.createElement(tagName);
             if(fieldValue instanceof Date){
-               if(typeName === "Дата и время" || typeName === 'DateTime')
+               if(typeName === "дата и время" || typeName === 'datetime')
                   fieldValue = fieldValue.toSQL() + "T" + fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
-               if(typeName === 'Дата' || typeName === 'Date')
+               if(typeName === 'дата' || typeName === 'date')
                   fieldValue = fieldValue.toSQL();
-               if(typeName === 'Время' || typeName === 'Time')
+               if(typeName === 'время' || typeName === 'time')
                   fieldValue = fieldValue.toTimeString().replace(" GMT", "").replace(/\s[\w\W]*/, "");
             }
 
@@ -191,12 +193,12 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             fieldValue = strHelpers.removeInvalidXMLChars(''.concat(fieldValue));
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
-         } else if(typeName == 'Связь'){
+         } else if(typeName == 'связь'){
             element = document.createElement('Link');
             element.setAttribute('Table', typeof(column.type) == 'object' ? column.type.t : column.table);
             element.appendChild(document.createTextNode(fieldValue));
             fieldElement.appendChild(element);
-         } else if(typeName == 'Иерархия' || (column.s && column.s == 'Иерархия')){
+         } else if(typeName == 'иерархия' || (column.s && column.s == 'иерархия')){
             fieldElement.appendChild(element = document.createElement('Hierarchy'));
             var pID, flBranch;
             element.appendChild(pID = document.createElement('Parent'));
@@ -206,7 +208,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                pID.appendChild(document.createTextNode(fieldValue[1] + ""));
                flBranch.appendChild(document.createTextNode(this._branchTypes[fieldValue[0] + ""]));
             } else {
-               if(typeName == "Идентификатор"){
+               if(typeName == "идентификатор"){
                   element.setAttribute('HierarchyName', column.titleColumn + "");
                   pID.appendChild(document.createTextNode(fieldValue + ""));
                   fieldValue = this._branchTypes[record.get(column.title + "@") + ""];
@@ -215,7 +217,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                   recordElement.removeChild(fieldElement);
                }
             }
-         } else if(typeName == 'Перечисляемое'){
+         } else if(typeName == 'перечисляемое'){
             fieldElement.appendChild(element = document.createElement('Enumerable'));
             var option;
             fieldValue = fieldValue.toObject();
@@ -232,7 +234,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                      option.setAttribute('Checked', 'true');
                }
             }
-         } else if(typeName == 'Флаги'){
+         } else if(typeName == 'флаги'){
             fieldElement.appendChild(element = document.createElement('Flags'));
             var flag;
             fieldValue = fieldValue.toObject();
@@ -243,7 +245,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                   flag.setAttribute('Condition', fieldValue[number] + "");
                }
             }
-         } else if(typeName == 'Массив'){
+         } else if(typeName == 'массив' || typeName == 'array'){
             fieldElement.appendChild(element = document.createElement('Array'));
             element.setAttribute('DataType', typeof(column.type) == 'object' ? column.type.t : column.arrayType);
             var elem;
@@ -252,7 +254,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                //для элементов массива всегда добавляем их значение как текст, ведь там может быть null
                elem.appendChild(document.createTextNode(strHelpers.removeInvalidXMLChars(fieldValue[i] + '')));
             }
-         } else if (typeName == 'RecordSet' || typeName == 'Record') {
+         } else if (typeName == 'recordset' || typeName == 'record') {
             this._serializeObject(fieldValue, fieldElement, document, this._getColumns(fieldValue));
          }
       },

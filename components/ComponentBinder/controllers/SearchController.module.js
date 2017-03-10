@@ -20,14 +20,17 @@ define('js!SBIS3.CONTROLS.SearchController',
             searchMode: null,
             doNotRespondOnReset: null,
             breadCrumbs: null,
-            backButton: null
+            backButton: null,
+            keyboardLayoutRevert: true,
+            hierarchyViewMode: true
          },
          _kbLayoutRevertObserver: null,
          _firstSearch: true,
          _searchReload: true,
          _searchMode: false,
          _searchForm: undefined,
-         _lastRoot: undefined
+         _lastRoot: undefined,
+         _lastDepth: null
       },
 
       _breakSearch: function(withReload) {
@@ -41,8 +44,13 @@ define('js!SBIS3.CONTROLS.SearchController',
       },
 
       _startHierSearch: function(text) {
+         var curFilter = this._options.view.getFilter();
+         if (!this._lastDepth) {
+            this._lastDepth = curFilter['Разворот'] ? curFilter['Разворот'] : 'Без разворота'
+         }
+
          var searchParamName = this._options.searchParamName,
-             filter = cMerge(this._options.view.getFilter(), {
+             filter = cMerge(curFilter, {
                 'Разворот': 'С разворотом',
                 'usePages': 'full'
              }),
@@ -60,7 +68,11 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          filter[searchParamName] = text;
-         view._options.hierarchyViewMode = true;
+         if(self._options.hierarchyViewMode) {
+            view._options.hierarchyViewMode = true;
+         } else {
+            view.setExpand(true);
+         }
          view.setHighlightText(text, false);
          view.setHighlightEnabled(true);
 
@@ -97,11 +109,13 @@ define('js!SBIS3.CONTROLS.SearchController',
             if (self._options.searchMode === 'root') {
                root = view._options.root !== undefined ? view._options.root : null;
                //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
-               callProjectionMethod('setEventRaising',[false, true]);
+               // Attention! Achtung! Uwaga! Не трогать аргументы setEventRaising! Иначе перерисовка вызывается до мержа
+               // данных (см. очередность события onDataLoad - оно стреляет до помещения новых данных в items).
+               callProjectionMethod('setEventRaising',[false]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
                view._options._curRoot = root;
-               callProjectionMethod('setEventRaising', [true, true]);
+               callProjectionMethod('setEventRaising', [true]);
             }
          });
 
@@ -141,18 +155,28 @@ define('js!SBIS3.CONTROLS.SearchController',
          var
             view = this._options.view,
             filter = cMerge(view.getFilter(), {
-               'Разворот': 'Без разворота'
+               'Разворот': this._lastDepth
             }),
             self = this;
+         this._lastDepth = null;
          delete(filter[this._options.searchParamName]);
          //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно
          //только после релоада, иначе визуально будут прыжки и дерганья (класс меняет паддинги)
          view.once('onDataLoad', function() {
             view._container.removeClass('controls-GridView__searchMode');
-            view.setCurrentRoot(self._lastRoot || null);
+            /* Отктываю правку по установке корня через setCurrentRoot,
+             т.к. появлялась ошибка при сценарии: ищем что-то, пока грузится сбрасываем поиск,
+             и сразу опять что-то ищем. В фильтре списка оставался неправильный раздел. */
+            //view.setCurrentRoot(self._lastRoot || null);
+            view._options._curRoot = self._lastRoot ||  view.getRoot() || null;
+            view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
          });
          this._searchMode = false;
-         view._options.hierarchyViewMode = false;
+         if(this._options.hierarchyViewMode) {
+            view._options.hierarchyViewMode = false;
+         } else {
+            view.setExpand(false);
+         }
          //Если мы ничего не искали, то и сбрасывать нечего
          if (this._firstSearch) {
             return;
@@ -264,7 +288,9 @@ define('js!SBIS3.CONTROLS.SearchController',
                }
             }
 
-            self._kbLayoutRevertObserver.startObserve();
+            if(self._options.keyboardLayoutRevert) {
+               self._kbLayoutRevertObserver.startObserve();
+            }
             if (isTree) {
                self._startHierSearch(text);
             } else {
@@ -281,7 +307,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             }
 
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+            if (event.which == constants.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
                var selectedIndex = null,
                    itemsProjection = view._getItemsProjection();
                /* При поиске по дереву папки отображаются, как Хлебные крошки

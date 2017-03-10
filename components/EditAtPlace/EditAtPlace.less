@@ -1,10 +1,12 @@
 .controls-EditAtPlace {
-   border: none;
-   &:hover,
-   &.ws-disabled {
-      border: none;
+   &.controls-TextBox,
+   &.controls-TextBox:hover {
+     border: none;
    }
-   &.ws-disabled {
+   position: relative;
+   &:hover,
+   &.controls-TextBox.ws-disabled {
+      border: none;
       .controls-EditAtPlace__fieldWrapper {
          .controls-EditAtPlace__textField {
             cursor: @edit-at-place-field-disabled-cursor;
@@ -88,6 +90,8 @@
 }
 
 .controls-EditAtPlace__controlPanel {
+   float: right;
+   line-height: 24px;
    display: inline-block;
    margin: @edit-at-place-control-margin;
    vertical-align: top;

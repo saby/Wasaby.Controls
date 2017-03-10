@@ -12,7 +12,10 @@ define(
       'html!SBIS3.CONTROLS.DatePicker',
       'Core/helpers/dom&controls-helpers',
       'i18n!SBIS3.CONTROLS.DatePicker',
-      'js!SBIS3.CONTROLS.IconButton'
+      'js!SBIS3.CONTROLS.IconButton',
+      'css!SBIS3.CONTROLS.DatePicker',
+      'css!SBIS3.CONTROLS.FormattedTextBox',
+      'css!SBIS3.CONTROLS.DateBox'
    ],
    function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, dcHelpers) {
 
@@ -101,11 +104,11 @@ define(
                corner: 'tl',
                horizontalAlign: {
                   side: 'right',
-                  offset: 145
+                  offset: 143
                },
                verticalAlign: {
                   side: 'top',
-                  offset: -11
+                  offset: -9
                }
             }
          },
@@ -124,7 +127,7 @@ define(
 
          this._calendarInit();
 
-         this._container.removeClass('ws-area');
+         
       },
 
       _modifyOptions : function(options) {

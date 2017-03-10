@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.SuggestTextBoxMixin',
    'js!SBIS3.CONTROLS.SearchMixin',
    'js!SBIS3.CONTROLS.SearchController',
-   'html!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
-   'Core/core-instance'
+   'tmpl!SBIS3.CONTROLS.SuggestTextBox/resources/afterFieldWrapper',
+   'Core/core-instance',
+   'css!SBIS3.CONTROLS.SuggestTextBox'
 ], function (
     TextBox,
     PickerMixin,
@@ -44,17 +45,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _crossContainer: null
       },
       $constructor: function() {
-         var self = this;
-
          this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._getAfterFieldWrapper());
 
          this.subscribe('onTextChange', function(e, text) {
             this._crossContainer.toggleClass('ws-hidden', !text);
          });
 
-         this._crossContainer.click(function() {
-            self.setText('');
-         });
+         this._crossContainer.click(this.resetSearch.bind(this));
       },
 
       _chooseCallback: function(result) {
@@ -72,6 +69,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
+         this._setEqualPickerWidth();
+      },
+
+      _onListDrawItems: function() {
+         SuggestTextBox.superclass._onListDrawItems.apply(this, arguments);
          this._setEqualPickerWidth();
       },
 
@@ -94,7 +96,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
                Прикладной программист может увеличить ширину автодополнения установив min-width. */
             pickerContainer.style.maxWidth = textBoxWidth + 'px';
-            this._picker.recalcPosition(true);
+            this._picker.recalcPosition(true, true);
             pickerContainer.style.width = textBoxWidth + 'px';
          }
       }

@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
        'tmpl!SBIS3.CONTROLS.FilterHistoryView/itemTpl',
        'js!SBIS3.CONTROLS.HistoryList',
        'Core/CommandDispatcher',
-       'js!SBIS3.CONTROLS.ToggleButton'
+       'js!SBIS3.CONTROLS.CommandsSeparator',
+       'css!SBIS3.CONTROLS.FilterHistoryView'
     ],
 
     function(ListView, footerTpl, itemTpl, HistoryList, CommandDispatcher) {
@@ -17,7 +18,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
              _options: {
                 historyId: '',
                 itemsActions: [],
-                itemsDragNDrop: false
+                itemsDragNDrop: false,
+                itemContentTpl: itemTpl
              }
           },
 
@@ -34,7 +36,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
           _modifyOptions: function() {
              var opts = FilterHistoryView.superclass._modifyOptions.apply(this, arguments);
              opts.footerTpl = footerTpl;
-             opts.itemContentTpl = itemTpl;
              opts.idProperty = 'id';
              opts.className += ' controls-HistoryView';
              return opts;
@@ -46,8 +47,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
              if(this._options.historyId) {
                 var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
-                historyController.subscribe('onHistoryUpdate', function (event, history) {
-                   this.setItems(history.clone());
+                this.subscribeTo(historyController, 'onHistoryUpdate', function(event, history) {
+                   this.setItems(history.clone(true));
                 }.bind(this));
 
                 this.setItems(historyController.getHistory());

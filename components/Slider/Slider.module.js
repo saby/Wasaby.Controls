@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.Slider',
    [
       'js!SBIS3.CORE.CompoundControl',
       'html!SBIS3.CONTROLS.Slider',
-      'js!SBIS3.CONTROLS.DragNDropMixinNew',
+      'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.RangeMixin',
-      'Core/IoC'
+      'Core/IoC',
+      'css!SBIS3.CONTROLS.Slider'
    ], function(CompoundControl, dotTplFn, DragNDropMixinNew, RangeMixin, IoC) {
       'use strict';
       //TODO: documentation
@@ -22,8 +23,11 @@ define('js!SBIS3.CONTROLS.Slider',
          },
          /**
           * Класс контрола "Слайдер".
+          *
           * @class SBIS3.CONTROLS.Slider
           * @extends SBIS3.CORE.CompoundControl
+          * @public
+          * @control
           *
           * @mixes SBIS3.CONTROLS.DragNDropMixinNew
           * @mixes SBIS3.CONTROLS.RangeMixin
@@ -254,9 +258,13 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _updateMinMaxValue: function(value, side){
-               side === 'min' ?  this._options.minValue = value : this._options.maxValue = value;
-               this._drawValue(this._options.startValue, 'start');
-               this._drawValue(this._options.endValue, 'end');
+               var
+                  optionName = side === 'min' ? 'minValue' : 'maxValue';
+               if (this._options[optionName] != value) {
+                  this._options[optionName] = value;
+                  this._drawValue(this._options.startValue, 'start');
+                  this._drawValue(this._options.endValue, 'end');
+               }
             },
             //DragNDropMixin методы
             _initDrag: function(event) {

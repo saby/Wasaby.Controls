@@ -1,12 +1,15 @@
 <div>
-   <ws:SBIS3.CONTROLS.BreadCrumbs class="controls-BreadCrumbs__smallItems controls-TreeView__searchBreadCrumbs"
+   <ws:SBIS3.CONTROLS.BreadCrumbs class="controls-BreadCrumbs__smallItems controls-BreadCrumbs__home-hide controls-TreeView__searchBreadCrumbs"
       items="{{path}}"
+      itemTpl="{{bcTpls.itemTpl}}"
+      itemContentTpl="{{bcTpls.itemContentTpl}}"
       highlightEnabled="{{viewCfg.highlightEnabled}}"
       highlightText="{{viewCfg.highlightText}}"
       colorMarkEnabled="{{viewCfg.colorMarkEnabled}}"
       colorField="{{viewCfg.colorField}}"
       enabled="{{viewCfg.allowEnterToFolder}}"
       idProperty="{{viewCfg.idProperty}}"
+      activableByClick="{{false}}"
       displayProperty="{{viewCfg.displayProperty}}"
     />
 </div>

@@ -17,48 +17,46 @@ input[type="reset"]::-moz-focus-inner {
 /* ATTENTION styles */
 .icon-attention
 {
-  color: @icon-color-attention !important;
+  color: @icon-color-attention;
 }
 
 /* DONE styles */
 .icon-done
 {
-  color: @icon-color-done !important;
+  color: @icon-color-done;
 }
 
 /* ERROR styles */
 .icon-error
 {
-  color: @icon-color-error !important;
+  color: @icon-color-error;
 }
 
 /* PRIMARY styles */
 .icon-primary
 {
-  color: @icon-color-primary !important;
+  color: @icon-color-primary;
 }
 
 /* DISABLED styles */
 .icon-disabled,
 {
-  color: @icon-color-disabled !important;
+  color: @icon-color-disabled;
 }
 
 /* Для тех, кто поддерживает... */
 .icon-primary:disabled {
-  color: @icon-color-disabled !important;
+  color: @icon-color-disabled;
 }
 
-@media @ie8 {
-  /* Для IE8 */
-  .icon-primary[disabled] {
-    color: @icon-color-disabled !important;
-  }
+/* Цвет основного текста */
+.normaltext-color {
+  color: @black-color;
 }
 
-/* HOVER styles */
+//HOVER styles
 .icon-hover{
-  color: @icon-color-hover !important;
+  color: @icon-color-hover;
 }
 
 .gray-color {
@@ -68,34 +66,34 @@ input[type="reset"]::-moz-focus-inner {
 .blue-color {
   color: @darkcyan-color;
 }
-
+.controls-Link {
 // Модификаторы цвета ссылки
-.mainLink__2 {
-  color: @gray-lamantin-color;
-}
+  &.mainLink__2 {
+    color: @gray-lamantin-color;
+  }
 
-.additionalLink {
-  color: @gray-color;
+  &.additionalLink {
+    color: @gray-color;
+  }
+  &.additionalLink__2 {
+    color: @black-color;
+  }
+  &.additionalLink__3 {
+    color: @red-color;
+  }
+  &.additionalLink__4 {
+    color: @green-color;
+  }
+  &.additionalLink__5 {
+    color: @purple-color;
+  }
 }
-.additionalLink__2 {
-  color: @black-color;
-}
-.additionalLink__3 {
-  color: @red-color;
-}
-.additionalLink__4 {
-  color: @green-color;
-}
-.additionalLink__5 {
-  color: @purple-color;
-}
-
 .blue-dark-color {
   color: @blue-dark-color;
 }
 
 .ws-is-desktop-platform {
   .action-hover:not(.ws-disabled):hover {
-    color: @blue-dark-color !important;
+    color: @blue-dark-color;
   }
 }

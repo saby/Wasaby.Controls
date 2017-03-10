@@ -137,13 +137,14 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             meta = meta || {};
             var movedItems = meta.movedItems || meta.records || this.getSelectedItems();
             meta.movedItems = movedItems;
-            this._opendEditComponent({
+            meta.dialogOptions = meta.dialogOptions || {};
+            cMerge(meta.dialogOptions, {
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               cssClassName: 'controls-moveDialog',
                opener: this._getListView(),
                movedItems: movedItems,
                componentOptions: meta.componentOptions || {}
-            }, this._options.template);
+            });
+            this._openComponent(meta);
          },
 
          _buildComponentConfig: function(meta) {

@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       $constructor: function() {
          this._publish('onTextChange');
-         this._container.removeClass('ws-area');
+         
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
 
          this.subscribe('onFocusOut', this._focusOutHandler.bind(this));

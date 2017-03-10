@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    "Core/helpers/event-helpers",
    "Core/helpers/date-helpers",
    "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link"
+   "js!SBIS3.CONTROLS.Link",
+   'css!SBIS3.CONTROLS.DateRangeChoose'
 ], function ( Deferred, IoC, ConsoleLogger,CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil, cInstance, eHelpers, dateHelpers) {
    'use strict';
 
@@ -30,17 +31,55 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             checkedEnd: null,
 
             /**
+             * @cfg {String} CSS класс который будет установлен у выделенных иконок. По умолчанию - зеленая галочка.
+             */
+            checkedIconCssClass: 'icon-Yes icon-done',
+            /**
+             * @cfg {String} CSS класс который будет установлен у не выделенных иконок. По умолчанию - серая галочка.
+             */
+            uncheckedIconCssClass: 'icon-Yes icon-disabled',
+            /**
+             * @cfg {String} Подсказка которая будет отображаться у выделенных иконок. По умолчанию тултипа нет.
+             */
+            checkedIconTitle: null,
+            /**
+             * @cfg {String} Подсказка которая будет отображаться у не выделенных иконок. По умолчанию тултипа нет.
+             */
+            uncheckedIconTitle: null,
+
+            /**
+             * @typedef {Object} Icon
+             * @property {String} iconClass Класс который будет установлен у контейнера иконки.
+             * @property {String} title Заголовок отображаемы в всплывающей подсказке.
+             *
+             * @remark
+             * { iconClass: 'icon-Yes icon-done',
+             *   title: 'Период отчетности закрыт'
+             *   }
+             */
+            /**
+             * @typedef {[Date, Date]} Period
+             * Массив содержащий даты начала и конеца периода
+             */
+
+            /**
              * @cfg {Function} устанавливает функцию которая будет вызвана во время перерисовки компонента.
              * @remark
              * Аргументы функции:
              * <ol>
              *    <li>periods - Массив содержащий массивы из начала и конца периода</li>
              * </ol>
-             * Функция должна вернуть объект содержащий информацию об отображаемой иконке или Deferred,
-             * стреляющий таким объектом.
+             * Функция должна вернуть массив элементов типа Boolean либо объект содержащих информацию об отображаемой
+             * иконке {@link Icon} или Deferred, стреляющий таким объектом.
+             * Если функция возвращает true, то будет отрисована иконка соответствующая опциям {@Link checkedIconCssClass} и
+             * {@Link checkedIconTitle}. Если возвращает false, то иконки будут соответствовать опциям
+             * {@Link uncheckedIconCssClass} и {@Link uncheckedIconTitle}. По умолчанию это зеленые и серые галочки.
+             * Функция может вернуть объект содержащий онформацию о кастомных оконках.
              * { iconClass: 'icon-Yes icon-done',
              *   title: 'Период отчетности закрыт'
              *   }
+             *
+             * @see updateIcons
              */
             iconsHandler: null,
 
@@ -51,7 +90,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
                      {name: 'I', months: ['Январь', 'Февраль', 'Март']},
                      {name: 'II', months: ['Апрель', 'Май', 'Июнь']}
                   ]
-
                },
                {
                   name: 'II',
@@ -108,6 +146,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             this.setYear((new Date()).getFullYear());
          } else {
             this._updateYearView();
+            this.updateIcons();
          }
 
          if (this._options.checkedMonthStart || this._options.checkedMonthEnd) {
@@ -157,7 +196,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
          this.subscribe('onRangeChange', this._onRangeChanged.bind(this));
          this._updateRangeTitle();
-         this._updateCheckMarks();
          this._updateYears();
       },
 
@@ -169,7 +207,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          this._options.year = year;
          this._updateYearView();
          this._updateYears();
-         this._updateCheckMarks();
+         this.updateIcons();
       },
       /**
        * Возвращает текущий год
@@ -281,22 +319,83 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          );
       },
 
-      _updateCheckMarks: function () {
-         var self = this,
-            iconsHandler = this._options.iconsHandler || this._getIcons,
-            periods = [],
-            containers, step, pType, container, icons;
+      /**
+       * Обновляет иконки. Для получения данных вызывается хендлер {@link iconsHandler} установленный через опции.
+       * @see iconsHandler
+       */
+      updateIcons: function () {
+         var iconsHandler = this._options.iconsHandler || this._getIcons,
+            periods, icons;
 
          if (!this._options.checkedStart && !this._options.checkedEnd && !this._options.iconsHandler) {
             return;
          }
+         periods = this._getIconsPeriods();
 
+         icons = iconsHandler.call(this, periods[0], periods[1]);
+         if (!(icons && icons instanceof Deferred)) {
+            icons = (new Deferred()).callback(icons);
+         }
+
+         icons.addCallback(this._setIcons.bind(this));
+      },
+
+      /**
+       * Устанавливает иконки отбражаемые напротив периодов.
+       * @param icons {Icon[]}
+       * @protected
+       * @see iconsHandler
+       * @see updateIcons
+       * @see _getIconsPeriods
+       */
+      _setIcons: function (icons) {
+         var self = this,
+            containers, container, iconCssClass, iconTitle;
          if (this._options.showMonths) {
             containers = this.getContainer().find(['.', this._cssDateRangeChoose.month].join(''));
+         } else if (this._options.showQuarters) {
+            containers = this.getContainer().find(['.', this._cssDateRangeChoose.quarter].join(''));
+         } else {
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Not implemented.');
+            return;
+         }
+         if (icons.length !== containers.length) {
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'Передано не коректное количество иконок в функцию _setIcons.');
+         }
+         containers.each(function (index) {
+            if (typeof(icons[index]) === "boolean") {
+               if (icons[index]) {
+                  iconCssClass = self._options.checkedIconCssClass;
+                  iconTitle = self._options.checkedIconTitle || '';
+               } else {
+                  iconCssClass = self._options.uncheckedIconCssClass;
+                  iconTitle = self._options.uncheckedIconTitle || '';
+               }
+            } else {
+               iconCssClass = icons[index].iconClass;
+               iconTitle = icons[index].title;
+            }
+            container = $(this).find(['>.', self._cssDateRangeChoose.checkbox].join(''));
+            container.removeClass().addClass([self._cssDateRangeChoose.checkbox, 'icon-16', iconCssClass].join(' '));
+            container.prop('title', iconTitle);
+         });
+      },
+
+      /**
+       * Возвращает массив содержащий массив периодов соответсвующих иконкам и тип этих периодов.
+       * @returns {[Period[], String]}
+       * @protected
+       * @see iconsHandler
+       * @see updateIcons
+       * @see _setIcons
+       */
+      _getIconsPeriods: function () {
+         var periods = [],
+            step, pType;
+         if (this._options.showMonths) {
             step = 1;
             pType = 'month';
          } else if (this._options.showQuarters) {
-            containers = this.getContainer().find(['.', this._cssDateRangeChoose.quarter].join(''));
             step = 3;
             pType = 'quarter';
          } else {
@@ -306,19 +405,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          for (var i = 0; i < 12; i += step) {
             periods.push([new Date(this.getYear(), i, 1), new Date(this.getYear(), i + step, 0)]);
          }
-
-         icons = iconsHandler.call(this, periods, pType);
-         if (!(icons && icons instanceof Deferred)) {
-            icons = (new Deferred()).callback(icons);
-         }
-
-         icons.addCallback(function (_icons) {
-            containers.each(function (index) {
-               container = $(this).find(['>.', self._cssDateRangeChoose.checkbox].join(''));
-               container.removeClass().addClass([self._cssDateRangeChoose.checkbox, 'icon-16', _icons[index].iconClass].join(' '));
-               container.prop('title', _icons[index].title);
-            });
-         });
+         return [periods, pType];
       },
 
       _getIcons: function (periods) {
@@ -332,17 +419,13 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
       _getIcon: function (start, end) {
          var checkedStart = this._options.checkedStart,
              checkedEnd = this._options.checkedEnd;
-         if (!checkedStart && checkedEnd) {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'checkedStart and checkedEnd options must be set.');
+         if (!checkedStart && !checkedEnd) {
+            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DateRangeChoose', 'checkedStart and/or checkedEnd options must be set.');
             return [];
          }
          checkedStart = checkedStart? checkedStart.getTime(): 0;
          checkedEnd = checkedEnd? checkedEnd.getTime(): Infinity;
-         if (Math.max(start.getTime(), checkedStart) <= Math.min(end.getTime(), checkedEnd)) {
-            return {iconClass: 'icon-Yes icon-done', title: rk('Период отчетности закрыт')};
-         } else {
-            return {iconClass: 'icon-Yes icon-disabled', title: rk('Период отчетности закрыт')};
-         }
+         return Math.max(start.getTime(), checkedStart) <= Math.min(end.getTime(), checkedEnd);
       },
 
       // Режим года

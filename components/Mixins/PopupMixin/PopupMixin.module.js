@@ -15,11 +15,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 ], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
    'use strict';
    if (typeof window !== 'undefined') {
-      var eventsChannel = EventBus.channel('WindowChangeChannel');
-
-      $(document).bind('mousedown touchstart', function (e) {
-         eventsChannel.notify('onDocumentClick', e);
-      });
+      var
+         eventsChannel = EventBus.channel('WindowChangeChannel'),
+         clickCallback = function (e) {
+            eventsChannel.notify('onDocumentClick', e);
+         };
+      // Отлавливаем mousedown + touchstart в захватывающей фазе, т.к. всплытие до document может быть остановлено
+      // через stopPropagation (https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04)
+      document.addEventListener('mousedown', clickCallback, true);
+      document.addEventListener('touchstart', clickCallback, true);
 
       $(window).blur(function(e) {
          if(document.activeElement && document.activeElement.tagName == "IFRAME"){
@@ -170,7 +174,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * @type {Boolean}
              */
             bodyBounds: false,
-            isHint: true
+            isHint: true,
+            parentContainer: ''
          }
       },
 
@@ -184,9 +189,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             'left': '-10000px'
          });
 
-         //TODO: Придрот
-         container.removeClass('ws-area');
-         /********************************/
 
          this._initOppositeCorners();
 
@@ -202,7 +204,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
          this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
-         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
@@ -214,7 +215,20 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                self.hide();
             });
          }
-         container.appendTo('body');
+
+         if (this._options.parentContainer) {
+            var appendContainer;
+            if (this._options.target) {
+               appendContainer = this._options.target.closest('.' + this._options.parentContainer)
+            }
+            else {
+               appendContainer = $('.' + this._options.parentContainer);
+            }
+            container.appendTo(appendContainer);
+         }
+         else {
+            container.appendTo('body');
+         }
 
          this._saveDefault();
          this._resetToDefault();
@@ -248,9 +262,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
-      _onTargetMove: function(){
-         // Если fixed не надо двигаться за таргетом
-         if (this.isVisible() && !this._fixed) {
+      _onTargetMove: function () {
+         if (this.isVisible()) {
+            if (this.isFixed()) {
+               this._initSizes();
+            }
             this.recalcPosition();
             this._checkTargetPosition();
          } else {
@@ -267,6 +283,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
+            if (this._options.parentContainer && !element.hasClass(this._options.parentContainer)) {
+               break;
+            }
             if (element.css('position') == 'fixed'){
                $(this._container).css({position : 'fixed'});
                if (this._fixed){
@@ -297,7 +316,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
        * Пересчитать положение и размеры
        * @param recalcFlag
        */
-      recalcPosition: function (recalcFlag) {
+      recalcPosition: function (recalcFlag, saveSide) {
          if (this._isVisible) {
             this._currentAlignment = {
                verticalAlign : this._options.verticalAlign,
@@ -315,7 +334,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   maxHeight = parseFloat(this._container.css('max-height'), 10) || scrollHeight,
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._resetToDefault();
+               if (!saveSide) {
+                  this._resetToDefault();
+               } else {
+                  this._isMovedV = false;
+               }
 
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
@@ -323,14 +346,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
             }
-            this._initSizes();
+            this._initSizes(saveSide);
             if (!this._originsInited){
                return;
             }
             if (this._options.target) {
                var offset = {
-                     top: this._fixed ? this._targetSizes.boundingClientRect.top : this._targetSizes.offset.top,
-                     left: this._fixed ? this._targetSizes.boundingClientRect.left : this._targetSizes.offset.left
+                     top: this._targetSizes.offset.top,
+                     left: this._targetSizes.offset.left
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
@@ -524,7 +547,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (self._options.target && self._options.targetPart) {
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
-            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target) && !this._isLinkedPanel(target)) {
                if ($(target).hasClass('ws-window-overlay')) {
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
@@ -534,6 +557,22 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                }
             }
          }
+      },
+
+      _isLinkedPanel: function (target) {
+         //По ошибке https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04 убрали всплытие события при mousedown (для чего описано в ошибке)
+         //FloatArea теперь не может превентить событие, поэтому при клике по панели закрывается попап, из которого была открыта floatArea.
+         //Если клик был по скроллу - то target.wsControl вернет null, т.к. скролл находится на родительском контейнере floatArea
+         //Пытаюсь найти панель вручную. Использую closest, т.к. клик может быть в ws-float-area-panel-external-jeans, который лежит на 1 уровне с floatarea
+         var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
+         if (floatArea.length){
+            target = floatArea.wsControl().getOpener();
+            while (target && target !== this) {
+               target = target.getParent() || target.getOpener();
+            }
+            return target === this;
+         }
+         return false;
       },
 
       _checkTargetPosition: function () {
@@ -550,7 +589,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       //Кэшируем размеры
-      _initSizes: function () {
+      _initSizes: function (saveSide) {
          var target = this._options.target,
             container = this._container;
          if (target) {
@@ -562,6 +601,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                boundingClientRect: target.get(0).getBoundingClientRect()
             };
 
+            if (this._options.parentContainer) {
+               var parContainer;
+               if (this._options.target) {
+                  parContainer = this._options.target.closest('.' + this._options.parentContainer)
+               }
+               else {
+                  parContainer = $('.' + this._options.parentContainer);
+               }
+               var parOffset = parContainer.offset();
+               this._targetSizes.offset.top = this._targetSizes.offset.top - parOffset.top + parContainer.scrollTop();
+               this._targetSizes.offset.left = this._targetSizes.offset.left - parOffset.left + parContainer.scrollLeft();
+            }
+
             /* task:1173219692
             im.dubrovin на Chrome on Android при получении offset необходимо учитывать scrollTop , scrollLeft */
             if(detection.isMobileAndroid){
@@ -569,10 +621,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._targetSizes.offset.left-=$(window).scrollLeft();
             };
 
-            if (this._fixed) this._targetSizes.offset = this._targetSizes.boundingClientRect;
+            // Для фиксированого таргета считаем оффсеты как boundingClientRect
+            // Но на айпаде это неправильно, так как fixed слой там сдвигается вместе с клавиатурой
+            if (this._fixed && !detection.isMobileIOS) {
+               this._targetSizes.offset = this._targetSizes.boundingClientRect
+            }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
-         var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         var buff;
+         if (saveSide) {
+            buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner, true);
+         } else {
+            buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         }
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requiredOffset = {
@@ -823,6 +884,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+               spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
                if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
                      this._container.css('height', height);
@@ -1087,12 +1149,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   if (res !== false) {
                      parentHide.call(self);
                      clearZIndex();
+                     self._fixedOffset = null;
                      deactivateWindow.call(this);
                   }
                });
             } else if (result !== false) {
                parentHide.call(this);
                clearZIndex();
+               self._fixedOffset = null;
                deactivateWindow.call(this);
             }
          }

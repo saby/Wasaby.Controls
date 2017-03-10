@@ -27,11 +27,18 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    /*методы для поиска*/
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
+      var visible = operationPanel.isVisible();
       if (gridView._options.multiselect) {
          gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
          if (hideCheckBoxes) {
             gridView.toggleCheckboxes(operationPanel.isVisible());
-            gridView.removeItemsSelectionAll();
+            if (!visible) {
+               if (gridView._options.useSelectAll) {
+                  gridView.setSelectedAllNew(false);
+               } else {
+                  gridView.removeItemsSelectionAll();
+               }
+            }
          }
          if (gridView._options.startScrollColumn !== undefined) {
             gridView.updateScrollAndColumns();
@@ -133,7 +140,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        *     myBinder.bindSearchGrid('СтрокаПоиска');
        * </pre>
        */
-      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset) {
+      bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset, keyboardLayoutRevert, hierarchyViewMode) {
          if (!this._searchController){
             this._searchController = new SearchController({
                view: this._options.view,
@@ -143,7 +150,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                searchMode: searchMode,
                doNotRespondOnReset: doNotRespondOnReset,
                breadCrumbs: this._options.breadCrumbs,
-               backButton: this._options.backButton
+               backButton: this._options.backButton,
+               keyboardLayoutRevert: keyboardLayoutRevert,
+               hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
             });
          }
          this._searchController.bindSearch();

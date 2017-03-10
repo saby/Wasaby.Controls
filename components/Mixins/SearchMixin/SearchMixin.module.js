@@ -69,6 +69,13 @@ define('js!SBIS3.CONTROLS.SearchMixin',
          },
          destroy : function() {
             this._clearSearchDelay();
+         },
+         init: function () {
+            /* Чтобы запустился поиск, если компонент уже создаётся с проставленной опцией text */
+            var text = this.getText();
+            if(text) {
+               this._applySearch(text);
+            }
          }
       },
 

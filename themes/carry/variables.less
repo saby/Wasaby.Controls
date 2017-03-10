@@ -14,7 +14,8 @@
 // data grid
 @data-grid-cell-height:                         44px;;
 @data-grid-cell-padding:                        4px 8px;
-@data-grid-first-content-cell-padding-left:     8px;
+@data-grid-side-cell-padding:                   8px;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  8px;
 @data-grid-header-cell-font-size:               18px;
 @data-grid-header-cell-height:                  22px;
@@ -209,7 +210,7 @@
 // Link //
 // ---- //
 
-@link-text-decoration:                          underline;
+@link-text-decoration:                          none;
 
 // ------ //
 // Button //
@@ -319,6 +320,12 @@
 @menu-button-header-left-bg-revert-vertical:            transparent;
 @menu-button-header-left-bg-revert-vertical-horizontal: transparent;
 
+// --------- //
+// Menu icon //
+// --------- //
+
+@menu-icon-menu-margin:                                 -5px 0 0 -9px;
+
 // ---- //
 // Menu //
 // ---- //
@@ -332,6 +339,7 @@
 // Menu item //
 // --------- //
 @menu-item-height:                              40px;
+@menu-item-line-height:                         40px;
 @menu-header-height:                            @menu-item-height;
 @menu-item-bg:                                  @menu-button-menu-bg;
 @menu-item-hover-bg:                            #F0F5FB;
@@ -496,7 +504,9 @@
 // Popup
 @font-popup-size:                               @font-basic-size;
 
-@menu-item-text-margin:                         0 0 0 34px;
+@menu-item-text-margin:                         0;
+@menu-item-icon-24-margin:                      0 0 0 34px;
+@menu-item-icon-32-margin:                      0 0 0 40px;
 @menu-item-icon-top-offset:                     14px;
 @menu-link-icon-24-top:                         2px;
 
@@ -511,9 +521,9 @@
 
 // EditDialog
 @editdialog-applybutton-width:                  130px;
-@editdialog-applybutton-right:                  64px; /*ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:          194px; /*ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними */
-@editdialog-template-minwidth:                  460px;
+@editdialog-applybutton-right:                  64px; //ширина кнопки закрытия окна 60px + 4px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:          194px; //ширина кнопки закрытия окна 60px + 90px ширина кнопки сохранить + 4px на небольшой отступ между ними
+@editdialog-template-minwidth:                  510px;
 @editdialog-applybutton-top:                    10px;
 
 //MoveDialog
@@ -550,7 +560,7 @@
 @controls-OperationsPanelButton-width:          32px;
 @controls-OperationsPanelButton-vert-height:    32px;
 @controls-OperationsPanelButton-icon-left:      8px;
-@controls-OperationsPanelButton-font:           24px 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-font:           24px 'TensorFont', sans-serif;
 
 // --------- //
 // Menu link //
@@ -632,3 +642,6 @@
 
 @controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+
+//Browser
+@controls-Browser-ListView-minHeight:              90px;

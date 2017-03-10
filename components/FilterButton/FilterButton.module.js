@@ -15,14 +15,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/ParallelDeferred",
    "Core/helpers/collection-helpers",
    "Core/IoC",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
    "js!SBIS3.CONTROLS.FilterHistory",
    "js!SBIS3.CONTROLS.AdditionalFilterParams",
    "i18n!SBIS3.CONTROLS.FilterButton",
-   "js!SBIS3.CONTROLS.ScrollContainer"
+   "js!SBIS3.CONTROLS.ScrollContainer",
+   'css!SBIS3.CONTROLS.FilterButton'
 ],
     function(
         mStubs,
@@ -39,8 +39,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         TemplateUtil,
         ParallelDeferred,
         colHelpers,
-        IoC,
-        MarkupTransformer
+        IoC
     ) {
 
        'use strict';
@@ -186,8 +185,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
              this._checkPickerContent = this._checkPickerContent.once();
-             this.getContainer().removeClass('ws-area')
-                                .on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
+             this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
           showPicker: function() {
@@ -295,7 +293,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 config[template] = components[template] ? getCompTpl(templateProperty) : getTpl(templateProperty);
              });
 
-             return MarkupTransformer(prepTpl(dotTplForPicker)(config));
+             return prepTpl(dotTplForPicker)(config);
           },
 
           _setPickerConfig: function () {
@@ -316,11 +314,15 @@ define('js!SBIS3.CONTROLS.FilterButton',
              }
 
              function updatePickerVisibility() {
-                var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function(result, element) {
-                   return result || element === false;
-                }, false);
+                var visibility = context.getValue(rootName + '/visibility');
 
-                context.setValue('additionalFilterVisible', showAdittionalBlock);
+                if(!Object.isEmpty(visibility)) {
+                   var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function (result, element) {
+                      return result || element === false;
+                   }, false);
+
+                   context.setValue('additionalFilterVisible', showAdittionalBlock);
+                }
              }
 
              this._pickerContext = context;

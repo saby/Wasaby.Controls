@@ -12,20 +12,14 @@
         <option name="name">FieldLinkItemsCollection</option>
         <option name="tabindex">0</option>
         <option name="displayProperty">{{=it.displayProperty}}</option>
-        <option name="userItemAttributes">{{=it.userItemAttributes}}</option>
         <option name="idProperty">{{=it.idProperty}}</option>
         <option name="itemTemplate" type="ref">{{@it.itemTemplate}}</option>
+        <option name="itemTpl" type="ref">{{@it.itemTpl}}</option>
         <option name="itemContentTpl" type="ref">{{@it.itemContentTpl}}</option>
+        <option name="includedTemplates" type="ref">{{@it.includedTemplates}}</option>
         <options name="_preRenderValues">
             <option name="selectedItems" type="ref">{{@it.selectedItems}}</option>
             <option name="selectedItem" type="ref">{{@it.selectedItem}}</option>
-        </options>
-        <options name="handlers">
-            <option name="onDrawItems" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
-            <option name="onCrossClick" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
-            <option name="onItemActivate" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
-            <option name="onClosePicker" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
-            <option name="onShowPicker" type="function">js!SBIS3.CONTROLS.FieldLinkItemsCollection:prototype._eventHandler</option>
         </options>
     </component>
 </div>

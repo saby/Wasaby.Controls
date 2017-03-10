@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
-      'i18n!SBIS3.CONTROLS.EditAtPlace'
+      'i18n!SBIS3.CONTROLS.EditAtPlace',
+      'css!SBIS3.CONTROLS.EditAtPlace'
    ],
    function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn, strHelpers) {
       'use strict';
@@ -110,7 +111,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self._clickHandler();
             });
             /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
-            this._container.removeClass('ws-area');
+            
             
             //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a) 
             var decorators = this._container.attr('decorators');
@@ -138,8 +139,8 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             //Начальный текст может быть и не пустой строкой
             this._saveOldText();
 
-            editorComponent.subscribe('onFocusOut', function(){
-               if (!self._isEditInGroup && self.validate()){
+            editorComponent.subscribe('onFocusOut', function(event, destroyed, focusedControl){
+               if (!self._isEditInGroup && self.validate() && !self._isEditorChild(focusedControl, this)){
                   if (this.getText() !== self._oldText){
                      self._editorFocusOutHandler(true);
                   } else {
@@ -159,10 +160,26 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           * При потере полем редактирования фокуса вызываем завершение редактирования
           * @private
           */
-         _editorFocusOutHandler: function(apply){
+         _editorFocusOutHandler: function(apply) {
             if (!this._isEditInGroup && this._options.displayAsEditor){
                apply ? this._applyEdit() : this._cancelEdit();
             }
+         },
+
+         // Проверяем не ушел ли фокус на одного из детей редактора (например выпадашка у поля связи)
+         _isEditorChild: function(focusedControl, control){
+            var isChild = false,
+               parent, opener;
+            while (focusedControl && (focusedControl.getParent || focusedControl.getOpener)) {
+               parent = focusedControl.getParent();
+               opener = focusedControl.getOpener ? focusedControl.getOpener() : null;
+               if (focusedControl == control) {
+                  isChild = true;
+                  break;
+               }
+               focusedControl = parent || opener;
+            }
+            return isChild;
          },
 
          /**

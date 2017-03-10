@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/core-functions",
    "Core/core-merge",
+   "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/helpers/functional-helpers",
    "Core/IoC",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC) {
+], function ( cFunctions, cMerge, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -37,19 +38,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.idProperty);
       }
 
-      var filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this);
-      projection = new TreeProjection({
-         collection: items,
-         idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
-         parentProperty: cfg.parentProperty,
-         nodeProperty: cfg.nodeProperty,
-         loadedProperty: cfg.parentProperty + '$',
-         unique: true,
-         root: root,
-         rootEnumerable: rootAsNode,
-         filter: filterCallBack,
-         sort: cfg.itemsSortMethod
-      });
+      var
+         filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this),
+         projOptions = {
+            collection: items,
+            idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty,
+            loadedProperty: cfg.parentProperty + '$',
+            unique: true,
+            root: root,
+            rootEnumerable: rootAsNode,
+            filter: filterCallBack,
+            sort: cfg.itemsSortMethod
+         };
+
+
+      if (cfg.loadItemsStrategy == 'append') {
+         projOptions.unique = false;
+      }
+
+      projection = new TreeProjection(projOptions);
 
       return projection;
    },
@@ -85,9 +94,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var lastFolder = path[path.length - 1];
             defaultCfg.projItem = lastFolder.projItem;
             defaultCfg.item = defaultCfg.projItem.getContents();
-            defaultCfg.className = 'controls-HierarchyDataGridView__path'
+            defaultCfg.className = 'controls-HierarchyDataGridView__path';
             cfg._searchFolders[defaultCfg.item.get(cfg.idProperty)] = true;
             defaultCfg.itemContent = TemplateUtil.prepareTemplate(cfg._defaultSearchRender);
+
+            defaultCfg.bcTpls = {};
+            if (cfg.hierarchyViewModeItemTpl || cfg.hierarchyViewModeItemContentTpl) {
+               defaultCfg.bcTpls.itemTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemTpl);
+               defaultCfg.bcTpls.itemContentTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemContentTpl);
+            }
             cMerge(defaultCfg, {
                path: cFunctions.clone(path),
                viewCfg: cfg._getSearchCfg(cfg)
@@ -185,7 +200,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (item.isNode()){
                cfg.hasNodes = true;
             }
-            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup) {
+            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
@@ -328,7 +343,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @event onSetRoot Происходит при загрузке данных и перед установкой корня иерархии.
        * @remark
        * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
-       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link SBIS3.CONTROLS.Data.Collection.RecordSet#meta}).
+       * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
@@ -339,7 +354,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        *    <li>parent - идентификатор предыдущего узла иерархии;</li>
        *    <li>title - значение поля отображения (см. {@link SBIS3.CONTROLS.DSMixin#displayProperty});</li>
        *    <li>color - значение поля записи, хранящее данные об отметке цветом (см. {@link SBIS3.CONTROLS.DecorableMixin#colorField});</li>
-       *    <li>data - запись узла иерархии, экземпляр класса {@link SBIS3.CONTROLS.Data.Record}.</li>
+       *    <li>data - запись узла иерархии, экземпляр класса {@link WS.Data/Entity/Record}.</li>
        * </ul>
        * @see onBeforeSetRoot
        */
@@ -564,6 +579,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
               * @cfg {Boolean}
               */
             hierarchyViewMode: false,
+            hierarchyViewModeItemTpl: '',
+            hierarchyViewModeItemContentTpl: '',
             /**
              * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
              * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
@@ -578,7 +595,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _lastPath : [],
          _loadedNodes: {},
          _previousRoot: null,
-         _hier: []
+         _hier: [],
+         _hierPages: {}
       },
 
       $constructor : function(cfg) {
@@ -769,6 +787,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemParent = item.getParent();
          return itemParent ? itemParent.isExpanded() ? this._isVisibleItem(itemParent) : false : true;
       },
+
+      _getGroupItems: function(groupId) {
+         var
+            rootItems = [],
+            fullItems = this._getItemsProjection().getGroupItems(groupId);
+
+         for (var i = 0; i < fullItems.length; i++) {
+            if (this._canApplyGrouping(fullItems[i])) {
+               rootItems.push(fullItems[i]);
+            }
+         }
+         return rootItems;
+      },
+
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
          if (this._options.hierarchyViewMode) {
@@ -780,7 +812,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
                      prevGroupId = groupId;
-                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                     if (this._getGroupItems(groupId).length <= items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
                      }
                   }
@@ -1030,6 +1062,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return currentRootItems;
       },
 
+      _afterAddItems: function() {
+         // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
+         if (this._isSearchMode()) {
+            this.redraw();
+         }
+      },
+
+      _getReloadOffset: function(){
+         var offset;
+         if (this._hierPages[this.getCurrentRoot()] !== undefined) {
+            offset = this._hierPages[this.getCurrentRoot()] * this._limit;
+         } else {
+            offset = 0;
+         }
+         return offset;
+      },
+
       before: {
          _modifyOptions: function(cfg) {
             if (cfg.hierField) {
@@ -1040,7 +1089,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
          },
-         reload : function() {
+         reload: function() {
+            // сохраняем текущую страницу при проваливании в папку
+            if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
+               this._hierPages[this._previousRoot] = this._getCurrentPage();
+            }
             this._folderOffsets['null'] = 0;
             this._lastParent = undefined;
             this._lastDrawn = undefined;
@@ -1138,8 +1191,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see root
        * @see getRoot
        */
-      setRoot: function(root){
+      setRoot: function(root) {
          this._options.root = root;
+         // при изменении корня, сбросим предыдущий, так как он теряет актуальность
+         this._previousRoot = undefined;
       },
 
 
@@ -1172,8 +1227,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
+         // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
+         // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто на контейнер таблицы, но
+         // только в том случае, если ранее фокус реально был на элементе таблицы.
+         // https://inside.tensor.ru/opendoc.html?guid=7b093780-dc30-4f90-b443-0d6f96992490&des=
+         if (constants.browser.isIE && $.contains(this._container[0], document.activeElement)) {
+            this._container.focus();
+         }
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
-         this._destroyEditInPlace();
+         this._destroyEditInPlaceController();
          if (key !== undefined && key !== null) {
             filter[this._options.parentProperty] = key;
          } else {

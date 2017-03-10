@@ -33,7 +33,7 @@
 @bg:                                      transparent;
 @text-color:                              @black-color;
 
-@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;
+@font-basic-name:                         'TensorFont', sans-serif;
 @font-basic-size:                         14px;
 @font-popup-size:                         15px;
 @font-folder-size:                        15px;
@@ -49,7 +49,6 @@
 
 @hover-color:                             @blue-dark-color;
 @controls-panel-shadow:                   0px 0px 12px 0px rgba(0,0,0,0.4);
-
 
 // ---- //
 // Link //
@@ -350,7 +349,7 @@
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
-@tab-button-font:                               14px 'TensorFont Regular', 'TensorFont';
+@tab-button-font:                               14px 'TensorFont', sans-serif;
 @tab-button-margin-top:                         0;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
@@ -656,7 +655,7 @@
 // ---- //
 
 @menu-margin:                             -1px 0 0;
-@menu-subpopup-margin:                    -6px 0 0 0;
+@menu-subpopup-margin:                    -5px 0 0 0;
 @menu-subpopup-padding:                   4px 0;
 @menu-padding:                            0 0 4px 0;
 @menu-border-width:                       1px;
@@ -692,7 +691,7 @@
 @menu-item-cursor:                        pointer;
 @menu-item-width:                         auto;
 @menu-item-height:                        32px;
-@menu-item-line-height:                   @menu-item-height;
+@menu-item-line-height:                   20px;
 @menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 
@@ -709,13 +708,15 @@
 @menu-item-icon-left-offset:              0px;
 @menu-item-icon-left-offset-big:          0px;
 
-@menu-item-icon24-top-offset:             3px;
+@menu-item-icon24-top-offset:             4px;
 @menu-item-icon24-top-offset-big:         -4px;
 
 @menu-item-icon24-left-offset:            0;
 @menu-item-icon24-left-offset-big:        -3px;
 
-@menu-item-text-margin:                   0 0 0 22px;
+@menu-item-text-margin:                   6px 0 6px 0;
+@menu-item-icon-24-margin:                6px 0 6px 30px;
+@menu-item-icon-32-margin:                6px 0 6px 38px;
 
 
 
@@ -768,7 +769,6 @@
 
 // Menu
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
-@menu-icon-menu-padding:                  0 0 4px 0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 
@@ -1618,14 +1618,15 @@
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
 @list-view-actions-menu-padding:                4px 0;
-@list-view-actions-menu-margin:                 3px 0 0 6px;
-@list-view-actions-menu-text-margin:            0 0 0 30px;
+@list-view-actions-menu-margin:                 4px 0 0 5px;
+@list-view-actions-menu-text-margin:            6px 0 6px 30px;
 
-@list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
+@list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
 @list-view-scroll-width:                        32px;
-
+@list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
+@list-view-loading-indicator-gradient-bg-up:    url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @list-view-disabled-cursor:                     default;
 
 @listView-empty-data-color:                     @black-color;
@@ -1636,6 +1637,7 @@
 @listView-servicefooter-fontsize:               12px;
 
 // ItemsToolbar small
+@items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -1666,7 +1668,7 @@
 // --------- //
 
 @controls-toolbar-display:                      inline-block;
-@controls-toolbar-default-margin:               8px;
+@controls-toolbar-default-margin:               12px;
 @controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
 @controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
 @controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
@@ -1720,6 +1722,8 @@
 @tree-view-ellipsis-copyArrow-shadow:           -10px 0 10px 0;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
+@tree-view-ellipsis-copyArrow-right:            -1px;
+@tree-view-firstCell-margin-searchMode:         6px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1765,7 +1769,7 @@
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               12px;
 
-@data-grid-header-cell-border-width:            1px 1px 0 1px;
+@data-grid-header-cell-border-width:            1px 0 0 0;
 @data-grid-header-cell-border-style:            solid;
 @data-grid-header-cell-border-color:            transparent;
 @data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
@@ -1782,7 +1786,8 @@
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
-@data-grid-first-content-cell-padding-left:     8px;
+@data-grid-side-cell-padding:                   8px;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -1862,7 +1867,7 @@
 
 @controls-OperationsPanel-actions-margin:           0 4px;
 
-@controls-OperationsPanel-separator-margin-left:    8px;
+@controls-OperationsPanel-separator-margin-left:    4px;
 @controls-OperationsPanel-separator-margin-right:   0;
 @controls-OperationsPanel-separator-bg:             @gray-ccc-color;
 @controls-OperationsPanel-separator-width:          1px;
@@ -1874,7 +1879,7 @@
 // --------------- //
 // OperationsMark  //
 // --------------- //
-@controls-OperationsMark-checkBox-margin:           0 4px;
+@controls-OperationsMark-checkBox-margin:           4px;
 
 // --------------- //
 // OperationMerge  //
@@ -1915,7 +1920,7 @@
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
-@controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         6px;
@@ -2086,23 +2091,23 @@
 @controls-filterButton-history-title-color:       @blue-dark-color !important;
 @controls-filterButton-history-title-width:       100%;
 
-//FilterButtonToggleButton
-@controls-filterButton-toggleButton-lineHeight:   20px !important;
-@controls-filterButton-toggleButton-fontSize:     26px !important;
-@controls-filterButton-toggleButton-fontFamily:   acordion-font !important;
-@controls-filterButton-toggleButton-height:       24px;
+//CommandsSeparator
+@controls-commandsSeparator-lineHeight:   20px !important;
+@controls-commandsSeparator-fontSize:     26px !important;
+@controls-commandsSeparator-fontFamily:   acordion-font !important;
+@controls-commandsSeparator-height:       24px;
 
-@controls-filterButton-toggleButton-icon-width:   24px;
-@controls-filterButton-toggleButton-icon-height:  24px;
-@controls-filterButton-toggleButton-icon-top:     2px;
-@controls-filterButton-toggleButton-icon-left:    -1px;
-@controls-filterButton-toggleButton-icon-style:   normal;
-@controls-filterButton-toggleButton-icon-down:    "\e902";
-@controls-filterButton-toggleButton-icon-up:      "\e904";
-@controls-filterButton-toggleButton-color:        #CCCCCC !important;
+@controls-commandsSeparator-icon-width:   24px;
+@controls-commandsSeparator-icon-height:  24px;
+@controls-commandsSeparator-icon-top:     2px;
+@controls-commandsSeparator-icon-left:    -1px;
+@controls-commandsSeparator-icon-style:   normal;
+@controls-commandsSeparator-icon-down:    "\e902";
+@controls-commandsSeparator-icon-up:      "\e904";
+@controls-commandsSeparator-color:        #CCCCCC !important;
 
-@controls-filterButton-toggleButton-border:       none;
-@controls-filterButton-toggleButton-bgColor:      transparent;
+@controls-commandsSeparator-border:       none;
+@controls-commandsSeparator-bgColor:      transparent;
 
 //FilterLine
 @controls-filterLine-padding:                     8px 8px 8px 0;
@@ -2197,6 +2202,7 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
+@bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
@@ -2204,8 +2210,8 @@
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
-@editdialog-applybutton-right:                     38px; /*ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
-@editdialog-window-title-margin-right:             128px; /*ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
+@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
+@editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 
@@ -2238,14 +2244,13 @@
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
-@controls-NotificationPopup-header-height:                                   40px;
-@controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
-@controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
+@controls-NotificationPopup-header-padding:                                  8px 12px 8px 12px;
+@controls-NotificationPopup-header-padding-with-close-button:                8px 48px 8px 12px;
 
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
 @controls-NotificationPopup-header-icon-right-margin:                        12px;
-@controls-NotificationPopup-header-icon-height:                              24px;
+@controls-NotificationPopup-max-width:                                       440px;
 
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:         351px;
@@ -2266,7 +2271,7 @@
 @controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;
 @controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
-@controls-SubmitPopup-message-color:               inherit;
+@controls-SubmitPopup-message-color:               #000;
 @controls-SubmitPopup-details-color:               inherit;
 
 //ListView AjaxIndicator
@@ -2364,7 +2369,7 @@
 @toggle-header-background:                         none;
 
 @toggle-header-before-content:                     '\E013';
-@toggle-header-before-font:                        18px 'TensorFont';
+@toggle-header-before-font:                        18px 'TensorFont', sans-serif;
 @toggle-header-before-color:                       #D94700;
 @toggle-header-before-width:                       24px;
 
@@ -2413,3 +2418,6 @@
 
 @money-decorator-fraction-font-size:                       12px;
 @money-decorator-fraction-font-color:                      @gray-ccc-color;
+
+//Browser
+@controls-Browser-ListView-minHeight:                      90px;

@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
-      'html!SBIS3.CONTROLS.EditAtPlaceGroup'],
+      'html!SBIS3.CONTROLS.EditAtPlaceGroup',
+      'css!SBIS3.CONTROLS.EditAtPlaceGroup'],
    function (CompoundControl, PickerMixin, EditAtPlace, EditAtPlaceMixin, dotTplFn) {
       'use strict';
       /**
@@ -45,21 +46,20 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             var self = this;
             this.reviveComponents();
             if (this._options.displayAsEditor) {
-               this.setInPlaceEditMode();
-            } else {
-               // всем EditAtPlace задаем свой обработчик клика
-               this._iterateChildEditAtPlaces(function(child){
-                  child._setClickHandler(self._clickHandler.bind(self));
-                  child._setKeyPressHandler(self._keyPressHandler.bind(self));
-                  child._setEditInGroup();
-                  if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
-                     $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
-                  }
-                  child.subscribe('onTextChange', function(event, text){
-                     self._requireDialog = text != child._oldText;
-                  });
-               });
+               this.setInPlaceEditMode(true);
             }
+            // всем EditAtPlace задаем свой обработчик клика
+            this._iterateChildEditAtPlaces(function(child){
+               child._setClickHandler(self._clickHandler.bind(self));
+               child._setKeyPressHandler(self._keyPressHandler.bind(self));
+               child._setEditInGroup();
+               if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
+                  $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
+               }
+               child.subscribe('onTextChange', function(event, text){
+                  self._requireDialog = text != child._oldText;
+               });
+            });
             if (!this._options.editInPopup){
                this.subscribe('onFocusOut', function(){
                   self._applyEdit();

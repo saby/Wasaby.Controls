@@ -16,13 +16,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DropdownListMixin",
+   "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
+   "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ScrollContainer",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
@@ -32,10 +33,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
    "Core/helpers/dom&controls-helpers",
-   "i18n!SBIS3.CONTROLS.DropdownList"
+   "i18n!SBIS3.CONTROLS.DropdownList",
+   'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
 
       'use strict';
       /**
@@ -107,7 +109,29 @@ define('js!SBIS3.CONTROLS.DropdownList',
          return emptyItemProjection.at(0);
       }
 
-      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
+      function getSelectedItems(items, keys, idProperty) {
+         //Подготавливаем данные для построения на шаблоне
+         var list;
+         if (items && keys && keys.length > 0){
+            list = new List({
+               ownerShip: false
+            });
+            items.each(function (record, index) {
+               var id = record.get(idProperty);
+               for (var i = 0, l = keys.length; i < l; i++) {
+                  //Сравниваем с приведением типов, т.к. ключи могут отличаться по типу (0 !== '0')
+                  //Зачем такое поведение поддерживалось изначально не знаю. Подобные проверки есть и в других методах (к примеру setSelectedKeys)
+                  if (keys[i] == id) {
+                     list.add(record);
+                     return;
+                  }
+               }
+            });
+         }
+         return list;
+      }
+
+      var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
           * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
@@ -306,14 +330,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
          init: function(){
             DropdownList.superclass.init.apply(this, arguments);
          },
-         _modifyOptions: function(cfg, parsedCfg) {
+         _modifyOptions: function() {
+            var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;
             }
             cfg.pickerClassName += ' controls-DropdownList__picker';
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
-            return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
+            if (!cfg.selectedItems) {
+               cfg.selectedItems = getSelectedItems(cfg._items, cfg.selectedKeys, cfg.idProperty);
+            }
+            return cfg;
          },
 
          _setPickerContent : function () {
@@ -371,7 +399,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _onReviveItems: function(){
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
-            this._removeOldKeys();
+            //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
+            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
+               this._removeOldKeys();
+            }
             DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
@@ -398,8 +429,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _setSelectedEmptyRecord: function(){
             var oldKeys = this.getSelectedKeys();
-            this._drawSelectedValue(null, [this._emptyText]);
+            this._options.selectedItems && this._options.selectedItems.clear();
             this._options.selectedKeys = [null];
+            this._drawSelectedValue(null, [this._emptyText]);
             this._notifySelectedItems(this._options.selectedKeys,{
                added : [null],
                removed : oldKeys
@@ -826,9 +858,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _redrawHead: function(isDefaultIdSelected){
             var pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer()),
-                headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options)))();
+                headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options))();
             if (this._options.type !== 'fastDataFilter'){
-               var pickerHeadTpl = $(MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options)))());
+               var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
                pickerHeadTpl.click(function(e){
                   e.stopImmediatePropagation();
                });
@@ -911,7 +943,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                closeByExternalClick : true,
                activableByClick: false,
                targetPart: true,
-               template : MarkupTransformer(dotTplFnPicker)({
+               template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,
                   'footerTpl' : this._options.footerTpl
                })

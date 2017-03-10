@@ -6,7 +6,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    "Core/defaultRenders",
    "Core/constants",
    "js!SBIS3.CONTROLS.NumberTextBox",
-   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper'
+   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
+   'css!SBIS3.CONTROLS.MoneyTextBox'
 ], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
 
    'use strict';
@@ -24,10 +25,19 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
           true
       );
 
-      return value;
+      return value || '';
    }
 
-   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
+    /**
+     * Класс контрола "Поле ввода денег".
+     *
+     * @class SBIS3.CONTROLS.MoneyTextBox
+     * @extends SBIS3.CONTROLS.NumberTextBox
+     * @public
+     * @control
+     *
+     */
+   var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
          _decimalsContainer: null,
          _options: {
@@ -116,6 +126,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          }
       },
 
+      _useNativePlaceHolder: function () {
+        return false;
+      },
+
       _setNumericValue: function(value) {
          if (typeof(value) == 'string'){
             value = value.replace(/\s+/g,"");
@@ -131,6 +145,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setInputValue: function(value) {
+         this._updateCompatPlaceholderVisibility();
          this._inputField[0].innerHTML = value;
       },
 

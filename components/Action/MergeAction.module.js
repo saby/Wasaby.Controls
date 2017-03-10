@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MergeAction', [
    "Core/core-merge",
-   "js!SBIS3.CONTROLS.DialogActionBase",
+   "js!SBIS3.CONTROLS.Action.OpenDialog",
    "Core/IoC",
    "js!SBIS3.CONTROLS.MergeDialogTemplate"
 ], function (cMerge, OpenDialogAction, IoC) {
@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              * @remark
              * Набор полученных записей будет отображен на диалоге объединения.
              * @see testMergeMethodName
+             * @deprecated
              */
             queryMethodName: undefined,
             /**
@@ -118,8 +119,8 @@ define('js!SBIS3.CONTROLS.MergeAction', [
          return MergeAction.superclass._modifyOptions.apply(this, arguments);
       },
 
-      _notifyOnExecuted: function (meta) {
-         this._notify('onExecuted', meta)
+      _notifyOnExecuted: function (meta, result) {
+         this._notify('onExecuted', result)
       },
       /**
        * Устанавливает источник данных для окна объединения записей.
@@ -144,11 +145,6 @@ define('js!SBIS3.CONTROLS.MergeAction', [
             testMergeMethodName: this._options.testMergeMethodName,
             titleCellTemplate: this._options.titleCellTemplate
          });
-      },
-      _getDialogConfig: function (meta) {
-         var cfg = MergeAction.superclass._getDialogConfig.apply(this, arguments);
-         cfg.title = rk('Объединение наименований');
-         return cfg;
       }
    });
 

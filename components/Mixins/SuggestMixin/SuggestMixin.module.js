@@ -254,12 +254,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              * @variant true Показывать выпадающий блок при пустом списке.
              * @variant false Не показывать выпадающий блок при пустом списке.
              */
-            showEmptyList: true,
-            /**
-             * @noshow
-             * @deprecated
-             */
-            reverseItemsOnListRevert: true
+            showEmptyList: true
          },
          _resultBindings: {},                   /* {Object} Соответствие полей для подстановки в контекст */
          _delayTimer: null,                     /* {Object|null} Таймер задержки загрузки picker-а */
@@ -386,7 +381,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          if(list.getDataSource()) {
             this._delayTimer = setTimeout(function () {
                self._showLoadingIndicator();
-               self.hidePicker();
                self._loadDeferred = list.reload(self._options.listFilter).addCallback(function () {
                   if (self._checkPickerState(!self._options.showEmptyList)) {
                      self.showPicker();
@@ -637,7 +631,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             /* Изменяем видимость кнопки в зависимости от:
              1) Записей не найдено вовсе - показываем (по стандарту).
              2) Записи найдены, но есть ещё. */
-            if(!items.getCount()) {
+            if(!items || !items.getCount()) {
                showButton = true;
             } else {
                showButton = list._hasNextPage(items.getMetaData().more);
@@ -660,7 +654,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var showAllConfig = this._getShowAllConfig();
 
          this.hidePicker();
-         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, null);
+         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, showAllConfig.selectionType || null);
       },
 
       /**
@@ -679,7 +673,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       _onListDrawItems: function () {
          if (this._picker) {
             this._picker.getContainer().height('auto');
-            this._picker.recalcPosition(true);
+            this._picker.recalcPosition(true, true);
          }
       },
 
@@ -689,10 +683,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListItemSelect: function (id, item) {
          var def = new Deferred(),
-             items = this._getListItems(),
-             ctx = this._getBindingContext(),
-             self = this,
-             toSet = {};
+             items = this._getListItems();
 
          if (id === null || id === undefined) {
             return;
@@ -708,17 +699,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
          }
 
-         def.addCallback(function (item) {
-            self._notify('onListItemSelect', item, self._resultBindings);
-            /* Соберём все изменения в пачку,
-               чтобы контекст несколько раз не пересчитывался */
-            for (var field in self._resultBindings) {
-               if (self._resultBindings.hasOwnProperty(field)) {
-                  toSet[field] = item.get(self._resultBindings[field]);
-               }
+         def.addCallback(this._onListItemSelectNotify.bind(this, item));
+      },
+      _onListItemSelectNotify: function (item) {
+         var ctx = this._getBindingContext(),
+             toSet = {};
+         this._notify('onListItemSelect', item, this._resultBindings);
+         /* Соберём все изменения в пачку,
+          чтобы контекст несколько раз не пересчитывался */
+         for (var field in this._resultBindings) {
+            if (this._resultBindings.hasOwnProperty(field)) {
+               toSet[field] = item.get(this._resultBindings[field]);
             }
-            ctx.setValue(toSet, false, self._list);
-         });
+         }
+         ctx.setValue(toSet, false, this._list);
       },
 
       /**

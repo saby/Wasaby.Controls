@@ -57,9 +57,17 @@
          padding-right: @menu-header-icon-padding;
       }
    }
+   .controls-MenuItem-additional {
+      display: none;
+   }
+   &.controls-Menu-showAdditionalItems {
+      .controls-MenuItem-additional {
+         .flexbox();
+      }
+   }
+
    .controls-MenuItem {
       min-height: @menu-item-height;
-      max-height: 2 * @menu-item-height;
       height: auto;
       padding: @menu-item-default-padding;
    }
@@ -81,6 +89,11 @@
    }
 }
 
+.controls-Menu__Popup:not(.controls-MenuPicker__resetIconColor) {
+   .controls-Menu__header-icon {
+      color: @blue-dark-color !important;
+   }
+}
 .controls-Menu__submenu {
    display: none;
 }

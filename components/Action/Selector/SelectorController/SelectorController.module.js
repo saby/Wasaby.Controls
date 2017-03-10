@@ -6,14 +6,19 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
    "Core/helpers/collection-helpers",
+   "Core/core-instance",
+   "Core/core-merge",
+   "js!WS.Data/Source/SbisService",
+   "js!SBIS3.CONTROLS.Utils.Query",
+   "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!SBIS3.CONTROLS.SelectorWrapper",
    "js!WS.Data/Collection/List"
 ],
-    function ( CommandDispatcher,CompoundControl, Di, collectionHelpers) {
+    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, SbisService, Query, OpenDialogUtil) {
 
        'use strict';
 
-       var MULTISELECT_CLASS = 'controls-SelectorWrapper__multiselect';
+       var MULTISELECT_CLASS = 'controls-SelectorController__multiselect';
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
@@ -58,7 +63,23 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 /**
                  * @cfg {String} Устанавливает имя кнопки (см. {@link $ws.proto.Control#name}), клик по которой завершает выбор отмеченных элементов.
                  */
-                selectButton: 'SelectorControllerButton'
+                selectButton: 'SelectorControllerButton',
+                /**
+                 * @cfg {WS.Data/Source/ISource|Function|Object} Источник данных. Требуется для предзапроса.
+                 */
+                dataSource: null,
+                /**
+                 * @cfg {Object} Устанавливает фильтр данных.
+                 * @example
+                 * Фильтрация будет произведена по полям creatingDate и documentType, значения для которых берутся из контекста из полей selectedDocumentDate и selectedDocumentType соответственно.
+                 * <pre class="brush:xml">
+                 *     <options name="filter">
+                 *        <option name="creatingDate" bind="selectedDocumentDate"></option>
+                 *        <option name="documentType" bind="selectedDocumentType"></option>
+                 *     </options>
+                 * </pre>
+                 */
+                filter: null
              },
              _selectButton: null
           },
@@ -73,11 +94,13 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              if(this._options.selectedItems) {
                 if(Array.isArray(this._options.selectedItems)) {
                    this._options.selectedItems = Di.resolve('collection.list', {items: this._options.selectedItems});
-                } else {
-                   this._options.selectedItems = this._options.selectedItems.clone(true);
                 }
              } else {
                 this._options.selectedItems = Di.resolve('collection.list');
+             }
+
+             if(this._options.items) {
+                this._setContextItems(this._options.items);
              }
           },
 
@@ -134,7 +157,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              function onChangeSelection() {
                 if(self._selectButton && multiselect) {
-                   self._selectButton.show();
+                   self._selectButton[currentItems.getCount() ? 'show' : 'hide']();
                 }
              }
 
@@ -173,8 +196,27 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             */
           _selectComplete: function() {
              this._notify('onSelectComplete', this._options.selectedItems.clone());
+          },
+
+          _setContextItems: function(items){
+             this.getLinkedContext().setValue('items', items);
           }
        });
+
+       SelectorController.prototype.getComponentOptions = function(opt){
+          return OpenDialogUtil.getOptionsFromProto(this, opt);
+       };
+
+       SelectorController.prototype.getItemsFromSource = function (opt) {
+          var options = this.getComponentOptions(opt),
+              dataSource = options.dataSource;
+
+          return Query(dataSource, [
+             options.filter || {},
+             {},
+             0,
+             25]);
+       };
 
        return SelectorController;
 
