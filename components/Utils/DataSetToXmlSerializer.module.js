@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          "array" : true,
          "запись" : true,
          "выборка" : true,
-         "recordSet" : true,
+         "recordset" : true,
          "record" : true
       },
       _wordsToTranslate: {
