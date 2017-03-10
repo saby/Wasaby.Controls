@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.ListView',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!SBIS3.CONTROLS.CommonHandlers",
    "js!SBIS3.CONTROLS.Pager",
+   'js!SBIS3.CONTROLS.MassSelectionController',
    "js!SBIS3.CONTROLS.EditInPlaceHoverController",
    "js!SBIS3.CONTROLS.EditInPlaceClickController",
    "js!SBIS3.CONTROLS.ImitateEvents",
@@ -62,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function ( cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
              Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
-             TemplateUtil, CommonHandlers, Pager, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
+             TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
              Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
              Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
 
@@ -229,9 +230,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
           */
          /**
-          * @event onBeginAdd Происходит перед началом добавления записи по месту.
+          * @event onBeginAdd Происходит перед созданием в списке нового элемента коллекции.
+          * @remark
+          * Событие происходит при вызове команды {@link beginAdd} и при <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>добавлении по месту</a> из пользовательского интерфейса.
+          * В обработчике события можно установить инициализирующие значения полей для создаваемого элемента коллекции.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @returns {Object|WS.Data/Entity/Model} Инициализирующе данные для создаваемой записи.
+          * @example
+          * В качестве результата события передают Object или экземпляр класса {@link WS.Data/Entity/Model}.
+          * <pre>
+          *    myView.subscribe('onBeginAdd', function(eventObject) {
+          *
+          *       // инициализирующее значение для поля "Новинка"
+          *       eventObject.setResult({ 'Новинка': true });
+          *    });
+          * </pre>
+          * @see beginAdd
           */
          /**
           * @event onAfterBeginEdit Происходит после начала редактирования.
@@ -781,7 +794,14 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </ul>
                 * по умолчанию опция включена
                 */
-               contextMenu: true
+               contextMenu: true,
+               /**
+                * @cfg {Boolean} Использовать функционал выбора всех записей
+                * @remark Начиная с версии 3.7.5.100 данная опция будет удалена.
+                * Стандартным будет считаться поведение, useSelectAll = true.
+                * @deprecated
+                */
+               useSelectAll: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -948,7 +968,10 @@ define('js!SBIS3.CONTROLS.ListView',
               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
             } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
-               scrollContainer = scrollContainer[0] == window ? $('body') : scrollContainer;
+               // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
+               // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
+               // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
+               scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
                $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
@@ -1342,17 +1365,28 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(this._options.contextMenu && itemsActions && itemsActions.hasVisibleActions() && this._needProcessMouseEvent(event)) {
+            if(this._needShowContextMenu()) {
                if (!this._checkItemAction()) {
-                  if (this._hoveredItem && this._hoveredItem.container && !this._hoveredItem.container.hasClass('controls-editInPlace__editing') && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false') {
                      event.preventDefault();
                      itemsActions.showItemActionsMenu(align);
-                  }
                } else {
                   IoC.resolve('ILogger').info('ItemActionsGroup:', "Опция caption не задана у одного из элементов, для отображения контекстного меню укажите опцию");
                }
+               (this._hoveredItem && this._hoveredItem.container) && event.stopPropagation();
             }
-            event.stopPropagation();
+         },
+
+         _needShowContextMenu: function () {
+            var itemsActions = this.getItemsActions();
+
+            return this._options.contextMenu
+                && itemsActions
+                && itemsActions.hasVisibleActions()
+                && this._needProcessMouseEvent(event)
+                && this._hoveredItem
+                && this._hoveredItem.container
+                && !this._hoveredItem.container.hasClass('controls-editInPlace__editing')
+                && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false'
          },
 
          /*
@@ -1529,6 +1563,36 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         /*MASS SELECTION START*/
+         /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
+         setSelectedAllNew: function(selected) {
+            this._getMassSelectionController().setSelectedAll(selected);
+         },
+
+         toggleSelectedAll: function() {
+            this._getMassSelectionController().toggleSelectedAll();
+         },
+
+         _getMassSelectionController: function() {
+            if (!this._massSelectionController) {
+               this._makeMassSelectionController();
+            }
+            return this._massSelectionController;
+         },
+
+         _makeMassSelectionController: function() {
+            this._massSelectionController = new MassSelectionController(this._getMassSelectorConfig());
+         },
+
+         _getMassSelectorConfig: function() {
+            return {
+               linkedObject: this,
+               idProperty: this._options.idProperty
+            }
+         },
+
+         /*MASS SELECTION END*/
+
          _loadFullData: function() {
             return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
          },
@@ -1620,6 +1684,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          reload: function () {
+            if (this._scrollBinder && this._options.saveReloadPosition){
+               var reloadOffset = this._getReloadOffset();
+               this._offset = reloadOffset;
+               this._scrollOffset.top = reloadOffset;
+               this._scrollOffset.bottom = reloadOffset;
+               if (reloadOffset > 0) {
+                  this.setInfiniteScroll('both', true);
+               }
+            }
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
@@ -1629,6 +1702,25 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._observeResultsRecord(false);
             return ListView.superclass.reload.apply(this, arguments);
+         },
+         /**
+          * Необходимо для того, что бы перезагружать список в той же позиции до которой доскролили
+          * @return {Number} оффсет, который будет отправлен в запросе для reload
+          */
+         _getReloadOffset: function(){
+            return this._limit * this._getCurrentPage();
+         },
+         /**
+          * Возвращает страницу навигации, до которой досткролили
+          */
+         _getCurrentPage: function() {
+            var page = 0;
+            if (this._scrollBinder) {
+               var scrollPage = this._scrollBinder._getScrollPage();
+               page = Math.floor(scrollPage.element.index() / this._limit);
+            }
+            // прибавим к полученой странице количество еще не загруженных страниц
+            return page + Math.floor((this._scrollOffset.top + this._limit) / this._limit);
          },
          /**
           * Метод установки/замены обработчика клика по строке.
@@ -1835,8 +1927,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlace();
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
-            if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom = this._limit;
+            if (this._options.saveReloadPosition) {
+               this._getScrollWatcher().scrollTo(0);
             }
          },
 
@@ -2353,7 +2445,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
-               if (this._scrollWatcher && !this._scrollWatcher.hasScroll()){
+               if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
                   this._scrollLoadNextPage();
                }
                if (this._scrollPager){
@@ -2378,10 +2470,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _addItems: function(newItems, newItemsIndex, groupId){
-            ListView.superclass._addItems.apply(this, arguments);
+         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId){
+            ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
+               if (action == IBindCollection.ACTION_ADD) {
+                  this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
+               } else if (action == IBindCollection.ACTION_REMOVE) {
+                  this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
+               }
             }
          },
 
@@ -2580,7 +2676,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _hasNextPage: function(more, offset) {
             if (this._infiniteScrollState.mode == 'up'){
-               return this._scrollOffset.top > 0;
+               return this._scrollOffset.top >= 0;
             } else {
                // Если загружена последняя страница, то вниз грузить больше не нужно
                // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
@@ -2589,80 +2685,71 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _loadNextPage: function() {
-            var offset = this._getNextOffset();
-            this._showLoadingIndicator();
-            this._toggleEmptyData(false);
-            //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-            this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
-               this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
-            this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
-            this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
-               //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
-               //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
-               this._loader = null;
-               //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-               var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+            if (this._dataSource) {
+               var offset = this._getNextOffset();
+               this._showLoadingIndicator();
+               this._toggleEmptyData(false);
+               //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
+                  this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
+               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
+                  //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+                  //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+                  this._loader = null;
+                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+                  var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
 
-               this._updateScrolOffset();
-               //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-               this.getItems().setMetaData(dataSet.getMetaData());
-               this._hideLoadingIndicator();
-               if (!hasNextPage) {
-                  this._toggleEmptyData(!this.getItems().getCount());
-               }
-               this._notify('onDataMerge', dataSet);
-               //Если данные пришли, нарисуем
-               if (dataSet.getCount()) {
-                  //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
-                  //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                  if (this._isSlowDrawing(this._options.easyGroup)) {
-                     this._needToRedraw = false;
+                  this._updateScrollOffset();
+                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                  this.getItems().setMetaData(dataSet.getMetaData());
+                  this._hideLoadingIndicator();
+                  if (!hasNextPage) {
+                     this._toggleEmptyData(!this.getItems().getCount());
                   }
-                  this._drawPage(dataSet);
-                  //И выключаем после отрисовки
-                  if (this._isSlowDrawing(this._options.easyGroup)) {
-                     this._needToRedraw = true;
+                  this._notify('onDataMerge', dataSet);
+                  //Если данные пришли, нарисуем
+                  if (dataSet.getCount()) {
+                     //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                     if (this._isSlowDrawing(this._options.easyGroup)) {
+                        this._needToRedraw = false;
+                     }
+                     this._drawPage(dataSet);
+                     //И выключаем после отрисовки
+                     if (this._isSlowDrawing(this._options.easyGroup)) {
+                        this._needToRedraw = true;
+                     }
+                  } else {
+                     // Если пришла пустая страница, но есть еще данные - догрузим их
+                     if (hasNextPage){
+                        this._scrollLoadNextPage();
+                     }
                   }
-               } else {
-                  // Если пришла пустая страница, но есть еще данные - догрузим их
-                  if (hasNextPage){
-                     this._scrollLoadNextPage();
-                  }
-               }
-            }, this)).addErrback(function (error) {
-               this._hideLoadingIndicator();
-               //Здесь при .cancel приходит ошибка вида DeferredCanceledError
-               return error;
-               }.bind(this));
-         },
-
-         _getNextOffset: function(){
-            if (this._getSourceNavigationType() == 'Offset') {
-               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-                  return this._scrollOffset.bottom;
-               } else {
-                  return this._scrollOffset.top;
-               }
-            } else {
-               if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-                  return this._scrollOffset.bottom + this._limit;
-               } else {
-                  return this._scrollOffset.top - this._limit;
-               }
+               }, this)).addErrback(function (error) {
+                  this._hideLoadingIndicator();
+                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                  return error;
+                  }.bind(this));
             }
          },
 
-         _updateScrolOffset: function(){
+         _getNextOffset: function(){
+            if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
+               return this._scrollOffset.bottom + this._limit;
+            } else {
+               return this._scrollOffset.top - this._limit;
+            }
+         },
+
+         _updateScrollOffset: function(){ 
             if (this._infiniteScrollState.mode === 'down' || this._infiniteScrollState.mode == 'demand') {
-               if (this._getSourceNavigationType() != 'Offset') {
+               //Если навигация по оффсетам, сдвиг произойдет в _onCollectionAddMoveRemove по общему механизму
+               if (this._getSourceNavigationType() !== 'Offset') {
                   this._scrollOffset.bottom += this._limit;
                }
             } else {
-               if (this._scrollOffset.top >= this._limit){
-                  this._scrollOffset.top -= this._limit;
-               } else {
-                  this._scrollOffset.top = 0;
-               }
+               this._scrollOffset.top -= this._limit;
             }
          },
 
@@ -2675,14 +2762,15 @@ define('js!SBIS3.CONTROLS.ListView',
                at = {at: 0};
             }
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
+            var items;
             if (this._infiniteScrollState.mode == 'down') {
-               this.getItems().append(dataSet);
+               items = this.getItems().append(dataSet);
             } else {
-               this.getItems().prepend(dataSet);
+               items = this.getItems().prepend(dataSet);
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
-               this._drawItems(dataSet.toArray(), at);
+               this._drawItems(items, at);
             }
 
             this._needScrollCompensation = false;
@@ -3176,38 +3264,36 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          /**
-          * Добавляет новый элемента коллекции.
+          * Создаёт в списке новый элемент коллекции.
           * @remark
-          * Команда применяется для создания нового элемента коллекции без использования диалога редактирования.
-          * Схожим функционалом обладает автоматическое добавление по месту представлений данных (см. опцию {@link editMode}).
-          * <br/>
-          * Полный пример использования команды для создания новых элементов коллекции в иерархическом списке вы можете найти {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ здесь}.
-          * <br/>
-          * Команда поддерживает инициацию добавления по месту для заранее подготовленной записи (см. примеры).
-          * @param {BeginEditOptions} [options] Параметры вызова команды.
-          * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
+          * Команда инициирует создание в списке нового элемента коллекции через функционал <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>Добавление по месту</a>.
+          * При создании элемента коллекции происходит событие {@link onBeginAdd}.
+          * @param {Object} [options] Параметры вызова команды.
+          * @param {String|Number} [options.parentId] Идентификатор узла, в который добавляют элемент коллекции. Параметр актуален для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>ирерахических списков</a>.
+          * @param {String} [options.addPosition=bottom] Расположение созданного элемента коллекции в режиме редактирования.
+          * <ul>
+          *     <li>top - отображается в начале списка;</li>
+          *     <li>bottom - отображается в конце списка.</li>
+          * </ul>
+          * @param {WS.Data/Entity/Model|Object} [options.preparedModel] Модель, используемая, чтобы предустановить значения полей созданного элемента коллекции.
+          * @param {Boolean} [withoutActivateEditor=false] В значении true в режиме редактирования созданного элемента коллекции фокус не установлен ни на один из редакторов (см. {@link SBIS3.CONTROLS.DataGridView/Columns.typedef editor}).
           * @example
-          * <u>Пример 1.</u> Частный случай вызова команды для создания нового узла иерархии внутри другого узла:
+          * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
-          * this.sendCommand('beginAdd', {parentId: 'parentBranchId'});
-          * </pre>
-          * <u>Пример 2.</u> Добавления по месту для заранее подготовленной записи. Таким образом добавление по месту запускается синхронно и без единого запроса к бизнес-логике.
-          * <i>Вариант 1.</i>
-          * <pre>
-          * ListView.getDataSource().create().addCallback(function(preparedModel){...};
-          * </pre>
-          * <i>Вариант 2.</i>
-          * <pre>
-          * ListView.beginAdd({ preparedModel: preparedModel });
+          * var commandParams = {
+          *     parentId: myView.getCurrentRoot(),
+          *     preparedModel: {
+          *         'Наименование': 'ООО "Тензор"',
+          *     },
+          *     withoutActivateEditor: true
+          * };
+          * myView.sendCommand('beginAdd', commandParams);
           * </pre>
           * @returns {*|Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
           * @private
           * @command beginAdd
+          * @see onBeginAdd
           * @see sendCommand
-          * @see activateItem
-          * @see beginEdit
-          * @see cancelEdit
-          * @see commitEdit
           */
          _beginAdd: function(options, withoutActivateEditor) {
             if (!options) {
@@ -3304,6 +3390,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._listNavigation) {
                this._listNavigation.destroy();
+            }
+            if (this._massSelectionController) {
+               this._massSelectionController.destroy();
             }
             ListView.superclass.destroy.call(this);
          },
@@ -3702,7 +3791,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(movedItems, target, position);
+            return this._getMover().move(movedItems, target, position).addCallback(function(){
+               //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
+               //и рассинхронизурутся записи в items и selectItems 💩
+               this.setSelectedKeys(this.getSelectedKeys());
+            }.bind(this));
          },
          //endregion moveMethods
          /**

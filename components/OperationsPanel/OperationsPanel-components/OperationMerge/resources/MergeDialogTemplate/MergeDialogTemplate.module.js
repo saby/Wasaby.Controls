@@ -80,11 +80,18 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
         _initItems: function() {
             var
                 self = this,
-                dataSource = this._options.dataSource,
-                binding = dataSource.getBinding(),
-                queryMethodName = binding.query;
-            binding.query = this._options.queryMethodName || queryMethodName;
-            dataSource.query((new Query).where({
+                originalDataSource = this._options.dataSource,
+                binding = originalDataSource.getBinding(),
+                //TODO: из-за того что есть опция queryMethodName приходится создавать новый DataSource для запроса данных.
+                //Нужно отказаться от этой опции, и настраивать action сразу правильным DataSource.
+                mergeDataSource = new SbisServiceSource({
+                    idProperty: originalDataSource.getIdProperty(),
+                    endpoint: originalDataSource.getEndpoint(),
+                    binding: {
+                        query: this._options.queryMethodName || binding.query
+                    }
+                });
+            mergeDataSource.query((new Query()).where({
                 'Разворот': 'С разворотом',
                 'usePages': 'full',
                 'mergeIds': this._options.items
@@ -107,7 +114,6 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                     self._treeView.setSelectedKey(self._options.selectedKey);
                 }
             });
-            binding.query = queryMethodName;
         },
         onMergeButtonActivated: function() {
             var self = this,

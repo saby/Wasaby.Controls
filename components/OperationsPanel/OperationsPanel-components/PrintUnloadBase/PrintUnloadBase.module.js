@@ -88,7 +88,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             this._processMassOperations(title);
          } else {
             selectedRecordSet = new RecordSet({
-               adapter: items ? items.getAdapter() : 'adapter.json'
+               adapter: items ? items.getAdapter() : 'adapter.json',
+               model: items ? items.getModel() : 'entity.model'
             });
             selectedRecordSet.assign(selectedItems);
             this._applyOperation(selectedRecordSet);

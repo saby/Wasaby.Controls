@@ -175,22 +175,30 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                };
             if (this.getItems().getRecordById('history')) {
                this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
-                  var
-                     items = [],
-                     history = this.getItemInstance('history');
-                  for (var i in arrBL) {
-                     if (arrBL.hasOwnProperty(i)) {
-                        items.push({
-                           key: items.length,
-                           title: prepareHistory(arrBL[i]),
-                           value: arrBL[i]
-                        })
+                  //Проблема:
+                  //          После прихода данных тулбар уже может быть уничтожен
+                  //Решение 1:
+                  //          Хранить deferred вызова и убивать его в destroy
+                  //Решение 2:
+                  //          Проверять на isDestroyed
+                  if (!this.isDestroyed()) {
+                     var
+                        items = [],
+                        history = this.getItemInstance('history');
+                     for (var i in arrBL) {
+                        if (arrBL.hasOwnProperty(i)) {
+                           items.push({
+                              key: items.length,
+                              title: prepareHistory(arrBL[i]),
+                              value: arrBL[i]
+                           })
+                        }
                      }
+                     if (!arrBL.length) {
+                        history.setEnabled(false);
+                     }
+                     history.setItems(items);
                   }
-                  if (!arrBL.length) {
-                     history.setEnabled(false);
-                  }
-                  history.setItems(items)
                }.bind(this));
             }
          },
@@ -276,7 +284,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                      {color:'blue'},
                      {color:'purple'},
                      {color:'grey'}
-                  ]
+                  ],
+                  activableByClick: false
                });
 
                this._stylesPanel.subscribe('changeFormat', function(){

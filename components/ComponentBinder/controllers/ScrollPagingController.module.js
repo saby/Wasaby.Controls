@@ -31,11 +31,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          if (isTree){
             view.subscribe('onSetRoot', function(){
                var curRoot = view.getCurrentRoot();
-               if (this._currentRoot !== curRoot){
-                  this._options.paging.setPagesCount(0);
-                  this.updateScrollPages(true);
-                  this._currentRoot = curRoot;
-               }
+               this._options.paging.setSelectedKey(0);
+               this._options.paging.setPagesCount(0);
+               this._currentScrollPage = 0;
+               this.updateScrollPages(true);
             }.bind(this));
 
             view.subscribe('onNodeExpand', function(){
@@ -56,7 +55,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }.bind(this));
 
          view._getScrollWatcher().subscribe('onScroll', function(){
-            var pageNumber = this.getScrollPage();
+            var pageNumber = this._calculateScrollPage();
             var paging = this._options.paging;
             if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
                if (pageNumber > paging.getPagesCount()) {
@@ -102,7 +101,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
       },
 
-      getScrollPage: function(){
+      _calculateScrollPage: function(){
          var view = this._options.view;
          if (this._options.view.isScrollOnBottom(true)){
             return this._scrollPages.length - 1;
@@ -113,6 +112,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                return i;
             }
          }
+      },
+
+      getScrollPage: function(){
+         return this._scrollPages[this._currentScrollPage];
       },
 
       updateScrollPages: function(reset){

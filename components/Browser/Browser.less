@@ -1,4 +1,5 @@
-.controls-Browser__view:not(.ws-sticky-header__header-container) .controls-ListView:not(.controls-ListView__dataLoaded) {
+.controls-Browser__view > .controls-ListView:not(.controls-ListView__dataLoaded),
+.controls-Browser__view :not(.ws-sticky-header__header-container) .controls-ListView:not(.controls-ListView__dataLoaded) {
    /* При фиксации заголовков все стили с оригинальной таблицы переносятся на ее копию в заголовках.
       Если фиксация заголовков происходит внутри ScrollContainer который находится внутри браузера
       (контенер для фиксации оказывается внутри браузера), то не устанавливаем минимальную высоту.

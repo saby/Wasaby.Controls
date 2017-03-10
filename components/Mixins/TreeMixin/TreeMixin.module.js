@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/core-functions",
    "Core/core-merge",
+   "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/helpers/functional-helpers",
    "Core/IoC",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC) {
+], function ( cFunctions, cMerge, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -594,7 +595,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _lastPath : [],
          _loadedNodes: {},
          _previousRoot: null,
-         _hier: []
+         _hier: [],
+         _hierPages: {}
       },
 
       $constructor : function(cfg) {
@@ -785,6 +787,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var itemParent = item.getParent();
          return itemParent ? itemParent.isExpanded() ? this._isVisibleItem(itemParent) : false : true;
       },
+
+      _getGroupItems: function(groupId) {
+         var
+            rootItems = [],
+            fullItems = this._getItemsProjection().getGroupItems(groupId);
+
+         for (var i = 0; i < fullItems.length; i++) {
+            if (this._canApplyGrouping(fullItems[i])) {
+               rootItems.push(fullItems[i]);
+            }
+         }
+         return rootItems;
+      },
+
       _getItemsForRedrawOnAdd: function(items, groupId) {
          var result = [];
          if (this._options.hierarchyViewMode) {
@@ -796,7 +812,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
                      prevGroupId = groupId;
-                     if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+                     if (this._getGroupItems(groupId).length <= items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
                      }
                   }
@@ -1053,6 +1069,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
 
+      _getReloadOffset: function(){
+         var offset;
+         if (this._hierPages[this.getCurrentRoot()] !== undefined) {
+            offset = this._hierPages[this.getCurrentRoot()] * this._limit;
+         } else {
+            offset = 0;
+         }
+         return offset;
+      },
+
       before: {
          _modifyOptions: function(cfg) {
             if (cfg.hierField) {
@@ -1063,7 +1089,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
          },
-         reload : function() {
+         reload: function() {
+            // сохраняем текущую страницу при проваливании в папку
+            if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
+               this._hierPages[this._previousRoot] = this._getCurrentPage();
+            }
             this._folderOffsets['null'] = 0;
             this._lastParent = undefined;
             this._lastDrawn = undefined;
@@ -1197,6 +1227,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       setCurrentRoot: function(key) {
          var
             filter = this.getFilter() || {};
+         // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
+         // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто на контейнер таблицы, но
+         // только в том случае, если ранее фокус реально был на элементе таблицы.
+         // https://inside.tensor.ru/opendoc.html?guid=7b093780-dc30-4f90-b443-0d6f96992490&des=
+         if (constants.browser.isIE && $.contains(this._container[0], document.activeElement)) {
+            this._container.focus();
+         }
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
          this._destroyEditInPlaceController();
          if (key !== undefined && key !== null) {

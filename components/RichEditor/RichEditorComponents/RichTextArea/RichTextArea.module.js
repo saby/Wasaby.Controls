@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "html!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
-   "js!SBIS3.Plugin.Source.LocalService",
+   "js!SBIS3.CORE.PluginManager",
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
    "Core/helpers/collection-helpers",
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
    'css!SBIS3.CONTROLS.RichTextArea'
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, LocalService, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
@@ -404,7 +404,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //Проблема утечки памяти через tinyMCE
             //Проверка на то созадвался ли tinyEditor
             if (this._tinyEditor && this._tinyReady.isReady()) {
-               this._tinyEditor.remove();
                this._tinyEditor.destroy();
                if (this._tinyEditor.theme ) {
                   if (this._tinyEditor.theme.panel) {
@@ -413,6 +412,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   this._tinyEditor.theme.panel = null;
                }
+               for (var key in this._tinyEditor) {
+                  if (this._tinyEditor.hasOwnProperty(key)) {
+                     this._tinyEditor[key] = null;
+                  }
+               }
+               this._tinyEditor.destroyed = true;
             }
             dcHelpers.trackElement(this._container, false);
             this._container.unbind('keydown keyup');
@@ -460,15 +465,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   event.preventDefault();
                   return false;
                },
-               //service создаётся каждый раз и destroy`тся каждый раз тк плагин может перезагрузиться и сервис протухнет
-               //см прохождение по задаче:https://inside.tensor.ru/opendoc.html?guid=c3362ff8-4a31-4caf-a284-c0832c4ac4d5&des=
-               service = new LocalService({
-                  endpoint: {
-                     address: 'Clipboard-1.0.1.0',
-                     contract: 'Clipboard'
-                  },
-                  options: { mode: 'silent' }
-               }),
                createDialog = function() {
                   cIndicator.hide();
                   require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CONTROLS.Button'], function(Dialog, Button) {
@@ -510,27 +506,28 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         }
                      });
                   });
-                  service.destroy();
                };
-
             cIndicator.show();
-
-            service.isReady().addCallback(function() {
-               service.call("getContentType", {}).addCallback(function (ContentType) {
-                  service.call(ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText', {}).addCallback(function (content) {
-                     cIndicator.hide();
-                     prepareAndInsertContent(content);
-                     if (typeof onAfterCloseHandler === 'function') {
-                        onAfterCloseHandler();
-                     }
-                     service.destroy();
-                  }).addErrback(function () {
+            PluginManager.getPlugin('Clipboard', '1.0.1.0', {silent: true}).addCallback(function(clipboard) {
+               if (clipboard.getContentType && clipboard.getHtml) {
+                  clipboard.getContentType().addCallback(function(ContentType) {
+                     clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
+                        .addCallback(function(content) {
+                           cIndicator.hide();
+                           prepareAndInsertContent(content);
+                           if (typeof onAfterCloseHandler === 'function') {
+                              onAfterCloseHandler();
+                           }
+                        }).addErrback(function() {
+                           createDialog();
+                        });
+                  }).addErrback(function() {
                      createDialog();
                   });
-               }).addErrback(function () {
+               } else {
                   createDialog();
-               });
-            }).addErrback(function () {
+               }
+            }).addErrback(function() {
                createDialog();
             });
          },
@@ -635,9 +632,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
+            size = size + 'px';
             //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
-            this._removeFormat('fontsize')
-            this._tinyEditor.execCommand('FontSize',false,  size + 'px');
+            this._removeFormat('fontsize', size);
+            this._tinyEditor.execCommand('FontSize', false,  size);
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
@@ -1074,12 +1072,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
-               self._notify('onInitEditor');
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
                editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,selectedMainText,additionalText', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
+               self._notify('onInitEditor');
             }.bind(this));
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
@@ -1396,10 +1394,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
             
          _prepareImageURL: function(fileobj) {
-            //todo: preview
-            var
-               URL = fileobj.filePath ? fileobj.filePath : fileobj.url;
-            return URL;
+            return'/previewer' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
          },
             
          _replaceWhitespaces: function(text) {
@@ -1767,9 +1762,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * функция взята из textColor плагина для tinyMCE:
           * https://github.com/tinymce/tinymce/commit/2adfc8dc5467c4af77ff0e5403d00ae33298ed52
           */
-         _removeFormat : function(format) {
+         _removeFormat : function(format, value) {
             this._tinyEditor.focus();
-            this._tinyEditor.formatter.remove(format, {value: null}, null, true);
+            this._tinyEditor.formatter.remove(format, {value: value}, null, true);
             this._tinyEditor.nodeChanged();
          },
 

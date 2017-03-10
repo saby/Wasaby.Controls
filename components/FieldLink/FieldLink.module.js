@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
         * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
+        * @cssModifier controls-FieldLink__big-fontSize Выбранные записи в поле связи отображаются с увеличенным (15px) и жирным шрифтом.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
@@ -305,6 +306,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @depreacted
                  */
                 saveParentRecordChanges: false,
+                /* FIXME до перехода на переворот на проекции
+                 https://inside.tensor.ru/opendoc.html?guid=7ec62a96-9fdc-4295-b6f0-8afda6de5190&des=
+                 Задача в разработку 05.09.2016 R! В 3.7.4.200 Мальцев сделал более правильный и универсальный способ переворота на проекции. Нужно …
+                 */
+                reverseItemsOnListRevert: true,
                 /**
                  * @noshow
                  * @depreacted
@@ -387,7 +393,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  .subscribeTo(linkCollection, 'onClosePicker', this._onItemActivateItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onShowPicker', this._onItemActivateItemsCollection.bind(this))
                  .subscribeTo(linkCollection, 'onFocusIn', function() {
-                    self.setActive(true);
+                     // Из за того, что фокус устанавливается программно, нужно выставить флаг fromTouch - 
+                     // так как нажатие произошло на поле связи, но не на поле ввода, но фокус остался в поле ввода
+                     if (constants.browser.isMobileIOS && self._isInputVisible()) {
+                        self._fromTouch = true;
+                     }
+                     self.setActive(true);
                  });
 
              if(this._options.useSelectorAction) {
@@ -948,6 +959,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
 
           setDataSource: function(ds, noLoad) {
+             var source = this.getDataSource();
+
              this.once('onListReady', function(event, list) {
                 if(!list.getDataSource()) {
                    list.setDataSource(ds, noLoad);
@@ -956,8 +969,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              FieldLink.superclass.setDataSource.apply(this, arguments);
 
              /* Если в поле связи есть выбранные ключи, то после установки сорса надо
-                загрузить записи и отрисовать их */
-             if(!this._isEmptySelection()) {
+                загрузить записи и отрисовать их.
+                Если source был, то не будем вызывать лишнюю перерисовку. */
+             if(!this._isEmptySelection() && !source) {
                 this._loadAndDrawItems();
              }
           },
@@ -1039,7 +1053,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
                 при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
                 поэтому при перевороте проскролим вниз автодополнение */
-             this._processSuggestPicker();
+             this._scrollListToBottom();
           },
           
           // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
@@ -1080,19 +1094,25 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    side: 'left'
                 },
                 handlers: {
-                   onShow: function() {
-                      if (this._isSuggestPickerRevertedVertical()) {
-                         if (!this._listReversed) {
-                            this._reverseList();
-                         }
-                      } else {
-                         if (this._listReversed) {
-                            this._reverseList();
-                         }
-                      }
-                   }.bind(this)
+                   onShow: this._checkListItemRevert.bind(this)
                 }
              };
+          },
+
+          _checkListItemRevert: function(){
+             if(!this._options.reverseItemsOnListRevert) {
+                return;
+             }
+
+             if (this._isSuggestPickerRevertedVertical()) {
+                if (!this._listReversed) {
+                   this._reverseList();
+                }
+             } else {
+                if (this._listReversed) {
+                   this._reverseList();
+                }
+             }
           },
 
           _isSuggestPickerRevertedVertical: function() {
@@ -1102,7 +1122,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
              при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
              поэтому при перевороте проскролим вниз автодополнение */
-          _processSuggestPicker: function() {
+          _scrollListToBottom: function() {
              if(this._picker && this._isSuggestPickerRevertedVertical()) {
                 var pickerContainer = this._picker.getContainer();
                 pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
@@ -1113,7 +1133,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              после перерисовки надо вызвать метод, обрабатывающий положение автодополнение */
           _onListDrawItems: function() {
              FieldLink.superclass._onListDrawItems.apply(this, arguments);
-             this._processSuggestPicker();
+             this._checkListItemRevert();
+             this._scrollListToBottom();
           },
           /**
            * Обрабатывает нажатие клавиш, специфичных для поля связи

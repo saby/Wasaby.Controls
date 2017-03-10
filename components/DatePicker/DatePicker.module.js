@@ -166,6 +166,10 @@ define(
          }
       },
 
+      showPicker: function () {
+         DatePicker.superclass.showPicker.call(this);
+         this._chooserControl.setRange(this.getDate(), this.getDate());
+      },
       /**
        * Определение контента пикера. Переопределённый метод
        * @private
