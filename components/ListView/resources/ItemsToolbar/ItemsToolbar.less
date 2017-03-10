@@ -119,7 +119,7 @@
    }
    &.controls-ListView__bottomStyle {
       padding-bottom: @bottomStyle-items-toolbar-height;
-      .controls-ItemsToolbar {
+      > .controls-ItemsToolbar {
          right: 0;
          .controls-ItemActions__itemsContainer {
             margin-right: 0;
@@ -174,7 +174,7 @@
             }
          }
       }
-      .controls-ItemsToolbar .controls-ItemsToolbar__container {
+      > .controls-ItemsToolbar .controls-ItemsToolbar__container {
          margin: 3px 0 0 0;
          height: @bottomStyle-items-toolbar-height - 1;
       }
@@ -188,13 +188,13 @@
 
 .controls-ListView.controls-ListView__touchMode {
    &.controls-ListView__bottomStyle {
-      .controls-ItemsToolbar {
+       > .controls-ItemsToolbar {
          height: @bottomStyle-items-toolbar-height - 1 !important;
       }
    }
 
    &:not(.controls-ListView__bottomStyle) {
-      .controls-ItemsToolbar {
+      > .controls-ItemsToolbar {
          overflow: hidden;
          top: auto;
          bottom: 0;
