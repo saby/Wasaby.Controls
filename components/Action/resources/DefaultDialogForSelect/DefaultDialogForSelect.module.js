@@ -1,19 +1,16 @@
-/**
- * Created by as.suhoruchkin on 02.04.2015.
- */
-define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
+define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.SelectorController',
-   "html!SBIS3.CONTROLS.MoveDialogTemplate",
+   "html!SBIS3.CONTROLS.DefaultDialogForSelect",
    "Core/core-instance",
-   "html!SBIS3.CONTROLS.MoveDialogTemplate/resources/FolderTitleTpl",
+   "html!SBIS3.CONTROLS.DefaultDialogForSelect/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
-   "i18n!SBIS3.CONTROLS.MoveDialogTemplate",
-   'css!SBIS3.CONTROLS.MoveDialogTemplate'
+   "i18n!SBIS3.CONTROLS.DefaultDialogForSelect",
+   'css!SBIS3.CONTROLS.DefaultDialogForSelect'
 ], function(CommandDispatcher, SelectorController, dotTplFn, cInstance) {
 
-   var MoveDialogTemplate = SelectorController.extend({
+   var DefaultDialogForSelect = SelectorController.extend({
       _dotTplFn: dotTplFn,
 
       $protected: {
@@ -44,11 +41,9 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
       _onReady: function() {
          var
              filter = this._options.filter || {};
-         this._treeView = this.getChildControlByName('MoveDialogTemplate-TreeDataGridView');
+         this._treeView = this.getChildControlByName('DefaultDialogForSelect-TreeDataGridView');
          if (cInstance.instanceOfModule(this.getDataSource(), 'SBIS3.CONTROLS.SbisServiceSource') || cInstance.instanceOfModule(this.getDataSource(),'WS.Data/Source/SbisService')) {
             filter['ВидДерева'] = "Только узлы";
-            //TODO: костыль написан специально для нуменклатуры, чтобы не возвращалась выборка всех элементов при заходе в пустую папку
-            filter['folderChanged'] = true;
          }
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
@@ -68,5 +63,5 @@ define('js!SBIS3.CONTROLS.MoveDialogTemplate', [
 
    });
 
-   return MoveDialogTemplate;
+   return DefaultDialogForSelect;
 });

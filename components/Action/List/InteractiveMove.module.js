@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
              * @property {Boolean} partialyReload Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
              */
             _options : {
-               template : 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+               template : 'js!SBIS3.CONTROLS.DefaultDialogForSelect',
                parentProperty: undefined,
                nodeProperty: undefined,
                /**

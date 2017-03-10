@@ -1,0 +1,46 @@
+   <div class="controls-DefaultDialogForSelect">
+   <div class="ws-window-titlebar-custom">
+      <component data-component="SBIS3.CONTROLS.Button" class="controls-DefaultDialogForSelect__activateMove">
+         <option name="name" value="DefaultDialogForSelect-moveButton"></option>
+         <option name="caption">{{=it.buttonCaption}}</option>
+         <option name="primary" type="boolean" value="true"></option>
+         <option name="command" value="applyMove"></option>
+      </component>
+   </div>
+   <component data-component="SBIS3.CONTROLS.SelectorWrapper">
+      <option name="content">
+         <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-DefaultDialogForSelect-TreeDataGridView">
+            <option name="name" value="DefaultDialogForSelect-TreeDataGridView"></option>
+            <options name="itemsActions" type="array"></options>
+            <option name="allowEnterToFolder" type="boolean">false</option>
+            <option name="showHead" type="boolean">false</option>
+            <option name="expand" type="boolean">false</option>
+            <option name="displayType" type="string">folders</option>
+            <option name="showPaging" type="boolean">false</option>
+            <option name="itemsDragNDrop" type="boolean">false</option>
+            <option name="allowEmptySelection" type="boolean">true</option>
+            <option name="partialyReload" type="boolean">{{=it.partialyReload}}</option>
+            <option name="infiniteScroll">{{=it.infiniteScroll}}</option>
+            <option name="pageSize">{{=it.pageSize}}</option>
+            <options name="columns" type="array">
+               <options>
+                  <option name="title"></option>
+                  <option name="field">{{=it.displayProperty}}</option>
+                  <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
+                  <option name="cellTemplate">html!SBIS3.CONTROLS.DefaultDialogForSelect/resources/FolderTitleTpl</option>
+               </options>
+            </options>
+            <option name="displayProperty">{{=it.displayProperty}}</option>
+            <option name="idProperty">{{=it.idProperty}}</option>
+            <option name="parentProperty">{{=it.parentProperty}}</option>
+            <option name="nodeProperty">{{=it.nodeProperty}}</option>
+            <options name="root">
+               <option name="{{=it.idProperty}}" type="null">null</option>
+               <option name="{{=it.displayProperty}}" type="string">{{=rk('Корень')}}</option>
+               <option name="{{=it.parentProperty}}" type="boolean">true</option>
+            </options>
+         </component>
+      </option>
+      <option name="linkedObjectName">DefaultDialogForSelect-TreeDataGridView</option>
+   </component>
+</div>
