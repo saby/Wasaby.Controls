@@ -323,7 +323,9 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._initializeContent();
       },
       _destroyFilter: function() {
-         this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         if (this._filterRecordSet) {
+            this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         }
          if (this._filterAccordion) {
             this._filterAccordion.destroy();
             this._filterAccordion = null;
