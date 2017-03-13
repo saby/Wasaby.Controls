@@ -643,8 +643,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _drawItemsCallback: function() {
-            if (this._isEmptyValueSelected()){
-               this._options.selectedKeys = [null];
+            if (this._isEmptyValueSelected()) {
+               if (this.getSelectedKeys()[0] !== null) {
+                  this._options.selectedKeys = [null];
+               }
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
@@ -701,7 +703,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               this._options.selectedKeys = [id];
+               this._options.selectedKeys.push(id);
             }
          },
          _setHasMoreButtonVisibility: function(){
