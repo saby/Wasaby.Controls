@@ -877,13 +877,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var vOffset = this._options.verticalAlign.offset || 0,
             hOffset = this._options.verticalAlign.offset || 0,
             scrollHeight = this._container.get(0).scrollHeight,
+            height = "",
             spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
             if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
-               var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+               //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
+               if (this._container.get(0).scrollHeight > this._windowSizes.height) {
+                  height = this._windowSizes.height;
+               }
+               // При рассчете свободного места снизу учитываем виртуальную клавиатуру
                spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
                if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
@@ -903,8 +908,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                      height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
                   }
                }
-               this._container.css('height', height);
             }
+            this._container.css('height', height);
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
