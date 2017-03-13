@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
+   "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/core-merge",
    "Core/constants",
@@ -23,12 +24,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.DataGridView'
 ],
    function(
+      CommandDispatcher,
       cFunctions,
       cMerge,
       constants,
@@ -52,6 +55,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cellTemplate,
       headColumnTpl,
       GroupTemplate,
+      SortingTemplate,
       colHelpers,
       strHelpers,
       dcHelpers
@@ -237,7 +241,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
 
-               if (column.headTemplate) {
+               //TODO здесь получается верстка, которая отдается в шаблонизатор.
+               //лучше прокинуть сам шаблон, чтобы он потом там позвался
+               if (column.sorting) {
+                  column.value = getSortingColumnTpl(column, cfg);
+               }
+               else if (column.headTemplate) {
                   column.value = getHeadColumnTpl(column);
                } else {
                   column.value = getDefaultHeadColumnTpl(column.title);
@@ -250,6 +259,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
 
             return headData;
+         },
+         getSortingColumnTpl = function(column, cfg) {
+            var
+               sorting = cfg.sorting,
+               sortingValue;
+
+            sorting.forEach(function(sortingElem){
+               if (sortingElem[column.field]) {
+                  sortingValue = sortingElem[column.field];
+               }
+            });
+
+            return TemplateUtil.prepareTemplate(SortingTemplate)({
+               column: column,
+               sortingValue: sortingValue
+            });
          },
          getHeadColumnTpl = function (column){
             return TemplateUtil.prepareTemplate(column.headTemplate)({
@@ -610,6 +635,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       init: function() {
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
+         CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
       },
 
       _prepareConfig: function() {
@@ -1360,6 +1386,33 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._movableElems = [];
          }
          DataGridView.superclass.destroy.call(this);
+      },
+      _setColumnSorting: function(colName) {
+         var sorting, newSorting, wasNoneSorting = true;
+         sorting = this.getSorting();
+
+         newSorting = sorting.filter(function(sortElem){
+            if (sortElem[colName] == 'ASC') {
+               wasNoneSorting = false;
+               return false;
+            }
+            else if (sortElem[colName] == 'DESC') {
+               sortElem[colName] = 'ASC';
+               wasNoneSorting = false;
+               return true;
+            }
+            else {
+               return true;
+            }
+
+         });
+
+         if (wasNoneSorting) {
+            var addSortObj = {};
+            addSortObj[colName] = 'DESC';
+            newSorting.push(addSortObj);
+         }
+         this.setSorting(newSorting);
       },
       /* ----------------------------------------------------------------------------
        ------------------- НИЖЕ ПЕРЕХОД НА ItemsControlMixin ----------------------
