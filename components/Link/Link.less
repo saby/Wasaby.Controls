@@ -23,12 +23,19 @@
     }
   }
 
+  &.controls-Link__underline {
+    text-decoration: underline;
+  }
+
   &.ws-disabled {
     color: @link-disabled-text-color;
     cursor: default;
     text-decoration: none;
     .controls-Link__icon{
       color: @icon-color-disabled !important;
+    }
+    &.controls-Link__underline {
+      text-decoration: none;
     }
   }
 
@@ -63,10 +70,6 @@
      color: inherit;
      text-decoration: inherit;
      cursor: inherit;
-  }
-
-  &.controls-Link__underline {
-    text-decoration: underline;
   }
 }
 .ws-is-ie10 {
