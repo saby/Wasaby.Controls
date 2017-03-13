@@ -212,7 +212,14 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
          this._setPanelRecord(this.getRecord());
-         this._processingRecordDeferred();
+
+         if (this._getDelayedRemoteWayDeferred()) {
+            this._processingRecordDeferred();
+         }
+         else {
+            //Если не дожидаемся ответа от БЛ, то до показа панели покажем оверлей
+            this._toggleOverlay(true);
+         }
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
@@ -241,7 +248,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _processingRecordDeferred: function() {
-         var receiptRecordDeferred = this._options._receiptRecordDeferred,
+         var receiptRecordDeferred = this._getDelayedRemoteWayDeferred(),
              needUpdateKey = !this._options.key,
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
              config = {
@@ -249,13 +256,18 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: eventName
              },
              self = this;
-         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')) {
+         if (receiptRecordDeferred) {
             receiptRecordDeferred.addCallback(function (record) {
                self.setRecord(record, needUpdateKey);
                return record;
             });
             this._prepareSyncOperation(receiptRecordDeferred, config, {});
          }
+      },
+
+      _getDelayedRemoteWayDeferred: function(){
+         var receiptRecordDeferred = this._options._receiptRecordDeferred;
+         return cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred') ? receiptRecordDeferred : null;
       },
 
       _onBeforeUnload: function(e) {
@@ -271,6 +283,10 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _onAfterShow: function() {
+         //Если не дожидаемся ответа от БЛ, то после показа панели скрываем оверлей
+         if (!this._getDelayedRemoteWayDeferred()) {
+            this._toggleOverlay(false);
+         }
          this._updateIndicatorZIndex();
          this._notifyOnAfterFormLoadEvent();
       },
