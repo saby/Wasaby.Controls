@@ -97,5 +97,20 @@ define(['js!SBIS3.CONTROLS.Utils.Sanitize'], function (Sanitize) {
 
          assert.equal(expect, Sanitize(text,{checkDataAttribute: false}));
       });
+
+      it('cut onclick', function (){
+         var
+            text = '<a class="someclass" title="some title" onclick="somefunction">some text</a>',
+            neededText = '<a class="someclass" title="some title">some text</a>';
+
+         assert.equal(neededText, Sanitize(text));
+      });
+
+      it('no cut openFile onclick', function (){
+         var
+            text = '<a class="someclass" title="some title" onclick="$ws.helpers.openFile(\'put to file\');">some text</a>';
+
+         assert.equal(text, Sanitize(text));
+      });
    });
 });
