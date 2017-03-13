@@ -28,24 +28,23 @@ define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
             filter: undefined,
             infiniteScroll: null,
             pageSize: undefined,
-            buttonCaption: 'Перенести'
+            buttonCaption: 'Выбрать'
          },
          treeView: undefined
       },
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
-         CommandDispatcher.declareCommand(this, 'applyMove', this._onSelectButtonActivated.bind(this));
+         CommandDispatcher.declareCommand(this, 'applySelect', this._onSelectButtonActivated.bind(this));
       },
+      
       _onReady: function() {
          var
              filter = this._options.filter || {};
          this._treeView = this.getChildControlByName('DefaultDialogForSelect-TreeDataGridView');
-         if (cInstance.instanceOfModule(this.getDataSource(), 'SBIS3.CONTROLS.SbisServiceSource') || cInstance.instanceOfModule(this.getDataSource(),'WS.Data/Source/SbisService')) {
-            filter['ВидДерева'] = "Только узлы";
-         }
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
       },
+
       _onSelectButtonActivated: function() {
          var moveTo = this._treeView.getSelectedKey();
          if (moveTo !== null) {

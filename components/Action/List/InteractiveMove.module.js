@@ -155,6 +155,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                   }
                }
             });
+            options.filter = options.filter || {};
+            if (!options.filter.hasOwnProperty('ВидДерева')) {
+               options.filter['ВидДерева'] = "Только узлы";
+            }
             if (options.pageSize) {
                //todo пейджинг нормально выглядит только с кнопкой еще, догрузка по скроллу не работает, потому что окно может не скролится, а обычный педжинг не отображает корень только на первой странице
                //нужен стандарт на пейджинг в окне перемещения.
@@ -207,6 +211,9 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                      }
                   }
                }, this);
+            }
+            if (!result.buttonCaption) {
+               result.buttonCaption = 'Перенести';
             }
             return result;
          },
