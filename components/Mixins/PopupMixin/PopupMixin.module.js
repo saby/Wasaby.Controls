@@ -559,6 +559,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
+      //Если клик был по другой всплывашке, определяем, нужно ли закрывать текущий popup
       _isLinkedPanel: function (target) {
          //По ошибке https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04 убрали всплытие события при mousedown (для чего описано в ошибке)
          //FloatArea теперь не может превентить событие, поэтому при клике по панели закрывается попап, из которого была открыта floatArea.
@@ -572,7 +573,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
             return target === this;
          }
-         return false;
+         //Если кликнули по инфобоксу - popup закрывать не нужно
+         var infoBox = $(target).closest('.ws-info-box');
+         return !!infoBox.length;
       },
 
       _checkTargetPosition: function () {
