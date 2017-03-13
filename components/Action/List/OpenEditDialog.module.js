@@ -109,6 +109,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
+         _overlay: undefined,
          _showedLoading: false,
          _openInNewTab: false
       },
@@ -138,11 +139,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _openComponent:function(meta, mode) {
          var openUrl = meta.item && meta.item.get(this._options.urlProperty);
-         if (this._needOpenInNewTab() && openUrl) {
-            window.open(openUrl);
-            return;
+
+         if (this._isExecuting){
+            //Если execute уже был вызван, а панель еще не открылась, игнорируем этот вызов execute, пока не отработает открытие панели из первого вызова.
          }
-         if (this._isNeedToRedrawDialog()) {
+         else if (this._needOpenInNewTab() && openUrl) {
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()) {
             this._saveRecord().addCallback(function () {
                OpenEditDialog.superclass._openComponent.call(this, meta, mode);
             }.bind(this));
@@ -284,12 +288,34 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
-      _showLoadingIndicator: function(){
+      _showLoadingIndicator: function() {
+         this._toggleOverlay(true);
          cIndicator.setMessage('Загрузка...', true);
       },
 
-      _hideLoadingIndicator: function(){
+      _hideLoadingIndicator: function() {
+         this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _toggleOverlay: function(show){
+         //При вызове execute, во время начала асинхронных операций при выставленной опции initializingWay = 'remote' || 'delayedRemote',
+         //закрываем оверлеем весь боди, чтобы пользователь не мог взаимодействовать с интерфейсом, пока не загрузится диалог редактирования,
+         //иначе пока не загрузилась одна панель, мы можем позвать открытие другой, что приведет к ошибкам.
+         if (!this._overlay) {
+            this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
+            this._overlay.css({
+               position: 'absolute',
+               top: 0,
+               left: 0,
+               right: 0,
+               bottom: 0,
+               'z-index': 9999,
+               opacity: 0
+            });
+            this._overlay.appendTo('body');
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _buildComponentConfig: function (meta) {
@@ -561,6 +587,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return cMerge(config, {
             handlers: {
                onAfterClose: function (e, meta) {
+                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, this._record);
                   self._dialog = undefined;
                }
