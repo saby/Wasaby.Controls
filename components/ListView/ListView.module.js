@@ -3635,7 +3635,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this._getMover().move(models, target.getModel(), position);
+                     this._getMover().move(models, target.getModel(), position).addCallback(function(){
+                        this.removeItemsSelectionAll();
+                     }.bind(this));
                   } else {
                      var currentDataSource = this.getDataSource(),
                         dragOwner = dragObject.getOwner(),
