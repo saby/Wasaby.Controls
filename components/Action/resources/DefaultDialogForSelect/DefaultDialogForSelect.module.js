@@ -33,10 +33,8 @@ define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
          treeView: undefined
       },
       $constructor: function() {
-         this._publish('onPrepareFilterOnMove', 'onMove');
-         
          this.subscribe('onReady', this._onReady.bind(this));
-         CommandDispatcher.declareCommand(this, 'applyMove', this._onMoveButtonActivated.bind(this));
+         CommandDispatcher.declareCommand(this, 'applyMove', this._onSelectButtonActivated.bind(this));
       },
       _onReady: function() {
          var
@@ -48,13 +46,12 @@ define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
       },
-      _onMoveButtonActivated: function() {
+      _onSelectButtonActivated: function() {
          var moveTo = this._treeView.getSelectedKey();
          if (moveTo !== null) {
             moveTo = this._treeView.getItems().getRecordById(moveTo);
          }
-         this._notify('onMove', this._options.records, moveTo);
-         this.sendCommand('close');
+         this.sendCommand('close', moveTo);
       },
 
       getDataSource: function() {

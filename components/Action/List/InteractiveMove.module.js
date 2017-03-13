@@ -136,21 +136,22 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          _doExecute: function(meta) {
             meta = meta || {};
             meta.movedItems = meta.movedItems || meta.records || this.getSelectedItems();
-            this._openComponent(meta);
+            return InteractiveMove.superclass._doExecute.call(this, meta);
          },
 
          _buildComponentConfig: function(meta) {
-            var self = this,
-               options = cMerge(meta.componentOptions||{}, this._getComponentOptions());
+            var
+               options = cMerge(meta.componentOptions||{}, this._getComponentOptions()),
+               movedItems = meta.movedItems;
             cMerge(options, {
                linkedView: this._getListView(),
                dataSource: this.getDataSource(),
                parentProperty: this._options.parentProperty,
                nodeProperty: this._options.nodeProperty,
-               records: meta.movedItems,
+               records: movedItems,
                handlers: {
-                  onMove: function(e, movedItems, target) {
-                     self._move(movedItems, target);
+                  onSelectComplete: function(event, list) {
+                     this.sendCommand('close', list.at(0));
                   }
                }
             });
@@ -164,7 +165,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
-            this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
+            return this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
@@ -178,7 +179,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                movedItems = meta.movedItems;
             cMerge(config, {
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               opener: this._getListView()
+               opener: this._getListView(),
             }, {preferSource: true});
             return config;
          },
@@ -208,8 +209,13 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                }, this);
             }
             return result;
-         }
+         },
 
+         _notifyOnExecuted: function (meta, result) {
+            this._move(meta.movedItems, result).addBoth(function () {
+               InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
+            }.bind(this));
+         }
       });
       return InteractiveMove;
    }
