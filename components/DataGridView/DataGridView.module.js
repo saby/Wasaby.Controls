@@ -889,15 +889,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (!this._thead) {
                this._bindHead();
             }
-            var needShowScroll = this._isTableWide();
-
-            this._isPartScrollVisible ?
-               needShowScroll ?
-                  this.updateScrollAndColumns() : this._hidePartScroll() :
-               needShowScroll ?
-                  this._showPartScroll() : this._hidePartScroll();
-
-            this._findMovableCells();
+            this._updatePartScroll();
          }
          DataGridView.superclass._drawItemsCallback.call(this);
       },
@@ -914,8 +906,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
          this._containerOffsetWidth = this.getContainer().outerWidth();
-         if(this._isPartScrollVisible) {
-            this._updatePartScrollWidth();
+         if(this.hasPartScroll()) {
+            this._updatePartScroll();
          }
       },
       //********************************//
@@ -1033,6 +1025,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /***********************/
       hasPartScroll: function() {
          return this._options.startScrollColumn !== undefined;
+      },
+
+      _updatePartScroll: function() {
+         var needShowScroll = this._isTableWide();
+
+         this._isPartScrollVisible ?
+            needShowScroll ?
+               this.updateScrollAndColumns() : this._hidePartScroll() :
+            needShowScroll ?
+               this._showPartScroll() : this._hidePartScroll();
       },
 
       _initPartScroll: function() {
@@ -1273,6 +1275,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(!this._isPartScrollVisible) {
             this._partScrollRow.removeClass('ws-hidden');
             this._updatePartScrollWidth();
+            this._findMovableCells();
             this._isPartScrollVisible = true;
          }
       },
