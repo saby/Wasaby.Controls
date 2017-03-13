@@ -389,7 +389,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
-               var self = this;
+               var
+                   self = this,
+                   needValidate;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
@@ -399,8 +401,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (endEditResult) {
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
+               needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
 
-               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
+               if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
