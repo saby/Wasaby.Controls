@@ -703,12 +703,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               //Устанавливаю новый id в тот же(по ссылке) массив, иначе биндинги не поймут, что массив не изменился, т.к. сравнивают по ссылке
-               //Сюда по идее попадаем, когда массив и так пустой, в хотфикс оставляю вычищающий цикл, в доброске в 375.20 его не будет
-               var selKeys = this.getSelectedKeys();
-               while(selKeys.length > 0){
-                  selKeys.pop();
-               }
                this._options.selectedKeys.push(id);
             }
          },
