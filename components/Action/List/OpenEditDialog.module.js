@@ -413,24 +413,17 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
        * Если из обработчиков событий и переопределяемых методов вернули не OpenEditDialog.ACTION_CUSTOM, то выполняем базовую логику.
        */
-      _actionHandler: function(event, model) {
+      _actionHandler: function(event, model, additionalData) {
          var eventName = event.name,
-            genericMethods = {
-               onDestroyModel: '_destroyModel',
-               onUpdateModel : '_updateModel',
-               onReadModel: '_readModel'
-            },
             args = Array.prototype.slice.call(arguments, 0),
             self = this,
             eventResult,
             actionResult,
-            methodResult,
-            genericMethod;
+            methodResult;
 
          args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
          eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
-         genericMethod = genericMethods[eventName];
          if (eventResult !== OpenEditDialog.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
@@ -438,18 +431,49 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (actionResult === OpenEditDialog.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
          }
-         if (actionResult !== undefined){
-            genericMethod = actionResult;
-         }
+
          if (actionResult instanceof Deferred){
             actionResult.addCallback(function(result){
-               if (self[genericMethod]){
-                  self[genericMethod].apply(this, args);
-               }
+               self._processingResult(eventName, result, model, additionalData);
             })
          } else {
-            if (this[genericMethod]){
-               this[genericMethod].apply(this, args);
+            this._processingResult(eventName, actionResult, model, additionalData);
+         }
+      },
+
+      _processingResult: function (eventName, result, editModel, additionalData) {
+         var genericMethods = {
+               onDestroyModel: '_destroyModel',
+               onUpdateModel: '_updateModel',
+               onReadModel: '_readModel'
+            },
+            self = this,
+            genericMethod = genericMethods[eventName];
+
+         if (cInstance.instanceOfModule(result, 'WS.Data/Collection/RecordSet')) {
+            if (additionalData.isNewRecord) { //Создание
+               additionalData.isNewRecord = false;
+               additionalData.ignoreLinkedModelKey = true;
+               result.each(function (record) {
+                  self._createRecord(record, 0, additionalData);
+               });
+            }
+            else { //Сохранение
+               if (result.getCount()) {
+                  additionalData.ignoreLinkedModelKey = true;
+                  result.each(function (record) {
+                     self._mergeRecords(record, null, additionalData);
+                  });
+               }
+               else {
+                  this._destroyModel(editModel);
+               }
+            }
+         }
+         else {
+            genericMethod = result || genericMethod;
+            if (this[genericMethod]) {
+               this[genericMethod](editModel, additionalData);
             }
          }
       },
@@ -530,11 +554,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _getCollectionRecord: function(model, additionalData){
          var collectionData = this._getCollectionData(),
-            index;
+             id,
+             index;
+
+         if (additionalData.ignoreLinkedModelKey || !this._linkedModelKey) {
+            id = this._getRecordId(model, additionalData.idProperty);
+         }
+         else {
+            id = this._linkedModelKey;
+         }
 
          if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
-            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey ||
-               this._getRecordId(model, additionalData.idProperty));
+            index = collectionData.getIndexByValue(collectionData.getIdProperty(), id);
             return collectionData.at(index);
          }
          return undefined;
