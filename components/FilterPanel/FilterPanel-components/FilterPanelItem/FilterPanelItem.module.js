@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
 ], function (cContext, CompoundControl, dotTplFn) {
    /**
     * Миксин, задающий любому контролу поведение работы с набором фильтров.
+    * Сейчас применяется для конфигурации фильтров на Панели фильтров (см. {@link SBIS3.CONTROLS.FilterPanel}).
     * @mixin SBIS3.CONTROLS.FilterPanelItem
     * @public
     * @author Авраменко Алексей Сергеевич
@@ -20,6 +21,11 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            /**
+             * @cfg {WS.Data/Entity/Record} Запись, описывающая конфигурацию фильтр.
+             * @remark
+             * Пример полей для записи, которая определяется миксином, описан в {@link SBIS3.CONTROLS.FilterPanel/FilterPanelItem.typedef}.
+             */
             item: null
          }
       },
