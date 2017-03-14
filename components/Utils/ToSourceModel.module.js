@@ -1,0 +1,3 @@
+define('ToSourceModel', [], function () {
+   return {};
+});
