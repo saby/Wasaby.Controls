@@ -1110,7 +1110,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
          hide: function() {
-            dcHelpers.trackElement(this._options.target, false);
+            if (this._options.target) {
+               dcHelpers.trackElement(this._options.target, false);
+            }
          }
       },
 
