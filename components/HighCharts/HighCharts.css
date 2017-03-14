@@ -1,6 +1,9 @@
 .ws-HighCharts {
-   -webkit-transform: none !important;
    position: relative;
+}
+
+.ws-is-mobile-platform .ws-HighCharts {
+   -webkit-transform: none !important;
 }
 
 .ws-HighCharts__plot {
