@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Pager', [
 
    /**
     * @class SBIS3.CONTROLS.Pager
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @category Decorate
     * @public

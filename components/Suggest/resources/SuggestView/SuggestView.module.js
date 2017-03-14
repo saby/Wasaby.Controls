@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
         * Если список один - то вкладки скрываются и отображается просто список.
         *
         * @class SBIS3.CONTROLS.SuggestView
-        * @extends $ws.proto.CompoundControl
+        * @extends SBIS3.CORE.CompoundControl
         *
         * @author Герасимов Александр Максимович
         *

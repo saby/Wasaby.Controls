@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * Контрол, содержащий несколько областей содержащих контент.
     * В каждый момент времени отображается только одна область. Отображаемая область может переключаться при клике на корешки вкладок.
     * @class SBIS3.CONTROLS.TabControl
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     *
     * @control
     * @author Красильников Андрей Сергеевич

@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
        *
        * @class SBIS3.CONTROLS.ListView
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @author Крайнов Дмитрий Олегович
        *
        * @mixes SBIS3.CORE.CompoundActiveFixMixin
