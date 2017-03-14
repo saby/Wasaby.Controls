@@ -569,7 +569,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          if (floatArea.length){
             target = floatArea.wsControl().getOpener();
             while (target && target !== this) {
-               target = target.getParent() || target.getOpener();
+               target = target.getParent() || (target.getOpener && target.getOpener());
             }
             return target === this;
          }
