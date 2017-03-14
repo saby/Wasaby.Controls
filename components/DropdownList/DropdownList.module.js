@@ -579,7 +579,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Ширина шапки не больше, чем ширина контейнера
             if (needResizeHead){
                this._pickerHeadContainer.width(containerWidth);
-               pickerHeaderWidth = containerWidth; //изменилась ширина контейрена, нужно взять актуальную
+               //изменилась ширина контейрена, нужно взять актуальную
+               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+               pickerHeaderWidth = containerWidth;
             }
 
             //Контейнер с итемами ресайзится в 2-х случаях
