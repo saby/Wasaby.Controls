@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        *    <li><b>fixed (Boolean)</b> - признак "Фиксированная колонка". Такие колонки всегда отображаются в списке, а соответствующая ей запись на Панели конфигурации недоступна для взаимодействия. Поэтому из пользовательского интерфейса нельзя изменить отображение фиксированной колонки.</li>
        *    <li><b>columnConfig (Object)</b> - конфигурация колонки (см. {@link SBIS3.CONTROLS.DataGridView/Columns.typedef columns}).</li>
        * </ol>
-       * @property {Array} selectedColumns Массив идентификаторов отображаемых колонок. Параметр актуален для колонок с опицей *fixed=false*.
+       * @property {Array} selectedColumns Массив идентификаторов отображаемых колонок. Параметр актуален для колонок с опцией *fixed=false*.
        */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.Browser', [
              *    ...
              * });
              * </pre>
-             * 3. В разметке реестра передана конфиугарция в опцию columnsConfig:
+             * 3. В разметке реестра передана конфигурация в опцию columnsConfig:
              * <pre>
              *     <ws:SBIS3.Engine.ReportBrowser columnsConfig="{{ _columnsConfig }}">
              *         ...
@@ -321,16 +321,20 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._getView().redraw();
       },
       /**
-       * Задает конфигурацию колонок
-       * @param config {Object} Конфигурация редактора колонок
+       * Устанавливает параметры для Панели конфигурации колонок списка.
+       * @param config {Object} Конфигурация.
+       * @see columnsConfig
+       * @see getColumnsConfig
        */
       setColumnsConfig: function(config) {
          this._options.columnsEditorConfig = config;
          this._notifyOnPropertyChanged('columnsEditorConfig');
       },
       /**
-       * Возвращает конфигурацию колонок
-       * @returns {Object} Конфигурация редактора колонок
+       * Возвращает параметры, установленные для Панели конфигурации колонок списка.
+       * @returns {Object} Конфигурация.
+       * @see columnsConfig
+       * @see setColumnsConfig
        */
       getColumnsConfig: function() {
          return this._options.columnsConfig;
