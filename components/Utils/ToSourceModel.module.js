@@ -25,13 +25,13 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
          if(dataSource && cInstance.instanceOfMixin(dataSource, 'WS.Data/Source/ISource')) {
             dataSourceModel = dataSource.getModel();
             /* Создадим инстанс модели, который указан в dataSource,
-               чтобы по нему проверять модели которые выбраны в поле связи */
+             чтобы по нему проверять модели которые выбраны в поле связи */
             dataSourceModelInstance = getModel(dataSourceModel, {});
 
             /* FIXME гразный хак, чтобы изменение рекордсета не влекло за собой изменение родительского рекорда
-               Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
-               Задача:
-               https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
+             Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
+             Задача:
+             https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
             if(saveParentRecordChanges) {
                parent = items._getMediator().getParent(items);
 
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
 
             Chain(items).each(function(rec, index) {
                /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
-                  чтобы не было конфликтов при мерже полей этих записей */
+                чтобы не было конфликтов при мерже полей этих записей */
                if(dataSourceModelInstance._moduleName !==  rec._moduleName) {
                   (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
                   if(cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
