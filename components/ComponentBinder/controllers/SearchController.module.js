@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.SearchController',
             doNotRespondOnReset: null,
             breadCrumbs: null,
             backButton: null,
-            keyboardLayoutRevert: true
-
+            keyboardLayoutRevert: true,
+            hierarchyViewMode: true
          },
          _kbLayoutRevertObserver: null,
          _firstSearch: true,
@@ -68,7 +68,11 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          filter[searchParamName] = text;
-         view._options.hierarchyViewMode = true;
+         if(self._options.hierarchyViewMode) {
+            view._options.hierarchyViewMode = true;
+         } else {
+            view.setExpand(true);
+         }
          view.setHighlightText(text, false);
          view.setHighlightEnabled(true);
 
@@ -168,7 +172,11 @@ define('js!SBIS3.CONTROLS.SearchController',
             view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
          });
          this._searchMode = false;
-         view._options.hierarchyViewMode = false;
+         if(this._options.hierarchyViewMode) {
+            view._options.hierarchyViewMode = false;
+         } else {
+            view.setExpand(false);
+         }
          //Если мы ничего не искали, то и сбрасывать нечего
          if (this._firstSearch) {
             return;
@@ -299,7 +307,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             }
 
             // переводим фокус на view и устанавливаем активным первый элемент, если поле пустое, либо курсор стоит в конце поля ввода
-            if ((event.which == constants.key.tab || event.which == constants.key.down) && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
+            if (event.which == constants.key.down && (this.getText() === '' || this.getText().length === this._inputField[0].selectionStart)) {
                var selectedIndex = null,
                    itemsProjection = view._getItemsProjection();
                /* При поиске по дереву папки отображаются, как Хлебные крошки

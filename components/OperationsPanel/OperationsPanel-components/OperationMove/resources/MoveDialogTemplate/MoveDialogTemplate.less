@@ -1,6 +1,7 @@
 .controls-MoveDialogTemplate {
    height: 100%;
    min-width: @controls-movedialog-min-width;
+   overflow-y: auto;
 
    .controls-MoveDialogTemplate-TreeDataGridView {
       padding: @controls-movedialog-padding;
@@ -9,8 +10,10 @@
       width: 100%;
    }
 }
-.controls-MoveDialogTemplate__activateMove {
-   position: absolute;
-   right: @controls-movedialog-activate-right;
-   top: @controls-movedialog-activate-top;
+.ws-window-titlebar-custom {
+   .controls-MoveDialogTemplate__activateMove {
+      position: absolute;
+      right: @controls-movedialog-activate-right;
+      top: @controls-movedialog-activate-top;
+   }
 }

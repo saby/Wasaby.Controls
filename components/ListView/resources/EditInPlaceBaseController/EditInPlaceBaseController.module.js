@@ -389,7 +389,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
-               var self = this;
+               var
+                   self = this,
+                   needValidate;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
@@ -399,8 +401,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (endEditResult) {
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
+               needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
 
-               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
+               if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
@@ -430,6 +433,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         self._acceptChanges(eip, eipRecord);
                      }).addErrback(function (error) {
                         fcHelpers.alert(error);
+                        return error;
                      });
                   } else {
                      this._acceptChanges(eip, eipRecord);
@@ -486,7 +490,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
-                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
+                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : null);
                            }
                            //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
                            //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.

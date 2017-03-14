@@ -69,6 +69,13 @@ define('js!SBIS3.CONTROLS.SearchMixin',
          },
          destroy : function() {
             this._clearSearchDelay();
+         },
+         init: function () {
+            /* Чтобы была возможность сбросить поиск, если контрол создаётся с уже проставленной опцией text */
+            var text = this.getText();
+            if(text && text.length >= this._options.startCharacter) {
+               this._onResetIsFired = false;
+            }
          }
       },
 

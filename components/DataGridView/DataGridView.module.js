@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
+   "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/core-merge",
    "Core/constants",
@@ -11,7 +12,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/footTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
@@ -24,12 +24,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.DataGridView'
 ],
    function(
+      CommandDispatcher,
       cFunctions,
       cMerge,
       constants,
@@ -41,7 +43,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       headTpl,
       footTpl,
       resultsTpl,
-      MarkupTransformer,
       DragAndDropMixin,
       ImitateEvents,
       groupByTpl,
@@ -54,6 +55,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cellTemplate,
       headColumnTpl,
       GroupTemplate,
+      SortingTemplate,
       colHelpers,
       strHelpers,
       dcHelpers
@@ -239,7 +241,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
 
-               if (column.headTemplate) {
+               //TODO здесь получается верстка, которая отдается в шаблонизатор.
+               //лучше прокинуть сам шаблон, чтобы он потом там позвался
+               if (column.sorting) {
+                  column.value = getSortingColumnTpl(column, cfg);
+               }
+               else if (column.headTemplate) {
                   column.value = getHeadColumnTpl(column);
                } else {
                   column.value = getDefaultHeadColumnTpl(column.title);
@@ -253,13 +260,29 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             return headData;
          },
+         getSortingColumnTpl = function(column, cfg) {
+            var
+               sorting = cfg.sorting,
+               sortingValue;
+
+            sorting.forEach(function(sortingElem){
+               if (sortingElem[column.field]) {
+                  sortingValue = sortingElem[column.field];
+               }
+            });
+
+            return TemplateUtil.prepareTemplate(SortingTemplate)({
+               column: column,
+               sortingValue: sortingValue
+            });
+         },
          getHeadColumnTpl = function (column){
-            return MarkupTransformer(TemplateUtil.prepareTemplate(column.headTemplate)({
+            return TemplateUtil.prepareTemplate(column.headTemplate)({
                column: column
-            }));
+            });
          },
          getDefaultHeadColumnTpl = function(title){
-            return MarkupTransformer(headColumnTpl({title: title}));
+            return headColumnTpl({title: title});
          },
          prepareResultsData = function (cfg, headData, resultsRecord) {
             var data = [], value, column;
@@ -284,7 +307,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                };
                //TODO в рамках совместимости, выпилить как все перейдут на отрисовку колонки через функцию в resultsTpl
                //{{=column.resultTemplate(column.resultTemplateData)}}
-               data.push(MarkupTransformer(TemplateUtil.prepareTemplate(column.resultTemplate)(column.resultTemplateData)));
+               data.push(TemplateUtil.prepareTemplate(column.resultTemplate)(column.resultTemplateData));
             }
             headData.results = data;
             headData.item = resultsRecord;//тоже в рамках совместимости для 230 версии, что с этим делать написано чуть выше
@@ -612,6 +635,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       init: function() {
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
+         CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
       },
 
       _prepareConfig: function() {
@@ -645,8 +669,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
 
-               if(colValue) {
-                  colValueText = colValue.innerText;
+               if(colValue && !colValue.getAttribute('title')) {
+                  colValueText = strHelpers.escapeHtml(colValue.innerText);
 
                   if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
@@ -752,7 +776,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData = prepareHeadData(this._options);
          headData.columnsScrollPosition = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
-         headMarkup = MarkupTransformer(this._options.headTpl(headData));
+         headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
 
          var newTHead = $(headMarkup);
@@ -779,7 +803,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _redrawFoot: function(){
          var footData = prepareHeadData(this._options),
-             newTFoot = $(MarkupTransformer(this._options._footTpl(footData)));
+             newTFoot = $(this._options._footTpl(footData));
 
          if (this._tfoot && this._tfoot.length){
             this._destroyControls(this._tfoot);
@@ -865,15 +889,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (!this._thead) {
                this._bindHead();
             }
-            var needShowScroll = this._isTableWide();
-
-            this._isPartScrollVisible ?
-               needShowScroll ?
-                  this.updateScrollAndColumns() : this._hidePartScroll() :
-               needShowScroll ?
-                  this._showPartScroll() : this._hidePartScroll();
-
-            this._findMovableCells();
+            this._updatePartScroll();
          }
          DataGridView.superclass._drawItemsCallback.call(this);
       },
@@ -890,8 +906,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
          this._containerOffsetWidth = this.getContainer().outerWidth();
-         if(this._isPartScrollVisible) {
-            this._updatePartScrollWidth();
+         if(this.hasPartScroll()) {
+            this._updatePartScroll();
          }
       },
       //********************************//
@@ -1009,6 +1025,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /***********************/
       hasPartScroll: function() {
          return this._options.startScrollColumn !== undefined;
+      },
+
+      _updatePartScroll: function() {
+         var needShowScroll = this._isTableWide();
+
+         this._isPartScrollVisible ?
+            needShowScroll ?
+               this.updateScrollAndColumns() : this._hidePartScroll() :
+            needShowScroll ?
+               this._showPartScroll() : this._hidePartScroll();
       },
 
       _initPartScroll: function() {
@@ -1249,6 +1275,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(!this._isPartScrollVisible) {
             this._partScrollRow.removeClass('ws-hidden');
             this._updatePartScrollWidth();
+            this._findMovableCells();
             this._isPartScrollVisible = true;
          }
       },
@@ -1363,6 +1390,33 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          DataGridView.superclass.destroy.call(this);
       },
+      _setColumnSorting: function(colName) {
+         var sorting, newSorting, wasNoneSorting = true;
+         sorting = this.getSorting();
+
+         newSorting = sorting.filter(function(sortElem){
+            if (sortElem[colName] == 'ASC') {
+               wasNoneSorting = false;
+               return false;
+            }
+            else if (sortElem[colName] == 'DESC') {
+               sortElem[colName] = 'ASC';
+               wasNoneSorting = false;
+               return true;
+            }
+            else {
+               return true;
+            }
+
+         });
+
+         if (wasNoneSorting) {
+            var addSortObj = {};
+            addSortObj[colName] = 'DESC';
+            newSorting.push(addSortObj);
+         }
+         this.setSorting(newSorting);
+      },
       /* ----------------------------------------------------------------------------
        ------------------- НИЖЕ ПЕРЕХОД НА ItemsControlMixin ----------------------
        ---------------------------------------------------------------------------- */
@@ -1396,7 +1450,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
             }
-            value = MarkupTransformer((cellTpl)(tplOptions));
+            value = (cellTpl)(tplOptions);
          } else {
             if (
                Array.indexOf(this._options.ladder, column.field) > -1 &&

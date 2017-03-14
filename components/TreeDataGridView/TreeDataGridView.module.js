@@ -11,11 +11,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
+   'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    "Core/ConsoleLogger",
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender) {
+], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -172,6 +173,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._options._serverRender) {
             this._createAllFolderFooters();
          }
+         if (this._options.useSelectAll) {
+            this._makeMassSelectionController();
+         }
       },
 
       _getSearchBreadCrumbsWidth: function(){
@@ -196,6 +200,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._options.startScrollColumn && this._isSearchMode()){
          	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
          }
+      },
+
+      _makeMassSelectionController: function() {
+         this._massSelectionController = new MassSelectionHierarchyController(this._getMassSelectorConfig());
       },
 
       _drawItemsCallback: function() {
@@ -501,7 +509,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             if (data.get(this._options.nodeProperty)) {
-               this.toggleNode(id);
+               //В режиме "поиска" ветки не надо разворачивать
+               if (!this._options.hierarchyViewMode) {
+                  this.toggleNode(id);
+               }
             }
             else {
                this._activateItem(id);

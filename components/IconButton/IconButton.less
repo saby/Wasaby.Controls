@@ -5,7 +5,7 @@
 
    &.ws-disabled {
       border-color: @gray-ccc-color;
-      color: @gray-ccc-color !important;
+      color: @gray-ccc-color;
    }
    box-sizing: border-box;
 }
@@ -13,21 +13,21 @@
 .round-button-hover-mixin() {
   &:hover {
     border-color: @default-color;
-    color: @default-color !important;
+    color: @default-color;
     &.controls-IconButton__errorBorder {
       border-color: @button-icon-error-color;
-      color: @button-icon-error-color !important;
+      color: @button-icon-error-color;
       &.ws-disabled {
         border-color: @gray-ccc-color;
-        color: @gray-ccc-color !important;
+        color: @gray-ccc-color;
       }
     }
     &.controls-IconButton__doneBorder {
       border-color: @button-icon-done-color;
-      color: @button-icon-done-color !important;
+      color: @button-icon-done-color;
       &.ws-disabled {
         border-color: @gray-ccc-color;
-        color: @gray-ccc-color !important;
+        color: @gray-ccc-color;
       }
     }
   }
@@ -39,22 +39,22 @@
 
   &.controls-Click__active {
     &.icon-primary {
-      color: @blue-dark-color !important;
+      color: @blue-dark-color;
 
       &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
         border-color: @default-color;
-        color: @default-color !important;
+        color: @default-color;
 
 
       }
     }
      &.controls-IconButton__errorBorder {
         border-color: @button-icon-error-color;
-        color: @button-icon-error-color !important;
+        color: @button-icon-error-color;
      }
      &.controls-IconButton__doneBorder {
         border-color: @button-icon-done-color;
-        color: @button-icon-done-color !important;
+        color: @button-icon-done-color;
      }
   }
 
@@ -64,10 +64,10 @@
    }
 
    &.controls-IconButton__doneBorder {
-     color: @button-icon-done-color !important;
+     color: @button-icon-done-color;
    }
    &.controls-IconButton__errorBorder {
-     color: @button-icon-error-color !important;
+     color: @button-icon-error-color;
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color);
@@ -96,7 +96,7 @@
    }
    &.ws-disabled {
       cursor: default;
-      color: @icon-color-disabled !important;
+      color: @icon-color-disabled;
    }
 }
 .controls-IconButton__filter {
@@ -135,7 +135,7 @@
   .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
     &:hover {
       &.icon-primary {
-        color: @blue-dark-color !important;
+        color: @blue-dark-color;
       }
     }
     &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{

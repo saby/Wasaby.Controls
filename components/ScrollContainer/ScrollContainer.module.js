@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
       'js!SBIS3.CORE.FloatAreaManager',
+      'js!SBIS3.StickyHeaderManager',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager) {
 
       'use strict';
 
@@ -94,16 +95,17 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('.controls-ScrollContainer__content', this.getContainer());
+            this._showScrollbar = !cDetection.isMobileSafari && !cDetection.isMobileAndroid;
             //Под android оставляем нативный скролл
-            if (!cDetection.isMobileSafari && !cDetection.isMobileAndroid){
+            if (this._showScrollbar){
                this._initScrollbar = this._initScrollbar.bind(this);
                if (!cDetection.isIE8){
                   this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                }
                this._container.one('mousemove', this._initScrollbar);
                this._hideScrollbar();
-               this._subscribeOnScroll();
             }
+            this._subscribeOnScroll();
 
             // Что бы до инициализации не было видно никаких скроллов
             this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
@@ -119,14 +121,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onScroll: function(){
             var scrollTop = this._getScrollTop();
-            if (this._scrollbar){
+            if (this._showScrollbar && this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
          },
 
          _hideScrollbar: function(){
-            if (!cDetection.safari && !cDetection.chrome){
+            if (!cDetection.webkit){
                var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
                   };
@@ -160,6 +162,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
+               if (this._options.stickyContainer) {
+                  this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
+               }
             }
          },
 

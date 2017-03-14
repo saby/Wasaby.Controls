@@ -143,9 +143,17 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
-                target,
                 menuClassName = '',
-                parentContainer = this.getParent().getContainer();
+                parentContainer = this.getParent().getContainer(),
+                items = this.getItems().clone(),
+                target;
+
+            /* В меню комманды передавать нельзя, т.к. агрументы для комманды формируются динамически(выделенная строка),
+               поэтому надо клик обработать нам, и послать комманду с аргументами */
+
+            if (items.getFormat && items.getFormat().getFieldIndex('command') > 0) {
+               items.removeField('command');
+            }
 
             if(this._options.touchMode) {
                verticalAlign = TOUCH_ALIGN.verticalAlign;
@@ -162,7 +170,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
-               items: this.getItems(),
+               items: items,
                idProperty: this._options.idProperty,
                allowChangeEnable: false,
                displayProperty: 'caption',
@@ -289,14 +297,25 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * @private
           */
          _itemActivatedHandler: function(item) {
-            this._itemActionsButtons[item]['handler'].call(this._options.linkedControl,
-                this._activeItem.container,
-                this._activeItem.key,
-                this._activeItem.record);
+            //хэндлер на пункте может быть и не задан
+            var actionCommand = this._itemActionsButtons[item]['command'],
+                actionHandler;
 
-            /* В обработчике могут вызвать destroy */
-            if(!this.isDestroyed()) {
-               this._notify('onActionActivated', this._activeItem.key);
+            if(actionCommand){
+               CommandDispatcher.sendCommand(this, actionCommand, this._activeItem);
+            }
+            else {
+               actionHandler = this._itemActionsButtons[item]['handler'];
+               if (actionHandler) {
+                  actionHandler.call(this._options.linkedControl,
+                      this._activeItem.container,
+                      this._activeItem.key,
+                      this._activeItem.record);
+               }
+               /* В обработчике могут вызвать destroy */
+               if (!this.isDestroyed()) {
+                  this._notify('onActionActivated', this._activeItem.key);
+               }
             }
          },
 
@@ -351,7 +370,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var action = {
                isMainAction : item.get('isMainAction'),
                isContextAction : item.get('isContextAction'),
-               isVisible: true
+               isVisible: true,
+               command: item.get('command')
                 },
                 onActivated = item.get('onActivated');
 

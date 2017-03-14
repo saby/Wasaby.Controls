@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             this._getAllButton().setCaption('Ещё' + ' ' + (this._getListView().getItems().getCount() - 3));
         },
 
-        _onExecutedHandler: function(event, result) {
+        _onExecutedHandler: function(event, meta, result) {
             var
                 listView = this._getListView(),
                 items = listView.getItems();
@@ -174,6 +174,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             if (!this._selectorAction) {
                 this._selectorAction = new SelectorAction({
                     mode: 'floatArea',
+                    parent: this,
                     handlers: {
                         onExecuted: this._onExecutedHandler.bind(this)
                     }

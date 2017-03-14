@@ -59,7 +59,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
-         _linkedModelKey: undefined
+         _linkedModelKey: undefined,
+         _isExecuting: false //Открывается ли сейчас панель
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -110,13 +111,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
       _openComponent: function(meta, mode) {
          var config = this._getDialogConfig(meta);
-         if (this._dialog && (typeof this._dialog.isAutoHide == 'function') && !this._dialog.isAutoHide()) {
-            cMerge(this._dialog._options, config);
-            this._dialog.reload();
-         }
-         else {
-            this._createComponent(config, meta, mode || this._options.mode);
-         }
+         this._createComponent(config, meta, mode || this._options.mode);
       },
 
       _buildComponentConfig: function(meta) {
@@ -136,7 +131,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
-         else{
+         else {
+            this._isExecuting = true;
             this._dialog = new Component(config);
          }
       },
@@ -152,6 +148,14 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
+            opener: undefined,
+            side: 'left',
+            direction: '',
+            target: undefined,
+            offset: {
+               x: 0,
+               y: 0
+            },
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
          }, config)
       },
@@ -167,7 +171,12 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          var config = this._getDeafuiltDialogConfig(),
              compOptions = this._buildComponentConfig(meta),
              self = this;
-
+         colHelpers.forEach(config, function(defaultValue, key){
+            if (meta.hasOwnProperty(key)){
+               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + 'должна задаваться через meta.dialogOptions');
+               config[key] = meta[key];
+            }
+         });
          cMerge(config, meta.dialogOptions  ||  {});
          cMerge(config, {
             opener: this,
@@ -175,6 +184,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             componentOptions: compOptions,
             handlers: { 
                onAfterClose: function(e, result){
+                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, result);
                   self._dialog = undefined;
                },
@@ -182,6 +192,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                   self._notify('onBeforeShow');
                },
                onAfterShow: function(){
+                  self._isExecuting = false;
                   self._notify('onAfterShow');
                }
             }

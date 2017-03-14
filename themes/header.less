@@ -1,4 +1,4 @@
-.ws-header {
+.ws-header, .controls-Link.ws-header {
   .ws-header-mixin(@header-padding-left, @header-padding-right, @header-font, @header-color);
 }
 
@@ -6,11 +6,11 @@
   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigHeader-font, @bigHeader-color);
 }
 
-.ws-subheader {
+.ws-subheader, .controls-Link.ws-subheader {
   .ws-header-mixin(@header-padding-left, @header-padding-right, @subheader-font, @subheader-color);
 }
 
-.ws-bigSubheader {
+.ws-bigSubheader, .controls-Link.ws-bigSubheader {
   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
 }
 
@@ -26,21 +26,21 @@
   }
 }
 
-.ws-linkHeader {
+.ws-linkHeader, .controls-Link.ws-linkHeader {
   .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font, @link-header-color);
-  text-decoration: @link-header-text-decoration !important;
+  text-decoration: @link-header-text-decoration;
 
   &:after {
     display: inline-block;
     width: 8px;
     .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
-    margin-left: @link-header-after-margin-left !important;
+    margin-left: @link-header-after-margin-left;
   }
 
   &:hover {
-    color: @link-header-hover-color !important;
+    color: @link-header-hover-color;
     &:after {
-      color: @link-header-hover-after-color !important;
+      color: @link-header-hover-after-color;
     }
   }
 }
@@ -56,6 +56,10 @@
   &.controls-Checked__checked:before {
     content: @toggle-header-checked-before-content;
   }
+   
+   &.ws-disabled {
+      border: @toggle-header-border;
+   } 
 
   &, &.controls-Checked__checked {
     .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
@@ -94,19 +98,19 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-Link:not(.ws-disabled) {
-    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader{
-      &, &:hover {
+  .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
+    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
+      &:hover .controls-Link-link {
         text-decoration: @link-header-text-decoration;
       }
     }
-    &.ws-linkHeader {
-      &:hover, &.controls-Click__active:active {
+    &.ws-linkHeader:not(.controls-Link__disabledHover) {
+      &:hover {
         color: @link-header-hover-color;
       }
     }
     &.ws-header,  &.ws-bigSubheader, &.ws-subheader {
-      &:hover, &.controls-Click__active:active {
+      &:not(.controls-Link__disabledHover):hover {
         color: @primary-color;
       }
     }
@@ -119,19 +123,43 @@
     color: @toggle-header-hover-color;
   }
 
-  .controls-Button.ws-toggleHeader {
+  .controls-Button:not(.ws-disabled).ws-toggleHeader {
     &, &.controls-Checked__checked {
-      &, &:hover, &.controls-Click__active:active {
+      &:hover {
         border: @toggle-header-border;
         background: @toggle-header-background;
         font: @toggle-header-font;
       }
-
-      color: @toggle-header-color;
-
-      &:hover, &.controls-Click__active:active {
+      // TODO избавиться от каскада при переходе на абстрактную кнопку
+      &:hover.controls-Button {
         color: @toggle-header-hover-color;
+        border: none;
       }
+    }
+  }
+}
+
+.controls-Link {
+  &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
+    &.controls-Click__active:active {
+      text-decoration: @link-header-text-decoration;
+      color: @link-header-hover-color;
+    }
+  }
+}
+
+.controls-Button.ws-toggleHeader {
+  &, &.controls-Checked__checked {
+    &, &.controls-Click__active {
+      border: @toggle-header-border;
+      background: @toggle-header-background;
+      font: @toggle-header-font;
+    }
+
+    color: @toggle-header-color;
+
+    &.controls-Click__active {
+      color: @toggle-header-hover-color;
     }
   }
 }

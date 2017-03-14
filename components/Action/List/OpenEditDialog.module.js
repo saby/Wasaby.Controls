@@ -9,9 +9,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'Core/helpers/fast-control-helpers',
       'js!WS.Data/Entity/Record',
       'js!WS.Data/Di',
+      'js!SBIS3.CONTROLS.Utils.OpenDialog',
       'js!SBIS3.CORE.Dialog',
       'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, Dialog, FloatArea) {
+   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, OpenDialogUtil, Dialog, FloatArea) {
    'use strict';
 
    /**
@@ -108,6 +109,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
+         _overlay: undefined,
          _showedLoading: false,
          _openInNewTab: false
       },
@@ -137,11 +139,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _openComponent:function(meta, mode) {
          var openUrl = meta.item && meta.item.get(this._options.urlProperty);
-         if (this._needOpenInNewTab() && openUrl) {
-            window.open(openUrl);
-            return;
+
+         if (this._isExecuting){
+            //Если execute уже был вызван, а панель еще не открылась, игнорируем этот вызов execute, пока не отработает открытие панели из первого вызова.
          }
-         if (this._isNeedToRedrawDialog()) {
+         else if (this._needOpenInNewTab() && openUrl) {
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()) {
             this._saveRecord().addCallback(function () {
                OpenEditDialog.superclass._openComponent.call(this, meta, mode);
             }.bind(this));
@@ -201,28 +206,42 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _createComponent: function(config, meta, mode){
          var initializingWay = config.componentOptions.initializingWay,
-            dialogComponent = config.template;
+             dialogComponent = config.template,
+             self = this;
 
-         if (initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
-            this._showLoadingIndicator();
-            require([dialogComponent], function(templateComponent){
-               this._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function(){
-                  this._hideLoadingIndicator();
-                  OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
-               }.bind(this))
-            }.bind(this));
+         function wayRemote(templateComponent) {
+            return self._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function () {
+               OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            });
          }
-         else if (initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE){
+
+         function wayDelayedRemove(templateComponent) {
+            var def = self._getRecordDeferred(config, meta, mode, templateComponent);
+            OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            return def;
+         }
+
+         if(initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE || initializingWay == OpenEditDialog.INITIALIZING_WAY_DELAYED_REMOTE) {
             this._showLoadingIndicator();
             require([dialogComponent], function(templateComponent) {
-               this._getRecordDeferred(config, meta, mode, templateComponent).addCallback(function (record) {
-                  this._hideLoadingIndicator();
-                  OpenEditDialog.superclass._createComponent.call(this, config, meta, mode);
+               var def;
+               if(initializingWay == OpenEditDialog.INITIALIZING_WAY_REMOTE) {
+                  def = wayRemote(templateComponent);
+               } else {
+                  def = wayDelayedRemove(templateComponent);
+               }
+               def.addErrback(function (error) {
+                  //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
+                  if (!error._isOfflineMode) {
+                     OpenDialogUtil.errorProcess(error);
+                  }
+                  return error;
+               }).addBoth(function (record) {
+                  self._hideLoadingIndicator();
                   return record;
-               }.bind(this))
-            }.bind(this));
-         }
-         else {
+               });
+            })
+         } else {
             OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
          }
       },
@@ -257,21 +276,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                config.componentOptions.isNewRecord = isNewRecord;
                if (isNewRecord){
                   config.componentOptions.key = record.getId();
-                  options = templateComponent.prototype.getComponentOptions.call(templateComponent.prototype, config.componentOptions);
+                  options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
                   config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
-            }).addErrback(function(error){
-               //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-               if (!error._isOfflineMode){
-                  //Помечаем ошибку обработанной, чтобы остальные подписанты на errback не показывали свой алерт
-                  error.processed = true;
-                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
-                     InformationPopupManager.showMessageDialog({
-                        message: error.message,
-                        status: 'error'
-                     });
-                  });
-               }
+               return record;
             });
             return def;
          }
@@ -280,18 +288,12 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
-      _showLoadingIndicator: function(){
-         this._showedLoading = true;
+      _showLoadingIndicator: function() {
          this._toggleOverlay(true);
-         window.setTimeout(function(){
-            if (this._showedLoading){
-               cIndicator.setMessage('Загрузка...'); //setMessage зовет show у loadingIndicator
-            }
-         }.bind(this), 2000);
+         cIndicator.setMessage('Загрузка...', true);
       },
 
-      _hideLoadingIndicator: function(){
-         this._showedLoading = false;
+      _hideLoadingIndicator: function() {
          this._toggleOverlay(false);
          cIndicator.hide();
       },
@@ -320,17 +322,28 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          this._setModelId(meta);
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
-            result = {
+             componentConfig = {
                isNewRecord: !!meta.isNewRecord,
                source: meta.source,
-               key: meta.id,
-               initValues: meta.filter,
-               readMetaData: meta.readMetaData,
                record: record,
                handlers: this._getFormControllerHandlers(),
                initializingWay: meta.initializingWay || this._options.initializingWay
             };
-         cMerge(result, meta.componentOptions);
+
+         //Если этих опций нет в meta - не добавляем их, т.к. они могут быть объявлены на опциях FC. Иначе опции FC перетрутся пустыми значениями при получении записи с прототипного метода.
+         if (meta.readMetaData){
+            componentConfig.readMetaData = meta.readMetaData;
+         }
+         if (meta.id){
+            componentConfig.key = meta.id;
+         }
+         if (meta.filter){
+            componentConfig.initValues = meta.filter;
+         }
+         if (meta.dataSource){
+            componentConfig.dataSource = meta.dataSource;
+         }
+         cMerge(componentConfig, meta.componentOptions);
          //Мы передаем клон записи из списка. После того, как мы изменим ее поля и сохраним, запись из связного списка будет помечена измененной,
          //т.к. при синхронизации мы изменили ее поля. При повторном открытии этой записи на редактирование, она уже будет помечена как измененная =>
          //ненужный вопрос о сохранении, если пользователь сразу нажмет на крест.
@@ -338,11 +351,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (record) {
             record.acceptChanges();
          }
-         //в дальнейшем будем мержить опции на этот конфиг и если в мете явно не передали dataSource
-         //то в объекте не нужно создавать свойство, иначе мы затрем опции на FormController.
-         if (meta.dataSource)
-            result.dataSource = meta.dataSource;
-         return result;
+         return componentConfig;
       },
       /**
        * Возвращает обработчики на события formController'a
@@ -556,7 +565,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
          return undefined;
       },
-      
+
       _getRecordId: function(record, idProperty){
          if (idProperty) {
             return record.get(idProperty);
@@ -578,6 +587,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return cMerge(config, {
             handlers: {
                onAfterClose: function (e, meta) {
+                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, this._record);
                   self._dialog = undefined;
                }

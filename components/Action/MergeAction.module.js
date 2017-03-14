@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MergeAction', [
    "Core/core-merge",
-   "js!SBIS3.CONTROLS.DialogActionBase",
+   "js!SBIS3.CONTROLS.Action.OpenDialog",
    "Core/IoC",
    "js!SBIS3.CONTROLS.MergeDialogTemplate"
 ], function (cMerge, OpenDialogAction, IoC) {
@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
              * @remark
              * Набор полученных записей будет отображен на диалоге объединения.
              * @see testMergeMethodName
+             * @deprecated
              */
             queryMethodName: undefined,
             /**

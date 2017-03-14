@@ -20,10 +20,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
-   "js!SBIS3.CORE.MarkupTransformer",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
+   "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ScrollContainer",
    "html!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
@@ -32,12 +32,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "html!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
-   "Core/helpers/dom&controls-helpers",
    "i18n!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, MarkupTransformer, TemplateUtil, RecordSet, Projection, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance) {
 
       'use strict';
       /**
@@ -107,6 +106,28 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          emptyItemProjection = Projection.getDefaultDisplay(rs);
          return emptyItemProjection.at(0);
+      }
+
+      function getSelectedItems(items, keys, idProperty) {
+         //Подготавливаем данные для построения на шаблоне
+         var list;
+         if (items && keys && keys.length > 0){
+            list = new List({
+               ownerShip: false
+            });
+            items.each(function (record, index) {
+               var id = record.get(idProperty);
+               for (var i = 0, l = keys.length; i < l; i++) {
+                  //Сравниваем с приведением типов, т.к. ключи могут отличаться по типу (0 !== '0')
+                  //Зачем такое поведение поддерживалось изначально не знаю. Подобные проверки есть и в других методах (к примеру setSelectedKeys)
+                  if (keys[i] == id) {
+                     list.add(record);
+                     return;
+                  }
+               }
+            });
+         }
+         return list;
       }
 
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
@@ -308,14 +329,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
          init: function(){
             DropdownList.superclass.init.apply(this, arguments);
          },
-         _modifyOptions: function(cfg, parsedCfg) {
+         _modifyOptions: function() {
+            var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('DropDownList', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;
             }
             cfg.pickerClassName += ' controls-DropdownList__picker';
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
-            return DropdownList.superclass._modifyOptions.call(this, cfg, parsedCfg);
+            if (!cfg.selectedItems) {
+               cfg.selectedItems = getSelectedItems(cfg._items, cfg.selectedKeys, cfg.idProperty);
+            }
+            return cfg;
          },
 
          _setPickerContent : function () {
@@ -333,15 +358,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload(); //todo - убрать в 375. Если нужен reload, должны позвать сами. Наша логика перерисовки содержится в itemsControlMixin'e
             this._bindItemSelect();
 
-            if(this._isHoverMode()) {
-               this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
-               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, null));
-            }
-            else {
+            if(!this._isHoverMode()) {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
          },
@@ -373,7 +392,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _onReviveItems: function(){
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
-            this._removeOldKeys();
+            //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
+            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
+               this._removeOldKeys();
+            }
             DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
@@ -593,26 +615,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _pickerMouseLeaveHandler: function(fromHeader, e) {
-            var pickerContainer = this._picker.getContainer(),
-                toElement = $(e.toElement || e.relatedTarget),
-                containerToCheck;
-
-            if(fromHeader) {
-               containerToCheck = this._pickerBodyContainer;
-            } else if(fromHeader === null) {
-               containerToCheck = pickerContainer;
-            } else {
-               containerToCheck = dcHelpers.hasScrollbar(pickerContainer) ? pickerContainer : this._pickerHeadContainer;
-            }
-
-            if(this._hideAllowed && !toElement.closest(containerToCheck, pickerContainer).length) {
-               this.hidePicker();
-            }
-         },
          _drawItemsCallback: function() {
-            if (this._isEmptyValueSelected()){
-               this._options.selectedKeys = [null];
+            if (this._isEmptyValueSelected()) {
+               if (this.getSelectedKeys()[0] !== null) {
+                  this._options.selectedKeys = [null];
+               }
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
@@ -669,7 +676,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               this._options.selectedKeys = [id];
+               this._options.selectedKeys.push(id);
             }
          },
          _setHasMoreButtonVisibility: function(){
@@ -829,9 +836,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _redrawHead: function(isDefaultIdSelected){
             var pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer()),
-                headTpl = MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options)))();
+                headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options))();
             if (this._options.type !== 'fastDataFilter'){
-               var pickerHeadTpl = $(MarkupTransformer(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options)))());
+               var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
                pickerHeadTpl.click(function(e){
                   e.stopImmediatePropagation();
                });
@@ -909,12 +916,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   offset: offset.left
                },
                className: pickerClassName,
-               //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
-               closeByExternalOver: this._isHoverMode() && !this._options.multiselect,
+               closeByExternalOver: false,
                closeByExternalClick : true,
                activableByClick: false,
                targetPart: true,
-               template : MarkupTransformer(dotTplFnPicker)({
+               template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,
                   'footerTpl' : this._options.footerTpl
                })

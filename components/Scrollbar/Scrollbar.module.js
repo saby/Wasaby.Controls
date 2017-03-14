@@ -39,7 +39,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             _containerHeight: undefined,
             _containerOuterHeight: undefined,
             //Является ли высота ползунка константой
-            _isConstThumb: undefined
+            _isConstThumb: undefined,
+            _headerHeight: 0
          },
 
          $constructor: function () {
@@ -82,6 +83,11 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._setViewportRatio();
             this._setThumbHeight();
             this._setScrollRatio();
+         },
+
+         setContentHeaderHeight: function (height) {
+            this._headerHeight = height;
+            this._thumb.css('margin-top', height);
          },
 
          /**
@@ -132,7 +138,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             } else {
                this._isConstThumb = false;
             }
-            this._thumb.height(this._thumbHeight);
+            if (this._thumb) {
+               this._thumb.height(this._thumbHeight);
+            }
          },
 
          _calcProjectionSize: function (size, ratio) {

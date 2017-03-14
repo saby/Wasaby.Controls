@@ -769,7 +769,6 @@
 
 // Menu
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
-@menu-icon-menu-padding:                  0 0 4px 0;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 
@@ -1341,6 +1340,7 @@
 @date-range-slider-color:                       @darkcyan-color;
 @date-range-slider-disabled-text-color:         @link-disabled-text-color;
 @date-range-slider-hover-color:                 @blue-dark-color;
+@date-range-slider-unlocked-icon-hover-color:   @gray-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
@@ -2186,6 +2186,9 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 
+@controls-FieldLink-big-fontSize:                  15px;
+@controls-FieldLink-big-fontSize-color:            #313E78;
+
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
@@ -2245,9 +2248,8 @@
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
-@controls-NotificationPopup-header-height:                                   40px;
-@controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
-@controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
+@controls-NotificationPopup-header-padding:                                  8px 12px 8px 12px;
+@controls-NotificationPopup-header-padding-with-close-button:                8px 48px 8px 12px;
 
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
@@ -2263,7 +2265,7 @@
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           @float-area-border;
+@controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;

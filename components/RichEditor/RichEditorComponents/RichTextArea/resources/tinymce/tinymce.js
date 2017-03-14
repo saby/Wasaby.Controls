@@ -15822,7 +15822,12 @@
             }
 
             var throttledUpdateResizeRect = Delay.throttle(function(e) {
-               if (!editor.composing) {
+               //Проблема:
+               //       Если экземпляру редактора позвать destroy() сразу после инициализации
+               //       будет ошибка тк updateResizeRect происходит отложенно
+               //Решение:
+               //       Перед вызовом updateResizeRect проверять редактор на destroyed
+               if (!editor.composing && !editor.destroyed) {
                   updateResizeRect(e);
                }
             });
@@ -36613,7 +36618,15 @@
             editor.on('focus', function() {
                // Make sure we have a proper fake caret on focus
                Delay.setEditorTimeout(editor, function() {
-                  editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
+                  //Проблема:
+                  //          во избежание утечек памяти в destroy selection = null
+                  //          перед destroy у редактора может быть вызван focus
+                  //          обработчик по таймауту приводит к ошибкам
+                  //Решение:
+                  //          в обработчике проверять редактор на destroyed
+                  if(!editor.destroyed) {
+                     editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
+                  }
                }, 0);
             });
 

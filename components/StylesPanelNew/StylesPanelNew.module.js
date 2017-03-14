@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'Core/helpers/collection-helpers',
    'Core/helpers/generate-helpers',
    'html!SBIS3.CONTROLS.StylesPanelNew',
+   'Core/EventBus',
    'html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemTemplate',
    'html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemContentTpl',
    'js!SBIS3.CONTROLS.ListView',
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
    'css!SBIS3.CONTROLS.StylesPanelNew'
-], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -84,6 +85,12 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                'color': '#000000'
             },
             /**
+             * @cfg {Number}
+             * Устанавливает количество колонок в режиме палитры
+             * @see palleteRenderStyle
+             */
+            columnsCount: null,
+            /**
              * @cfg {String}
              * Специальный id по которому будет загружаться/сохраняться история
              * @remark
@@ -115,23 +122,25 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
           * }
           */
          _presetItems: null,
-         _presetView: null,
          /* ListView отображающий историю и предвыбранные наборы форматирования */
-         _width: undefined,
+         _presetView: null,
          /* Ширина панели в режиме палитры */
-         _palette: null,
+         _palleteWidth: undefined,
          /* Компонент палитры */
+         _palette: null,
          /* Компоненты выбора формата начертания */
          _size: null,
          _bold: null,
          _italic: null,
          _underline: null,
-         _strikethrough: null
+         _strikethrough: null,
+         _pickerOpenHandler: undefined
       },
 
       $constructor: function() {
          var container = this.getContainer(),
-            colorsCount, i;
+             columnsCount = this._options.columnsCount,
+             colorsCount, i;
 
          this._publish('changeFormat');
          CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
@@ -142,28 +151,32 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              * по спецификации известно, что максимальное количество отображаемых цветов по высоте равно равно 6
              */
             colorsCount = this._options.colors.length;
-            if (colorsCount <= 6) {
-               /* Когда элементов меньше 6 отображаемых их в одну колонку */
-               this._width = 32;
-            } else {
-               /* Когда цветов больше 6 нужно искать прямоугольник с подходящими размерами
-                * По высоте/ширине может быть от 2 до 6 цветов, поэтому нужно перебрать длины и найти
-                * ту которая является делитем числа цветов, а частное меньше 6,
-                * т.к. вторая сторона равна частному
-                * если такого прямоугольника нет, это может быть в случае простых чисел, либо у которых
-                * нет подходящих делителей, например 27 = 3 * 9, добавляем к числу 1 и снова пытаемся найти
-                * прямоугольник, тогда количество пустот будет минимально
-                */
-               while (!this._width) {
-                  i = 2;
-                  while (i <= 6 && !this._width) {
-                     if (colorsCount % i === 0 && colorsCount / i <= 6) {
-                        this._width = i * 32;
+            if (columnsCount){
+               this._palleteWidth = columnsCount <= 6 ? columnsCount * 32 : 192;
+            }else {
+               if (colorsCount <= 6) {
+                  /* Когда элементов меньше 6 отображаемых их в одну колонку */
+                  this._palleteWidth = 32;
+               } else {
+                  /* Когда цветов больше 6 нужно искать прямоугольник с подходящими размерами
+                   * По высоте/ширине может быть от 2 до 6 цветов, поэтому нужно перебрать длины и найти
+                   * ту которая является делитем числа цветов, а частное меньше 6,
+                   * т.к. вторая сторона равна частному
+                   * если такого прямоугольника нет, это может быть в случае простых чисел, либо у которых
+                   * нет подходящих делителей, например 27 = 3 * 9, добавляем к числу 1 и снова пытаемся найти
+                   * прямоугольник, тогда количество пустот будет минимально
+                   */
+                  while (!this._palleteWidth) {
+                     i = 2;
+                     while (i <= 6 && !this._palleteWidth) {
+                        if (colorsCount % i === 0 && colorsCount / i <= 6) {
+                           this._palleteWidth = i * 32;
+                        }
+                        i++;
                      }
-                     i++;
-                  }
-                  if (!this._width) {
-                     colorsCount++;
+                     if (!this._palleteWidth) {
+                        colorsCount++;
+                     }
                   }
                }
             }
@@ -172,7 +185,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       init: function() {
-         var self = this;
+         var
+            self = this;
 
          StylesPanel.superclass.init.call(this);
 
@@ -196,7 +210,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          if (self._options.paletteRenderStyle) {
             /* В случае палитру нужно подписаться на смену цвета, т.к. выбор происходит без подтверждения*/
             self._palette.subscribe('onSelectedItemChange', this._paletteClickHandler.bind(self));
-            self._palette.getContainer().width(self._width);
+            self._palette.getContainer().width(self._palleteWidth);
          } else {
             /* находим контролы отвечающие за начертание шрифта */
             this._size = this.getChildControlByName('FontSize');
@@ -219,6 +233,14 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                   self._historyInit();
                }
             }
+            self._pickerOpenHandler = function() {
+               self._size._picker._container.on('mousedown focus', self._blockFocusEvents);
+            }.bind(self);
+            self._container.on('mousedown focus', self._blockFocusEvents);
+            //TODO: наилютейший костыль чтобы combobox не брал на себя фокус при открытии/закрытии popup`a
+            self._size._scrollToItem = function(){};
+            self._size.setActive = function(){};
+            self._size.once('onPickerOpen', self._pickerOpenHandler);
          }
 
          if (this._options.instantFireMode === true) {
@@ -464,8 +486,25 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                this._underline.setChecked(styles.underline);
                this._strikethrough.setChecked(styles.strikethrough);
          }
-      }
+      },
 
+      //TODO: убрать метод после закртытия задачи: https://inside.tensor.ru/opendoc.html?guid=b67f7f5b-8b91-4fcb-8f83-74fd29d64db4
+      _blockFocusEvents: function(event) {
+         var eventsChannel = EventBus.channel('WindowChangeChannel');
+         event.preventDefault();
+         event.stopPropagation();
+         //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
+         if(event.type === 'mousedown') {
+            eventsChannel.notify('onDocumentClick', event);
+         }
+      },
+      destroy: function() {
+         StylesPanel.superclass.destroy.apply(this, arguments);
+         if (!this._options.paletteRenderStyle) {
+            this._container.off('mousedown focus', this._blockFocusEvents);
+            this._size.unsubscribe('onPickerOpen', this._pickerOpenHandler);
+         }
+      }
    });
 
    return StylesPanel;

@@ -77,14 +77,14 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('hovered_menu_button', function (actions) {
 				actions.mouseMove(this.menu_button);
             })
-			
+			/*
 			.capture('opened_menu', function (actions) {
 				actions.click(this.menu_button);
             })
 			
 			.capture('hovered_second_action', function (actions) {
 				actions.mouseMove(this.delete_icon);
-            })
+            })*/
 			
 			.capture('expanded_folder', function (actions) {
 				actions.click(this.expander);
@@ -224,14 +224,14 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('hovered_menu_button', function (actions) {
 				actions.mouseMove(this.menu_button);
             })
-			
+			/*
 			.capture('opened_menu', function (actions) {
 				actions.click(this.menu_button);
             })
 			
 			.capture('hovered_second_action', function (actions) {
 				actions.mouseMove(this.delete_icon);
-            })
+            })*/
     });
 	
 	gemini.suite('CompositeViewList', function (test) {
@@ -465,14 +465,14 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('hovered_menu_button', function (actions) {
 				actions.mouseMove(this.menu_button);
             })
-			
+			/*
 			.capture('opened_menu', function (actions) {
 				actions.click(this.menu_button);
             })
 			
 			.capture('hovered_second_action', function (actions) {
 				actions.mouseMove(this.delete_icon);
-            })
+            })*/
     });
 	
 	gemini.suite('TreeDataGridView', function (test) {
@@ -690,14 +690,14 @@ gemini.suite('SBIS3.CONTROLS.ItemsAction Online', function () {
 			.capture('hovered_menu_button', function (actions) {
 				actions.mouseMove(this.menu_button);
             })
-			
+			/*
 			.capture('opened_menu', function (actions) {
 				actions.click(this.menu_button);
             })
 			
 			.capture('hovered_second_action', function (actions) {
 				actions.mouseMove(this.delete_icon);
-            })
+            })*/
 			
 			.capture('expanded_folder', function (actions) {
 				actions.click(this.expander);

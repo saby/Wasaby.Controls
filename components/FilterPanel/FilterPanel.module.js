@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.Expandable',
    'js!WS.Data/Collection/RecordSet',
    'js!SBIS3.CONTROLS.FilterPanelItem',
-   'js!SBIS3.CORE.MarkupTransformer',
    'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
    'tmpl!SBIS3.CONTROLS.FilterPanel',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelContent',
@@ -31,7 +30,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
    'css!SBIS3.CONTROLS.FilterPanel'
-], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, RecordSet, FilterPanelItem, MarkupTransformer, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
+], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
    /**
@@ -324,13 +323,16 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._initializeContent();
       },
       _destroyFilter: function() {
+         if (this._filterRecordSet) {
+            this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         }
          if (this._filterAccordion) {
             this._filterAccordion.destroy();
             this._filterAccordion = null;
          }
       },
       _initializeContent: function() {
-         this._getContentContainer().html(MarkupTransformer(this._options._contentTpl(this._options)));
+         this._getContentContainer().html(this._options._contentTpl(this._options));
          this.reviveComponents();
          this._initializeFilter();
          this._initializeFilterItems();
@@ -367,6 +369,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       _getHeadContainer: function() {
          return $('.controls-FilterPanel__headContainer', this.getContainer());
+      },
+      destroy: function() {
+         this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         FilterPanel.superclass.destroy.apply(this, arguments);
       }
    });
 

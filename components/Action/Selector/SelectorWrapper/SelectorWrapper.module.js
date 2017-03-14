@@ -55,7 +55,6 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             var linkedObject = this._getLinkedObject();
 
             this.subscribeTo(linkedObject, 'onSelectedItemsChange', this._onSelectedItemsChangeHandler.bind(this))
-                .subscribeTo(linkedObject, 'onItemActivate', this._onItemActivatedHandler.bind(this))
                 .subscribeTo(linkedObject, 'onItemClick', this._onItemClickHandler.bind(this));
 
             /* Обработка кнопки "Выбрать" для иерархических представлений */
@@ -126,30 +125,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       /**
-       * Обработчик активации записи
-       * @private
-       */
-      _onItemActivatedHandler: function(e, meta) {
-         var linkedObject = this._getLinkedObject();
-
-         if(!this._checkItemForSelect(meta.item)) {
-            return
-         }
-
-         if(linkedObject.getMultiselect() && !linkedObject._isEmptySelection()) {
-            linkedObject.addItemsSelection([meta.id]);
-            return;
-         }
-
-         this._applyItemSelect(meta.item);
-      },
-
-      /**
        * Обработчик клика по записи
        * @private
        */
       _onItemClickHandler: function(event, id, item, target) {
-         var linkedObject = this._getLinkedObject();
+         var linkedObject = this._getLinkedObject(),
+             isBranch = this._isBranch(item);
 
          /* Если клик произошёл по стрелке разворота папки или запись выбрать нельзя,
             то не обрабатываем это событие */
@@ -157,10 +138,24 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             return;
          }
 
-         /* При единичном выборе, клик по записи должен её выбирать, даже если это папка */
-         if(!linkedObject.getMultiselect() && cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && this._isBranch(item)) {
-             event.setResult(false);
-             this._applyItemSelect(item);
+         if(linkedObject.getMultiselect()) {
+            /* При множественном выборе:
+             1) Если есть выделенная чекбоксом запись, то клик по листу должен выделять, а по папке вызывать проваливание
+             2) Если запись не выделена, клик по листу должен его выбирать, по записи должно происходить проваливание */
+            if(!linkedObject._isEmptySelection()) {
+               if(!isBranch) {
+                  linkedObject.addItemsSelection([id]);
+               }
+            } else if(!isBranch) {
+               this._applyItemSelect(item);
+            }
+         } else {
+            /* При единичном выборе запись всегда должна выбираться при клике,
+             не важно, папка это или лист */
+            if(isBranch) {
+               event.setResult(false);
+            }
+            this._applyItemSelect(item);
          }
       },
 
@@ -184,19 +179,22 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _processSelectActionVisibility: function(hoveredItem) {
-         var linkedObject = this._getLinkedObject(),
-             selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+         var linkedObject = this._getLinkedObject();
 
-         /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
-         if(hoveredItem.container) {
-            if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
-               if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
-                  selectAction.show();
+         if(linkedObject.getItemsActions()) {
+            var selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
+
+            /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
+            if (hoveredItem.container) {
+               if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
+                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
+                     selectAction.show();
+                  } else {
+                     selectAction.hide()
+                  }
                } else {
-                  selectAction.hide()
+                  selectAction.hide();
                }
-            } else {
-               selectAction.hide();
             }
          }
       },
@@ -223,10 +221,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                isMainAction: true,
                allowChangeEnable: false,
                onActivated: function(container, key, item) {
-                  self._onItemActivatedHandler(null, {
-                     item: item,
-                     id: key
-                  })
+                  self._applyItemSelect(item);
                }
             });
             linkedObject.setItemsActions(itemsActionsArray);
@@ -256,7 +251,13 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
 
       _isBranch: function(item) {
-         return item.get(this._getLinkedObject().getParentProperty() + '@');
+         var linkedObject = this._getLinkedObject();
+
+         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+            return item.get(linkedObject.getNodeProperty());
+         }
+         return false;
+
       },
 
       setSelectedItems: function(items) {
@@ -272,7 +273,11 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
          });
 
          if(keys.length) {
-            linkedObject.setSelectedKeys(keys);
+            if(linkedObject.getMultiselect()) {
+               linkedObject.setSelectedKeys(keys);
+            } else {
+               linkedObject.setSelectedKey(keys[0]);
+            }
          }
       },
 
