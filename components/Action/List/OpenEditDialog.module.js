@@ -530,34 +530,46 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
+      _deepMergeRecords: function(model, additionalData) {
+         additionalData.deepMerge = true;
+         this._updateModel(model, additionalData);
+      },
+
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(model, colRec, additionalData){
-         var collectionRecord = colRec || this._getCollectionRecord(model, additionalData),
-            collectionData = this._getCollectionData(),
-            recValue;
-         if (!collectionRecord) {
-            return;
-         }
+      _mergeRecords: function(editRecord, colRec, additionalData){
+         var collectionRecord = colRec || this._getCollectionRecord(editRecord, additionalData);
 
-         if (additionalData.isNewRecord) {
-            collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
+         if (collectionRecord) {
+            if (additionalData.isNewRecord) {
+               collectionRecord.set(this._getCollectionData().getIdProperty(), additionalData.key);
+            }
+            this._mergeRecord(collectionRecord, editRecord, additionalData);
          }
+      },
 
+      _mergeRecord: function(collectionRecord, editRecord, additionalData) {
+         var recValue,
+             self = this;
          Record.prototype.each.call(collectionRecord, function (key, value) {
-            recValue = model.get(key);
-            if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
-               //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
-               if (recValue && (typeof recValue.clone == 'function')) {
-                  recValue = recValue.clone();
+            if(editRecord.has(key)){
+               recValue = editRecord.get(key);
+               if (additionalData.deepMerge && cInstance.instanceOfModule(recValue, 'WS.Data/Entity/Record') && cInstance.instanceOfModule(value, 'WS.Data/Entity/Record')) {
+                  self._mergeRecord(value, recValue, additionalData);
                }
-               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-               try {
-                  this.set(key, recValue);
-               } catch (e) {
-                  if (!(e instanceof ReferenceError)) {
-                     throw e;
+               else if (recValue != value && key !== editRecord.getIdProperty()) {
+                  //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
+                  if (recValue && (typeof recValue.clone == 'function')) {
+                     recValue = recValue.clone();
+                  }
+                  //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+                  try {
+                     this.set(key, recValue);
+                  } catch (e) {
+                     if (!(e instanceof ReferenceError)) {
+                        throw e;
+                     }
                   }
                }
             }
@@ -620,6 +632,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
    OpenEditDialog.ACTION_CUSTOM = 'custom';
    OpenEditDialog.ACTION_MERGE = '_mergeRecords';
+   OpenEditDialog.ACTION_DEEP_MERGE = '_deepMergeRecords';
    OpenEditDialog.ACTION_ADD = '_createRecord';
    OpenEditDialog.ACTION_RELOAD = '_collectionReload';
    OpenEditDialog.ACTION_DELETE = '_destroyModel';
