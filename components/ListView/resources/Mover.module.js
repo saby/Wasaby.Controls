@@ -155,7 +155,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             target = this.getItems().getRecordById(target);
          }
 
-         if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
+         if (this._checkRecordsForMove(movedItems, target)) {
             var
                moveStrategy = this.getMoveStrategy(),
                move = function (result) {
@@ -282,7 +282,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        */
       _changeHierarchy: function(items, movedItems, target) {
          movedItems.forEach(function (movedItem) {
-            movedItem.set(this._options.parentProperty, target.getId());
+            movedItem.set(this._options.parentProperty, target ? target.getId() : null);
             if (items.getIndex(movedItem) == -1) {
                items.add(movedItem);
             }
@@ -327,11 +327,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * Проверяет можно ли перенести элементы
        * @param {Array} movedItems Массив перемещаемых элементов
        * @param {WS.Data/Entity/Record} target рекорд к которому надо переместить
-       * @param {Boolean} isChangeOrder Изменяется порядок элементов
        * @returns {Boolean}
        * @private
        */
-      _checkRecordsForMove: function(movedItems, target, isChangeOrder) {
+      _checkRecordsForMove: function(movedItems, target) {
          var
             key,
             toMap = [];
@@ -339,16 +338,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             return false;
          }
 
-         if (target.get(this._options.nodeProperty) && !isChangeOrder || isChangeOrder) {
-            if (target !== null && this._options.parentProperty) {
+         if (this._options.parentProperty) {
+            if (target !== null) {
                toMap = this._getParentsMap(target.getId());
             }
             for (var i = 0; i < movedItems.length; i++) {
                key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
                if (toMap.indexOf(key) !== -1) {
-                  return false;
-               }
-               if (target !== null && !isChangeOrder && !target.get(this._options.nodeProperty)) {
                   return false;
                }
             }
