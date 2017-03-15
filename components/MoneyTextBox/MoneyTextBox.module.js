@@ -94,19 +94,19 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          this._decimalsContainer = $('.js-MoneyTextBox__decimals', this.getContainer().get(0));
       },
 
-      setEnabled: function(enabled){
+      _setEnabled: function(enabled){
          var text = this._inputField.text();
-         if(enabled !== this._options.enabled) {
-            this._inputField[0].contentEditable = enabled;
-            if(!enabled) {
-               this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
-               this._setInputValue(this._getIntegerPart(this._getInputValue()));
-            }else{
-               this._setInputValue(this._options.text);
-            }
-            this._decimalsContainer.toggleClass('ws-hidden', enabled);
-            MoneyTextBox.superclass.setEnabled.apply(this, arguments);
+         this._inputField[0].contentEditable = enabled;
+         if(!enabled) {
+            // Рассчеты и отрисовку нужно разделить
+            // TODO сделать это в рамках работы по стандартизации полей ввода
+            this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
+            this._setInputValue(this._getIntegerPart(this._getInputValue()));
+         }else{
+            this._setInputValue(this._options.text);
          }
+         this._decimalsContainer.toggleClass('ws-hidden', enabled);
+         MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
       /**
        * Возвращает текущее значение денежного поля ввода.
