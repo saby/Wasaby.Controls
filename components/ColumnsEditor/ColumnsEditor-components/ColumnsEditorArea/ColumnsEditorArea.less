@@ -1,6 +1,27 @@
 .controls-ColumnsEditorArea {
    position: relative;
    width: 388px;
+   .controls-ColumnsEditorArea__view-item {
+      height: 32px;
+      display: inline-block;
+      .controls-ListView__itemCheckBox {
+         left: 4px;
+         top: 4px;
+      }
+   }
+
+   .controls-ColumnsEditorArea__FixedView {
+      .controls-CheckBox {
+         display: block;
+         padding: 7px 0;
+      }
+      .controls-CheckBox .controls-CheckBox__icon {
+         margin: 0 8px;
+      }
+      .controls-CheckBox .controls-CheckBox__caption {
+         color: @black-color !important;
+      }
+   }
 }
 
 .controls-ColumnsEditorArea__head {
@@ -27,29 +48,6 @@
 
 .controls-ColumnsEditorArea__body {
    border-top: 1px solid #CCCCCC;
-}
-
-.controls-ColumnsEditorArea__view-item {
-   height: 32px;
-   display: inline-block;
-}
-
-.controls-ColumnsEditorArea__view-item .controls-ListView__itemCheckBox {
-   left: 4px;
-   top: 4px;
-}
-
-.controls-ColumnsEditorArea__FixedView {
-   .controls-CheckBox {
-      display: block;
-      padding: 7px 0;
-   }
-   .controls-CheckBox .controls-CheckBox__icon {
-      margin: 0 8px;
-   }
-   .controls-CheckBox .controls-CheckBox__caption {
-      color: @black-color !important;
-   }
 }
 
 .controls-ColumnsEditorArea__view-item-text {
