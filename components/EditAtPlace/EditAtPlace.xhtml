@@ -1,4 +1,4 @@
-<div class="controls-EditAtPlace controls-TextBox {{?it.multiline}}controls-EditAtPlace__autoHeight{{?}}" {{?it.tooltip}}title="{{=it._escape(it.tooltip)}}"{{?}}>
+<div class="controls-EditAtPlace controls-TextBox {{?it.multiline}}controls-EditAtPlace__autoHeight{{?}}" {{?it.tooltip}}title="{{!it.tooltip}}"{{?}}>
         <div class="js-controls-EditAtPlace__fieldWrapper controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper {{?it.displayAsEditor}}ws-hidden{{?}}">
             <div class="controls-EditAtPlace__textField controls-TextBox__field  {{?it.multiline}}controls-EditAtPlace__multiline{{?}}">{{?it.text}}{{?!Object.isEmpty(it.text)}}{{=it.formattedText()}}{{?}}{{??}}{{?it.placeholder}}<span class="controls-EditAtPlace__placeholder">{{=it.placeholder}}</span>{{?}}{{?}}</div>
         </div>

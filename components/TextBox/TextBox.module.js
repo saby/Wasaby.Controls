@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox',
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'js!SBIS3.CONTROLS.TextBoxUtils',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
    "Core/helpers/functional-helpers",
@@ -18,6 +19,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     dotTplFn,
     textFieldWrapper,
     TemplateUtil,
+    TextBoxUtils,
     Sanitize,
     dcHelpers,
     fHelpers) {
@@ -159,39 +161,47 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       $constructor: function() {
+         this._publish('onPaste');
          var self = this;
          this._inputField = this._getInputField();
          this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
-         this._inputField.on('paste', function(){
-            self._pasteProcessing++;
-            window.setTimeout(function(){
-               self._pasteProcessing--;
-               if (!self._pasteProcessing) {
-                  var text = self._getInputValue(),
-                     newText = '';
-                  if (self._options.inputRegExp){
-                     var regExp = new RegExp(self._options.inputRegExp);
-                     for (var i = 0; i < text.length; i++){
-                        if (regExp.test(text[i])){
-                           newText = newText + text[i];
-                        }
-                     }
-                     text = newText;
-                  }
-                  text = self._formatText(text);
-                  self._drawText(text);
-                  /* Событие paste может срабатывать:
-                     1) При нажатии горячих клавиш
-                     2) При вставке из котекстного меню.
+         this._inputField.on('paste', function(event){
+            var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
 
-                     Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
-                     но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
-                     можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
-                     которые на это рассчитывают.
-                   */
-                  self._setTextByKeyboard(text);
-               }
-            }, 100);
+            if(userPasteResult !== false){
+               self._pasteProcessing++;
+               window.setTimeout(function(){
+                  self._pasteProcessing--;
+                  if (!self._pasteProcessing) {
+                     var text = self._getInputValue(),
+                         newText = '';
+                     if (self._options.inputRegExp){
+                        var regExp = new RegExp(self._options.inputRegExp);
+                        for (var i = 0; i < text.length; i++){
+                           if (regExp.test(text[i])){
+                              newText = newText + text[i];
+                           }
+                        }
+                        text = newText;
+                     }
+                     text = self._formatText(text);
+                     self._drawText(text);
+                     /* Событие paste может срабатывать:
+                      1) При нажатии горячих клавиш
+                      2) При вставке из котекстного меню.
+
+                      Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
+                      но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
+                      можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
+                      которые на это рассчитывают.
+                      */
+                     self._setTextByKeyboard(text);
+                  }
+               }, 100);
+            }else {
+               event.preventDefault();
+            }
+
          });
 
          this._inputField.change(function(){

@@ -169,6 +169,7 @@
             background-color: @data-grid-header-cell-hover-bg;
          }
          .controls-ListView__itemCheckBox{
+            .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
             margin: -3px 0 0 4px;
             background: @listView-check-box-icon-bg;
             &.controls-DataGridView__th__checkBox__checked{
@@ -231,6 +232,7 @@
          vertical-align: @data-grid-cell-check-box-vertical-align;
          overflow: hidden;
          .controls-ListView__itemCheckBox {
+            .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
             top: @data-grid-check-box-top;
             left: @data-grid-check-box-left;
          }
