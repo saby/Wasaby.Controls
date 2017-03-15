@@ -348,9 +348,8 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                   return false;
                }
             }
-            return true;
          }
-         return false;
+         return true;
       },
       /**
        *
