@@ -18,9 +18,9 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    /**
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
     * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
-    * @class SBIS3.CONTROLS.OpenEditDialog
-    * @extends SBIS3.CONTROLS.DialogActionBase
-    * @author Крайнов Дмитрий Олегович
+    * @class SBIS3.CONTROLS.Action.OpenEditDialog
+    * @extends SBIS3.CONTROLS.Action.OpenDialog
+    * @author Красильников Андрей Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
@@ -46,60 +46,51 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
     * @public
     * @category Actions
     * @initial
-    * <component data-component="SBIS3.CONTROLS.OpenEditDialog">
+    * <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog">
     * </component>
     */
-   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.OpenEditDialog.prototype */{
+   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.Action.OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {String} key Первичный ключ сохраняемой записи.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была удалена из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была создана в источнике данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, полученная из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       $protected: {
          _options: {
             /**
              * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает связанный с диалогом список.
              * @remark
-             * Опция применятся при работе со <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/">списками</a>, чтобы производить <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a>.
-             * Для списка, с которым производится связывание, устанавливается ограничение: в класс списка должы быть добавлены миксины ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}).
+             * Для связанного списка производится автоматическая <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a> со списком.
              * @see setLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает способ инициализации данных диалога.
+             * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
              * @remark
-             * Описание значений опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации данных диалога</a>.
+             * Подробнее читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации</a>.
              * @variant local
              * @variant remote
              * @variant delayedRemote
              */
             initializingWay: 'remote',
             /**
-             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             * @cfg {String} устанавливает поле записи, в котором хранится url-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
              */
             urlProperty: ''
          },
