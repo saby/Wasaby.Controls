@@ -2816,10 +2816,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
           * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
+          * @param {Number} depth количество родительских контейнеров, лежащих в dom дереве ниже, которые будут проскролены
+          * что бы элемент стал видимым. Учитываются только контейнеры на которых overflow-y установлен в auto или scroll.
+          * По умолчанию равен бесконечности.
           */
-         scrollToItem: function(item, toBottom){
+         scrollToItem: function(item, toBottom, depth){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId(), toBottom);
+               this._scrollToItem(item.getId(), toBottom, depth);
             }
          },
 
