@@ -2071,8 +2071,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _hasNextPage: function (hasMore, offset) {
          offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
-         //Если offset отрицательный, значит запрашивали последнюю страницу
-         return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
+         var hasNextPage = typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
+         if (this._getSourceNavigationType() == 'Offset') {
+            return hasNextPage;
+         } else {
+            //Если offset отрицательный, значит запрашивали последнюю страницу
+            return offset < 0 ? false : hasNextPage;
+         }
       },
       _scrollTo: function scrollTo(target, toBottom) {
          if (typeof target === 'string') {
