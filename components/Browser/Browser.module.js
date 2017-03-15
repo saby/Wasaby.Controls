@@ -55,21 +55,21 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {String} id Идентификатор редактируемой папки. В случае добавления новой папки значение параметра - null.
        */
-       /**
-        * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS.FastDataFilter}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS.FilterButton}).
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-        */
+      /**
+       * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS.FastDataFilter}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS.FilterButton}).
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       /**
        * @typedef {Object} СolumnsConfigObject
-       * @property {WS.Data/Collection/RecordSet} columns Набор записей, описывающий возможные колонки <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/'>списка</a>.
-       * Одна запись предназначена для описания одной колонки. Обязательные поля записи:
+       * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
+       * Поля записи:
        * <ol>
-       *    <li><b>id (String)</b> - идентификатор .</li>
-       *    <li><b>title (String)</b> - отображаемый текст.</li>
-       *    <li><b>fixed (Boolean)</b> - признак "Фиксированная колонка". Такие колонки всегда отображаются в списке, а соответствующая ей запись на Панели конфигурации недоступна для взаимодействия. Поэтому из пользовательского интерфейса нельзя изменить отображение фиксированной колонки.</li>
-       *    <li><b>columnConfig (Object)</b> - конфигурация колонки (см. {@link SBIS3.CONTROLS.DataGridView/Columns.typedef columns}).</li>
+       *    <li><b>id (String)</b> - идентификатор элемента.</li>
+       *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
+       *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
+       *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS.DataGridView#columns columns}).</li>
        * </ol>
-       * @property {Array} selectedColumns Массив идентификаторов отображаемых колонок. Параметр актуален для колонок с опцией *fixed=false*.
+       * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
        */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -145,35 +145,41 @@ define('js!SBIS3.CONTROLS.Browser', [
             showCheckBoxes: false,
 	        contentTpl: null,
             /**
-             * @cfg {СolumnsConfigObject} Устанавливает параметры для Панели конфигурации колонок списка.
+             * @cfg {СolumnsConfigObject} Устанавливает параметры для Панели редактирования колонок.
              * @remark
              * Вызов панели производят кликом по иконке с шестерёнкой, которая расположена справа от строки поиска.
              * Иконка отображается, когда в опции установлено значение.
              * @example
-             * 1. В файле MyColumnsConfig.module.js описан RecordSet для опции columns:
+             * 1. В файле MyColumnsConfig.module.js описан RecordSet для конфигурации Панели редактирования колонок:
              * <pre>
              * define('js!SBIS3.MyArea.MyColumnsConfig', ['js!WS.Data/Collection/RecordSet'], function(RecordSet) {
              *    var data = [
              *        {
              *           id: 1,
-             *           title: 'Идентификатор товара',
+             *           title: 'Базовая группа колонок',
              *
-             *           // Фиксированная колонка
+             *           // Признак "Фиксированный"
              *           fixed: true,
-             *           columnConfig:{
-             *              title: 'Идентификатор',
-             *              field: '@Товар'
-             *           }
+             *           columnConfig: [
+             *              {
+             *                 title: 'Идентификатор',
+             *                 field: '@Товар'
+             *              },
+             *              {
+             *                 title: 'Наименование',
+             *                 field: 'Наименование',
+             *                 className: 'controls-DataGridView-cell-overflow-ellipsis'
+             *              }
+             *           ]
              *       },
              *       {
              *          id: 2,
-             *          title: 'Наименование товара',
+             *          title: 'Колонка "Дата выпуска"',
              *          fixed: false,
-             *          columnConfig:{
-             *              title: 'Наименование',
-             *              field: 'Наименование',
-             *              className: 'controls-DataGridView-cell-overflow-ellipsis'
-             *          }
+             *          columnConfig: [{
+             *              title: 'Дата выпуска',
+             *              field: 'Дата_выпуска'
+             *          }]
              *       },
              *       ...
              *    ];
@@ -183,14 +189,14 @@ define('js!SBIS3.CONTROLS.Browser', [
              *    });
              * });
              * </pre>
-             * 2. Для JS-модуль реестра импортирован RecordSet с конфигурацией колонки:
+             * 2. Для JS-модуль реестра импортирован RecordSet:
              * <pre>
              * define('js!SBIS3.MyArea.MyReportBrowser',[ ... , 'js!SBIS3.MyArea.MyColumnsConfig'], function(... , MyColumnsConfig) {
              *    ...
              *    $protected: {
              *       _options : {
              *
-             *          // Создана опция для конфигурации columnsConfig
+             *          // Создана опция для конфигурации опции columnsConfig
              *          _columnsConfig: {
              *             columns: myConfig,
              *             selectedColumns: [2, 3]
