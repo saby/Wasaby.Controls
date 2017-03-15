@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              colorsCount, i;
 
          this._publish('changeFormat');
-         CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'saveStylesPanel', this.saveHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.
