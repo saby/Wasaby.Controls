@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Browser', [
     * Базовый класс для реестра
     *
     * @class SBIS3.CONTROLS.Browser
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyBrowser
     *

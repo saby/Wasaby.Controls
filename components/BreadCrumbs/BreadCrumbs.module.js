@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     *
     * @author Крайнов Дмитрий Олегович
     *

@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * </pre>
        *
        * @class SBIS3.CONTROLS.DropdownList
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        *
        * @author Красильников Андрей Сергеевич
        *

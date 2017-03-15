@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
     * Панель выбора цвета с возможностью выбора цвета, начертания шрифта, установки предвыбранных стилей и сохранения истории
     *
     * @class SBIS3.CONTROLS.StylesPanel
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.PopupMixin
