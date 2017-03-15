@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
     * Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
     * @public
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin

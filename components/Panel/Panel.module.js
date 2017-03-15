@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
    /**
     * SBIS3.CONTROLS.Panel
     * @class SBIS3.CONTROLS.Panel
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @public
     * @author Крайнов Дмитрий Олегович

@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
     * Кнопка для реализации поведения возврата назад по истории.
     * Пример использования - иерархические реестры
     * @class SBIS3.CONTROLS.BackButton
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @author Крайнов Дмитрий Олегович
     * @demo SBIS3.CONTROLS.Demo.MyBackButton
     *

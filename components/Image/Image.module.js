@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Image',
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS.Image
-          * @extends $ws.proto.CompoundControl
+          * @extends SBIS3.CORE.CompoundControl
           * @author Крайнов Дмитрий Олегович
           *
           * @ignoreOptions validators

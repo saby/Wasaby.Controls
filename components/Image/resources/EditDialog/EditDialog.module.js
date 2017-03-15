@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
    /**
     * SBIS3.CONTROLS.Image.EditDialog
     * @class SBIS3.CONTROLS.Image.EditDialog
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     */
    var EditDialog = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.EditDialog.prototype */{
       _dotTplFn: dotTplFn,
