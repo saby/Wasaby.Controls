@@ -1089,6 +1089,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
          },
+         _addItems: function() {
+            // При добавлении новых элементов восстанавливаем раскрытые узлы, т.к. записи, необходимые для восстановления
+            // состояния дерева могут придти и на второй странице
+            // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
+            applyExpandToItemsProjection(this._getItemsProjection(), this._options);
+         },
          reload: function() {
             // сохраняем текущую страницу при проваливании в папку
             if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
