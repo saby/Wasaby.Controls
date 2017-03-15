@@ -1,0 +1,1104 @@
+@import "../carry/variables";
+
+@black-color:                             #333;
+
+@gray-color:                              #aaa;
+@gray-light-color:                        #eee;
+
+@primary-color:                           #ffcc99;
+@secondary-color:                         #4e5762;
+
+@bg:                                      @secondary-color;
+@text-color:                              @white-color;
+
+@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
+@font-basic-size:                         14px;
+@font-popup-size:                         14px;
+@font-folder-size:                        14px;
+@font-basic-line-height:                  20px;
+
+@closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
+@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -40px;
+@closeBigButtonWidth:                     60px;
+@closeBigButtonHeight:                    40px;
+
+@default-itemHover-color:                 @primary-color;
+@default-itemSelected-color:              @primary-color;
+
+@hover-color:                             @primary-color;
+// ---- //
+// Link //
+// ---- //
+
+@link-text-color:                         #A8ACC3;
+@link-line-height:                        normal;
+@link-font-size:                          24px;
+@link-hover-text-color:                   #FFA34F;
+@link-icon-hover-icon:                    @link-hover-text-color;
+
+@link-icon-margin:                        -2px 0 0;
+
+@link-icon-field-margin:                  0 0 0 4px;
+
+// ------ //
+// Button //
+// ------ //
+
+// Normal button
+@button-font-size:                        24px;
+@button-font:                             @button-font-size @font-basic-name;
+@button-text-alignment:                   center;
+@button-min-width:                        24px;
+@button-padding:                          0 8px;
+@button-icon-top-offset:                  12px;                     // top offset of 16x16 icon
+@button-icon-gap:                         4px;                      // gap between icon and text
+@button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
+@button-icon-big-top-offset:              8px;                     // top offset of 24x24 icon
+@button-icon-big-left-offset:             @button-icon-left-offset;
+@button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
+@button-text-margin:                      0 8px 0 8px;
+@button-text-margin-left:                 8px;
+@button-text-margin-right:                8px;
+@button-text-padding:                     0;                        // padding of text
+@button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+
+@FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
+@FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
+@FilterPanelButtonRightOpen: url('img/FilterPanelButton.png') -70px 0;
+@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.png') -105px 0;
+@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.png') 0 24px;
+@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
+@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
+@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
+
+// ------------------ //
+// FilterPanelChooser //
+// ------------------ //
+@filter-panel-chooser-default-color:                              #F9F9F9;
+@filter-panel-chooser-hovered-color:                              #EAECEE;
+@filter-panel-chooser-selected-color:                             #F3F3F3;
+@filter-panel-chooser-default-text-color:                         #8991A9;
+@filter-panel-chooser-list-view-title-box-shadow-pos:             -10px 0 10px;
+@filter-panel-chooser-list-view-item-cursor:                      pointer;
+@filter-panel-chooser-list-view-item-padding:                     0 0 0 24px;
+@filter-panel-chooser-list-view-item-bg:                          @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-item-bg:                  @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-item-bg:                 @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-check-box-top:                    6px;
+@filter-panel-chooser-list-view-check-box-left:                   4px;
+@filter-panel-chooser-list-view-count-top:                        6px;
+@filter-panel-chooser-list-view-count-right:                      0;
+@filter-panel-chooser-list-view-count-padding:                    6px 8px;
+@filter-panel-chooser-list-view-count-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-title-color:                      @filter-panel-chooser-default-text-color;
+@filter-panel-chooser-list-view-selected-title-color:             @black-color;
+@filter-panel-chooser-list-view-title-max-height:                 54px;
+@filter-panel-chooser-list-view-title-shadow-right:               0;
+@filter-panel-chooser-list-view-title-shadow-top:                 36px;
+@filter-panel-chooser-list-view-title-shadow-width:               15px;
+@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
+@filter-panel-chooser-list-view-title-shadow-bg:                  @filter-panel-chooser-default-color;
+@filter-panel-chooser-list-view-hovered-title-shadow-bg:          @filter-panel-chooser-hovered-color;
+@filter-panel-chooser-list-view-selected-title-shadow-bg:         @filter-panel-chooser-selected-color;
+@filter-panel-chooser-footer-text-align:                          right;
+@filter-panel-chooser-footer-padding:                             0 8px 0 20px;
+@filter-panel-chooser-footer-height:                              30px;
+@filter-panel-chooser-all-button-line-height:                     30px;
+@filter-panel-chooser-dictionary-button-line-height:              30px;
+@filter-panel-chooser-all-button-font-size:                       12px;
+@filter-panel-chooser-dictionary-button-font-size:                12px;
+@filter-panel-chooser-all-button-float:                           left;
+
+// Normal default button
+@button-border:                           @button-border-width none;
+
+@button-hover-border:                     0 none;
+
+@button-active-text-color:                @secondary-color;
+@button-active-border:                    0 none;
+@button-active-bg:                        lighten(@primary-color, 10%);
+
+// Normal primary button
+@button-primary-text-color:               @black-color;
+@button-primary-border:                   0 none;
+@button-primary-bg:                       @primary-color;
+
+@button-primary-hover-border:             0 none;
+@button-primary-hover-shadow:             @button-shadow;
+@button-primary-hover-bg:                 #FFA34F;
+
+@button-primary-active-text-color:        @button-active-text-color;
+@button-primary-active-border:            @button-active-border;
+@button-primary-active-shadow:            @button-active-shadow;
+@button-primary-active-bg:                @button-active-bg;
+
+// Normal disabled button
+@button-disabled-text-color:              @gray-color;
+@button-disabled-border:                  @button-border;
+@button-disabled-bg:                      @gray-light-color;
+
+// Big button
+@button-big-font:                         (@font-basic-size * 1.285714285714286) @font-basic-name;
+@button-big-height:                       58px;
+@button-big-line-height:                  @button-line-height;
+@button-big-padding:                      @button-padding;
+@button-big-icon-top-offset:              20px;                             // top offset of 16x16 icon
+@button-big-icon-left-offset:             8px;
+@button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
+@button-big-icon-big-top-offset:          15px;                             // top offset of 24x24 icon
+@button-big-icon-big-left-offset:         @button-big-icon-left-offset;
+@button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
+@button-big-text-margin:                  0 8px 0 8px;
+@button-big-text-margin-left:             8px;
+
+@button-big-hover-text-color:             @button-hover-text-color;
+@button-big-hover-border:                 @button-hover-border;
+
+@button-big-active-text-color:            @button-active-text-color;
+@button-big-active-border:                @button-active-border;
+
+// Big primary button
+@button-big-primary-hover-text-color:     @button-primary-hover-text-color;
+@button-big-primary-hover-border:         @button-primary-hover-border;
+@button-big-primary-hover-shadow:         @button-primary-hover-shadow;
+
+@button-big-primary-active-text-color:    @button-primary-active-text-color;
+@button-big-primary-active-border:        @button-primary-active-border;
+@button-big-primary-active-shadow:        @button-primary-active-shadow;
+
+@button-icon-32-top-offset:               0;
+@button-icon-32-left-offset:              0;
+
+// ------------ //
+// Button group //
+// ------------ //
+
+@button-group-horizontal-item-margin:     0 16px 0 0;
+@button-group-vertical-item-margin:       0 0 16px 0;
+
+// ------------- //
+// Toggle button //
+// ------------- //
+
+// Normal default button
+@button-checked-text-color:               @button-active-text-color;
+@button-checked-border-width:             @button-border-width;
+@button-checked-font-weight:              normal;
+@button-checked-border:                   @button-active-border;
+@button-checked-bg:                       @button-active-bg;
+@button-checked-icon-top-offset:          @button-icon-top-offset;
+@button-checked-icon-left-offset:         @button-icon-left-offset;
+@button-checked-icon-big-top-offset:      @button-icon-big-top-offset;
+@button-checked-icon-big-left-offset:     @button-icon-big-left-offset;
+
+// Normal primary button
+@button-primary-checked-border:           @button-primary-active-border;
+@button-primary-checked-bg:               @button-primary-active-bg;
+
+// Big default button
+@button-big-checked-border:               @button-big-active-border;
+@button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
+@button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
+@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
+@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
+
+// Big primary button
+@button-big-primary-checked-border:       @button-big-primary-active-border;
+
+// ---------- //
+// Tab button //
+// ---------- //
+
+@tab-button-large-secondAddText-font-size:      13px;
+
+@tab-button-inner-height:                       29px;
+
+// ------------ //
+// Radio button //
+// ------------ //
+
+@radio-button-text-margin:                      0;
+@radio-button-height:                           auto;
+@radio-button-lineheight:                       normal;
+
+@radio-button-text-color:                       @text-color;
+
+@radio-button-hover-text-decoration:            none;
+
+@radio-button-checked-text-color:               @radio-button-text-color;
+@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
+
+@radio-button-disabled-text-color:              @gray-color;
+@radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
+
+@radio-button-icon-width:                       18px;
+@radio-button-icon-height:                      18px;
+@radio-button-icon-line-height:                 normal;
+
+@radio-button-icon-bg:                          transparent;
+
+@radio-button-icon-margin:                      0 8px 0 0 ;
+@radio-button-icon-border-color:                #ffffff;
+@radio-button-icon-border-color-checked:        @primary-color;
+@radio-button-icon-border-color-disabled:       @radio-button-icon-border-color;
+
+@radio-button-icon-border-radius:               9px;
+
+@radio-button-dot-size:                         8px;
+@radio-button-dot-color:                        @primary-color;
+
+// -------- //
+// Checkbox //
+// -------- //
+
+@check-box-text-margin:                         0 8px;
+
+@check-box-text-color:                          @text-color;
+@check-box-hover-text-color:                    @primary-color;
+
+@check-box-disabled-text-color:                 @gray-color;
+
+@check-box-icon-width:                          18px;
+@check-box-icon-height:                         18px;
+@check-box-icon-line-height:                    18px;
+
+@check-box-icon-spritesheet:                    'img/checkbox.png';
+
+@check-box-icon-border:                         1px solid @default-color;
+@check-box-icon-bg:                             transparent;
+
+@check-box-icon-hover-bg:                       transparent;
+
+@check-box-icon-checked-bg:                     transparent url(@check-box-icon-spritesheet) -2px -5px;
+
+@check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
+
+@check-box-icon-third-state-border:             @check-box-icon-border;;
+@check-box-icon-third-state-bg:                 lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
+
+@check-box-icon-disabled-border:                1px solid @gray-color;
+@check-box-icon-disabled-bg:                    transparent;
+@check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
+@check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
+
+
+
+// -------- //
+// Switcher //
+// -------- //
+@switcher-line-color-disabled:                  @gray-light-color;
+@switcher-btn-color-disabled:                   @gray-light-color;
+@switcher-btn-bg-color:                         #202835;
+
+@switcher-border:                               1px solid #293543;
+@switcher-btn-color:                            #FF7033;
+@switcher-do-horizontal-line-background-color:  @switcher-btn-color;
+@switcher-do-text-color:                        @white-color;
+@switcher-do-unselected-text-color:             #999999;
+
+// ---- //
+// Menu //
+// ---- //
+
+@menu-subpopup-margin:                    @menu-margin;
+@menu-border-width:                       1px;
+@menu-border-color:                       @gray-color;
+
+@menu-expand-width:                       8px;
+@menu-expand-top-offset:                  20px;
+@menu-expand-top-offset32:                20px;
+@menu-expand-right-offset:                12px;
+@menu-expand-spritesheet:                 '';
+
+@menu-expand-border-width:                8px 0 8px 8px;
+@menu-expand-border-color:                transparent transparent transparent @primary-color;
+@menu-expand-bg:                          transparent;
+
+@menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
+@menu-expand-hover-bg:                    @menu-expand-bg;
+
+@menu-header-height:                      24px;
+@menu-big-header-height:                  32px;
+@menu-header-padding:                     4px;
+
+// --------- //
+// Menu item //
+// --------- //
+@menu-item-height:                        56px;
+@menu-big-item-height:                    32px;
+@menu-item-padding:                       0 32px 0 16px;
+
+@menu-item-text-color:                    @text-color;
+@menu-item-bg:                            @text-box-focus-bg;
+
+@menu-item-hover-text-color:              @secondary-color;
+@menu-item-hover-bg:                      @default-color;
+@menu-item-hover-icon-color:              @primary-color!important;
+
+@menu-item-icon-top-offset:               0px;
+
+@menu-item-icon-left-offset:              -2px;
+
+@menu-item-icon24-top-offset:               0px;
+@menu-item-icon24-top-offset-big:           0px;
+
+@menu-item-icon24-left-offset:              -2px;
+@menu-item-icon24-left-offset-big:           0px;
+@menu-item-line-height:                   56px;
+
+// ----------- //
+// Menu button //
+// ----------- //
+
+@menu-button-arrow-width:                               10px;
+@menu-button-arrow-height:                              5px;
+@menu-button-arrow-right-offset:                        12px;
+@menu-button-arrow-top-offset:                          24px;
+
+@menu-button-arrow-padding:                             0 36px 0 12px;          // padding for menu button containing dropdown arrow
+@menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
+
+// Default menu button
+@menu-button-text-right-margin:                         30px;                   //this margin reserve space for arrow-down icon
+@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin;
+@menu-button-arrow-spritesheet:                         '';
+
+@menu-button-arrow-border-width:                        8px 8px 0 8px;
+@menu-button-arrow-border-style:                        solid;
+@menu-button-arrow-border-color:                        @secondary-color transparent transparent transparent;
+@menu-button-arrow-bg:                                  transparent;
+
+@menu-button-arrow-hover-border-width:                  @menu-button-arrow-border-width;
+@menu-button-arrow-hover-border-style:                  @menu-button-arrow-border-style;
+@menu-button-arrow-hover-border-color:                  @white-color transparent transparent transparent;
+@menu-button-arrow-hover-bg:                            @menu-button-arrow-bg;
+
+@menu-button-arrow-checked-border-width:                @menu-button-arrow-border-width;
+@menu-button-arrow-checked-border-style:                @menu-button-arrow-border-style;
+@menu-button-arrow-checked-border-color:                @menu-button-arrow-border-color;
+
+@menu-button-arrow-checked-hover-border-width:          @menu-button-arrow-checked-border-width;
+@menu-button-arrow-checked-hover-border-style:          @menu-button-arrow-checked-border-style;
+@menu-button-arrow-checked-hover-border-color:          @menu-button-arrow-border-color;
+
+// Primary menu button
+@menu-button-primary-arrow-spritesheet:                 '';
+
+@menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
+@menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
+@menu-button-primary-arrow-border-color:                @white-color transparent transparent transparent;
+@menu-button-primary-arrow-bg:                          transparent;
+
+@menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
+@menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
+@menu-button-primary-arrow-hover-border-color:          @default-color transparent transparent transparent;
+@menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
+
+@menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
+@menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
+@menu-button-primary-arrow-checked-border-color:        @secondary-color transparent transparent transparent;
+
+@menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
+@menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
+@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
+
+// Disabled menu button
+@menu-button-arrow-disabled-border-width:               @menu-button-arrow-border-width;
+@menu-button-arrow-disabled-border-style:               @menu-button-arrow-border-style;
+@menu-button-arrow-disabled-border-color:               @gray-color transparent transparent transparent;
+@menu-button-arrow-disabled-bg:                         @menu-button-arrow-bg;
+
+// Menu
+@menu-button-menu-top-margin:                           3px;
+@menu-button-menu-border-width:                         @menu-border-width;
+@menu-button-menu-border-color:                         @menu-border-color;
+@menu-button-menu-bg:                                   @white-color;
+
+// --------- //
+// Menu link //
+// --------- //
+
+@menu-link-arrow-spritesheet:             @menu-button-arrow-spritesheet;
+
+@menu-link-arrow-width:                   none;
+@menu-link-arrow-height:                  6px;
+@menu-link-arrow-right-offset:            0;
+@menu-link-arrow-top-offset:              10px;
+@menu-link-arrow-top-offset-big:          14px;
+@menu-link-line-height:                   24px;
+
+@menu-link-arrow-padding:                 0 16px 0 0;
+@menu-link-no-arrow-padding:              0;
+
+@menu-link-arrow-bg:                      @menu-button-arrow-bg;
+
+@menu-link-hover-arrow-bg:                @menu-button-arrow-hover-bg;
+@menu-link-border-color: 						@primary-color transparent transparent transparent;
+@menu-link-border-style: 						solid;
+@menu-link-border-width: 						5px 5px 0 5px;
+
+@menu-link-checked-text-color:            @secondary-color;
+
+// Menu
+@menu-link-menu-margin:                   0 0 0 -9px;
+@menu-link-header-bg-color:               @menu-button-menu-bg;
+@menu-link-menu-border-width:             @menu-border-width;
+@menu-link-icon-24-top:                   -4px;
+
+// Menu header
+@menu-link-header-padding:                6px;
+
+// --------- //
+// Menu icon //
+// --------- //
+
+// Menu
+@menu-icon-menu-margin:                   -5px 0 0 5px;
+
+// Menu header
+@menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
+@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
+@menu-icon-header-left-bg:                transparent;
+
+@menu-icon-header-right-top-offset:       0;            // top offset of icon's right header part
+@menu-icon-header-right-left-offset:      6px;          // left offset of icon's right header part
+@menu-icon-header-right-bg:               transparent;
+
+// -------- //
+// Text box //
+// -------- //
+
+@text-box-wrapper-padding:                0 4px;
+
+@text-box-field-min-height:               38px;
+@text-box-field-padding:                  0;
+
+@text-box-field-text-color:               #666666;
+@text-box-field-focus-text-color:         @white-color;
+@text-box-field-hover-text-color:         @text-box-field-text-color;
+
+@text-box-border-color:                   #314559 #314559 #314559 #314559;
+@text-box-bottom-border-color:            #314559;
+@text-box-bg:                             transparent;
+@text-box-editor-bg:                      #f3f3f3;
+@text-box-editor-text-color:              #999999;
+@combo-box-picker-show-background-color : #f0f5fb;
+@combo-box-picker-show-border-color     :#48bffc;
+@text-box-focus-border-color:             @black-color;
+@text-box-focus-bg:                       @secondary-color;
+
+@text-box-hover-border-width:             @text-box-border-width;
+@text-box-hover-border-style:             @text-box-border-style;
+@text-box-hover-border-color:             @gray-dark-color;
+
+@text-box-disabled-border-bottom:         1px solid #333333;
+
+@text-box-after-width:                    20px;
+@text-box-height: 84px;
+@text-box-overflow:                       initial;
+
+// ------------------ //
+// Formatted text box //
+// ------------------ //
+
+@formatted-text-box-wrapper-min-height:         @text-box-field-min-height;
+
+@formatted-text-box-field-padding:              12px 0 0;
+
+// --------------- //
+// Number text box //
+// --------------- //
+
+@number-text-box-wrapper-margin:                      0;
+
+@number-text-box-arrow-up-height:                     8px;
+@number-text-box-arrow-up-margin:                     8px 0 0;
+
+@number-text-box-arrow-up-bg:                         transparent;
+@number-text-box-arrow-up-border-width:               0 8px 8px 8px;
+@number-text-box-arrow-up-border-color:               transparent transparent @primary-color transparent;
+
+@number-text-box-arrow-up-hover-border-color:         transparent transparent darken(@primary-color, 10%) transparent;
+
+@number-text-box-arrow-up-disabled-bg:                @number-text-box-arrow-up-bg;
+@number-text-box-arrow-up-disabled-border-width:      0;
+@number-text-box-arrow-up-disabled-border-color:      transparent;
+
+@number-text-box-arrow-down-margin:                   6px 0 0;
+
+@number-text-box-arrow-down-bg:                       transparent;
+@number-text-box-arrow-down-border-width:             8px 8px 0 8px;
+@number-text-box-arrow-down-border-color:             @primary-color transparent transparent transparent;
+
+@number-text-box-arrow-down-hover-border-color:       darken(@primary-color, 10%) transparent transparent transparent;
+
+@number-text-box-arrow-down-disabled-bg:              @number-text-box-arrow-down-bg;
+@number-text-box-arrow-down-disabled-border-width:    0;
+@number-text-box-arrow-down-disabled-border-color:    transparent;
+
+// ----------- //
+// DateBox //
+// ----------- //
+@date-box-field-text-color:                           #cccccc;
+
+// ----------- //
+// Search form //
+// ----------- //
+
+@search-background:                                   none;
+@search-disabled-background:                          @text-box-disabled-bg;
+@search-height:                                       40px;
+@search-border-color:                                 transparent;
+@search-hover-border-color:                           #2B3546;
+@search-bottom-border-color:                          @search-hover-border-color;
+@search-form-border-disabled-width:                   @text-box-disabled-border-width;
+@search-form-icon-padding:                            11px 8px 0 0;
+@search-form-icon-disabled-display:                   block;
+@search-loop-size:                                    24px;
+
+// --------- //
+// Combo box //
+// --------- //
+
+@combo-box-arrow-spritesheet:                   '';
+@combo-box-picker-item-font-size: 32px;
+@combo-box-arrow-width:                         16px;
+@combo-box-arrow-height:                        8px;
+@combo-box-arrow-margin:                        -2px 0 0;
+@combo-box-arrow-right-offset:                  4px;
+
+@combo-box-arrow-border-width:                  8px 8px 0 8px;
+@combo-box-arrow-border-color:                  @primary-color transparent transparent transparent;
+@combo-box-arrow-bg:                            transparent;
+
+@combo-box-arrow-hover-border-color:            darken(@primary-color, 10%) transparent transparent transparent;
+@combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
+
+@combo-box-arrow-active-border-width:           0 8px 8px 8px;
+@combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
+@combo-box-field-text-color : #314559;
+@text-box-border-color: #314559 #314559 #314559 #314559;;
+@combo-box-arrow-active-hover-border-width:     @combo-box-arrow-active-border-width;
+@combo-box-arrow-active-hover-border-style:     @combo-box-arrow-active-border-style;
+@combo-box-arrow-active-hover-border-color:     transparent transparent darken(@primary-color, 10%) transparent;
+@combo-box-arrow-active-hover-bg:               @combo-box-arrow-active-bg;
+
+@combo-box-arrow-disabled-border-width:         0;
+@combo-box-arrow-disabled-border-color:         transparent;
+@combo-box-disabled-border-width:               0;
+@combo-box-disabled-border-bottom-color:        #E4E4E4;
+@combo-box-disabled-border-color:               transparent;
+@combo-box-disabled-color:                      #38495B;
+
+@combo-box-picker-border:                       2px solid #48bffc;
+@combo-box-picker-item-padding:                 32px 16px 31px 16px;
+@text-box-field-font-size: 32px;
+@combo-box-picker-item-bg:                      #e1ecf6;
+@combo-box-picker-item-text-color               : #324352;
+@combo-box-picker-item-hover-text-color:        @black-color;
+@combo-box-picker-item-hover-bg:                #f0f5fb;
+
+@combo-box-picker-item-selected-bg:             @combo-box-picker-item-bg;
+
+@compo-box-fieldWrapper-margin-right:           22px;
+@combo-box-after-width:                         @text-box-after-width;
+
+// TODO: check whether it's required
+
+// --------- //
+// Text area //
+// --------- //
+
+@text-area-field-line-height:                   @text-box-field-line-height;
+
+
+@text-area-border-color:                        @gray-dark-color;
+
+@text-area-focus-border-style:                  @text-area-border-color;
+@text-area-focus-border-color:                  @gray-dark-color;
+@text-area-focus-bg:                            @text-box-focus-bg;
+
+@text-area-left-padding:                        5px;
+@text-area-top-padding:                         0;
+@text-area-right-padding:                       5px;
+@text-area-bottom-padding:                      0;
+
+// ----------- //
+// Suggest //
+// ----------- //
+
+@suggest-picker-border:                         1px solid @gray-color;
+@suggest-picker-margin:                         -1px;
+
+@suggest-list-item-hover-bg:                    #f3f3f3;
+@suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
+@suggest-list-footer-height:                    30px;
+@suggest-list-footer-padding:                   0 8px;
+
+// ----------- //
+// Date picker //
+// ----------- //
+
+@date-picker-calendar-icon-top-offset:          15px;
+@date-picker-calendar-icon-left-offset:         4px;
+
+// -------- //
+// Calendar //
+// -------- //
+
+@calendar-width:                                auto;
+@calendar-bg:                                   darken(@secondary-color, 5%);
+
+@data-grid-cell-box-sizing: 									border-box;
+@calendar-day-cell-text-color:                  @text-color;
+@calendar-day-cell-bg:                          @secondary-color;
+@calendar-day-cell-hover-text-color:            @black-color;
+@calendar-day-cell-hover-bg:                    @default-color;
+@calendar-day-cell-active-text-color:           @secondary-color;
+@calendar-day-cell-active-bg:                   @primary-color;
+@calendar-day-cell-active-hover-text-color:     @calendar-day-cell-hover-text-color;
+@calendar-day-cell-active-hover-bg:             @calendar-day-cell-hover-bg;
+
+// --------- //
+// MonthView //
+// --------- //
+
+@month-view-font:                                 inherit;
+@month-view-width:                                215px;
+@month-view-padding:                              8px 0 0;
+@month-view-bg:                                   @white-color;
+
+@month-view-month-picker-width:                   148px;
+
+@month-view-day-border-spacing:                   1px;
+
+@month-view-day-header-font:                      11px @font-basic-name;
+@month-view-day-header-text-alignment:            center;
+
+@month-view-day-body-font:                        @month-view-font;
+@month-view-day-body-text-alignment:              left;
+
+@month-view-day-cell-width:                       56px;
+@month-view-day-table-cell-height:                24px;
+@month-view-day-table-cell-padding:               0 0 0 8px;
+
+@month-view-day-cell-cursor:                      pointer;
+@month-view-day-cell-text-color:                  inherit;
+@month-view-day-cell-bg:                          #f2f2f2;
+@month-view-day-cell-hover-text-color:            @month-view-day-cell-text-color;
+@month-view-day-cell-hover-bg:                    #e5ecf4;
+@month-view-day-cell-active-text-color:           @month-view-day-cell-text-color;
+@month-view-day-cell-active-bg:                   #ffc37e;
+@month-view-day-cell-active-hover-text-color:     @month-view-day-cell-active-text-color;
+@month-view-day-cell-active-hover-bg:             @month-view-day-cell-active-bg;
+
+@month-view-day-fog-cell-cursor:                  default;
+@month-view-day-fog-cell-text-color:              @gray-color;
+@month-view-day-fog-cell-bg:                      transparent;
+@month-view-day-fog-cell-hover-text-color:        @month-view-day-fog-cell-text-color;
+@month-view-day-fog-cell-hover-bg:                @month-view-day-fog-cell-bg;
+
+// ------------ //
+// Month picker //
+// ------------ //
+
+@month-picker-field-height:                     24px;
+
+@month-picker-arrow-spritesheet:                '';
+
+@month-picker-arrow-width:                      8px;
+
+@month-picker-left-arrow-border-width:          8px 8px 8px 0;
+@month-picker-left-arrow-border-color:          transparent @primary-color transparent transparent;
+@month-picker-left-arrow-bg:                    transparent;
+
+@month-picker-left-arrow-hover-border-color:    transparent darken(@primary-color, 10%) transparent transparent;
+@month-picker-left-arrow-hover-bg:              @month-picker-left-arrow-bg;
+
+@month-picker-right-arrow-border-width:         8px 0 8px 8px;
+@month-picker-right-arrow-border-color:         transparent transparent transparent @primary-color;
+@month-picker-right-arrow-bg:                   transparent;
+
+@month-picker-right-arrow-hover-border-color:   transparent transparent transparent darken(@primary-color, 10%);
+@month-picker-right-arrow-hover-bg:             @month-picker-right-arrow-bg;
+
+@month-picker-wrapper-border:                   1px solid @gray-color;
+@month-picker-wrapper-bg:                       @text-box-focus-bg;
+
+@month-picker-item-text-color:                  @text-color;
+
+@month-picker-item-hover-text-color:            @black-color;
+@month-picker-item-hover-bg:                    @default-color;
+
+@month-picker-item-active-text-color:           @secondary-color;
+@month-picker-item-active-bg:                   @primary-color;
+
+// ---------- //
+// Data Range //
+// ---------- //
+
+@date-range-line-height:                        24px;
+@date-range-text-line-height:                   normal;
+
+// ----------------- //
+// Data Range Slider //
+// ----------------- //
+@date-range-slider-font-family:                 'TensorFont Regular', 'TensorFont', sans-serif;
+@date-range-slider-color:                       @white-color;
+@date-range-slider-hover-color:                 #ff7033;
+@date-range-slider-hover-text-decoration:       underline;
+@date-range-slider-font-size:                   20px;
+@date-range-slider-value-font-weight:           bold;
+@date-range-slider-prev-next-buttons-hover-color:  @blue-dark-color;
+@date-range-slider-prev-next-buttons-font-weight:  normal;
+
+
+// ----------------- //
+// Date Range Choose //
+// ----------------- //
+@date-range-choose-bg-active-color:             #e1ecf6;
+@date-range-choose-border-color:                @gray-light-color;
+@date-range-choose-font-family:                 'TensorFont Regular', 'TensorFont', sans-serif;
+@date-range-choose-font-size:                   20px;
+@date-range-choose-hover-color:                 @blue-dark-color;
+
+
+@date-range-choose-current-value-font-size:     @date-range-choose-font-size;
+@date-range-choose-current-value-font-weight:   bold;
+@date-range-choose-current-value-height:        54px;
+@date-range-choose-current-value-line-height:   52px;
+
+@date-range-choose-year-font-size:              @date-range-choose-font-size;
+@date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
+
+// -------------- //
+// Date Range Big //
+// -------------- //
+
+@date-range-big-choose-years-height:                           40px;
+@date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
+
+@date-range-big-choose-quarters-half-years-font-size:                inherit;
+@date-range-big-choose-month-range-padding:                          8px;
+@date-range-big-choose-month-range-picker-month-width:               84px;
+@date-range-big-choose-month-range-picker-month-height:              96px;
+@date-range-big-choose-month-range-picker-caption-height:            24px;
+@date-range-big-choose-month-range-picker-caption-font-size:         14px;
+@date-range-big-choose-month-range-picker-table-element-height:      11px;
+@date-range-big-choose-month-range-picker-table-element-font-size:   8px;
+
+// ------------- //
+// Edit at place //
+// ------------- //
+
+@edit-at-place-wrapper-text-area-padding:       0 5px;
+@edit-at-place-wrapper-border-width:            1px;
+
+@edit-at-place-editor-overlay-margin:           -10px 0 0 -10px;
+@edit-at-place-editor-overlay-padding:          10px;
+@edit-at-place-editor-overlay-border:           none;
+@edit-at-place-editor-overlay-border-radius:    3px;
+@edit-at-place-editor-overlay-bg:               darken(@secondary-color, 5%) !important;
+
+// --------- //
+// List view //
+// --------- //
+@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
+@listView-check-box-icon-bg:                    @check-box-icon-bg;
+@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
+@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
+@list-view-actions-item-height:                 16px;
+@list-view-actions-margin:                      0 4px;
+@list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
+@list-view-actions-active-bg:                   #F3F3F3;
+
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-line-height:                16px;
+@list-view-items-toolbar-vertical-line-height:       24px;
+@list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
+@touch-mode-items-toolbar-icon-margin-top:           -24px;
+
+@list-view-actions-menu-icon-width:             16px;
+
+
+@list-view-actions-menu-close-top:              4px;
+@list-view-actions-menu-close-right:            4px;
+@list-view-actions-menu-close-height:           16px;
+@list-view-actions-menu-close-width:            16px;
+@list-view-actions-menu-padding:                @menu-padding;
+
+@listView-empty-data-color:                     @black-color;
+@listView-empty-data-font-size:                 15px;
+@listView-empty-data-padding-top:               46px;
+
+// --------- //
+// Tree view //
+// --------- //
+
+@tree-view-expand-spritesheet:                  '';
+
+
+@tree-view-expand-height:                       21px;
+@tree-view-expand-margin:                       0 2px 0 -2px;
+
+@tree-view-value-left-margin:                   @tree-view-expand-width;
+
+@tree-view-editArrow-top:                       2px;
+
+@tree-view-expand-bg:                           transparent;
+
+@tree-view-expand-hover-bg:                     @tree-view-expand-bg;
+
+@tree-view-expand-open-margin:                  8px 0 0;
+
+@tree-view-expand-open-border-width:            8px 8px 0 8px;
+@tree-view-expand-open-bg:                      transparent;
+
+@tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
+
+@tree-view-item-content-margin:                 0 0 0 20px;
+
+@tree-view-child-container-padding:             0 0 0 20px;
+@tree-view-hier-wrapper-width:						20px;
+@tree-view-hier-wrapper-height: 						20px;
+
+@tree-view-copy-arrow-background:               #202835;
+
+// --------- //
+// Data grid //
+// --------- //
+
+@data-grid-bg:                                  @text-box-focus-bg;
+
+@data-grid-row-hover-bg:                        @default-color;
+@data-grid-row-selected-bg:                     @data-grid-row-bg;
+
+@data-grid-row-hover-cell-text-color:           @black-color;
+
+@data-grid-header-cell-height:                  32px;
+@data-grid-cell-line-height:                    21px;
+@data-grid-header-cell-padding:                 0 10px;
+@data-grid-header-cell-padding-side:            10px;
+@data-grid-header-cell-font-size:               12px;
+
+@data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
+
+@data-grid-cell-height:                         @data-grid-header-cell-height;
+@data-grid-cell-padding:                        @data-grid-header-cell-padding;
+@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
+@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
+@data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
+@data-grid-cell-vertical-align: 				middle;
+@data-grid-cell-check-box-vertical-align: 		top !important;
+
+@data-grid-edge-cell-separator-color:           #2B3546;
+
+@data-grid-td-checkbox-width:                   16px;
+@data-grid-td-visible-checkbox-width:           24px;
+@data-grid-check-box-top:                       5px;
+@data-grid-check-box-left:                      4px;
+@data-grid-folder-font-size: 							15px;
+
+@data-grid-table-layot: 								fixed;
+
+// --------------- //
+// OperationsPanel //
+// --------------- //
+
+@controls-OperationsPanel-height:                   30px;
+
+@controls-OperationsPanel-bg:                       #38495B;
+
+@controls-OperationsPanel-actions-margin:           0 4px;
+
+@controls-OperationsPanel-separator-bg:             #CCCCCC;
+@controls-OperationsPanel-separator-height:         20px;
+@controls-OperationsPanel-separator-line-height:    30px;
+
+@controls-OperationsPanel-actions-padding-left:     0;
+
+// ----------------------- //
+// OperationsPanelButton  //
+// ----------------------- //
+
+@controls-OperationsPanelButton-width:             24px;
+@controls-OperationsPanelButton-vert-height:       24px;
+@controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-icon-left:         6px;
+
+// ----------------------- //
+//      EditInPlace        //
+// ----------------------- //
+@controls-editInPlace-editor-padding:               3px 1px;
+@controls-editInPlace-first-editor-padding-left:    1px;
+@controls-editInPlace-editor-without-offset-margin: 0;
+
+// --------------- //
+// OperationsMark //
+// --------------- //
+
+@controls-OperationsMark-checkBox-margin:     0 4px;
+
+// --------------- //
+//    MultiView    //
+// --------------- //
+@listView-check-box-left:                           3px;
+@listView-check-box-top:                            5px;
+@listView-check-box-border:                         1px solid;
+@listView-check-box-width:                          18px;
+@listView-check-box-height:                         18px;
+@multiView-tile-item-border:                        1px solid @gray-light-color;
+@multiView-tile-item-min-width:                     128px;
+@multiView-tile-item-image-margin:                  10px 40px;
+@multiView-tile-item-text-margin:                   7px;
+@multiView-tile-selected-item-bg:                   #E7F0F9;
+
+// --------------- //
+// DropdownList//
+// --------------- //
+@DropdownList-border-color:                   #e4e4e4;
+
+//Pager
+@controls-Pager-amount-text :                     #999999;
+
+//FilterButton
+@controls-filterButton-picker-bg:                 #38495B;
+@controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
+@controls-filterButton-picker-border-width:       0;
+@controls-filterButton-picker-border-radius:      0;
+@controls-filterButton-picker-margin-top:         -1px;
+@controls-Popup-closeButton-top:                  16px;
+
+@controls-filterButton-button-height:             24px;
+@controls-filterButton-button-margin:             8px 8px 8px 0;
+@controls-filterButton-button-margin-ff:          8px 32px 8px 0;
+
+@controls-filterButton-button-arrow-margin:       -4px;;
+
+@controls-filterButton-area-header-padding:       16px 76px 16px 12px;
+
+@controls-filterButton-area-text-size:            24px;
+@controls-filterButton-area-text-color:           @primary-color;
+@controls-filterButton-clear-margin-right:        16px;
+
+@controls-filterButton-area-content-margin:       0 16px 12px 16px;
+@controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
+@controls-filterButton-line-height:               41px;
+@controls-filterButton-apply-margin-right:        0;
+
+//FilterButtonToggleButton
+@controls-filterButton-toggleButton-icon-down:    "\e902";
+@controls-filterButton-toggleButton-icon-up:      "\e904";
+@controls-filterButton-toggleButton-color:        #CCCCCC !important;
+
+//FilterLine
+@controls-filterLine-wrapper-height:              24px;
+@controls-filterLine-line-display:                table-row;
+@controls-filterLine-items-display:               table-cell;
+@controls-filterLine-items-padding:               0;
+@controls-filterLine-arrow-height:                19px;
+@controls-filterLine-link-color:                  #0055bb;
+@controls-filterLine-link-hover-color:            @primary-color;
+
+@controls-filterLine-copyCross-top:               -28px;
+@controls-filterLine-copyCross-margin:            -16px;
+@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
+@controls-filterLine-copyCross-cross-top:         3px;
+
+//FieldLink
+@controls-FieldLink-showAllLinks-lineHeight:       22px;
+@controls-FieldLink-linkItem-line-height:          18px;
+@controls-FieldLink-showAllLinks-width:            20px;
+
+@controls-FieldLink-linkItem-margin:               2px 0;
+@controls-FieldLink-linkItem-padding:              0 17px 0 4px;
+@controls-FieldLink-linkItem-caption-height:       16px;
+@controls-FieldLink-linkItem-cross-width:          20px;
+@controls-FieldLink-linkItem-cross-right:          -4px;
+@controls-FieldLink-linkItem-cross-top:            -3px;
+
+@controls-FieldLink-afterField-padding:            0 4px 0 0;
+@controls-FieldLink-afterField-height:             22px;
+
+@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-margin:   2px 4px;
+
+@controls-FieldLink-afterField-background:         @white-color;
+@controls-FieldLink-link-color:                    #8991A9;
+@controls-FieldLink-link-color-hover:              #313E78;
+@controls-FieldLink-showAll-shadow-width:          20px;
+@controls-FieldLink-showAll-margin-right-ff:       -15px;
+
+//SelectorButton
+@controls-SelectorButton-align:                    middle;
+
+// BackButton
+@back-button-font-size:                            18px;
+@back-button-margin-before:                        0;
+@back-button-padding-before:                       0;
+
+// BreadCrumbs
+@breadcrumbs-top:                                  4px;
+@breadcrumbs-smallItems-font-size:                 13px;
+@breadcrumbs-arrow-top:                            2px;
+@breadcrumbs-small-items-top:                      inherit;
+
+// EditDialog
+@editdialog-applybutton-width:                     90px;
+@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними
+@editdialog-template-minwidth:                     auto;
+@editdialog-applybutton-top:                       8px;
+
+//MoveDialog
+@controls-movedialog-activate-right:               38px;
+@controls-movedialog-activate-top:                 8px;
+@controls-movedialog-min-width:                    auto;
+@controls-movedialog-padding:                      0 0 5px 0;
+@controls-movedialog-min-height:                   50px;
+@controls-movedialog-min-width:                    auto;
+
+@controls-Paging-item-width:                       24px;
+@controls-Paging-btn-width:                        16px;
+@controls-Paging-btn-height:                       16px;
+@controls-Paging-btn-margin:                       8px 0;
+@controls-Paging-btn-padding:                      8px;
+
+//Scrollbar
+@controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+
+@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+
+//InformationPopup
+@controls-InformationPopup-bg:                  #293543;
+@controls-InformationPopup-border:              1px solid @controls-InformationPopup-bg;
+@controls-InformationPopup-border-bottom:       @controls-InformationPopup-border !important;
+@controls-InformationPopup-border-top:          3px solid;
+
+//SubmitPopup
+@controls-SubmitPopup-border-top:               none;
+@controls-SubmitPopup-border-bottom:            @controls-InformationPopup-border;
+@controls-SubmitPopup-border-left:              @controls-InformationPopup-border;
+@controls-SubmitPopup-border-right:             @controls-InformationPopup-border;
+@controls-SubmitPopup-message-color:            #FFFFFF;
+@controls-SubmitPopup-details-color:            #999999;
+
+//NotificationPopup
+@controls-NotificationPopup-border-top:         none;
+@controls-NotificationPopup-border-bottom:      @controls-InformationPopup-border;
+@controls-NotificationPopup-border-left:        @controls-InformationPopup-border;
+@controls-NotificationPopup-border-right:       @controls-InformationPopup-border;
+
+//TabButton
+@tab-buttons-border-bottom:                     1px solid #293543;
+
+//Browser
+@controls-Browser-ListView-minHeight:           90px;
+@text-box-field-font-size: 32px;
