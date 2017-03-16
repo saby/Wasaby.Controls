@@ -2079,16 +2079,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             return offset < 0 ? false : hasNextPage;
          }
       },
-      _scrollTo: function scrollTo(target, toBottom) {
+      _scrollTo: function scrollTo(target, toBottom, depth) {
          if (typeof target === 'string') {
             target = $(target);
          }
-         LayoutManager.scrollToElement(target, toBottom);
+         LayoutManager.scrollToElement(target, toBottom, depth);
       },
-      _scrollToItem: function(itemId, toBottom) {
+      _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer, toBottom);
+            this._scrollTo(itemContainer, toBottom, depth);
          }
       },
       /**
