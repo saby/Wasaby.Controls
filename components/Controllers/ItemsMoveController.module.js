@@ -73,7 +73,8 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
          var
             items = this._options.linkedView.getItems(),
             item, selectedKeysCount;
-         if (changes.added.length) {
+         // Костыль до 3.7.5.30. В 3.7.5.30 он выпилен вместе с функционалом перемещения записи вверх при отметке.
+         if (changes.added.length === 1) {
             item = items.getRecordById(changes.added[0]);
             selectedKeysCount = selectedKeys.length;
             if (selectedKeysCount > 1) {
