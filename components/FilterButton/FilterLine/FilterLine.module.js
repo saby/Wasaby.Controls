@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
       'html!SBIS3.CONTROLS.FilterButton.FilterLine',
-      'Core/helpers/string-helpers'
+      'Core/helpers/string-helpers',
+      'Core/Sanitize'
    ],
-   function(CompoundControl, FilterToStringUtil, dotTplFn, strHelpers) {
+   function(CompoundControl, FilterToStringUtil, dotTplFn, strHelpers, Sanitize) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
@@ -34,6 +35,8 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                   } else {
                      linkText = context.getValue('filterResetLinkText');
                   }
+
+                  linkText = Sanitize(linkText);
 
                   context.setValueSelf({
                      linkText: linkText,
