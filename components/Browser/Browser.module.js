@@ -39,24 +39,37 @@ define('js!SBIS3.CONTROLS.Browser', [
 
    var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
       /**
-       * @event onEdit при редактировании/создании записи
-       * @event onEditCurrentFolder при редактировании записи текущей папки (только в случае иерархического представления!)
+       * @event onEdit Происходит при редактировании или создании новой записи реестра.
+       * @remark
+       * Для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a> событие происходит только для записей типа "Лист" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {String} id Ид редактируемой записи. Для добавления будет null
-       * @param {SBIS3.CONTROLS.Record} item Редактируемая запись
-       * @example
+       * @param {Object} meta Мета параметры события.
+       * @param {String|Number} meta.id Идентификатор записи. В случае создания новой записи значение параметра - null.
+       * @param {WS.Data/Entity/Record} meta.item Экземпляр класса записи. В случае создания новой записи значение параметра - null.
+       */
+      /**
+       * @event onEditCurrentFolder Происходит при редактировании или создании новой папки (записей типа "Узел" и "Скрытый узел").
+       * @remark
+       * Подробнее о типах записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
+       * Событие актуально только для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a>.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {String} id Идентификатор редактируемой папки. В случае добавления новой папки значение параметра - null.
+       */
+      /**
+       * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS.FastDataFilter}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS.FilterButton}).
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        */
       /**
        * @typedef {Object} СolumnsConfigObject
-       * @property {WS.Data/Collection/RecordSet} columns Рекордсет с полным списком возможных колонок табличного представления.
-       * Содержит следующие обязательные поля:
+       * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
+       * Поля записи:
        * <ol>
-       *    <li><b>id</b> - идентификатор колонки.</li>
-       *    <li><b>title</b> - описание колонки.</li>
-       *    <li><b>fixed</b> - признак фиксированности колонки. Фиксированная колонка отображается вне зависимости от присутсвия её в списке колонок для отображения.</li>
-       *    <li><b>columnConfig</b> - конфигурация колонки. Данный {Object} используется в связанном табличном представлении в качестве настроек колонки.</li>
+       *    <li><b>id (String)</b> - идентификатор элемента.</li>
+       *    <li><b>title (String)</b> - отображаемый текст элемента.</li>
+       *    <li><b>fixed (Boolean)</b> - признак "Фиксированный". На панели редактирования колонок элементы с таким признаком выбраны и недоступны для взаимодействия, а колонки элемента, описанные в опции **columnConfig**, всегда отображены в списке.</li>
+       *    <li><b>columnConfig (Array)</b> - массив с конфигурацией колонок (см. {@link SBIS3.CONTROLS.DataGridView#columns columns}).</li>
        * </ol>
-       * @property {Array} selectedColumns Массив идентификаторов колонок, используемых в представлении данных.
+       * @property {Array.<String|Number>} selectedColumns Массив идентификаторов элементов, которые будут отмечены на панели редактирования колонок. Параметр актуален для элементов с опцией *fixed=false*.
        */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -130,9 +143,77 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
-	         contentTpl: null,
+	        contentTpl: null,
             /**
-             * @cfg {СolumnsConfigObject} columnsConfig Конфигурация колонок
+             * @cfg {СolumnsConfigObject} Устанавливает параметры для Панели редактирования колонок.
+             * @remark
+             * Вызов панели производят кликом по иконке с шестерёнкой, которая расположена справа от строки поиска.
+             * Иконка отображается, когда в опции установлено значение.
+             * @example
+             * 1. В файле MyColumnsConfig.module.js описан RecordSet для конфигурации Панели редактирования колонок:
+             * <pre>
+             * define('js!SBIS3.MyArea.MyColumnsConfig', ['js!WS.Data/Collection/RecordSet'], function(RecordSet) {
+             *    var data = [
+             *        {
+             *           id: 1,
+             *           title: 'Базовая группа колонок',
+             *
+             *           // Признак "Фиксированный"
+             *           fixed: true,
+             *           columnConfig: [
+             *              {
+             *                 title: 'Идентификатор',
+             *                 field: '@Товар'
+             *              },
+             *              {
+             *                 title: 'Наименование',
+             *                 field: 'Наименование',
+             *                 className: 'controls-DataGridView-cell-overflow-ellipsis'
+             *              }
+             *           ]
+             *       },
+             *       {
+             *          id: 2,
+             *          title: 'Колонка "Дата выпуска"',
+             *          fixed: false,
+             *          columnConfig: [{
+             *              title: 'Дата выпуска',
+             *              field: 'Дата_выпуска'
+             *          }]
+             *       },
+             *       ...
+             *    ];
+             *    return new RecordSet({
+             *       rawData: data,
+             *       idProperty: 'id'
+             *    });
+             * });
+             * </pre>
+             * 2. Для JS-модуль реестра импортирован RecordSet:
+             * <pre>
+             * define('js!SBIS3.MyArea.MyReportBrowser',[ ... , 'js!SBIS3.MyArea.MyColumnsConfig'], function(... , MyColumnsConfig) {
+             *    ...
+             *    $protected: {
+             *       _options : {
+             *
+             *          // Создана опция для конфигурации опции columnsConfig
+             *          _columnsConfig: {
+             *             columns: myConfig,
+             *             selectedColumns: [2, 3]
+             *          }
+             *       }
+             *    }
+             *    ...
+             * });
+             * </pre>
+             * 3. В разметке реестра передана конфигурация в опцию columnsConfig:
+             * <pre>
+             *     <ws:SBIS3.Engine.ReportBrowser columnsConfig="{{ _columnsConfig }}">
+             *         ...
+             *     </ws:SBIS3.Engine.ReportBrowser>
+             * </pre>
+             * @see setColumnsConfig
+             * @see getColumnsConfig
              */
             columnsConfig: null,
             /**
@@ -246,16 +327,20 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._getView().redraw();
       },
       /**
-       * Задает конфигурацию колонок
-       * @param config {Object} Конфигурация редактора колонок
+       * Устанавливает параметры для Панели конфигурации колонок списка.
+       * @param config {Object} Конфигурация.
+       * @see columnsConfig
+       * @see getColumnsConfig
        */
       setColumnsConfig: function(config) {
          this._options.columnsEditorConfig = config;
          this._notifyOnPropertyChanged('columnsEditorConfig');
       },
       /**
-       * Возвращает конфигурацию колонок
-       * @returns {Object} Конфигурация редактора колонок
+       * Возвращает параметры, установленные для Панели конфигурации колонок списка.
+       * @returns {Object} Конфигурация.
+       * @see columnsConfig
+       * @see setColumnsConfig
        */
       getColumnsConfig: function() {
          return this._options.columnsConfig;
