@@ -281,12 +281,14 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * @param position
        */
       _changeHierarchy: function(items, movedItems, target) {
-         movedItems.forEach(function (movedItem) {
-            movedItem.set(this._options.parentProperty, target ? target.getId() : null);
-            if (items.getIndex(movedItem) == -1) {
-               items.add(movedItem);
-            }
-         }.bind(this));
+         if (this._options.parentProperty) {
+            movedItems.forEach(function (movedItem) {
+               movedItem.set(this._options.parentProperty, target ? target.getId() : null);
+               if (items.getIndex(movedItem) == -1) {
+                  items.add(movedItem);
+               }
+            }.bind(this));
+         }
       },
       /**
        * Перемещает элементы по иерархии.
