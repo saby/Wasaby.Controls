@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeSliderBase',
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link'
-], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil) {
+], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
    /**
@@ -83,6 +84,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue, {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
          return opts;
       },
 
