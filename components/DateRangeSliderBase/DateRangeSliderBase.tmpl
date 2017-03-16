@@ -5,10 +5,10 @@
    <span class="controls-DateRangeSlider__value-wrapper">
       <ws:partial template="{{lockIconTemplate}}" scope="{{...}}"></ws:partial>
       <ws:if data="{{ type == 'normal' }}">
-         <span class="controls-DateRangeSlider__value">{{'&nbsp;'|sanitize}}</span>
+         <span class="controls-DateRangeSlider__value">{{ _caption }}</span>
       </ws:if>
       <ws:else>
-         <ws:SBIS3.CONTROLS.Link name="Link"/>
+         <ws:SBIS3.CONTROLS.Link name="Link" caption="{{ _caption }}"/>
       </ws:else>
    </span>
    <ws:if data="{{ showNextArrow }}">
