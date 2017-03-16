@@ -358,7 +358,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload(); //todo - убрать в 375. Если нужен reload, должны позвать сами. Наша логика перерисовки содержится в itemsControlMixin'e
             this._bindItemSelect();
 
             if(!this._isHoverMode()) {
@@ -580,7 +579,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Ширина шапки не больше, чем ширина контейнера
             if (needResizeHead){
                this._pickerHeadContainer.width(containerWidth);
-               pickerHeaderWidth = containerWidth; //изменилась ширина контейрена, нужно взять актуальную
+               //изменилась ширина контейрена, нужно взять актуальную
+               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+               pickerHeaderWidth = containerWidth;
             }
 
             //Контейнер с итемами ресайзится в 2-х случаях
@@ -617,8 +618,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._picker.getContainer();
          },
          _drawItemsCallback: function() {
-            if (this._isEmptyValueSelected()){
-               this._options.selectedKeys = [null];
+            if (this._isEmptyValueSelected()) {
+               if (this.getSelectedKeys()[0] !== null) {
+                  this._options.selectedKeys = [null];
+               }
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
@@ -675,7 +678,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               this._options.selectedKeys = [id];
+               this._options.selectedKeys.push(id);
             }
          },
          _setHasMoreButtonVisibility: function(){

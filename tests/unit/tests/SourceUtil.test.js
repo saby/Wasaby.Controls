@@ -14,16 +14,16 @@ define(['js!SBIS3.CONTROLS.Utils.SourceUtil', 'js!WS.Data/Source/Memory', 'Core/
             return new Memory();
          };
 
-         //TODO отключаю пока, падает тест по неизвестной причине под нодой
-         // var sourceOpts = {
-         //   module: 'js!WS.Data/Source/Memory',
-         //   options: {}
-         // };
-         // it('source from options', function (){
-         //    assert.equal(cInstance.instanceOfMixin(SourceUtil.prepareSource(sourceOpts), 'WS.Data/Source/ISource'), true);
-         // });
+         var sourceOpts = {
+            module: 'js!WS.Data/Source/Memory',
+            options: {}
+         };
 
          var createdSource = new Memory();
+
+         it('source from options', function (){
+            assert.equal(cInstance.instanceOfMixin(SourceUtil.prepareSource(sourceOpts), 'WS.Data/Source/ISource'), true);
+         });
 
          it('source from function', function (){
             assert.equal(cInstance.instanceOfMixin(SourceUtil.prepareSource(getSourceFromFunc), 'WS.Data/Source/ISource'), true);

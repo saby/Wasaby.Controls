@@ -91,14 +91,6 @@
          color: #313E78;
       }
 
-      .controls-DataGridView__tr {
-         &.controls-ListView__item__multiSelected {
-            .controls-DataGridView__notScrolledCell {
-               background-color: @data-grid-row-selected-bg;
-            }
-         }
-      }
-
       .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__th__topRow{
             text-align: center;
@@ -130,16 +122,6 @@
 
       .controls-DataGridView__tr {
          background: @data-grid-row-bg;
-
-         &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
-            &.controls-ListView__item {
-               background-color: @data-grid-row-selected-bg;
-            }
-            .controls-DataGridView__td {
-               background-color: @data-grid-row-selected-bg;
-               color: @data-grid-row-selected-cell-text-color;
-            }
-         }
 
          &.controls-ListView__hoveredItem {
             background: @data-grid-row-hover-bg;
@@ -187,6 +169,7 @@
             background-color: @data-grid-header-cell-hover-bg;
          }
          .controls-ListView__itemCheckBox{
+            .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
             margin: -3px 0 0 4px;
             background: @listView-check-box-icon-bg;
             &.controls-DataGridView__th__checkBox__checked{
@@ -249,6 +232,7 @@
          vertical-align: @data-grid-cell-check-box-vertical-align;
          overflow: hidden;
          .controls-ListView__itemCheckBox {
+            .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
             top: @data-grid-check-box-top;
             left: @data-grid-check-box-left;
          }
@@ -429,4 +413,13 @@
        }
     }
   }
+}
+
+.controls-DataGridView__headSorting {
+   &.controls-Link {
+      .controls-Link__icon + .controls-Link__field {
+         margin: 0;
+      }
+      font-size: @data-grid-header-cell-font-size;
+   }
 }

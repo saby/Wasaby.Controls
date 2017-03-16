@@ -1,4 +1,4 @@
-rootUrl: http://test-autotest67:31489
+rootUrl: http://test-autotest103:35000
 gridUrl: http://10.76.159.209:4444/wd/hub
 screenshotsDir: './screenshots'
 windowSize: 1024x768
