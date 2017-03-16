@@ -79,7 +79,12 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
          container.find('.controls-DateRangeSlider__next').click(this._onNextBtnClick.bind(this));
 
          this.subscribe('onRangeChange', this._updateValueView.bind(this));
-         this._updateValueView();
+      },
+
+      _modifyOptions: function() {
+         var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue, {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         return opts;
       },
 
       _onPrevBtnClick: function () {
