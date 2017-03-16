@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/helpers/functional-helpers",
        "Core/helpers/string-helpers",
        "Core/helpers/collection-helpers",
+       "Core/ParserUtilities",
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
        "js!SBIS3.CONTROLS.MultiSelectable",
@@ -17,6 +18,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
        "html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
        "html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
+       "tmpl!SBIS3.CONTROLS.FieldLink/textFieldWrapper",
        "js!SBIS3.CONTROLS.Utils.DialogOpener",
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
@@ -38,6 +40,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         fHelpers,
         strHelpers,
         colHelpers,
+        ParserUtilities,
         SuggestTextBox,
         ItemsControlMixin,
 
@@ -57,6 +60,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /* Служебные шаблоны поля связи */
         afterFieldWrapper,
         beforeFieldWrapper,
+        textFieldWrapper,
         /********************************************/
         DialogOpener,
         ITextValue,
@@ -178,6 +182,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
+                textFieldWrapper: textFieldWrapper,
                 /**********************************************************************************************/
                  list: {
                    component: 'js!SBIS3.CONTROLS.DataGridView',
@@ -731,6 +736,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 if(selectedKeysLength === 1 || !selectedKeysLength) {
                    classesToAdd.push(classes.SELECTED_SINGLE);
                 }
+             }
+
+             /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
+             cfg._useNativePlaceholder = cfg.placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+
+             if(!cfg._useNativePlaceholder) {
+                cfg.placeholder = ParserUtilities.buildInnerComponentsExtended(cfg.placeholder, cfg).markup;
              }
 
              /* className вешаем через modifyOptions,
