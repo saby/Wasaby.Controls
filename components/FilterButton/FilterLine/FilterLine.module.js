@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                      linkText = context.getValue('filterResetLinkText');
                   }
 
-                  linkText = Sanitize(linkText);
+                  linkText = Sanitize(linkText, {validNodes: {component: true}});
 
                   context.setValueSelf({
                      linkText: linkText,
