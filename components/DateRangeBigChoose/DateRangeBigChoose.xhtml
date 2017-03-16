@@ -20,6 +20,20 @@
                <option name="onTextChangeMode">onTextEnter</option>
                <option name="tabindex">2</option>
                <option name="mask">{{=it.mask}}</option>
+               {{? it.rangeselect }}
+               <options name="validators" type="array">
+                  <options>
+                     <option name="validator" type="function" value="js!SBIS3.CONTROLS.DateRangeBigChoose.Validators:compareExt"></option>
+                     <option name="option">date</option>
+                     <option name="errorMessage">{{=rk('Дата конца периода должна быть больше даты начала.')}}</option>
+                     <options name="params" type="array">
+                        <option>DatePickerStart</option>
+                        <option>getDate</option>
+                        <option>>=</option>
+                     </options>
+                  </options>
+               </options>
+               {{?}}
             </component>
             <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
          </div>
