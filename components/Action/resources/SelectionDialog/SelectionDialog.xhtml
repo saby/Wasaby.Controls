@@ -1,7 +1,7 @@
-   <div class="controls-DefaultDialogForSelect">
+   <div class="controls-SelectionDialog">
    <div class="ws-window-titlebar-custom">
       <component data-component="SBIS3.CONTROLS.Button" class="controls-DefaultDialogForSelect__activateMove">
-         <option name="name" value="DefaultDialogForSelect-moveButton"></option>
+         <option name="name" value="SelectionDialog-moveButton"></option>
          <option name="caption">{{=it.buttonCaption}}</option>
          <option name="primary" type="boolean" value="true"></option>
          <option name="command" value="applySelect"></option>
@@ -9,8 +9,8 @@
    </div>
    <component data-component="SBIS3.CONTROLS.SelectorWrapper">
       <option name="content">
-         <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-DefaultDialogForSelect-TreeDataGridView">
-            <option name="name" value="DefaultDialogForSelect-TreeDataGridView"></option>
+         <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-SelectionDialog-TreeDataGridView">
+            <option name="name" value="SelectionDialog-TreeDataGridView"></option>
             <options name="itemsActions" type="array"></options>
             <option name="allowEnterToFolder" type="boolean">false</option>
             <option name="showHead" type="boolean">false</option>
@@ -27,7 +27,7 @@
                   <option name="title"></option>
                   <option name="field">{{=it.displayProperty}}</option>
                   <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
-                  <option name="cellTemplate">html!SBIS3.CONTROLS.DefaultDialogForSelect/resources/FolderTitleTpl</option>
+                  <option name="cellTemplate">html!SBIS3.CONTROLS.SelectionDialog/resources/FolderTitleTpl</option>
                </options>
             </options>
             <option name="displayProperty">{{=it.displayProperty}}</option>
@@ -41,6 +41,6 @@
             </options>
          </component>
       </option>
-      <option name="linkedObjectName">DefaultDialogForSelect-TreeDataGridView</option>
+      <option name="linkedObjectName">SelectionDialog-TreeDataGridView</option>
    </component>
 </div>

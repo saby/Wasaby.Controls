@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
              * @property {Boolean} partialyReload Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
              */
             _options : {
-               template : 'js!SBIS3.CONTROLS.DefaultDialogForSelect',
+               template : 'js!SBIS3.CONTROLS.SelectionDialog',
                parentProperty: undefined,
                nodeProperty: undefined,
                /**
@@ -183,7 +183,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                movedItems = meta.movedItems;
             cMerge(config, {
                title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               opener: this._getListView(),
+               opener: this._getListView()
             }, {preferSource: true});
             return config;
          },

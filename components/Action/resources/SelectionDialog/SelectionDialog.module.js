@@ -1,16 +1,16 @@
-define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
+define('js!SBIS3.CONTROLS.SelectionDialog', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.SelectorController',
-   "html!SBIS3.CONTROLS.DefaultDialogForSelect",
+   "html!SBIS3.CONTROLS.SelectionDialog",
    "Core/core-instance",
-   "html!SBIS3.CONTROLS.DefaultDialogForSelect/resources/FolderTitleTpl",
+   "html!SBIS3.CONTROLS.SelectionDialog/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
-   "i18n!SBIS3.CONTROLS.DefaultDialogForSelect",
-   'css!SBIS3.CONTROLS.DefaultDialogForSelect'
+   "i18n!SBIS3.CONTROLS.SelectionDialog",
+   'css!SBIS3.CONTROLS.SelectionDialog'
 ], function(CommandDispatcher, SelectorController, dotTplFn, cInstance) {
 
-   var DefaultDialogForSelect = SelectorController.extend({
+   var SelectionDialog = SelectorController.extend({
       _dotTplFn: dotTplFn,
 
       $protected: {
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
       _onReady: function() {
          var
              filter = this._options.filter || {};
-         this._treeView = this.getChildControlByName('DefaultDialogForSelect-TreeDataGridView');
+         this._treeView = this.getChildControlByName('SelectionDialog-TreeDataGridView');
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
       },
@@ -59,5 +59,5 @@ define('js!SBIS3.CONTROLS.DefaultDialogForSelect', [
 
    });
 
-   return DefaultDialogForSelect;
+   return SelectionDialog;
 });
