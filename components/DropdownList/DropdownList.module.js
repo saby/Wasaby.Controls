@@ -537,7 +537,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          showPicker: function(ev) {
             if (this.isEnabled()) {
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
-               if (!this._isHoverMode() && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
+               if (!this._isHoverMode() && ev && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
                }
                var items = this._getPickerContainer().find('.controls-DropdownList__item');
