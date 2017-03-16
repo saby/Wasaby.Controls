@@ -82,6 +82,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
           HIDDEN: 'ws-hidden'
        };
 
+       var _private = {
+          keysFix: function(keys) {
+             if(keys !== undefined && !Array.isArray(keys)) {
+                keys = [keys];
+             }
+             return keys;
+          }
+       };
+
        /**
         * Поле связи - это базовый контрол веб-фреймворка WS, который предназначен для выбора нескольких значений.
         * Контрол состоит из поля ввода и кнопки-меню для выбора справочника. Допускается конфигурация контрола, при которой будет использована только кнопка-меню.
@@ -626,6 +635,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
           },
 
+          // FIXME костыль, выписана задача:
+          // https://inside.tensor.ru/opendoc.html?guid=90fbc224-849e-485d-b843-2a0bb47871e7&des=
+          // Задача в разработку 15.03.2017 Подумать, как жить в условиях что типы полей фильтра могут меняться, а в историю может сохраниться п…
+          setSelectedKeys: function(keys) {
+             keys = _private.keysFix(keys);
+             FieldLink.superclass.setSelectedKeys.call(this, keys);
+          },
+
           /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
 
           /**
@@ -724,7 +741,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
-                 selectedKeysLength = cfg.selectedKeys.length;
+                 selectedKeysLength;
+
+             cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
+             selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
                 classesToAdd.push(classes.MULTISELECT);
