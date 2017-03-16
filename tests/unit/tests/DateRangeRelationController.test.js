@@ -28,7 +28,7 @@ define([
    describe('SBIS3.CONTROLS.DateRangeRelationController', function () {
       let controls, controller;
 
-      this.timeout(1500000);
+      // this.timeout(1500000);
 
       let initControls = function (start, endOrStep, options) {
             var step = typeof endOrStep === 'number' ? endOrStep : null,
@@ -54,6 +54,14 @@ define([
             }
             return dates;
          };
+
+      it('should generate an event on date changed', function (done) {
+         initControls(new Date(2015, 0, 1), new Date(2015, 0, 31));
+         controller.subscribe('onDatesChange', function () {
+            done();
+         });
+         controls[0].setRange(new Date(2017, 0, 1), new Date(2017, 0, 31));
+      });
 
       describe('step = null', function () {
          beforeEach(function() {
