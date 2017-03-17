@@ -3,13 +3,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/core-merge",
    "Core/constants",
    "js!SBIS3.CONTROLS.DataGridView",
-   "html!SBIS3.CONTROLS.TreeDataGridView",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
    "js!SBIS3.CONTROLS.TreeViewMixin",
    "js!SBIS3.CONTROLS.IconButton",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    "Core/ConsoleLogger",
@@ -30,10 +30,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.hasScroll = tplOptions.startScrollColumn !== undefined;
          tplOptions.foldersColspan = cfg.foldersColspan;
+         tplOptions.getItemContentTplData = getItemContentTplData;
          tplOptions.cellData.isSearch = tvOptions.isSearch;
          return tplOptions;
       },
+
       getSearchCfg = function(cfg) {
          return {
             idProperty: cfg.idProperty,
@@ -46,6 +49,41 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
+      },
+      getItemTemplateData = function (cfg) {
+         var config = {
+            nodePropertyValue: cfg.item.get(cfg.nodeProperty),
+            projection: cfg.projItem.getOwner(),
+         };
+         config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
+         config.hasLoadedChild = config.children.length > 0;
+         config.loadedWithoutChilds = (cfg.projItem.isLoaded() || !config.hasLoadedChild) && config.nodePropertyValue != null;
+         config.drawExpandIcon = !!config.nodePropertyValue;
+         config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
+         config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
+         config.classPresenceLoadedNodes = config.loadedWithoutChilds ? ' controls-ListView__item-without-child' : '';
+         config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
+         config.isColumnScrolling = cfg.startScrollColumn === 0,
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classPresenceLoadedNodes + config.classIsSelected;
+         if (config.isColumnScrolling){
+            config.computedPadding = 'left: ' + cfg.columnsScrollPosition + 'px;';
+         }
+         return config;
+      },
+      getItemContentTplData = function(cfg){
+         cfg = cfg.__rootScope; //todo https://inside.tensor.ru/opendoc.html?guid=24956751-4374-4381-8c2e-6ada0146d853&des=
+         var data = {};
+         if (cfg.isSearch) {
+            data.padding = (cfg.projItem.getLevel() == 1) ? cfg.originallPadding : cfg.originallPadding + cfg.paddingSize;
+         }
+         else{
+            data.padding = cfg.paddingSize * (cfg.projItem.getLevel() - 1) + cfg.originallPadding;
+         }
+         data.hierField$ = cfg.projItem.getContents().get(cfg.parentProperty + '$');
+         data.hasScroll = cfg.startScrollColumn !== undefined;
+         data.isNode = cfg.projItem.getContents().get(cfg.nodeProperty);
+         data.hasChilds = cfg.hierarchy.getChildren(cfg.item, cfg.projItem.getOwner().getCollection()).length > 0;
+         return data;
       };
 
    'use strict';
@@ -120,6 +158,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             _defaultSearchRender: searchRender,
+            _getItemTemplateData: getItemTemplateData,
             _getSearchCfg: getSearchCfg,
             /**
              * @cfg {Function}

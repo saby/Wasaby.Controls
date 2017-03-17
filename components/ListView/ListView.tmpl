@@ -1,4 +1,4 @@
-<div class="controls-ListView{{ multiselect !== false ? ' controls-ListView__multiselect' : ' controls-ListView__multiselect__off'}}">
+<div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}">
     <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
     <div class="controls-AjaxLoader ws-hidden">
         <div class="controls-AjaxLoader__outer">
@@ -29,13 +29,10 @@
     </ws:if>
     <ws:if data="{{ infiniteScroll == 'demand'}}">
        <div class="controls-ListView__serviceFooter">
-         <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
-            <option name="caption">Еще...</option>
-            <option name="visible" type="boolean">false</option>
-         </component>
+         <ws:SBIS3.CONTROLS.Link name="loadMoreButton" class="controls-ListView__loadMoreButton" caption="Еще..." visible="false" />
        </div>
     </ws:if>
-    <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
+    <div class="controls-ListView-scrollIndicator ws-hidden {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
-    <div class="controls-ListView__scrollPager{{ !infiniteScroll ? ' ws-hidden'}}"></div>
+    <div class="controls-ListView__scrollPager {{!infiniteScroll ? ' ws-hidden' : ''}}"></div>
 </div>
