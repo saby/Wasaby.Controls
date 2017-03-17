@@ -254,8 +254,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + '//www.youtube.com/embed/' + id + '"',
-                  ' frameborder="0"',
-                  ' allowfullscreen>',
+                  ' frameborder="0" >',
                   '</iframe>'
                ].join('');
                this.insertHtml(content);
