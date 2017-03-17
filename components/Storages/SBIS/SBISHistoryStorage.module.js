@@ -24,39 +24,37 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    var GLOBAL_POSTFIX = '-global';
 
    /**
-    * Контроллер, который предоставляет базовые механизмы работы с иторией.
+    * Контроллер, который предоставляет базовые механизмы работы с историей.
     * @author Герасимов Александр Максимович
+    * @class SBIS3.CONTROLS.SBISHistoryStorage
     * @public
     */
-   var SBISHistoryStorage = cAbstract.extend([],/** @lends SBIS3.CONTROLS.HistoryController.prototype */{
+   var SBISHistoryStorage = cAbstract.extend([],/** @lends SBIS3.CONTROLS.SBISHistoryStorage.prototype */{
       $protected: {
          _options: {
             /**
-             * Специальный id по которому будет загружаться/сохраняться история
-             * @cfg {String}
+             * @cfg {String} Устанавливает специальный id, по которому будет загружаться/сохраняться история.
              */
             historyId: undefined,
             /**
-             * Функция для сериализации и десериализации
-             * По-умолчанию используется serializeURLData/deserializeURLData
-             * @cfg {Function}
+             * @cfg {Function} Функция для сериализации и десериализации.
+             * @remark
+             * По-умолчанию используется {@link Core/helpers/string-helpers#serializeURLData} и {@link Core/helpers/string-helpers#deserializeURLData}.
              * @example
-             * Сделаем сериализатор для даты
+             * Сделаем сериализатор для даты:
              * <pre>
-             *    serialize: function( serialize, value ){
-             *       return serialize ? value.toSQL() : Date.fromSQL( value );
+             *    serialize: function(serialize, value) {
+             *       return serialize ? value.toSQL() : Date.fromSQL(value);
              *    }
              * </pre>
              */
             serialize: serializeFnc,
             /**
-             * Значение истории, которое установится при сбросе
-             * @cfg {*}
+             * @cfg {*} Устанавливает значение истории, которое будет использовано в качестве значения при сбросе.
              */
             emptyValue: null,
             /**
-             * @cfg {Boolean}
-             * Сохранять в глобальные параметры клиента
+             * @cfg {Boolean} Устанавливает сохранение в глобальные параметры клиента.
              */
             isGlobalUserConfig: false
          },
@@ -146,18 +144,24 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       },
 
       /**
-       * Возвращает историю
+       * Возвращает историю.
        * @returns {Object|null}
+       * @see setHistory
+       * @see saveHistory
+       * @see clearHistory
        */
       getHistory: function() {
          return this._history;
       },
 
       /**
-       * Устанавливает и сохраняет историю
+       * Устанавливает и сохраняет историю.
        * @param {*} history История
-       * @param {Boolean} needSave Нужно ли сохранять историю в пользовательские параметры
+       * @param {Boolean} needSave Нужно ли сохранять историю в пользовательские параметры.
        * @returns {Deferred}
+       * @see getHistory
+       * @see saveHistory
+       * @see clearHistory
        */
       setHistory: function(history, needSave) {
          this._history = history;
@@ -167,8 +171,11 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       },
 
       /**
-       * Сохраняет историю в пользовательские параметры
+       * Сохраняет историю в пользовательские параметры.
        * @private
+       * @see setHistory
+       * @see getHistory
+       * @see clearHistory
        */
       saveHistory: function() {
          var self = this;
@@ -187,14 +194,17 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       },
 
       /**
-       * Очищает историю
+       * Очищает историю.
+       * @see setHistory
+       * @see getHistory
+       * @see saveHistory
        */
       clearHistory: function() {
          this.setHistory(this._options.emptyValue, true);
       },
 
       /**
-       * Возвращает, сохраняется ли сейчас история
+       * Возвращает признак: сохраняется ли сейчас история.
        * @returns {Deferred|*|boolean}
        */
       isNowSaving: function() {
@@ -202,7 +212,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       },
 
       /**
-       * Возвращает деферед сохранения истории (если она сейчас сохраняется)
+       * Возвращает деферед сохранения истории (если она сейчас сохраняется).
        * @returns {Deferred|*|boolean}
        */
       getSaveDeferred: function() {
