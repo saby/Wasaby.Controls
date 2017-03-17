@@ -55,7 +55,11 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             /**
              * @cfg {Boolean} Инвертирует вызов методов перемещния по порядку.
              */
-            invertOrder: false
+            invertOrder: false,
+            /**
+             * @cfg {WS.Data/Source/ISource} источник данных.
+             */
+            dataSource: undefined
          }
       },
       $constructor: function (cfg) {
@@ -155,11 +159,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             target = this.getItems().getRecordById(target);
          }
 
-         if (this._checkRecordsForMove(movedItems, target)) {
+         if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
             var
                moveStrategy = this.getMoveStrategy(),
                move = function (result) {
-                  if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
+                  if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
+                     this.moveInItems(movedItems, target, position);
+                  } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
                      this._callMoveMethod(movedItems, target, position, result).addBoth(function (result) {
                         var endMoveResult = this._notify('onEndMove', movedItems, target, position, result);
                         if (!(result instanceof Error) && endMoveResult !== Mover.ON_END_MOVE_RESULT.CUSTOM) {
@@ -332,7 +338,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * @returns {Boolean}
        * @private
        */
-      _checkRecordsForMove: function(movedItems, target) {
+      _checkRecordsForMove: function(movedItems, target, isChangeOrder) {
          var
             key,
             toMap = [];
@@ -342,6 +348,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
          if (this._options.parentProperty) {
             if (target !== null) {
+               if (this._options.nodeProperty && !isChangeOrder && target.get(this._options.nodeProperty) === null) {
+                  return false;
+               }
                toMap = this._getParentsMap(target.getId());
             }
             for (var i = 0; i < movedItems.length; i++) {

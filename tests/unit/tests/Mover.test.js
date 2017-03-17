@@ -56,7 +56,7 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             {'id': 3, title: 'Три', parent: null, 'parent@': true},
             {'id': 4, title: 'Четыре', parent: 1, 'parent@': true},
             {'id': 5, title: 'Четыре', parent: 1, 'parent@': true},
-            {'id': 6, title: 'Четыре', parent: 4, 'parent@': false},
+            {'id': 6, title: 'Четыре', parent: 4, 'parent@': null},
             {'id': 7, title: 'Четыре', parent: 4, 'parent@': true},
             {'id': 8, title: 'Четыре', parent: 7, 'parent@': true}
          ],
@@ -208,13 +208,47 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             mover.move([items.at(0)], items.at(2), 'after');
             assert.equal(id, items.at(0).getId());
          });
-         it('should cancel move if return deffered and it return custom', function() {
+         it('should cancel move if it return deffered and it return custom', function() {
             var id = items.at(0).getId();
             mover.subscribe('onBeginMove', function (e) {
                e.setResult(new Deferred().callback('Custom'));
             });
             mover.move([items.at(0)], items.at(2), 'after');
             assert.equal(id, items.at(0).getId());
+         });
+         it('should not call move method if it return MoveInItems', function() {
+            var id = items.at(0).getId(),
+               mover = new Mover({
+                  items: items,
+                  projection: projection,
+                  dataSource: {
+                     move: function () {
+                        throw new Error('move must not be called');
+                     }
+                  }
+               });
+            mover.subscribe('onBeginMove', function(e) {
+               e.setResult('MoveInItems');
+            });
+            mover.move([items.at(0)], items.at(2), 'after');
+            assert.equal(items.at(2).getId(), id);
+         });
+         it('should not call move method if it returns deffered that returns MoveInItems', function() {
+            var id = items.at(0).getId(),
+               mover = new Mover({
+                  items: items,
+                  projection: projection,
+                  dataSource: {
+                     move: function () {
+                        throw new Error('move must not be called');
+                     }
+                  }
+               });
+            mover.subscribe('onBeginMove', function(e) {
+               e.setResult(new Deferred().callback('MoveInItems'));
+            });
+            mover.move([items.at(0)], items.at(2), 'after');
+            assert.equal(items.at(2).getId(), id);
          });
       });
       describe('onEndMove', function () {

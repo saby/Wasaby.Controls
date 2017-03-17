@@ -86,14 +86,19 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
 
          _getMover: function () {
             if (!this._mover) {
-               this._mover = Di.resolve('listview.mover', {
-                  moveStrategy: this.getMoveStrategy(),
-                  items: this._getItems(),
-                  parentProperty: this._options.parentProperty,
-                  nodeProperty: this._options.nodeProperty,
-                  invertOrder: this._options.invertOrder,
-                  dataSource: this.getDataSource()
-               });
+               var listView = this._getListView();
+               if (listView) {
+                  this._mover = listView;
+               } else {
+                  this._mover = Di.resolve('listview.mover', {
+                     moveStrategy: this.getMoveStrategy(),
+                     items: this._getItems(),
+                     parentProperty: this._options.parentProperty,
+                     nodeProperty: this._options.nodeProperty,
+                     invertOrder: this._options.invertOrder,
+                     dataSource: this.getDataSource()
+                  });
+               }
                colHelpers.forEach(['onBeginMove', 'onEndMove'], function (eventName) {
                   this._mover.subscribe(eventName, function (e) {
                      e.setResult(this._notify(eventName));
