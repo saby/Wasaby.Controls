@@ -160,6 +160,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             targetOverlay: false,
             /**
+             * @cfg {Boolean} переводить ли активность на панель после открытия
+             */
+            activateAfterShow: false,
+            /**
              * Способ подстраивания всплывающей панели под свободное рядом с таргетом пространство
              * @typedef {Object} loacationStrategyEnum
              * @variant dontMove всплывающая панель не двигается относительно таргета
@@ -1064,6 +1068,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
+            }
+            if (this._options.activateAfterShow) {
+               this.activateFirstControl();
             }
          }
       },
