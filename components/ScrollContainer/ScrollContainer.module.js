@@ -44,6 +44,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *
        * @control
        * @public
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ScrollContainer' name="MyScrollContainer>
+       *     <option name="content">
+       *         <component data-component="SBIS3.CONTROLS.ListView" name="ContentList">
+       *             <option name="idProperty">key</option>
+       *             <option name="displayProperty">title</option>
+       *         </component>
+       *     </option>
+       * </component>
        */
       var ScrollContainer = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
 
