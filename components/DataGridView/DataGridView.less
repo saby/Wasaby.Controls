@@ -94,7 +94,7 @@
        &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
          .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
            &.controls-DataGridView__notScrolledCell {
-             background-color: @data-grid-partScroll-notScrolledCell-Color;
+             background-color: @data-grid-multiselect-notScrolledCell-Color;
            }
          }
        }
@@ -337,7 +337,13 @@
                background-color: @data-grid-row-hover-bg-mobile;
             }
          }
+         &.controls-ListView__item__multiSelected{
+           .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+             background-color: @data-grid-row-selected-bg;
+           }
+         }
       }
+
    }
 }
 /*Для строк идущих после группировки не должно быть верхних бордеров*/
