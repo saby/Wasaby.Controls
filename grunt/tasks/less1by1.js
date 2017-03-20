@@ -6,7 +6,7 @@ const helpers = require('./helpers'),
     less = require('less'),
     getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
     DEFAULT_THEME = 'online',
-    themes = ['online', 'carry', 'prestonew']
+    themes = ['online', 'carry', 'prestonew'];
 /**
  @workaround Временно ресолвим текущую тему по названию модуля.
 */
@@ -36,11 +36,14 @@ function itIsControl(path) {
 module.exports = function less1by1Task(grunt) {
   let root = grunt.option('root') || '',
       app = grunt.option('application') || '',
+      changedComponent = grunt.config.get('changed') || '',
       rootPath = path.join(root, app),
       themesPath = path.join(rootPath, './themes/');
 
   function processLessFile(data, filePath, error, theme, itIsControl) {
-    let lessData = data.toString(),
+      //console.log('keklol' + );
+
+      let lessData = data.toString(),
         imports = theme ?
         `
             @import '${themesPath}${theme}/variables';
@@ -57,7 +60,7 @@ module.exports = function less1by1Task(grunt) {
     }, function writeCSS(compileLessError, output) {
 
         if (compileLessError) {
-            grunt.log.ok(compileLessError);
+            grunt.log.error(compileLessError);
         }
         let suffix = '';
 
@@ -67,7 +70,7 @@ module.exports = function less1by1Task(grunt) {
         let newName = `${path.dirname(filePath)}/${path.basename(filePath, '.less')}${suffix}.css`;
         if (output) {
             fs.writeFile(newName, output.css, function writeFileCb(writeFileError) {
-                if (writeFileError) grunt.log.ok(`Не могу записать файл. Ошибка: ${writeFileError.message}.`);
+                if (writeFileError) grunt.log.error(`Не могу записать файл. Ошибка: ${writeFileError.message}.`);
                 grunt.log.ok(`file ${filePath} successfuly compiled. Theme: ${theme}`);
             });
         }
@@ -83,7 +86,7 @@ module.exports = function less1by1Task(grunt) {
 
         helpers.recurse(rootPath, function(filepath, cb) {
 
-          if (helpers.validateFile(filepath, ['components/**/*.less']) || helpers.validateFile(filepath, ['themes/**/*.less'])) {
+          if (helpers.validateFile(filepath, [grunt.config.get('changed') || `components/**/*.less`]) || helpers.validateFile(filepath, [grunt.config.get('changed') || 'themes/**/*.less'])) {
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
                   let theme = resolveThemeName(filepath)
                     if (itIsControl(filepath)) {
