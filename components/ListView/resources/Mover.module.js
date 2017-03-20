@@ -166,7 +166,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                   if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
                      this.moveInItems(movedItems, target, position);
                   } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
-                     this._callMoveMethod(movedItems, target, position, result).addBoth(function (result) {
+                     return this._callMoveMethod(movedItems, target, position, result).addBoth(function (result) {
                         var endMoveResult = this._notify('onEndMove', movedItems, target, position, result);
                         if (!(result instanceof Error) && endMoveResult !== Mover.ON_END_MOVE_RESULT.CUSTOM) {
                            this.moveInItems(movedItems, target, position);
@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                if (result instanceof Deferred) {
                   result.addCallback(move);
                } else {
-                  move(result);
+                  result = move(result);
                }
             }
          }
