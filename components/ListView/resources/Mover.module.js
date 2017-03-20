@@ -406,9 +406,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       CUSTOM: 'Custom', //Своя логика перемещения записей
       MOVE_IN_ITEMS: 'MoveInItems'//Переместить в списке без вызова перемещения на источнике
    };
-   Mover.ON_END_MOVE_RESULT = { // Возможные результаты события "BeginEditResult"
-      CUSTOM: 'Custom', //Своя логика перемещения записей
-   };
 
    return Mover;
 });
