@@ -12,7 +12,7 @@
     <table class="controls-DataGridView__table {{stickyHeader ? 'ws-sticky-header__table' : ''}}">
         <ws:partial template="{{_colGroupTpl}}" scope="{{_colgroupData}}" />
         <ws:if data="{{showHead}}">
-            <ws:partial template="{{_headTpl}}" scope="{{_headData}}" />
+            <ws:partial template="{{headTpl}}" scope="{{_headData}}" />
         </ws:if>
         <tbody class="controls-DataGridView__tbody">
         <ws:if data="{{_serverRender}}">
