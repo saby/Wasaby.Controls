@@ -101,12 +101,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
           */
          _linkedModelKey: undefined,
          _overlay: undefined,
+         _setOpeningModeHandler: undefined,
          _showedLoading: false,
          _openInNewTab: false
       },
       init: function () {
          OpenEditDialog.superclass.init.apply(this, arguments);
-         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
+         this._setOpeningModeHandler = this._setOpeningMode.bind(this);
+         $(document).bind('keydown keyup', this._setOpeningModeHandler);
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -627,6 +629,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                }
             }
          });
+      },
+
+      destroy: function() {
+         $(document).unbind('keydown keyup', this._setOpeningModeHandler);
+         OpenEditDialog.superclass.destroy.apply(this, arguments);
       }
    });
 
