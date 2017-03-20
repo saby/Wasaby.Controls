@@ -130,6 +130,12 @@ define('js!SBIS3.CONTROLS.ListView',
        * @control
        * @public
        * @category Lists
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ListView'>
+       * </component>
+       *
+       *
        */
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
