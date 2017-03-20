@@ -166,14 +166,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                   if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
                      this.moveInItems(movedItems, target, position);
                   } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
-                     return this._callMoveMethod(movedItems, target, position, result).addBoth(function (result) {
-                        var endMoveResult = this._notify('onEndMove', movedItems, target, position, result);
-                        if (!(result instanceof Error) && endMoveResult !== Mover.ON_END_MOVE_RESULT.CUSTOM) {
-                           this.moveInItems(movedItems, target, position);
-                        }
+                     return this._callMoveMethod(movedItems, target, position, result).addCallback(function () {
+                        this.moveInItems(movedItems, target, position);
+                     }.bind(this)).addBoth(function () {
+                        this._notify('onEndMove', movedItems, target, position);
                      }.bind(this));
                   } else {
-                     this._notify('onEndMove', movedItems, target, position, result);
+                     this._notify('onEndMove', movedItems, target, position);
                   }
                }.bind(this);
             if (moveStrategy) {

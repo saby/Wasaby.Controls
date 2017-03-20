@@ -258,13 +258,20 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             });
             mover.move([items.at(0)], items.at(2), 'after');
          });
-         it('should cancel move', function() {
-            var id = items.at(0).getId();
-            mover.subscribe('onEndMove', function (e) {
-               e.setResult('Custom');
+         it('should trigger onEndMove if move method return error', function(done) {
+            var mover = new Mover({
+               items: items,
+               projection: projection,
+               dataSource: {
+                  move: function () {
+                     return Deferred.fail();
+                  }
+               }
+            });
+            mover.subscribe('onEndMove', function () {
+               done();
             });
             mover.move([items.at(0)], items.at(2), 'after');
-            assert.equal(id, items.at(0).getId());
          });
       });
       describe('.moveFromOutside', function(){
