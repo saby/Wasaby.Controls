@@ -27,6 +27,12 @@
          white-space: nowrap;
          background-color: @controls-OperationsPanel-bg;
       }
+
+       .controls-operationsPanel__actionMark, .controls-operationsPanel__actions {
+         .inline-flexbox();
+         .align-items(center);
+         height: @controls-OperationsPanel-height;
+      }
       
       .controls-operationsPanel__actionMark {
          padding-left: @controls-OperationsPanel-actions-padding-left;
@@ -49,7 +55,6 @@
       .controls-operationsPanel__actionType-mark,
       .controls-operationsPanel__actionType-all {
          margin: @controls-OperationsPanel-actions-margin;
-         line-height: @controls-OperationsPanel-height !important;
       }
    }
 
