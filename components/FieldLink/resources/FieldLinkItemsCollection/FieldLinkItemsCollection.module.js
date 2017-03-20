@@ -22,11 +22,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        */
 
       function itemTemplateRender(opts) {
-         var collector = function(item) {
-               tplArgs.item = item;
-               res.push(tplArgs.defaultItemTpl(tplArgs));
-            },
-            items = [],
+         var items,
             itemsCount,
             tplArgs = {},
             res = [];
@@ -43,11 +39,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             tplArgs = opts._buildTplArgs(opts);
             tplArgs.className = 'controls-ListView__item';
             tplArgs.itemTemplate = opts.itemTemplate;
-            if (typeof items.each === 'function') {
-               items.each(collector);
-            } else {
-               colHelpers.forEach(items, collector);
-            }
+            items.forEach(function(item) {
+               tplArgs.item = item;
+               res.push(tplArgs.defaultItemTpl(tplArgs));
+            });
          }
 
          return res.join('');
