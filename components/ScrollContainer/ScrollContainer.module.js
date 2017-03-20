@@ -41,6 +41,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </pre>
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрыть ползунок
        *
        * @control
        * @public
