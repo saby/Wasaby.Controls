@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.FormController', [
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
     *
     * @class SBIS3.CONTROLS.FormController
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @public
     * @author Красильников Андрей Сергеевич
     *

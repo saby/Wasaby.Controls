@@ -86,8 +86,12 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setContentHeaderHeight: function (height) {
-            this._headerHeight = height;
-            this._thumb.css('margin-top', height);
+            if (this._headerHeight !== height) {
+               this._containerHeight += this._headerHeight - height;
+               this._container.height(this._containerHeight);
+               this._headerHeight = height;
+               this._container.css('margin-top', height);
+            }
          },
 
          /**

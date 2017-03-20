@@ -4,68 +4,69 @@
 
 define('js!SBIS3.CONTROLS.ListView',
    [
-   "Core/core-functions",
-   "Core/CommandDispatcher",
-   "Core/constants",
-   "Core/Deferred",
-   "Core/IoC",
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CORE.CompoundActiveFixMixin",
-   "js!SBIS3.CONTROLS.ItemsControlMixin",
-   "js!SBIS3.CONTROLS.MultiSelectable",
-   "js!WS.Data/Query/Query",
-   "js!WS.Data/Entity/Record",
-   "js!SBIS3.CONTROLS.Selectable",
-   "js!SBIS3.CONTROLS.DataBindMixin",
-   "js!SBIS3.CONTROLS.DecorableMixin",
-   "js!SBIS3.CONTROLS.DragNDropMixin",
-   "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CORE.BreakClickBySelectMixin",
-   "js!SBIS3.CONTROLS.ItemsToolbar",
-   "tmpl!SBIS3.CONTROLS.ListView",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "js!SBIS3.CONTROLS.CommonHandlers",
-   "js!SBIS3.CONTROLS.Pager",
+   'Core/core-merge',
+   'Core/core-functions',
+   'Core/CommandDispatcher',
+   'Core/constants',
+   'Core/Deferred',
+   'Core/IoC',
+   'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CORE.CompoundActiveFixMixin',
+   'js!SBIS3.CONTROLS.ItemsControlMixin',
+   'js!SBIS3.CONTROLS.MultiSelectable',
+   'js!WS.Data/Query/Query',
+   'js!WS.Data/Entity/Record',
+   'js!SBIS3.CONTROLS.Selectable',
+   'js!SBIS3.CONTROLS.DataBindMixin',
+   'js!SBIS3.CONTROLS.DecorableMixin',
+   'js!SBIS3.CONTROLS.DragNDropMixin',
+   'js!SBIS3.CONTROLS.FormWidgetMixin',
+   'js!SBIS3.CORE.BreakClickBySelectMixin',
+   'js!SBIS3.CONTROLS.ItemsToolbar',
+   'tmpl!SBIS3.CONTROLS.ListView',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'js!SBIS3.CONTROLS.CommonHandlers',
+   'js!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.MassSelectionController',
-   "js!SBIS3.CONTROLS.EditInPlaceHoverController",
-   "js!SBIS3.CONTROLS.EditInPlaceClickController",
-   "js!SBIS3.CONTROLS.ImitateEvents",
-   "js!SBIS3.CONTROLS.Link",
-   "js!SBIS3.CONTROLS.ScrollWatcher",
-   "js!WS.Data/Collection/IBind",
-   "js!WS.Data/Collection/List",
-   "html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy",
-   "html!SBIS3.CONTROLS.ListView/resources/emptyData",
-   "tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate",
-   "tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate",
-   "tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate",
-   "browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager",
-   "js!SBIS3.CONTROLS.Paging",
-   "js!SBIS3.CONTROLS.ComponentBinder",
-   "js!WS.Data/Di",
-   "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
-   "Core/helpers/fast-control-helpers",
-   "Core/helpers/collection-helpers",
-   "Core/core-instance",
-   "Core/helpers/functional-helpers",
-   "Core/helpers/dom&controls-helpers",
+   'js!SBIS3.CONTROLS.EditInPlaceHoverController',
+   'js!SBIS3.CONTROLS.EditInPlaceClickController',
+   'js!SBIS3.CONTROLS.ImitateEvents',
+   'js!SBIS3.CONTROLS.Link',
+   'js!SBIS3.CONTROLS.ScrollWatcher',
+   'js!WS.Data/Collection/IBind',
+   'js!WS.Data/Collection/List',
+   'html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+   'html!SBIS3.CONTROLS.ListView/resources/emptyData',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
+   'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+   'js!SBIS3.CONTROLS.Paging',
+   'js!SBIS3.CONTROLS.ComponentBinder',
+   'js!WS.Data/Di',
+   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
+   'Core/helpers/fast-control-helpers',
+   'Core/helpers/collection-helpers',
+   'Core/core-instance',
+   'Core/helpers/functional-helpers',
+   'Core/helpers/dom&controls-helpers',
    'js!SBIS3.CONTROLS.CursorListNavigation',
-   "js!WS.Data/Source/SbisService",
-   "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
-   "js!SBIS3.CONTROLS.DragEntity.Row",
-   "js!WS.Data/Collection/RecordSet",
-   "i18n!SBIS3.CONTROLS.ListView",
-   "js!SBIS3.CONTROLS.DragEntity.List",
-   "js!WS.Data/MoveStrategy/Base",
-   "js!SBIS3.CONTROLS.ListView.Mover",
+   'js!WS.Data/Source/SbisService',
+   'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+   'js!SBIS3.CONTROLS.DragEntity.Row',
+   'js!WS.Data/Collection/RecordSet',
+   'i18n!SBIS3.CONTROLS.ListView',
+   'js!SBIS3.CONTROLS.DragEntity.List',
+   'js!WS.Data/MoveStrategy/Base',
+   'js!SBIS3.CONTROLS.ListView.Mover',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function ( cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record,
-             Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn,
-             TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents,
-             Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-             Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
+   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
+    Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
+    TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
+    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
 
      'use strict';
 
@@ -99,7 +100,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
        *
        * @class SBIS3.CONTROLS.ListView
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @author Крайнов Дмитрий Олегович
        *
        * @mixes SBIS3.CORE.CompoundActiveFixMixin
@@ -1365,7 +1366,7 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(this._needShowContextMenu()) {
+            if(this._needShowContextMenu(event)) {
                if (!this._checkItemAction()) {
                      event.preventDefault();
                      itemsActions.showItemActionsMenu(align);
@@ -1376,7 +1377,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _needShowContextMenu: function () {
+         _needShowContextMenu: function (event) {
             var itemsActions = this.getItemsActions();
 
             return this._options.contextMenu
@@ -1387,6 +1388,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 && this._hoveredItem.container
                 && !this._hoveredItem.container.hasClass('controls-editInPlace__editing')
                 && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false'
+                // при клике по ссылке необходимо показывать стандартное меню,
+                // т.к. иначе ломаем привычное для пользователя поведение
+                && event.target.nodeName.toLowerCase() !== 'a'
          },
 
          /*
@@ -2816,10 +2820,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * Скролит табличное представление к указанному элементу
           * @param item Элемент, к которому осуществляется скролл
           * @param {Boolean} toBottom скроллить к нижней границе элемента, по умолчанию скролит к верхней
+          * @param {Number} depth количество родительских контейнеров, лежащих в dom дереве ниже, которые будут проскролены
+          * что бы элемент стал видимым. Учитываются только контейнеры на которых overflow-y установлен в auto или scroll.
+          * По умолчанию равен бесконечности.
           */
-         scrollToItem: function(item, toBottom){
+         scrollToItem: function(item, toBottom, depth){
             if (item.getId && item.getId instanceof Function){
-               this._scrollToItem(item.getId(), toBottom);
+               this._scrollToItem(item.getId(), toBottom, depth);
             }
          },
 
@@ -3070,9 +3077,9 @@ define('js!SBIS3.CONTROLS.ListView',
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
                if (this._getItemsProjection()) {
-                  queryFilter = $ws.core.clone(filter);
+                  queryFilter =  cFunctions.clone(filter);
                   var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
-                  $ws.core.merge(queryFilter, addParams.filter);
+                  cMerge(queryFilter, addParams.filter);
                }
             }
             query.where(queryFilter)

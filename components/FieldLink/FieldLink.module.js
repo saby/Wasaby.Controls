@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/helpers/functional-helpers",
        "Core/helpers/string-helpers",
        "Core/helpers/collection-helpers",
+       "Core/ParserUtilities",
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
        "js!SBIS3.CONTROLS.MultiSelectable",
@@ -17,6 +18,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
        "html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
        "html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
+       "tmpl!SBIS3.CONTROLS.FieldLink/textFieldWrapper",
        "js!SBIS3.CONTROLS.Utils.DialogOpener",
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
@@ -38,6 +40,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         fHelpers,
         strHelpers,
         colHelpers,
+        ParserUtilities,
         SuggestTextBox,
         ItemsControlMixin,
 
@@ -57,6 +60,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /* Служебные шаблоны поля связи */
         afterFieldWrapper,
         beforeFieldWrapper,
+        textFieldWrapper,
         /********************************************/
         DialogOpener,
         ITextValue,
@@ -76,6 +80,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
           INVISIBLE: 'ws-invisible',
           HIDDEN: 'ws-hidden'
+       };
+
+       var _private = {
+          keysFix: function(keys) {
+             if(keys !== undefined && !Array.isArray(keys)) {
+                keys = [keys];
+             }
+             return keys;
+          }
        };
 
        /**
@@ -179,6 +192,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
+                textFieldWrapper: textFieldWrapper,
                 /**********************************************************************************************/
                  list: {
                    component: 'js!SBIS3.CONTROLS.DataGridView',
@@ -622,6 +636,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
           },
 
+          // FIXME костыль, выписана задача:
+          // https://inside.tensor.ru/opendoc.html?guid=90fbc224-849e-485d-b843-2a0bb47871e7&des=
+          // Задача в разработку 15.03.2017 Подумать, как жить в условиях что типы полей фильтра могут меняться, а в историю может сохраниться п…
+          setSelectedKeys: function(keys) {
+             keys = _private.keysFix(keys);
+             FieldLink.superclass.setSelectedKeys.call(this, keys);
+          },
+
           /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
 
           /**
@@ -720,7 +742,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
-                 selectedKeysLength = cfg.selectedKeys.length;
+                 selectedKeysLength;
+
+             cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
+             selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
                 classesToAdd.push(classes.MULTISELECT);
@@ -732,6 +757,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 if(selectedKeysLength === 1 || !selectedKeysLength) {
                    classesToAdd.push(classes.SELECTED_SINGLE);
                 }
+             }
+
+             /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
+             cfg._useNativePlaceholder = cfg.placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+
+             if(!cfg._useNativePlaceholder) {
+                cfg.placeholder = ParserUtilities.buildInnerComponentsExtended(cfg.placeholder, cfg).markup;
              }
 
              /* className вешаем через modifyOptions,

@@ -227,6 +227,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                column,
                columnTop,
                headColumns = prepareHeadColumns(cfg);
+
+            cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[0].length; i++) {
                columnTop = headData.content[1][i];
@@ -670,7 +672,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                colValue = td.find('.controls-DataGridView__columnValue')[0];
 
                if(colValue && !colValue.getAttribute('title')) {
-                  colValueText = strHelpers.escapeHtml(colValue.innerText);
+                  colValueText = colValue.innerText;
 
                   if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
@@ -797,6 +799,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this.reviveComponents(this._thead);
 
          this._redrawColgroup();
+         if (this.hasPartScroll()) {
+            // Заголовки всегда рисуются со скрытым скролом. Решение о том будет ли показан скрол принимается позднее
+            this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
+         }
          this._bindHead();
          this._notify('onDrawHead');
       },
@@ -1268,15 +1274,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._isPartScrollVisible) {
             this._partScrollRow.addClass('ws-hidden');
             this._isPartScrollVisible = false;
+            this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
+            // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
+            this._resizeChilds();
          }
       },
 
       _showPartScroll: function() {
          if(!this._isPartScrollVisible) {
             this._partScrollRow.removeClass('ws-hidden');
+            this.getContainer().addClass('controls-DataGridView__PartScroll__shown');
             this._updatePartScrollWidth();
             this._findMovableCells();
             this._isPartScrollVisible = true;
+            // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
+            this._resizeChilds();
          }
       },
 
