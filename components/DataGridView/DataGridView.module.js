@@ -234,9 +234,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             cMerge(headData, headColumns);
-            for (var i = 0; i < headData.content[1].length; i++) {
-               columnTop = headData.content[1][i];
-               column = headData.content[0][i];
+            for (var i = 0; i < headData.content[0].length; i++) {
+               columnTop = headData.content[0][i];
+               column = headData.content[1][i];
 
                if (columnTop) {
                   if (columnTop.rowspan > 1 && columnTop.headTemplate){ //Если колонка на 2 строки, то отрисуем headTemplate в ней
