@@ -64,6 +64,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              })
              .subscribe('onClose', function(){
                 container.removeClass('controls-Picker__show');
+                self._notify('onPickerClose');
              });
 
          container
@@ -176,7 +177,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          if(this._picker) {
             this._container.removeClass('controls-Picker__show');
             this._picker.hide();
-            this._notify('onPickerClose');
          }
       },
      /**

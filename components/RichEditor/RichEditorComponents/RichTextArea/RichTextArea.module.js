@@ -254,8 +254,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + '//www.youtube.com/embed/' + id + '"',
-                  ' frameborder="0"',
-                  ' allowfullscreen>',
+                  ' frameborder="0" >',
                   '</iframe>'
                ].join('');
                this.insertHtml(content);
@@ -432,6 +431,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._readyContolDeffered.errback();
             }
             this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
+            if (this._imageOptionsPanel) {
+               this._imageOptionsPanel.destroy();
+            }
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 

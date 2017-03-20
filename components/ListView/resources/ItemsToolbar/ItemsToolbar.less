@@ -33,28 +33,6 @@
          }
       }
 
-      &.controls-ItemsToolbar__vertical {
-         right: 1px;
-         top: 1px;
-         bottom: auto;
-
-         .controls-ItemActions {
-            height: auto;
-            width: @list-view-actions-verAlign-width;
-            margin: @list-view-actions-verAlign-margin;
-
-            .controls-ItemActions__itemsContainer {
-               & > * {
-                  margin: @list-view-actions-margin-action-multiView;
-               }
-               margin-right: 0;
-            }
-
-            .controls-ItemActions__menu-button {
-               margin-left: @list-view-actions-marginLeft-menu-multiView;
-            }
-         }
-      }
       .controls-Button__closeButton.controls-IconButton {
          display: inline-block;
          margin-right: 0;
@@ -63,18 +41,46 @@
          .icon-size {
             .icon-16();
          }
-
-         &.controls-ItemsToolbar__vertical {
-            .controls-ItemActions {
-               width: @list-view-small-actions-verAlign-width;
-            }
-         }
-
       }
 
 
       &.controls-ItemsToolbar__hidden {
          visibility: hidden;
+      }
+   }
+
+   &.controls-CompositeView {
+      .controls-ItemsToolbar {
+         &.controls-ItemsToolbar__vertical {
+            right: 1px;
+            top: 1px;
+            bottom: auto;
+
+            .controls-ItemActions {
+               height: auto;
+               width: @list-view-actions-verAlign-width;
+               margin: @list-view-actions-verAlign-margin;
+
+               .controls-ItemActions__itemsContainer {
+                  & > * {
+                     margin: @list-view-actions-margin-action-multiView;
+                  }
+                  margin-right: 0;
+               }
+
+               .controls-ItemActions__menu-button {
+                  margin-left: @list-view-actions-marginLeft-menu-multiView;
+               }
+            }
+         }
+
+         &.controls-ItemsToolbar__small {
+            &.controls-ItemsToolbar__vertical {
+               .controls-ItemActions {
+                  width: @list-view-small-actions-verAlign-width;
+               }
+            }
+         }
       }
    }
 

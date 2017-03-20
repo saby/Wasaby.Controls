@@ -65,6 +65,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
     * @public
     */
    var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
+      /**
+       * @event onDatesChange Происходит при изменении значения хотя бы одного из синхронизируемых контролов.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected : {
          _options: {
             /**
@@ -349,6 +353,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                showLock: showLock,
                onlyByCapacity: onlyByCapacity
             });
+            this._dateRangeRelationController.subscribe('onDatesChange', function () {
+               this._notify('onDatesChange');
+            }.bind(this));
          }
          this._dateRangeRelationController.bindDateRanges();
       },
@@ -381,6 +388,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          if (this._pagingHistoryController){
             this._pagingHistoryController.destroy();
             this._pagingHistoryController = null;
+         }
+         if (this._dateRangeRelationController){
+            this._dateRangeRelationController.destroy();
+            this._dateRangeRelationController = null;
          }
          ComponentBinder.superclass.destroy.call(this);
       }

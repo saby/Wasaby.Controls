@@ -18,9 +18,9 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    /**
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
     * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
-    * @class SBIS3.CONTROLS.OpenEditDialog
-    * @extends SBIS3.CONTROLS.DialogActionBase
-    * @author Крайнов Дмитрий Олегович
+    * @class SBIS3.CONTROLS.Action.OpenEditDialog
+    * @extends SBIS3.CONTROLS.Action.OpenDialog
+    * @author Красильников Андрей Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
@@ -46,60 +46,51 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
     * @public
     * @category Actions
     * @initial
-    * <component data-component="SBIS3.CONTROLS.OpenEditDialog">
+    * <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog">
     * </component>
     */
-   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.OpenEditDialog.prototype */{
+   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.Action.OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {String} key Первичный ключ сохраняемой записи.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была удалена из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была создана в источнике данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, полученная из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       $protected: {
          _options: {
             /**
              * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает связанный с диалогом список.
              * @remark
-             * Опция применятся при работе со <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/">списками</a>, чтобы производить <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a>.
-             * Для списка, с которым производится связывание, устанавливается ограничение: в класс списка должы быть добавлены миксины ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}).
+             * Для связанного списка производится автоматическая <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a> со списком.
              * @see setLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает способ инициализации данных диалога.
+             * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
              * @remark
-             * Описание значений опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации данных диалога</a>.
+             * Подробнее читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации</a>.
              * @variant local
              * @variant remote
              * @variant delayedRemote
              */
             initializingWay: 'remote',
             /**
-             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             * @cfg {String} устанавливает поле записи, в котором хранится url-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
              */
             urlProperty: ''
          },
@@ -439,24 +430,17 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
        * Если из обработчиков событий и переопределяемых методов вернули не OpenEditDialog.ACTION_CUSTOM, то выполняем базовую логику.
        */
-      _actionHandler: function(event, model) {
+      _actionHandler: function(event, model, additionalData) {
          var eventName = event.name,
-            genericMethods = {
-               onDestroyModel: '_destroyModel',
-               onUpdateModel : '_updateModel',
-               onReadModel: '_readModel'
-            },
             args = Array.prototype.slice.call(arguments, 0),
             self = this,
             eventResult,
             actionResult,
-            methodResult,
-            genericMethod;
+            methodResult;
 
          args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
          eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
-         genericMethod = genericMethods[eventName];
          if (eventResult !== OpenEditDialog.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
@@ -464,18 +448,49 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (actionResult === OpenEditDialog.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
          }
-         if (actionResult !== undefined){
-            genericMethod = actionResult;
-         }
+
          if (actionResult instanceof Deferred){
             actionResult.addCallback(function(result){
-               if (self[genericMethod]){
-                  self[genericMethod].apply(this, args);
-               }
+               self._processingResult(eventName, result, model, additionalData);
             })
          } else {
-            if (this[genericMethod]){
-               this[genericMethod].apply(this, args);
+            this._processingResult(eventName, actionResult, model, additionalData);
+         }
+      },
+
+      _processingResult: function (eventName, result, editModel, additionalData) {
+         var genericMethods = {
+               onDestroyModel: '_destroyModel',
+               onUpdateModel: '_updateModel',
+               onReadModel: '_readModel'
+            },
+            self = this,
+            genericMethod = genericMethods[eventName];
+
+         if (cInstance.instanceOfModule(result, 'WS.Data/Collection/RecordSet')) {
+            if (additionalData.isNewRecord) { //Создание
+               additionalData.isNewRecord = false;
+               additionalData.ignoreLinkedModelKey = true;
+               result.each(function (record) {
+                  self._createRecord(record, 0, additionalData);
+               });
+            }
+            else { //Сохранение
+               if (result.getCount()) {
+                  additionalData.ignoreLinkedModelKey = true;
+                  result.each(function (record) {
+                     self._mergeRecords(record, null, additionalData);
+                  });
+               }
+               else {
+                  this._destroyModel(editModel);
+               }
+            }
+         }
+         else {
+            genericMethod = result || genericMethod;
+            if (this[genericMethod]) {
+               this[genericMethod](editModel, additionalData);
             }
          }
       },
@@ -515,34 +530,46 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
+      _deepMergeRecords: function(model, additionalData) {
+         additionalData.deepMerge = true;
+         this._updateModel(model, additionalData);
+      },
+
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(model, colRec, additionalData){
-         var collectionRecord = colRec || this._getCollectionRecord(model, additionalData),
-            collectionData = this._getCollectionData(),
-            recValue;
-         if (!collectionRecord) {
-            return;
-         }
+      _mergeRecords: function(editRecord, colRec, additionalData){
+         var collectionRecord = colRec || this._getCollectionRecord(editRecord, additionalData);
 
-         if (additionalData.isNewRecord) {
-            collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
+         if (collectionRecord) {
+            if (additionalData.isNewRecord) {
+               collectionRecord.set(this._getCollectionData().getIdProperty(), additionalData.key);
+            }
+            this._mergeRecord(collectionRecord, editRecord, additionalData);
          }
+      },
 
+      _mergeRecord: function(collectionRecord, editRecord, additionalData) {
+         var recValue,
+             self = this;
          Record.prototype.each.call(collectionRecord, function (key, value) {
-            recValue = model.get(key);
-            if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
-               //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
-               if (recValue && (typeof recValue.clone == 'function')) {
-                  recValue = recValue.clone();
+            if(editRecord.has(key)){
+               recValue = editRecord.get(key);
+               if (additionalData.deepMerge && cInstance.instanceOfModule(recValue, 'WS.Data/Entity/Record') && cInstance.instanceOfModule(value, 'WS.Data/Entity/Record')) {
+                  self._mergeRecord(value, recValue, additionalData);
                }
-               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-               try {
-                  this.set(key, recValue);
-               } catch (e) {
-                  if (!(e instanceof ReferenceError)) {
-                     throw e;
+               else if (recValue != value && key !== editRecord.getIdProperty()) {
+                  //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
+                  if (recValue && (typeof recValue.clone == 'function')) {
+                     recValue = recValue.clone();
+                  }
+                  //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+                  try {
+                     this.set(key, recValue);
+                  } catch (e) {
+                     if (!(e instanceof ReferenceError)) {
+                        throw e;
+                     }
                   }
                }
             }
@@ -556,11 +583,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _getCollectionRecord: function(model, additionalData){
          var collectionData = this._getCollectionData(),
-            index;
+             id,
+             index;
+
+         if (additionalData.ignoreLinkedModelKey || !this._linkedModelKey) {
+            id = this._getRecordId(model, additionalData.idProperty);
+         }
+         else {
+            id = this._linkedModelKey;
+         }
 
          if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
-            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey ||
-               this._getRecordId(model, additionalData.idProperty));
+            index = collectionData.getIndexByValue(collectionData.getIdProperty(), id);
             return collectionData.at(index);
          }
          return undefined;
@@ -598,6 +632,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
    OpenEditDialog.ACTION_CUSTOM = 'custom';
    OpenEditDialog.ACTION_MERGE = '_mergeRecords';
+   OpenEditDialog.ACTION_DEEP_MERGE = '_deepMergeRecords';
    OpenEditDialog.ACTION_ADD = '_createRecord';
    OpenEditDialog.ACTION_RELOAD = '_collectionReload';
    OpenEditDialog.ACTION_DELETE = '_destroyModel';

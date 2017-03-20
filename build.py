@@ -1,9 +1,7 @@
-import buildThemes
 import shutil
 import os
 import os.path
 
-buildThemes.main()
 
 def copyReplace(folder): 
    myPath = os.path.join("SBIS3.CONTROLS", folder)

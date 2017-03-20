@@ -1,6 +1,9 @@
 /* Ответственный за модуль: Дубровин Игорь Михайлович */
 /* Created by im.dubrovin */
-define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.ContainerModel'], function(ContainerModel) {
+define('js!SBIS3.CONTROLS.TargetRelativePositionModel', [
+   'Core/core-extend',
+   'js!SBIS3.CONTROLS.ContainerModel'
+], function(cExtend, ContainerModel) {
    /*
    Класс производит необходимы расчеты для позиционирования targetRelative контейнера относительно
    target в parentContainer. Пример:
@@ -66,7 +69,7 @@ define('js!SBIS3.CONTROLS.TargetRelativePositionModel', ['js!SBIS3.CONTROLS.Cont
       relativeOffset:1,
       adapter:1
    },
-   TargetRelativePositionModel = $ws.core.extend({
+   TargetRelativePositionModel = cExtend({
       /**
        * @cfg {CoordinatesType} тип координат которые будут передаваться в метод _setOffsetOfTargetRelative, если опция не задана(null) то будет
        * передаваться offset html блока, если задано например {vertical:'top', horizontal:'right'} то будут переданы координаты html элемента {top: 10, right: 200}

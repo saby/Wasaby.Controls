@@ -11,7 +11,7 @@
    </ws:if>
    <div class="controls-TextBox__fieldWrapper">
       <span class="controls-TextBox__field controls-ComboBox__fieldNotEditable js-controls-ComboBox__fieldNotEditable
-         {{it.text ? '' : 'controls-ComboBox__fieldNotEditable__placeholder'}}">{{(text || placeholder || '&nbsp;')|sanitize}}</span>
+         {{text ? '' : 'controls-ComboBox__fieldNotEditable__placeholder'}}">{{(text || placeholder || '&nbsp;')|sanitize}}</span>
       <input
          class="controls-TextBox__field controls-ComboBox__field js-controls-TextBox__field {{textTransform === 'uppercase' ? 'controls-TextBox__field-uppercase'}} {{textTransform === 'lowercase' ? 'controls-TextBox__field-lowercase'}}"
          type="text"

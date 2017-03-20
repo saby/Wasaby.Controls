@@ -34,39 +34,37 @@ define('js!SBIS3.CONTROLS.Action.Action',
       //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
       var Action = Control.Control.extend(/** @lends SBIS3.CONTROLS.Action.Action.prototype */{
          /**
-          * @event onExecute Перед началом работы действия. Если из события вернуть deferred то основное действие выполнится
-          * в коллбеке, если вернуть false или 'custom' то действие будет отменено.
+          * @event onExecute Происходит перед началом работы действия.
+          * @remark
+          * Если из события вернуть deferred то основное действие выполнится в коллбеке, если вернуть false или 'custom' то действие будет отменено.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} meta Объект содержащий мета параметры Action'а
+          * @param {Object} meta Объект содержащий мета параметры Action'а.
           * @see execute
-          * @example
           */
          /**
-          * @event onExecuted После выполнения основоного действия
+          * @event onExecuted Происходит после выполнения основного действия.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} meta Объект содержащий мета параметры Action'а
+          * @param {Object} meta Объект, содержащий мета параметры Action'а.
           * @see execute
-          * @example
           */
           /**
-          * @event onError При возникновении ошибки при выполнении Action'a
+          * @event onError Происходит при возникновении ошибки при выполнении Action'a.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Error} error Инстанс ошибки произошедшей при выполнении основного действия.
           * @param {Object} meta Объект содержащий мета параметры Action'а
           * @see execute
-          * @example
           */
           /**
-          * @event onChangeCanExecute При изменении признака CanExecute
-          * @see setCanExecute
-          * @see isCanExecute
+          * @event onChangeCanExecute Происходит при изменении признака {@link CanExecute}.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Boolean} canExecute
-          * @example
+          * @see execute
+          * @see setCanExecute
+          * @see isCanExecute
           */
          $protected: {
             /**
-             * @var {Boolean} canExecute может ли выполниться Action
+             * @var {Boolean} Устанавливает: может ли выполниться Action.
              */
             _canExecute: true
          },
@@ -77,10 +75,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
          /**
           * Метод, запускающий выполнение Action'а.
           * @param {Object} meta Объект, содержащий мета-параметры Action'а. Набор мета-параметров фиксирован для каждого Action'а.
-          * <ul>
-          *     <li>Для класса {@link SBIS3.CONTROLS.DialogActionBase} список мета-параметров описан <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/DialogActionBase/typedefs/ExecuteMetaConfig/'>здесь</a>.</li>
-          *     <li>Для миксина {@link SBIS3.CONTROLS.Action.DialogMixin} список мета-параметров описан <a href='https://wi.sbis.ru/docs/SBIS3/CONTROLS/Action/DialogMixin/typedefs/ExecuteMetaConfig/'>здесь</a>.</li>
-          * </ul>
+          * Например, для класса {@link SBIS3.CONTROLS.Action.OpenEditDialog} список мета-параметров описан {@link SBIS3.CONTROLS.Action.OpenEditDialog/ExecuteMetaConfig.typedef здесь}.
           * @returns {Deferred}
           */
          execute: function (meta) {

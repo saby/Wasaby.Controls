@@ -19,7 +19,6 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
             linkedView = this._options.linkedView; //getItemsActions().getItems().getRawData()
          linkedView.setItemsActions(this._prepareItemsActions(linkedView._options.itemsActions));
          linkedView.subscribe('onChangeHoveredItem', this._onChangeHoveredItem.bind(this));
-         linkedView.subscribe('onSelectedItemsChange', this._onSelectedItemsChange.bind(this));
 
          this._publish('onItemMove');
       },
@@ -34,9 +33,11 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
             currentItemIndex = Array.indexOf(selectedKeys, item.getId());
          // При перемещении записи необходимо менять её позицию в рекордсете
          linkedView.move([item], moveTo, at);
-         // и в списке выбранных записей
-         selectedKeys[newItemIndex] = item.getId();
-         selectedKeys[currentItemIndex] = moveTo.getId();
+         // и в списке выбранных записей (в случае если среди отмеченных присутствуют заменяемая запись)
+         if (newItemIndex !== -1) {
+            selectedKeys[newItemIndex] = item.getId();
+            selectedKeys[currentItemIndex] = moveTo.getId();
+         }
          // Перед установкой нового порядка выделенных записей - нужно обнулить выделение, иначе обновление массива выделенных ключей не произойдет
          linkedView.getSelectedItems().clear();
          linkedView.setSelectedKeys(selectedKeys);
@@ -69,55 +70,17 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
          return itemsActions;
       },
 
-      _onSelectedItemsChange: function(event, selectedKeys, changes) {
-         var
-            items = this._options.linkedView.getItems(),
-            item, selectedKeysCount;
-         if (changes.added.length) {
-            item = items.getRecordById(changes.added[0]);
-            selectedKeysCount = selectedKeys.length;
-            if (selectedKeysCount > 1) {
-               this._moveItem(item, items.getRecordById(selectedKeys[selectedKeysCount - 2]), 'after');
-            } else {
-               this._moveItem(item, items.at(0), 'before');
-            }
-         } else if (changes.removed.length) {
-            item = items.getRecordById(changes.removed[0]);
-            selectedKeysCount = selectedKeys.length;
-            if (selectedKeysCount) {
-               this._moveItem(item, items.getRecordById(selectedKeys[selectedKeysCount - 1]), 'after');
-            }
-         }
-      },
-
-      _moveItem: function(item, target, position) {
-         this._options.linkedView.move([item], target, position);
-         this._updateItemsActions(item);
-      },
-
       _updateItemsActions: function(item) {
          var
             linkedView = this._options.linkedView,
             items = linkedView.getItems(),
-            selectedKeys = linkedView.getSelectedKeys(),
             itemsInstances = linkedView.getItemsActions().getItemsInstances(),
-            showMoveUp = false,
-            showMoveDown = false,
             nextItem, prevItem;
 
-         if (Array.indexOf(selectedKeys, item.getId()) !== -1) {
-            prevItem = items.at(items.getIndex(item) - 1);
-            nextItem = items.at(items.getIndex(item) + 1);
-            if (prevItem && Array.indexOf(selectedKeys, prevItem.getId()) !== -1) {
-               showMoveUp = true;
-            }
-            if (nextItem && Array.indexOf(selectedKeys, nextItem.getId()) !== -1) {
-               showMoveDown = true;
-            }
-         }
-
-         itemsInstances['moveUp'].toggle(showMoveUp);
-         itemsInstances['moveDown'].toggle(showMoveDown);
+         prevItem = items.at(items.getIndex(item) - 1);
+         nextItem = items.at(items.getIndex(item) + 1);
+         itemsInstances['moveUp'].toggle(prevItem);
+         itemsInstances['moveDown'].toggle(nextItem);
       },
 
       _onChangeHoveredItem: function(event, hoveredItem) {
