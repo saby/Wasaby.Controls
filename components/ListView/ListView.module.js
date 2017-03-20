@@ -52,13 +52,13 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/dom&controls-helpers',
    'js!SBIS3.CONTROLS.CursorListNavigation',
    'js!WS.Data/Source/SbisService',
+   'js!SBIS3.CONTROLS.ListView.Mover',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.DragEntity.List',
    'js!WS.Data/MoveStrategy/Base',
-   'js!SBIS3.CONTROLS.ListView.Mover',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, Mover) {
 
      'use strict';
 
@@ -3640,7 +3640,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this._getMover().move(models, target.getModel(), position).addCallback(function(){
+                     this.getMover().move(models, target.getModel(), position).addCallback(function(){
                         this.removeItemsSelectionAll();
                      }.bind(this));
                   } else {
@@ -3653,7 +3653,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                     this.getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
             }
@@ -3711,7 +3711,7 @@ define('js!SBIS3.CONTROLS.ListView',
                selectedItems = selectedItems.toArray();
             }
 
-            this._getMover().move(selectedItems, target).addCallback(function(res){
+            this.getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3722,14 +3722,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordDown: function(record) {
-            this._getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
+            this.getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
          },
          /**
           * Переместить на одну запись вверх.
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordUp: function(record) {
-            this._getMover().moveRecordUp(arguments[2]||record);
+            this.getMover().moveRecordUp(arguments[2]||record);
          },
          /**
           * Возвращает стратегию перемещения
@@ -3771,9 +3771,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * Возвращает перемещатор
           * @private
           */
-         _getMover: function() {
+         getMover: function() {
             if (!this._mover) {
-               this._mover = Di.resolve('listview.mover', {
+               this._mover = new Mover({
                   moveStrategy: this.getMoveStrategy(),
                   items: this.getItems(),
                   projection: this._getItemsProjection(),
@@ -3811,7 +3811,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(movedItems, target, position).addCallback(function(){
+            return this.getMover().move(movedItems, target, position).addCallback(function(){
                //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
                //и рассинхронизурутся записи в items и selectItems 💩
                this.setSelectedKeys(this.getSelectedKeys());
