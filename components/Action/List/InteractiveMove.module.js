@@ -72,7 +72,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *    ...
        *    move = new InteractiveMove({
        *       linkedObject: this.getChildControlByName('MyListView')
-       *       moveStrategy: 'movestrategy.base'
        *    });
        *    ...
        * </pre>
@@ -172,24 +171,16 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
-            this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
+
+            this._getMover().move(movedItems, target, 'on').addCallback(function (result) {
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
-            }.bind(this)).addBoth(function() {
+            }.bind(this)).addBoth(function () {
                Indicator.hide();
             });
          },
-
-         _makeMoveStrategy: function () {
-            return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty,
-               listView: this._getListView()
-            });
-         },
+         
          _getComponentOptions: function() {
             var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
                listView = this._getListView(),
