@@ -315,8 +315,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
 
+      /*
+      * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
+      * */
       _checkCapacity: function(){
          var container = this.getContainer();
+         /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
          var allowedWidth = container.width() - this._blocks.markOperations.width() - ITEMS_MENU_WIDTH;
 
          var operations = this._blocks.allOperations.find('.js-controls-operationsPanel__action:visible');
@@ -327,6 +331,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
          for(var i = 0, l = operations.length; i < l; i++){
             var elemWidth = $(operations[i]).outerWidth(true);
+
+            /* Если текущая ширина привышает доступную, то ограничеваем ее, таким образом, кнопка с меню прижмется справа */
             if(width + elemWidth > allowedWidth){
                isMenuNecessary = true;
                this._blocks.allOperations.css('width', width);
