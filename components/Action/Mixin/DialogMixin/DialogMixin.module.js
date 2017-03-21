@@ -110,15 +110,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _openComponent: function(meta, mode) {
+         meta = meta || {};
+         mode = mode || this._options.mode;
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta, mode || this._options.mode);
+         this._createComponent(config, meta, mode);
       },
 
       _buildComponentConfig: function(meta) {
-         var
-            config = cMerge({}, this._options.componentOptions || {}),
-            metaConfig = meta && meta.componentOptions ? meta.componentOptions : {};
-         return cMerge(config,  metaConfig )
+         var config = cMerge({}, this._options.componentOptions);
+         return cMerge(config,  meta.componentOptions)
       },
 
       _createComponent: function(config, meta, mode) {
@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
             this._dialog._options.componentOptions = {};
             cMerge(this._dialog._options, config);
-            this._dialog.reload();
+            this._dialog.reload(true);
          }
          else {
             this._isExecuting = true;
@@ -138,60 +138,55 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
       /**
        * Возвращает конфигурацию диалога по умолчанию.
-       * @param mode
+       * @param meta
        * @returns {*}
        * @private
        */
-      _getDeafuiltDialogConfig: function() {
-         var config = this._options.dialogOptions || {};
+      _getDefaultDialogConfig: function(meta) {
          return cMerge({
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
-            opener: undefined,
+            opener: this._getOpener(),
+            template: meta.template || this._options.template,
             target: undefined,
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
-         }, config)
+         }, this._options.dialogOptions || {});
+      },
+      _getOpener: function(){
+         //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
+         //В идеале они должны делать это сами и тогда этот код не нужен
+         var topParent = this.getTopParent(),
+             floatAreaContainer = topParent.getContainer().closest('.ws-float-area'),
+             floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+         return floatArea || this;
       },
       /**
        * Возвращает конфигурацию диалога - всплывающей панели или окна.
        * @param {Object} meta
-       * @param {String} template
-       * @param {String} mode
        * @returns {Object}
        * @private
        */
       _getDialogConfig: function(meta) {
-         var config = this._getDeafuiltDialogConfig(),
-             compOptions = this._buildComponentConfig(meta),
+         var config = this._getDefaultDialogConfig(meta),
              self = this;
-         colHelpers.forEach(config, function(defaultValue, key){
-            if (meta.hasOwnProperty(key)){
-               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + 'должна задаваться через meta.dialogOptions');
-               config[key] = meta[key];
-            }
-         });
-         cMerge(config, meta.dialogOptions  ||  {});
-         cMerge(config, {
-            opener: this,
-            template: meta.template || this._options.template,
-            componentOptions: compOptions,
-            handlers: { 
-               onAfterClose: function(e, result){
-                  self._isExecuting = false;
-                  self._notifyOnExecuted(meta, result);
-                  self._dialog = undefined;
-               },
-               onBeforeShow: function(){
-                  self._notify('onBeforeShow');
-               },
-               onAfterShow: function(){
-                  self._isExecuting = false;
-                  self._notify('onAfterShow');
-               }
-            }
-         });
 
+         cMerge(config, meta.dialogOptions);
+         config.componentOptions = this._buildComponentConfig(meta);
+         config.handlers = {
+            onAfterClose: function (e, result) {
+               self._isExecuting = false;
+               self._notifyOnExecuted(meta, result);
+               self._dialog = undefined;
+            },
+            onBeforeShow: function () {
+               self._notify('onBeforeShow');
+            },
+            onAfterShow: function () {
+               self._isExecuting = false;
+               self._notify('onAfterShow');
+            }
+         };
          return config;
       },
 
@@ -211,7 +206,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
       /**
        * Устанавливает название шаблона
-       * @param {String} Название модуля шаблона.
+       * @param {String} template Название модуля шаблона.
        * @deprecated
        */
       setDialogComponent: function (template) {
