@@ -240,37 +240,38 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _delayedRemoteWayCallback: function(config, meta, mode, templateComponent){
-         var def = this._getRecordDeferred(config, templateComponent);
-         config.componentOptions._receiptRecordDeferred = def;
-         return def;
+         var deferred = this._getRecordDeferred(config, templateComponent);
+         if (deferred){
+            config.componentOptions._receiptRecordDeferred = deferred;
+         }
+         return new Deferred().callback();
       },
 
       _getRecordDeferred: function(config, templateComponent) {
-         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource,
-            def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
-         //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
-         if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
-            return new Deferred().callback();
-         }
-         return def;
+         var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
+         return getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
       },
 
       _remoteWayCallback: function (config, meta, mode, templateComponent) {
          var self = this,
             options,
-            isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key;
+            isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
+            deferred;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod) {
-            return this._getRecordDeferred(config, templateComponent).addCallback(function (record) {
-               config.componentOptions.record = record;
-               config.componentOptions.isNewRecord = isNewRecord;
-               if (isNewRecord) {
-                  config.componentOptions.key = record.getId();
-                  options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
-                  config.componentOptions.key = self._getRecordId(record, options.idProperty);
-               }
-               return record;
-            });
+            deferred = this._getRecordDeferred(config, templateComponent);
+            if (deferred) {
+               return deferred.addCallback(function (record) {
+                  config.componentOptions.record = record;
+                  config.componentOptions.isNewRecord = isNewRecord;
+                  if (isNewRecord) {
+                     options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
+                     config.componentOptions.key = self._getRecordId(record, options.idProperty);
+                  }
+                  return record;
+               });
+            }
+            return new Deferred().callback();
          }
          else {
             return new Deferred().callback();
@@ -282,7 +283,13 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
              config = this._getDialogConfig(meta),
              self = this;
          require([config.template], function(templateComponent) {
-            deferred.dependOn(self._getRecordDeferred(config, templateComponent));
+            var recordDef = self._getRecordDeferred(config, templateComponent);
+            if (recordDef) {
+               deferred.dependOn(recordDef);
+            }
+            else {
+               deferred.errback(new Error('Для получения записи необходимо задать опцию dataSource'));
+            }
          });
          return deferred;
       },
