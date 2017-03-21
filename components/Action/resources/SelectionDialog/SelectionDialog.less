@@ -1,17 +1,20 @@
 .controls-SelectionDialog {
    height: 100%;
-   min-width: @controls-selectiondialog-min-width;
+   min-width: @controls-movedialog-min-width;
    overflow-y: auto;
 
    .controls-SelectionDialog-TreeDataGridView {
-      padding: @controls-selectiondialog-padding;
+      padding: @controls-movedialog-padding;
       overflow-x: hidden;
-      min-height: @controls-selectiondialog-min-height;
+      min-height: @controls-movedialog-min-height;
       width: 100%;
    }
 }
-.controls-selectionDialog-SelectionButton {
-   position: absolute;
-   right: @controls-selectiondialog-activate-right;
-   top: @controls-selectiondialog-activate-top;
+
+.ws-window-titlebar-custom {
+   .controls-selectionDialog-SelectionButton {
+      position: absolute;
+      right: @controls-movedialog-activate-right;
+      top: @controls-movedialog-activate-top;
+   }
 }
