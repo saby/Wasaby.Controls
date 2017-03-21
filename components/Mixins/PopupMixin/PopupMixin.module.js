@@ -167,6 +167,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              * Способ подстраивания всплывающей панели под свободное рядом с таргетом пространство
              * @typedef {Object} loacationStrategyEnum
              * @variant dontMove всплывающая панель не двигается относительно таргета
+             * @variant bodyBounds контейнер всплывающей панели ограничивается краем экрана, если не влезает в экран
              */
             locationStrategy: null,
             /**
@@ -827,21 +828,36 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* в режиме донт мув мы донт мув */
             case 'dontMove':
                  return offset;
-
+            case 'bodyBounds':
+               var scrollY = this._fixed ? 0 : $(window).scrollTop(),
+                  scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
+               if (this._isHorizontalOverflow() && this._options.horizontalAlign.side !== 'right') {
+                  offset.left = this._windowSizes.width + scrollX - this._containerSizes.originWidth;
+               }
+               //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
+               if (this._isVerticalOverflow() && this._options.verticalAlign.side !== 'bottom') {
+                  offset.top = this._windowSizes.height + scrollY - this._containerSizes.originHeight;
+               }
+               if (offset.top < 0){
+                  offset.top = 0;
+               }
+               if (offset.left < 0){
+                  offset.left = 0;
+               }
+               return offset;
             /* по умаолчанию учитываем свободное место на экране */
             default:
-               var buf = this._targetSizes.offset,
-                   scrollY = this._fixed ? 0 : $(window).scrollTop(),
-                   scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               var buf = this._targetSizes.offset;
                //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
-               if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
+               if (this._isVerticalOverflow() && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
                   this._isMovedV = true;
                   offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
                   offset.top = this._addOffset(offset, buf).top;
                }
 
                //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
-               if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
+               if (!this._isVerticalOverflow() && this._isMovedV) {
                   this._isMovedV = false;
                   offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
                   offset.top = this._addOffset(offset, buf).top;
@@ -849,20 +865,30 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                //TODO Избавиться от дублирования
                //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
-               if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
+               if (this._isHorizontalOverflow() && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
                   this._isMovedH = true;
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
 
                //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
-               if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
+               if (!this._isHorizontalOverflow() && this._isMovedH) {
                   this._isMovedH = false;
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
                return offset;
          }
+      },
+
+      _isHorizontalOverflow: function() {
+         var scrollX = this._fixed ? 0 : $(window).scrollLeft();
+         return this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX;
+      },
+
+      _isVerticalOverflow: function() {
+         var scrollY = this._fixed ? 0 : $(window).scrollTop();
+         return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY;
       },
 
       _calculateOverflow: function (offset, orientation) {

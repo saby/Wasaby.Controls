@@ -101,12 +101,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
           */
          _linkedModelKey: undefined,
          _overlay: undefined,
+         _setOpeningModeHandler: undefined,
          _showedLoading: false,
          _openInNewTab: false
       },
       init: function () {
          OpenEditDialog.superclass.init.apply(this, arguments);
-         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
+         this._setOpeningModeHandler = this._setOpeningMode.bind(this);
+         $(document).bind('keydown keyup', this._setOpeningModeHandler);
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -201,13 +203,13 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
              self = this;
 
          function wayRemote(templateComponent) {
-            return self._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function () {
+            return self._remoteWayCallback(config, meta, mode, templateComponent).addCallback(function () {
                OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
             });
          }
 
          function wayDelayedRemove(templateComponent) {
-            var def = self._getRecordDeferred(config, meta, mode, templateComponent);
+            var def = self._delayedRemoteWayCallback(config, meta, mode, templateComponent);
             OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
             return def;
          }
@@ -237,46 +239,52 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
-      _getRecordDeferred: function(config, meta, mode, templateComponent){
+      _delayedRemoteWayCallback: function(config, meta, mode, templateComponent){
+         var def = this._getRecordDeferred(config, templateComponent);
+         config.componentOptions._receiptRecordDeferred = def;
+         return def;
+      },
+
+      _getRecordDeferred: function(config, templateComponent) {
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource,
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
          //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
          if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
             return new Deferred().callback();
          }
-         config.componentOptions._receiptRecordDeferred = def;
          return def;
       },
 
-      _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
+      _remoteWayCallback: function (config, meta, mode, templateComponent) {
          var self = this,
             options,
-            isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
-            def;
+            isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod) {
-            def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
-
-            //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
-            if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
-               return new Deferred().callback();
-            }
-
-            def.addCallback(function (record) {
+            return this._getRecordDeferred(config, templateComponent).addCallback(function (record) {
                config.componentOptions.record = record;
                config.componentOptions.isNewRecord = isNewRecord;
-               if (isNewRecord){
+               if (isNewRecord) {
                   config.componentOptions.key = record.getId();
                   options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
                   config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
                return record;
             });
-            return def;
          }
          else {
             return new Deferred().callback();
          }
+      },
+
+      getEditRecordDeferred: function(meta) {
+         var deferred = new Deferred(),
+             config = this._getDialogConfig(meta),
+             self = this;
+         require([config.template], function(templateComponent) {
+            deferred.dependOn(self._getRecordDeferred(config, templateComponent));
+         });
+         return deferred;
       },
 
       _showLoadingIndicator: function() {
@@ -627,6 +635,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                }
             }
          });
+      },
+
+      destroy: function() {
+         $(document).unbind('keydown keyup', this._setOpeningModeHandler);
+         OpenEditDialog.superclass.destroy.apply(this, arguments);
       }
    });
 
