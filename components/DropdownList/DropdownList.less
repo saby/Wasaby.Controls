@@ -246,6 +246,7 @@
    }
    .controls-DropdownList__header {
       display: none;
+      position: relative;
       background: @DropdownList-header-bg;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-head-border-radius;
@@ -458,17 +459,14 @@
 .ws-is-mobile-platform {
    //На мобильной платформе при сглаживании появляется линия в пол пикселя в вертикальной ориентации. Перекрываю через псевдо-элемент
    .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      .controls-DropdownList__header{
-         position: relative;
-         &:before {
-            content: '';
-            position: absolute;
-            right: 0;
-            left: 0;
-            bottom: -1px;
-            height: 2px;
-            background: @DropdownList-header-bg;
-         }
+      .controls-DropdownList__header:before {
+         content: '';
+         position: absolute;
+         right: 0;
+         left: 0;
+         bottom: -1px;
+         height: 2px;
+         background: @DropdownList-header-bg;
       }
    }
 }
