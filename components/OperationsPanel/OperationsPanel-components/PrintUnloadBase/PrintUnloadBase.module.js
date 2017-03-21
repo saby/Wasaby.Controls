@@ -70,11 +70,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
 
-      _modifyOptions : function(options) {
-         options.pickerClassName += ' controls-OperationPanel__Menu';
-         return MenuLink.superclass._modifyOptions.apply(this, arguments);
-      },
-
       _onOperationActivated: function() {
       },
 

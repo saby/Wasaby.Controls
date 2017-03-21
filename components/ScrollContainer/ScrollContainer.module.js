@@ -41,6 +41,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </pre>
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрыть ползунок
        *
        * @control
        * @public
@@ -182,6 +183,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                contentHeight: this._getScrollHeight(),
                parent: this
             });
+
+            /**
+             * В ie при overflow-y: scroll добавляется 1px для скроллирования. И когда скролла нет
+             * мы можем скроллить область на 1px. Поэтому мы избавимся от нативного скролла.
+             */
+            if (cDetection.IEVersion >= 10) {
+               this._content.css('overflow-y', 'auto');
+            }
             if (!cDetection.isIE8){
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
             }

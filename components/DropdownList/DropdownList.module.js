@@ -400,35 +400,34 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          setSelectedKeys: function(idArray){
-            if (this._options.emptyValue && idArray[0] == this._defaultId){
-               this._setSelectedEmptyRecord();
-               return;
+            //Если выбрана запись "Не выбрано", то отрисуем ее вручную, т.к. эта запись отсуствует в рекордсете и не может быть обработана по стандартной логике
+            if (this._options.emptyValue && idArray.length === 1 && idArray[0] == this._defaultId){
+               var oldKeys = this.getSelectedKeys();
+               this._options.selectedItems && this._options.selectedItems.clear();
+               this._options.selectedKeys = idArray;
+               this._drawSelectedValue(null, [this._emptyText]);
+               this._notifySelectedItems(this._options.selectedKeys,{
+                  added : idArray,
+                  removed : oldKeys
+               });
             }
-            //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
-            //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
-            if (idArray.length > 1) {
-               for (var i = 0; i < idArray.length; i++) {
-                  if (idArray[i] == this._defaultId){
-                     idArray.splice(i, 1);
-                     break;
+            else {
+               //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
+               //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
+               if (idArray.length > 1) {
+                  for (var i = 0; i < idArray.length; i++) {
+                     if (idArray[i] == this._defaultId){
+                        idArray.splice(i, 1);
+                        break;
+                     }
                   }
                }
+               if (this._isEnumTypeData()) {
+                  this.getItems().set(idArray[0]);
+               }
+               DropdownList.superclass.setSelectedKeys.call(this, idArray);
+               this._updateCurrentSelection();
             }
-            if (this._isEnumTypeData()) {
-               this.getItems().set(idArray[0]);
-            }
-            DropdownList.superclass.setSelectedKeys.call(this, idArray);
-            this._updateCurrentSelection();
-         },
-         _setSelectedEmptyRecord: function(){
-            var oldKeys = this.getSelectedKeys();
-            this._options.selectedItems && this._options.selectedItems.clear();
-            this._options.selectedKeys = [null];
-            this._drawSelectedValue(null, [this._emptyText]);
-            this._notifySelectedItems(this._options.selectedKeys,{
-               added : [null],
-               removed : oldKeys
-            });
          },
          _updateCurrentSelection: function(){
             var keys;

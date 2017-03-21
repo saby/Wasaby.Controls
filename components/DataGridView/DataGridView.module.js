@@ -122,6 +122,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                getColumnVal: getColumnVal,
                getCellValue: getCellValue,
                decorators : tplOptions.decorators,
+               highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
                displayProperty: tplOptions.displayProperty
             };

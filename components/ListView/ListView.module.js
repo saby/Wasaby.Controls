@@ -1366,7 +1366,7 @@ define('js!SBIS3.CONTROLS.ListView',
                    }
                 };
 
-            if(this._needShowContextMenu()) {
+            if(this._needShowContextMenu(event)) {
                if (!this._checkItemAction()) {
                      event.preventDefault();
                      itemsActions.showItemActionsMenu(align);
@@ -1377,7 +1377,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _needShowContextMenu: function () {
+         _needShowContextMenu: function (event) {
             var itemsActions = this.getItemsActions();
 
             return this._options.contextMenu
@@ -1388,6 +1388,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 && this._hoveredItem.container
                 && !this._hoveredItem.container.hasClass('controls-editInPlace__editing')
                 && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false'
+                // при клике по ссылке необходимо показывать стандартное меню,
+                // т.к. иначе ломаем привычное для пользователя поведение
+                && event.target.nodeName.toLowerCase() !== 'a'
          },
 
          /*

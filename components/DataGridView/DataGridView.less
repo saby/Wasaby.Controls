@@ -69,10 +69,6 @@
       }
    }
 
-   .controls-DataGridView__td__textAlignRight{
-     text-align: right!important;
-   }
-
    .controls-DataGridView__table {
       width: 100%;
       position: relative;
@@ -84,6 +80,12 @@
       background: @data-grid-bg;
       table-layout: @data-grid-table-layot;
 
+      .controls-DataGridView__tbody, .controls-DataGridView__thead {
+         .controls-DataGridView__td__textAlignRight {
+            text-align: right;
+         }
+      }
+
       .controls-DataGridView__results {
          background: @data-grid-row-bg;
          font-weight: bold;
@@ -94,7 +96,7 @@
        &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
          .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
            &.controls-DataGridView__notScrolledCell {
-             background-color: @data-grid-partScroll-notScrolledCell-Color;
+             background-color: @data-grid-multiselect-notScrolledCell-Color;
            }
          }
        }
@@ -120,6 +122,9 @@
          }
          &.controls-DataGridView__scrolledCell {
             cursor: @data-grid-partScroll-cursor;
+         }
+         &.controls-DataGridView-cell-verticalAlignTop {
+            vertical-align: top;
          }
       }
 
@@ -232,9 +237,6 @@
            .column-ellipsis();
         }
 
-        &.controls-DataGridView-cell-verticalAlignTop{
-          vertical-align: top;
-        }
         &.controls-DataGridView-cell-verticalAlignMiddle{
           vertical-align: middle;
         }
@@ -337,7 +339,13 @@
                background-color: @data-grid-row-hover-bg-mobile;
             }
          }
+         &.controls-ListView__item__multiSelected{
+           .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+             background-color: @data-grid-row-selected-bg;
+           }
+         }
       }
+
    }
 }
 /*Для строк идущих после группировки не должно быть верхних бордеров*/

@@ -59,7 +59,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          var topParent;
          this._publish('onTotalScroll', 'onScroll');
          var element = this._findScrollElement() || $(window);
-         element.bind('scroll.wsScrollWatcher', this._onContainerScroll.bind(this));
+         this._onContainerScroll = this._onContainerScroll.bind(this);
+         element.bind('scroll.wsScrollWatcher', this._onContainerScroll);
       },
 
       // Ищем в порядке - пользовательский контейнер -> ws-scrolling-content -> ws-body-scrolling-content -> Window
@@ -123,7 +124,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       isScrollOnBottom: function(noOffset){
          var element = this.getScrollContainer(),
          offset = noOffset ? 0 : this._options.totalScrollOffset;
-         return this._isScrollOnBottom(element, offset)
+         return this._isScrollOnBottom(element, offset);
       },
 
       _isScrollOnBottom: function(element, offset){
@@ -207,7 +208,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       destroy: function(){
-         this._options.element.unbind('scroll.wsScrollWatcher');
+         this._options.element.unbind('scroll.wsScrollWatcher', this._onContainerScroll);
          ScrollWatcher.superclass.destroy.call(this);
       }
 
