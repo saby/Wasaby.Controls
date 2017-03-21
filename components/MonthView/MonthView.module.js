@@ -24,7 +24,7 @@ define(
        * Календарь отображающий 1 месяц.
        * Предназначен для задания даты или диапазона дат в рамках одного месяца путём выбора.
        * @class SBIS3.CONTROLS.MonthView
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
        * @author Миронов Александр Юрьевич

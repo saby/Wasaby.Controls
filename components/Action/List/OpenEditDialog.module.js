@@ -18,9 +18,9 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    /**
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
     * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
-    * @class SBIS3.CONTROLS.OpenEditDialog
-    * @extends SBIS3.CONTROLS.DialogActionBase
-    * @author Крайнов Дмитрий Олегович
+    * @class SBIS3.CONTROLS.Action.OpenEditDialog
+    * @extends SBIS3.CONTROLS.Action.OpenDialog
+    * @author Красильников Андрей Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
@@ -46,60 +46,51 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
     * @public
     * @category Actions
     * @initial
-    * <component data-component="SBIS3.CONTROLS.OpenEditDialog">
+    * <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog">
     * </component>
     */
-   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.OpenEditDialog.prototype */{
+   var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.Action.OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Сохраняемая запись.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {String} key Первичный ключ сохраняемой записи.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была удалена из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, которая была создана в источнике данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога.
-       * @remark Событие используется, когда логика взаимодействия с источником диалога должна быть определена на стороне компонента, который инициировал открытие диалога.
-       * При создании обработчика события существуют ограничения. Подробнее об этом вы можете прочитать в статье <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/synchronization/">Синхронизация изменений со списком</a>.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Record} record Запись, полученная из источника данных диалога.
+       * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       $protected: {
          _options: {
             /**
              * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает связанный с диалогом список.
              * @remark
-             * Опция применятся при работе со <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/">списками</a>, чтобы производить <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a>.
-             * Для списка, с которым производится связывание, устанавливается ограничение: в класс списка должы быть добавлены миксины ({@link SBIS3.CONTROLS.DSMixin} или {@link WS.Data/Collection/IList}).
+             * Для связанного списка производится автоматическая <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a> со списком.
              * @see setLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает способ инициализации данных диалога.
+             * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
              * @remark
-             * Описание значений опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации данных диалога</a>.
+             * Подробнее читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации</a>.
              * @variant local
              * @variant remote
              * @variant delayedRemote
              */
             initializingWay: 'remote',
             /**
-             * @cfg {String} Поле записи, в котором лежит url, по которому откроется новая вкладка при вызове execute при зажатой клавише ctrl
+             * @cfg {String} устанавливает поле записи, в котором хранится url-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
              */
             urlProperty: ''
          },
@@ -109,12 +100,15 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
+         _overlay: undefined,
+         _setOpeningModeHandler: undefined,
          _showedLoading: false,
          _openInNewTab: false
       },
       init: function () {
          OpenEditDialog.superclass.init.apply(this, arguments);
-         $(document).bind('keydown keyup', this._setOpeningMode.bind(this));
+         this._setOpeningModeHandler = this._setOpeningMode.bind(this);
+         $(document).bind('keydown keyup', this._setOpeningModeHandler);
       },
       /**
        * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
@@ -138,11 +132,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _openComponent:function(meta, mode) {
          var openUrl = meta.item && meta.item.get(this._options.urlProperty);
-         if (this._needOpenInNewTab() && openUrl) {
-            window.open(openUrl);
-            return;
+
+         if (this._isExecuting){
+            //Если execute уже был вызван, а панель еще не открылась, игнорируем этот вызов execute, пока не отработает открытие панели из первого вызова.
          }
-         if (this._isNeedToRedrawDialog()) {
+         else if (this._needOpenInNewTab() && openUrl) {
+            window.open(openUrl);
+         }
+         else if (this._isNeedToRedrawDialog()) {
             this._saveRecord().addCallback(function () {
                OpenEditDialog.superclass._openComponent.call(this, meta, mode);
             }.bind(this));
@@ -206,13 +203,13 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
              self = this;
 
          function wayRemote(templateComponent) {
-            return self._initTemplateComponentCallback(config, meta, mode, templateComponent).addCallback(function () {
+            return self._remoteWayCallback(config, meta, mode, templateComponent).addCallback(function () {
                OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
             });
          }
 
          function wayDelayedRemove(templateComponent) {
-            var def = self._getRecordDeferred(config, meta, mode, templateComponent);
+            var def = self._delayedRemoteWayCallback(config, meta, mode, templateComponent);
             OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
             return def;
          }
@@ -242,54 +239,82 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
-      _getRecordDeferred: function(config, meta, mode, templateComponent){
+      _delayedRemoteWayCallback: function(config, meta, mode, templateComponent){
+         var def = this._getRecordDeferred(config, templateComponent);
+         config.componentOptions._receiptRecordDeferred = def;
+         return def;
+      },
+
+      _getRecordDeferred: function(config, templateComponent) {
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource,
             def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
          //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
          if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
             return new Deferred().callback();
          }
-         config.componentOptions._receiptRecordDeferred = def;
          return def;
       },
 
-      _initTemplateComponentCallback: function (config, meta, mode, templateComponent) {
+      _remoteWayCallback: function (config, meta, mode, templateComponent) {
          var self = this,
             options,
-            isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
-            def;
+            isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key;
          var getRecordProtoMethod = templateComponent.prototype.getRecordFromSource;
          if (getRecordProtoMethod) {
-            def = getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
-
-            //TODO Условие в рамках совместимости. убрать как все перейдут на установку dataSource с опций
-            if (!cInstance.instanceOfModule(def, 'Core/Deferred')){
-               return new Deferred().callback();
-            }
-
-            def.addCallback(function (record) {
+            return this._getRecordDeferred(config, templateComponent).addCallback(function (record) {
                config.componentOptions.record = record;
                config.componentOptions.isNewRecord = isNewRecord;
-               if (isNewRecord){
+               if (isNewRecord) {
                   config.componentOptions.key = record.getId();
                   options = OpenDialogUtil.getOptionsFromProto(templateComponent, 'getComponentOptions', config.componentOptions);
                   config.componentOptions.key = self._getRecordId(record, options.idProperty);
                }
                return record;
             });
-            return def;
          }
          else {
             return new Deferred().callback();
          }
       },
 
-      _showLoadingIndicator: function(){
+      getEditRecordDeferred: function(meta) {
+         var deferred = new Deferred(),
+             config = this._getDialogConfig(meta),
+             self = this;
+         require([config.template], function(templateComponent) {
+            deferred.dependOn(self._getRecordDeferred(config, templateComponent));
+         });
+         return deferred;
+      },
+
+      _showLoadingIndicator: function() {
+         this._toggleOverlay(true);
          cIndicator.setMessage('Загрузка...', true);
       },
 
-      _hideLoadingIndicator: function(){
+      _hideLoadingIndicator: function() {
+         this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _toggleOverlay: function(show){
+         //При вызове execute, во время начала асинхронных операций при выставленной опции initializingWay = 'remote' || 'delayedRemote',
+         //закрываем оверлеем весь боди, чтобы пользователь не мог взаимодействовать с интерфейсом, пока не загрузится диалог редактирования,
+         //иначе пока не загрузилась одна панель, мы можем позвать открытие другой, что приведет к ошибкам.
+         if (!this._overlay) {
+            this._overlay = $('<div class="controls-OpenDialogAction-overlay ws-hidden"></div>');
+            this._overlay.css({
+               position: 'absolute',
+               top: 0,
+               left: 0,
+               right: 0,
+               bottom: 0,
+               'z-index': 9999,
+               opacity: 0
+            });
+            this._overlay.appendTo('body');
+         }
+         this._overlay.toggleClass('ws-hidden', !show);
       },
 
       _buildComponentConfig: function (meta) {
@@ -413,24 +438,17 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
        * Если из обработчиков событий и переопределяемых методов вернули не OpenEditDialog.ACTION_CUSTOM, то выполняем базовую логику.
        */
-      _actionHandler: function(event, model) {
+      _actionHandler: function(event, model, additionalData) {
          var eventName = event.name,
-            genericMethods = {
-               onDestroyModel: '_destroyModel',
-               onUpdateModel : '_updateModel',
-               onReadModel: '_readModel'
-            },
             args = Array.prototype.slice.call(arguments, 0),
             self = this,
             eventResult,
             actionResult,
-            methodResult,
-            genericMethod;
+            methodResult;
 
          args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
          eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
 
-         genericMethod = genericMethods[eventName];
          if (eventResult !== OpenEditDialog.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
@@ -438,18 +456,49 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (actionResult === OpenEditDialog.ACTION_CUSTOM || !this._options.linkedObject) {
             return;
          }
-         if (actionResult !== undefined){
-            genericMethod = actionResult;
-         }
+
          if (actionResult instanceof Deferred){
             actionResult.addCallback(function(result){
-               if (self[genericMethod]){
-                  self[genericMethod].apply(this, args);
-               }
+               self._processingResult(eventName, result, model, additionalData);
             })
          } else {
-            if (this[genericMethod]){
-               this[genericMethod].apply(this, args);
+            this._processingResult(eventName, actionResult, model, additionalData);
+         }
+      },
+
+      _processingResult: function (eventName, result, editModel, additionalData) {
+         var genericMethods = {
+               onDestroyModel: '_destroyModel',
+               onUpdateModel: '_updateModel',
+               onReadModel: '_readModel'
+            },
+            self = this,
+            genericMethod = genericMethods[eventName];
+
+         if (cInstance.instanceOfModule(result, 'WS.Data/Collection/RecordSet')) {
+            if (additionalData.isNewRecord) { //Создание
+               additionalData.isNewRecord = false;
+               additionalData.ignoreLinkedModelKey = true;
+               result.each(function (record) {
+                  self._createRecord(record, 0, additionalData);
+               });
+            }
+            else { //Сохранение
+               if (result.getCount()) {
+                  additionalData.ignoreLinkedModelKey = true;
+                  result.each(function (record) {
+                     self._mergeRecords(record, null, additionalData);
+                  });
+               }
+               else {
+                  this._destroyModel(editModel);
+               }
+            }
+         }
+         else {
+            genericMethod = result || genericMethod;
+            if (this[genericMethod]) {
+               this[genericMethod](editModel, additionalData);
             }
          }
       },
@@ -489,34 +538,46 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          }
       },
 
+      _deepMergeRecords: function(model, additionalData) {
+         additionalData.deepMerge = true;
+         this._updateModel(model, additionalData);
+      },
+
       /**
        * Мержим поля из редактируемой записи в существующие поля записи из связного списка.
        */
-      _mergeRecords: function(model, colRec, additionalData){
-         var collectionRecord = colRec || this._getCollectionRecord(model, additionalData),
-            collectionData = this._getCollectionData(),
-            recValue;
-         if (!collectionRecord) {
-            return;
-         }
+      _mergeRecords: function(editRecord, colRec, additionalData){
+         var collectionRecord = colRec || this._getCollectionRecord(editRecord, additionalData);
 
-         if (additionalData.isNewRecord) {
-            collectionRecord.set(collectionData.getIdProperty(), additionalData.key);
+         if (collectionRecord) {
+            if (additionalData.isNewRecord) {
+               collectionRecord.set(this._getCollectionData().getIdProperty(), additionalData.key);
+            }
+            this._mergeRecord(collectionRecord, editRecord, additionalData);
          }
+      },
 
+      _mergeRecord: function(collectionRecord, editRecord, additionalData) {
+         var recValue,
+             self = this;
          Record.prototype.each.call(collectionRecord, function (key, value) {
-            recValue = model.get(key);
-            if (model.has(key) && recValue != value && key !== model.getIdProperty()) {
-               //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
-               if (recValue && (typeof recValue.clone == 'function')) {
-                  recValue = recValue.clone();
+            if(editRecord.has(key)){
+               recValue = editRecord.get(key);
+               if (additionalData.deepMerge && cInstance.instanceOfModule(recValue, 'WS.Data/Entity/Record') && cInstance.instanceOfModule(value, 'WS.Data/Entity/Record')) {
+                  self._mergeRecord(value, recValue, additionalData);
                }
-               //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-               try {
-                  this.set(key, recValue);
-               } catch (e) {
-                  if (!(e instanceof ReferenceError)) {
-                     throw e;
+               else if (recValue != value && key !== editRecord.getIdProperty()) {
+                  //клонируем модели, флаги, итд потому что при сете они теряют связь с рекордом текущим рекордом, а редактирование может еще продолжаться.
+                  if (recValue && (typeof recValue.clone == 'function')) {
+                     recValue = recValue.clone();
+                  }
+                  //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+                  try {
+                     this.set(key, recValue);
+                  } catch (e) {
+                     if (!(e instanceof ReferenceError)) {
+                        throw e;
+                     }
                   }
                }
             }
@@ -530,11 +591,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _getCollectionRecord: function(model, additionalData){
          var collectionData = this._getCollectionData(),
-            index;
+             id,
+             index;
+
+         if (additionalData.ignoreLinkedModelKey || !this._linkedModelKey) {
+            id = this._getRecordId(model, additionalData.idProperty);
+         }
+         else {
+            id = this._linkedModelKey;
+         }
 
          if (collectionData && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IList') && cInstance.instanceOfMixin(collectionData, 'WS.Data/Collection/IIndexedCollection')) {
-            index = collectionData.getIndexByValue(collectionData.getIdProperty(), this._linkedModelKey ||
-               this._getRecordId(model, additionalData.idProperty));
+            index = collectionData.getIndexByValue(collectionData.getIdProperty(), id);
             return collectionData.at(index);
          }
          return undefined;
@@ -561,16 +629,23 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return cMerge(config, {
             handlers: {
                onAfterClose: function (e, meta) {
+                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, this._record);
                   self._dialog = undefined;
                }
             }
          });
+      },
+
+      destroy: function() {
+         $(document).unbind('keydown keyup', this._setOpeningModeHandler);
+         OpenEditDialog.superclass.destroy.apply(this, arguments);
       }
    });
 
    OpenEditDialog.ACTION_CUSTOM = 'custom';
    OpenEditDialog.ACTION_MERGE = '_mergeRecords';
+   OpenEditDialog.ACTION_DEEP_MERGE = '_deepMergeRecords';
    OpenEditDialog.ACTION_ADD = '_createRecord';
    OpenEditDialog.ACTION_RELOAD = '_collectionReload';
    OpenEditDialog.ACTION_DELETE = '_destroyModel';

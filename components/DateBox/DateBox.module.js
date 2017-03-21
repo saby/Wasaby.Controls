@@ -10,7 +10,10 @@ define(
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'tmpl!SBIS3.CONTROLS.DateBox',
-      'js!SBIS3.CONTROLS.FormWidgetMixin'
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
+      // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
+      'css!SBIS3.CONTROLS.FormattedTextBox',
+      'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
    function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
@@ -642,7 +645,9 @@ define(
        */
       _createDate: function (yyyy, mm, dd, hh, ii, ss, uuu) {
          var date = new Date(yyyy, mm, dd, hh, ii, ss, uuu);
-         if (yyyy < 100) {
+         //TODO возможно надо переделать но ошибку по смокам лечит
+         //когда контрол с вводом времени, то в yyyy приходит 0 и ставится 0 год, потом валится БЛ
+         if (yyyy < 100 && yyyy > 0) {
             date.setFullYear(yyyy);
          }
          return date;

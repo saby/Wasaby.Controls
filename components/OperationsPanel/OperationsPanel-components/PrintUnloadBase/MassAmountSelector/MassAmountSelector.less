@@ -3,6 +3,8 @@
 }
 .controls-PrintMassDialog {
    left: 12px;
+   position: relative;
+
    .controls-MassAmountSelector__numberTextBox .controls-NumberTextBox {
       width: 80px;
       .controls-TextBox__field {
@@ -19,10 +21,12 @@
       padding-right: 8px;
    }
 }
-.controls-Button__activatePrintMass{
-   line-height: 1.2em;
-   margin-top: @controls-printdialog-activate-margin-top;
-   position: absolute;
-   right: @controls-printdialog-activate-right;
+.ws-window-titlebar-custom {
+   .controls-Button__activatePrintMass {
+      line-height: 1.2em;
+      margin-top: @controls-printdialog-activate-margin-top;
+      position: absolute;
+      right: @controls-printdialog-activate-right;
+   }
 }
 

@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
      * Для каждого типа редактора имя обозначено в описании класса.
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.Base
-     * @extends $ws.proto.CompoundControl
+     * @extends SBIS3.CORE.CompoundControl
      * @author Сухоручкин Андрей Сергеевич
      *
      * @mixes SBIS3.CONTROLS.IFilterItem

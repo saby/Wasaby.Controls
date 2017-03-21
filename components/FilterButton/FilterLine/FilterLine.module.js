@@ -3,15 +3,16 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
       'html!SBIS3.CONTROLS.FilterButton.FilterLine',
-      'Core/helpers/string-helpers'
+      'Core/helpers/string-helpers',
+      'Core/Sanitize'
    ],
-   function(CompoundControl, FilterToStringUtil, dotTplFn, strHelpers) {
+   function(CompoundControl, FilterToStringUtil, dotTplFn, strHelpers, Sanitize) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
        * Умеет отображать строку по определенному шаблону. Работает исключительно через контекст.
        * @class SBIS3.CONTROLS.FilterButton.FilterLine
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @control
        * @public
@@ -34,6 +35,8 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                   } else {
                      linkText = context.getValue('filterResetLinkText');
                   }
+
+                  linkText = Sanitize(linkText, {validNodes: {component: true}});
 
                   context.setValueSelf({
                      linkText: linkText,

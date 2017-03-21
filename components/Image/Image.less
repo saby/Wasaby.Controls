@@ -6,6 +6,9 @@
    &__file-loader {
       display: none;
    }
+   &__file-cam-loader {
+      display: none;
+   }
    &__wrapper {
       width: 100%;
       height: 100%;
@@ -13,8 +16,8 @@
       white-space: nowrap;
       text-align: center;
    }
-   &__image-bar {
-      position: absolute;
+   .controls-image__image-bar {
+      position: absolute ;
       margin: 0px;
       padding: 0px;
       left: 0px;
@@ -28,7 +31,7 @@
       max-width: 100%;
       max-height: 100%;
    }
-   &__button {
+   .controls-image__button {
       &-edit, &-upload, &-reset {
          position: absolute;
          bottom: 4px;
@@ -39,9 +42,17 @@
       }
       &-upload {
          left: 12px;
+         line-height:24px;
       }
       &-reset {
          right: 12px;
+      }
+   }
+   &__normal {
+      .controls-image__wrapper {
+         display: flex;
+         justify-content: center;
+         align-items: center;
       }
    }
 }

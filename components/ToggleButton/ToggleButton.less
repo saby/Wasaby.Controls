@@ -1,5 +1,13 @@
-@import "../IconButton/IconButton";
-@import "../Button/Button";
+.button-mixin(@icon-top, @icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+   left: @icon-left - @border-width;
+   top: @icon-top - @border-width;
+
+   & + .controls-Button__text {
+      margin-right: @margin-right - @border-width;
+      margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+   }
+}
+
 .controls-Button {
   &.controls-Checked__checked {
     color: @button-checked-text-color;
@@ -57,6 +65,9 @@
     }
     .controls-Button__icon.icon-24 {
       .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
+    .controls-Button__icon.icon-32 {
+      .button-mixin(@button-big-icon-32-top-offset, @button-big-icon-32-left-offset, 32px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
     }
 }
 

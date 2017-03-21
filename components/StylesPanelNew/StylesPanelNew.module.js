@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'Core/helpers/collection-helpers',
    'Core/helpers/generate-helpers',
    'html!SBIS3.CONTROLS.StylesPanelNew',
+   'Core/EventBus',
    'html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemTemplate',
    'html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemContentTpl',
    'js!SBIS3.CONTROLS.ListView',
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
    'css!SBIS3.CONTROLS.StylesPanelNew'
-], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn) {
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -23,7 +24,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
     * Панель выбора цвета с возможностью выбора цвета, начертания шрифта, установки предвыбранных стилей и сохранения истории
     *
     * @class SBIS3.CONTROLS.StylesPanel
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.PopupMixin
@@ -132,7 +133,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          _bold: null,
          _italic: null,
          _underline: null,
-         _strikethrough: null
+         _strikethrough: null,
+         _pickerOpenHandler: undefined
       },
 
       $constructor: function() {
@@ -141,7 +143,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              colorsCount, i;
 
          this._publish('changeFormat');
-         CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'saveStylesPanel', this.saveHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.
@@ -183,7 +185,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       init: function() {
-         var self = this;
+         var
+            self = this;
 
          StylesPanel.superclass.init.call(this);
 
@@ -230,6 +233,14 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                   self._historyInit();
                }
             }
+            self._pickerOpenHandler = function() {
+               self._size._picker._container.on('mousedown focus', self._blockFocusEvents);
+            }.bind(self);
+            self._container.on('mousedown focus', self._blockFocusEvents);
+            //TODO: наилютейший костыль чтобы combobox не брал на себя фокус при открытии/закрытии popup`a
+            self._size._scrollToItem = function(){};
+            self._size.setActive = function(){};
+            self._size.once('onPickerOpen', self._pickerOpenHandler);
          }
 
          if (this._options.instantFireMode === true) {
@@ -475,8 +486,25 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                this._underline.setChecked(styles.underline);
                this._strikethrough.setChecked(styles.strikethrough);
          }
-      }
+      },
 
+      //TODO: убрать метод после закртытия задачи: https://inside.tensor.ru/opendoc.html?guid=b67f7f5b-8b91-4fcb-8f83-74fd29d64db4
+      _blockFocusEvents: function(event) {
+         var eventsChannel = EventBus.channel('WindowChangeChannel');
+         event.preventDefault();
+         event.stopPropagation();
+         //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
+         if(event.type === 'mousedown') {
+            eventsChannel.notify('onDocumentClick', event);
+         }
+      },
+      destroy: function() {
+         StylesPanel.superclass.destroy.apply(this, arguments);
+         if (!this._options.paletteRenderStyle) {
+            this._container.off('mousedown focus', this._blockFocusEvents);
+            this._size.unsubscribe('onPickerOpen', this._pickerOpenHandler);
+         }
+      }
    });
 
    return StylesPanel;

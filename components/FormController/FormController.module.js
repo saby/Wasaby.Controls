@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.FormController', [
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
     *
     * @class SBIS3.CONTROLS.FormController
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @public
     * @author Красильников Андрей Сергеевич
     *
@@ -35,11 +35,6 @@ define('js!SBIS3.CONTROLS.FormController', [
     * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
     */
    'use strict';
-
-   //Открыли FormController в новой вкладке
-   function isOpenedFromNewTab(){
-      return !cInstance.instanceOfModule(this, 'SBIS3.CORE.FloatArea') && !cInstance.instanceOfModule(this, 'SBIS3.CORE.Dialog');
-   }
 
    var FormController = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FormController.prototype */ {
       /**
@@ -137,6 +132,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          _syncOperationCallback: undefined,
          _panelReadyDeferred: undefined,
          _overlay: undefined,
+         _onBeforeCloseHandler: undefined,
+         _onAfterShowHandler: undefined,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи {@link record}.
@@ -210,10 +207,19 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._newRecord = this._options.isNewRecord;
          this._panelReadyDeferred = new Deferred();
          this._panel = this.getTopParent();
+         this._onBeforeCloseHandler = this._onBeforeClose.bind(this);
+         this._onAfterShowHandler = this._onAfterShow.bind(this);
          this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
          this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
          this._setPanelRecord(this.getRecord());
-         this._processingRecordDeferred();
+
+         if (this._getDelayedRemoteWayDeferred()) {
+            this._processingRecordDeferred();
+         }
+         else {
+            //Если не дожидаемся ответа от БЛ, то до показа панели покажем оверлей
+            this._toggleOverlay(true);
+         }
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
@@ -242,7 +248,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _processingRecordDeferred: function() {
-         var receiptRecordDeferred = this._options._receiptRecordDeferred,
+         var receiptRecordDeferred = this._getDelayedRemoteWayDeferred(),
              needUpdateKey = !this._options.key,
              eventName = needUpdateKey ? 'onCreateModel' : 'onReadModel',
              config = {
@@ -250,13 +256,18 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: eventName
              },
              self = this;
-         if (cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred')) {
+         if (receiptRecordDeferred) {
             receiptRecordDeferred.addCallback(function (record) {
                self.setRecord(record, needUpdateKey);
                return record;
             });
             this._prepareSyncOperation(receiptRecordDeferred, config, {});
          }
+      },
+
+      _getDelayedRemoteWayDeferred: function(){
+         var receiptRecordDeferred = this._options._receiptRecordDeferred;
+         return cInstance.instanceOfModule(receiptRecordDeferred, 'Core/Deferred') ? receiptRecordDeferred : null;
       },
 
       _onBeforeUnload: function(e) {
@@ -271,15 +282,13 @@ define('js!SBIS3.CONTROLS.FormController', [
          return null;
       },
 
-      _onAfterShowHandler: function() {
-         //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)) {
-            this._notifyOnAfterFormLoadEvent(); //Если открылись в новой вкладке, событие onAfterShow стреляет непосредственно для FC
-            return;
+      _onAfterShow: function() {
+         //Если не дожидаемся ответа от БЛ, то после показа панели скрываем оверлей
+         if (!this._getDelayedRemoteWayDeferred()) {
+            this._toggleOverlay(false);
          }
-         var self = this._getTemplateComponent();
-         self._updateIndicatorZIndex();
-         self._notifyOnAfterFormLoadEvent();
+         this._updateIndicatorZIndex();
+         this._notifyOnAfterFormLoadEvent();
       },
 
       _notifyOnAfterFormLoadEvent: function(){
@@ -293,8 +302,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _onBeforeCloseHandler: function(event, result){
-         //Обработчик _onBeforeCloseHandler универсален: при фактической операции закрытия панели мы можем попасть сюда несколько раз, т.к.
+      _onBeforeClose: function(event, result){
+         //Обработчик _onBeforeClose универсален: при фактической операции закрытия панели мы можем попасть сюда несколько раз, т.к.
          //при определенных условиях прерываем логику закрытия панели и/или сами вызываем команду на закрытие.
          //Есть 2 типовых операции, когда мы попадаем сюда несколько раз, прежде чем закрыться:
          //1: Открыли существующую запись, изменили в ней поля, пытаемся закрыться по крестику. Сначала мы прервем логику закрытия, чтобы показать диалог о сохранении.
@@ -303,11 +312,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          //ждем когда задестроится запись и после этого сами вызываем закрытие панели.
          //TODO: Сейчас нет механизма, позволяющего работать с панелью не через события и влиять на ее работу. хорошо бы такой иметь
 
-         //Если мы в новой вкладке браузера, то ничего не делаем
-         if (isOpenedFromNewTab.call(this)){
-            return;
-         }
-         var self = this._getTemplateComponent(),
+         var self = this,
              record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
          //Если нет записи или она была удалена, то закрываем панель
@@ -388,7 +393,9 @@ define('js!SBIS3.CONTROLS.FormController', [
                adapter: record.getAdapter()
             }),
             changedFields = record.getChanged();
-         changedFields.push(record.getIdProperty());
+         if (changedFields.indexOf(record.getIdProperty()) === -1){
+            changedFields.push(record.getIdProperty());
+         }
 
          $.each(changedFields, function(i, key){
             var formatIndex = record.getFormat().getFieldIndex(key);

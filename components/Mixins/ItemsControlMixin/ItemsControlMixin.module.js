@@ -23,7 +23,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
    constants,
@@ -49,7 +50,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    LayoutManager,
    cInstance,
    fcHelpers,
-   fHelpers) {
+   fHelpers,
+   SourceUtil) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -578,8 +580,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="array">
-             *        <option name="date" value="ASC"></option>
-             *        <option name="name" value="DESC"></option>
+             *        <options>
+             *           <option name="date" value="ASC"></option>
+             *        </options>
+             *        <options>
+             *           <option name="name" value="DESC"></option>
+             *        </options>
              *     </options>
              * </pre>
              */
@@ -727,10 +733,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
          // FIXME сделано для правильной работы медленной отрисовки
-         this._drawItemsCallbackDebounce = function() {
+         this._drawItemsCallbackDebounce = fHelpers.forAliveOnly(function() {
             debouncedDrawItemsCallback();
             this._drawItemsCallbackSync();
-         }.bind(this);
+         }, this);
 
          if (typeof this._options.pageSize === 'string') {
             this._options.pageSize = this._options.pageSize * 1;
@@ -757,7 +763,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
-            this._dataSource = this._prepareSource(this._options.dataSource);
+            this._dataSource =  SourceUtil.prepareSource.call(this, this._options.dataSource);
          }
          /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
          if (this._options._itemsProjection) {
@@ -797,7 +803,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _prepareConfig : function(sourceOpt, itemsOpt) {
          if (sourceOpt) {
-            this._dataSource = this._prepareSource(sourceOpt);
+            this._dataSource =  SourceUtil.prepareSource.call(this, sourceOpt);
          }
 
          if (itemsOpt) {
@@ -862,7 +868,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _getGroupContainers: function(groupId) {
          var containers = $([]);
          if (this._getItemsProjection()) {
-            var items = this._getItemsProjection().getGroupItems(groupId);
+            var items = this._getGroupItems(groupId);
             for (var i = 0; i < items.length; i++) {
                containers.push(this._getDomElementByItem(items[i]).get(0))
             }
@@ -1084,7 +1090,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (!Object.isEmpty(this._options.groupBy)) {
 
                   if (this._options.easyGroup) {
-                     if (this._getItemsProjection().getGroupItems(groupId).length < 1) {
+                     if (this._getGroupItems(groupId).length < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
@@ -1125,7 +1131,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getItemsProjection().getGroupItems(groupId).length <= items.length) {
+            if (this._getGroupItems(groupId).length <= items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -1367,25 +1373,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             this._clearItems();
          }
-      },
-
-      _prepareSource: function(sourceOpt) {
-         var result;
-         switch (typeof sourceOpt) {
-            case 'function':
-               result = sourceOpt.call(this);
-               break;
-            case 'object':
-               if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
-                  result = sourceOpt;
-               }
-               if ('module' in sourceOpt) {
-                  var DataSourceConstructor = require(sourceOpt.module);
-                  result = new DataSourceConstructor(sourceOpt.options || {});
-               }
-               break;
-         }
-         return result;
       },
 
       /**
@@ -2084,19 +2071,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _hasNextPage: function (hasMore, offset) {
          offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
-         //Если offset отрицательный, значит запрашивали последнюю страницу
-         return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
+         var hasNextPage = typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
+         if (this._getSourceNavigationType() == 'Offset') {
+            return hasNextPage;
+         } else {
+            //Если offset отрицательный, значит запрашивали последнюю страницу
+            return offset < 0 ? false : hasNextPage;
+         }
       },
-      _scrollTo: function scrollTo(target, toBottom) {
+      _scrollTo: function scrollTo(target, toBottom, depth) {
          if (typeof target === 'string') {
             target = $(target);
          }
-         LayoutManager.scrollToElement(target, toBottom);
+         LayoutManager.scrollToElement(target, toBottom, depth);
       },
-      _scrollToItem: function(itemId, toBottom) {
+      _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer, toBottom);
+            this._scrollTo(itemContainer, toBottom, depth);
          }
       },
       /**
@@ -2359,6 +2351,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
              itemParent = projItem.getParent && projItem.getParent();
          return !Object.isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
+      },
+
+      _getGroupItems: function(groupId) {
+         return this._getItemsProjection().getGroupItems(groupId);
       },
 
       _addItem: function (projItem, at, withoutNotify) {

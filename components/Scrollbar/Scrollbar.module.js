@@ -86,8 +86,12 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setContentHeaderHeight: function (height) {
-            this._headerHeight = height;
-            this._thumb.css('margin-top', height);
+            if (this._headerHeight !== height) {
+               this._containerHeight += this._headerHeight - height;
+               this._container.height(this._containerHeight);
+               this._headerHeight = height;
+               this._container.css('margin-top', height);
+            }
          },
 
          /**
@@ -138,7 +142,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             } else {
                this._isConstThumb = false;
             }
-            this._thumb.height(this._thumbHeight - this._headerHeight);
+            if (this._thumb) {
+               this._thumb.height(this._thumbHeight);
+            }
          },
 
          _calcProjectionSize: function (size, ratio) {

@@ -20,14 +20,17 @@
       <ws:SBIS3.CONTROLS.ListView
               class="controls-ColumnsEditorArea__SelectableView"
               name="controls-ColumnsEditorArea__SelectableView"
+              easyGroup="{{ true }}"
               items="{{ _preparedItems.selectableItems }}"
               itemsActions="{{ [] }}"
               idProperty="id"
+              itemsDragNDrop="{{ false }}"
               displayProperty="title"
               selectedKeys="{{ _preparedItems.selectableMarkedKeys }}"
               itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl"
               multiselect="{{ true }}">
          <ws:handlers onItemClick="{{_onItemClick}}" />
+         <ws:groupBy field="group" contentTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl" />
       </ws:SBIS3.CONTROLS.ListView>
    </div>
 </div>

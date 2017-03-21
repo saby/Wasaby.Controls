@@ -160,9 +160,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             targetOverlay: false,
             /**
+             * @cfg {Boolean} переводить ли активность на панель после открытия
+             */
+            activateAfterShow: false,
+            /**
              * Способ подстраивания всплывающей панели под свободное рядом с таргетом пространство
              * @typedef {Object} loacationStrategyEnum
              * @variant dontMove всплывающая панель не двигается относительно таргета
+             * @variant bodyBounds контейнер всплывающей панели ограничивается краем экрана, если не влезает в экран
              */
             locationStrategy: null,
             /**
@@ -204,7 +209,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
          this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
-         EventBus.globalChannel().subscribe('MobileInputFocusOut', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
             container.append('<div class="controls-PopupMixin__closeButton"></div>');
@@ -317,7 +321,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
        * Пересчитать положение и размеры
        * @param recalcFlag
        */
-      recalcPosition: function (recalcFlag) {
+      recalcPosition: function (recalcFlag, saveSide) {
          if (this._isVisible) {
             this._currentAlignment = {
                verticalAlign : this._options.verticalAlign,
@@ -335,7 +339,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   maxHeight = parseFloat(this._container.css('max-height'), 10) || scrollHeight,
                   border = (this._container.outerWidth() - this._container.innerWidth());
 
-               this._resetToDefault();
+               if (!saveSide) {
+                  this._resetToDefault();
+               } else {
+                  this._isMovedV = false;
+               }
 
                this._containerSizes.originWidth = scrollWidth > maxWidth ? maxWidth : scrollWidth + border ;
                this._containerSizes.originHeight = scrollHeight > maxHeight ? maxHeight : scrollHeight + border;
@@ -343,14 +351,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._fixed === undefined){
                this._checkFixed(this._options.target);
             }
-            this._initSizes();
+            this._initSizes(saveSide);
             if (!this._originsInited){
                return;
             }
             if (this._options.target) {
                var offset = {
-                     top: this._fixed ? this._targetSizes.boundingClientRect.top : this._targetSizes.offset.top,
-                     left: this._fixed ? this._targetSizes.boundingClientRect.left : this._targetSizes.offset.left
+                     top: this._targetSizes.offset.top,
+                     left: this._targetSizes.offset.left
                   },
                   buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner);
 
@@ -544,7 +552,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (self._options.target && self._options.targetPart) {
                inTarget = !!((self._options.target.get(0) == target) || self._options.target.find($(target)).length);
             }
-            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target)) {
+            if (!inTarget && !ControlHierarchyManager.checkInclusion(self, target) && !this._isLinkedPanel(target)) {
                if ($(target).hasClass('ws-window-overlay')) {
                   if (parseInt($(target).css('z-index'), 10) < this._zIndex) {
                      self.hide();
@@ -554,6 +562,25 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                }
             }
          }
+      },
+
+      //Если клик был по другой всплывашке, определяем, нужно ли закрывать текущий popup
+      _isLinkedPanel: function (target) {
+         //По ошибке https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04 убрали всплытие события при mousedown (для чего описано в ошибке)
+         //FloatArea теперь не может превентить событие, поэтому при клике по панели закрывается попап, из которого была открыта floatArea.
+         //Если клик был по скроллу - то target.wsControl вернет null, т.к. скролл находится на родительском контейнере floatArea
+         //Пытаюсь найти панель вручную. Использую closest, т.к. клик может быть в ws-float-area-panel-external-jeans, который лежит на 1 уровне с floatarea
+         var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
+         if (floatArea.length){
+            target = floatArea.wsControl().getOpener();
+            while (target && target !== this) {
+               target = target.getParent() || (target.getOpener && target.getOpener());
+            }
+            return target === this;
+         }
+         //Если кликнули по инфобоксу - popup закрывать не нужно
+         var infoBox = $(target).closest('.ws-info-box');
+         return !!infoBox.length;
       },
 
       _checkTargetPosition: function () {
@@ -570,7 +597,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       //Кэшируем размеры
-      _initSizes: function () {
+      _initSizes: function (saveSide) {
          var target = this._options.target,
             container = this._container;
          if (target) {
@@ -609,7 +636,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
-         var buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         var buff;
+         if (saveSide) {
+            buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner, true);
+         } else {
+            buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
+         }
          //Запоминаем координаты правого нижнего угла контейнера необходимые для отображения контейнера целиком и там где нужно.
          if (target) {
             this._containerSizes.requiredOffset = {
@@ -796,21 +828,36 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* в режиме донт мув мы донт мув */
             case 'dontMove':
                  return offset;
-
+            case 'bodyBounds':
+               var scrollY = this._fixed ? 0 : $(window).scrollTop(),
+                  scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
+               if (this._isHorizontalOverflow() && this._options.horizontalAlign.side !== 'right') {
+                  offset.left = this._windowSizes.width + scrollX - this._containerSizes.originWidth;
+               }
+               //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
+               if (this._isVerticalOverflow() && this._options.verticalAlign.side !== 'bottom') {
+                  offset.top = this._windowSizes.height + scrollY - this._containerSizes.originHeight;
+               }
+               if (offset.top < 0){
+                  offset.top = 0;
+               }
+               if (offset.left < 0){
+                  offset.left = 0;
+               }
+               return offset;
             /* по умаолчанию учитываем свободное место на экране */
             default:
-               var buf = this._targetSizes.offset,
-                   scrollY = this._fixed ? 0 : $(window).scrollTop(),
-                   scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               var buf = this._targetSizes.offset;
                //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
-               if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
+               if (this._isVerticalOverflow() && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
                   this._isMovedV = true;
                   offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
                   offset.top = this._addOffset(offset, buf).top;
                }
 
                //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
-               if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
+               if (!this._isVerticalOverflow() && this._isMovedV) {
                   this._isMovedV = false;
                   offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
                   offset.top = this._addOffset(offset, buf).top;
@@ -818,20 +865,30 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                //TODO Избавиться от дублирования
                //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
-               if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
+               if (this._isHorizontalOverflow() && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
                   this._isMovedH = true;
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
 
                //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
-               if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
+               if (!this._isHorizontalOverflow() && this._isMovedH) {
                   this._isMovedH = false;
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
                return offset;
          }
+      },
+
+      _isHorizontalOverflow: function() {
+         var scrollX = this._fixed ? 0 : $(window).scrollLeft();
+         return this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX;
+      },
+
+      _isVerticalOverflow: function() {
+         var scrollY = this._fixed ? 0 : $(window).scrollTop();
+         return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY;
       },
 
       _calculateOverflow: function (offset, orientation) {
@@ -853,13 +910,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var vOffset = this._options.verticalAlign.offset || 0,
             hOffset = this._options.verticalAlign.offset || 0,
             scrollHeight = this._container.get(0).scrollHeight,
+            height = "",
             spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
             if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
-               var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+               //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
+               if (this._container.get(0).scrollHeight > this._windowSizes.height) {
+                  height = this._windowSizes.height;
+               }
+               // При рассчете свободного места снизу учитываем виртуальную клавиатуру
                spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
                if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
@@ -879,8 +941,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                      height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
                   }
                }
-               this._container.css('height', height);
             }
+            this._container.css('height', height);
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
@@ -1033,6 +1095,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
             }
+            if (this._options.activateAfterShow) {
+               this.activateFirstControl();
+            }
          }
       },
 
@@ -1083,7 +1148,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
          hide: function() {
-            dcHelpers.trackElement(this._options.target, false);
+            if (this._options.target) {
+               dcHelpers.trackElement(this._options.target, false);
+            }
          }
       },
 
@@ -1125,12 +1192,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   if (res !== false) {
                      parentHide.call(self);
                      clearZIndex();
+                     self._fixedOffset = null;
                      deactivateWindow.call(this);
                   }
                });
             } else if (result !== false) {
                parentHide.call(this);
                clearZIndex();
+               self._fixedOffset = null;
                deactivateWindow.call(this);
             }
          }

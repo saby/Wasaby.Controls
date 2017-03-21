@@ -69,10 +69,6 @@
       }
    }
 
-   .controls-DataGridView__td__textAlignRight{
-     text-align: right!important;
-   }
-
    .controls-DataGridView__table {
       width: 100%;
       position: relative;
@@ -84,22 +80,30 @@
       background: @data-grid-bg;
       table-layout: @data-grid-table-layot;
 
+      .controls-DataGridView__tbody, .controls-DataGridView__thead {
+         .controls-DataGridView__td__textAlignRight {
+            text-align: right;
+         }
+      }
+
       .controls-DataGridView__results {
          background: @data-grid-row-bg;
          font-weight: bold;
          font-size: 14px;
          color: #313E78;
       }
-
-      .controls-DataGridView__tr {
-         &.controls-ListView__item__multiSelected {
-            .controls-DataGridView__notScrolledCell {
-               background-color: @data-grid-row-selected-bg;
-            }
+     .controls-DataGridView__tr {
+       &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
+         .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+           &.controls-DataGridView__notScrolledCell {
+             background-color: @data-grid-multiselect-notScrolledCell-Color;
+           }
          }
-      }
+       }
+     }
 
-      .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+
+     .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__th__topRow{
             text-align: center;
             &.controls-DataGridView__th__topRow-has_text{
@@ -131,15 +135,16 @@
       .controls-DataGridView__tr {
          background: @data-grid-row-bg;
 
-         &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
-            &.controls-ListView__item {
-               background-color: @data-grid-row-selected-bg;
-            }
-            .controls-DataGridView__td {
-               background-color: @data-grid-row-selected-bg;
-               color: @data-grid-row-selected-cell-text-color;
-            }
-         }
+        &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
+           &.controls-ListView__item {
+              background-color: @data-grid-row-selected-bg;
+           }
+
+           .controls-DataGridView__td {
+              background-color: @data-grid-row-selected-bg;
+              color: @data-grid-row-selected-cell-text-color;
+           }
+        }
 
          &.controls-ListView__hoveredItem {
             background: @data-grid-row-hover-bg;
@@ -187,6 +192,7 @@
             background-color: @data-grid-header-cell-hover-bg;
          }
          .controls-ListView__itemCheckBox{
+            .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
             margin: -3px 0 0 4px;
             background: @listView-check-box-icon-bg;
             &.controls-DataGridView__th__checkBox__checked{
@@ -249,6 +255,7 @@
          vertical-align: @data-grid-cell-check-box-vertical-align;
          overflow: hidden;
          .controls-ListView__itemCheckBox {
+            .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
             top: @data-grid-check-box-top;
             left: @data-grid-check-box-left;
          }
@@ -332,7 +339,13 @@
                background-color: @data-grid-row-hover-bg-mobile;
             }
          }
+         &.controls-ListView__item__multiSelected{
+           .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+             background-color: @data-grid-row-selected-bg;
+           }
+         }
       }
+
    }
 }
 /*Для строк идущих после группировки не должно быть верхних бордеров*/
@@ -405,8 +418,10 @@
 .ws-sticky-header__header-container {
    >.controls-ListView.controls-DataGridView.controls-DataGridView__with-partScroll {
       overflow-y: hidden;
-      padding-bottom: 7px;
       background-clip: content-box;
+      &.controls-DataGridView__PartScroll__shown {
+         padding-bottom: 7px;
+      }
    }
 }
 
@@ -429,4 +444,13 @@
        }
     }
   }
+}
+
+.controls-DataGridView__headSorting {
+   &.controls-Link {
+      .controls-Link__icon + .controls-Link__field {
+         margin: 0;
+      }
+      font-size: @data-grid-header-cell-font-size;
+   }
 }

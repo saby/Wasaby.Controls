@@ -12,16 +12,35 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
        * @category Inputs
+       *
        * @mixes SBIS3.CONTROLS.PickerMixin
+       * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
+       *
        * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyEditAtPlace
        */
 
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
+         /**
+          * @event onCancel Происходит при отмене сохранения изменений.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @remark
+          * Выход из режима редактирования производится нажатием клавиши Esc или кнопки "Нет" в диалоге, который появляется при клике вне области редактирования.
+          */
+         /**
+          * @event onApply Происходит при сохранении изменений.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @remark
+          * Сохранение изменений производится нажатием клавиши "Enter" или кнопки "Да" в диалоге, который появляется при клике вне области редактирования.
+          */
+          /**
+           * @event onShowEditor Происходит при переходе в режим редактирования.
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           */
          _dotTplFn: dotTplFn,
          $protected: {
             _textField: null,
@@ -46,21 +65,20 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             var self = this;
             this.reviveComponents();
             if (this._options.displayAsEditor) {
-               this.setInPlaceEditMode();
-            } else {
-               // всем EditAtPlace задаем свой обработчик клика
-               this._iterateChildEditAtPlaces(function(child){
-                  child._setClickHandler(self._clickHandler.bind(self));
-                  child._setKeyPressHandler(self._keyPressHandler.bind(self));
-                  child._setEditInGroup();
-                  if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
-                     $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
-                  }
-                  child.subscribe('onTextChange', function(event, text){
-                     self._requireDialog = text != child._oldText;
-                  });
-               });
+               this.setInPlaceEditMode(true);
             }
+            // всем EditAtPlace задаем свой обработчик клика
+            this._iterateChildEditAtPlaces(function(child){
+               child._setClickHandler(self._clickHandler.bind(self));
+               child._setKeyPressHandler(self._keyPressHandler.bind(self));
+               child._setEditInGroup();
+               if ($(child._options.editorTpl).attr('data-component') == 'SBIS3.CONTROLS.TextArea'){
+                  $(child._container.children()[0]).addClass('controls-EditAtPlace__textAreaWrapper');
+               }
+               child.subscribe('onTextChange', function(event, text){
+                  self._requireDialog = text != child._oldText;
+               });
+            });
             if (!this._options.editInPopup){
                this.subscribe('onFocusOut', function(){
                   self._applyEdit();

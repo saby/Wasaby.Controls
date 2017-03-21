@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
+   "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/core-merge",
    "Core/constants",
@@ -23,12 +24,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.DataGridView'
 ],
    function(
+      CommandDispatcher,
       cFunctions,
       cMerge,
       constants,
@@ -52,6 +55,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cellTemplate,
       headColumnTpl,
       GroupTemplate,
+      SortingTemplate,
       colHelpers,
       strHelpers,
       dcHelpers
@@ -114,6 +118,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
                decorators : tplOptions.decorators,
+               highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
                displayProperty: tplOptions.displayProperty
             };
@@ -223,6 +228,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                column,
                columnTop,
                headColumns = prepareHeadColumns(cfg);
+
+            cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[0].length; i++) {
                columnTop = headData.content[1][i];
@@ -237,7 +244,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                   }
                }
 
-               if (column.headTemplate) {
+               //TODO здесь получается верстка, которая отдается в шаблонизатор.
+               //лучше прокинуть сам шаблон, чтобы он потом там позвался
+               if (column.sorting) {
+                  column.value = getSortingColumnTpl(column, cfg);
+               }
+               else if (column.headTemplate) {
                   column.value = getHeadColumnTpl(column);
                } else {
                   column.value = getDefaultHeadColumnTpl(column.title);
@@ -250,6 +262,22 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
 
             return headData;
+         },
+         getSortingColumnTpl = function(column, cfg) {
+            var
+               sorting = cfg.sorting,
+               sortingValue;
+
+            sorting.forEach(function(sortingElem){
+               if (sortingElem[column.field]) {
+                  sortingValue = sortingElem[column.field];
+               }
+            });
+
+            return TemplateUtil.prepareTemplate(SortingTemplate)({
+               column: column,
+               sortingValue: sortingValue
+            });
          },
          getHeadColumnTpl = function (column){
             return TemplateUtil.prepareTemplate(column.headTemplate)({
@@ -610,6 +638,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       init: function() {
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
+         CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
       },
 
       _prepareConfig: function() {
@@ -643,7 +672,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
 
-               if(colValue) {
+               if(colValue && !colValue.getAttribute('title')) {
                   colValueText = colValue.innerText;
 
                   if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
@@ -771,6 +800,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this.reviveComponents(this._thead);
 
          this._redrawColgroup();
+         if (this.hasPartScroll()) {
+            // Заголовки всегда рисуются со скрытым скролом. Решение о том будет ли показан скрол принимается позднее
+            this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
+         }
          this._bindHead();
          this._notify('onDrawHead');
       },
@@ -863,15 +896,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (!this._thead) {
                this._bindHead();
             }
-            var needShowScroll = this._isTableWide();
-
-            this._isPartScrollVisible ?
-               needShowScroll ?
-                  this.updateScrollAndColumns() : this._hidePartScroll() :
-               needShowScroll ?
-                  this._showPartScroll() : this._hidePartScroll();
-
-            this._findMovableCells();
+            this._updatePartScroll();
          }
          DataGridView.superclass._drawItemsCallback.call(this);
       },
@@ -888,8 +913,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _onResizeHandler: function() {
          DataGridView.superclass._onResizeHandler.apply(this, arguments);
          this._containerOffsetWidth = this.getContainer().outerWidth();
-         if(this._isPartScrollVisible) {
-            this._updatePartScrollWidth();
+         if(this.hasPartScroll()) {
+            this._updatePartScroll();
          }
       },
       //********************************//
@@ -1007,6 +1032,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       /***********************/
       hasPartScroll: function() {
          return this._options.startScrollColumn !== undefined;
+      },
+
+      _updatePartScroll: function() {
+         var needShowScroll = this._isTableWide();
+
+         this._isPartScrollVisible ?
+            needShowScroll ?
+               this.updateScrollAndColumns() : this._hidePartScroll() :
+            needShowScroll ?
+               this._showPartScroll() : this._hidePartScroll();
       },
 
       _initPartScroll: function() {
@@ -1240,14 +1275,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._isPartScrollVisible) {
             this._partScrollRow.addClass('ws-hidden');
             this._isPartScrollVisible = false;
+            this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
+            // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
+            this._resizeChilds();
          }
       },
 
       _showPartScroll: function() {
          if(!this._isPartScrollVisible) {
             this._partScrollRow.removeClass('ws-hidden');
+            this.getContainer().addClass('controls-DataGridView__PartScroll__shown');
             this._updatePartScrollWidth();
+            this._findMovableCells();
             this._isPartScrollVisible = true;
+            // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
+            this._resizeChilds();
          }
       },
 
@@ -1360,6 +1402,33 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._movableElems = [];
          }
          DataGridView.superclass.destroy.call(this);
+      },
+      _setColumnSorting: function(colName) {
+         var sorting, newSorting, wasNoneSorting = true;
+         sorting = this.getSorting();
+
+         newSorting = sorting.filter(function(sortElem){
+            if (sortElem[colName] == 'ASC') {
+               wasNoneSorting = false;
+               return false;
+            }
+            else if (sortElem[colName] == 'DESC') {
+               sortElem[colName] = 'ASC';
+               wasNoneSorting = false;
+               return true;
+            }
+            else {
+               return true;
+            }
+
+         });
+
+         if (wasNoneSorting) {
+            var addSortObj = {};
+            addSortObj[colName] = 'DESC';
+            newSorting.push(addSortObj);
+         }
+         this.setSorting(newSorting);
       },
       /* ----------------------------------------------------------------------------
        ------------------- НИЖЕ ПЕРЕХОД НА ItemsControlMixin ----------------------

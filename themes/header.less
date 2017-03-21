@@ -57,12 +57,20 @@
     content: @toggle-header-checked-before-content;
   }
 
+   &.ws-disabled {
+      border: @toggle-header-border;
+   }
+
   &, &.controls-Checked__checked {
     .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
     border: @toggle-header-border;
     background: @toggle-header-background;
 
     &.controls-Click__active:active {
+      border: @toggle-header-border;
+      background: @toggle-header-background;
+    }
+    &.controls-Click__active {
       border: @toggle-header-border;
       background: @toggle-header-background;
     }
@@ -126,9 +134,10 @@
         background: @toggle-header-background;
         font: @toggle-header-font;
       }
-
-      &:hover {
+      // TODO избавиться от каскада при переходе на абстрактную кнопку
+      &:hover.controls-Button {
         color: @toggle-header-hover-color;
+        border: none;
       }
     }
   }
@@ -145,7 +154,7 @@
 
 .controls-Button.ws-toggleHeader {
   &, &.controls-Checked__checked {
-    &, &.controls-Click__active:active {
+    &, &.controls-Click__active {
       border: @toggle-header-border;
       background: @toggle-header-background;
       font: @toggle-header-font;
@@ -153,7 +162,7 @@
 
     color: @toggle-header-color;
 
-    &.controls-Click__active:active {
+    &.controls-Click__active {
       color: @toggle-header-hover-color;
     }
   }

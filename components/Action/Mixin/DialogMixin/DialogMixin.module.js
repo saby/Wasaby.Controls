@@ -59,7 +59,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
-         _linkedModelKey: undefined
+         _linkedModelKey: undefined,
+         _isExecuting: false //Открывается ли сейчас панель
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -130,7 +131,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             cMerge(this._dialog._options, config);
             this._dialog.reload();
          }
-         else{
+         else {
+            this._isExecuting = true;
             this._dialog = new Component(config);
          }
       },
@@ -146,6 +148,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
+            opener: undefined,
+            target: undefined,
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
          }, config)
       },
@@ -174,6 +178,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             componentOptions: compOptions,
             handlers: { 
                onAfterClose: function(e, result){
+                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, result);
                   self._dialog = undefined;
                },
@@ -181,6 +186,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                   self._notify('onBeforeShow');
                },
                onAfterShow: function(){
+                  self._isExecuting = false;
                   self._notify('onAfterShow');
                }
             }

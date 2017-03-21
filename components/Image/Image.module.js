@@ -14,15 +14,20 @@ define('js!SBIS3.CONTROLS.Image',
    "html!SBIS3.CONTROLS.Image",
    "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.FileLoader",
+   'js!SBIS3.CORE.FileCamLoader',
    "js!SBIS3.CORE.LoadingIndicator",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
+   "js!SBIS3.CONTROLS.Utils.SourceUtil",
+   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    "js!SBIS3.CONTROLS.Link",
+   'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred,CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers) {
+], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
       'use strict';
+      //TODO: Избавится от дублирования
       var
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
@@ -32,7 +37,7 @@ define('js!SBIS3.CONTROLS.Image',
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS.Image
-          * @extends $ws.proto.CompoundControl
+          * @extends SBIS3.CORE.CompoundControl
           * @author Крайнов Дмитрий Олегович
           *
           * @ignoreOptions validators
@@ -325,12 +330,15 @@ define('js!SBIS3.CONTROLS.Image',
                _imageUrl: '',
                _image: undefined,
                _fileLoader: undefined,
+               _fileCamLoader: undefined,
                _buttonReset: undefined,
                _buttonEdit: undefined,
                _buttonUpload: undefined,
                _boundEvents: undefined,
                _saveIndicator: undefined,
-               _firstLoaded: false
+               _firstLoaded: false,
+               _pickerIsOpen: false,
+               _cursorInside: false
             },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
@@ -338,14 +346,17 @@ define('js!SBIS3.CONTROLS.Image',
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
                this._setImage = this._setImage.debounce(0);
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
+               CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
                CommandDispatcher.declareCommand(this, 'resetImage', this.resetImage);
+               CommandDispatcher.declareCommand(this, 'pickerOpen', this._pickerOpenHandler);
+               CommandDispatcher.declareCommand(this, 'pickerClose', this._pickerCloseHandler);
                if (this._options.imageBar) {
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
                this._image = this._container.find('.controls-image__image');
                if (this._options.dataSource) {
-                  this._options.dataSource = this._prepareSource(this._options.dataSource);
+                  this._options.dataSource = SourceUtil.prepareSource.call(this, this._options.dataSource);
                }
             },
             init: function() {
@@ -355,6 +366,8 @@ define('js!SBIS3.CONTROLS.Image',
                Image.superclass.init.call(this);
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
+                  var
+                     pickerContainer;
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
@@ -363,6 +376,13 @@ define('js!SBIS3.CONTROLS.Image',
                      this._buttonUpload.setTooltip('Загрузить');
                   }
                   this._bindToolbarEvents();
+                  pickerContainer = this._buttonUpload.getPicker().getContainer();
+                  pickerContainer.mouseenter(function(){
+                     this._cursorInside = true;
+                  }.bind(this));
+                  pickerContainer.mouseleave(function(){
+                     this._cursorInside = false;
+                  }.bind(this))
                }
                if (this.getDataSource()) {
                   this.reload();
@@ -397,6 +417,7 @@ define('js!SBIS3.CONTROLS.Image',
                if (!noReload) {
                   this.reload();
                }
+               this._container.toggleClass('controls-image__normal', sizeMode == 'normal');
             },
             /**
              * Возвращает текущий способ отображения изображения в контейнере.
@@ -414,24 +435,6 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
-            _prepareSource: function(sourceOpt) {
-               var result;
-               switch (typeof sourceOpt) {
-                  case 'function':
-                     result = sourceOpt.call(this);
-                     break;
-                  case 'object':
-                     if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
-                        result = sourceOpt;
-                     }
-                     if ('module' in sourceOpt) {
-                        var DataSourceConstructor = require(sourceOpt.module);
-                        result = new DataSourceConstructor(sourceOpt.options || {});
-                     }
-                     break;
-               }
-               return result;
-            },
             _getSourceUrl: function() {
                var
                   dataSource = this.getDataSource();
@@ -463,20 +466,22 @@ define('js!SBIS3.CONTROLS.Image',
             _onEndLoad: function(event, response) {
                var
                   imageInstance = this.getParent();
-               if (response.hasOwnProperty('error')) {
+               if (response instanceof Error) {
                   fcHelpers.toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
-                  imageInstance._onErrorLoad(response.error, true);
-                  fcHelpers.alert('При загрузке изображения возникла ошибка: ' + response.error.message);
-               } else {
-                  imageInstance._notify('onEndLoad', response);
-                  if (imageInstance._options.edit) {
-                     imageInstance._showEditDialog('new');
-                  } else {
-                     imageInstance._setImage(imageInstance._getSourceUrl());
-                     fcHelpers.toggleLocalIndicator(imageInstance._container, false);
-                     this._hideIndicator();
+                  // игнорируем HTTPError офлайна, если они обработаны
+                  if (!(response._isOfflineMode && response.processed)){
+                      fcHelpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
                   }
+                  return imageInstance._onErrorLoad(response, true);
+               }
+               imageInstance._notify('onEndLoad', response);
+               if (imageInstance._options.edit) {
+                  imageInstance._showEditDialog('new');
+               } else {
+                  imageInstance._setImage(imageInstance._getSourceUrl());
+                  fcHelpers.toggleLocalIndicator(imageInstance._container, false);
+                  this._hideIndicator();
                }
             },
             _onChangeImage: function() {
@@ -505,14 +510,16 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             _onImageMouseEnter: function() {
+               this._cursorInside = true;
                if (this._canDisplayImageBar()) {
                   this._imageBar.fadeIn(ANIMATION_DURATION);
                }
             },
-            _onImageMouseLeave: function() {
-               if (this._canDisplayImageBar()) {
+            _onImageMouseLeave: function(event) {
+               if (!this._pickerIsOpen && !ControlHierarchyManager.checkInclusion(this, $(event.toElement)) && this._canDisplayImageBar()) {
                   this._imageBar.hide();
                }
+               this._cursorInside = false;
             },
             _canDisplayImageBar: function() {
                return this.isEnabled();
@@ -623,11 +630,26 @@ define('js!SBIS3.CONTROLS.Image',
               * @see resetImage
               */
             _uploadImage: function(originalEvent) {
+                if (this._options.imageBar && this._canDisplayImageBar()) {
+                   this._imageBar.hide();
+                }
                if (!this.getDataSource()) {
                   return;
                }
                this._getFileLoader().addCallback(function (loader){
                   loader.selectFile(originalEvent, false);
+               });
+            },
+
+            _uploadFileCam: function(originalEvent) {
+               if (this._options.imageBar && this._canDisplayImageBar()) {
+                  this._imageBar.hide();
+               }
+               if (!this.getDataSource()) {
+                  return;
+               }
+               this._getFileCamLoader().addCallback(function (loader){
+                  loader.getImage(originalEvent, false);
                });
             },
              /**
@@ -693,9 +715,30 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок обработчиков кнопок imageBar
                ------------------------------------------------------------ */
-            _buttonUploadClick: function(event, originalEvent) {
-               this.sendCommand('uploadImage', originalEvent);
+            _buttonUploadClick: function(event, key, originalEvent) {
+               if (key == 'fromFile') {
+                  this.sendCommand('uploadImage', originalEvent);
+               } else if (key == 'fromWebCam') {
+                  this.sendCommand('uploadFileCam', originalEvent);
+               }
             },
+            _pickerOpen: function() {
+               this.sendCommand('pickerOpen');
+            },
+            _pickerClose: function() {
+               this.sendCommand('pickerClose');
+            },
+
+            _pickerOpenHandler: function() {
+               this._pickerIsOpen = true;
+            },
+            _pickerCloseHandler: function() {
+               if (!this._cursorInside && this._canDisplayImageBar()) {
+                  this._imageBar.hide();
+               }
+               this._pickerIsOpen = false;
+            },
+
             /* ------------------------------------------------------------------------------------------------------------------------------------
                todo: Используется для работы с DataSource и Filter. Будет полностью удалено, когда появится базовый миксин для работы с DataSource.
                Задача в разработку от 17.12.2015 №1212750
@@ -717,6 +760,12 @@ define('js!SBIS3.CONTROLS.Image',
                   var self = this;
                   if (this._fileLoader) {
                      this._fileLoader.setMethod(
+                           (self._options.linkedObject || dataSource.getEndpoint().contract) +
+                           '.' + dataSource.getBinding().create
+                     );
+                  }
+                  if (this._fileCamLoader) {
+                     this._fileCamLoader.setMethod(
                            (self._options.linkedObject || dataSource.getEndpoint().contract) +
                            '.' + dataSource.getBinding().create
                      );
@@ -762,7 +811,9 @@ define('js!SBIS3.CONTROLS.Image',
             _getFileLoader: function() {
                return this._createFileLoader();
             },
-
+            _getFileCamLoader: function() {
+               return this._createFileCamLoader();
+            },
             /**
              * Создание загрузчика файлов
              * @private
@@ -799,6 +850,43 @@ define('js!SBIS3.CONTROLS.Image',
                }
 
                return Deferred.success(self._fileLoader)
+            },
+            /**
+             * Создание загрузчика файлов
+             * @private
+             */
+            _createFileCamLoader: function() {
+               if (this._fileCamLoader) {
+                  return Deferred.success(this._fileCamLoader);
+               }
+
+               //NB! Вероятно хотим отредактировать.
+               // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
+               var self = this;
+               var cont = $('<div class="controls-image__file-cam-loader"></div>');
+               self.getContainer().append(cont);
+               self._fileCamLoader = new FileCamLoader({
+                  extensions: ['image'],
+                  element: cont,
+                  name: 'FileLoader',
+                  parent: self,
+                  showIndicator: false,
+                  handlers: {
+                     onLoadStarted: self._onBeginLoad,
+                     onLoaded: self._onEndLoad
+                  }
+               });
+
+               //todo Удалить, временная опция для поддержки смены логотипа компании
+               var dataSource = self.getDataSource();
+               if (dataSource) {
+                  self._fileCamLoader.setMethod((
+                     self._options.linkedObject || dataSource.getEndpoint().contract) +
+                     '.' + dataSource.getBinding().create
+                  );
+               }
+
+               return Deferred.success(self._fileCamLoader)
             }
          });
 

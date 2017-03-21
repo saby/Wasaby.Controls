@@ -70,11 +70,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
       },
 
-      _modifyOptions : function(options) {
-         options.pickerClassName += ' controls-OperationPanel__Menu';
-         return MenuLink.superclass._modifyOptions.apply(this, arguments);
-      },
-
       _onOperationActivated: function() {
       },
 
@@ -88,7 +83,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             this._processMassOperations(title);
          } else {
             selectedRecordSet = new RecordSet({
-               adapter: items ? items.getAdapter() : 'adapter.json'
+               adapter: items ? items.getAdapter() : 'adapter.json',
+               model: items ? items.getModel() : 'entity.model'
             });
             selectedRecordSet.assign(selectedItems);
             this._applyOperation(selectedRecordSet);

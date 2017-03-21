@@ -118,8 +118,8 @@
     cursor: @DropdownList-cursor;
   }
 
-  &.controls-DropdownList__equalsWidth.controls-FloatArea {
-      .controls-DropdownList__body {
+  &.controls-DropdownList__equalsWidth, &.controls-DropdownList__equalsWidth.controls-DropdownList__type-fastDataFilter {
+      &.controls-FloatArea .controls-DropdownList__body {
          border-radius: @DropdownList-picker-list-border-radius-equal;
       }
    }
@@ -233,7 +233,8 @@
             border-radius: @DropdownList-picker-list-left-border-radius;
          }
          .controls-DropdownList__header{
-            float: right;
+            position: absolute;
+            right: 0;
             .controls-DropdownList{
                margin: @DropdownList-picker-hor-revert-head-margin !important;
             }

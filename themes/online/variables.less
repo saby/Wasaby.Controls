@@ -1340,6 +1340,7 @@
 @date-range-slider-color:                       @darkcyan-color;
 @date-range-slider-disabled-text-color:         @link-disabled-text-color;
 @date-range-slider-hover-color:                 @blue-dark-color;
+@date-range-slider-unlocked-icon-hover-color:   @gray-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
@@ -1750,7 +1751,7 @@
 
 @data-grid-row-bg:                              transparent;
 @data-grid-row-hover-bg:                        @default-itemHover-color;
-@data-grid-row-selected-bg:                     @default-itemSelected-color;
+@data-grid-row-selected-bg:                     transparent;
 @data-grid-row-hover-bg-mobile:                 transparent;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
@@ -1819,6 +1820,7 @@
 @data-grid-partScroll-cursor:                   pointer;
 @data-grid-partScroll-wrapper-height:           1px;
 @data-grid-partScroll-notScrolledCell-Color:    @data-grid-bg;
+@data-grid-multiselect-notScrolledCell-Color:   @data-grid-partScroll-notScrolledCell-Color;
 
 @data-grid-partScroll-thumb-height-hover:       6px;
 @data-grid-partScroll-thumb-height:             3px;
@@ -1951,7 +1953,7 @@
 @multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
 @multiView-tile-item-image-margin:                  4px auto 0 auto;
 @multiView-tile-item-text-margin:                   8px;
-@multiView-tile-selected-item-bg:                   @default-itemSelected-color;
+@multiView-tile-selected-item-bg:                   transparent;
 @multiView-tile-selected-item-border:               1px solid @multiView-tile-selected-item-border-color;
 @multiView-tile-selected-item-border-color:         #FF9C6C;
 @multiView-default-folder-border:                   1px solid transparent;
@@ -2185,6 +2187,9 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 
+@controls-FieldLink-big-fontSize:                  15px;
+@controls-FieldLink-big-fontSize-color:            #313E78;
+
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
@@ -2244,9 +2249,8 @@
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
-@controls-NotificationPopup-header-height:                                   40px;
-@controls-NotificationPopup-header-padding:                                  0 12px 0 12px;
-@controls-NotificationPopup-header-padding-with-close-button:                0 48px 0 12px;
+@controls-NotificationPopup-header-padding:                                  8px 12px 8px 12px;
+@controls-NotificationPopup-header-padding-with-close-button:                8px 48px 8px 12px;
 
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
@@ -2262,7 +2266,7 @@
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           @float-area-border;
+@controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;

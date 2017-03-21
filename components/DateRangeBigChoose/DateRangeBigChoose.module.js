@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker",
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker",
    "js!SBIS3.CORE.CloseButton",
+   "js!SBIS3.CONTROLS.DateRangeBigChoose.Validators",
    "browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers",
    'i18n!SBIS3.CONTROLS.DateRangeBigChoose',
    'css!SBIS3.CONTROLS.DateRangeBigChoose'
@@ -255,7 +256,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          if (endDate && date > endDate) {
             // setRange не вызываем, диапазон установится в обработчике _onDatePickerEndDateChanged
             // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
-            this._endDatePicker.setDate(date);
+            // this._endDatePicker.setDate(date);
+            return;
          } else {
             if (this._options.rangeselect) {
                this.setStartValue(date);
@@ -283,7 +285,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             return;
          }
          if (startDate && date < startDate) {
-            date = startDate
+            // date = startDate
+            return;
          }
          this.setRange(startDate, date);
          this._setCurrentYear(date.getFullYear(), true);

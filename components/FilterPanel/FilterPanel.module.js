@@ -323,6 +323,9 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._initializeContent();
       },
       _destroyFilter: function() {
+         if (this._filterRecordSet) {
+            this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         }
          if (this._filterAccordion) {
             this._filterAccordion.destroy();
             this._filterAccordion = null;
@@ -366,6 +369,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       },
       _getHeadContainer: function() {
          return $('.controls-FilterPanel__headContainer', this.getContainer());
+      },
+      destroy: function() {
+         this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);
+         FilterPanel.superclass.destroy.apply(this, arguments);
       }
    });
 

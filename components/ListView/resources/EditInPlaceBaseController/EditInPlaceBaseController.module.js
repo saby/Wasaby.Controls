@@ -389,7 +389,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
-               var self = this;
+               var
+                   self = this,
+                   needValidate;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
@@ -399,8 +401,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (endEditResult) {
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
+               needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
 
-               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
+               if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
@@ -408,7 +411,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return Deferred.success();
                } else {
                   this._updateModel(eip, withSaving).addCallback(function () {
-                     self._removePendingOperation();
                      self._afterEndEdit(eip, withSaving);
                   }).addErrback(function() {
                      self._savingDeferred.errback();
@@ -450,6 +452,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var isAdd = this._isAdd;
+               //После завершения редактирования, обязательно нужно удалить навешенный pending
+               this._removePendingOperation();
                //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
                //Иначе если сначала скрыть редакторы, курсор мыши может оказаться над фейковой строкой и произойдёт
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
@@ -487,7 +491,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
-                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : options.target);
+                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : null);
                            }
                            //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
                            //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.

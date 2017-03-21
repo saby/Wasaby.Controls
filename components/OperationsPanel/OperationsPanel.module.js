@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     *
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
@@ -276,6 +276,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+
+         //TODO: Скрывать кнопки просто через модификатор нельзя, иначе обход по tab будет учитывать невидимые кнопки.
+         //Пока что добавим на кнопки ws-hidden, чтобы они не участвовали в обходе.
+         $('.controls-operationsPanel__actionType-mass', this._container).toggleClass('ws-hidden', !!idArray.length);
+         $('.controls-operationsPanel__actionType-selection', this._container).toggleClass('ws-hidden', !idArray.length);
+
          if (this._itemsDrawn) {
             this._onSelectedItemsChange(idArray);
          } else {
