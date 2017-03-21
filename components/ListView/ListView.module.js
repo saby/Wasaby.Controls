@@ -317,6 +317,29 @@ define('js!SBIS3.CONTROLS.ListView',
           * @variant NotSave Завершить редактирование/добавление без сохранения изменений. Использование данной константы в режиме добавления по месту приводит к автоудалению созданной записи.
           * @variant CustomLogic Завершить редактирование/добавление с сохранением изменений по пользовательской логике. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись.
           */
+         /**
+          * @typedef {String} BeginMoveResult
+          * @variant MoveInItems Переместить записи в списке без вызова метода перемещения на источнике данных.
+          * @variant Custom Завершить перемещение не делая ни чего. В этом случае предполагается что вся логика перемещения будет реализована самостоятельно.
+          */
+         /**
+          * @event onBeginMove Происходит перед началом перемещения записей
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Array} moveItems Массив перемещаемых записей.
+          * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
+          * @param {MovePosition} position Как перемещать записи.
+          * @remark Событие не работает если используются стратегии перемещения
+          * @returns {BeginMoveResult} Когда из обработчика события возвращается константа или деферед, возвращающий константу, список которых приведён выше, происходит соответствующее действие.
+          * Когда возвращается любое другое значение, оно будет проигнорировано, и произойдёт перемещение записей.
+          */
+         /**
+          * @event onEndMove Происходит после перемещения записей.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {undefined|Object|Error} result Результат вызова метода перемещения на источнике данных.
+          * @param {Array} moveItems Массив перемещаемых записей.
+          * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
+          * @param {MovePosition} position Как перемещать записи.
+          */
          $protected: {
             _floatCheckBox: null,
             _dotItemTpl: null,
@@ -781,7 +804,7 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntityList: 'dragentity.list',
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
-                * @deprecated
+                * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
@@ -3737,6 +3760,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
          getMoveStrategy: function() {
@@ -3744,6 +3768,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
+          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           * @private
           */
@@ -3761,6 +3786,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Устанавливает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
+          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {

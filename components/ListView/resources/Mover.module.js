@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       $protected: {
          _options: {
             /**
-             * @deprecated
+             * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
              * @member {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения
              */
             moveStrategy: undefined,
@@ -166,17 +166,20 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                   if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
                      this.moveInItems(movedItems, target, position);
                   } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
-                     return this._callMoveMethod(movedItems, target, position, result).addCallback(function () {
+                     return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
                         this.moveInItems(movedItems, target, position);
-                     }.bind(this)).addBoth(function () {
-                        this._notify('onEndMove', movedItems, target, position);
+                        return result;
+                     }.bind(this)).addBoth(function (result) {
+                        this._notify('onEndMove', result, movedItems, target, position);
+                        return result;
                      }.bind(this));
                   } else {
-                     this._notify('onEndMove', movedItems, target, position);
+                     this._notify('onEndMove', undefined, movedItems, target, position);
                   }
                }.bind(this);
             if (moveStrategy) {
-               if (isChangeOrder) { //todo поддерживаем стратегии перемещения, потом убрать
+               //todo поддерживаем стратегии перемещения, потом убрать
+               if (isChangeOrder) { 
                   result = moveStrategy.move(movedItems, target, position == 'after');
                } else {
                   result = moveStrategy.hierarchyMove(movedItems, target);
@@ -196,7 +199,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       //region move_strategy
       /**
        * Возвращает стратегию перемещения
-       * @deprecated
+       * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        */
@@ -205,7 +208,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       },
       /**
        * Устанавливает стратегию перемещения
-       * @deprecated
+       * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
@@ -272,61 +275,32 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       moveInItems: function(movedItems, target, position) {
          var items = this.getItems();
          if (items) {
-            if (position == 'on') {
-               this._changeHierarchy(items, movedItems, target, position);
-            } else {
-               this._changeOrder(items, movedItems, target, position);
-            }
-         }
-      },
-      /**
-       * Перемещает элементы по иерархии.
-       * @param movedItems
-       * @param target
-       * @param position
-       */
-      _changeHierarchy: function(items, movedItems, target) {
-         if (this._options.parentProperty) {
             movedItems.forEach(function (movedItem) {
-               movedItem.set(this._options.parentProperty, target ? target.getId() : null);
-               if (items.getIndex(movedItem) == -1) {
-                  items.add(movedItem);
+               if (this._options.parentProperty) {
+                  //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
+                  movedItem.set(this._options.parentProperty, target ? target.getId() : null);
+               }
+               if (position !== 'on') {
+                  var itemsIndex = items.getIndex(movedItem),
+                     targetIndex = items.getIndex(target);
+                  if (position == ISource.MOVE_POSITION.after) {
+                     targetIndex = (targetIndex + 1) < items.getCount() ? ++targetIndex : items.getCount();
+                  } else {
+                     targetIndex = (targetIndex - 1) > -1 ? targetIndex : 0;
+                  }
+                  if (itemsIndex !== -1 && itemsIndex < targetIndex && targetIndex > 0) {
+                     targetIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
+                  }
+                  items.setEventRaising(false, true);
+                  items.remove(movedItem);
+                  items.add(
+                     movedItem,
+                     targetIndex < items.getCount() ? targetIndex : undefined
+                  );
+                  items.setEventRaising(true, true);
                }
             }.bind(this));
          }
-      },
-      /**
-       * Перемещает элементы по иерархии.
-       * @param items
-       * @param movedItems
-       * @param target
-       * @param position
-       * @private
-       */
-      _changeOrder: function(items, movedItems, target, position) {
-         movedItems.forEach(function (movedItem) {
-            if (this._options.parentProperty) {
-               //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
-               movedItem.set(this._options.parentProperty, target.get(this._options.parentProperty));
-            }
-            var itemsIndex = items.getIndex(movedItem),
-               targetIndex = items.getIndex(target);
-            if (position == ISource.MOVE_POSITION.after) {
-               targetIndex = (targetIndex + 1) < items.getCount() ? ++targetIndex : items.getCount();
-            } else {
-               targetIndex = (targetIndex - 1) > -1 ? targetIndex : 0;
-            }
-            if (itemsIndex !== -1 && itemsIndex < targetIndex && targetIndex > 0) {
-               targetIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
-            }
-            items.setEventRaising(false, true);
-            items.remove(movedItem);
-            items.add(
-               movedItem,
-               targetIndex < items.getCount() ? targetIndex : undefined
-            );
-            items.setEventRaising(true, true);
-         }.bind(this));
       },
       //endregion move_strategy
       //region checkmove
