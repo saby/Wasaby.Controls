@@ -1358,6 +1358,7 @@
 // Date Range Choose //
 // ----------------- //
 @date-range-choose-bg-color:                    @gray-f4f4f4-color;
+@date-range-choose-years-only-bg-color:         @white-color;
 @date-range-choose-bg-hover-color:              @white-color;
 @date-range-choose-bg-active-color:             #e1ecf6;
 @date-range-choose-border-color:                @gray-ccc-color;
@@ -1371,8 +1372,9 @@
 @date-range-choose-width:                       178px;
 @date-range-choose-short-width:                 146px;
 @date-range-choose-year-state-width:            80px;
-@date-range-choose-padding:                     0 0 4px;
+@date-range-choose-padding:                     0;
 
+@date-range-choose-standart-line-height:        32px;
 
 @date-range-choose-current-value-font-size:           15px;
 @date-range-choose-current-value-font-weight:         bold;
@@ -1390,11 +1392,11 @@
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-font-weight:            bold;
 @date-range-choose-year-color:                  @darkcyan-color;
-@date-range-choose-year-height:                 32px;
+@date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
 @date-range-choose-year-bg-hover-color:         inherit;
 
-@date-range-choose-year-prev-next-btns-width:         24px;
+@date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
 @date-range-choose-year-prev-next-btns-font-weight:   normal;
 @date-range-choose-year-prev-next-btns-color:         @darkcyan-color;
@@ -1411,14 +1413,18 @@
 @date-range-choose-halfyear-caption-left:             0;
 @date-range-choose-halfyear-caption-text-align:       @date-range-choose-caption-text-align;
 
-@date-range-choose-quarter-caption-line-height:    3*@date-range-choose-month-height;
-@date-range-choose-quarter-with-halfyears-margin:  0 0 @date-range-choose-indents 34px; //(@date-range-choose-halfyear-caption-width + @date-range-choose-indents)
-@date-range-choose-quarter-with-quarters-margin:   0 0 @date-range-choose-indents 0;
-@date-range-choose-quarter-caption-width:          28px;
-@date-range-choose-quarter-caption-text-align:     @date-range-choose-caption-text-align;
-@date-range-choose-quarter-caption-with-month-text-align:  @date-range-choose-caption-text-align;
+@date-range-choose-quarter-caption-line-height:             @date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-with-month-line-height:  3*@date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-height:                  @date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-with-month-height:       auto;
+@date-range-choose-quarter-with-halfyears-margin:           0 0 @date-range-choose-indents 34px; //(@date-range-choose-halfyear-caption-width + @date-range-choose-indents)
+@date-range-choose-quarter-with-quarters-margin:            0;
+@date-range-choose-quarter-with-month-margin:               0 0 @date-range-choose-indents 0;
+@date-range-choose-quarter-caption-width:                   28px;
+@date-range-choose-quarter-caption-text-align:              @date-range-choose-caption-text-align;
+@date-range-choose-quarter-caption-with-month-text-align:   @date-range-choose-caption-text-align;
 
-@date-range-choose-month-height:                32px;
+@date-range-choose-month-height:                @date-range-choose-standart-line-height;
 @date-range-choose-month-margin:                0 0 0 32px; // (@date-range-choose-quarter-caption-width + @date-range-choose-indents);
 @date-range-choose-month-padding:               0 0 0 8px;
 @date-range-choose-month-text-align:            left;
@@ -1430,6 +1436,8 @@
 
 @date-range-choose-container-caption-width:     32px;
 @date-range-choose-container-caption-padding:   0;
+
+@date-range-choose-years-only-curent-year-color:   @darkcyan-color;
 
 @date-range-choose-home-button-size:            24px;
 @date-range-choose-home-button-font-size:       14px;

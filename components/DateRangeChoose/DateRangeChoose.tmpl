@@ -3,7 +3,13 @@
       <div class="controls-DateRangeChoose__currentValue"></div>
       <div class="controls-DateRangeChoose__yearWrapper">
          <span class="controls-DateRangeChoose__year-prev"></span>
-         <span class="controls-DateRangeChoose__year {{ showYears === true ? 'controls-DateRangeChoose__year-clickable' }}"></span>
+         <!--<div class="controls-DateRangeChoose__yearWrapper2">-->
+            <component data-component="SBIS3.CONTROLS.IconButton" name="HomeButton" class="controls-DateRangeChoose__home controls-DateRangeBigChoose__homeBtn">
+               <option name="icon">sprite:icon-16 icon-Home3 icon-primary</option>
+               <option name="tabindex">0</option>
+            </component>
+            <span class="controls-DateRangeChoose__year {{ showYears === true ? 'controls-DateRangeChoose__year-clickable' }}"></span>
+         <!--</div>-->
          <span class="controls-DateRangeChoose__year-next"></span>
       </div>
       <div class="controls-DateRangeChoose__bodyWrapper controls-DateRangeChoose__month-checkMark-hidden">
@@ -18,13 +24,13 @@
                      </ws:if>
                      <ws:for data="monthIndex as month in quarter.months">
                         <div class="controls-DateRangeChoose__month" data-range-id="{{ halfYearIndex*6 + quarterIndex*3 + monthIndex}}">
+                           <div class="controls-DateRangeChoose__border"></div>
                            <ws:if data="{{ checkedStart || checkedEnd || iconsHandler }}">
                               <div class="controls-DateRangeChoose__checkBox controls-DateRangeChoose__month-checkBox icon-16 icon-Yes"></div>
                            </ws:if>
                            <div class="controls-DateRangeChoose__month-caption">
                               {{ month }}
                            </div>
-                           <div class="controls-DateRangeChoose__border"></div>
                         </div>
                      </ws:for>
                      <div class="controls-DateRangeChoose__quarter-caption">
@@ -47,9 +53,9 @@
          </ws:for>
       </div>
       <div class="controls-DateRangeChoose__yearsMode-next"></div>
+      <component data-component="SBIS3.CONTROLS.IconButton" name="HomeButton" class="controls-DateRangeChoose__home2 controls-IconButton__round-border controls-DateRangeBigChoose__homeBtn">
+         <option name="icon">sprite:icon-16 icon-Home3 icon-primary</option>
+         <option name="tabindex">0</option>
+      </component>
    </ws:if>
-   <component data-component="SBIS3.CONTROLS.IconButton" name="HomeButton" class="controls-DateRangeChoose__home controls-IconButton__round-border controls-DateRangeBigChoose__homeBtn">
-      <option name="icon">sprite:icon-16 icon-Home2 icon-primary</option>
-      <option name="tabindex">0</option>
-   </component>
 </div>

@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
          container.find(['.', this._cssDateRangeChoose.halfYearCaption].join('')).click(this._onHalfYearClick.bind(this));
          container.find(['.', this._cssDateRangeChoose.quarterCaption].join('')).click(this._onQuarterClick.bind(this));
-         container.find(['.', this._cssDateRangeChoose.monthCaption].join('')).click(this._onMonthClick.bind(this));
+         container.find(['.', this._cssDateRangeChoose.month].join('')).click(this._onMonthClick.bind(this));
 
          container.find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join('')).click(this._onYearsModeWrapperClick.bind(this));
 
