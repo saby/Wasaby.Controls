@@ -4,8 +4,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
    "Core/core-instance",
    "Core/Deferred",
    "Core/Abstract",
-   "Core/IoC"
-], function (Di, cInstance, Deferred, Abstract, IoC) {
+   'js!WS.Data/Utils',
+   'js!WS.Data/Source/ISource'
+
+], function (Di, cInstance, Deferred, Abstract, Utils, ISource) {
    'use strict';
    /**
     * Перемещает элементы
@@ -16,6 +18,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       $protected: {
          _options: {
             /**
+             * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
              * @member {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения
              */
             moveStrategy: undefined,
@@ -27,9 +30,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
              * @cfg {WS.Data/Display/Display} Проекция элементов.
              */
             projection: undefined,
-            /**
-             *
-             */
             /**
              * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
              * @remark
@@ -51,41 +51,47 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
              *    <option name="parentProperty">Раздел@</option>
              * </pre>
              */
-            nodeProperty: null
+            nodeProperty: null,
+            /**
+             * @cfg {Boolean} Инвертирует вызов методов перемещния по порядку.
+             */
+            invertOrder: false,
+            /**
+             * @cfg {WS.Data/Source/ISource} источник данных.
+             */
+            dataSource: undefined
          }
       },
-      _modifyOptions: function (cfg) {
-         if (cfg.hierField) {
-            IoC.resolve('ILogger').log('Mover', 'Опция hierField является устаревшей, используйте parentProperty');
-            cfg.parentProperty = cfg.hierField;
+      $constructor: function (cfg) {
+         cfg = cfg || {};
+         this._publish('onBeginMove', 'onEndMove');
+         if (cfg.moveStrategy) {
+            Utils.logger.stack(this._moduleName + 'MoveStrategy have deprecated, and will be removed in 3.8.0, please use events onBeginMove or onEndMove on ListView instead of MoveStrategy', 1);
          }
-         if (cfg.parentProperty && !cfg.nodeProperty) {
-            cfg.nodeProperty = cfg.parentProperty + '@';
-         }
-         return Mover.superclass._modifyOptions.apply(this, arguments);
       },
+      //region for_controls
       moveRecordDown: function(record) {
-         this._moveToOneRow(record, true);
+         this._moveToOneRow(record, 'after');
       },
 
       moveRecordUp: function(record) {
-         this._moveToOneRow(record, false);
+         this._moveToOneRow(record, 'before');
       },
 
       getItems: function(){
          return this._options.items;
       },
 
-      _moveToOneRow: function(record, down) {
+      _moveToOneRow: function(record, position) {
          var projection = this.getProjection(),
             item = projection.getItemBySourceItem(record),
-            targetItem = down ? projection.getNext(item) : projection.getPrevious(item);
+            targetItem = position == 'after' ? projection.getNext(item) : projection.getPrevious(item);
          if(targetItem) {
-            this.getMoveStrategy().move([record], targetItem.getContents(), down);
+            this.move([record], targetItem.getContents(), position);
          }
       },
 
-      getProjection: function(){
+      getProjection: function() {
          return this._options.projection;
       },
 
@@ -149,27 +155,51 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             isNodeTo = true,
             isChangeOrder = position !== 'on';
 
-         if (!cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
+         if (target !== null && !cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
             target = this.getItems().getRecordById(target);
          }
 
-         if (target !== null) {
-            isNodeTo = target.get(this._options.nodeProperty);
-         }
-
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
-            if (isNodeTo && !isChangeOrder) {
-               result = this.getMoveStrategy().hierarchyMove(movedItems, target);
-            } else if(isChangeOrder)  {
-               result = this.getMoveStrategy().move(movedItems, target, position == 'after');
+            var
+               moveStrategy = this.getMoveStrategy(),
+               move = function (result) {
+                  if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
+                     this.moveInItems(movedItems, target, position);
+                  } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
+                     return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
+                        this.moveInItems(movedItems, target, position);
+                        return result;
+                     }.bind(this)).addBoth(function (result) {
+                        this._notify('onEndMove', result, movedItems, target, position);
+                        return result;
+                     }.bind(this));
+                  } else {
+                     this._notify('onEndMove', undefined, movedItems, target, position);
+                  }
+               }.bind(this);
+            if (moveStrategy) {
+               //todo поддерживаем стратегии перемещения, потом убрать
+               if (isChangeOrder) { 
+                  result = moveStrategy.move(movedItems, target, position == 'after');
+               } else {
+                  result = moveStrategy.hierarchyMove(movedItems, target);
+               }
+            } else {
+               var result = this._notify('onBeginMove', movedItems, target, position);
+               if (result instanceof Deferred) {
+                  result.addCallback(move);
+               } else {
+                  result = move(result);
+               }
             }
          }
          return (result instanceof Deferred) ? result : new Deferred().callback(result);
       },
-
+      //endregion for_controls
       //region move_strategy
       /**
        * Возвращает стратегию перемещения
+       * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        */
@@ -178,11 +208,99 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       },
       /**
        * Устанавливает стратегию перемещения
+       * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (moveStrategy) {
          this._options.moveStrategy = strategy;
+      },
+
+      /**
+       * Вызывает метод перемещения на источнике данных
+       * @param movedItems
+       * @param target
+       * @param position
+       * @returns {*|$ws.proto.Deferred}
+       * @private
+       */
+      _callMoveMethod: function(movedItems, target, position, result) {
+         if (result !== Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
+            var
+               invert = {},
+               idArray = [];
+            invert[ISource.MOVE_POSITION.after] = ISource.MOVE_POSITION.before;
+            invert[ISource.MOVE_POSITION.before] = ISource.MOVE_POSITION.after;
+            invert[ISource.MOVE_POSITION.on] = ISource.MOVE_POSITION.on;
+            movedItems.forEach(function (item) {
+               if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+                  idArray.push(item.getId());
+               } else {
+                  idArray.push(item);
+               }
+            });
+            var dataSource = this._getDataSource();
+            if (dataSource) {
+               return dataSource.move(
+                  idArray,
+                  target === null ? null : target.getId(), {
+                     position: this._options.invertOrder ? invert[position] : position,
+                     parentProperty: this._options.parentProperty,
+                     nodeProperty: this._options.nodeProperty
+                  }
+               );
+            }
+         }
+         return new Deferred().callback(result);
+      },
+
+      /**
+       * Возвращает источник данных
+       * @returns {*}
+       * @private
+       */
+      _getDataSource: function() {
+         if (this._options.dataSource) {
+            return this._options.dataSource;
+         } else if (this._options.listView) {
+            return this._options.listView.getDataSource();
+         }
+      },
+      /**
+       * Перемещает записи в связанной коллекции.
+       * @param movedItems
+       * @param target
+       * @param position
+       */
+      moveInItems: function(movedItems, target, position) {
+         var items = this.getItems();
+         if (items) {
+            movedItems.forEach(function (movedItem) {
+               if (this._options.parentProperty) {
+                  //если перемещение было по порядку и иерархии одновременно, то надо обновить hierField
+                  movedItem.set(this._options.parentProperty, target ? target.getId() : null);
+               }
+               if (position !== 'on') {
+                  var itemsIndex = items.getIndex(movedItem),
+                     targetIndex = items.getIndex(target);
+                  if (position == ISource.MOVE_POSITION.after) {
+                     targetIndex = (targetIndex + 1) < items.getCount() ? ++targetIndex : items.getCount();
+                  } else {
+                     targetIndex = (targetIndex - 1) > -1 ? targetIndex : 0;
+                  }
+                  if (itemsIndex !== -1 && itemsIndex < targetIndex && targetIndex > 0) {
+                     targetIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
+                  }
+                  items.setEventRaising(false, true);
+                  items.remove(movedItem);
+                  items.add(
+                     movedItem,
+                     targetIndex < items.getCount() ? targetIndex : undefined
+                  );
+                  items.setEventRaising(true, true);
+               }
+            }.bind(this));
+         }
       },
       //endregion move_strategy
       //region checkmove
@@ -190,7 +308,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * Проверяет можно ли перенести элементы
        * @param {Array} movedItems Массив перемещаемых элементов
        * @param {WS.Data/Entity/Record} target рекорд к которому надо переместить
-       * @param {Boolean} isChangeOrder Изменяется порядок элементов
        * @returns {Boolean}
        * @private
        */
@@ -201,19 +318,21 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target === undefined) {
             return false;
          }
-         if (target !== null && this._options.parentProperty) {
-            toMap = this._getParentsMap(target.getId());
-         }
-         for (var i = 0; i < movedItems.length; i++) {
-            key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
-            if (toMap.indexOf(key) !== -1) {
-               return false;
-            }
-            if (target !== null && !isChangeOrder && !target.get(this._options.nodeProperty)) {
-               return false;
-            }
-         }
 
+         if (this._options.parentProperty) {
+            if (target !== null) {
+               if (this._options.nodeProperty && !isChangeOrder && target.get(this._options.nodeProperty) === null) {
+                  return false;
+               }
+               toMap = this._getParentsMap(target.getId());
+            }
+            for (var i = 0; i < movedItems.length; i++) {
+               key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
+               if (toMap.indexOf(key) !== -1) {
+                  return false;
+               }
+            }
+         }
          return true;
       },
       /**
@@ -252,8 +371,15 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          return toMap;
       }
+
+
       //endregion checkmove
    });
    Di.register('listview.mover', Mover);
+   Mover.ON_BEGIN_MOVE_RESULT = { // Возможные результаты события "BeginEditResult"
+      CUSTOM: 'Custom', //Своя логика перемещения записей
+      MOVE_IN_ITEMS: 'MoveInItems'//Переместить в списке без вызова перемещения на источнике
+   };
+
    return Mover;
 });
