@@ -339,6 +339,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {Array} moveItems Массив перемещаемых записей.
           * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
           * @param {MovePosition} position Как перемещать записи.
+          * @remark Событие не работает если используются стратегии перемещения
           */
          $protected: {
             _floatCheckBox: null,
