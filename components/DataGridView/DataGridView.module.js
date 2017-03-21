@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             cMerge(headData, headColumns);
-            for (var i = 0; i < headData.content[0].length; i++) {
+            for (var i = 0; i < headData.content[1].length; i++) {
                columnTop = headData.content[0][i];
                column = headData.content[1][i];
 
