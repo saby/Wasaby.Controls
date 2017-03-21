@@ -52,13 +52,13 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/dom&controls-helpers',
    'js!SBIS3.CONTROLS.CursorListNavigation',
    'js!WS.Data/Source/SbisService',
-   'js!SBIS3.CONTROLS.ListView.Mover',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.DragEntity.List',
    'js!WS.Data/MoveStrategy/Base',
+   'js!SBIS3.CONTROLS.ListView.Mover',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, Mover) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
 
      'use strict';
 
@@ -316,30 +316,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @variant Save Завершить редактирование/добавление с сохранением изменений логике, которая установленной по умолчанию.
           * @variant NotSave Завершить редактирование/добавление без сохранения изменений. Использование данной константы в режиме добавления по месту приводит к автоудалению созданной записи.
           * @variant CustomLogic Завершить редактирование/добавление с сохранением изменений по пользовательской логике. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись.
-          */
-         /**
-          * @typedef {String} BeginMoveResult
-          * @variant MoveInItems Переместить записи в списке без вызова метода перемещения на источнике данных.
-          * @variant Custom Завершить перемещение не делая ни чего. В этом случае предполагается что вся логика перемещения будет реализована самостоятельно.
-          */
-         /**
-          * @event onBeginMove Происходит перед началом перемещения записей
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Array} moveItems Массив перемещаемых записей.
-          * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
-          * @param {MovePosition} position Как перемещать записи.
-          * @remark Событие не работает если используются стратегии перемещения
-          * @returns {BeginMoveResult} Когда из обработчика события возвращается константа или деферед, возвращающий константу, список которых приведён выше, происходит соответствующее действие.
-          * Когда возвращается любое другое значение, оно будет проигнорировано, и произойдёт перемещение записей.
-          */
-         /**
-          * @event onEndMove Происходит после перемещения записей.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {undefined|Object|Error} result Результат вызова метода перемещения на источнике данных.
-          * @param {Array} moveItems Массив перемещаемых записей.
-          * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
-          * @param {MovePosition} position Как перемещать записи.
-          * @remark Событие не работает если используются стратегии перемещения
           */
          $protected: {
             _floatCheckBox: null,
@@ -805,16 +781,10 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntityList: 'dragentity.list',
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
-                * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: null,
-               /**
-                * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
-                * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
-                */
-               moveInvertOrder: false,
+               moveStrategy: 'movestrategy.base',
                /**
                 * @cfg {Boolean} Устанавливает возможность показа контекстного меню при нажатии правой кнопки мыши.
                 * @remark
@@ -846,7 +816,7 @@ define('js!SBIS3.CONTROLS.ListView',
          $constructor: function () {
             var dispatcher = CommandDispatcher;
 
-            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
+            this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete');
             this._setScrollPagerPositionThrottled = this._setScrollPagerPosition.throttle(100, true).bind(this);
             this._bindEventHandlers(this._container);
 
@@ -3431,9 +3401,6 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._massSelectionController) {
                this._massSelectionController.destroy();
             }
-            if (this._mover) {
-               this._mover.destroy();
-            }
             ListView.superclass.destroy.call(this);
          },
          /**
@@ -3667,7 +3634,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this.getMover().move(models, target.getModel(), position).addCallback(function(){
+                     this._getMover().move(models, target.getModel(), position).addCallback(function(){
                         this.removeItemsSelectionAll();
                      }.bind(this));
                   } else {
@@ -3680,7 +3647,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this.getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
             }
@@ -3738,7 +3705,7 @@ define('js!SBIS3.CONTROLS.ListView',
                selectedItems = selectedItems.toArray();
             }
 
-            this.getMover().move(selectedItems, target).addCallback(function(res){
+            this._getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3749,19 +3716,18 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordDown: function(record) {
-            this.getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
+            this._getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
          },
          /**
           * Переместить на одну запись вверх.
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordUp: function(record) {
-            this.getMover().moveRecordUp(arguments[2]||record);
+            this._getMover().moveRecordUp(arguments[2]||record);
          },
          /**
           * Возвращает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
          getMoveStrategy: function() {
@@ -3769,25 +3735,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           * @private
           */
          _makeMoveStrategy: function () {
-            if (this._options.moveStrategy) {
-               return Di.resolve(this._options.moveStrategy, {
-                  dataSource: this.getDataSource(),
-                  hierField: this._options.parentProperty,
-                  parentProperty: this._options.parentProperty,
-                  nodeProperty: this._options.nodeProperty,
-                  listView: this
-               });
-            }
+            return Di.resolve(this._options.moveStrategy, {
+               dataSource: this.getDataSource(),
+               hierField: this._options.parentProperty,
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty,
+               listView: this
+            });
          },
          /**
           * Устанавливает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {
@@ -3801,25 +3763,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * Возвращает перемещатор
           * @private
           */
-         getMover: function() {
-            if (!this._mover) {
-               this._mover = new Mover({
-                  moveStrategy: this.getMoveStrategy(),
-                  items: this.getItems(),
-                  projection: this._getItemsProjection(),
-                  parentProperty: this._options.parentProperty,
-                  nodeProperty: this._options.nodeProperty,
-                  invertOrder: this._options.invertOrder,
-                  dataSource: this.getDataSource()
-               });
-               colHelpers.forEach(['onBeginMove', 'onEndMove'], function (eventName) {
-                  this._mover.subscribe(eventName, function (e) {
-                     e.setResult(this._notify(eventName));
-                     return e;
-                  }.bind(this))
-               }, this);
-            }
-            return this._mover
+         _getMover: function() {
+            return this._mover || (this._mover = Di.resolve('listview.mover', {
+               moveStrategy: this.getMoveStrategy(),
+               items: this.getItems(),
+               projection: this._getItemsProjection(),
+               parentProperty: this._options.parentProperty,
+               nodeProperty: this._options.nodeProperty
+            }));
          },
          /**
           * Перемещает переданные записи
@@ -3841,7 +3792,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this.getMover().move(movedItems, target, position).addCallback(function(){
+            return this._getMover().move(movedItems, target, position).addCallback(function(){
                //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
                //и рассинхронизурутся записи в items и selectItems 💩
                this.setSelectedKeys(this.getSelectedKeys());
