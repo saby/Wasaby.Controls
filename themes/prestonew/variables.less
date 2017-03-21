@@ -45,7 +45,8 @@
 // ------ //
 
 // Normal button
-@button-font-size:                        24px;
+@button-height: 84px;
+@button-font-size:                        40px;
 @button-font:                             @button-font-size @font-basic-name;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
@@ -111,20 +112,21 @@
 @filter-panel-chooser-all-button-font-size:                       12px;
 @filter-panel-chooser-dictionary-button-font-size:                12px;
 @filter-panel-chooser-all-button-float:                           left;
-
+@button-border-width: 2px;
 // Normal default button
-@button-border:                           @button-border-width none;
-
+@button-border:                           @button-border-width solid #26b8ff;
+@button-line-height: 40px;
 @button-hover-border:                     0 none;
-
-@button-active-text-color:                @secondary-color;
+@button-text-color:                       #E4E4E4;
+@button-active-text-color:                #E4E4E4;
 @button-active-border:                    0 none;
 @button-active-bg:                        lighten(@primary-color, 10%);
-
+@button-hover-bg: #212e3d;
+@button-bg: #2d3f53;
 // Normal primary button
-@button-primary-text-color:               @black-color;
-@button-primary-border:                   0 none;
-@button-primary-bg:                       @primary-color;
+@button-primary-text-color:               #2C3E50;
+@button-primary-border:                   @button-border;
+@button-primary-bg:                       #e4e4e4;
 
 @button-primary-hover-border:             0 none;
 @button-primary-hover-shadow:             @button-shadow;
@@ -477,7 +479,7 @@
 @text-box-field-padding:                  0;
 
 @text-box-field-text-color:               #666666;
-@text-box-field-focus-text-color:         @white-color;
+
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
 @text-box-border-color:                   #314559 #314559 #314559 #314559;
@@ -487,17 +489,18 @@
 @text-box-editor-text-color:              #999999;
 @combo-box-picker-show-background-color : #f0f5fb;
 @combo-box-picker-show-border-color     :#48bffc;
-@text-box-focus-border-color:             @black-color;
-@text-box-focus-bg:                       @secondary-color;
+@text-box-focus-border-color:             @text-box-border-color;
+@text-box-field-focus-text-color:         #314559;
+@compo-box-picker-show-color:             #324352;
+@text-box-focus-bg:                      #f0f5fb;
 @text-box-border-width: 2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             @gray-dark-color;
 
 @text-box-disabled-border-bottom:         1px solid #333333;
-@text-box-focus-border-width: inherit;
-@text-box-focus-bg: inherit;
-@text-box-field-focus-text-color: #fff;
+@text-box-focus-border-width: 2px;
+@text-box-field-focus-text-color:         #324352;
 @text-box-after-width:                    20px;
 @text-box-height: 84px;
 @text-box-overflow:                       initial;
@@ -549,18 +552,18 @@
 // ----------- //
 // Search form //
 // ----------- //
-
-@search-background:                                   none;
+@search-loop-size: 56px;
+@search-background:                                   #2e3a45;
 @search-disabled-background:                          @text-box-disabled-bg;
-@search-height:                                       40px;
+@search-height:                                       84px;
 @search-border-color:                                 transparent;
 @search-hover-border-color:                           #2B3546;
 @search-bottom-border-color:                          @search-hover-border-color;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-form-icon-padding:                            11px 8px 0 0;
+@search-form-icon-padding:                            32px 8px 0 0;
 @search-form-icon-disabled-display:                   block;
-@search-loop-size:                                    24px;
 
+@search-focus-background:                             #2e3a45;
 // --------- //
 // Combo box //
 // --------- //
