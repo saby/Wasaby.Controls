@@ -71,7 +71,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return config;
       },
       getItemContentTplData = function(cfg){
-         cfg = cfg.__rootScope; //todo https://inside.tensor.ru/opendoc.html?guid=24956751-4374-4381-8c2e-6ada0146d853&des=
          var data = {};
          if (cfg.isSearch) {
             data.padding = (cfg.projItem.getLevel() == 1) ? cfg.originallPadding : cfg.originallPadding + cfg.paddingSize;
