@@ -55,9 +55,12 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        } else if (opts.selectedItems) {
           items = opts.selectedItems;
        }
-       items.forEach(function(item) {
-          res.push(item.get(opts.displayProperty));
-       });
+
+       if (items) {
+          items.forEach(function(item) {
+             res.push(item.get(opts.displayProperty));
+          });
+       }
 
        return res.join('');
     }
