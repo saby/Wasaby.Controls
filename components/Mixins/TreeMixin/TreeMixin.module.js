@@ -1055,7 +1055,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       _getAdditionalOffset: function(items){
          var currentRootItems = 0;
          for (i = 0; i < items.length; i++){
-            if (items[i].getContents().get(this._options.hierField) == this.getCurrentRoot()){
+            if (items[i].getContents().get(this._options.parentProperty) == this.getCurrentRoot()){
                currentRootItems++;
             }
          }
@@ -1088,6 +1088,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (cfg.parentProperty && !cfg.nodeProperty) {
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
+         },
+         _addItems: function() {
+            // При добавлении новых элементов восстанавливаем раскрытые узлы, т.к. записи, необходимые для восстановления
+            // состояния дерева могут придти и на второй странице
+            // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
+            applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
          reload: function() {
             // сохраняем текущую страницу при проваливании в папку

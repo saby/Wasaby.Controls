@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.PagerMore', [
    /**
     * Пейдер - загружает записи в коллекцию c реализацией интерфейса WS.Data/Collection/ISourceLoadable постранично
     * @class SBIS3.CONTROLS.PagerMore
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @public
     * @author Крайнов Дмитрий Олегович
     */

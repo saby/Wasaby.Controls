@@ -69,10 +69,6 @@
       }
    }
 
-   .controls-DataGridView__td__textAlignRight{
-     text-align: right!important;
-   }
-
    .controls-DataGridView__table {
       width: 100%;
       position: relative;
@@ -84,14 +80,30 @@
       background: @data-grid-bg;
       table-layout: @data-grid-table-layot;
 
+      .controls-DataGridView__tbody, .controls-DataGridView__thead {
+         .controls-DataGridView__td__textAlignRight {
+            text-align: right;
+         }
+      }
+
       .controls-DataGridView__results {
          background: @data-grid-row-bg;
          font-weight: bold;
          font-size: 14px;
          color: #313E78;
       }
+     .controls-DataGridView__tr {
+       &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
+         .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+           &.controls-DataGridView__notScrolledCell {
+             background-color: @data-grid-partScroll-notScrolledCell-Color;
+           }
+         }
+       }
+     }
 
-      .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
+
+     .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
          &.controls-DataGridView__th__topRow{
             text-align: center;
             &.controls-DataGridView__th__topRow-has_text{
@@ -122,6 +134,17 @@
 
       .controls-DataGridView__tr {
          background: @data-grid-row-bg;
+
+        &.controls-ListView__item__multiSelected:not(.controls-ListView__hoveredItem) {
+           &.controls-ListView__item {
+              background-color: @data-grid-row-selected-bg;
+           }
+
+           .controls-DataGridView__td {
+              background-color: @data-grid-row-selected-bg;
+              color: @data-grid-row-selected-cell-text-color;
+           }
+        }
 
          &.controls-ListView__hoveredItem {
             background: @data-grid-row-hover-bg;
@@ -389,8 +412,10 @@
 .ws-sticky-header__header-container {
    >.controls-ListView.controls-DataGridView.controls-DataGridView__with-partScroll {
       overflow-y: hidden;
-      padding-bottom: 7px;
       background-clip: content-box;
+      &.controls-DataGridView__PartScroll__shown {
+         padding-bottom: 7px;
+      }
    }
 }
 

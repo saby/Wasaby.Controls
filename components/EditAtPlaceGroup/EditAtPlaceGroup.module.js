@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
        * @category Inputs

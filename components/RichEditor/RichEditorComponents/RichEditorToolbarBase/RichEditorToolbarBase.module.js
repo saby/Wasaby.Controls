@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             var
                editor = this._options.linkedEditor;
             if (editor) {
-               editor.unsubscribe('onFormatChange', this._handlersInstances.format);
+               this.unsubscribeFrom(editor, 'onFormatChange', this._handlersInstances.format);
             }
          },
 
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             var
                editor = this._options.linkedEditor;
             this._handlersInstances.format = this._formatChangeHandler.bind(this);
-            editor.subscribe('onFormatChange', this._handlersInstances.format);
+            this.subscribeTo(editor, 'onFormatChange', this._handlersInstances.format);
          },
 
          _formatChangeHandler : function() {},

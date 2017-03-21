@@ -3,7 +3,17 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
    'Core/helpers/date-helpers'
 ], function(cAbstract, dateHelpers) {
 
-   var DateRangeController = cAbstract.extend({
+   /**
+    * Контроллер, позволяющий связывать контролы выбора периодов
+    * @author Александр Миронов
+    * @class SBIS3.CONTROLS.DateRangeRelationController
+    * @extends Core/Abstract
+    */
+   var DateRangeController = cAbstract.extend(/**@lends SBIS3.CONTROLS.DateRangeRelationController.prototype*/{
+      /**
+       * @event onDatesChange Происходит при изменении значения хотя бы одного из синхронизируемых контролов.
+       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       */
       $protected: {
          _options: {
             /**
@@ -101,6 +111,10 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
 
          start = start || changedControl.getStartValue();
          end = end || changedControl.getEndValue();
+         if (!start || !end) {
+            this._updating = false;
+            return;
+         }
 
          periodType = dateHelpers.getPeriodType(start, end);
          periodLength = dateHelpers.getPeriodLengthInMonthByType(periodType);
@@ -144,6 +158,7 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
          // }
 
          this._updating = false;
+         this._notify('onDatesChange');
       },
 
       _slideStartDate: function (date, monthDelta) {

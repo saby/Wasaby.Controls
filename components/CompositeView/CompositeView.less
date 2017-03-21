@@ -50,6 +50,9 @@
         }
       }
     }
+    &.controls-ListView__item__multiSelected {
+      background: @multiView-tile-selected-item-bg;
+    }
   }
   &.controls-CompositeView-table .controls-Pager-container {
      display : none
@@ -116,6 +119,9 @@
                   box-shadow: 1px 2px 4px #aaa;
                }
             }
+         }
+         &.controls-ListView__item__multiSelected {
+           background: @multiView-tile-selected-item-bg;
          }
          .controls-CompositeView__tileImg {
             display: block;
