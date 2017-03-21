@@ -6,12 +6,16 @@
 .controls-DateRangeChoose__container-caption () {
    .box-sizing(border-box);
    cursor: pointer;
+   display: none;
    height: 100%;
-   line-height: @date-range-choose-month-height;
-   padding: 0 10px 0 10px;
+   //line-height: @date-range-choose-month-height;
+   padding: @date-range-choose-container-caption-padding;
    position: absolute;
    top: 0;
-   width: @date-range-choose-container-caption-width;
+}
+
+.controls-DateRangeChoose__container-month-caption () {
+   .controls-DateRangeChoose__container-caption();
 }
 
 .controls-DateRangeChoose {
@@ -28,9 +32,20 @@
    padding: @date-range-choose-padding;
    height: auto;
 
+   .controls-DateRangeChoose__border {
+      border: @date-range-choose-border-hover;
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 100%;
+      box-sizing: border-box;
+      display: none;
+   }
+
    .controls-DateRangeChoose__currentValue {
       font-size:  @date-range-choose-current-value-font-size;
       font-weight: @date-range-choose-current-value-font-weight;
+      color: @date-range-choose-current-value-color;
       text-align: center;
       height: @date-range-choose-current-value-height;
       line-height: @date-range-choose-current-value-line-height;
@@ -47,7 +62,9 @@
    .controls-DateRangeChoose__yearWrapper {
       position: relative;
       margin-bottom: @date-range-choose-year-margin-bottom;
+      background-color: @date-range-choose-year-wrapper-bg-color;
       .controls-DateRangeChoose__year {
+         color: @date-range-choose-year-color;
          display: block;
          font-size: @date-range-choose-year-font-size;
          font-weight: @date-range-choose-year-font-weight;
@@ -60,7 +77,7 @@
          &.controls-DateRangeChoose__year-clickable{
             cursor: pointer;
             &:hover {
-               background-color: @date-range-choose-bg-hover-color;
+               background-color: @date-range-choose-year-bg-hover-color;
             }
          }
       }
@@ -71,6 +88,7 @@
          display: inline-block;
          font-size: @date-range-choose-year-prev-next-btns-font-size;
          font-weight: @date-range-choose-year-prev-next-btns-font-weight;
+         color: @date-range-choose-year-prev-next-btns-color;
          position: absolute;
          top: 0;
          text-align: center;
@@ -96,18 +114,34 @@
       }
    }
 
+   // Убираем фон у всех внутренних блоков
+   .controls-DateRangeChoose__selected {
+      .controls-DateRangeChoose__halfYear-caption,
+      .controls-DateRangeChoose__quarter-caption,
+      .controls-DateRangeChoose__month {
+         background-color: transparent !important;
+      }
+   }
+
    .controls-DateRangeChoose__halfYear {
       .controls-DateRangeChoose__container();
 
       &.controls-DateRangeChoose__selected {
          background-color: @date-range-choose-bg-hover-color;
+         //border: @date-range-choose-border-hover;
+         >.controls-DateRangeChoose__border {
+            display: block;
+         }
       }
 
       .controls-DateRangeChoose__halfYear-caption {
          .controls-DateRangeChoose__container-caption();
-         display: none;
-         right: 0;
-         text-align: right;
+         line-height: @date-range-choose-halfyear-caption-line-height;
+         width: @date-range-choose-halfyear-caption-width;
+         right: @date-range-choose-halfyear-caption-right;
+         left: @date-range-choose-halfyear-caption-left;
+         text-align: @date-range-choose-halfyear-caption-text-align;
+         background-color: @date-range-choose-caption-background-color;
       }
 
       .controls-DateRangeChoose__quarter {
@@ -115,15 +149,18 @@
 
          &.controls-DateRangeChoose__selected {
             background-color: @date-range-choose-bg-hover-color;
+            //border: @date-range-choose-border-hover;
+            >.controls-DateRangeChoose__border {
+               display: block;
+            }
          }
 
          .controls-DateRangeChoose__quarter-caption {
             .controls-DateRangeChoose__container-caption();
-            display: none;
-            position: inherit;
-            text-align: center;
+            position: relative;
+            text-align: @date-range-choose-quarter-caption-text-align;
             left: 0;
-            width: auto;
+            background-color: @date-range-choose-caption-background-color;
             &:hover {
                color: @date-range-choose-color;
             }
@@ -132,13 +169,21 @@
          .controls-DateRangeChoose__month {
             cursor: pointer;
             display: none;
-            text-align: center;
+            position: relative;
+            box-sizing: border-box;
             height: @date-range-choose-month-height;
             line-height: @date-range-choose-month-height;
-            position: relative;
-            padding: 0 10px;
+            background-color: @date-range-choose-bg-hover-color;
+            text-align: @date-range-choose-month-month-only-text-align;
+            .controls-DateRangeChoose__month-caption {
+               padding: @date-range-choose-month-padding;
+            }
             &:hover {
                background-color: @date-range-choose-bg-hover-color;
+               //border: @date-range-choose-border-hover;
+               >.controls-DateRangeChoose__border {
+                  display: block;
+               }
             }
             &:active {
                background-color: @date-range-choose-bg-active-color;
@@ -150,17 +195,8 @@
    .controls-DateRangeChoose__checkBox {
       display: block;
       position: absolute;
-      right: 4px;
-      top: 4px;
-   }
-   &.controls-DateRangeChoose__showMonths {
-      .controls-DateRangeChoose__halfYear {
-         .controls-DateRangeChoose__quarter {
-            .controls-DateRangeChoose__quarter-caption {
-               text-align: left;
-            }
-         }
-      }
+      right: @date-range-choose-checkbox-right;
+      top: @date-range-choose-checkbox-top;
    }
 
    &.controls-DateRangeChoose__showCheckboxes {
@@ -186,6 +222,21 @@
    &.controls-DateRangeChoose__showHalfYears,
    &.controls-DateRangeChoose__showQuarters,
    &.controls-DateRangeChoose__showMonths {
+      min-width: @date-range-choose-short-width;
+   }
+
+   &.controls-DateRangeChoose__showHalfYears,
+   &.controls-DateRangeChoose__showQuarters {
+      .controls-DateRangeChoose__halfYear {
+         .controls-DateRangeChoose__quarter {
+            .controls-DateRangeChoose__month {
+               text-align: @date-range-choose-month-text-align;
+            }
+         }
+      }
+   }
+
+   &.controls-DateRangeChoose__showHalfYears.controls-DateRangeChoose__showQuarters.controls-DateRangeChoose__showMonths {
       min-width: @date-range-choose-width;
    }
 
@@ -199,24 +250,60 @@
    &.controls-DateRangeChoose__showQuarters {
       .controls-DateRangeChoose__halfYear {
          .controls-DateRangeChoose__quarter {
+            margin: @date-range-choose-quarter-with-quarters-margin;
             .controls-DateRangeChoose__quarter-caption {
                display: block;
             }
+
+            .controls-DateRangeChoose__month {
+               margin: @date-range-choose-month-margin;
+            }
+         }
+      }
+      &.controls-DateRangeChoose__showHalfYears {
+         .controls-DateRangeChoose__quarter {
+            margin: @date-range-choose-quarter-with-halfyears-margin;
          }
       }
    }
 
    &.controls-DateRangeChoose__showMonths {
+      // Синий цвет у полугодий и кварталов в режиме когда еще показываются месяца
+      .controls-DateRangeChoose__halfYear-caption,
+      .controls-DateRangeChoose__quarter-caption {
+         color: @date-range-choose-halfyear-caption-with-quarters-color;
+      }
+
       .controls-DateRangeChoose__halfYear {
          .controls-DateRangeChoose__quarter {
             .controls-DateRangeChoose__month {
                display: block;
             }
             .controls-DateRangeChoose__quarter-caption {
-               .controls-DateRangeChoose__container-caption()
+               //.controls-DateRangeChoose__container-caption();
+               position: absolute;
+               width: @date-range-choose-quarter-caption-width;
+               line-height: @date-range-choose-quarter-caption-line-height;
+               text-align: @date-range-choose-quarter-caption-with-month-text-align;
             }
             .controls-DateRangeChoose__quarter-caption-text {
                display: none;
+            }
+         }
+      }
+      &.controls-DateRangeChoose__showHalfYears {
+         .controls-DateRangeChoose__halfYear {
+            .controls-DateRangeChoose__quarter {
+               margin: @date-range-choose-quarter-with-halfyears-margin;
+            }
+         }
+      }
+      &.controls-DateRangeChoose__showQuarters {
+         .controls-DateRangeChoose__halfYear {
+            .controls-DateRangeChoose__quarter {
+               .controls-DateRangeChoose__month {
+                  margin: @date-range-choose-month-margin;
+               }
             }
          }
       }
