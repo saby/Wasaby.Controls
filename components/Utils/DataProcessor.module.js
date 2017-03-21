@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "Core/EventBus",
    "Core/IoC",
    "Core/ConsoleLogger",
+   "js!WS.Data/Entity/Record",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer",
    "js!SBIS3.CORE.LoadingIndicator",
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "Core/helpers/transport-helpers",
    "Core/helpers/fast-control-helpers",
    "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
-], function( cExtend, cFunctions, EventBus, IoC, ConsoleLogger,Source, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers) {
+], function( cExtend, cFunctions, EventBus, IoC, ConsoleLogger, Record, Source, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -248,6 +249,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             fields = [],
             titles = [],
             filter,
+            navigation,
             queryParams,
             cfg = {},
             openedPath,
@@ -275,11 +277,15 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                }
             }
          }
-         queryParams =  dataSource.prepareQueryParams(filter, null, this._options.offset , selectedNumRecords || this._options.dataSet.getCount(), false);
+         navigation = selectedNumRecords ? this._prepareNavigation(
+            this._options.offset,
+            selectedNumRecords,
+            false
+         ) : null;
          cfg[eng ? 'MethodName': 'ИмяМетода'] = dataSource.getEndpoint().contract + '.' + dataSource.getBinding().query;
-         cfg[eng ? 'Filter' : 'Фильтр'] = queryParams['Фильтр'];
-         cfg[eng ? 'Sorting' : 'Сортировка'] =  queryParams['Сортировка'];
-         cfg[eng ? 'Pagination' : 'Навигация'] = !selectedNumRecords ? null : queryParams['Навигация'];
+         cfg[eng ? 'Filter' : 'Фильтр'] = filter ? Record.fromObject(filter, dataSource.getAdapter()) : null;
+         cfg[eng ? 'Sorting' : 'Сортировка'] =  null;
+         cfg[eng ? 'Pagination' : 'Навигация'] = navigation ? Record.fromObject(navigation, dataSource.getAdapter()) : null;
          cfg[eng ? 'Fields' : 'Поля'] = fields;
          cfg[eng ? 'Titles' : 'Заголовки'] = titles;
          if (!eng) {
@@ -287,6 +293,22 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          return cfg;
       },
+
+      _prepareNavigation: function(offset, limit, hasMore) {
+         if (
+            offset === 0 &&
+            (limit === undefined || limit === null)
+         ) {
+            return null;
+         }
+
+         return {
+            'Страница': limit > 0 ? Math.floor(offset / limit) : 0,
+            'РазмерСтраницы': limit,
+            'ЕстьЕще': hasMore
+         };
+      },
+
       _prepareSerializer: function(){
          var serializer = new Serializer({
                   columns: this._options.columns,
