@@ -21,7 +21,6 @@ define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
        * @author Герасимов Александр
        * @class SBIS3.CONTROLS.SBISUserConfigStorage
        * @mixes SBIS3.CONTROLS.IStorage
-       * @singleton
        * @public
        */
 

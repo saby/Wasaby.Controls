@@ -19,7 +19,6 @@ define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
        * @author Герасимов Александр
        * @class SBIS3.CONTROLS.SBISClientsGlobalConfigStorage
        * @mixes SBIS3.CONTROLS.IStorage
-       * @singleton
        * @public
        */
 

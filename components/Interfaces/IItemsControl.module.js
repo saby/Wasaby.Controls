@@ -2,6 +2,10 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
 
    'use strict';
 
+   /**
+    * @class SBIS3.CONTROLS.IItemsControl
+    * @author Герасимов А.М.
+    */
    var IItemsControl =/** @lends SBIS3.CONTROLS.IItemsControl.prototype */ {
       /**
        * @event onDrawItems После отрисовки всех элементов коллекции
@@ -235,7 +239,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
          throw new Error('Method must be implemented');
       },
       /**
-       * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
+       * Устанавливает поле элемента коллекции, которое является идентификатором записи
        * @example
        * <pre class="brush:xml">
        *     <option name="idProperty">Идентификатор</option>
@@ -249,7 +253,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
          throw new Error('Method must be implemented');
       },
       /**
-       * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные
+       * Устанавливает поле элемента коллекции, из которого отображать данные
        * @example
        * <pre class="brush:xml">
        *     <option name="displayProperty">Название</option>
