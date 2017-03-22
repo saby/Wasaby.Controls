@@ -115,8 +115,9 @@
 @button-border-width: 2px;
 // Normal default button
 @button-border:                           @button-border-width solid #26b8ff;
+@button-shadow: 0 0 8px rgba(0,0,0,.35);
 @button-line-height: 40px;
-@button-hover-border:                     0 none;
+@button-hover-border:                     @button-border;
 @button-text-color:                       #E4E4E4;
 @button-active-text-color:                #E4E4E4;
 @button-active-border:                    0 none;
@@ -128,9 +129,9 @@
 @button-primary-border:                   @button-border;
 @button-primary-bg:                       #e4e4e4;
 
-@button-primary-hover-border:             0 none;
+@button-primary-hover-border:             @button-border;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                 #FFA34F;
+@button-primary-hover-bg:                 @button-primary-bg;
 
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @button-active-border;
@@ -143,8 +144,11 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font:                         (@font-basic-size * 1.285714285714286) @font-basic-name;
-@button-big-height:                       58px;
+@button-big-border: 2px solid #c1441b;
+@button-big-hover-bg: #c1441b;
+@button-big-font:                         @button-font;
+@button-big-bg: #fd8a6b;
+@button-big-height:                       84px;
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
 @button-big-icon-top-offset:              20px;                             // top offset of 16x16 icon
@@ -161,7 +165,7 @@
 
 @button-big-active-text-color:            @button-active-text-color;
 @button-big-active-border:                @button-active-border;
-
+@button-primary-hover-text-color: #000;
 // Big primary button
 @button-big-primary-hover-text-color:     @button-primary-hover-text-color;
 @button-big-primary-hover-border:         @button-primary-hover-border;

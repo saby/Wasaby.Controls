@@ -40,6 +40,7 @@
       }
    }
 
+
    &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
       background-color: #ffffff;
    }
@@ -98,6 +99,7 @@
       .border-radius(@button-big-border-radius);
       .box-shadow(@button-big-shadow);
       background: @button-big-bg;
+
 
       &.controls-Click__active {
          color: @button-big-active-text-color;
@@ -165,6 +167,7 @@
       background: @button-active-bg;
    }
 
+
    &.ws-disabled {
       cursor: default;
       color: @button-disabled-text-color;
@@ -176,6 +179,7 @@
       }
    }
 }
+
 .ws-is-desktop-platform {
    .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
       &:hover {
@@ -201,6 +205,7 @@
             .box-shadow(@button-big-hover-shadow);
             background: @button-big-hover-bg;
          }
+
 
          &.controls-Button__primary {
             &:hover {
