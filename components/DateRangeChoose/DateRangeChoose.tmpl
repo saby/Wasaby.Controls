@@ -1,18 +1,19 @@
 <div class="controls-DateRangeChoose">
    <ws:if data="{{showMonths || showQuarters || showHalfyears}}">
       <div class="controls-DateRangeChoose__currentValue"></div>
-      <div class="controls-DateRangeChoose__yearWrapper">
-         <span class="controls-DateRangeChoose__year-prev"></span>
-         <!--<div class="controls-DateRangeChoose__yearWrapper2">-->
-            <component data-component="SBIS3.CONTROLS.IconButton" name="HomeButton" class="controls-DateRangeChoose__home controls-DateRangeBigChoose__homeBtn">
-               <option name="icon">sprite:icon-16 icon-Home3 icon-primary</option>
-               <option name="tabindex">0</option>
-            </component>
-            <span class="controls-DateRangeChoose__year {{ showYears === true ? 'controls-DateRangeChoose__year-clickable' }}"></span>
-         <!--</div>-->
-         <span class="controls-DateRangeChoose__year-next"></span>
-      </div>
       <div class="controls-DateRangeChoose__bodyWrapper controls-DateRangeChoose__month-checkMark-hidden">
+         <div class="controls-DateRangeChoose__border"></div>
+         <div class="controls-DateRangeChoose__yearWrapper">
+            <span class="controls-DateRangeChoose__year-prev"></span>
+            <!--<div class="controls-DateRangeChoose__yearWrapper2">-->
+               <component data-component="SBIS3.CONTROLS.IconButton" name="HomeButton" class="controls-DateRangeChoose__home controls-DateRangeBigChoose__homeBtn">
+                  <option name="icon">sprite:icon-16 icon-Home3 icon-primary</option>
+                  <option name="tabindex">0</option>
+               </component>
+               <span class="controls-DateRangeChoose__year {{ showYears === true ? 'controls-DateRangeChoose__year-clickable' }}"></span>
+            <!--</div>-->
+            <span class="controls-DateRangeChoose__year-next"></span>
+         </div>
          <ws:for data="halfYearIndex as halfYear in _months">
             <div class="controls-DateRangeChoose__halfYear" data-range-id="{{ halfYearIndex }}">
                <div class="controls-DateRangeChoose__border"></div>
@@ -44,6 +45,21 @@
             </div>
          </ws:for>
       </div>
+      <ws:if data="{{showUndefined}}">
+         <div  class="controls-DateRangeChoose__extended-period controls-DateRangeChoose__undefined-period">
+            <ws:if data="{{showMonths && (showQuarters || showHalfyears)}}">
+               {{ rk('Период не указан') }}
+            </ws:if>
+            <ws:else>
+               {{ rk('Не указан') }}
+            </ws:else>
+         </div>
+      </ws:if>
+      <ws:if data="{{showCustom}}">
+         <div  class="controls-DateRangeChoose__extended-period controls-DateRangeChoose__custom-period">
+            {{customPeriod.label}}
+         </div>
+      </ws:if>
    </ws:if>
    <ws:if data="{{!showMonths && !showQuarters && !showHalfyears}}">
       <div class="controls-DateRangeChoose__yearsMode-prev"></div>

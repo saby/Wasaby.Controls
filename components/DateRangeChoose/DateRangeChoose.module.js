@@ -17,6 +17,12 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    'use strict';
 
    var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
+      /**
+       * @typedef {Object} customPeriod
+       * @property {String} label Заголовок который будет отбражаться в контроле.
+       * @property {Date} startValue Начальное значение периода
+       * @property {Date} endValue КОнечное значение периода
+       */
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -26,6 +32,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             showQuarters: true,
             showHalfyears: true,
             showYears: true,
+
+            /**
+             * @cfg {Boolean} Отображать кнопку "Период не указан"
+             */
+            showUndefined: false,
+
+            /**
+             * @cfg {customPeriod} Конфигурация кастомной кнопки снизу для выбора периода заданного на прикладной стороне
+             */
+            customPeriod: null,
 
             checkedStart: null,
             checkedEnd: null,
@@ -179,6 +195,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          if (this._options.showYears) {
             container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
          }
+         container.on('mouseleave mouseenter', ['.', this._cssDateRangeChoose.yearButton].join(''), this._onMouseOver.bind(this));
 
          container.find('.controls-DateRangeChoose__year-prev').click(this._onPrevYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
@@ -215,6 +232,52 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
        */
       getYear: function () {
          return this._options.year;
+      },
+
+      _onMouseOver: function (e) {
+         // TODO: перевести все на единую пописку
+         var target = $(event.target),
+            closestCssClass;
+         if (target.hasClass(this._cssDateRangeChoose.yearButton)) {
+            closestCssClass = 'controls-DateRangeChoose';
+         }
+         switch (e.type) {
+            case 'mouseenter':
+               this._addSelectedClassOnMouseEnter(closestCssClass, e);
+               break;
+            case 'mouseleave':
+               this._removeSelectedClassOnMouseLeave(closestCssClass, e);
+               break;
+         }
+      },
+
+      _onClickHandler: function(event) {
+         var target = $(event.target);
+         DateRangeChoose.superclass._onClickHandler.apply(this, arguments);
+         if (this.isEnabled()) {
+            if (target.hasClass('controls-DateRangeChoose__undefined-period')) {
+               this._onUndefinedPeriodClick();
+            } else if (target.hasClass('controls-DateRangeChoose__custom-period')) {
+               this._onCustomPeriodClick();
+            }
+         }
+      },
+
+      _onUndefinedPeriodClick: function () {
+         this.setRange();
+         this._notify('onChoose');
+      },
+
+      _onCustomPeriodClick: function () {
+         this.setRange(this._options.customPeriod.startValue, this._options.customPeriod.endValue);
+         this._notify('onChoose', this._options.customPeriod.startValue, this._options.customPeriod.endValue);
+      },
+
+      _addSelectedClassOnMouseEnter: function (closestCssClass, e) {
+         $(e.target).closest(['.', closestCssClass].join('')).addClass(this._cssDateRangeChoose.selected);
+      },
+      _removeSelectedClassOnMouseLeave: function (closestCssClass, e) {
+         $(e.target).closest(['.', closestCssClass].join('')).removeClass(this._cssDateRangeChoose.selected);
       },
 
       _updateYearView: function () {
