@@ -157,8 +157,11 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
          //В идеале они должны делать это сами и тогда этот код не нужен
          var topParent = this.getTopParent(),
-             floatAreaContainer = topParent.getContainer().closest('.ws-float-area'),
-             floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+            floatArea, floatAreaContainer;
+         if (topParent !== this) {
+            floatAreaContainer = topParent.getContainer().closest('.ws-float-area'),
+            floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+         }
          return floatArea || this;
       },
       /**
