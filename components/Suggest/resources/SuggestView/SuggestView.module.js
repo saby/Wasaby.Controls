@@ -322,7 +322,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
                    self._viewsIterator(function(view, tabOpts) {
                       if(!founded && view.getItems().getCount()) {
                          founded = true;
-                         self.getTabControl().setSelectedKey(tabOpts[self._options.keyField]);
+                         self.getTabControl().setSelectedKey(tabOpts[self._options.idProperty]);
                       }
                    });
                 }

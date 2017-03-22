@@ -25,6 +25,8 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
        */
       setItems: function (items) {
          var tabControl = this.getParent();
+         this._currentAreaId = undefined; //Сбрасываю перед установкой новых данных. Заполнится в setActiveArea, когда будут доступны все итемы
+
          for (var id in this._areaHashMap){
             if (this._areaHashMap.hasOwnProperty(id)){
                this.removeArea(id);
