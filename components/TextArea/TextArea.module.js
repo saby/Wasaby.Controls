@@ -231,6 +231,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
                $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('controls-TextArea__disabled-wrapper-empty');
             }
          }
+         //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
+         var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
+         modifyHeightClasses(this._inputField.get(0), hClasses);
          this._container.addClass('controls-TextArea__heightInit');
       },
 
