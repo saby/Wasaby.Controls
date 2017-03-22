@@ -117,8 +117,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _buildComponentConfig: function(meta) {
-         var config = cMerge({}, this._options.componentOptions);
-         return cMerge(config,  meta.componentOptions)
+         var config = cMerge({}, this._options.componentOptions || {});
+         return cMerge(config,  meta.componentOptions || {});
       },
 
       _createComponent: function(config, meta, mode) {
