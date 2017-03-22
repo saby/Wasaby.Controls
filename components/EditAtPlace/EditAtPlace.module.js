@@ -3,13 +3,14 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.TextBox',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, DateFormatDecorator, dotTplFn, strHelpers) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, strHelpers) {
       'use strict';
 
       var dateDecorator = null;
@@ -48,7 +49,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @author Крайнов Дмитрий Олегович
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
-      var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
+      var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
          _dotTplFn: dotTplFn,
          _aliasForContent: 'editorTpl',
          $protected: {
