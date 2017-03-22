@@ -409,7 +409,6 @@ define('js!SBIS3.CONTROLS.FormController', [
             }
          });
 
-         record.acceptChanges();
          return changedRec;
       },
 
@@ -782,6 +781,7 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          if (this._options.record.isChanged() || self._newRecord) {
             this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
+               self.getRecord().acceptChanges(); //Выпилить вообще весь функционал _getRecordForUpdate, задача с отправкой только измененных полей решается через опцию sbisService
                updateConfig.additionalData.key = key;
                self._newRecord = false;
                return key;
