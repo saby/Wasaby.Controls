@@ -193,6 +193,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
          if (this._jsEvent) {
             if (this._jsEvent.type in {"touchmove":true, "touchend":true} || Constants.browser.firefox) {
                //для touch событий в таргете всегда лежит элемент над которым началось перемещение
+               //тоже самое для firefox
                return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
             } else {
                return $(this._jsEvent.target);
