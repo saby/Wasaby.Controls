@@ -35,13 +35,24 @@
 @text-color:                              @black-color;
 
 @font-basic-name:                         'TensorFont', sans-serif;
+@font-icon-name:                          'cbuc-icons';
 @font-basic-size:                         14px;
 @font-popup-size:                         15px;
 @font-folder-size:                        15px;
 @font-basic-line-height:                  20px;
 
-@closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
-@closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
+@height-basic-min:                        12px;
+@height-basic:                            24px;
+@height-basic-max:                        36px;
+
+@border-width:                            1px;
+@border-style:                            solid;
+
+@enabled-cursor:                          pointer;
+@disabled-cursor:                         default;
+
+@closeButtonImage:                        url('img/areaCloseButton.png') -30px 0;
+@closeButtonImageHover:                   url('img/areaCloseButton.png') -30px -24px;
 @closeButtonWidth:                        36px;
 @closeButtonHeight:                       24px;
 
@@ -504,7 +515,7 @@
 @radio-button-dot-color-disabled:               @radio-button-icon-border-color-disabled;
 @radio-button-dot-margin:                       (@radio-button-icon-width - @radio-button-dot-size) / 2  - @radio-button-icon-border-width;
 
-   // ----------- //
+// ----------- //
 // Radio group //
 // ----------- //
 
@@ -517,52 +528,15 @@
 // Checkbox //
 // -------- //
 
-@check-box-text-margin:                         0 4px;
+@check-box-icon-checked-width:                  18px;
+@check-box-icon-checked-height:                 @check-box-icon-checked-width;
+@check-box-icon-checked-font-size:              @check-box-icon-checked-width;
+@check-box-icon-checked-margin:                 0 1px 6px 5px;
 
-@check-box-text-color:                          @black-color;
-@check-box-hover-text-color:                    @check-box-text-color;
+@check-box-icon-null-width:                     6px;
+@check-box-icon-null-height:                    @check-box-icon-null-width;
 
-@check-box-checked-text-color:                  @check-box-text-color;
-@check-box-checked-hover-text-color:            @check-box-hover-text-color;
-
-@check-box-third-state-text-color:              @check-box-text-color;
-@check-box-third-state-hover-text-color:        @check-box-hover-text-color;
-
-@check-box-disabled-text-color:                 @gray-ccc-color;
-@check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
-
-@check-box-icon-width:                          16px;
-@check-box-icon-height:                         16px;
-@check-box-icon-line-height:                    19px;
-
-@check-box-icon-spritesheet:                    'img/CheckBox.png';
-
-@check-box-icon-border:                         none;
-@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 1px;
-@check-box-icon-bg-pathFilter:                  url(@check-box-icon-spritesheet) 0 2px;
-
-@check-box-icon-hover-border:                   @check-box-icon-border;
-@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 17px;
-
-@check-box-icon-checked-border:                 @check-box-icon-border;
-@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
-@check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
-
-@check-box-icon-checked-hover-border:           @check-box-icon-border;
-@check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
-
-@check-box-icon-third-state-border:             @check-box-icon-border;
-@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) 0 33px;
-
-@check-box-icon-third-state-hover-border:       @check-box-icon-border;
-@check-box-icon-third-state-hover-bg:           @check-box-icon-third-state-bg;
-
-@check-box-icon-disabled-border:                @check-box-icon-border;
-@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 16px 1px;
-@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 16px 49px;
-@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 16px 33px;
-
-
+@check-box-caption-padding:                     3px 0;
 
 // -------------- //
 // Checkbox group //
@@ -2057,6 +2031,11 @@
 @DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    4px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
+
+@DropdownList-icon-spritesheet:                          'img/CheckBox.png';
+@DropdownList-icon-bg-pathFilter:                        url(@DropdownList-icon-spritesheet) 0 2px;
+@DropdownList-icon-checked-bg-pathFilter:                url(@DropdownList-icon-spritesheet) 0 50px;
+
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
 @controls-ProgressBar-empty-bg:                   #F3F3F3;
