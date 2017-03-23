@@ -1078,7 +1078,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
              // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
              if (constants.browser.isMobilePlatform) {
-                constants.$body.addClass.addClass('controls-ScrollContainer-overflow-scrolling-auto');
+                $('.controls-ScrollContainer').addClass('controls-ScrollContainer-overflow-scrolling-auto');
              }
 
              FieldLink.superclass.showPicker.apply(this, arguments);

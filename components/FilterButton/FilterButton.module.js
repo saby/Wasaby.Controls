@@ -402,6 +402,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
                       /* Разрушаем панель при закрытии,
                          надо для: сбрасывания валидации, удаления ненужных значений из контролов */
                       if(self._picker) {
+                         if(constants.browser.isMobilePlatform) {
+                            constants.$body.removeClass('controls-ScrollContainer-overflow-scrolling-auto');
+                         }
                          self._picker.destroy();
                          self._picker = null;
                       }
