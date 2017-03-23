@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
     *
     * SBIS3.CONTROLS.DateRangeSlider
     * @class SBIS3.CONTROLS.DateRangeSlider
-    * @extends $ws.proto.DateRangeSliderBase
+    * @extends SBIS3.CONTROLS.DateRangeSliderBase
     * @mixes SBIS3.CONTROLS.DateRangeChoosePickerMixin
     * @author Миронов Александр Юрьевич
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider

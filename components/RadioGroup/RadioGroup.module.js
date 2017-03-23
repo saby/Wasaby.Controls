@@ -63,7 +63,6 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
         *     // radioGroup - экземпляр класса SBIS3.CONTROLS.RadioGroup
         *     radioGroup.setSelectedKey(null);
         * </pre>
-        * @default false
         */
       /**
        * @typedef {Object} GroupItems
