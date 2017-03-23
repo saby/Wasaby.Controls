@@ -1,208 +1,83 @@
-.controls-FloatArea {
-   &.controls__filterButton__picker {
-      overflow-y: hidden !important;
-      background: @controls-filterButton-picker-bg;
-      border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
-      .border-radius(@controls-filterButton-picker-border-radius);
-      .box-shadow(@menu-shadow);
-      margin-top: -1px;
+.controls__filterButton__picker {
+   overflow-y: hidden !important;
+   background: @controls-filterButton-picker-bg;
+   border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
+   .border-radius(@controls-filterButton-picker-border-radius);
+   .box-shadow(@menu-shadow);
+   margin-top: -1px;
 
-      .controls__filterButton__area-scrollContainer {
-         height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
-      }
-
-      .controls__filterButton__area {
-         height: 100%;
-      }
-
-      .controls__filterButton__area-header {
-         padding: @controls-filterButton-area-header-padding;
-         height: @controls-filterButton-area-header-height;
-         min-width: @controls-filterButton-area-header-width;
-
-         .controls__filterButton__area-text {
-            font-size: @controls-filterButton-area-text-size;
-            font-weight: @controls-filterButton-area-text-weight;
-            color: @controls-filterButton-area-text-color;
-            line-height: @controls-filterButton-line-height;
-            margin: @controls-filterButton-area-text-margin;
-         }
-
-         .controls__filter-button__clear-filter {
-            margin-right: @controls-filterButton-clear-margin-right;
-         }
-
-         .controls__filter-button__apply-filter {
-            float: right;
-         }
-      }
-
-      .controls-filterButton__secondary-title {
-         font-size: @controls-filterButton-title-fontSize;
-         color: @controls-filterButton-title-text-color;
-         display: inline-block;
-         height: 24px;
-         line-height: 24px;
-         cursor: default;
-      }
-
-      .blue-color {
-         &.controls-Link {
-            &.controls-FieldLink__Link {
-               color: @darkcyan-color;
-            }
-         }
-      }
-      .blue-dark-color {
-         &.controls-DropdownList {
-            &.ws-enabled {
-               .controls-DropdownList__selectedItem {
-                  .controls-DropdownList__textWrapper {
-                        color: @blue-dark-color;
-                  }
-               }
-            }
-         }
-
-         &.controls-Link {
-            &.ws-enabled {
-               color: @blue-dark-color;
-               text-decoration: none;
-            }
-         }
-      }
-
-      .controls__filterButton__filterText {
-         height: @controls-filterButton-button-height;
-         line-height: @controls-filterButton-button-height;
-         display: inline-block;
-         cursor: default;
-
-         .controls__filterButton__FilterText__caption {
-            line-height: @controls-filterButton-button-height;
-            display: inline-block;
-         }
-         .controls__filterButton__FilterText__reset {
-            cursor: pointer;
-            position: relative;
-            top: 2px;
-            left: -5px;
-         }
-      }
-
-      .controls__filterButton__area-footer {
-         margin: 0 12px 12px 12px;
-
-         .controls-filterButton__footerAreas-maxHeight {
-            max-height: @controls-filterButton-history-maxHeight-height;
-         }
-
-         .controls-filterButton__footerAreas-wrapper {
-            display: block;
-            overflow: hidden;
-            margin: 6px 0 0 14px;
-         }
-
-         .controls-filterButton__additionalFilterParams-area {
-            margin-bottom: 6px;
-         }
-
-         .controls-filterButton__history-area {
-
-            .controls-filterButton__footerAreas-wrapper {
-               margin-left: -4px;
-            }
-
-            .controls-filterButton__historyView {
-               min-height: 0;
-
-               .controls-ItemsToolbar {
-                  background-color: transparent;
-                  box-shadow: none;
-                  right: @controls-filterButton-history-actions-right;
-                  left: @controls-filterButton-history-actions-left;
-                  bottom: @controls-filterButton-history-actions-bottom;
-
-                  .icon-size {
-                     .icon-16();
-                  }
-               }
-
-               .controls-filterButton__historyView-item {
-                  cursor: @link-cursor;
-                  min-height: @controls-filterButton-history-item-min-height;
-
-                  .controls-filterButton__historyView-pin {
-                     float: @controls-filterButton-history-pin-float;
-                     position: @controls-filterButton-history-pin-position;
-                     top: @controls-filterButton-history-pin-top;
-                  }
-
-                  .controls-filterButton__historyView-titleContainer {
-                     position: @controls-filterButton-history-titleCont-position;
-                     right: @controls-filterButton-history-titleCont-right;
-                     left: @controls-filterButton-history-titleCont-left;
-                     top: 4px;
-
-                     .controls-filterButton__historyView-item-title {
-                        display: @controls-filterButton-history-title-display;
-                        .text-overflow();
-                        max-height: @controls-filterButton-history-title-height;
-                        vertical-align: @controls-filterButton-history-title-verAlign;
-                        color: @controls-filterButton-history-title-color;
-                        width: @controls-filterButton-history-title-width;
-                     }
-                  }
-                  &.controls-ListView__hoveredItem {
-                     background-color: transparent !important;
-
-                     .controls-filterButton__historyView-item-title {
-                        text-decoration: underline;
-                     }
-                  }
-               }
-            }
-         }
-      }
-      .controls__filterButton__filterSelect{
-         .controls-FilterSelect__item{
-            display: inline-block;
-            color: #313E78;
-            > div {
-               display: inline-block;
-            }
-         }
-         :last-child {
-            .controls-FilterSelect__item-separator{
-               display: none;
-            }
-         }
-      }
-
+   .controls__filterButton__area-scrollContainer {
+      height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
    }
 
-   .controls__filterButton__area-content {
-      padding: @controls-filterButton-area-content-margin;
-      overflow: hidden;
+   .blue-color {
+      &.controls-Link {
+         &.controls-FieldLink__Link {
+            color: @darkcyan-color;
+         }
+      }
+   }
+   .blue-dark-color {
+      &.controls-DropdownList {
+         &.ws-enabled {
+            .controls-DropdownList__selectedItem {
+               .controls-DropdownList__textWrapper {
+                  color: @blue-dark-color;
+               }
+            }
+         }
+      }
+
+      &.controls-Link {
+         &.ws-enabled {
+            color: @blue-dark-color;
+            text-decoration: none;
+         }
+      }
+   }
+
+   .controls__filterButton__filterText {
+      height: @controls-filterButton-button-height;
+      line-height: @controls-filterButton-button-height;
+      display: inline-block;
+      cursor: default;
+
+      .controls__filterButton__FilterText__caption {
+         line-height: @controls-filterButton-button-height;
+         display: inline-block;
+      }
+      .controls__filterButton__FilterText__reset {
+         cursor: pointer;
+         position: relative;
+         top: 2px;
+         left: -5px;
+      }
+   }
+
+   .controls__filterButton__filterSelect {
+      .controls-FilterSelect__item{
+         display: inline-block;
+         color: #313E78;
+         > div {
+            display: inline-block;
+         }
+      }
+      :last-child {
+         .controls-FilterSelect__item-separator{
+            display: none;
+         }
+      }
+   }
+
+   /* ХАК для мобилки, чтобы корректно работал скролл */
+   &.controls__filterButton-overflow-scroll-fix .controls-ScrollContainer__content {
+      -webkit-overflow-scrolling: touch!important;
    }
 }
 
 .controls__filterButton {
    height: @controls-filterButton-height;
    display: inline-block;
-
-   .controls__filterButton-button {
-      width: @controls-filterButton-button-width;
-      height: @controls-filterButton-button-height;
-      margin: @controls-filterButton-button-margin;
-      display: inline-block;
-      cursor: pointer;
-      float: right;
-
-      &:active {
-         color: @blue-dark-color !important;
-      }
-   }
 
    &.ws-disabled {
       .controls__filterButton-button {
@@ -221,93 +96,223 @@
          }
       }
    }
+}
 
-   .controls__filterButton__filterLine {
-      height: @controls-filterButton-button-height;
-      overflow: hidden;
-      margin: 8px 0 8px 0;
-      vertical-align: @controls-filterLine-align;
-      text-align: @controls-filterLine-text-align;
+.controls__filterButton__area {
+   height: 100%;
+}
 
-      &.ws-disabled {
-         .controls__filterButton__filterLine-items {
-            color: @link-disabled-text-color;
-            cursor: default;
+.controls-filterButton__secondary-title {
+   font-size: @controls-filterButton-title-fontSize;
+   color: @controls-filterButton-title-text-color;
+   display: inline-block;
+   height: 24px;
+   line-height: 24px;
+   cursor: default;
+}
 
-            .controls__filterButton__filterLine-arrow {
-               color: @icon-color-disabled !important;
-               cursor: default;
-            }
+.controls__filterButton__area-footer {
+   margin: 0 12px 12px 12px;
+}
 
-            &:hover {
-               color: @link-disabled-text-color;
-               .controls__filterButton__filterLine-text {
-                  text-decoration: none;
-               }
-            }
-         }
-      }
+.controls-filterButton__history-area {
 
-      .controls__filterButton__filterLine-table {
-         display: @controls-filterLine-wrapper-display;
-         height: @controls-filterLine-wrapper-height;
-         float: left;
+   .controls-filterButton__historyView {
+      min-height: 0;
 
-         .controls__filterButton__filterLine-table-row {
-            display: @controls-filterLine-line-display;
-         }
-      }
-      .controls__filterButton__filterLine-copyCross {
-         position: relative;
-         display: inline-block;
-         float: right;
-         top: @controls-filterLine-copyCross-top;
-         margin-left: @controls-filterLine-copyCross-margin;
-         background-color: @white-color;
-         .box-shadow(@controls-filterLine-copyCross-shadow);
+      .controls-ItemsToolbar {
+         background-color: transparent;
+         box-shadow: none;
+         right: @controls-filterButton-history-actions-right;
+         left: @controls-filterButton-history-actions-left;
+         bottom: @controls-filterButton-history-actions-bottom;
 
-         span {
-            color: @controls-filterLine-link-color
+         .icon-size {
+            .icon-16();
          }
       }
    }
+}
 
-   .controls__filterButton__filterLine-items {
-      .text-overflow();
-      display: @controls-filterLine-items-display;
-      text-align: right;
-      vertical-align: middle;
+.controls-filterButton__historyView-item {
+   cursor: @link-cursor;
+   min-height: @controls-filterButton-history-item-min-height;
 
-      cursor: pointer;
-      color: @controls-filterLine-link-color;
-      text-decoration: none;
-      line-height: @controls-filterLine-items-line-height;
-      padding: @controls-filterLine-items-padding;
-      box-sizing: border-box;
-   }
+   &.controls-ListView__hoveredItem {
+      background-color: transparent !important;
 
-   .controls__filterButton__filterLine-arrow {
-      height: @controls-filterLine-arrow-height;
-      vertical-align: middle;
-      margin-right: @controls-filterButton-button-arrow-margin;
-   }
-
-   .controls__filterButton__filterLine-items:hover {
-      color: @hover-color;
-      .controls__filterButton__filterLine-arrow {
-         color: @hover-color !important;
-      }
-      .controls__filterButton__filterLine-text {
+      .controls-filterButton__historyView-item-title {
          text-decoration: underline;
       }
    }
+}
 
-   .controls__filterButton__filterLine-cross {
-      display: @controls-filterLine-items-display;
-      cursor: pointer;
-      vertical-align: middle;
-      position: relative;
+.controls-filterButton__historyView-pin {
+   float: @controls-filterButton-history-pin-float;
+   position: @controls-filterButton-history-pin-position;
+   top: @controls-filterButton-history-pin-top;
+}
+
+.controls-filterButton__footerAreas-maxHeight {
+   max-height: @controls-filterButton-history-maxHeight-height;
+}
+
+.controls-filterButton__footerAreas-wrapper {
+   display: block;
+   overflow: hidden;
+   margin: 6px 0 0 14px;
+}
+
+.controls-filterButton__additionalFilterParams-area {
+   margin-bottom: 6px;
+}
+
+.controls-filterButton__footerAreas-wrapper {
+   margin-left: -4px;
+}
+
+.controls-filterButton__historyView-titleContainer {
+   position: @controls-filterButton-history-titleCont-position;
+   right: @controls-filterButton-history-titleCont-right;
+   left: @controls-filterButton-history-titleCont-left;
+   top: 4px;
+}
+
+.controls-filterButton__historyView-item-title {
+   display: @controls-filterButton-history-title-display;
+   .text-overflow();
+   max-height: @controls-filterButton-history-title-height;
+   vertical-align: @controls-filterButton-history-title-verAlign;
+   color: @controls-filterButton-history-title-color;
+   width: @controls-filterButton-history-title-width;
+}
+
+.controls__filterButton__area-header {
+   padding: @controls-filterButton-area-header-padding;
+   height: @controls-filterButton-area-header-height;
+   min-width: @controls-filterButton-area-header-width;
+}
+
+.controls__filter-button__clear-filter {
+   margin-right: @controls-filterButton-clear-margin-right;
+}
+
+.controls__filter-button__apply-filter {
+   float: right;
+}
+
+.controls__filterButton__area-content {
+   padding: @controls-filterButton-area-content-margin;
+   overflow: hidden;
+}
+
+.controls__filterButton__area-text {
+   font-size: @controls-filterButton-area-text-size;
+   font-weight: @controls-filterButton-area-text-weight;
+   color: @controls-filterButton-area-text-color;
+   line-height: @controls-filterButton-line-height;
+   margin: @controls-filterButton-area-text-margin;
+}
+
+.controls__filterButton-button {
+   width: @controls-filterButton-button-width;
+   height: @controls-filterButton-button-height;
+   margin: @controls-filterButton-button-margin;
+   display: inline-block;
+   cursor: pointer;
+   float: right;
+
+   &:active {
+      color: @blue-dark-color !important;
    }
+}
+
+.controls__filterButton__filterLine {
+   height: @controls-filterButton-button-height;
+   overflow: hidden;
+   margin: 8px 0 8px 0;
+   vertical-align: @controls-filterLine-align;
+   text-align: @controls-filterLine-text-align;
+
+   &.ws-disabled {
+      .controls__filterButton__filterLine-items {
+         color: @link-disabled-text-color;
+         cursor: default;
+
+         .controls__filterButton__filterLine-arrow {
+            color: @icon-color-disabled !important;
+            cursor: default;
+         }
+
+         &:hover {
+            color: @link-disabled-text-color;
+            .controls__filterButton__filterLine-text {
+               text-decoration: none;
+            }
+         }
+      }
+   }
+}
+
+.controls__filterButton__filterLine-table {
+   display: @controls-filterLine-wrapper-display;
+   height: @controls-filterLine-wrapper-height;
+   float: left;
+}
+
+.controls__filterButton__filterLine-table-row {
+   display: @controls-filterLine-line-display;
+}
+
+.controls__filterButton__filterLine-copyCross {
+   position: relative;
+   display: inline-block;
+   float: right;
+   top: @controls-filterLine-copyCross-top;
+   margin-left: @controls-filterLine-copyCross-margin;
+   background-color: @white-color;
+   .box-shadow(@controls-filterLine-copyCross-shadow);
+
+   span {
+      color: @controls-filterLine-link-color
+   }
+}
+
+.controls__filterButton__filterLine-items {
+   .text-overflow();
+   display: @controls-filterLine-items-display;
+   text-align: right;
+   vertical-align: middle;
+
+   cursor: pointer;
+   color: @controls-filterLine-link-color;
+   text-decoration: none;
+   line-height: @controls-filterLine-items-line-height;
+   padding: @controls-filterLine-items-padding;
+   box-sizing: border-box;
+}
+
+.controls__filterButton__filterLine-arrow {
+   height: @controls-filterLine-arrow-height;
+   vertical-align: middle;
+   margin-right: @controls-filterButton-button-arrow-margin;
+}
+
+.controls__filterButton__filterLine-items:hover {
+   color: @hover-color;
+   .controls__filterButton__filterLine-arrow {
+      color: @hover-color !important;
+   }
+   .controls__filterButton__filterLine-text {
+      text-decoration: underline;
+   }
+}
+
+.controls__filterButton__filterLine-cross {
+   display: @controls-filterLine-items-display;
+   cursor: pointer;
+   vertical-align: middle;
+   position: relative;
 }
 
 .ws-is-desktop-platform {
@@ -321,16 +326,16 @@
       }
    }
    .controls__filterButton__picker {
-      .controls__filterButton__area-header { 
-      .blue-color {
-         &.controls-Link {
-            &.ws-enabled {
-               &:hover {
-                  color: @darkcyan-color;
+      .controls__filterButton__area-header {
+         .blue-color {
+            &.controls-Link {
+               &.ws-enabled {
+                  &:hover {
+                     color: @darkcyan-color;
+                  }
                }
             }
          }
-      }
 
          &.controls-DropdownList {
             &.ws-enabled {

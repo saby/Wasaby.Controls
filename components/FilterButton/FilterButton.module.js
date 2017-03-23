@@ -412,10 +412,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
                          updatePickerContext();
                       }
 
-                      if(!self._picker.isActive()) {
-                         self._picker.setActive(true);
+                      if(!this.isActive()) {
+                         this.setActive(true);
                       }
 
+                      if(constants.browser.isMobilePlatform) {
+                         constants.$body.addClass('controls-ScrollContainer-overflow-scrolling-auto');
+                         this.getContainer().addClass('controls__filterButton-overflow-scroll-fix');
+                      }
                       firstTime = false;
                    },
 
