@@ -187,15 +187,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             return config;
          },
 
-         _makeMoveStrategy: function () {
-            return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty,
-               listView: this._getListView()
-            });
-         },
          _getComponentOptions: function() {
             var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
                listView = this._getListView(),
