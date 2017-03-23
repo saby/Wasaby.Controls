@@ -1604,6 +1604,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               this._reviveItems();
 	               break;
 
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                  }, this);
+                  break;
+
 	            case IBindCollection.ACTION_MOVE:
                    //TODO: код понадобится для частичной перерисовки после перемещения
 	               /*for (i = 0; i < newItems.length; i++) {
