@@ -204,6 +204,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
          });
 
+         this._inputField.on('drop', function(){
+            window.setTimeout(function(){
+               // в момент события в поле ввода нет перенесенных данных,
+               // поэтому вставка выполняется с задержкой, чтобы позволить браузеру обработать перенесенные данные (картинка, верстка)
+               self._setTextByKeyboard(self._getInputValue());
+            }, 100);
+         });
+
          this._inputField.change(function(){
             var newText = $(this).val();
             if (newText != self._options.text) {
