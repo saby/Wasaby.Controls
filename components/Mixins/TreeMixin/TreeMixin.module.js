@@ -192,7 +192,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       restoreFilterAndRunEventRaising(projection, projectionFilter, analyzeChanges);
 
       cfg._searchFolders = {};
-      cfg.hasNodes = false;
       if (cfg.hierarchyViewMode) {
          records = searchProcessing(projection, cfg);
       }
@@ -1065,7 +1064,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _afterAddItems: function() {
          // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
-         if (this._options.hasNodes && this._isSearchMode()) {
+         if (this._isSearchMode()) {
             this.redraw();
          }
       },
