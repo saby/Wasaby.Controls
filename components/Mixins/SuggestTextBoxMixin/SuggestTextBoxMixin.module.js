@@ -147,6 +147,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             this._changedByKeyboard = true;
          },
          _observableControlFocusHandler: function(){
+            if (this._options.historyId && !this._historyController){
+               this._historyController = new HistoryList({
+                  historyId: this._options.historyId
+               });
+            }
             if (this._needShowHistory()){
                this._showHistory();
             }
@@ -234,13 +239,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                } else {
                   this.subscribeOnceTo(list, 'onDrawItems', togglePicker);
                }
-            }
-         },
-         _initList: function(){
-            if (this._options.historyId){
-               this._historyController = new HistoryList({
-                  historyId: this._options.historyId
-               });
             }
          },
          _resetSearch: function() {
