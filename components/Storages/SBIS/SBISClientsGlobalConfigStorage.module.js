@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
    [
       'js!SBIS3.CONTROLS.SBISStorageAdapter',
-      'Core/ClientsGlobalConfig'
+      'Core/ClientsGlobalConfig',
+      'js!SBIS3.CONTROLS.IStorage'
    ],
 
    function(SBISStorageAdapter, ClientsGlobalConfig) {

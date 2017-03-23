@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
    [
       'js!SBIS3.CONTROLS.SBISStorageAdapter',
-      'Core/UserConfig'
+      'Core/UserConfig',
+      'js!SBIS3.CONTROLS.IStorage'
    ],
 
    function(SBISStorageAdapter, UserConfig) {
