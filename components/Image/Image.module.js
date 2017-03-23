@@ -465,8 +465,8 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _onEndLoad: function(event, response) {
                var imageInstance = this.getParent();
-               if (response instanceof Error) {
-                  var error = response;
+               var error = response instanceof Error? response: response.error;
+               if (error) {
                   fcHelpers.toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
                   // игнорируем HTTPError офлайна, если они обработаны

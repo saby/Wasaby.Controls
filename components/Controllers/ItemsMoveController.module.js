@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
       _prepareItemsActions: function(itemsActions) {
          var
             self = this;
-         itemsActions.push(
+         itemsActions.unshift(
             {
                name: 'moveDown',
                tooltip: 'Переместить вниз',
