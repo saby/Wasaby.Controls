@@ -51,17 +51,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
            }
        });
 
-   /**
-    * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
-    * @class SBIS3.CONTROLS.DateRangeBig.DateRangePicker
-    * @extends SBIS3.CONTROLS.ListView
-    * @author Миронов Александр Юрьевич
-    * @control
-    * @mixes SBIS3.CONTROLS.RangeMixin
-    */
-
    var monthSource = new MonthSource();
 
+   /**
+     * SBIS3.CONTROLS.DateRangeBig.DateRangePicker
+     * @class SBIS3.CONTROLS.DateRangeBig.DateRangePicker
+     * @extends SBIS3.CONTROLS.ListView
+     * @author Миронов Александр Юрьевич
+     * @control
+     * @mixes SBIS3.CONTROLS.RangeMixin
+     */
    var Component = ListView.extend([RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBig.DateRangePicker.prototype */{
       $protected: {
          _options: {
