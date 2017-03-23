@@ -205,6 +205,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
          return {
             corner: 'tl',
             bodyBounds: true,
+            locationStrategy: 'bodyBounds',
             horizontalAlign: {
                side: 'left',
                offset: -133
@@ -213,7 +214,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
                side: 'top',
                offset: -11
             }
-         }
+         };
       },
 
       _addDefaultValidator: function() {
