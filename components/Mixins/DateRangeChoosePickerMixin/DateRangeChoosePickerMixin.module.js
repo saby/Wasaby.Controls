@@ -13,6 +13,12 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
     */
 
    var DateRangeChoosePickerMixin = /**@lends SBIS3.CONTROLS.DateRangeChoosePickerMixin.prototype  */{
+      /**
+       * @typedef {Object} customPeriod
+       * @property {String} label Заголовок который будет отбражаться в контроле.
+       * @property {Date} startValue Начальное значение периода
+       * @property {Date} endValue КОнечное значение периода
+       */
       $protected: {
          _options: {
             /**
@@ -31,6 +37,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
              * @cfg {Boolean} Отобразить возможность выбора по годам. По умолчанию true.
              */
             showYears: true,
+
+            /**
+             * @cfg {Boolean} Отображать кнопку "Период не указан"
+             */
+            showUndefined: false,
+
+            /**
+             * @cfg {customPeriod} Конфигурация кастомной кнопки снизу для выбора периода заданного на прикладной стороне
+             */
+            customPeriod: null,
 
             /**
              * @cfg {Date|String} Дата, начиная с которой месяца будут отмечены зеленой галочкой.
@@ -133,6 +149,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                showQuarters: this._options.showQuarters,
                showHalfyears: this._options.showHalfyears,
                showYears: this._options.showYears,
+               showUndefined: this._options.showUndefined,
+               customPeriod: this._options.customPeriod,
                checkedStart: this._options.checkedStart,
                checkedEnd: this._options.checkedEnd,
                checkedIconCssClass: this._options.checkedIconCssClass,

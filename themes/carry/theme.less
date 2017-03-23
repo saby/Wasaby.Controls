@@ -4,6 +4,7 @@
 @carry-big-height:                        60px;
 @text-box-height-carryFont:               42px;
 @float-area-top-offset:                   10px;
+@browser-path-height:                     32px;
 
 .icon-size {
    font-size: @icon-size !important;
@@ -394,6 +395,20 @@
   .date-range-apply-button .ws-button-image{
     left: 0px!important;
   }
+}
+// стилизуем хлебные крошки и кнопку назад для Розницы, т.к. Engine не поддерживает тематизации
+.engine-Browser__path-wrapper.engine-Browser__path-wrapper-in-head {
+   .engine-Browser__path {
+      height: @browser-path-height;
+      max-height: @browser-path-height;
+      .controls-Browser__backButton {
+         max-height: @browser-path-height;
+      }
+   }
+   .controls-Browser__breadCrumbs {
+      max-height: @browser-path-height;
+      top: -7px;
+   }
 }
 .controls-BreadCrumbs {
    .controls-BreadCrumbs__itemsContainer{

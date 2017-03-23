@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             var selectAction = linkedObject.getItemsActions().getItemsInstances()[SELECT_ACTION_NAME];
 
             /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
-            if (hoveredItem.container) {
+            if (hoveredItem.container && selectAction) {
                if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
                   if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
                      selectAction.show();

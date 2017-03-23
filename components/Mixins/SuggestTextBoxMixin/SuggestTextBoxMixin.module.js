@@ -65,26 +65,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
          /* Если передали параметр поиска, то поиск производим через ComponentBinder */
          if(this._options.searchParam) {
-            CommandDispatcher.declareCommand(this, 'changeSearchParam', this.setSearchParamName);
-
-            this.subscribe('onSearch', function(e, text, force) {
-               if(!force) {
-                  this._showLoadingIndicator();
-               }
-            });
-
-            this.once('onSearch', function () {
-               this._searchController = new SearchController({
-                  view: this.getList(),
-                  searchForm: this,
-                  searchParamName: this._options.searchParam,
-                  doNotRespondOnReset: true,
-                  searchFormWithSuggest: true
-               });
-               this._searchController.bindSearch();
-            });
-
-            this.subscribe('onReset', this._resetSearch.bind(this));
+            this._initializeSearchController();
          }
       },
 
@@ -130,10 +111,33 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
        * @param {String} paramName
        */
       setSearchParamName: function(paramName) {
+         this._options.searchParam = paramName;
          if(this._searchController) {
             this._searchController.setSearchParamName(paramName);
+         } else {
+            this._initializeSearchController();
          }
-         this._options.searchParam = paramName;
+      },
+
+      _initializeSearchController: function() {
+         this.subscribe('onSearch', function(e, text, force) {
+            if(!force) {
+               this._showLoadingIndicator();
+            }
+         });
+
+         this.once('onSearch', function () {
+            this._searchController = new SearchController({
+               view: this.getList(),
+               searchForm: this,
+               searchParamName: this._options.searchParam,
+               doNotRespondOnReset: true,
+               searchFormWithSuggest: true
+            });
+            this._searchController.bindSearch();
+         });
+
+         this.subscribe('onReset', this._resetSearch.bind(this));
       },
 
       _getLoadingContainer : function() {
