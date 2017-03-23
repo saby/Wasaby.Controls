@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       _isBranch: function(item) {
          var linkedObject = this._getLinkedObject();
 
-         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+         if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') && item) {
             return item.get(linkedObject.getNodeProperty());
          }
          return false;
