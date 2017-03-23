@@ -119,9 +119,9 @@
 @button-line-height: 40px;
 @button-hover-border:                     @button-border;
 @button-text-color:                       #E4E4E4;
-@button-active-text-color:                #E4E4E4;
-@button-active-border:                    0 none;
-@button-active-bg:                        lighten(@primary-color, 10%);
+@button-active-text-color:                @button-text-color;
+@button-active-border:                    @button-border;
+@button-active-bg:                        #1b2a3b;
 @button-hover-bg: #212e3d;
 @button-bg: #2d3f53;
 // Normal primary button
@@ -136,7 +136,7 @@
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @button-active-border;
 @button-primary-active-shadow:            @button-active-shadow;
-@button-primary-active-bg:                @button-active-bg;
+@button-primary-active-bg:                #c9c9c9;
 
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
@@ -145,7 +145,7 @@
 
 // Big button
 @button-big-border: 2px solid #c1441b;
-@button-big-hover-bg: #c1441b;
+@button-big-hover-bg: #ff7033;
 @button-big-font:                         @button-font;
 @button-big-bg: #fd8a6b;
 @button-big-height:                       84px;
@@ -162,9 +162,9 @@
 
 @button-big-hover-text-color:             @button-hover-text-color;
 @button-big-hover-border:                 @button-hover-border;
-
+@button-big-active-bg: #c1441b;
 @button-big-active-text-color:            @button-active-text-color;
-@button-big-active-border:                @button-active-border;
+@button-big-active-border:                @button-big-border;
 @button-primary-hover-text-color: #000;
 // Big primary button
 @button-big-primary-hover-text-color:     @button-primary-hover-text-color;
@@ -295,6 +295,8 @@
 // -------- //
 // Switcher //
 // -------- //
+@switcher-width: 100px;
+@switcher-height: 50px;
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-btn-bg-color:                         #202835;
@@ -482,7 +484,7 @@
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
 
-@text-box-field-text-color:               #666666;
+@text-box-field-text-color:               #314559;
 
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
@@ -500,7 +502,7 @@
 @text-box-border-width: 2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
-@text-box-hover-border-color:             @gray-dark-color;
+@text-box-hover-border-color:             #354b62;
 
 @text-box-disabled-border-bottom:         1px solid #333333;
 @text-box-focus-border-width: 2px;
