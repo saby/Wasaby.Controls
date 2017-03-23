@@ -282,8 +282,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
          //TODO: Скрывать кнопки просто через модификатор нельзя, иначе обход по tab будет учитывать невидимые кнопки.
          //Пока что добавим на кнопки ws-hidden, чтобы они не участвовали в обходе.
-         $('.controls-operationsPanel__actionType-mass', this._container).toggleClass('ws-hidden', !!idArray.length);
-         $('.controls-operationsPanel__actionType-selection', this._container).toggleClass('ws-hidden', !idArray.length);
+
+         $('.controls-operationsPanel__actionType-mass', this._container).filter(function(index, elem){
+            return !!elem.wsControl.isVisible();
+         }).toggleClass('ws-hidden', !!idArray.length);
+
+         $('.controls-operationsPanel__actionType-selection', this._container).filter(function(index, elem){
+            return !!elem.wsControl.isVisible();
+         }).toggleClass('ws-hidden', !idArray.length);
 
          if (this._itemsDrawn) {
             this._onSelectedItemsChange(idArray);
