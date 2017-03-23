@@ -397,14 +397,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 context: context,
                 className: 'controls__filterButton__picker',
                 template: this._getAreaTemplate(),
+                activateAfterShow: true,
                 handlers: {
                    onClose: function() {
                       /* Разрушаем панель при закрытии,
                          надо для: сбрасывания валидации, удаления ненужных значений из контролов */
                       if(self._picker) {
-                         if(constants.browser.isMobilePlatform) {
-                            constants.$body.removeClass('controls-ScrollContainer-overflow-scrolling-auto');
-                         }
                          self._picker.destroy();
                          self._picker = null;
                       }
@@ -415,14 +413,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
                          updatePickerContext();
                       }
 
-                      if(!this.isActive()) {
-                         this.setActive(true);
-                      }
-
-                      if(constants.browser.isMobilePlatform) {
-                         constants.$body.addClass('controls-ScrollContainer-overflow-scrolling-auto');
-                         this.getContainer().addClass('controls__filterButton-overflow-scroll-fix');
-                      }
                       firstTime = false;
                    },
 

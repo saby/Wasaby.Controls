@@ -11,8 +11,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    "Core/helpers/helpers",
    "Core/helpers/dom&controls-helpers",
-   "Core/detection"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
+   "Core/detection",
+   "Core/constants"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -1108,6 +1109,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                top: '-10000px'
             });
             this._subscribeTargetMove();
+
+            /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
+            if(constants.browser.isMobilePlatform) {
+               var topWindow = cWindowManager.getMaxZWindow();
+
+               constants.$body.addClass('controls-ScrollContainer-overflow-scrolling-auto');
+               /* У верхнего по стеку окна убираем класс, чтобы оно не портило сролл у нового окна */
+               if(topWindow) {
+                  topWindow.getContainer().removeClass('controls-Popup__touchScroll-fix');
+               }
+               this.getContainer().addClass('controls-Popup__touchScroll-fix');
+            }
+
             ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (!this._zIndex) {
@@ -1185,7 +1199,23 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                       if (this._parentFloatArea) {
                          this._parentFloatArea.setHasPopupInside(false);
                       }
+
                    }.bind(this));
+                   /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
+                   if(constants.browser.isMobilePlatform) {
+                      var topWindow = cWindowManager.getMaxZWindow(),
+                          isPopUp = coreHelpers.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
+
+                      /* При скрытии popUp'a:
+                         если ниже по стеку тоже popup вешаем на него класс, который фиксит скролл
+                         если нет, то убираем класс с body, фиксить скролл не надо */
+                      if(isPopUp) {
+                         topWindow.getContainer().addClass('controls-Popup__touchScroll-fix');
+                      } else {
+                         constants.$body.removeClass('controls-ScrollContainer-overflow-scrolling-auto');
+                      }
+                      self.getContainer().removeClass('controls-Popup__touchScroll-fix');
+                   }
                 };
             if (result instanceof Deferred) {
                result.addCallback(function (res) {
