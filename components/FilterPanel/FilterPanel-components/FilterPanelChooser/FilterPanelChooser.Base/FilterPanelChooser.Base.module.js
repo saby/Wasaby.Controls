@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.Base', [
      *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.List} - редактор в виде списка {@link SBIS3.CONTROLS.ListView};</li>
      *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.DictionaryList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} с возможность выбора записей из справочника;</li>
      *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.FavoritesList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} с возможность выбора записей из справочника и добавлением записей в избранное;</li>
+     *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.DetailsList} - редактор в виде списка {@link SBIS3.CONTROLS.ListView} для детализации;</li>
      *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink} - редактор в виде поля связи {@link SBIS3.CONTROLS.FieldLink};</li>
      *     <li>{@link SBIS3.CONTROLS.FilterPanelChooser.RadioGroup} - редактор в виде группы радиокнопок {@link SBIS3.CONTROLS.RadioGroup}.</li>
      * </ul>
