@@ -158,6 +158,15 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          },
          _onListItemSelectNotify: function(item){
             if (this._historyController) {
+               //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
+               //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
+               //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
+               //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
+               var idProp = this.getList().getItems().getIdProperty(),
+                   index = this._historyController.getIndexByValue(idProp, item.get(idProp));
+               if(index !== -1) {
+                  this._historyController.removeAt(index);
+               }
                this._historyController.prepend(item.getRawData());
             }
          }
