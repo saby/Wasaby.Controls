@@ -3539,10 +3539,14 @@ define('js!SBIS3.CONTROLS.ListView',
                this._hideItemsToolbar();
                if (this._checkHorisontalDragndrop(target)) {
                   this._horisontalDragNDrop = true;
-                  this.getContainer().hasClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().addClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
                } else {
                   this._horisontalDragNDrop = false;
-                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
+                  this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().addClass('controls-ListView__verticalDragNDrop');
+               } else {
+
                }
                return true;
             }
