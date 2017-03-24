@@ -27,11 +27,11 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             tplArgs = {},
             res = [];
 
-         if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
-            items = [opts._preRenderValues.selectedItem];
+         if(opts.preRenderValues.selectedItem && cInstance.instanceOfModule(opts.preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
+            items = [opts.preRenderValues.selectedItem];
             itemsCount = items.length;
-         } else if (opts._preRenderValues.selectedItems) {
-            items = opts._preRenderValues.selectedItems;
+         } else if (opts.preRenderValues.selectedItems) {
+            items = opts.preRenderValues.selectedItems;
             itemsCount = items.getCount();
          }
 
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                _defaultItemContentTemplate: defaultItemContentTemplate,
                _defaultItemTemplate: defaultItemTemplate,
                _preRenderFunction: itemTemplateRender,
-               _preRenderValues: {}
+               preRenderValues: {}
             },
             _parentFieldLink: undefined
          },
