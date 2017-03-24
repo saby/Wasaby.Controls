@@ -218,17 +218,32 @@
 }
 
 .dragdropBody {
-  .controls-DragNDrop__insertBefore{
-    &, > td {
-      border-top: @drag-and-drop-border;
-    }
-  }
-  .controls-DragNDrop__insertAfter {
-    &, > td {
-      border-bottom: @drag-and-drop-border;
-    }
+   .controls-ListView__verticalDragNDrop {
+      .controls-DragNDrop__insertBefore {
+         &, > td {
+            border-top: @drag-and-drop-border;
+         }
+      }
+      .controls-DragNDrop__insertAfter {
+         &, > td {
+            border-bottom: @drag-and-drop-border;
+         }
+      }
+   }
+  .controls-ListView__horisontalDragNDrop {
+     .controls-DragNDrop__insertBefore{
+        &, > td {
+           border-left: @drag-and-drop-border;
+        }
+     }
+     .controls-DragNDrop__insertAfter {
+        &, > td, &.controls-ListView__hoveredItem {
+           border-right: @drag-and-drop-border;
+        }
+     }
   }
 }
+
 
 .controls-ListView__results{
   background: #FFF;

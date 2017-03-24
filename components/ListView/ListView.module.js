@@ -120,6 +120,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__horisontalDragNDrop Если список горизонтальный или распологается в несколько колонок.
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -810,7 +811,8 @@ define('js!SBIS3.CONTROLS.ListView',
             _touchSupport: false,
             _editByTouch: false,
             _dragInitHandler: undefined, //метод который инициализирует dragNdrop
-            _inScrollContainerControl: false
+            _inScrollContainerControl: false,
+            _horisontalDragNDrop: false
          },
 
          $constructor: function () {
@@ -3536,6 +3538,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   })
                );
                this._hideItemsToolbar();
+               this.getContainer().addClass('controls-ListView__horisontalDragNDrop')
+               if (this.getContainer().hasClass('controls-ListView__horisontalDragNDrop')) {
+                  this._horisontalDragNDrop = true;
+                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
+               } else {
+                  this.getContainer().addClass('controls-ListView__verticalDragNDrop');
+               }
                return true;
             }
             return false;
@@ -3571,10 +3580,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getDragTarget: function(dragObject) {
             var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
-               item;
+               item,
+               projection = this._getItemsProjection();
 
             if (target.length > 0) {
-               item = this._getItemsProjection().getByHash(target.data('hash'));
+               item = projection.getByHash(target.data('hash'));
+            } else if (this._horisontalDragNDrop) {
+               item = projection.at(projection.getCount()-1);
             }
 
             return item ? item.getContents() : undefined;
@@ -3617,10 +3629,14 @@ define('js!SBIS3.CONTROLS.ListView',
             domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
          },
          _getDirectionOrderChange: function(e, target) {
-            return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height());
+            if (this._horisontalDragNDrop) {
+               return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+            } else {
+               return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+            }
          },
-         _getOrderPosition: function(offset, metric) {
-            return offset < 10 ? DRAG_META_INSERT.before : offset > metric - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+         _getOrderPosition: function(offset, metric, orderOffset) {
+            return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
          },
 
          _createAvatar: function(dragObject) {
