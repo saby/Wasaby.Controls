@@ -120,7 +120,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
-       * @cssModifier controls-ListView__horisontalDragNDrop Если список горизонтальный или распологается в несколько колонок.
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -3538,18 +3537,24 @@ define('js!SBIS3.CONTROLS.ListView',
                   })
                );
                this._hideItemsToolbar();
-               this.getContainer().addClass('controls-ListView__horisontalDragNDrop')
-               if (this.getContainer().hasClass('controls-ListView__horisontalDragNDrop')) {
+               if (this._checkHorisontalDragndrop(target)) {
                   this._horisontalDragNDrop = true;
-                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
+                  this.getContainer().hasClass('controls-ListView__horisontalDragNDrop');
                } else {
-                  this.getContainer().addClass('controls-ListView__verticalDragNDrop');
+                  this._horisontalDragNDrop = false;
+                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
                }
                return true;
             }
             return false;
          },
+         _checkHorisontalDragndrop: function (target) {
+            var listWidth =  this.getContainer().width(),
+               targetWidth = target.width();
+            //если ширина элемента в половину меньше ширины списка то считаем что это плитка.
+            return targetWidth < listWidth/2;
 
+         },
          _onDragHandler: function(dragObject, e) {
             this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {

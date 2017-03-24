@@ -327,8 +327,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
              .toggleClass('controls-CompositeView-list', mode == 'list')
              .toggleClass('controls-CompositeView-tile', mode == 'tile')
              .toggleClass('controls-CompositeView-tile__static', mode == 'tile' && tileMode == TILE_MODE.STATIC)
-             .toggleClass('controls-CompositeView-tile__dynamic', mode == 'tile' && tileMode == TILE_MODE.DYNAMIC)
-             .toggleClass('controls-ListView__horisontalDragNDrop', mode == 'tile');
+             .toggleClass('controls-CompositeView-tile__dynamic', mode == 'tile' && tileMode == TILE_MODE.DYNAMIC);
          if (this._options.viewMode == 'table') {
             $('.controls-DataGridView__table', this._container.get(0)).removeClass('ws-hidden');
             $('.controls-CompositeView__itemsContainer', this._container.get(0)).addClass('ws-hidden');
