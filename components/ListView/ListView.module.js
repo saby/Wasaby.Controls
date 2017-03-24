@@ -818,6 +818,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _editByTouch: false,
             _dragInitHandler: undefined, //метод который инициализирует dragNdrop
             _inScrollContainerControl: false,
+            _allowMouseMoveEvent: true,
             _horisontalDragNDrop: false
          },
 
@@ -903,7 +904,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            var originalEvent = e.originalEvent,
+            var self = this,
+                originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix';
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
@@ -918,12 +920,21 @@ define('js!SBIS3.CONTROLS.ListView',
                (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
             );
 
+
             switch (e.type) {
                case 'mousemove':
-                  this._mouseMoveHandler(e);
+                  self._allowMouseMoveEvent && this._mouseMoveHandler(e);
                   break;
                case 'touchstart':
                   this._touchstartHandler(e);
+                  // На windows 10 планшетах между touch-событиями прилетают события мыши
+                  // поэтому на секунду игнорируем mouseMove событие т.к. произошло касание и мыши быть не может
+                  if(self._allowMouseMoveEvent && !constants.browser.isMobileIOS) {
+                     self._allowMouseMoveEvent = false;
+                     setTimeout(function () {
+                        self._allowMouseMoveEvent = true;
+                     }, 1000);
+                  }
                   break;
                case 'swipe':
                   this._swipeHandler(e);
