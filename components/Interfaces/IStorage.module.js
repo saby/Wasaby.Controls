@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.IStorage', [], function() {
     * Позволяет добавлять, изменять или удалять сохраненные элементы данных.
     * @public
     * @mixin SBIS3.CONTROLS.IStorage
-    * @type {{getItem: Function, setItem: Function, removeItem: Function}}
     * @author Герасимов Александр
     */
    var IStorage =/** @lends SBIS3.CONTROLS.IStorage.prototype */ {

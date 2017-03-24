@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.Slider',
           * @public
           * @control
           *
-          * @mixes SBIS3.CONTROLS.DragNDropMixinNew
+          * @mixes SBIS3.CONTROLS.DragNDropMixin
           * @mixes SBIS3.CONTROLS.RangeMixin
           *
           * @author Борисов Петр Сергеевич
