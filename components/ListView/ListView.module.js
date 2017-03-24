@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/dom&controls-helpers',
    'js!SBIS3.CONTROLS.CursorListNavigation',
    'js!WS.Data/Source/SbisService',
+   'Core/detection',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -66,7 +67,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection) {
 
      'use strict';
 
@@ -130,6 +131,12 @@ define('js!SBIS3.CONTROLS.ListView',
        * @control
        * @public
        * @category Lists
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ListView'>
+       * </component>
+       *
+       *
        */
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
@@ -1013,6 +1020,10 @@ define('js!SBIS3.CONTROLS.ListView',
                // и смещение зависит от положения скрола и от зума. Это не ошибка расчета, а баг(фича?) ipad.
                // Смещены элементы со стилем right: 0 и bottom: 0. На небольшом зуме этого смещения нет.
                right = window.innerWidth - this.getContainer().get(0).getBoundingClientRect().right;
+               // Edge выставляет right начиная от скроллбара, а все остальные браузеры (внезапно) от края страницы 
+               if (cDetection.isIE12) {
+                  right -= 12;
+               }
                this._scrollPager.getContainer().css('right', right);
             }
          },

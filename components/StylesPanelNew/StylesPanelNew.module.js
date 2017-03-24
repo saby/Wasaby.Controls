@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    /**
     * Панель выбора цвета с возможностью выбора цвета, начертания шрифта, установки предвыбранных стилей и сохранения истории
     *
-    * @class SBIS3.CONTROLS.StylesPanel
+    * @class SBIS3.CONTROLS.StylesPanelNew
     * @extends SBIS3.CORE.CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
     * @public
     */
 
-   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
+   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.StylesPanelNew.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
