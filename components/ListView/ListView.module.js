@@ -3667,7 +3667,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this.getMover().move(models, target.getModel(), position).addCallback(function(){
+                     this._getMover().move(models, target.getModel(), position).addCallback(function(){
                         this.removeItemsSelectionAll();
                      }.bind(this));
                   } else {
@@ -3680,7 +3680,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this.getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
             }
@@ -3738,7 +3738,7 @@ define('js!SBIS3.CONTROLS.ListView',
                selectedItems = selectedItems.toArray();
             }
 
-            this.getMover().move(selectedItems, target).addCallback(function(res){
+            this._getMover().move(selectedItems, target).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3749,14 +3749,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordDown: function(record) {
-            this.getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
+            this._getMover().moveRecordDown(arguments[2]||record);//поддерживаем старую сигнатуру
          },
          /**
           * Переместить на одну запись вверх.
           * @param {WS.Data/Entity/Record} record Запись которую надо переместить
           */
          moveRecordUp: function(record) {
-            this.getMover().moveRecordUp(arguments[2]||record);
+            this._getMover().moveRecordUp(arguments[2]||record);
          },
          /**
           * Возвращает стратегию перемещения
@@ -3801,7 +3801,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Возвращает перемещатор
           * @private
           */
-         getMover: function() {
+         _getMover: function() {
             if (!this._mover) {
                this._mover = new Mover({
                   moveStrategy: this.getMoveStrategy(),
@@ -3841,7 +3841,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this.getMover().move(movedItems, target, position).addCallback(function(){
+            return this._getMover().move(movedItems, target, position).addCallback(function(){
                //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
                //и рассинхронизурутся записи в items и selectItems 💩
                this.setSelectedKeys(this.getSelectedKeys());

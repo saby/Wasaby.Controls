@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
             if (!this._mover) {
                var listView = this._getListView();
                if (listView) {
-                  this._mover = listView.getMover();
+                  this._mover = listView;
                } else {
                   this._mover = new Mover({
                      moveStrategy: this.getMoveStrategy(),
