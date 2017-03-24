@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @extends SBIS3.CONTROLS.NumberTextBox
      * @public
      * @control
-     *
+     * @author Крайнов Дмитрий Олегович
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {

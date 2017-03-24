@@ -1130,7 +1130,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
-               if (!self._mouseIsPressed) {
+               //upd: в костроме форматная вставка, не нужно вырезать лишние теги
+               if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
                   e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE

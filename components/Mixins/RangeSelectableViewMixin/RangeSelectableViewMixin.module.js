@@ -12,16 +12,16 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
             // TODO: переименовать в selectionMode {'range', 'single'}. см SBIS3.CONTROLS.DateRangeBigChoosePickerMixin.
             // Возможно стоит сделать синонимы для констатнт {'range'->'date', 'single'->'period'} для контролов работы с датами
             /**
-             * Режим выбора диапазона
-             * @cfg {Boolean} Если true, то включена возможность выделения диапазона,
-             * иначе можно выделить только 1 элемент.
+             * @cfg {Boolean} Определяет режим выбора диапазона
+             * * true Включена возможность выделения диапазона,
+             * * false Можно выделить только 1 элемент.
              */
             rangeselect: true,
 
             /**
-             * @cfg {Boolean} Если true, то диапазон обновляется по мере выделения, если false, то он обновляется после
-             * окончания выбора.
-             * @default false
+             * @cfg {Boolean} Определяет режим обновления выделяемого диапазона
+             * * true Диапазон обновляется по мере выделения.
+             * * false Диапазон обновляется после окончания выбора.
              */
             liveSelection: false
          },

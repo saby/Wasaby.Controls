@@ -23,6 +23,11 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
        * @property {Date} startValue Начальное значение периода
        * @property {Date} endValue КОнечное значение периода
        */
+      /**
+       * @typedef {[Date, Date]} Period
+       * Массив содержащий даты начала и конца периода
+       */
+
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -62,21 +67,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
              * @cfg {String} Подсказка которая будет отображаться у не выделенных иконок. По умолчанию тултипа нет.
              */
             uncheckedIconTitle: null,
-
-            /**
-             * @typedef {Object} Icon
-             * @property {String} iconClass Класс который будет установлен у контейнера иконки.
-             * @property {String} title Заголовок отображаемы в всплывающей подсказке.
-             *
-             * @remark
-             * { iconClass: 'icon-Yes icon-done',
-             *   title: 'Период отчетности закрыт'
-             *   }
-             */
-            /**
-             * @typedef {[Date, Date]} Period
-             * Массив содержащий даты начала и конеца периода
-             */
 
             /**
              * @cfg {Function} устанавливает функцию которая будет вызвана во время перерисовки компонента.
@@ -403,6 +393,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          icons.addCallback(this._setIcons.bind(this));
       },
 
+      /**
+       * @typedef {Object} Icon
+       * @property {String} iconClass Класс который будет установлен у контейнера иконки.
+       * @property {String} title Заголовок, отображаемый в всплывающей подсказке.
+       *
+       * @remark
+       * { iconClass: 'icon-Yes icon-done',
+       *   title: 'Период отчетности закрыт'
+       *   }
+       */
       /**
        * Устанавливает иконки отбражаемые напротив периодов.
        * @param icons {Icon[]}

@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.CommandsSeparator', [
     * </component>
     */
 
-   var CommandsSeparator = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
+   var CommandsSeparator = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CommandsSeparator.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
       }

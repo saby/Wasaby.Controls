@@ -397,6 +397,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 context: context,
                 className: 'controls__filterButton__picker',
                 template: this._getAreaTemplate(),
+                activateAfterShow: true,
                 handlers: {
                    onClose: function() {
                       /* Разрушаем панель при закрытии,
@@ -410,10 +411,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    onShow: function() {
                       if (!firstTime) {
                          updatePickerContext();
-                      }
-
-                      if(!self._picker.isActive()) {
-                         self._picker.setActive(true);
                       }
 
                       firstTime = false;
