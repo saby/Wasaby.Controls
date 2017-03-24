@@ -258,6 +258,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                delete listFilter[this._options.searchParam];
                this.setListFilter(listFilter, true);
             }
+         },
+         destroy: function() {
+            if (this._historyController) {
+               this._historyController.destroy();
+               this._historyController = null;
+            }
          }
       },
       around: {
