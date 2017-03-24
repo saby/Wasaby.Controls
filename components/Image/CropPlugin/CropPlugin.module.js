@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.Image.CropPlugin',
        * @class SBIS3.CONTROLS.Image.CropPlugin
        * @extends $ws.proto.Abstract
        * @author Крайнов Дмитрий Олегович
-       * @control
        * @public
        */
       var CropPlugin = cAbstract.extend(/** @lends SBIS3.CONTROLS.Image.CropPlugin.prototype */{
