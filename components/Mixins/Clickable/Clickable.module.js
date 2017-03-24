@@ -35,7 +35,17 @@ define('js!SBIS3.CONTROLS.Clickable', [
             /**
              * @cfg {Array} Аргументы, которые будут переданы при вызове команды
              */
-            commandArgs: []
+            commandArgs: [],
+            /**
+             * @cfg {Boolean} Разрешить множественные клики
+             * Если опция включена, то все клики будут вызывать событие,
+             * если опция отключена, то появляется задержка между кликами (определяется браузером)
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="allowMultipleClick">true</option>
+             * </pre>
+             */
+            allowMultipleClick: true
          },
          _keysWeHandle: [
             constants.key.enter,
@@ -108,8 +118,10 @@ define('js!SBIS3.CONTROLS.Clickable', [
                if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
-               this._clickHandler(e);
-               this._notifyOnActivated(e);
+               if(this._options.allowMultipleClick || (!this._options.allowMultipleClick && e.originalEvent.detail === 1)) {
+                  this._clickHandler(e);
+                  this._notifyOnActivated(e);
+               }
             }
             e.stopImmediatePropagation();
          }
