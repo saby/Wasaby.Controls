@@ -61,7 +61,7 @@
       border: @toggle-header-border;
    }
 
-  &, &.controls-Checked__checked {
+  &, &.controls-Checked__checked:not(.ws-disabled) {
     .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
     border: @toggle-header-border;
     background: @toggle-header-background;
@@ -126,7 +126,6 @@
     font: @toggle-header-font;
     color: @toggle-header-hover-color;
   }
-
   .controls-Button:not(.ws-disabled).ws-toggleHeader {
     &, &.controls-Checked__checked {
       &:hover {
@@ -153,7 +152,7 @@
 }
 
 .controls-Button.ws-toggleHeader {
-  &, &.controls-Checked__checked {
+  &, &.controls-Checked__checked:not(.ws-disabled) {
     &, &.controls-Click__active {
       border: @toggle-header-border;
       background: @toggle-header-background;
