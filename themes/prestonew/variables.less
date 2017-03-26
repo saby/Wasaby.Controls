@@ -263,7 +263,7 @@
 @check-box-text-margin:                         0 8px;
 
 @check-box-text-color:                          @text-color;
-@check-box-hover-text-color:                    @primary-color;
+@check-box-hover-text-color:                    #e4e4e4;
 
 @check-box-disabled-text-color:                 @gray-color;
 
@@ -676,7 +676,7 @@
 // --------- //
 // MonthView //
 // --------- //
-
+@data-grid-cell-hover-bg: #1b2530;
 @month-view-font:                                 inherit;
 @month-view-width:                                215px;
 @month-view-padding:                              8px 0 0;
@@ -824,14 +824,14 @@
 @list-view-actions-item-height:                 16px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
-@list-view-actions-active-bg:                   #F3F3F3;
+
 
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
-
+@list-view-actions-active-bg: @data-grid-bg;
 @list-view-actions-menu-icon-width:             16px;
 
 
@@ -882,22 +882,22 @@
 // Data grid //
 // --------- //
 
-@data-grid-bg:                                  @text-box-focus-bg;
+@data-grid-bg:                                  #1d2834;
 
-@data-grid-row-hover-bg:                        @default-color;
+@data-grid-row-hover-bg:                        #1b2530;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
-@data-grid-row-hover-cell-text-color:           @black-color;
+@data-grid-row-hover-cell-text-color:           #e4e4e4;
 
 @data-grid-header-cell-height:                  32px;
 @data-grid-cell-line-height:                    21px;
 @data-grid-header-cell-padding:                 0 10px;
 @data-grid-header-cell-padding-side:            10px;
-@data-grid-header-cell-font-size:               12px;
-
+@data-grid-header-cell-font-size:               24px;
+@data-grid-row-selected-cell-text-color: #e4e4e4;
 @data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
 
-@data-grid-cell-height:                         @data-grid-header-cell-height;
+@data-grid-cell-height:                         50px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
 @data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
 @data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
