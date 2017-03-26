@@ -1978,6 +1978,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   items: this.getItems(),
+                  idProperty: this._options.idProperty,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
                   itemsProjection: this._getItemsProjection(),

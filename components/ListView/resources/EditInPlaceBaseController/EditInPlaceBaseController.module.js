@@ -226,6 +226,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getNextTarget: function(currentTarget, editNextRow) {
                //Ищем с помощью nextAll и prevAll т.к. между строками таблицы могут находиться блоки группировки, футеры папок и т.д. и
                //при помощи next и prev при указанном селекторе мы бы ни чего не нашли, хотя нужные строки могли быть.
+               currentTarget = this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + currentTarget.attr('data-id') + '"]:not(".controls-editInPlace")');
                return currentTarget[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').eq(0);
             },
             _getCurrentTarget: function() {
@@ -244,8 +245,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             edit: function (model, withoutActivateFirstControl) {
-               var self = this;
+               var
+                  self = this,
+                  reReadModel;
                return this.endEdit(true).addCallback(function() {
+                  //TODO: Постепенно нужно отказываться от начала редактирования по моделе, нужно редактировать по ключу(хэшу).
+                  //С помощью этого мы избавимся от пласта ошибок, связанных с отрывом модели от рекордсета после reload.
+                  //Пока что добавим дополнительную проверку на то, что запись привязана к recordSet'у, и перечитаем её если нужно.
+                  if (model.getState() === Record.RecordState.DETACHED) {
+                     reReadModel = self._options.items.getRecordById(model.get(self._options.idProperty));
+                     model = reReadModel || model;
+                  }
                   return self._prepareEdit(model).addCallback(function(preparedRecord) {
                      var editingRecord;
                      if (preparedRecord) {
