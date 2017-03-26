@@ -246,8 +246,14 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       _setHoveredStyles: function(item) {
          if (item && !item.hasClass('controls-CompositeView__hoverStylesInit')) {
             this._calculateHoveredStyles(item);
+            item.toggleClass('controls-CompositeView__item-withoutItemsAction', !this._hasItemsActions());
             item.addClass('controls-CompositeView__hoverStylesInit');
          }
+      },
+
+      _hasItemsActions: function() {
+         var itemsActions = this.getItemsActions();
+         return itemsActions && itemsActions.hasVisibleActions();
       },
 
       _calculateHoveredStyles: function(item) {
