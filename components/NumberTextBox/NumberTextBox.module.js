@@ -125,6 +125,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * </pre>
              * @see decimals
              * @see hideEmptyDecimals
+             * @see setOnlyInteger
              */
             onlyInteger: false,
             /**
@@ -352,6 +353,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if (typeof integers === 'number') {
             this._options.integers = integers;
          }
+      },
+      /**
+       * Установить возможность ввода только целых чисел
+       * @param {Boolean} onlyInteger Ввод только целых чисел
+       * @see onlyInteger
+       */
+      setOnlyInteger: function(onlyInteger){
+         this._options.onlyInteger = Boolean(onlyInteger);
       },
 
       _updateCompatPlaceholderVisibility: function() {
