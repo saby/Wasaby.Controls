@@ -520,8 +520,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (preparedModel instanceof Model) {
                   return Deferred.success(preparedModel);
                } else {
-                  return this._options.dataSource.create(modelOptions).addBoth(function(model) {
+                  return this._options.dataSource.create(modelOptions).addCallback(function(model) {
                      return model;
+                  }).addErrback(function (error) {
+                     fcHelpers.alert(error);
+                     return error;
                   });
                }
             },
