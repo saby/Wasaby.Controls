@@ -21,41 +21,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        * @extends SBIS3.CORE.CompoundControl
        */
 
-      function itemTemplateRender(opts) {
-         var items,
-            itemsCount,
-            tplArgs = {},
-            res = [];
-
-         if(opts.preRenderValues.selectedItem && cInstance.instanceOfModule(opts.preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
-            items = [opts.preRenderValues.selectedItem];
-            itemsCount = items.length;
-         } else if (opts.preRenderValues.selectedItems) {
-            items = opts.preRenderValues.selectedItems;
-            itemsCount = items.getCount();
-         }
-
-         if(itemsCount) {
-            tplArgs = opts._buildTplArgs(opts);
-            tplArgs.className = 'controls-ListView__item';
-            tplArgs.itemTemplate = opts.itemTemplate;
-            items.forEach(function(item) {
-               tplArgs.item = item;
-               res.push(tplArgs.defaultItemTpl(tplArgs));
-            });
-         }
-
-         return res.join('');
-      }
-
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                _defaultItemContentTemplate: defaultItemContentTemplate,
                _defaultItemTemplate: defaultItemTemplate,
-               _preRenderFunction: itemTemplateRender,
-               preRenderValues: {}
+               _canServerRender: true
             },
             _parentFieldLink: undefined
          },

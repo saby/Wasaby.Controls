@@ -22,6 +22,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
+       "js!WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -63,7 +64,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /********************************************/
         ITextValue,
         TemplateUtil,
-        ToSourceModel
+        ToSourceModel,
+        List
     ) {
 
        'use strict';
@@ -733,7 +735,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
-                 selectedKeysLength;
+                 selectedKeysLength, items;
 
              cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
              selectedKeysLength = cfg.selectedKeys.length;
@@ -748,6 +750,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 if(selectedKeysLength === 1 || !selectedKeysLength) {
                    classesToAdd.push(classes.SELECTED_SINGLE);
                 }
+             }
+
+             if(cfg.selectedItem && cInstance.instanceOfModule(cfg.selectedItem, 'WS.Data/Entity/Model')) {
+                items = new List({items: [cfg.selectedItem]});
+             } else if (cfg.selectedItems) {
+                items = cfg.selectedItems;
+             }
+
+             if(items) {
+                cfg.preRenderItems = items;
              }
 
              /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */

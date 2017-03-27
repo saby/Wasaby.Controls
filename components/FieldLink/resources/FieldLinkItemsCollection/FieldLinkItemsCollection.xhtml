@@ -1,3 +1,5 @@
 <div class="controls-FieldLinkItemsCollection">
-    {{=it._preRenderFunction(it)}}
+    {{?it._serverRender}}
+        {{=it._itemsTemplate({records : it._records, tplData : it._itemData})}}
+    {{?}}
 </div>
