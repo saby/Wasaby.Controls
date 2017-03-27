@@ -199,7 +199,23 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * мы можем скроллить область на 1px. Поэтому мы избавимся от нативного скролла.
                 */
                if (cDetection.IEVersion >= 10) {
-                  this._content.css('overflow-y', 'auto');
+                  this._scrollbar.subscribe('onBeforeVisibilityChange', function(event, visible) {
+                     var styleContent;
+                     if (visible) {
+                        //Добавим нативный скролл, если он нужен и скроем его при помощи отрицательного margin.
+                        styleContent = {
+                           overflowY: 'scroll',
+                           marginRight: -this._getBrowserScrollbarWidth()
+                        };
+                     } else {
+                        //Избавляемся от нативного скролла и убираем margin, который скрывал скролл.
+                        styleContent = {
+                           overflowY: 'hidden',
+                           marginRight: 0
+                        };
+                     }
+                     this._content.css(styleContent);
+                  }.bind(this));
                }
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
