@@ -3728,7 +3728,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      linkedObject: this,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
-                     moveStrategy: this.getMoveStrategy()
+                     moveStrategy: this.getMoveStrategy()//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   }),
                   items = this.getItems(),
                   movedItems;
@@ -3829,7 +3829,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getMover: function() {
             if (!this._mover) {
                this._mover = new Mover({
-                  moveStrategy: this.getMoveStrategy(),
+                  moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   items: this.getItems(),
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,

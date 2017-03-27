@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                   this._mover = listView;
                } else {
                   this._mover = new Mover({
-                     moveStrategy: this.getMoveStrategy(),
+                     moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
                      items: this._getItems(),
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
