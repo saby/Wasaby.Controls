@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.List.ListMixin',
       'js!SBIS3.CONTROLS.ListView.Mover',
-      'js!WS.Data/Di',
-      'Core/helpers/collection-helpers'
+      'js!WS.Data/Di'
    ],
-   function (ActionBase, ListMixin, Mover, Di, colHelpers) {
+   function (ActionBase, ListMixin, Mover, Di) {
       'use strict';
       /**
        * Базовый класс перемещения элементов в списке
@@ -99,7 +98,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                      dataSource: this.getDataSource()
                   });
                }
-               colHelpers.forEach(['onBeginMove', 'onEndMove'], function (eventName) {
+               ['onBeginMove', 'onEndMove'].forEach(function (eventName) {
                   this._mover.subscribe(eventName, function (e) {
                      e.setResult(this._notify(eventName));
                      return e;

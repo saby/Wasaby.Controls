@@ -3565,7 +3565,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
                   items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
-               colHelpers.forEach(items, function (item) {
+               items.forEach(function (item) {
                   var projItem = this._getItemsProjection().getItemBySourceItem(item);
                   source.push(this._makeDragEntity({
                      owner: this,
@@ -3739,7 +3739,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   movedItems;
                if (idArray) {
                   movedItems = [];
-                  colHelpers.forEach(idArray, function (item, i) {
+                  idArray.forEach(function (item, i) {
                      if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
                         movedItems.push(items.getRecordById(item));
                      } else {
@@ -3842,7 +3842,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   invertOrder: this._options.invertOrder,
                   dataSource: this.getDataSource()
                });
-               colHelpers.forEach(['onBeginMove', 'onEndMove'], function (eventName) {
+               ['onBeginMove', 'onEndMove'].forEach(function (eventName) {
                   this._mover.subscribe(eventName, function (e) {
                      e.setResult(this._notify(eventName));
                      return e;
