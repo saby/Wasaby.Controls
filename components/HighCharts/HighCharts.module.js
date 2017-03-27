@@ -41,7 +41,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
    /**
     * Диаграмма HighCharts. Демо-примеры диаграмм вы можете найти на сайте <a href='http://www.highcharts.com/demo'>www.highcharts.com</a>.
     * @class SBIS3.CONTROLS.HighCharts
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @control
     * @public
     *
@@ -58,7 +58,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
        * @event onBeforeReload перед перерисовкой диаграммы
        * может использоваться для задания специфических опций при отрисовке диаграммы, например, когда надо сделать подпись в зависимости от условий
        * <wiTag group='Управление">
-       * @param {Object} eventObject описание в классе $ws.proto.Abstract
+       * @param {Object} eventObject описание в классе SBIS3.CORE.Abstract
        * @param {Object} highChartOptions Объект опций который будет передан в HighChart
        * @param {Object} объект HighChart
        * @param {Array} данные по которым отрисуется диаграмма

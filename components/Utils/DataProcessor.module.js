@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param object
        * @param methodName
        * @param cfg
-       * @returns {$ws.proto.Deferred}
+       * @returns {Core/Deferred}
        */
       exportFileTransfer: function(object, methodName, cfg){
          var self = this,

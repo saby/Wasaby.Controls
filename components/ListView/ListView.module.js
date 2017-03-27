@@ -470,7 +470,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>id - идентификатор записи.</li>
                 *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
                 * </ul>
-                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link $ws.proto.Control#enabled}).
+                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link SBIS3.CORE.Control#enabled}).
                 * <ul>
                 *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
                 *     <li>false. Действия доступны всегда.</li>
@@ -481,7 +481,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
                 * @remark
-                * Если для контрола установлено значение false в опции {@link $ws.proto.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
+                * Если для контрола установлено значение false в опции {@link SBIS3.CORE.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
                 * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 * @example
