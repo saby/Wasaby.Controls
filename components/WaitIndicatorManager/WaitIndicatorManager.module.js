@@ -71,11 +71,6 @@
                delay = options ? options.delay : 0,
                hidden = options ? options.hidden : false;
 
-            /*if (!WaitIndicatorManager._instances) {
-               WaitIndicatorManager._instances = [];
-            }
-            let list = WaitIndicatorManager._instances;*/
-
             let list = WaitIndicatorManager._instances;
             if (!list) {
                WaitIndicatorManager._instances = list = [];
@@ -382,8 +377,6 @@
           * @param {string} message Текст сообщения индикатора
           */
          static start (id, container, message) {
-            //###let container = WaitIndicatorManager._getContainer(target);
-
             let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (queueIndex !== -1) {
                // Индикатор уже есть в DOM-е
@@ -416,8 +409,6 @@
           * @param {string} message Текст сообщения индикатора
           */
          static suspend (id, container, message) {
-            //###let container = WaitIndicatorManager._getContainer(target);
-
             let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (queueIndex !== -1) {
                let queueItem =  WaitIndicatorQueue[queueIndex];
@@ -450,8 +441,6 @@
           * @param {string} message Текст сообщения индикатора
           */
          static remove (id, container, message) {
-            //###let container = WaitIndicatorManager._getContainer(target);
-
             let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (queueIndex !== -1) {
                let queueItem =  WaitIndicatorQueue[queueIndex];
