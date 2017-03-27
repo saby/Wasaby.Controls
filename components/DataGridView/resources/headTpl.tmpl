@@ -10,9 +10,9 @@
                 </ws:if>
 
                 <ws:for data="index, column in row">
-                    <th class="{{index === 0 ? 'controls-DataGridView__firstContentCell' : ''}} controls-DataGridView__th {{startScrollColumn !== undefined ? (isColumnScrolling ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{i == 0 ? 'controls-DataGridView__th__topRow' : ''}} {{column.className}}"
+                    <th class="{{index === 0 ? 'controls-DataGridView__firstContentCell' : ''}} controls-DataGridView__th {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{i == 0 ? 'controls-DataGridView__th__topRow' : ''}} {{column.className}}"
                         title="{{column.headTooltip ? column.headTooltip : column.title}}" colspan="{{column.colspan}}"
-                        style="{{isColumnScrolling ? 'left:' + columnsScrollPosition + 'px;' : ''}}">
+                        style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'left:' + columnsScrollPosition + 'px;' : ''}}">
                            {{column.value |sanitize}}
                     </th>
                 </ws:for>
