@@ -165,6 +165,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
             } else {
                if (this._items.getCount() == 1) {
                   var firstItem = this._items.at(0);
+                  //Эмулируем послыание команды, если пункт меню всего 1 и в нем есть команда
                   if (firstItem.has('command')) {
                      var sendCommandArgs = [];
                      sendCommandArgs.push(firstItem.get('command'));
