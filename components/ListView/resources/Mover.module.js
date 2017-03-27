@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                var result = this._notify('onBeginMove', movedItems, target, position);
                if (result instanceof Deferred) {
                   result.addCallback(function (result) {
-                     this._move(movedItems, target, position, result);
+                     this._move(movedItems, target, position, result)
                   }.bind(this));
                } else {
                   result = this._move(movedItems, target, position, result);
@@ -313,7 +313,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          var
             key,
             toMap = [];
-         if (target === undefined) {
+         if (target === undefined || !isChangeOrder && !this._options.nodeProperty) {
             return false;
          }
 
