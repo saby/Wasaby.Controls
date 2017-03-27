@@ -283,6 +283,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          //TODO: Скрывать кнопки просто через модификатор нельзя, иначе обход по tab будет учитывать невидимые кнопки.
          //Пока что добавим на кнопки ws-hidden, чтобы они не участвовали в обходе.
 
+         /*TODO Поправить данный костыль, разобраться с механизмом изменения видимости кнопок
+         * https://inside.tensor.ru/opendoc.html?guid=04941cd6-23ba-4e71-914f-833b8c07c04f&des=
+          Задача в разработку 27.03.2017 В панели массовых операций разобраться с механизмом скрытия кнопок. (Избавиться от костыля) Видимые …*/
          $('.controls-operationsPanel__actionType-mass', this._container).filter(function(index, elem){
             return !!elem.wsControl.isVisible();
          }).toggleClass('ws-hidden', !!idArray.length);
