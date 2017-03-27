@@ -250,8 +250,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   reReadModel;
                return this.endEdit(true).addCallback(function() {
                   //TODO: Постепенно нужно отказываться от начала редактирования по моделе, нужно редактировать по ключу(хэшу).
-                  //С помощью этого мы избавимся от пласта ошибок, связанных с отрывом модели от рекордсета после reload.
-                  //Пока что добавим дополнительную проверку на то, что запись привязана к recordSet'у, и перечитаем её если нужно.
+                  //Сейчас возникают ошибки, из-за того, что в метод edit передаётся модель, а затем вызвается endEdit,
+                  //в следствии чего может случиться reload и переданная нам модель, станет оторванной от recordSet'а.
+                  //Из-за этого при сохранении оторванной записи, изменённые данные не попадают в recordSet.
+                  //Переход на редактирование по ключам будет по задаче https://inside.tensor.ru/opendoc.html?guid=00cb0405-e407-4502-b067-06098aabdfd2
                   if (model.getState() === Record.RecordState.DETACHED) {
                      reReadModel = self._options.items.getRecordById(model.get(self._options.idProperty));
                      model = reReadModel || model;
