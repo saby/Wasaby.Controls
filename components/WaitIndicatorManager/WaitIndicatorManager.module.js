@@ -30,6 +30,9 @@
        * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
        * TODO: (+) Добавить сообщения
        * TODO: (+) Добавить идентификаторы
+       * TODO: (+-) Поправить страховочное очистку DOM-а (в связи с очередью)
+       * TODO: ### Переименовать очередь в DOMLog
+       * TODO: ### Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: ###
        * TODO: ### Перейти от тестов к демо ?
        * TODO: (+) Убрать lastUse
@@ -368,11 +371,11 @@
        */
 
       /**
-       * ###
+       * Класс с внутренними методами модуля
        */
       class WaitIndicatorInner {
          /**
-          * ###
+          * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
           * @public
           * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
@@ -381,28 +384,24 @@
          static start (id, container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
-            let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
-            if (queueIndex != -1) {
+            let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
+            if (queueIndex !== -1) {
+               // Индикатор уже есть в DOM-е
                let queueItem =  WaitIndicatorQueue[queueIndex];
-               // Индикатор уже есть и добавлен в DOM
-               queueItem.spinner.style.display = '';
+               if (!queueItem.list.length) {
+                  queueItem.spinner.style.display = '';
+               }
+               queueItem.list.push({id, message});
                // Сбросить отсчёт времени до принудительного удаления из DOM-а
                WaitIndicatorInner._unclear(queueItem);
             }
             else {
-               // Индикатора ещё нет или он не добавлен в DOM
-               // ### Здесь единственное место использования jQuery
-               let $container = $(container || document.body);
-               //////////////////////////////////////////////////
-               console.log('DBG: start: $container=', $container, ';');
-               //////////////////////////////////////////////////
-               let $spinner = $('<div class="WaitIndicator">' + (message || '') + '</div>');
-               $container.append($spinner);
-               let spinner = $spinner[0];
+               // Индикатора в DOM-е не содержиться
+               let spinner = WaitIndicatorInner._createSpinner(container, message);
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
-               WaitIndicatorQueue.push({id, container, message, spinner});
+               WaitIndicatorQueue.push({container, spinner, list:[{id, message}]});
                //////////////////////////////////////////////////
                console.log('DBG: start: WaitIndicatorQueue=', WaitIndicatorQueue, ';');
                //////////////////////////////////////////////////
@@ -410,7 +409,7 @@
          }
 
          /**
-          * ###
+          * Запросить скрытие DOM-элемент индикатора без удаления из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
           * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
@@ -419,19 +418,32 @@
          static suspend (id, container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
-            let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
-            if (queueIndex != -1) {
+            let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
+            if (queueIndex !== -1) {
                let queueItem =  WaitIndicatorQueue[queueIndex];
-               queueItem.spinner.style.display = 'none';
-               // Начать отсчёт времени до принудительного удаления из DOM-а
-               queueItem.clearing = setTimeout(() => {
-                  WaitIndicatorInner.remove(id, container, message);
-               }, WaitIndicatorManager.SUSPEND_TIME);
+               let i = queueItem.list.length ? queueItem.list.findIndex(item => item.id === id) : -1;
+               if (i !== -1) {
+                  if (1 < queueItem.list.length) {
+                     queueItem.list.splice(i, 1);//###
+                     let msg = queueItem.list[0];
+                     if (message !== msg) {
+                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spiner, msg);
+                     }
+                  }
+                  else {
+                     queueItem.list.splice(i, 1);//###
+                     queueItem.spinner.style.display = 'none';
+                     // Начать отсчёт времени до принудительного удаления из DOM-а
+                     queueItem.clearing = setTimeout(() => {
+                        WaitIndicatorInner._delete(queueItem);
+                  }, WaitIndicatorManager.SUSPEND_TIME);
+                  }
+               }
             }
          }
 
          /**
-          * ###
+          * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
           * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
@@ -440,15 +452,38 @@
          static remove (id, container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
-            let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
-            if (queueIndex != -1) {
+            let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
+            if (queueIndex !== -1) {
                let queueItem =  WaitIndicatorQueue[queueIndex];
-               // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               WaitIndicatorInner._unclear(queueItem);
-               // Удалить из DOM-а и из очереди
-               queueItem.spinner.parentNode.removeChild(queueItem.spinner);
-               WaitIndicatorQueue.splice(queueIndex, 1);
+               let i = queueItem.list.length ? queueItem.list.findIndex(item => item.id === id) : -1;
+               if (i !== -1) {
+                  if (1 < queueItem.list.length) {
+                     queueItem.list.splice(i, 1);//###
+                     let msg = queueItem.list[0];
+                     if (message !== msg) {
+                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spiner, msg);
+                     }
+                  }
+                  else {
+                     // Удалить из DOM-а и из очереди
+                     WaitIndicatorInner._delete(queueItem);
+                  }
+               }
             }
+         }
+
+         /**
+          * Удалить из DOM-а и из очереди
+          * @protected
+          * @param {object} queueItem Элемент очереди
+          */
+         static _delete (queueItem) {
+            // Сбросить отсчёт времени до принудительного удаления из DOM-а
+            WaitIndicatorInner._unclear(queueItem);
+            // Удалить из DOM-а
+            WaitIndicatorInner._removeSpinner(queueItem.spinner);
+            // Удалить из очереди
+            WaitIndicatorInner._removeQuequeItem(queueItem);
          }
 
          /**
@@ -467,14 +502,75 @@
          }
 
          /**
-          * ###
+          * Создать и добавить в DOM элемент индикатора
           * @protected
           * @param {HTMLElement} container Контейнер индикатора
-          * @return {###}
+          * @param {string} message Текст сообщения индикатора
+          * @return {HTMLElement}
           */
-         static _searchQuequeItem (container) {
-            return WaitIndicatorQueue.length ? WaitIndicatorQueue.findIndex(item => item.container === container) : -1;
+         static _createSpinner (container, message) {
+            // Здесь единственное место использования jQuery
+            // ### Зависит от шаблона !
+            let $container = $(container || document.body);
+            //////////////////////////////////////////////////
+            console.log('DBG: _createSpinner: $container=', $container, ';');
+            //////////////////////////////////////////////////
+            let $spinner = $('<div class="WaitIndicator">' + (message || '') + '</div>');
+            $container.append($spinner);
+            return $spinner[0];
          }
+
+         /**
+          * Изменить сообщение в DOM-элементе индикатора
+          * @protected
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {string} message Текст сообщения индикатора
+          */
+         static _changeSpinnerMessage (spinner, message) {
+            // ### Зависит от шаблона !
+            spinner.innerHTML = message || '';
+         }
+
+         /**
+          * Удалить из DOM элемент индикатора
+          * @protected
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static _removeSpinner (spinner) {
+            spinner.parentNode.removeChild(spinner);
+         }
+
+         /**
+          * Найти индекс элемента очереди по контейнеру
+          * @protected
+          * @param {HTMLElement} container Контейнер индикатора
+          * @return {number}
+          */
+         static _searchQuequeIndex (container) {
+            return WaitIndicatorQueue.length ? WaitIndicatorQueue.findIndex(item => item.container === container) : -1;
+            /*###return WaitIndicatorQueue.length ? WaitIndicatorQueue.reduce((acc, item, i) => {
+               if (item.container === container) {
+                  acc.push(i);
+               }
+               return acc;
+            }, []) : [];*/
+         }
+
+         /**
+          * Удалить элемент очереди
+          * @protected
+          * @param {object} item Элемент очереди
+          */
+         static _removeQuequeItem (queueItem) {
+            if (WaitIndicatorQueue.length) {
+               let i = WaitIndicatorQueue.findIndex(item => item === queueItem);
+               if (i !== -1) {
+                  WaitIndicatorQueue.splice(i, 1);
+               }
+            }
+         }
+
+
       }
 
       /**
