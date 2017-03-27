@@ -40,19 +40,19 @@
      }
      .controls-TextBox__afterFieldWrapper {
        width: @combo-box-after-width;
+       .flexbox();
+       align-items: center;
        + .controls-TextBox__fieldWrapper{
          margin-right: @compo-box-fieldWrapper-margin-right;
          padding-right: 0;
        }
        .controls-ComboBox__arrowDown {
-         position: absolute;
-         top: @combo-box-arrow-top-offset;
+         position: relative;
          right: @combo-box-arrow-right-offset;
          display: inline-block;
          overflow: hidden;
          width: @combo-box-arrow-width;
          height: @combo-box-arrow-height;
-         margin: @combo-box-arrow-margin;
          text-decoration: none;
          border-width: @combo-box-arrow-border-width;
          border-style: @combo-box-arrow-border-style;
@@ -173,7 +173,13 @@
    margin-right: @combo-box-input-wrapper-right-offset;
 }
 
-.ws-is-ie10{
+.ws-is-ie10 {
+   .controls-ComboBox .controls-TextBox__afterFieldWrapper {
+      margin-top: -1px;
+      .icon-ExpandLight:before {
+         vertical-align: middle;
+      }  
+   }
    .controls-ComboBox__picker .controls-ComboBox__body{
       height: 100%; //ie10 падает, если высота рассчитывается через calc. Теперь для ie10 выпадающий список прибит к краю экрана без отступа, если контейнер имеет достаточную высоту.
    }
