@@ -1,0 +1,10 @@
+<div class="controls-FieldLink__item controls-ListView__item {{className|orEmpty}}"
+     data-hash="{{ projItem.getHash() }}"
+     data-id="{{ item.getId() }}"
+     {{ needSort ? 'style="order:' + itemsCount - projection.getIndexByInstanceId(projItem.getInstanceId() + '"' }}>
+    <span class="controls-FieldLink__item-caption" {{ needTitle ? 'title="' + caption + '"' }}>
+        <ws:partial template="{{itemContent}}" scope="{{...}}"></ws:partial>
+    </span>
+    <span class="controls-FieldLink__item-cross icon-16 icon-size icon-Close icon-disabled"/>
+</div>
+

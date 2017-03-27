@@ -5,9 +5,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.PickerMixin',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
+      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection',
+      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
+      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/helpers/collection-helpers',
       'Core/core-instance',
       'Core/helpers/functional-helpers'
