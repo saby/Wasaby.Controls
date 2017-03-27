@@ -46,7 +46,7 @@
        */
       class WaitIndicatorManager {
          /**
-          * Константа - максимальное время по умолчанию до удаления приостановленных индикаторов из DOM-а
+          * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
           * @public
           * @static
           * @type {number}
@@ -416,9 +416,9 @@
                if (i !== -1) {
                   if (1 < queueItem.list.length) {
                      queueItem.list.splice(i, 1);//###
-                     let msg = queueItem.list[0];
+                     let msg = queueItem.list[0].message;
                      if (message !== msg) {
-                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spiner, msg);
+                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spinner, msg);
                      }
                   }
                   else {
@@ -441,6 +441,7 @@
           * @param {string} message Текст сообщения индикатора
           */
          static remove (id, container, message) {
+
             let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (queueIndex !== -1) {
                let queueItem =  WaitIndicatorQueue[queueIndex];
@@ -448,9 +449,9 @@
                if (i !== -1) {
                   if (1 < queueItem.list.length) {
                      queueItem.list.splice(i, 1);//###
-                     let msg = queueItem.list[0];
+                     let msg = queueItem.list[0].message;
                      if (message !== msg) {
-                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spiner, msg);
+                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spinner, msg);
                      }
                   }
                   else {
@@ -558,8 +559,6 @@
                }
             }
          }
-
-
       }
 
       /**
