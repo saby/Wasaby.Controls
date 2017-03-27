@@ -29,7 +29,7 @@
        * TODO: (+-) Предусмотреть очередь в менеджере
        * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
        * TODO: ### Перейти от тестов к демо ?
-       * TODO: ### Убрать lastUse
+       * TODO: (+) Убрать lastUse
        * TODO: ### Привести к ES5
        */
 
@@ -132,13 +132,13 @@
                // ### Здесь единственное место использования jQuery
                let $container = $(container || document.body);
                //////////////////////////////////////////////////
-               console.log('DBG: _start: $container=', $container, ';');
+               console.log('DBG: start: $container=', $container, ';');
                //////////////////////////////////////////////////
                let $spinner = $('<div class="WaitIndicator"></div>');
                $container.append($spinner);
                let spinner = $spinner[0];
                //////////////////////////////////////////////////
-               console.log('DBG: _start: spinner=', spinner, ';');
+               console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
                WaitIndicatorQueue.push({container:container, spinner:spinner});
             }
@@ -271,14 +271,10 @@
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
             this._container = container;
-            this._spinner = null;
             //###this._visible = false;
             this._starting = null;
             this._suspending = null;
             this._removing = null;
-            this._clearing = null;
-            this._lastUse = null;
-            this._regUse();
             /*###if (1 < arguments.length) {
                this.start(delay);
             }*/
@@ -307,9 +303,10 @@
           * @public
           * @type {boolean}
           */
-         get isVisible () {/*### Это уже не так !!!*/
+         /*### Это уже не так !!!*/
+         /*###get isVisible () {
             return !!this._spinner && !!this._spinner.parentNode;
-         }
+         }*/
 
          /**
           * Начать показ индикатора через (опциональное) время задержки
@@ -328,26 +325,6 @@
           */
          _start () {
             WaitIndicatorManager.start(this._container);
-            /*###if (this._spinner && this._spinner.parentNode) {
-               // Индикатор уже есть и добавлен в DOM
-               this._spinner.style.display = '';
-               // ### Сбросить отсчёт времени до принудительного удаления из DOM-а
-            }
-            else {
-               // Индикатора ещё нет или он не добавлен в DOM
-               // ### Здесь единственное место использования jQuery
-               let $container = $(this._container || document.body);
-               //////////////////////////////////////////////////
-               console.log('DBG: _start: $container=', $container, ';');
-               //////////////////////////////////////////////////
-               let $spinner = $('<div class="WaitIndicator"></div>');
-               $container.append($spinner);
-               this._spinner = $spinner[0];
-               //////////////////////////////////////////////////
-               console.log('DBG: _start: this._spinner=', this._spinner, ';');
-               //////////////////////////////////////////////////
-            }
-            this._regUse();*/
          }
 
          /**
@@ -368,17 +345,6 @@
           */
          _suspend () {
             WaitIndicatorManager.suspend(this._container);
-            /*###if (this._spinner && this._spinner.parentNode) {
-               this._spinner.style.display = 'none';
-               // ### Начать отсчёт времени до принудительного удаления из DOM-а
-               this._clearing = {
-                  id: setTimeout(() => {
-                     this._remove();
-                     this._clearing = null;
-                  }, WaitIndicator.^^^SUSPEND_TIME)
-               };
-               this._regUse();
-            }*/
          }
 
          /**
@@ -398,11 +364,6 @@
           */
          _remove () {
             WaitIndicatorManager.remove(this._container);
-            /*###if (this._spinner && this._spinner.parentNode) {
-               this._spinner.parentNode.removeChild(this._spinner);
-            }
-            this._spinner = null;
-            this._regUse();*/
          }
 
          /**
@@ -447,9 +408,9 @@
           */
          _clearDelays () {
             //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: this._starting=', this._starting, '; this._suspending=', this._suspending, '; this._removing=', this._removing, '; this._clearing=', this._clearing, ';');
+            console.log('DBG: _clearDelays: this._starting=', this._starting, '; this._suspending=', this._suspending, '; this._removing=', this._removing, ';');
             //////////////////////////////////////////////////
-            for (let storing of ['_starting', '_suspending', '_removing', '_clearing']) {
+            for (let storing of ['_starting', '_suspending', '_removing']) {
                let o = this[storing];
                if (o) {
                   clearTimeout(o.id);
@@ -460,7 +421,7 @@
                }
             }
             //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: this._starting=', this._starting, '; this._suspending=', this._suspending, '; this._removing=', this._removing, '; this._clearing=', this._clearing, ';');
+            console.log('DBG: _clearDelays: this._starting=', this._starting, '; this._suspending=', this._suspending, '; this._removing=', this._removing, ';');
             //////////////////////////////////////////////////
          }
 
@@ -489,23 +450,6 @@
           */
          get nextRemove () {
             return this._removing ? this._removing.promise : null;
-         }
-
-         /**
-          * Возвращает время последнего использования
-          * @public
-          * @type {number}
-          */
-         get lastUse () {
-            return this._lastUse;
-         }
-
-         /**
-          * Зарегистрировать время использования
-          * @protected
-          */
-         _regUse () {
-            this._lastUse = (new Date()).getTime();
          }
       }
 
