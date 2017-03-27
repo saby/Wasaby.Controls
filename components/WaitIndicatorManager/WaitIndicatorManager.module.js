@@ -29,7 +29,7 @@
        * TODO: (+-) Предусмотреть очередь в менеджере
        * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
        * TODO: (+) Добавить сообщения
-       * TODO: ### Добавить идентификаторы
+       * TODO: (+) Добавить идентификаторы
        * TODO: ###
        * TODO: ### Перейти от тестов к демо ?
        * TODO: (+) Убрать lastUse
@@ -95,7 +95,7 @@
                indicator = list.length ? list.find(item => item.container === container) : null;
             }
             if (indicator) {
-               // Найден существующий - использовать применимые опции
+               // Найден существующий индикатор - использовать применимые опции
                if (hidden) {
                   indicator.remove(delay);
                }
@@ -104,8 +104,12 @@
                }
             }
             else {
-               // не найден - создать новый
-               indicator = new WaitIndicator(container, message);
+               // индикатор не найден - создать новый
+               let id = ++WaitIndicatorCounter;
+               //////////////////////////////////////////////////
+               console.log('DBG: getWaitIndicator: id=', id, ';');
+               //////////////////////////////////////////////////
+               indicator = new WaitIndicator(id, container, message);
                if (!hidden) {
                   indicator.start(delay);
                }
@@ -143,6 +147,12 @@
          }
       }
 
+      /**
+       * Счётчик экземпляров
+       * @type {number}
+       */
+      let WaitIndicatorCounter = 0;
+
 
 
       /**
@@ -153,13 +163,15 @@
           * ###
           * @public
           * @constructor
+          * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           */
-         constructor (container, message) {
+         constructor (id, container, message) {
             //////////////////////////////////////////////////
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
+            this._id = id;
             this._container = container;
             this._message = message;
             this._starting = null;
@@ -220,7 +232,7 @@
           * @protected
           */
          _start () {
-            WaitIndicatorInner.start(this._container, this._message);
+            WaitIndicatorInner.start(this._id, this._container, this._message);
          }
 
          /**
@@ -240,7 +252,7 @@
           * @protected
           */
          _suspend () {
-            WaitIndicatorInner.suspend(this._container, this._message);
+            WaitIndicatorInner.suspend(this._id, this._container, this._message);
          }
 
          /**
@@ -259,7 +271,7 @@
           * @protected
           */
          _remove () {
-            WaitIndicatorInner.remove(this._container, this._message);
+            WaitIndicatorInner.remove(this._id, this._container, this._message);
          }
 
          /**
@@ -362,10 +374,11 @@
          /**
           * ###
           * @public
+          * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           */
-         static start (container, message) {
+         static start (id, container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
             let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
@@ -389,17 +402,21 @@
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
-               WaitIndicatorQueue.push({container:container, spinner:spinner});
+               WaitIndicatorQueue.push({id, container, message, spinner});
+               //////////////////////////////////////////////////
+               console.log('DBG: start: WaitIndicatorQueue=', WaitIndicatorQueue, ';');
+               //////////////////////////////////////////////////
             }
          }
 
          /**
           * ###
           * @public
+          * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           */
-         static suspend (container, message) {
+         static suspend (id, container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
             let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
@@ -408,7 +425,7 @@
                queueItem.spinner.style.display = 'none';
                // Начать отсчёт времени до принудительного удаления из DOM-а
                queueItem.clearing = setTimeout(() => {
-                  WaitIndicatorInner.remove(container, message);
+                  WaitIndicatorInner.remove(id, container, message);
                }, WaitIndicatorManager.SUSPEND_TIME);
             }
          }
@@ -416,10 +433,11 @@
          /**
           * ###
           * @public
+          * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
           */
-         static remove (container, message) {
+         static remove (id, container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
             let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
@@ -460,8 +478,8 @@
       }
 
       /**
-       * ### Очередь
-       * @protected
+       * ### Очередь ...
+       * @type {object[]}
        */
       let WaitIndicatorQueue = [];
 
