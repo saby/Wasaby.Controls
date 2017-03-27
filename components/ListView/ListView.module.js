@@ -3234,8 +3234,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _groupByDefaultRender: function (item, container) {
             return container;
          },
-         setDataSource: function () {
-            if (this._pager) {
+         setDataSource: function (source, noLoad) {
+            if (!noLoad && this._pager) {
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
