@@ -28,6 +28,9 @@
        * TODO: (+) Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
        * TODO: (+-) Предусмотреть очередь в менеджере
        * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
+       * TODO: (+) Добавить сообщения
+       * TODO: ### Добавить идентификаторы
+       * TODO: ###
        * TODO: ### Перейти от тестов к демо ?
        * TODO: (+) Убрать lastUse
        * TODO: ### Привести к ES5
@@ -61,6 +64,7 @@
          static getWaitIndicator (options) {
             // Разобрать опции
             let target = options ? options.target : null,
+               message = options ? options.message : null,
                delay = options ? options.delay : 0,
                hidden = options ? options.hidden : false;
 
@@ -101,7 +105,7 @@
             }
             else {
                // не найден - создать новый
-               indicator = new WaitIndicator(container);
+               indicator = new WaitIndicator(container, message);
                if (!hidden) {
                   indicator.start(delay);
                }
@@ -150,23 +154,21 @@
           * @public
           * @constructor
           * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
           */
-         constructor (container/*###, delay*/) {
+         constructor (container, message) {
             //////////////////////////////////////////////////
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
             this._container = container;
-            //###this._visible = false;
+            this._message = message;
             this._starting = null;
             this._suspending = null;
             this._removing = null;
-            /*###if (1 < arguments.length) {
-               this.start(delay);
-            }*/
          }
 
          /**
-          * Геттер свойства, возвращает DOM элемент привязки
+          * Геттер свойства, возвращает DOM элемент контейнера
           * @public
           * @type {HTMLElement}
           */
@@ -194,6 +196,15 @@
          }*/
 
          /**
+          * Геттер свойства, возвращает текст сообщения
+          * @public
+          * @type {HTMLElement}
+          */
+         get message () {
+            return this._message;
+         }
+
+         /**
           * Начать показ индикатора через (опциональное) время задержки
           * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
           * @public
@@ -209,7 +220,7 @@
           * @protected
           */
          _start () {
-            WaitIndicatorInner.start(this._container);
+            WaitIndicatorInner.start(this._container, this._message);
          }
 
          /**
@@ -229,7 +240,7 @@
           * @protected
           */
          _suspend () {
-            WaitIndicatorInner.suspend(this._container);
+            WaitIndicatorInner.suspend(this._container, this._message);
          }
 
          /**
@@ -248,7 +259,7 @@
           * @protected
           */
          _remove () {
-            WaitIndicatorInner.remove(this._container);
+            WaitIndicatorInner.remove(this._container, this._message);
          }
 
          /**
@@ -352,8 +363,9 @@
           * ###
           * @public
           * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
           */
-         static start (container) {
+         static start (container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
             let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
@@ -371,7 +383,7 @@
                //////////////////////////////////////////////////
                console.log('DBG: start: $container=', $container, ';');
                //////////////////////////////////////////////////
-               let $spinner = $('<div class="WaitIndicator"></div>');
+               let $spinner = $('<div class="WaitIndicator">' + (message || '') + '</div>');
                $container.append($spinner);
                let spinner = $spinner[0];
                //////////////////////////////////////////////////
@@ -385,8 +397,9 @@
           * ###
           * @public
           * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
           */
-         static suspend (container) {
+         static suspend (container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
             let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
@@ -395,7 +408,7 @@
                queueItem.spinner.style.display = 'none';
                // Начать отсчёт времени до принудительного удаления из DOM-а
                queueItem.clearing = setTimeout(() => {
-                  WaitIndicatorInner.remove(container);
+                  WaitIndicatorInner.remove(container, message);
                }, WaitIndicatorManager.SUSPEND_TIME);
             }
          }
@@ -404,8 +417,9 @@
           * ###
           * @public
           * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
           */
-         static remove (container) {
+         static remove (container, message) {
             //###let container = WaitIndicatorManager._getContainer(target);
 
             let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
