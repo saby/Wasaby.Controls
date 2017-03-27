@@ -11,32 +11,31 @@
   display: inline-block;
   float: left;
   &:before {
-    font-family: @font-icon-name;
+    font-family: @icon-font;
   }
 }
 
 .controls-CheckBox__caption_size {
-  font-size: @font-basic-size;
+  font-size: @default-font-size;
   width: calc(~"100% - 24px");
   padding: @check-box-caption-padding;
 }
 
 .controls-CheckBox__icon_size {
-  width: @height-default;
-  height: @height-default;
+  width: @default-height;
+  height: @default-height;
 }
 
 .controls-CheckBox__iconBox_size {
   position: absolute;
-  width: @check-box-icon-box - 2 * @border-width-default;
-  height: @check-box-icon-box - 2 * @border-width-default;
-  border-width: @border-width-default;
-  margin: (@height-default - @check-box-icon-box) / 2;
+  width: @check-box-icon-box - 2 * @default-border-width;
+  height: @check-box-icon-box - 2 * @default-border-width;
+  border-width: @default-border-width;
+  margin: (@default-height - @check-box-icon-box) / 2;
 }
 
 .controls-CheckBox__iconBox_color {
-  border-style: @border-style-default;
-  border-color: @gray-ccc-color;
+  border-style: @default-border-style;
 }
 
 .controls-Checked__checked {
@@ -56,7 +55,7 @@
     position: absolute;
     height: @check-box-icon-null-height;
     width: @check-box-icon-null-width;
-    margin: (@height-default - @check-box-icon-null-height) / 2;
+    margin: (@default-height - @check-box-icon-null-height) / 2;
   }
 }
 
@@ -65,7 +64,10 @@
     .default-pointer-cursor();
   }
   .controls-CheckBox__caption {
-    color: @text-color;
+    color: @default-text-color;
+  }
+  .controls-CheckBox__iconBox_color {
+    border-color: @gray-color;
   }
   &.controls-Checked__checked {
     .controls-CheckBox__icon:before {
@@ -84,16 +86,19 @@
   .default-default-cursor();
   }
   .controls-CheckBox__caption {
-    color: @text-color-disabled;
+    color: @disabled-text-color;
+  }
+  .controls-CheckBox__iconBox_color {
+    border-color: @disabled-icon-color;
   }
   &.controls-Checked__checked {
     .controls-CheckBox__icon:before {
-      color: @icon-color-disabled;
+      color: @disabled-icon-color;
     }
   }
   &.controls-ToggleButton__null {
     .controls-CheckBox__icon:before {
-      background-color: @icon-color-disabled;
+      background-color: @disabled-icon-color;
     }
   }
 }
