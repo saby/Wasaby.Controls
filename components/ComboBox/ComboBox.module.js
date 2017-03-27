@@ -430,7 +430,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedEmptyRecord: function(){
-         this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
+         if (this.isEditable()) {
+            //Если выбрали emptyValue и включен ввод значения в инпут - выставляем пустой текст, чтобы было видно placeholder
+            //Текст "не выбрано" в этом случае никому не нужен, он лишь мешает вводить значение.
+            ComboBox.superclass.setText.call(this, '');
+         }
+         else {
+            this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
+         }
+
          this._options.selectedKey = null;
          this.setSelectedIndex(-1);
          this.hidePicker();
