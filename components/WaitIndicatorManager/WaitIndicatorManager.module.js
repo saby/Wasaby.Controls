@@ -25,10 +25,11 @@
        * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
        * TODO: ### Привести к новым реалиям isVisible
        * TODO: (+-) Модуляризировать в requirejs
-       * TODO: ### Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
-       * TODO: ### Предусмотреть очередь в менеджере
+       * TODO: (+) Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
+       * TODO: (+-) Предусмотреть очередь в менеджере
+       * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
        * TODO: ### Перейти от тестов к демо ?
-       * TODO: ###
+       * TODO: ### Убрать lastUse
        * TODO: ### Привести к ES5
        */
 
@@ -38,6 +39,16 @@
        * ###
        */
       class WaitIndicatorManager {
+         /**
+          * Константа - максимальное время по умолчанию до удаления приостановленных индикаторов из DOM-а
+          * @public
+          * @static
+          * @type {number}
+          */
+         static get SUSPEND_TIME () {
+            return 10000;
+         }
+
          /**
           * ###Создаёт### индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями
           * @public
@@ -64,8 +75,8 @@
             }
 
             // Запрошен ли глобальный индикатор?
-            let targetNode = WaitIndicatorManager._getTargetNode(target);
-            let isGlobal = !targetNode;
+            let container = WaitIndicatorManager._getContainer(target);
+            let isGlobal = !container;
             //////////////////////////////////////////////////
             console.log('DBG: getWaitIndicator: isGlobal=', isGlobal, ';');
             //////////////////////////////////////////////////
@@ -77,7 +88,7 @@
             }
             else {
                // Запрошен локальный индикатор, их может быть много, но только один на каждый объект привязки
-               indicator = list.length ? list.find(item => item.target === targetNode) : null;
+               indicator = list.length ? list.find(item => item.container === container) : null;
             }
             if (indicator) {
                // Найден существующий - использовать применимые опции
@@ -90,7 +101,7 @@
             }
             else {
                // не найден - создать новый
-               indicator = new WaitIndicator(targetNode);
+               indicator = new WaitIndicator(container);
                if (!hidden) {
                   indicator.start(delay);
                }
@@ -101,6 +112,92 @@
          }
 
          /**
+          * ###
+          * @public
+          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
+          */
+         static start (target) {
+            let container = WaitIndicatorManager._getContainer(target);
+
+            let queueIndex = WaitIndicatorManager._searchQuequeItem(container);
+            if (queueIndex != -1) {
+               let queueItem =  WaitIndicatorQueue[queueIndex];
+               // Индикатор уже есть и добавлен в DOM
+               queueItem.spinner.style.display = '';
+               // Сбросить отсчёт времени до принудительного удаления из DOM-а
+               WaitIndicatorManager._unclear(queueItem);
+            }
+            else {
+               // Индикатора ещё нет или он не добавлен в DOM
+               // ### Здесь единственное место использования jQuery
+               let $container = $(container || document.body);
+               //////////////////////////////////////////////////
+               console.log('DBG: _start: $container=', $container, ';');
+               //////////////////////////////////////////////////
+               let $spinner = $('<div class="WaitIndicator"></div>');
+               $container.append($spinner);
+               let spinner = $spinner[0];
+               //////////////////////////////////////////////////
+               console.log('DBG: _start: spinner=', spinner, ';');
+               //////////////////////////////////////////////////
+               WaitIndicatorQueue.push({container:container, spinner:spinner});
+            }
+         }
+
+         /**
+          * ###
+          * @public
+          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
+          */
+         static suspend (target) {
+            let container = WaitIndicatorManager._getContainer(target);
+
+            let queueIndex = WaitIndicatorManager._searchQuequeItem(container);
+            if (queueIndex != -1) {
+               let queueItem =  WaitIndicatorQueue[queueIndex];
+               queueItem.spinner.style.display = 'none';
+               // Начать отсчёт времени до принудительного удаления из DOM-а
+               queueItem.clearing = setTimeout(() => {
+                  WaitIndicatorManager.remove(target);
+               }, WaitIndicatorManager.SUSPEND_TIME);
+            }
+         }
+
+         /**
+          * ###
+          * @public
+          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
+          */
+         static remove (target) {
+            let container = WaitIndicatorManager._getContainer(target);
+
+            let queueIndex = WaitIndicatorManager._searchQuequeItem(container);
+            if (queueIndex != -1) {
+               let queueItem =  WaitIndicatorQueue[queueIndex];
+               // Сбросить отсчёт времени до принудительного удаления из DOM-а
+               WaitIndicatorManager._unclear(queueItem);
+               // Удалить из DOM-а и из очереди
+               queueItem.spinner.parentNode.removeChild(queueItem.spinner);
+               WaitIndicatorQueue.splice(queueIndex, 1);
+            }
+         }
+
+         /**
+          * Сбросить отсчёт времени до принудительного удаления из DOM-а
+          * @protected
+          * @param {object} queueItem Элемент очереди
+          */
+         static _unclear (queueItem) {
+            if ('clearing' in queueItem) {
+               clearTimeout(queueItem.clearing);
+               delete queueItem.clearing;
+               //////////////////////////////////////////////////
+               console.log('DBG: _unclear: (clearing in queueItem)=', ('clearing' in queueItem), ';');
+               //////////////////////////////////////////////////
+            }
+         }
+
+         /**
           * Проверить, является ли указанный объект привязки глобальным
           * @public
           * @static
@@ -108,7 +205,7 @@
           * @return {boolean}
           */
          /*###static isGlobalTarget (target) {
-          return !WaitIndicatorManager._getTargetNode();
+          return !WaitIndicatorManager._getContainer(target);
           }*/
 
          /**
@@ -118,26 +215,44 @@
           * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
           * @return {HTMLElement}
           */
-         static _getTargetNode (target) {
+         static _getContainer (target) {
             //////////////////////////////////////////////////
-            console.log('DBG: _getTargetNode: (target && typeof target === object)=', (target && typeof target === 'object'), ';');
+            console.log('DBG: _getContainer: (target && typeof target === object)=', (target && typeof target === 'object'), ';');
             //////////////////////////////////////////////////
             if (!target || typeof target !== 'object') {
                return null;
             }
             //////////////////////////////////////////////////
-            console.log('DBG: _getTargetNode: (target.jquery && typeof target.jquery === string)=', (target.jquery && typeof target.jquery === 'string'), ';');
+            console.log('DBG: _getContainer: (target.jquery && typeof target.jquery === string)=', (target.jquery && typeof target.jquery === 'string'), ';');
             //////////////////////////////////////////////////
-            let node = target;
+            let container = target;
             if (target.jquery && typeof target.jquery === 'string') {
                if (!target.length) {
                   return null;
                }
-               node = target[0];
+               container = target[0];
             }
-            return node !== window && node !== document && node !== document.body ? node : null;
+            return container !== window && container !== document && container !== document.body ? container : null;
+         }
+
+         /**
+          * ###
+          * @protected
+          * @param {HTMLElement} container Контейнер индикатора
+          * @return {###}
+          */
+         static _searchQuequeItem (container) {
+            return WaitIndicatorQueue.length ? WaitIndicatorQueue.findIndex(item => item.container === container) : -1;
          }
       }
+
+
+
+      /**
+       * ###
+       * @protected
+       */
+      let WaitIndicatorQueue = [];
 
 
 
@@ -149,13 +264,13 @@
           * ###
           * @public
           * @constructor
-          * @param {HTMLElement} target Объект привязки индикатора
+          * @param {HTMLElement} container Контейнер индикатора
           */
-         constructor (target/*###, delay*/) {
+         constructor (container/*###, delay*/) {
             //////////////////////////////////////////////////
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
-            this._target = target;
+            this._container = container;
             this._spinner = null;
             //###this._visible = false;
             this._starting = null;
@@ -170,22 +285,12 @@
          }
 
          /**
-          * Константа - максимальное время по умолчанию до удаления приостановленных индикаторов из DOM-а
-          * @public
-          * @static
-          * @type {number}
-          */
-         static get SUSPEND_TIME () {
-            return 10000;
-         }
-
-         /**
           * Геттер свойства, возвращает DOM элемент привязки
           * @public
           * @type {HTMLElement}
           */
-         get target () {
-            return this._target;
+         get container () {
+            return this._container;
          }
 
          /**
@@ -194,7 +299,7 @@
           * @type {boolean}
           */
          get isGlobal () {
-            return !this._target;
+            return !this._container;
          }
 
          /**
@@ -215,31 +320,6 @@
           */
          start (delay) {
             return this._callDelayed('_start','_starting', delay);
-            /*###this._clearDelays();
-            if (typeof delay === 'number' && 0 < delay) {
-               let success, fail, promise = new Promise((resolve, reject) => {
-                  success = resolve;
-                  fail = reject;
-               });
-               this._starting = {
-                  id: setTimeout(() => {
-                     //////////////////////////////////////////////////
-                     console.log('DBG: start: TIMEOUT this._starting=', this._starting, ';');
-                     //////////////////////////////////////////////////
-                     this._start();
-                     this._starting.success.call(null);
-                     this._starting = null;
-                  }, delay),
-                  success: success,
-                  fail: fail,
-                  promise: promise
-               };
-               return promise.catch((err) => {});
-            }
-            else {
-               this._start();
-               return Promise.resolve();
-            }*/
          }
 
          /**
@@ -247,7 +327,8 @@
           * @protected
           */
          _start () {
-            if (this._spinner && this._spinner.parentNode) {
+            WaitIndicatorManager.start(this._container);
+            /*###if (this._spinner && this._spinner.parentNode) {
                // Индикатор уже есть и добавлен в DOM
                this._spinner.style.display = '';
                // ### Сбросить отсчёт времени до принудительного удаления из DOM-а
@@ -255,7 +336,7 @@
             else {
                // Индикатора ещё нет или он не добавлен в DOM
                // ### Здесь единственное место использования jQuery
-               let $container = $(this._target || document.body);
+               let $container = $(this._container || document.body);
                //////////////////////////////////////////////////
                console.log('DBG: _start: $container=', $container, ';');
                //////////////////////////////////////////////////
@@ -266,7 +347,7 @@
                console.log('DBG: _start: this._spinner=', this._spinner, ';');
                //////////////////////////////////////////////////
             }
-            this._regUse();
+            this._regUse();*/
          }
 
          /**
@@ -279,31 +360,6 @@
           */
          suspend (delay) {
             return this._callDelayed('_suspend','_suspending', delay);
-            /*###this._clearDelays();
-            if (typeof delay === 'number' && 0 < delay) {
-               let success, fail, promise = new Promise((resolve, reject) => {
-                  success = resolve;
-                  fail = reject;
-               });
-               this._suspending = {
-                  id: setTimeout(() => {
-                     //////////////////////////////////////////////////
-                     console.log('DBG: suspend: TIMEOUT this._suspending=', this._suspending, ';');
-                     //////////////////////////////////////////////////
-                     this._suspend();
-                     this._suspending.success.call(null);
-                     this._suspending = null;
-                  }, delay),
-                  success: success,
-                  fail: fail,
-                  promise: promise
-               };
-               return promise.catch((err) => {});
-            }
-            else {
-               this._suspend();
-               return Promise.resolve();
-            }*/
          }
 
          /**
@@ -311,17 +367,18 @@
           * @protected
           */
          _suspend () {
-            if (this._spinner && this._spinner.parentNode) {
+            WaitIndicatorManager.suspend(this._container);
+            /*###if (this._spinner && this._spinner.parentNode) {
                this._spinner.style.display = 'none';
                // ### Начать отсчёт времени до принудительного удаления из DOM-а
                this._clearing = {
                   id: setTimeout(() => {
                      this._remove();
                      this._clearing = null;
-                  }, WaitIndicator.SUSPEND_TIME)
+                  }, WaitIndicator.^^^SUSPEND_TIME)
                };
                this._regUse();
-            }
+            }*/
          }
 
          /**
@@ -333,31 +390,6 @@
           */
          remove (delay) {
             return this._callDelayed('_remove','_removing', delay);
-            /*###this._clearDelays();
-            if (typeof delay === 'number' && 0 < delay) {
-               let success, fail, promise = new Promise((resolve, reject) => {
-                  success = resolve;
-                  fail = reject;
-               });
-               this._removing = {
-                  id: setTimeout(() => {
-                     //////////////////////////////////////////////////
-                     console.log('DBG: remove: TIMEOUT this._removing=', this._removing, ';');
-                     //////////////////////////////////////////////////
-                     this._remove();
-                     this._removing.success.call(null);
-                     this._removing = null;
-                  }, delay),
-                  success: success,
-                  fail: fail,
-                  promise: promise
-               };
-               return promise.catch((err) => {});
-            }
-            else {
-               this._remove();
-               return Promise.resolve();
-            }*/
          }
 
          /**
@@ -365,11 +397,12 @@
           * @protected
           */
          _remove () {
-            if (this._spinner && this._spinner.parentNode) {
+            WaitIndicatorManager.remove(this._container);
+            /*###if (this._spinner && this._spinner.parentNode) {
                this._spinner.parentNode.removeChild(this._spinner);
             }
             this._spinner = null;
-            this._regUse();
+            this._regUse();*/
          }
 
          /**
