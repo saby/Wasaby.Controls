@@ -120,6 +120,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _createEip: function() {
                this._eip = new EditInPlace(this._getEditInPlaceConfig());
             },
+            //Переопределяем метод, т.к. контроллер не имеет вёрстки, и сам не умеет принимать активность.
+            setActive: function() {
+               var eip = this._getEditingEip();
+               if (eip) {
+                  eip.setActive.apply(eip, arguments);
+               }
+            },
             setItems: function(items) {
                this._options.items = items;
             },
