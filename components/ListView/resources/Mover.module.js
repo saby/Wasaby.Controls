@@ -53,10 +53,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
              */
             nodeProperty: null,
             /**
-             * @cfg {Boolean} Инвертирует вызов методов перемещния по порядку.
-             */
-            invertOrder: false,
-            /**
              * @cfg {WS.Data/Source/ISource} источник данных.
              */
             dataSource: undefined
@@ -161,22 +157,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
          if (this._checkRecordsForMove(movedItems, target, isChangeOrder)) {
             var
-               moveStrategy = this.getMoveStrategy(),
-               move = function (result) {
-                  if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
-                     this.moveInItems(movedItems, target, position);
-                  } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
-                     return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
-                        this.moveInItems(movedItems, target, position);
-                        return result;
-                     }.bind(this)).addBoth(function (result) {
-                        this._notify('onEndMove', result, movedItems, target, position);
-                        return result;
-                     }.bind(this));
-                  } else {
-                     this._notify('onEndMove', undefined, movedItems, target, position);
-                  }
-               }.bind(this);
+               moveStrategy = this.getMoveStrategy();
             if (moveStrategy) {
                //todo поддерживаем стратегии перемещения, потом убрать
                if (isChangeOrder) { 
@@ -187,13 +168,32 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             } else {
                var result = this._notify('onBeginMove', movedItems, target, position);
                if (result instanceof Deferred) {
-                  result.addCallback(move);
+                  result.addCallback(function (result) {
+                     this._move(movedItems, target, position, result);
+                  }.bind(this));
                } else {
-                  result = move(result);
+                  result = this._move(movedItems, target, position, result);
                }
             }
          }
          return (result instanceof Deferred) ? result : new Deferred().callback(result);
+      },
+
+      _move: function (movedItems, target, position, result) {
+         if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
+            this.moveInItems(movedItems, target, position);
+         } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
+            return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
+               this.moveInItems(movedItems, target, position);
+               return result;
+            }.bind(this)).addBoth(function (result) {
+               this._notify('onEndMove', result, movedItems, target, position);
+               return result;
+            }.bind(this));
+         } else {
+            this._notify('onEndMove', undefined, movedItems, target, position);
+         }
+         return result;
       },
       //endregion for_controls
       //region move_strategy
@@ -227,11 +227,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       _callMoveMethod: function(movedItems, target, position, result) {
          if (result !== Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
             var
-               invert = {},
                idArray = [];
-            invert[ISource.MOVE_POSITION.after] = ISource.MOVE_POSITION.before;
-            invert[ISource.MOVE_POSITION.before] = ISource.MOVE_POSITION.after;
-            invert[ISource.MOVE_POSITION.on] = ISource.MOVE_POSITION.on;
             movedItems.forEach(function (item) {
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
                   idArray.push(item.getId());
@@ -244,7 +240,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                return dataSource.move(
                   idArray,
                   target === null ? null : target.getId(), {
-                     position: this._options.invertOrder ? invert[position] : position,
+                     position: position,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty
                   }

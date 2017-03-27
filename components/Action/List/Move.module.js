@@ -40,12 +40,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
-               moveStrategy: undefined,
-               /**
-                * @cfg {Boolean} Инвертирует вызовы методов перемещения по порядку.
-                * @remark Если у вас cортировка по порядковым номерам по убыванию то надо включить эту опцию.
-                */
-               invertOrder: false
+               moveStrategy: undefined
             },
             _mover: null
          },
@@ -94,7 +89,6 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                      items: this._getItems(),
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
-                     invertOrder: this._options.invertOrder,
                      dataSource: this.getDataSource()
                   });
                }
