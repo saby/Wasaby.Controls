@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
          * @param endpoint
          * @param methodName
          * @param cfg
-         * @returns {ws.proto.Deferred}
+         * @returns {Core/Deferred}
          */
         exportFileTransfer: function(endpoint, methodName, cfg) {
             var self = this,
