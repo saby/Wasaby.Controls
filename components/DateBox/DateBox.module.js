@@ -36,7 +36,6 @@ define(
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDateBox
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
