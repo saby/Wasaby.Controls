@@ -107,106 +107,9 @@
                }
                list.push(indicator);
             }
-            // и вернуть (###прокси?)
+            // и вернуть
             return indicator;
          }
-
-         /**
-          * ###
-          * @public
-          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
-          */
-         static start (target) {
-            let container = WaitIndicatorManager._getContainer(target);
-
-            let queueIndex = WaitIndicatorManager._searchQuequeItem(container);
-            if (queueIndex != -1) {
-               let queueItem =  WaitIndicatorQueue[queueIndex];
-               // Индикатор уже есть и добавлен в DOM
-               queueItem.spinner.style.display = '';
-               // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               WaitIndicatorManager._unclear(queueItem);
-            }
-            else {
-               // Индикатора ещё нет или он не добавлен в DOM
-               // ### Здесь единственное место использования jQuery
-               let $container = $(container || document.body);
-               //////////////////////////////////////////////////
-               console.log('DBG: start: $container=', $container, ';');
-               //////////////////////////////////////////////////
-               let $spinner = $('<div class="WaitIndicator"></div>');
-               $container.append($spinner);
-               let spinner = $spinner[0];
-               //////////////////////////////////////////////////
-               console.log('DBG: start: spinner=', spinner, ';');
-               //////////////////////////////////////////////////
-               WaitIndicatorQueue.push({container:container, spinner:spinner});
-            }
-         }
-
-         /**
-          * ###
-          * @public
-          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
-          */
-         static suspend (target) {
-            let container = WaitIndicatorManager._getContainer(target);
-
-            let queueIndex = WaitIndicatorManager._searchQuequeItem(container);
-            if (queueIndex != -1) {
-               let queueItem =  WaitIndicatorQueue[queueIndex];
-               queueItem.spinner.style.display = 'none';
-               // Начать отсчёт времени до принудительного удаления из DOM-а
-               queueItem.clearing = setTimeout(() => {
-                  WaitIndicatorManager.remove(target);
-               }, WaitIndicatorManager.SUSPEND_TIME);
-            }
-         }
-
-         /**
-          * ###
-          * @public
-          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
-          */
-         static remove (target) {
-            let container = WaitIndicatorManager._getContainer(target);
-
-            let queueIndex = WaitIndicatorManager._searchQuequeItem(container);
-            if (queueIndex != -1) {
-               let queueItem =  WaitIndicatorQueue[queueIndex];
-               // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               WaitIndicatorManager._unclear(queueItem);
-               // Удалить из DOM-а и из очереди
-               queueItem.spinner.parentNode.removeChild(queueItem.spinner);
-               WaitIndicatorQueue.splice(queueIndex, 1);
-            }
-         }
-
-         /**
-          * Сбросить отсчёт времени до принудительного удаления из DOM-а
-          * @protected
-          * @param {object} queueItem Элемент очереди
-          */
-         static _unclear (queueItem) {
-            if ('clearing' in queueItem) {
-               clearTimeout(queueItem.clearing);
-               delete queueItem.clearing;
-               //////////////////////////////////////////////////
-               console.log('DBG: _unclear: (clearing in queueItem)=', ('clearing' in queueItem), ';');
-               //////////////////////////////////////////////////
-            }
-         }
-
-         /**
-          * Проверить, является ли указанный объект привязки глобальным
-          * @public
-          * @static
-          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
-          * @return {boolean}
-          */
-         /*###static isGlobalTarget (target) {
-          return !WaitIndicatorManager._getContainer(target);
-          }*/
 
          /**
           * Определить элемент DOM, соответствующий указанному объекту привязки
@@ -234,25 +137,7 @@
             }
             return container !== window && container !== document && container !== document.body ? container : null;
          }
-
-         /**
-          * ###
-          * @protected
-          * @param {HTMLElement} container Контейнер индикатора
-          * @return {###}
-          */
-         static _searchQuequeItem (container) {
-            return WaitIndicatorQueue.length ? WaitIndicatorQueue.findIndex(item => item.container === container) : -1;
-         }
       }
-
-
-
-      /**
-       * ###
-       * @protected
-       */
-      let WaitIndicatorQueue = [];
 
 
 
@@ -324,7 +209,7 @@
           * @protected
           */
          _start () {
-            WaitIndicatorManager.start(this._container);
+            WaitIndicatorInner.start(this._container);
          }
 
          /**
@@ -344,7 +229,7 @@
           * @protected
           */
          _suspend () {
-            WaitIndicatorManager.suspend(this._container);
+            WaitIndicatorInner.suspend(this._container);
          }
 
          /**
@@ -363,7 +248,7 @@
           * @protected
           */
          _remove () {
-            WaitIndicatorManager.remove(this._container);
+            WaitIndicatorInner.remove(this._container);
          }
 
          /**
@@ -452,6 +337,119 @@
             return this._removing ? this._removing.promise : null;
          }
       }
+
+
+
+      /**
+       * Отдельные функции модуля
+       */
+
+      /**
+       * ###
+       */
+      class WaitIndicatorInner {
+         /**
+          * ###
+          * @public
+          * @param {HTMLElement} container Контейнер индикатора
+          */
+         static start (container) {
+            //###let container = WaitIndicatorManager._getContainer(target);
+
+            let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
+            if (queueIndex != -1) {
+               let queueItem =  WaitIndicatorQueue[queueIndex];
+               // Индикатор уже есть и добавлен в DOM
+               queueItem.spinner.style.display = '';
+               // Сбросить отсчёт времени до принудительного удаления из DOM-а
+               WaitIndicatorInner._unclear(queueItem);
+            }
+            else {
+               // Индикатора ещё нет или он не добавлен в DOM
+               // ### Здесь единственное место использования jQuery
+               let $container = $(container || document.body);
+               //////////////////////////////////////////////////
+               console.log('DBG: start: $container=', $container, ';');
+               //////////////////////////////////////////////////
+               let $spinner = $('<div class="WaitIndicator"></div>');
+               $container.append($spinner);
+               let spinner = $spinner[0];
+               //////////////////////////////////////////////////
+               console.log('DBG: start: spinner=', spinner, ';');
+               //////////////////////////////////////////////////
+               WaitIndicatorQueue.push({container:container, spinner:spinner});
+            }
+         }
+
+         /**
+          * ###
+          * @public
+          * @param {HTMLElement} container Контейнер индикатора
+          */
+         static suspend (container) {
+            //###let container = WaitIndicatorManager._getContainer(target);
+
+            let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
+            if (queueIndex != -1) {
+               let queueItem =  WaitIndicatorQueue[queueIndex];
+               queueItem.spinner.style.display = 'none';
+               // Начать отсчёт времени до принудительного удаления из DOM-а
+               queueItem.clearing = setTimeout(() => {
+                  WaitIndicatorInner.remove(container);
+               }, WaitIndicatorManager.SUSPEND_TIME);
+            }
+         }
+
+         /**
+          * ###
+          * @public
+          * @param {HTMLElement} container Контейнер индикатора
+          */
+         static remove (container) {
+            //###let container = WaitIndicatorManager._getContainer(target);
+
+            let queueIndex = WaitIndicatorInner._searchQuequeItem(container);
+            if (queueIndex != -1) {
+               let queueItem =  WaitIndicatorQueue[queueIndex];
+               // Сбросить отсчёт времени до принудительного удаления из DOM-а
+               WaitIndicatorInner._unclear(queueItem);
+               // Удалить из DOM-а и из очереди
+               queueItem.spinner.parentNode.removeChild(queueItem.spinner);
+               WaitIndicatorQueue.splice(queueIndex, 1);
+            }
+         }
+
+         /**
+          * Сбросить отсчёт времени до принудительного удаления из DOM-а
+          * @protected
+          * @param {object} queueItem Элемент очереди
+          */
+         static _unclear (queueItem) {
+            if ('clearing' in queueItem) {
+               clearTimeout(queueItem.clearing);
+               delete queueItem.clearing;
+               //////////////////////////////////////////////////
+               console.log('DBG: _unclear: (clearing in queueItem)=', ('clearing' in queueItem), ';');
+               //////////////////////////////////////////////////
+            }
+         }
+
+         /**
+          * ###
+          * @protected
+          * @param {HTMLElement} container Контейнер индикатора
+          * @return {###}
+          */
+         static _searchQuequeItem (container) {
+            return WaitIndicatorQueue.length ? WaitIndicatorQueue.findIndex(item => item.container === container) : -1;
+         }
+      }
+
+      /**
+       * ### Очередь
+       * @protected
+       */
+      let WaitIndicatorQueue = [];
 
 
 
