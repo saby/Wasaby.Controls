@@ -1020,10 +1020,6 @@ define('js!SBIS3.CONTROLS.ListView',
                // и смещение зависит от положения скрола и от зума. Это не ошибка расчета, а баг(фича?) ipad.
                // Смещены элементы со стилем right: 0 и bottom: 0. На небольшом зуме этого смещения нет.
                right = window.innerWidth - this.getContainer().get(0).getBoundingClientRect().right;
-               // Edge выставляет right начиная от скроллбара, а все остальные браузеры (внезапно) от края страницы 
-               if (cDetection.isIE12) {
-                  right -= 12;
-               }
                this._scrollPager.getContainer().css('right', right);
             }
          },
