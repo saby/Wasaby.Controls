@@ -170,7 +170,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
              _filterStructure: null,      /* Структура фильтра */
              _historyController: null,    /* Контроллер для работы с историей */
              _filterTemplates: {},      /* Компонент, который будет отображаться на панели фильтрации */
-             _dTemplatesReady: null
+             _dTemplatesReady: null,
+             _pickerHeight: null
           },
 
           $constructor: function() {
@@ -294,6 +295,33 @@ define('js!SBIS3.CONTROLS.FilterButton',
              });
 
              return prepTpl(dotTplForPicker)(config);
+          },
+
+          /* В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
+             Для этого есть причины:
+             1) Пикер не знает, что именно в нём изменился контент.
+             2) Если принудительно считать, то все пикеры начнут часто прыгать.
+             Вызвать пересчёт - ответственность того, кто вызвал это изменение.
+             Но в кнопке фильтров контент постоянно меняется динамически (фильтры показываются / скрываются / раскрывается история),
+             и эти изменения вызываются стандартыми средствани (show/hide контролов), которые так же не сообщают,
+             где произошли изменения, а просто вызывают onResize. Для этого пишу обработчик, который замеряет высоту пикера,
+             и при её изменении вызывает необходимые расчеты.
+           */
+          _onResizeHandler: function() {
+             var picker = this.getPicker(),
+                 pickerContainer = picker && picker.getContainer()[0];
+
+             if(!this._pickerHeight) {
+                this._pickerHeight = pickerContainer.offsetHeight;
+             }
+
+             FilterButton.superclass._onResizeHandler.apply(this, arguments);
+
+             if(this._pickerHeight !== pickerContainer.offsetHeight) {
+                picker.recalcPosition(true);
+                picker._onResizeHandler();
+                this._pickerHeight = pickerContainer.offsetHeight;
+             }
           },
 
           _setPickerConfig: function () {
