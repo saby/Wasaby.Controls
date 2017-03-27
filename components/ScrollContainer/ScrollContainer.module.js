@@ -45,6 +45,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *
        * @control
        * @public
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ScrollContainer' name="MyScrollContainer>
+       *     <option name="content">
+       *         <component data-component="SBIS3.CONTROLS.ListView" name="ContentList">
+       *             <option name="idProperty">key</option>
+       *             <option name="displayProperty">title</option>
+       *         </component>
+       *     </option>
+       * </component>
        */
       var ScrollContainer = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
 
@@ -100,9 +110,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //Под android оставляем нативный скролл
             if (this._showScrollbar){
                this._initScrollbar = this._initScrollbar.bind(this);
-               if (!cDetection.isIE8){
-                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               }
+               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                this._container.one('mousemove', this._initScrollbar);
                this._hideScrollbar();
             }
@@ -122,14 +130,17 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onScroll: function(){
             var scrollTop = this._getScrollTop();
-            if (this._showScrollbar && this._scrollbar){
+            if (!this._scrollbar) {
+               this._initScrollbar();
+            }
+            if (this._showScrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
          },
 
          _hideScrollbar: function(){
-            if (!cDetection.webkit){
+            if (!cDetection.webkit && !cDetection.chrome){
                var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
                   };

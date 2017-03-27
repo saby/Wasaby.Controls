@@ -1038,18 +1038,25 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            var
                               target = e.target;
                            if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                              callback(target);
+                              callback(e, target);
                            }
                         }
                      });
                   };
                //По двойному клику на изображение показывать диалог редактирования размеров
-               bindImageEvent('dblclick', function(target) {
+               bindImageEvent('dblclick', function(event, target) {
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(target) {
+               bindImageEvent('mousedown touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
+                  //Проблема:
+                  //    При клике на изображение в ie появляются квадраты ресайза
+                  //Решение:
+                  //    отменять дефолтное действие
+                  if(cConstants.browser.isIE) {
+                     event.preventDefault();
+                  }
                });
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
@@ -1130,7 +1137,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
-               if (!self._mouseIsPressed) {
+               //upd: в костроме форматная вставка, не нужно вырезать лишние теги
+               if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
                   e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE

@@ -103,3 +103,15 @@
 .controls-ScrollContainer__hiddenScrollbar .controls-Scrollbar {
    display: none;
 }
+
+.controls-ScrollContainer.controls-ScrollContainer__flex {
+   display: flex;
+   flex-direction: column;
+   align-content: stretch;
+}
+
+.controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
+   overflow: auto;
+   height:100%;
+}
+

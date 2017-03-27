@@ -60,6 +60,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
       //endregion Protected methods
    });
 
+   var yearSource = new YearSource();
+
    /**
     * SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
     * @class SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker
@@ -69,9 +71,6 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
     * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
     * @mixes SBIS3.CONTROLS.RangeMixin
     */
-
-   var yearSource = new YearSource();
-
    var MonthRangePicker = ListView.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker.prototype */{
       $protected: {
          _options: {

@@ -300,20 +300,22 @@
             }
          }
 
-         &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
-            padding-bottom: 26px;
-            margin-bottom: -24px;
-            &:after {
-               content: '';
-               height: 26px;
-               width: 100%;
-               display: inline-block;
-               background-color: #E1ECF6;
-               position: absolute;
-               bottom: 0;
-            }
-            .controls-CompositeView__tileContainer {
-               margin-bottom: 26px;
+         &:not(.controls-CompositeView__item-withoutItemsAction) {
+            &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
+               padding-bottom: 26px;
+               margin-bottom: -24px;
+               &:after {
+                  content: '';
+                  height: 26px;
+                  width: 100%;
+                  display: inline-block;
+                  background-color: #E1ECF6;
+                  position: absolute;
+                  bottom: 0;
+               }
+               .controls-CompositeView__tileContainer {
+                  margin-bottom: 26px;
+               }
             }
          }
       }

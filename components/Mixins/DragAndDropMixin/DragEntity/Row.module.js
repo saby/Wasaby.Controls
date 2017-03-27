@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     * Drag'n'drop объект списочного контрола. Объекты этого класса (либо его наследники) создаются ListView, когда пользователь начинает перемещать элемент.
     *
     * @class SBIS3.CONTROLS.DragEntity.Row
-    * @control
     * @public
     * @author Крайнов Дмитрий Олегович
     * @example

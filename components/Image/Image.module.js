@@ -324,7 +324,15 @@ define('js!SBIS3.CONTROLS.Image',
                    * @deprecated
                    * @noshow
                    */
-                  linkedObject: ''
+                  linkedObject: '',
+                  /**
+                   * @cfg {Boolean} Устанавливает использование web-камеры для загрузки изображения
+                   * @example
+                   * <pre>
+                   *     <option name="imageBar">webCam</option>
+                   * </pre>
+                   */
+                  webCam: true
                },
                _imageBar: undefined,
                _imageUrl: '',
@@ -376,13 +384,15 @@ define('js!SBIS3.CONTROLS.Image',
                      this._buttonUpload.setTooltip('Загрузить');
                   }
                   this._bindToolbarEvents();
-                  pickerContainer = this._buttonUpload.getPicker().getContainer();
-                  pickerContainer.mouseenter(function(){
-                     this._cursorInside = true;
-                  }.bind(this));
-                  pickerContainer.mouseleave(function(){
-                     this._cursorInside = false;
-                  }.bind(this))
+                  if (this._options.webCam) {
+                     pickerContainer = this._buttonUpload.getPicker().getContainer();
+                     pickerContainer.mouseenter(function(){
+                        this._cursorInside = true;
+                     }.bind(this));
+                     pickerContainer.mouseleave(function(){
+                        this._cursorInside = false;
+                     }.bind(this))
+                  }
                }
                if (this.getDataSource()) {
                   this.reload();
@@ -465,8 +475,8 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _onEndLoad: function(event, response) {
                var imageInstance = this.getParent();
-               if (response instanceof Error) {
-                  var error = response;
+               var error = response instanceof Error? response: response.error;
+               if (error) {
                   fcHelpers.toggleLocalIndicator(imageInstance._container, false);
                   this._hideIndicator();
                   // игнорируем HTTPError офлайна, если они обработаны
@@ -716,10 +726,10 @@ define('js!SBIS3.CONTROLS.Image',
                Блок обработчиков кнопок imageBar
                ------------------------------------------------------------ */
             _buttonUploadClick: function(event, key, originalEvent) {
-               if (key == 'fromFile') {
-                  this.sendCommand('uploadImage', originalEvent);
-               } else if (key == 'fromWebCam') {
+               if (key == 'fromWebCam') {
                   this.sendCommand('uploadFileCam', originalEvent);
+               } else {
+                  this.sendCommand('uploadImage', originalEvent);
                }
             },
             _pickerOpen: function() {

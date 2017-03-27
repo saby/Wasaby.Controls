@@ -17,6 +17,17 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    'use strict';
 
    var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
+      /**
+       * @typedef {Object} customPeriod
+       * @property {String} label Заголовок который будет отбражаться в контроле.
+       * @property {Date} startValue Начальное значение периода
+       * @property {Date} endValue КОнечное значение периода
+       */
+      /**
+       * @typedef {[Date, Date]} Period
+       * Массив содержащий даты начала и конца периода
+       */
+
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -26,6 +37,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
             showQuarters: true,
             showHalfyears: true,
             showYears: true,
+
+            /**
+             * @cfg {Boolean} Отображать кнопку "Период не указан"
+             */
+            showUndefined: false,
+
+            /**
+             * @cfg {customPeriod} Конфигурация кастомной кнопки снизу для выбора периода заданного на прикладной стороне
+             */
+            customPeriod: null,
 
             checkedStart: null,
             checkedEnd: null,
@@ -46,21 +67,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
              * @cfg {String} Подсказка которая будет отображаться у не выделенных иконок. По умолчанию тултипа нет.
              */
             uncheckedIconTitle: null,
-
-            /**
-             * @typedef {Object} Icon
-             * @property {String} iconClass Класс который будет установлен у контейнера иконки.
-             * @property {String} title Заголовок отображаемы в всплывающей подсказке.
-             *
-             * @remark
-             * { iconClass: 'icon-Yes icon-done',
-             *   title: 'Период отчетности закрыт'
-             *   }
-             */
-            /**
-             * @typedef {[Date, Date]} Period
-             * Массив содержащий даты начала и конеца периода
-             */
 
             /**
              * @cfg {Function} устанавливает функцию которая будет вызвана во время перерисовки компонента.
@@ -179,6 +185,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          if (this._options.showYears) {
             container.find(['.', this._cssDateRangeChoose.yearButton].join('')).click(this._onYearClick.bind(this));
          }
+         container.on('mouseleave mouseenter', ['.', this._cssDateRangeChoose.yearButton].join(''), this._onMouseOver.bind(this));
 
          container.find('.controls-DateRangeChoose__year-prev').click(this._onPrevYearBtnClick.bind(this));
          container.find('.controls-DateRangeChoose__year-next').click(this._onNextYearBtnClick.bind(this));
@@ -188,7 +195,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
          container.find(['.', this._cssDateRangeChoose.halfYearCaption].join('')).click(this._onHalfYearClick.bind(this));
          container.find(['.', this._cssDateRangeChoose.quarterCaption].join('')).click(this._onQuarterClick.bind(this));
-         container.find(['.', this._cssDateRangeChoose.monthCaption].join('')).click(this._onMonthClick.bind(this));
+         container.find(['.', this._cssDateRangeChoose.month].join('')).click(this._onMonthClick.bind(this));
 
          container.find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join('')).click(this._onYearsModeWrapperClick.bind(this));
 
@@ -215,6 +222,52 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
        */
       getYear: function () {
          return this._options.year;
+      },
+
+      _onMouseOver: function (e) {
+         // TODO: перевести все на единую пописку
+         var target = $(event.target),
+            closestCssClass;
+         if (target.hasClass(this._cssDateRangeChoose.yearButton)) {
+            closestCssClass = 'controls-DateRangeChoose';
+         }
+         switch (e.type) {
+            case 'mouseenter':
+               this._addSelectedClassOnMouseEnter(closestCssClass, e);
+               break;
+            case 'mouseleave':
+               this._removeSelectedClassOnMouseLeave(closestCssClass, e);
+               break;
+         }
+      },
+
+      _onClickHandler: function(event) {
+         var target = $(event.target);
+         DateRangeChoose.superclass._onClickHandler.apply(this, arguments);
+         if (this.isEnabled()) {
+            if (target.hasClass('controls-DateRangeChoose__undefined-period')) {
+               this._onUndefinedPeriodClick();
+            } else if (target.hasClass('controls-DateRangeChoose__custom-period')) {
+               this._onCustomPeriodClick();
+            }
+         }
+      },
+
+      _onUndefinedPeriodClick: function () {
+         this.setRange();
+         this._notify('onChoose');
+      },
+
+      _onCustomPeriodClick: function () {
+         this.setRange(this._options.customPeriod.startValue, this._options.customPeriod.endValue);
+         this._notify('onChoose', this._options.customPeriod.startValue, this._options.customPeriod.endValue);
+      },
+
+      _addSelectedClassOnMouseEnter: function (closestCssClass, e) {
+         $(e.target).closest(['.', closestCssClass].join('')).addClass(this._cssDateRangeChoose.selected);
+      },
+      _removeSelectedClassOnMouseLeave: function (closestCssClass, e) {
+         $(e.target).closest(['.', closestCssClass].join('')).removeClass(this._cssDateRangeChoose.selected);
       },
 
       _updateYearView: function () {
@@ -340,6 +393,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          icons.addCallback(this._setIcons.bind(this));
       },
 
+      /**
+       * @typedef {Object} Icon
+       * @property {String} iconClass Класс который будет установлен у контейнера иконки.
+       * @property {String} title Заголовок, отображаемый в всплывающей подсказке.
+       *
+       * @remark
+       * { iconClass: 'icon-Yes icon-done',
+       *   title: 'Период отчетности закрыт'
+       *   }
+       */
       /**
        * Устанавливает иконки отбражаемые напротив периодов.
        * @param icons {Icon[]}
