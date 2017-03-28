@@ -296,6 +296,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                   items.setEventRaising(true, true);
                } else if(this._options.parentProperty) {
                   movedItem.set(this._options.parentProperty, target ? target.getId() : null);
+                  if (items.getIndex(movedItem) == -1) {
+                     items.add(movedItem);
+                  }
                }
             }.bind(this));
          }
