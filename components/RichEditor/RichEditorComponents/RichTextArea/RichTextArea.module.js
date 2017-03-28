@@ -515,10 +515,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                };
 
             cIndicator.show();
-            if (Di.isRegistered('SBIS3.Plugin.Source.LocalService')) {
+            if (Di.isRegistered('SBIS3.Plugin/Source/LocalService')) {
                //service создаётся каждый раз и destroy`тся каждый раз тк плагин может перезагрузиться и сервис протухнет
                //см прохождение по задаче:https://inside.tensor.ru/opendoc.html?guid=c3362ff8-4a31-4caf-a284-c0832c4ac4d5&des=
-               service = Di.resolve('SBIS3.Plugin.Source.LocalService',{
+               service = Di.resolve('SBIS3.Plugin/Source/LocalService',{
                   endpoint: {
                      address: 'Clipboard-1.0.1.0',
                      contract: 'Clipboard'
