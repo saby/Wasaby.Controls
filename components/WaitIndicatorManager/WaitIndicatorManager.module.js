@@ -31,7 +31,7 @@
        * TODO: (+) Добавить сообщения
        * TODO: (+) Добавить идентификаторы
        * TODO: (+) Поправить страховочное очистку DOM-а (в связи с очередью)
-       * TODO: ### Переименовать очередь в DOMLog
+       * TODO: (+) Переименовать очередь в Pool (это ведь не очередь)
        * TODO: ### Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: (+) Обособить методы, связанные с DOM-ом
        * TODO: ###
@@ -398,16 +398,16 @@
           * @param {string} message Текст сообщения индикатора
           */
          static start (id, container, message) {
-            let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
-            if (queueIndex !== -1) {
+            let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
+            if (poolIndex !== -1) {
                // Индикатор уже есть в DOM-е
-               let queueItem =  WaitIndicatorQueue[queueIndex];
-               if (!queueItem.list.length) {
-                  queueItem.spinner.style.display = '';
+               let poolItem =  WaitIndicatorPool[poolIndex];
+               if (!poolItem.list.length) {
+                  poolItem.spinner.style.display = '';
                }
-               queueItem.list.push({id, message});
+               poolItem.list.push({id, message});
                // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               WaitIndicatorInner._unclear(queueItem);
+               WaitIndicatorInner._unclear(poolItem);
             }
             else {
                // Индикатора в DOM-е не содержиться
@@ -415,9 +415,9 @@
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
-               WaitIndicatorQueue.push({container, spinner, list:[{id, message}]});
+               WaitIndicatorPool.push({container, spinner, list:[{id, message}]});
                //////////////////////////////////////////////////
-               console.log('DBG: start: WaitIndicatorQueue=', WaitIndicatorQueue, ';');
+               console.log('DBG: start: WaitIndicatorPool=', WaitIndicatorPool, ';');
                //////////////////////////////////////////////////
             }
          }
@@ -430,24 +430,24 @@
           * @param {string} message Текст сообщения индикатора
           */
          static suspend (id, container, message) {
-            let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
-            if (queueIndex !== -1) {
-               let queueItem =  WaitIndicatorQueue[queueIndex];
-               let i = queueItem.list.length ? queueItem.list.findIndex(item => item.id === id) : -1;
+            let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
+            if (poolIndex !== -1) {
+               let poolItem =  WaitIndicatorPool[poolIndex];
+               let i = poolItem.list.length ? poolItem.list.findIndex(item => item.id === id) : -1;
                if (i !== -1) {
-                  if (1 < queueItem.list.length) {
-                     queueItem.list.splice(i, 1);//###
-                     let msg = queueItem.list[0].message;
+                  if (1 < poolItem.list.length) {
+                     poolItem.list.splice(i, 1);//###
+                     let msg = poolItem.list[0].message;
                      if (message !== msg) {
-                        WaitIndicatorSpinner.changeMessage(queueItem.spinner, msg);
+                        WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
                      }
                   }
                   else {
-                     queueItem.list.splice(i, 1);//###
-                     queueItem.spinner.style.display = 'none';
+                     poolItem.list.splice(i, 1);//###
+                     poolItem.spinner.style.display = 'none';
                      // Начать отсчёт времени до принудительного удаления из DOM-а
-                     queueItem.clearing = setTimeout(() => {
-                        WaitIndicatorInner._delete(queueItem);
+                     poolItem.clearing = setTimeout(() => {
+                        WaitIndicatorInner._delete(poolItem);
                   }, WaitIndicatorManager.SUSPEND_TIME);
                   }
                }
@@ -463,21 +463,21 @@
           */
          static remove (id, container, message) {
 
-            let queueIndex = WaitIndicatorInner._searchQuequeIndex(container);
-            if (queueIndex !== -1) {
-               let queueItem =  WaitIndicatorQueue[queueIndex];
-               let i = queueItem.list.length ? queueItem.list.findIndex(item => item.id === id) : -1;
+            let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
+            if (poolIndex !== -1) {
+               let poolItem =  WaitIndicatorPool[poolIndex];
+               let i = poolItem.list.length ? poolItem.list.findIndex(item => item.id === id) : -1;
                if (i !== -1) {
-                  if (1 < queueItem.list.length) {
-                     queueItem.list.splice(i, 1);//###
-                     let msg = queueItem.list[0].message;
+                  if (1 < poolItem.list.length) {
+                     poolItem.list.splice(i, 1);//###
+                     let msg = poolItem.list[0].message;
                      if (message !== msg) {
-                        WaitIndicatorSpinner.changeMessage(queueItem.spinner, msg);
+                        WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
                      }
                   }
                   else {
                      // Удалить из DOM-а и из очереди
-                     WaitIndicatorInner._delete(queueItem);
+                     WaitIndicatorInner._delete(poolItem);
                   }
                }
             }
@@ -486,28 +486,28 @@
          /**
           * Удалить из DOM-а и из очереди
           * @protected
-          * @param {object} queueItem Элемент очереди
+          * @param {object} poolItem Элемент очереди
           */
-         static _delete (queueItem) {
+         static _delete (poolItem) {
             // Сбросить отсчёт времени до принудительного удаления из DOM-а
-            WaitIndicatorInner._unclear(queueItem);
+            WaitIndicatorInner._unclear(poolItem);
             // Удалить из DOM-а
-            WaitIndicatorSpinner.remove(queueItem.spinner);
+            WaitIndicatorSpinner.remove(poolItem.spinner);
             // Удалить из очереди
-            WaitIndicatorInner._removeQuequeItem(queueItem);
+            WaitIndicatorInner._removeQuequeItem(poolItem);
          }
 
          /**
           * Сбросить отсчёт времени до принудительного удаления из DOM-а
           * @protected
-          * @param {object} queueItem Элемент очереди
+          * @param {object} poolItem Элемент очереди
           */
-         static _unclear (queueItem) {
-            if ('clearing' in queueItem) {
-               clearTimeout(queueItem.clearing);
-               delete queueItem.clearing;
+         static _unclear (poolItem) {
+            if ('clearing' in poolItem) {
+               clearTimeout(poolItem.clearing);
+               delete poolItem.clearing;
                //////////////////////////////////////////////////
-               console.log('DBG: _unclear: (clearing in queueItem)=', ('clearing' in queueItem), ';');
+               console.log('DBG: _unclear: (clearing in poolItem)=', ('clearing' in poolItem), ';');
                //////////////////////////////////////////////////
             }
          }
@@ -519,8 +519,8 @@
           * @return {number}
           */
          static _searchQuequeIndex (container) {
-            return WaitIndicatorQueue.length ? WaitIndicatorQueue.findIndex(item => item.container === container) : -1;
-            /*###return WaitIndicatorQueue.length ? WaitIndicatorQueue.reduce((acc, item, i) => {
+            return WaitIndicatorPool.length ? WaitIndicatorPool.findIndex(item => item.container === container) : -1;
+            /*###return WaitIndicatorPool.length ? WaitIndicatorPool.reduce((acc, item, i) => {
                if (item.container === container) {
                   acc.push(i);
                }
@@ -533,11 +533,11 @@
           * @protected
           * @param {object} item Элемент очереди
           */
-         static _removeQuequeItem (queueItem) {
-            if (WaitIndicatorQueue.length) {
-               let i = WaitIndicatorQueue.findIndex(item => item === queueItem);
+         static _removeQuequeItem (poolItem) {
+            if (WaitIndicatorPool.length) {
+               let i = WaitIndicatorPool.findIndex(item => item === poolItem);
                if (i !== -1) {
-                  WaitIndicatorQueue.splice(i, 1);
+                  WaitIndicatorPool.splice(i, 1);
                }
             }
          }
@@ -547,7 +547,7 @@
        * ### Очередь ...
        * @type {object[]}
        */
-      let WaitIndicatorQueue = [];
+      let WaitIndicatorPool = [];
 
 
 
@@ -564,7 +564,7 @@
           */
          static create (container, message) {
             // Здесь единственное место использования jQuery (###возможно временно?)
-            //^^^_dotTplFn: $ws.doT.template(testTemplate)
+            //^^^let _dotTplFn = $ws.doT.template(testTemplate);
             // ### Зависит от шаблона !
             let $container = $(container || document.body);
             //////////////////////////////////////////////////
