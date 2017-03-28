@@ -195,7 +195,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
             trg.subscribe('onVisible', function (event, visible) {
                if (visible) {
-                  self._updateSizeHandler();
+                  var w = self._inputField.width();
+                  var h = self._inputField.height();
+                  if (w != self._cachedW || h != self._cachedH) {
+                     self._cachedW = w;
+                     self._cachedH = h;
+                     self._autosizeTextArea(true);
+                  }
                }
             });
 
@@ -204,17 +210,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
                this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
             }
             this._removeAutoSizeDognail();
-         }
-      },
-
-      _updateSizeHandler: function() {
-         var
-            w = this._inputField.width(),
-            h = this._inputField.height();
-         if (w != this._cachedW || h != this._cachedH) {
-            this._cachedW = w;
-            this._cachedH = h;
-            this._autosizeTextArea(true);
          }
       },
 
@@ -273,7 +268,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
          var newText = strHelpers.escapeHtml(text);
          this._disabledWrapper.html(strHelpers.wrapURLs(newText));
          this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !text);
-         this._updateSizeHandler();
       },
 
       _processNewLine: function(event) {
