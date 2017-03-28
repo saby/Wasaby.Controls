@@ -31,21 +31,6 @@
          }
       }
    }
-
-   .controls__filterButton__filterSelect {
-      .controls-FilterSelect__item{
-         display: inline-block;
-         color: #313E78;
-         > div {
-            display: inline-block;
-         }
-      }
-      :last-child {
-         .controls-FilterSelect__item-separator{
-            display: none;
-         }
-      }
-   }
 }
 
 .controls__filterButton {
@@ -60,14 +45,26 @@
       .controls__filterButton__filterLine-arrow {
          color: @icon-color-disabled !important;
       }
-      .controls__filterButton__filterLine-table {
-         .controls__filterButton__filterLine-table-row {
-            .controls__filterButton__filterLine-cross {
-               cursor: default;
-               color: @icon-color-disabled !important;
-            }
-         }
+      .controls__filterButton__filterLine-cross {
+         cursor: default;
+         color: @icon-color-disabled !important;
       }
+   }
+}
+
+.controls__filterButton__filterSelect {
+   :last-child {
+      .controls-FilterSelect__item-separator{
+         display: none;
+      }
+   }
+}
+
+.controls-FilterSelect__item {
+   display: inline-block;
+   color: #313E78;
+   > div {
+      display: inline-block;
    }
 }
 
