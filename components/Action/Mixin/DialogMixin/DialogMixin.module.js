@@ -156,11 +156,22 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _getOpener: function(){
          //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
          //В идеале они должны делать это сами и тогда этот код не нужен
-         var topParent = this.getTopParent(),
-            floatArea, floatAreaContainer;
-         if (topParent !== this) {
-            floatAreaContainer = topParent.getContainer().closest('.ws-float-area'),
-            floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+         var popup = this.getContainer() && this.getContainer().closest('.controls-FloatArea'),
+             topParent,
+             floatArea,
+             floatAreaContainer;
+         //Указываем opener'ом всплывающую панель, в которой лежит action, это может быть либо controls.FloatArea, либо core.FloatArea
+         //Нужно в ситуации, когда запись перерисовывается в уже открытой панели, чтобы по opener'aм добраться до панелей, которые открыты из той,
+         //которую сейчас перерисовываем, и закрыть их.
+         if (popup && popup.length) {
+            return popup.wsControl();
+         }
+         else {
+            topParent = this.getTopParent();
+            if (topParent !== this) {
+               floatAreaContainer = topParent.getContainer().closest('.ws-float-area');
+               floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+            }
          }
          return floatArea || this;
       },

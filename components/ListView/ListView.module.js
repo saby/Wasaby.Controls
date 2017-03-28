@@ -2001,6 +2001,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   items: this.getItems(),
+                  idProperty: this._options.idProperty,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
                   itemsProjection: this._getItemsProjection(),
@@ -3234,8 +3235,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _groupByDefaultRender: function (item, container) {
             return container;
          },
-         setDataSource: function () {
-            if (this._pager) {
+         setDataSource: function (source, noLoad) {
+            if (!noLoad && this._pager) {
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
