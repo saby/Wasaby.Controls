@@ -3545,19 +3545,26 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._horisontalDragNDrop = false;
                   this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
                   this.getContainer().addClass('controls-ListView__verticalDragNDrop');
-               } else {
-
                }
                return true;
             }
             return false;
          },
+         /**
+          * Определяет направление элементов в списке    
+          * @param target
+          * @returns {boolean}
+          * @private
+          */
          _checkHorisontalDragndrop: function (target) {
-            var listWidth =  this.getContainer().width(),
-               targetWidth = target.width();
-            //если ширина элемента в половину меньше ширины списка то считаем что это плитка.
-            return targetWidth < listWidth/2;
-
+            if (target.css('display') == 'inline-block' || target.css('float') != 'none') {
+               return true;
+            }
+            var parent = target.parent();
+            if (parent.css('display') == 'flex' && parent.css('flex-direction') == 'row') {
+               return true;
+            }
+            return false;
          },
          _onDragHandler: function(dragObject, e) {
             this._clearDragHighlight(dragObject);
