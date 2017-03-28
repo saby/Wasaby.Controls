@@ -571,16 +571,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
             self = this,
             filterFieldObj = {};
-
-         if (this._dataSource) {
+         //сначала поищем по рекордсету
+         if (this.getItems()) {
+            this._findItemByKey(this.getItems());
+         }
+         else if (this._dataSource) {
             filterFieldObj[this._options.displayProperty] = self._options.text;
 
             self._callQuery(filterFieldObj).addCallback(function (DataSet) {
                self._findItemByKey(DataSet);
             });
-         }
-         else if (this.getItems()) {
-            this._findItemByKey(this.getItems());
          }
          else {
             this._delayedSettingTextByKey = true;
