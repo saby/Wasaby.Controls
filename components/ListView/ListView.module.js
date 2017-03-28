@@ -1785,6 +1785,16 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         setActive: function() {
+            var eip;
+            if (this.isEdit()) {
+               eip = this._getEditInPlace();
+               eip.setActive.apply(eip, arguments);
+            } else {
+               ListView.superclass.setActive.apply(this, arguments);
+            }
+         },
+
          _toggleEipHoveredHandlers: function(toggle) {
             var methodName = toggle ? 'subscribe' : 'unsubscribe';
             this[methodName]('onChangeHoveredItem', this._onChangeHoveredItemHandler);
