@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/constants",
    'js!SBIS3.CONTROLS.SearchController',
    'js!SBIS3.CONTROLS.HistoryList',
-   'js!SBIS3.CONTROLS.ParentCheckerUtil',
+   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
    "Core/core-instance",
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    constants,
    SearchController,
    HistoryList,
-   ParentCheckerUtil,
+   ControlHierarchyManager,
    RecordSet,
    Di,
    cInstance,
@@ -288,7 +288,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
             /* focusedControl может не приходить при разрушении контрола */
             if(list && focusedControl) {
-               isChildControl = ParentCheckerUtil(list, focusedControl);
+               isChildControl = ControlHierarchyManager.checkInclusion(list, focusedControl.getContainer());
 
                if(!isChildControl) {
                   isChildControl = list.getChildControls(false, true, function(ctrl) {

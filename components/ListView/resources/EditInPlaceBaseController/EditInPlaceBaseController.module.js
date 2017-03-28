@@ -12,14 +12,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
    "js!SBIS3.CONTROLS.EditInPlace",
-   "js!SBIS3.CONTROLS.ParentCheckerUtil",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ParentCheckerUtil, Model, Record, cInstance, fcHelpers) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -608,7 +608,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             _isAnotherTarget: function(target, control) {
-               return !ParentCheckerUtil(control, target);
+               return !ControlHierarchyManager.checkInclusion(control, target.getContainer());
             },
             _isCurrentTarget: function(control) {
                var currentTarget = this._getEditingEip().getTarget(),

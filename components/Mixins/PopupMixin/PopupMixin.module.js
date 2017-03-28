@@ -575,7 +575,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
          if (floatArea.length){
             target = floatArea.wsControl().getOpener();
-            return ParentCheckerUtil(this, target);
+            return ControlHierarchyManager.checkInclusion(this, target.getContainer());
          }
          //Если кликнули по инфобоксу - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box');
