@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'html!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
+      'js!SBIS3.CONTROLS.ParentCheckerUtil',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, strHelpers) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, strHelpers, ParentCheckerUtil) {
       'use strict';
 
       var dateDecorator = null;
@@ -169,18 +170,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          // Проверяем не ушел ли фокус на одного из детей редактора (например выпадашка у поля связи)
          _isEditorChild: function(focusedControl, control){
-            var isChild = false,
-               parent, opener;
-            while (focusedControl && (focusedControl.getParent || focusedControl.getOpener)) {
-               parent = focusedControl.getParent();
-               opener = focusedControl.getOpener ? focusedControl.getOpener() : null;
-               if (focusedControl == control) {
-                  isChild = true;
-                  break;
-               }
-               focusedControl = parent || opener;
-            }
-            return isChild;
+            return !!ParentCheckerUtil(control, focusedControl);
          },
 
          /**
