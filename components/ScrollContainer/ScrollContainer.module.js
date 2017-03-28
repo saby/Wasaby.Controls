@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onScroll: function() {
             var scrollTop = this._getScrollTop();
-            if (this._showScrollbar){
+            if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
