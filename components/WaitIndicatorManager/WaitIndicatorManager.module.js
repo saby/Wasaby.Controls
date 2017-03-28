@@ -32,7 +32,7 @@
        * TODO: (+) Добавить идентификаторы
        * TODO: (+) Поправить страховочное очистку DOM-а (в связи с очередью)
        * TODO: (+) Переименовать очередь в Pool (это ведь не очередь)
-       * TODO: ### Объединить suspend и remove (в inner) во избежание дублирования кода
+       * TODO: (+) Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: (+) Обособить методы, связанные с DOM-ом
        * TODO: ###
        * TODO: ### Перейти от тестов к демо ?
@@ -430,28 +430,7 @@
           * @param {string} message Текст сообщения индикатора
           */
          static suspend (id, container, message) {
-            let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
-            if (poolIndex !== -1) {
-               let poolItem =  WaitIndicatorPool[poolIndex];
-               let i = poolItem.list.length ? poolItem.list.findIndex(item => item.id === id) : -1;
-               if (i !== -1) {
-                  if (1 < poolItem.list.length) {
-                     poolItem.list.splice(i, 1);//###
-                     let msg = poolItem.list[0].message;
-                     if (message !== msg) {
-                        WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
-                     }
-                  }
-                  else {
-                     poolItem.list.splice(i, 1);//###
-                     poolItem.spinner.style.display = 'none';
-                     // Начать отсчёт времени до принудительного удаления из DOM-а
-                     poolItem.clearing = setTimeout(() => {
-                        WaitIndicatorInner._delete(poolItem);
-                  }, WaitIndicatorManager.SUSPEND_TIME);
-                  }
-               }
-            }
+            WaitIndicatorInner._remove(id, container, message, false);
          }
 
          /**
@@ -462,22 +441,43 @@
           * @param {string} message Текст сообщения индикатора
           */
          static remove (id, container, message) {
+            WaitIndicatorInner._remove(id, container, message, true);
+         }
 
+         /**
+          * Общая реализация для методов suspend и remove
+          * @protected
+          * @param {number} id Идентификатор индикатора
+          * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
+          * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
+          */
+         static _remove (id, container, message, force) {
             let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (poolIndex !== -1) {
                let poolItem =  WaitIndicatorPool[poolIndex];
                let i = poolItem.list.length ? poolItem.list.findIndex(item => item.id === id) : -1;
                if (i !== -1) {
                   if (1 < poolItem.list.length) {
-                     poolItem.list.splice(i, 1);//###
+                     poolItem.list.splice(i, 1);
                      let msg = poolItem.list[0].message;
                      if (message !== msg) {
                         WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
                      }
                   }
                   else {
-                     // Удалить из DOM-а и из очереди
-                     WaitIndicatorInner._delete(poolItem);
+                     if (!force) {
+                        poolItem.list.splice(i, 1);
+                        poolItem.spinner.style.display = 'none';
+                        // Начать отсчёт времени до принудительного удаления из DOM-а
+                        poolItem.clearing = setTimeout(() => {
+                           WaitIndicatorInner._delete(poolItem);
+                        }, WaitIndicatorManager.SUSPEND_TIME);
+                     }
+                     else {
+                        // Удалить из DOM-а и из очереди
+                        WaitIndicatorInner._delete(poolItem);
+                     }
                   }
                }
             }
@@ -564,7 +564,10 @@
           */
          static create (container, message) {
             // Здесь единственное место использования jQuery (###возможно временно?)
-            //^^^let _dotTplFn = $ws.doT.template(testTemplate);
+            /*^^^let _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');*/
+            //////////////////////////////////////////////////
+            //console.log('DBG: Spinner create: _dotTplFn=', _dotTplFn, ';');
+            //////////////////////////////////////////////////
             // ### Зависит от шаблона !
             let $container = $(container || document.body);
             //////////////////////////////////////////////////
