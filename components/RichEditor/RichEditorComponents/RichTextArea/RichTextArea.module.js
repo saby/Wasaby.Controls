@@ -957,7 +957,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _setText: function(text) {
             if (text !== this.getText()) {
-               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+               if (!this._isEmptyValue(text)) {
                   this._textChanged = true;
                }
                this._options.text = text;
@@ -1038,18 +1038,25 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            var
                               target = e.target;
                            if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                              callback(target);
+                              callback(e, target);
                            }
                         }
                      });
                   };
                //По двойному клику на изображение показывать диалог редактирования размеров
-               bindImageEvent('dblclick', function(target) {
+               bindImageEvent('dblclick', function(event, target) {
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(target) {
+               bindImageEvent('mousedown touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
+                  //Проблема:
+                  //    При клике на изображение в ie появляются квадраты ресайза
+                  //Решение:
+                  //    отменять дефолтное действие
+                  if(cConstants.browser.isIE) {
+                     event.preventDefault();
+                  }
                });
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {

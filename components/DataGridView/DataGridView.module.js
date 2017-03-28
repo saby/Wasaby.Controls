@@ -268,11 +268,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
                sorting = cfg.sorting,
                sortingValue;
 
-            sorting.forEach(function(sortingElem){
-               if (sortingElem[column.field]) {
-                  sortingValue = sortingElem[column.field];
-               }
-            });
+            if (sorting instanceof Array) {
+               sorting.forEach(function (sortingElem) {
+                  if (sortingElem[column.field]) {
+                     sortingValue = sortingElem[column.field];
+                  }
+               });
+            }
 
             return TemplateUtil.prepareTemplate(SortingTemplate)({
                column: column,

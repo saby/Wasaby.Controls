@@ -1020,10 +1020,6 @@ define('js!SBIS3.CONTROLS.ListView',
                // и смещение зависит от положения скрола и от зума. Это не ошибка расчета, а баг(фича?) ipad.
                // Смещены элементы со стилем right: 0 и bottom: 0. На небольшом зуме этого смещения нет.
                right = window.innerWidth - this.getContainer().get(0).getBoundingClientRect().right;
-               // Edge выставляет right начиная от скроллбара, а все остальные браузеры (внезапно) от края страницы 
-               if (cDetection.isIE12) {
-                  right -= 12;
-               }
                this._scrollPager.getContainer().css('right', right);
             }
          },
@@ -1789,6 +1785,16 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         setActive: function() {
+            var eip;
+            if (this.isEdit()) {
+               eip = this._getEditInPlace();
+               eip.setActive.apply(eip, arguments);
+            } else {
+               ListView.superclass.setActive.apply(this, arguments);
+            }
+         },
+
          _toggleEipHoveredHandlers: function(toggle) {
             var methodName = toggle ? 'subscribe' : 'unsubscribe';
             this[methodName]('onChangeHoveredItem', this._onChangeHoveredItemHandler);
@@ -2005,6 +2011,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   items: this.getItems(),
+                  idProperty: this._options.idProperty,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
                   itemsProjection: this._getItemsProjection(),
@@ -3238,8 +3245,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _groupByDefaultRender: function (item, container) {
             return container;
          },
-         setDataSource: function () {
-            if (this._pager) {
+         setDataSource: function (source, noLoad) {
+            if (!noLoad && this._pager) {
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;

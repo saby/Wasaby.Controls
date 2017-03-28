@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
         return {
             checkMaxLength: function (value, maxLength) {
                 var length = value ? value.replace(/[\s.-]/g, '').length : 0;
-                return !(maxLength && length > maxLength);
+                return !(maxLength && length > maxLength) && (this._getIntegersCount(value || '') < 16);
             },
 
             numberPress: function(b, e, currentVal, delimiters, integers, decimals, keyCode, maxLength){

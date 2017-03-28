@@ -112,6 +112,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._initScrollbar = this._initScrollbar.bind(this);
                this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                this._container.one('mousemove', this._initScrollbar);
+               this._container.one('wheel', this._initScrollbar);
                this._hideScrollbar();
             }
             this._subscribeOnScroll();
@@ -128,11 +129,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content.on('scroll', this._onScroll.bind(this));
          },
 
-         _onScroll: function(){
+         _onScroll: function() {
             var scrollTop = this._getScrollTop();
-            if (!this._scrollbar) {
-               this._initScrollbar();
-            }
             if (this._showScrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
@@ -189,23 +187,23 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _initScrollbar: function(){
-            this._scrollbar = new Scrollbar({
-               element: $('> .controls-ScrollContainer__scrollbar', this._container),
-               contentHeight: this._getScrollHeight(),
-               parent: this
-            });
+            if (!this._scrollbar) {
+               this._scrollbar = new Scrollbar({
+                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
+                  contentHeight: this._getScrollHeight(),
+                  parent: this
+               });
 
-            /**
-             * В ie при overflow-y: scroll добавляется 1px для скроллирования. И когда скролла нет
-             * мы можем скроллить область на 1px. Поэтому мы избавимся от нативного скролла.
-             */
-            if (cDetection.IEVersion >= 10) {
-               this._content.css('overflow-y', 'auto');
-            }
-            if (!cDetection.isIE8){
+               /**
+                * В ie при overflow-y: scroll добавляется 1px для скроллирования. И когда скролла нет
+                * мы можем скроллить область на 1px. Поэтому мы избавимся от нативного скролла.
+                */
+               if (cDetection.IEVersion >= 10) {
+                  this._content.css('overflow-y', 'auto');
+               }
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
+               this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
-            this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
          _getScrollHeight: function(){
