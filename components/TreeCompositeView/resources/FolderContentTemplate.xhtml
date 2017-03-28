@@ -3,5 +3,9 @@
     <img class="controls-CompositeView__tileImg" src="{{?(it.item.get(it.image))}}{{=it.item.get(it.image)}}{{??}}/resources/SBIS3.CONTROLS/themes/online/img/defaultFolder.png{{?}}" />
 </div>
 <div class="controls-CompositeView__tileTitle">
-    <div class="controls-CompositeView__tileTitle-text" style="{{=it.decorators.apply(it.color, 'color')}}">{{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}</div>
+    <div class="controls-CompositeView__tileTitle-text" style="{{=it.decorators.apply(it.color, 'color')}}">
+        {{=it.decorators.apply($ws.helpers.escapeHtml(it.item.get(it.description)))}}
+        <div class="controls-TreeView__editArrow js-controls-TreeView__editArrow"></div>
+    </div><div class="controls-TreeView__editArrow controls-TreeView__editArrow-overflow js-controls-TreeView__editArrow">
+    </div>
 </div>
