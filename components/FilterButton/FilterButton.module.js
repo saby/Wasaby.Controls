@@ -308,16 +308,16 @@ define('js!SBIS3.CONTROLS.FilterButton',
              и при её изменении вызывает необходимые расчеты.
            */
           _onResizeHandler: function() {
-             var picker = this.getPicker(),
+             var picker = this._picker,
                  pickerContainer = picker && picker.getContainer()[0];
 
-             if(!this._pickerHeight) {
+             if (!this._pickerHeight && pickerContainer) {
                 this._pickerHeight = pickerContainer.offsetHeight;
              }
 
              FilterButton.superclass._onResizeHandler.apply(this, arguments);
 
-             if(this._pickerHeight !== pickerContainer.offsetHeight) {
+             if (pickerContainer && (this._pickerHeight !== pickerContainer.offsetHeight)) {
                 picker.recalcPosition(true);
                 picker._onResizeHandler();
                 this._pickerHeight = pickerContainer.offsetHeight;
