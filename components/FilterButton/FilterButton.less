@@ -6,10 +6,6 @@
    .box-shadow(@menu-shadow);
    margin-top: -1px;
 
-   .controls__filterButton__area-scrollContainer {
-      height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
-   }
-
    .blue-color {
       &.controls-Link {
          &.controls-FieldLink__Link {
@@ -33,24 +29,6 @@
             color: @blue-dark-color;
             text-decoration: none;
          }
-      }
-   }
-
-   .controls__filterButton__filterText {
-      height: @controls-filterButton-button-height;
-      line-height: @controls-filterButton-button-height;
-      display: inline-block;
-      cursor: default;
-
-      .controls__filterButton__FilterText__caption {
-         line-height: @controls-filterButton-button-height;
-         display: inline-block;
-      }
-      .controls__filterButton__FilterText__reset {
-         cursor: pointer;
-         position: relative;
-         top: 2px;
-         left: -5px;
       }
    }
 
@@ -93,6 +71,29 @@
    }
 }
 
+.controls__filterButton__filterText {
+   height: @controls-filterButton-button-height;
+   line-height: @controls-filterButton-button-height;
+   display: inline-block;
+   cursor: default;
+}
+
+.controls__filterButton__FilterText__caption {
+   line-height: @controls-filterButton-button-height;
+   display: inline-block;
+}
+
+.controls__filterButton__FilterText__reset {
+   cursor: pointer;
+   position: relative;
+   top: 2px;
+   left: -5px;
+}
+
+.controls__filterButton__area-scrollContainer {
+   height: calc(100% ~'-' @controls-filterButton-area-header-height * 2);
+}
+
 .controls__filterButton__area {
    height: 100%;
 }
@@ -110,21 +111,22 @@
    margin: 0 12px 12px 12px;
 }
 
-.controls-filterButton__history-area {
+.controls-filterButton__history-area .controls-filterButton__footerAreas-wrapper{
+   margin-left: -4px;
+}
 
-   .controls-filterButton__historyView {
-      min-height: 0;
+.controls-filterButton__historyView {
+   min-height: 0;
 
-      .controls-ItemsToolbar {
-         background-color: transparent;
-         box-shadow: none;
-         right: @controls-filterButton-history-actions-right;
-         left: @controls-filterButton-history-actions-left;
-         bottom: @controls-filterButton-history-actions-bottom;
+   .controls-ItemsToolbar {
+      background-color: transparent;
+      box-shadow: none;
+      right: @controls-filterButton-history-actions-right;
+      left: @controls-filterButton-history-actions-left;
+      bottom: @controls-filterButton-history-actions-bottom;
 
-         .icon-size {
-            .icon-16();
-         }
+      .icon-size {
+         .icon-16();
       }
    }
 }
@@ -160,10 +162,6 @@
 
 .controls-filterButton__additionalFilterParams-area {
    margin-bottom: 6px;
-}
-
-.controls-filterButton__footerAreas-wrapper {
-   margin-left: -4px;
 }
 
 .controls-filterButton__historyView-titleContainer {
@@ -383,17 +381,6 @@
          }
          .controls__filterButton__filterLine-cross {
             top: 1px;
-         }
-      }
-   }
-}
-
-.ws-is-ie8 {
-   .controls__filterButton {
-      .controls__filterButton__filterLine {
-         margin: @controls-filterButton-button-margin-ff;
-         .controls__filterButton__filterLine-copyCross {
-            margin-left: -15px;
          }
       }
    }
