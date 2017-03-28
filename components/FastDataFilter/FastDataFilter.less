@@ -2,7 +2,7 @@
   display: inline-block;
   border: @fastDataFilter-border;
   &.controls-FastDataFilter__resize{
-    display: flex;
+     .flexbox();
     .controls-DropdownList {
       overflow: hidden;
       .controls-DropdownList__textWrapper{
@@ -10,4 +10,10 @@
       }
     }
   }
+}
+
+.ws-is-firefox {
+   .controls-FastDataFilter.controls-FastDataFilter__resize {
+      .inline-flexbox();
+   }
 }

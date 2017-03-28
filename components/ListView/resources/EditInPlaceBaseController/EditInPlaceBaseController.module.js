@@ -226,6 +226,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getNextTarget: function(currentTarget, editNextRow) {
                //Ищем с помощью nextAll и prevAll т.к. между строками таблицы могут находиться блоки группировки, футеры папок и т.д. и
                //при помощи next и prev при указанном селекторе мы бы ни чего не нашли, хотя нужные строки могли быть.
+               currentTarget = this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + currentTarget.attr('data-id') + '"]:not(".controls-editInPlace")');
                return currentTarget[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').eq(0);
             },
             _getCurrentTarget: function() {
@@ -244,8 +245,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             edit: function (model, withoutActivateFirstControl) {
-               var self = this;
+               var
+                  self = this,
+                  reReadModel;
                return this.endEdit(true).addCallback(function() {
+                  //TODO: Постепенно нужно отказываться от начала редактирования по моделе, нужно редактировать по ключу(хэшу).
+                  //Сейчас возникают ошибки, из-за того, что в метод edit передаётся модель, а затем вызвается endEdit,
+                  //в следствии чего может случиться reload и переданная нам модель, станет оторванной от recordSet'а.
+                  //Из-за этого при сохранении оторванной записи, изменённые данные не попадают в recordSet.
+                  //Переход на редактирование по ключам будет по задаче https://inside.tensor.ru/opendoc.html?guid=00cb0405-e407-4502-b067-06098aabdfd2
+                  if (model.getState() === Record.RecordState.DETACHED) {
+                     reReadModel = self._options.items.getRecordById(model.get(self._options.idProperty));
+                     model = reReadModel || model;
+                  }
                   return self._prepareEdit(model).addCallback(function(preparedRecord) {
                      var editingRecord;
                      if (preparedRecord) {
