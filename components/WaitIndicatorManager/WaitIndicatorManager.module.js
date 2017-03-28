@@ -33,6 +33,7 @@
        * TODO: (+) Поправить страховочное очистку DOM-а (в связи с очередью)
        * TODO: ### Переименовать очередь в DOMLog
        * TODO: ### Объединить suspend и remove (в inner) во избежание дублирования кода
+       * TODO: (+) Обособить методы, связанные с DOM-ом
        * TODO: ###
        * TODO: ### Перейти от тестов к демо ?
        * TODO: (+) Убрать lastUse
@@ -386,10 +387,6 @@
 
 
       /**
-       * Отдельные функции модуля
-       */
-
-      /**
        * Класс с внутренними методами модуля
        */
       class WaitIndicatorInner {
@@ -414,7 +411,7 @@
             }
             else {
                // Индикатора в DOM-е не содержиться
-               let spinner = WaitIndicatorInner._createSpinner(container, message);
+               let spinner = WaitIndicatorSpinner.create(container, message);
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
@@ -442,7 +439,7 @@
                      queueItem.list.splice(i, 1);//###
                      let msg = queueItem.list[0].message;
                      if (message !== msg) {
-                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spinner, msg);
+                        WaitIndicatorSpinner.changeMessage(queueItem.spinner, msg);
                      }
                   }
                   else {
@@ -475,7 +472,7 @@
                      queueItem.list.splice(i, 1);//###
                      let msg = queueItem.list[0].message;
                      if (message !== msg) {
-                        WaitIndicatorInner._changeSpinnerMessage(queueItem.spinner, msg);
+                        WaitIndicatorSpinner.changeMessage(queueItem.spinner, msg);
                      }
                   }
                   else {
@@ -495,7 +492,7 @@
             // Сбросить отсчёт времени до принудительного удаления из DOM-а
             WaitIndicatorInner._unclear(queueItem);
             // Удалить из DOM-а
-            WaitIndicatorInner._removeSpinner(queueItem.spinner);
+            WaitIndicatorSpinner.remove(queueItem.spinner);
             // Удалить из очереди
             WaitIndicatorInner._removeQuequeItem(queueItem);
          }
@@ -513,45 +510,6 @@
                console.log('DBG: _unclear: (clearing in queueItem)=', ('clearing' in queueItem), ';');
                //////////////////////////////////////////////////
             }
-         }
-
-         /**
-          * Создать и добавить в DOM элемент индикатора
-          * @protected
-          * @param {HTMLElement} container Контейнер индикатора
-          * @param {string} message Текст сообщения индикатора
-          * @return {HTMLElement}
-          */
-         static _createSpinner (container, message) {
-            // Здесь единственное место использования jQuery
-            // ### Зависит от шаблона !
-            let $container = $(container || document.body);
-            //////////////////////////////////////////////////
-            console.log('DBG: _createSpinner: $container=', $container, ';');
-            //////////////////////////////////////////////////
-            let $spinner = $('<div class="WaitIndicator">' + (message || '') + '</div>');
-            $container.append($spinner);
-            return $spinner[0];
-         }
-
-         /**
-          * Изменить сообщение в DOM-элементе индикатора
-          * @protected
-          * @param {HTMLElement} spinner DOM-элемент индикатора
-          * @param {string} message Текст сообщения индикатора
-          */
-         static _changeSpinnerMessage (spinner, message) {
-            // ### Зависит от шаблона !
-            spinner.innerHTML = message || '';
-         }
-
-         /**
-          * Удалить из DOM элемент индикатора
-          * @protected
-          * @param {HTMLElement} spinner DOM-элемент индикатора
-          */
-         static _removeSpinner (spinner) {
-            spinner.parentNode.removeChild(spinner);
          }
 
          /**
@@ -590,6 +548,53 @@
        * @type {object[]}
        */
       let WaitIndicatorQueue = [];
+
+
+
+      /**
+       * Класс в котором собраны методы, непосредственно оперирующими с DOM-ом
+       */
+      class WaitIndicatorSpinner {
+         /**
+          * Создать и добавить в DOM элемент индикатора
+          * @public
+          * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
+          * @return {HTMLElement}
+          */
+         static create (container, message) {
+            // Здесь единственное место использования jQuery (###возможно временно?)
+            //^^^_dotTplFn: $ws.doT.template(testTemplate)
+            // ### Зависит от шаблона !
+            let $container = $(container || document.body);
+            //////////////////////////////////////////////////
+            console.log('DBG: Spinner create: $container=', $container, ';');
+            //////////////////////////////////////////////////
+            let $spinner = $('<div class="WaitIndicator">' + (message || '') + '</div>');
+            $container.append($spinner);
+            return $spinner[0];
+         }
+
+         /**
+          * Изменить сообщение в DOM-элементе индикатора
+          * @public
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {string} message Текст сообщения индикатора
+          */
+         static changeMessage (spinner, message) {
+            // ### Зависит от шаблона !
+            spinner.innerHTML = message || '';
+         }
+
+         /**
+          * Удалить из DOM элемент индикатора
+          * @public
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static remove (spinner) {
+            spinner.parentNode.removeChild(spinner);
+         }
+      }
 
 
 
