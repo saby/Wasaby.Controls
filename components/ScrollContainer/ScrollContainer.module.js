@@ -131,7 +131,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onScroll: function() {
             var scrollTop = this._getScrollTop();
-            if (this._scrollbar){
+            if (this._showScrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
@@ -170,9 +170,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _onResizeHandler: function(){
             ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
-               var scrollHeight = this._getScrollHeight();
-               this._container.toggleClass('controls-ScrollContainer__no-scrollbar', scrollHeight <= this._container[0].offsetHeight)
-               this._scrollbar.setContentHeight(scrollHeight);
+               this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
                if (this._options.stickyContainer) {
                   this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
@@ -195,6 +193,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   contentHeight: this._getScrollHeight(),
                   parent: this
                });
+
                /**
                 * В ie при overflow-y: scroll добавляется 1px для скроллирования. И когда скролла нет
                 * мы можем скроллить область на 1px. Поэтому мы избавимся от нативного скролла.
