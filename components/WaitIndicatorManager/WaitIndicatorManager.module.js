@@ -13,7 +13,7 @@
        * TODO: (+) Локальные индикаторы
        * TODO: ### Будем ли использовать Component-ы в качестве объектов привязки ?
        * TODO: (-) Нужен ли cancel как псевдоним remove ?
-       * TODO: (+-) Нужен ли массив экземпляров индикаторов (не в DOM-е)? Если нужен, то как его чистить ?
+       * TODO: (+) Нужен ли массив экземпляров индикаторов (не в DOM-е)? Если нужен, то как его чистить ?
        * TODO:     Если не нужен, то как контролировать единственность неглобальных?
        * TODO: (+) Добавить приостановку индикатора, без удаления из DOM-а
        * TODO: (+) Объединить схожий код в start, suspend и remove, clearDelays
@@ -26,11 +26,11 @@
        * TODO: ### Привести к новым реалиям isVisible
        * TODO: (+-) Модуляризировать в requirejs
        * TODO: (+) Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
-       * TODO: (+-) Предусмотреть очередь в менеджере
+       * TODO: (+) Предусмотреть очередь в менеджере
        * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
        * TODO: (+) Добавить сообщения
        * TODO: (+) Добавить идентификаторы
-       * TODO: (+-) Поправить страховочное очистку DOM-а (в связи с очередью)
+       * TODO: (+) Поправить страховочное очистку DOM-а (в связи с очередью)
        * TODO: ### Переименовать очередь в DOMLog
        * TODO: ### Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: ###
@@ -45,6 +45,16 @@
        * ###
        */
       class WaitIndicatorManager {
+         /**
+          * Константа - время задержки по умолчанию перед показом индикатора
+          * @public
+          * @static
+          * @type {number}
+          */
+         static get DEFAULT_DELAY () {
+            return 2000;
+         }
+
          /**
           * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
           * @public
@@ -68,10 +78,23 @@
             // Разобрать опции
             let target = options ? options.target : null,
                message = options ? options.message : null,
-               delay = options ? options.delay : 0,
+               delay = options ? options.delay : -1,
                hidden = options ? options.hidden : false;
 
-            let list = WaitIndicatorManager._instances;
+            let id = ++WaitIndicatorCounter;
+            //////////////////////////////////////////////////
+            console.log('DBG: getWaitIndicator: id=', id, ';');
+            //////////////////////////////////////////////////
+            let container = WaitIndicatorManager._getContainer(target);
+            let indicator = new WaitIndicator(id, container, message);
+            if (!hidden) {
+               indicator.start(0 <= delay ? delay : WaitIndicatorManager.DEFAULT_DELAY);
+            }
+            else {
+               indicator.remove(0 <= delay ? delay : 0);
+            }
+
+            /*###let list = WaitIndicatorManager._instances;
             if (!list) {
                WaitIndicatorManager._instances = list = [];
             }
@@ -112,7 +135,8 @@
                   indicator.start(delay);
                }
                list.push(indicator);
-            }
+            }*/
+
             // и вернуть
             return indicator;
          }
