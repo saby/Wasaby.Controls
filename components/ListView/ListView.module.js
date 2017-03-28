@@ -3727,12 +3727,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
-            var selectedItems = this.getSelectedItems(false);
-            if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
-               selectedItems = selectedItems.toArray();
-            }
-
-            this._getMover().move(selectedItems, target).addCallback(function(res){
+            this._getMover().move(
+               this._normalizeItems(this.getSelectedItems(false)),
+               target
+            ).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3809,12 +3807,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * <pre>
           *    new ListView({
           *       itemsActions: {
-      	 *	         name: 'moveSelected'
-      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
-      	 *	         onActivated: function(tr, id, record) {
-      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
-      	 *	         }
-      	 *	      }
+          *          name: 'moveSelected'
+          *          tooltip: 'Переместить выделленые записи внутрь папки'
+          *          onActivated: function(tr, id, record) {
+          *             this.move(this.getSelectedItems().toArray(), record, 'on')
+          *          }
+          *       }
           *    })
           * </pre>
           */
