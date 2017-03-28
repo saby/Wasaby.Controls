@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!WS.Data/Di',
       'Core/helpers/fast-control-helpers',
       'html!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      "Core/EventBus",
       'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
+   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
       'use strict';
 
       var
@@ -35,10 +36,20 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                this._publish('onImageChange');
                this._container.find('.controls-ImagePanel__Button').wsControl = function() { return self; };
                this._container.find('.controls-ImagePanel__Button').on('click', this._buttonClickHandler.bind(this));
+               this._container.on('mousedown focus', this._blockFocusEvents);
             },
 
             getFileLoader: function() {
                return Di.resolve('ImageUploader').getFileLoader();
+            },
+            _blockFocusEvents: function(event) {
+               var eventsChannel = EventBus.channel('WindowChangeChannel');
+               event.preventDefault();
+               event.stopPropagation();
+               //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
+               if(event.type === 'mousedown') {
+                  eventsChannel.notify('onDocumentClick', event);
+               }
             },
 
             _buttonClickHandler: function(event) {
