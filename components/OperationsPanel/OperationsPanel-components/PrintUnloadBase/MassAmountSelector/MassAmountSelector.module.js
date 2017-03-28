@@ -2,6 +2,7 @@
  * Created by ad.chistyakova on 10.04.2015.
  */
 define('js!SBIS3.CONTROLS.MassAmountSelector', [
+   "Core/helpers/fast-control-helpers",
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.MassAmountSelector',
    'js!SBIS3.CONTROLS.RadioGroup',
@@ -9,7 +10,7 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
    'js!SBIS3.CONTROLS.Button',
    'i18n!SBIS3.CONTROLS.MassAmountSelector',
    'css!SBIS3.CONTROLS.MassAmountSelector'
-], function(Control, dotTplFn) {
+], function(fcHelpers, Control, dotTplFn) {
 
    var MassAmountSelector = Control.extend({
 
@@ -38,10 +39,14 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
          this._radioButtons = this.getChildControlByName('controls-RadioButtons').subscribe('onSelectedItemChange', this.onChangeRadioButton.bind(this));
          this._numberTextBox = this.getChildControlByName('controls-numberTextBox');
          this.getChildControlByName('controls-buttonPrint').subscribe('onActivated', function(){
-            var parent = this.getTopParent();
-            if (parent.validate()){
-               parent.setResult(self._numberTextBox.getNumericValue());
+            var
+               parent = this.getTopParent(),
+               numericValue = self._numberTextBox.getNumericValue();
+            if (numericValue) {
+               parent.setResult(numericValue);
                parent.ok();
+            } else {
+               fcHelpers.alert(rk('Для завершения обработки команды вам необходимо указать количество записей'));
             }
          });
       },
