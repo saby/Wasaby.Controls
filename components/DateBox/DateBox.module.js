@@ -345,7 +345,7 @@ define(
 
          if (date === null || typeof date === 'undefined') {
             options.date = date;
-            options.text = this._getFormatModel(options).getStrMask(this._getMaskReplacer(options));
+            options.text = '';
             isCorrect = true;
          }
          if (date instanceof Date) {
