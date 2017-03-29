@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                }.bind(this))
             },
             destroy: function() {
-               this._container.off('.controls-ImagePanel__Button').on('click', this._buttonHandlerInstance);
+               this._container.find('.controls-ImagePanel__Button').off('click', this._buttonHandlerInstance);
                this._container.off('mousedown focus', this._blockFocusEvents);
                ImagePanel.superclass.destroy.apply(this, arguments);
             }
