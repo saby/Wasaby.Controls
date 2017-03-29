@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       moveFromOutside: function(dragSource, target, ownerItems, move) {
          var operation = dragSource.getOperation(),
             action = dragSource.getAction(),
-            def;
+            def = false;
          if (typeof action === 'function') {
             def =  action.call(dragSource);
          } else  if (move && (operation === 'add' || operation === 'move')) {
