@@ -3661,8 +3661,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this._getMover().move(models, target.getModel(), position).addCallback(function(){
-                        this.removeItemsSelectionAll();
+                     this._getMover().move(models, target.getModel(), position).addCallback(function(result){
+                        if (result) {
+                           this.removeItemsSelectionAll();
+                        }
                      }.bind(this));
                   } else {
                      var currentDataSource = this.getDataSource(),
