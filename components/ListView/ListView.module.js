@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/dom&controls-helpers',
    'js!SBIS3.CONTROLS.CursorListNavigation',
    'js!WS.Data/Source/SbisService',
+   'Core/detection',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -66,7 +67,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection) {
 
      'use strict';
 
@@ -130,6 +131,12 @@ define('js!SBIS3.CONTROLS.ListView',
        * @control
        * @public
        * @category Lists
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ListView'>
+       * </component>
+       *
+       *
        */
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
@@ -1994,6 +2001,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                config = {
                   items: this.getItems(),
+                  idProperty: this._options.idProperty,
                   ignoreFirstColumn: this._options.multiselect,
                   dataSource: this._dataSource,
                   itemsProjection: this._getItemsProjection(),
@@ -3227,8 +3235,8 @@ define('js!SBIS3.CONTROLS.ListView',
          _groupByDefaultRender: function (item, container) {
             return container;
          },
-         setDataSource: function () {
-            if (this._pager) {
+         setDataSource: function (source, noLoad) {
+            if (!noLoad && this._pager) {
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
@@ -3447,6 +3455,25 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
                   this._initDrag.call(this, e);
+                  //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
+                  //preventDefault и при таскании элементов мышкой происходит выделение текста.
+                  //Раньше тут была проверка !constants.compatibility.touch и preventDefault не вызывался для touch устройств
+                  //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
+                  //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
+                  //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
+                  //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !constants.browser.isMobilePlatform.
+                  //Кроме того в мозилле не правильно определяется event.target без preventDefault и србатывает клик
+                  //над элементом который перетаскивается https://bugzilla.mozilla.org/show_bug.cgi?id=1259357#a24470849_540189
+                  e.preventDefault();
+                  //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику на строку из за preventDefault
+                  var sel = window.getSelection();
+                  if (sel) {
+                     if (sel.removeAllRanges) {
+                        sel.removeAllRanges();
+                     } else if (sel.empty) {
+                        sel.empty();
+                     }
+                  }
                }
             }).bind(this)
          },
@@ -3634,8 +3661,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
-                     this._getMover().move(models, target.getModel(), position).addCallback(function(){
-                        this.removeItemsSelectionAll();
+                     this._getMover().move(models, target.getModel(), position).addCallback(function(result){
+                        if (result) {
+                           this.removeItemsSelectionAll();
+                        }
                      }.bind(this));
                   } else {
                      var currentDataSource = this.getDataSource(),

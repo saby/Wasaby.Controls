@@ -79,8 +79,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
          }
       },
 
-      $constructor: function() {
-      },
+      $constructor: function() {},
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
@@ -91,7 +90,6 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
 
       _setEnabled: function(enabled){
          Link.superclass._setEnabled.apply(this, arguments);
-         this._container.toggleClass('ws-hover-target', enabled);
          if (enabled) {
             if (this._options.href) {
                $('.controls-Link-link', this._container).attr('href', this._options.href);

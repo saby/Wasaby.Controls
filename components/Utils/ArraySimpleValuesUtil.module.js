@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.ArraySimpleValuesUtil', [
       },
 
       indexOf: function(array, value) {
-         return constants.browser.isIE8 ? Array.indexOf(array, value) : array.indexOf(value);
+         return array.indexOf(value);
       },
 
       invertTypeIndexOf: function(array, elem) {

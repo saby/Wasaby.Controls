@@ -151,12 +151,26 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             this._changedByKeyboard = true;
          },
          _observableControlFocusHandler: function(){
+            if (this._options.historyId && !this._historyController){
+               this._historyController = new HistoryList({
+                  historyId: this._options.historyId
+               });
+            }
             if (this._needShowHistory()){
                this._showHistory();
             }
          },
          _onListItemSelectNotify: function(item){
             if (this._historyController) {
+               //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
+               //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
+               //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
+               //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
+               var idProp = this.getList().getItems().getIdProperty(),
+                   index = this._historyController.getIndexByValue(idProp, item.get(idProp));
+               if(index !== -1) {
+                  this._historyController.removeAt(index);
+               }
                this._historyController.prepend(item.getRawData());
             }
          }
@@ -240,13 +254,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                }
             }
          },
-         _initList: function(){
-            if (this._options.historyId){
-               this._historyController = new HistoryList({
-                  historyId: this._options.historyId
-               });
-            }
-         },
          _resetSearch: function() {
             if (this._needShowHistory()){
                this._showHistory();
@@ -259,6 +266,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
                delete listFilter[this._options.searchParam];
                this.setListFilter(listFilter, true);
+            }
+         },
+         destroy: function() {
+            if (this._historyController) {
+               this._historyController.destroy();
+               this._historyController = null;
             }
          }
       },

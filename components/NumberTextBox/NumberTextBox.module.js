@@ -125,6 +125,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * </pre>
              * @see decimals
              * @see hideEmptyDecimals
+             * @see setOnlyInteger
              */
             onlyInteger: false,
             /**
@@ -317,7 +318,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       setNumericValue: function(value) {
-         if (value !== this._options.numericValue){
+         if (value !== this._options.numericValue && value < 9007199254740992){ // проверка на вернюю границу 2^53
             this._setNumericValue(value);
             this.setText(value + '');
          }
@@ -325,10 +326,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _setNumericValue: function(value){
          if (typeof(value) == 'string'){
-             value = value.replace(/\s+/g,"");
+             value = value.replace(/\s+/g,'');
          }
          if (this._options.onlyInteger) {
-            this._options.numericValue = parseInt(value);
+            this._options.numericValue = parseInt(value, 10);
          } else {
             this._options.numericValue = parseFloat(value);
          }
@@ -352,6 +353,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if (typeof integers === 'number') {
             this._options.integers = integers;
          }
+      },
+      /**
+       * Установить возможность ввода только целых чисел
+       * @param {Boolean} onlyInteger Ввод только целых чисел
+       * @see onlyInteger
+       */
+      setOnlyInteger: function(onlyInteger){
+         this._options.onlyInteger = Boolean(onlyInteger);
       },
 
       _updateCompatPlaceholderVisibility: function() {
