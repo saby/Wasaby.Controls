@@ -1,8 +1,8 @@
-﻿define('WaitIndicatorManager.module'/*###js!SBIS3.CONTROLS.WaitIndicatorManager*/,
+﻿define('js!SBIS3.CONTROLS.WaitIndicatorManager'/*###WaitIndicatorManager.module*/,
    [
-      //###
+      'css!SBIS3.CONTROLS.WaitIndicatorManager'
    ],
-   function (/*###*/) {
+   function () {
       'use strict';
 
       /*
@@ -24,7 +24,7 @@
        * TODO: ### Сделать реальный шаблон индикатора
        * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
        * TODO: ### Привести к новым реалиям isVisible
-       * TODO: (+-) Модуляризировать в requirejs
+       * TODO: (+) Модуляризировать в requirejs
        * TODO: (+) Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
        * TODO: (+) Предусмотреть очередь в менеджере
        * TODO: (+) Перенести страховочную очистку DOM-а в менеджер
@@ -34,9 +34,12 @@
        * TODO: (+) Переименовать очередь в Pool (это ведь не очередь)
        * TODO: (+) Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: (+) Обособить методы, связанные с DOM-ом
-       * TODO: ###
-       * TODO: ### Перейти от тестов к демо ?
+       * TODO: ### Добавить локально-глобальную блокировку
+       * TODO: (+-) Перейти от тестов к демо
        * TODO: (+) Убрать lastUse
+       * TODO: ### Стилевые классы на все случаи
+       * TODO: ### Сообщение меняется с ошибкой
+       * TODO: ###
        * TODO: ### Привести к ES5
        */
 
@@ -573,7 +576,7 @@
             //////////////////////////////////////////////////
             console.log('DBG: Spinner create: $container=', $container, ';');
             //////////////////////////////////////////////////
-            let $spinner = $('<div class="WaitIndicator">' + (message || '') + '</div>');
+            let $spinner = $('<div class="ws-wait-indicator"><div class="ws-wait-indicator-in">' + (message || '') + '</div></div>');
             $container.append($spinner);
             return $spinner[0];
          }
