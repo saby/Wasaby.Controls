@@ -266,11 +266,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var self = this;
          return function (cfg) {
             var
+                className,
                 item = cfg.item,
                 options = item.get('options') || {},
                 type = self._getItemType(item.get('type'));
-            options.className = 'js-controls-operationsPanel__action controls-operationsPanel__actionType-' + type;
-            return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
+            className = 'js-controls-operationsPanel__action controls-operationsPanel__actionType-' + type;
+            return '<component class="' + className + '" data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
          };
       },
       _getItemType: function (type) {
