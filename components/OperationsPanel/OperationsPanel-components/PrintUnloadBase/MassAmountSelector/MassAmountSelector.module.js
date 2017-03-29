@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
             var
                parent = this.getTopParent(),
                numericValue = self._numberTextBox.getNumericValue();
-            if (numericValue) {
+            if (numericValue || self._radioButtons.getSelectedKey() === 'all') {
                parent.setResult(numericValue);
                parent.ok();
             } else {
