@@ -515,10 +515,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                };
 
             cIndicator.show();
-            if (Di.isRegistered('SBIS3.Plugin.Source.LocalService')) {
+            if (Di.isRegistered('SBIS3.Plugin/Source/LocalService')) {
                //service создаётся каждый раз и destroy`тся каждый раз тк плагин может перезагрузиться и сервис протухнет
                //см прохождение по задаче:https://inside.tensor.ru/opendoc.html?guid=c3362ff8-4a31-4caf-a284-c0832c4ac4d5&des=
-               service = Di.resolve('SBIS3.Plugin.Source.LocalService',{
+               service = Di.resolve('SBIS3.Plugin/Source/LocalService',{
                   endpoint: {
                      address: 'Clipboard-1.0.1.0',
                      contract: 'Clipboard'
@@ -957,7 +957,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _setText: function(text) {
             if (text !== this.getText()) {
-               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+               if (!this._isEmptyValue(text)) {
                   this._textChanged = true;
                }
                this._options.text = text;
@@ -1038,18 +1038,25 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            var
                               target = e.target;
                            if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                              callback(target);
+                              callback(e, target);
                            }
                         }
                      });
                   };
                //По двойному клику на изображение показывать диалог редактирования размеров
-               bindImageEvent('dblclick', function(target) {
+               bindImageEvent('dblclick', function(event, target) {
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(target) {
+               bindImageEvent('mousedown touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
+                  //Проблема:
+                  //    При клике на изображение в ie появляются квадраты ресайза
+                  //Решение:
+                  //    отменять дефолтное действие
+                  if(cConstants.browser.isIE) {
+                     event.preventDefault();
+                  }
                });
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
@@ -1635,7 +1642,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             after = after ? after: '';
             img.on('load', function() {
                var
-                  isIEMore8 = cConstants.browser.isIE && !cConstants.browser.isIE8,
+                  isIEMore8 = cConstants.browser.isIE,
                // naturalWidth и naturalHeight - html5, работают IE9+
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
@@ -1643,9 +1650,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   style = ' style="width: 25%"';
                self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
             });
-            if (cConstants.browser.isIE8) {
-               $('body').append(img);
-            }
          },
 
          _onChangeAreaValue: function() {
