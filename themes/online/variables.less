@@ -37,7 +37,7 @@
 
 @font-basic-name:                         'TensorFont', sans-serif;
 @icon-font:                               'cbuc-icons';
-@font-basic-size:                       14px;
+@font-basic-size:                         14px;
 @font-popup-size:                         15px;
 @font-folder-size:                        15px;
 @font-basic-line-height:                  20px;
@@ -523,6 +523,21 @@
 // -------- //
 // Checkbox //
 // -------- //
+
+// -------------------------Используются в других темах.-------------------------------- //
+@check-box-icon-spritesheet:                    'img/CheckBox.png';
+
+@check-box-icon-border:                         none;
+@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 1px;
+@check-box-icon-bg-pathFilter:                  url(@check-box-icon-spritesheet) 0 2px;
+
+@check-box-icon-hover-border:                   @check-box-icon-border;
+@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 17px;
+
+@check-box-icon-checked-border:                 @check-box-icon-border;
+@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
+@check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
+// ------------------------------------------------------------------------------------- //
 
 @check-box-icon-width:                          18px;
 @check-box-icon-height:                         @check-box-icon-width;
