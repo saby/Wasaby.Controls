@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       moveFromOutside: function(dragSource, target, ownerItems, move) {
          var operation = dragSource.getOperation(),
             action = dragSource.getAction(),
-            def;
+            def = false;
          if (typeof action === 'function') {
             def =  action.call(dragSource);
          } else  if (move && (operation === 'add' || operation === 'move')) {
@@ -203,6 +203,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          if (target !== null && this._options.parentProperty) {
             toMap = this._getParentsMap(target.getId());
+         }
+         if (movedItems.indexOf(target) !== -1) {
+            return false;
          }
          for (var i = 0; i < movedItems.length; i++) {
             key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);

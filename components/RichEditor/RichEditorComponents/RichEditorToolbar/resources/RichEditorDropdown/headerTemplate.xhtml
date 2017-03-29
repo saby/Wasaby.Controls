@@ -1,4 +1,4 @@
-{{model = it.selectedItems.at(0);}}
+{{model = it.selecteModel || it.selectedItems.at(0);}}
 <div class="controls-RichEditorDropdown__head">
    {{?model}}
       {{? !model.get('icon')}}

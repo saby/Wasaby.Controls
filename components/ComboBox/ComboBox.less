@@ -40,15 +40,15 @@
      .controls-TextBox__afterFieldWrapper {
        width: @combo-box-after-width;
        .flexbox();
-       align-items: center;
+       .align-items(center);
+       .justify-content(center);
        + .controls-TextBox__fieldWrapper{
          margin-right: @compo-box-fieldWrapper-margin-right;
          padding-right: 0;
        }
        .controls-ComboBox__arrowDown {
-         position: relative;
-         right: @combo-box-arrow-right-offset;
          display: inline-block;
+         line-height: 1!important;
          overflow: hidden;
          width: @combo-box-arrow-width;
          height: @combo-box-arrow-height;
@@ -178,7 +178,7 @@
       margin-top: -1px;
       .icon-ExpandLight:before {
          vertical-align: middle;
-      }  
+      }
    }
    .controls-ComboBox__picker .controls-ComboBox__body{
       height: 100%; //ie10 падает, если высота рассчитывается через calc. Теперь для ie10 выпадающий список прибит к краю экрана без отступа, если контейнер имеет достаточную высоту.
