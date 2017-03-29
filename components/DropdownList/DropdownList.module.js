@@ -484,13 +484,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                  selectedKeys = this.getSelectedKeys(),
                  isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
                  selected;
-            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === 0)) {
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
                if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length &&
                   (selectedKeys.length > 1 || selectedKeys[0] != this._defaultId) || isCheckBoxClick){
-                  var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, itemId);
+                  var changedSelectionIndex = this._changedSelectedKeys.indexOf(itemId);
                   if (changedSelectionIndex < 0){
                      this._changedSelectedKeys.push(itemId);
                   }
@@ -524,7 +524,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _dblClickItemHandler : function(e){
             e.stopImmediatePropagation();
             var  row = $(e.target).closest('.' + this._getItemClass());
-            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === 0)) {
                if (this._options.multiselect) {
                   this._hideAllowed = true;
                   this.setSelectedKeys([this._getIdByRow(row)]);

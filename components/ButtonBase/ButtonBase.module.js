@@ -102,17 +102,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
          }
          this._options.caption = caption || '';
       },
-      _setEnabled: function() {
-         ButtonBase.superclass._setEnabled.apply(this, arguments);
-         // В IE8 при цвета смене иконки не происходит автоматическая её перерисовка, а вызывается она лишь при смене контента в before
-         // http://stackoverflow.com/questions/14227751/ie8-update-inherited-color-of-before-content-based-on-parent-elements-class
-         if (constants.browser.isIE8) {
-            this._container.addClass('controls-Button__IE8Hack');
-            setTimeout(function() {
-               this._container.removeClass('controls-Button__IE8Hack')
-            }.bind(this), 1);
-         }
-      },
 
       validate: function() {
          /* Т.к. buttonBase это составной контрол, то он должен валидировать как себя (радиокнопки должны валидировать себя),
