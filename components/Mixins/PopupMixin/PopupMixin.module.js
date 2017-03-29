@@ -9,11 +9,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
+   "js!SBIS3.CONTROLS.ParentCheckerUtil",
    "Core/helpers/helpers",
    "Core/helpers/dom&controls-helpers",
    "Core/detection",
    "Core/constants"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection, constants) {
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, ParentCheckerUtil, coreHelpers, dcHelpers, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -574,10 +575,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
          if (floatArea.length){
             target = floatArea.wsControl().getOpener();
-            while (target && target !== this) {
-               target = target.getParent() || (target.getOpener && target.getOpener());
-            }
-            return target === this;
+            return ControlHierarchyManager.checkInclusion(this, target.getContainer());
          }
          //Если кликнули по инфобоксу - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box');
