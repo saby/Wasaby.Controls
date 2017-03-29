@@ -57,8 +57,10 @@
    -webkit-overflow-scrolling: auto!important;
 }
 
-.controls-ScrollContainer__content-overflowHidden {
-   overflow: hidden;
+.ws-is-firefox, .ws-is-ie {
+   .controls-ScrollContainer__ie-overflow-hidden {
+      overflow: hidden;
+   }
 }
 
 .ws-is-desktop-platform {
