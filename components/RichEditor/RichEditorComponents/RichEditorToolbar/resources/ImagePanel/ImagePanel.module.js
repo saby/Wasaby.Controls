@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                }
             },
             _selectedTemplate: undefined,
+            _buttonHandlerInstance: undefined,
 
             _modifyOptions: function(options) {
                options = ImagePanel.superclass._modifyOptions.apply(this, arguments);
@@ -34,8 +35,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                var
                   self = this;
                this._publish('onImageChange');
+               this._buttonHandlerInstance = this._buttonClickHandler.bind(this);
                this._container.find('.controls-ImagePanel__Button').wsControl = function() { return self; };
-               this._container.find('.controls-ImagePanel__Button').on('click', this._buttonClickHandler.bind(this));
+               this._container.find('.controls-ImagePanel__Button').on('click', this._buttonHandlerInstance);
                this._container.on('mousedown focus', this._blockFocusEvents);
             },
 
@@ -63,6 +65,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                }.bind(this))
             },
             destroy: function() {
+               this._container.off('.controls-ImagePanel__Button').on('click', this._buttonHandlerInstance);
                this._container.off('mousedown focus', this._blockFocusEvents);
                ImagePanel.superclass.destroy.apply(this, arguments);
             }
