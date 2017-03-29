@@ -590,15 +590,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _findItemByKey: function(items) {
          //Алгоритм ищет нужный рекорд по текстовому полю. Это нужно в случае, если в комбобокс
          //передают текст, и надо оперделить ключ записи
-         var noItems = true,
+         var hasItems = false,
+            hasFindedKey = false,
             selKey,
             oldKey = this._options.selectedKey,
             oldIndex = this._options.selectedIndex,
             oldText = this.getText(),
             self = this;
          items.each(function (item) {
-            noItems = false;
+            hasItems = true;
             if (self._propertyValueGetter(item, self._options.displayProperty) == self._options.text) {
+               hasFindedKey = true;
                //для рекордов и перечисляемого чуть разный механизм
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
                   selKey = item.getId();
@@ -626,7 +628,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
 
-         if (noItems && oldKey !== null) {
+         if ((!hasFindedKey || !hasItems) && oldKey !== null) {
             ComboBox.superclass.setSelectedKey.call(self, null);
             self._drawText(oldText);
          }
