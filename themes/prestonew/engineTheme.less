@@ -1,0 +1,80 @@
+/*TODO Тема для Длительных операций, находящихся в sbis3.Engine. Здесь этого явно быть не должно. Возможно придется выносить представление в контролы. */
+.controls-InformationPopup {
+   .engine-OperationNotificationPopup__footer {
+      height: 50px;
+      line-height: 50px;
+      background: #293543;
+   }
+   .engine-OperationNotificationPopup__content_showRegistryButtonContainer {
+      height: 50px;
+   }
+   .engine-OperationNotificationPopup__content_showRegistryButton {
+      line-height: 50px;
+   }
+   &.engine-OperationNotificationPopup, .engine-OperationNotificationPopup__content {
+      width: 600px;
+   }
+   &.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode {
+      width: 420px;
+   }
+   .engine-OperationNotificationPopup__footer_execTasks, .engine-OperationNotificationPopup__footer_executeTime, .engine-OperationNotificationPopup__footer_progress {
+      font-size: 16px;
+      color: #fff;
+   }
+   &.engine-OperationNotificationPopup .controls-NotificationPopup__header_caption {
+      font-size: 32px;
+      color: #FFF;
+      line-height: 52px;
+   }
+   &.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode .controls-NotificationPopup__header_caption {
+      font-size: 24px;
+      line-height: inherit;
+   }
+   .controls-NotificationPopup__header {
+      height: 60px;
+
+      .engine-OperationNotificationPopup__header_stoppedOperationsButton {
+         color: #a8acc3;
+         font-size: 24px;
+      }
+   }
+   .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
+      padding-right: 72px;
+   }
+   .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton, .engine-OperationNotificationPopup__header_downloadButton,
+   .engine-OperationNotificationPopup__header_stoppedOperationsButton {
+      line-height: 60px;
+   }
+   .controls-NotificationPopup__header_icon.icon-size {
+      font-size: 32px !important;
+      width: 32px;
+      height: 32px;
+   }
+}
+
+.engine-LongOperationsList {
+   .engine-LongOperationsList__startTimeContainer, .engine-LongOperationsList__executeTimeContainer {
+      font-size: 16px;
+   }
+
+   .engine-LongOperationsList__groupTpl_title {
+      color: #fff;
+      background: #4e5762;
+   }
+}
+
+.engine-LongOperationsFilter {
+   .engine-LongOperationsFilter__stateDropdown {
+      width: 220px;
+   }
+
+   .engine-LongOperationsFilter__block {
+      height: 46px;
+   }
+
+   .engine-LongOperationsFilter__durationTitle, .engine-LongOperationsFilter__responsibleTitle {
+      min-height: 40px;
+      line-height: 40px;
+   }
+}
+/*TODO Конец костыля. */
