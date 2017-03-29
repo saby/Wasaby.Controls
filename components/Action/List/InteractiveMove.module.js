@@ -219,9 +219,13 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          },
 
          _notifyOnExecuted: function (meta, result) {
-            this._move(meta.movedItems, result).addBoth(function () {
+            if (result !== undefined) { //если ни чего не выбрали то не надо вызывать move
+               this._move(meta.movedItems, result).addBoth(function () {
+                  InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
+               }.bind(this));
+            } else {
                InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
-            }.bind(this));
+            }
          }
       });
       return InteractiveMove;
