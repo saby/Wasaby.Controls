@@ -37,15 +37,15 @@ define('js!SBIS3.CONTROLS.Clickable', [
              */
             commandArgs: [],
             /**
-             * @cfg {Boolean} Разрешить множественные клики
-             * Если опция включена, то все клики будут вызывать событие,
-             * если опция отключена, то появляется задержка между кликами (определяется браузером)
+             * @cfg {Boolean} После клика включает задержку (определяется браузерам) перед следующим кликом.
+             * Если опция отключена, то все клики будут вызывать событие
+             * Если опция включена, то появляется задержка между кликами (определяется браузером)
              * @example
              * <pre class="brush:xml">
-             *     <option name="allowMultipleClick">true</option>
+             *     <option name="clickThrottle">false</option>
              * </pre>
              */
-            allowMultipleClick: true
+            clickThrottle: true
          },
          _keysWeHandle: [
             constants.key.enter,
@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Clickable', [
                if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
-               if(this._options.allowMultipleClick || (!this._options.allowMultipleClick && e.originalEvent.detail === 1)) {
+               if(!this._options.clickThrottle || (this._options.clickThrottle && e.originalEvent.detail === 1)) {
                   this._clickHandler(e);
                   this._notifyOnActivated(e);
                }

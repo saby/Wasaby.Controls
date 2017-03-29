@@ -103,7 +103,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       $protected: {
          _options: {
             _preRender: itemTemplateRender,
-            allowMultipleClick: false,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
              * @example
