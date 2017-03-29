@@ -2486,9 +2486,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _removeItems: function(items, groupId){
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items, groupId);
-            if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom -= this._getAdditionalOffset(items);
-            }
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
