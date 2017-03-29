@@ -643,7 +643,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          var self = this,
              selKeys = this._options.selectedKeys,
              loadKeysArr = [],
-             dMultiResult, item, loadKeysAmount, itemsKeysArr;
+             dMultiResult, item, loadKeysAmount, itemsKeysArr, dependDef;
 
          if(!loadItems) {
             return this._options.selectedItems;
@@ -656,6 +656,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          this._loadItemsDeferred = new Deferred({cancelCallback: function() {
             if(dMultiResult) {
                dMultiResult.getResult().cancel();
+               dependDef.cancel();
             }
          }});
          itemsKeysArr = this._convertToKeys(this._options.selectedItems);
@@ -673,12 +674,23 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             loadKeysAmount = count < loadKeysAmount ? count : loadKeysAmount;
             dMultiResult = new ParallelDeferred({stopOnFirstError: false});
 
+            /* В момент загрузки списка, выделенные ключи могут менять несколько раз
+               (проблема в контексте, решается по ошибке:
+               https://inside.tensor.ru/opendoc.html?guid=b27fc831-a31a-4810-9036-2f32d22de8d1&des=
+               Ошибка в разработку 21.03.2017 Необходимо поправить обратную синхронизацию в контексте Метод setValue updateCo… )
+               Надо от этого защититься, если загрузка записей была прервана, то нам не нужно дожидаться загрузки списка. */
+            if(this.isLoading()) {
+               dependDef = (new Deferred()).dependOn(this._loader);
+            } else {
+               dependDef = Deferred.success();
+            }
+
             if(!this._options.selectedItems) {
                this.initializeSelectedItems();
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
-            cHelpers.callbackWrapper(this._loader, fHelpers.forAliveOnly(function(res) {
+            cHelpers.callbackWrapper(dependDef, fHelpers.forAliveOnly(function(res) {
                for (var j = 0; loadKeysAmount > j; j++) {
                   item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
 
