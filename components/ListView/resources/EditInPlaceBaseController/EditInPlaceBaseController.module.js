@@ -410,7 +410,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   IoC.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
 
-               if (endEditResult) {
+               //Не портим переменную withSaving в случае CUSTOM_LOGIC
+               if (endEditResult && endEditResult !== EndEditResult.CUSTOM_LOGIC) {
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
                needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
