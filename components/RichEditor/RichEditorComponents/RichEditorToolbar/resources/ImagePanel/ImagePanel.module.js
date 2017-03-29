@@ -61,6 +61,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                   this._notify('onImageChange', this._selectedTemplate, fileobj);
                   this.hide();
                }.bind(this))
+            },
+            destroy: function() {
+               this._container.off('mousedown focus', this._blockFocusEvents);
+               ImagePanel.superclass.destroy.apply(this, arguments);
             }
          });
       return ImagePanel;
