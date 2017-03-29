@@ -204,6 +204,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target !== null && this._options.parentProperty) {
             toMap = this._getParentsMap(target.getId());
          }
+         if (movedItems.indexOf(target) !== -1) {
+            return false;
+         }
          for (var i = 0; i < movedItems.length; i++) {
             key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
             if (toMap.indexOf(key) !== -1) {
