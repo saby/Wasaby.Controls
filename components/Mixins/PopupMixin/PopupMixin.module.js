@@ -9,12 +9,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
-   "js!SBIS3.CONTROLS.ParentCheckerUtil",
    "Core/helpers/helpers",
    "Core/helpers/dom&controls-helpers",
    "Core/detection",
    "Core/constants"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, ParentCheckerUtil, coreHelpers, dcHelpers, detection, constants) {
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
