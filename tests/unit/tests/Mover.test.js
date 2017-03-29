@@ -263,6 +263,13 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             treeMover.moveFromOutside(list, targetRow, outsideRs, true);
             assert.equal(count, treeItems.getCount());
          });
+
+         it('should not move the source row if default move off', function(){
+            targetRow.setPosition('after');
+            var count = treeItems.getCount();
+            treeMover.moveFromOutside(list, targetRow, outsideRs, false);
+            assert.equal(count, treeItems.getCount());
+         });
       });
    });
 });
