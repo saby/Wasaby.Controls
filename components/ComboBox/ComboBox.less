@@ -140,10 +140,14 @@
 
 .controls-ComboBox__picker {
    overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
-   .controls-ComboBox__body{
+   .controls-ComboBox__body {
      border: @combo-box-picker-border;
      height: calc(~"100% - 10px"); /* отступ от края экрана*/
      .border-radius(@combo-box-picker-border-radius);
+     .controls-ComboBox__list {
+        .flexbox();
+        .flex-direction(column);
+     }
    }
    .controls-ComboBox__scrollContainer{
      max-height: 400px;
@@ -163,6 +167,13 @@
       &:hover {
          color: @combo-box-picker-item-hover-text-color;
          background: @combo-box-picker-item-hover-bg;
+      }
+   }
+   &.controls-popup-revert-vertical {
+      .controls-ComboBox__body{
+         .controls-ComboBox__list {
+            .flex-direction(column-reverse);
+         }
       }
    }
 }
