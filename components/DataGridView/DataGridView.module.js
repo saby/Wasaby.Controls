@@ -120,7 +120,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators : tplOptions.decorators,
                highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
-               displayProperty: tplOptions.displayProperty
+               displayProperty: tplOptions.displayProperty,
+               escapeHtml: tplOptions.escapeHtml
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
             buildTplArgsLadder(tplOptions.cellData, cfg);
@@ -752,7 +753,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             decorators : args.decorators,
             displayField : args.displayProperty,
             displayProperty : args.displayProperty,
-            isSearch : args.isSearch
+            isSearch : args.isSearch,
+            escapeHtml: args.escapeHtml
          };
          args.startScrollColumn = cfg.startScrollColumn;
          args.currentScrollPosition = this._getColumnsScrollPosition();
