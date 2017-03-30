@@ -43,11 +43,11 @@
        * TODO: ### Возможно стоит механизировать разбор опций ?
        * TODO: ### Разобраться с урлами картинок
        * TODO: (+) Пересмотреть аргументы методов класса Inner
-       * TODO: (+-) Добавить возможность менять сообщение на лету
+       * TODO: (+) Добавить возможность менять сообщение на лету
        * TODO: ### Сделать подробные описания к демам
        * TODO: ### Сделать вывод сообщений в демо (псевдо-консоль)
        * TODO: (+) Собрать всё про Pool в класс
-       * TODO: ### Стоит ли убрать совсем методы _start, _suspend, _remove ?
+       * TODO: (+) Стоит ли убрать совсем методы _start, _suspend, _remove ?
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -312,15 +312,7 @@
           * @return {Promise}
           */
          start (delay) {
-            return this._callDelayed('_start','_starting', delay);
-         }
-
-         /**
-          * Начать показ индикатора немедленно
-          * @protected
-          */
-         _start () {
-            WaitIndicatorInner.start(this);
+            return this._callDelayed('start','_starting', delay);
          }
 
          /**
@@ -332,15 +324,7 @@
           * @return {Promise}
           */
          suspend (delay) {
-            return this._callDelayed('_suspend','_suspending', delay);
-         }
-
-         /**
-          * Завершить показ индикатора немедленно
-          * @protected
-          */
-         _suspend () {
-            WaitIndicatorInner.suspend(this);
+            return this._callDelayed('suspend','_suspending', delay);
          }
 
          /**
@@ -351,15 +335,7 @@
           * @return {Promise}
           */
          remove (delay) {
-            return this._callDelayed('_remove','_removing', delay);
-         }
-
-         /**
-          * Завершить показ индикатора немедленно
-          * @protected
-          */
-         _remove () {
-            WaitIndicatorInner.remove(this);
+            return this._callDelayed('remove','_removing', delay);
          }
 
          /**
@@ -382,7 +358,7 @@
                      //////////////////////////////////////////////////
                      console.log('DBG: ' + method + ': TIMEOUT this.' + storing + '=', this[storing], ';');
                      //////////////////////////////////////////////////
-                     this[method]();
+                     WaitIndicatorInner[method](this);
                      this[storing].success.call(null);
                      this[storing] = null;
                   }, delay),
@@ -393,7 +369,7 @@
                return promise.catch((err) => {});
             }
             else {
-               this[method]();
+               WaitIndicatorInner[method](this);
                return Promise.resolve();
             }
          }
