@@ -767,6 +767,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 len = id.length,
                 self = this,
                 item, def;
+            if (!this._getItemsCount()) {
+               //Если нет данных - не нужно запускать перерисовку. в этом случае обнулится опция text, которая может использоваться как значение по умолчанию (пока не установят данные)
+               //_drawSelectedItems запускается после init'a, в поле связи могут задать selectedItems, не задавая items, поэтому проблему в mixin'e решать нельзя
+               //DropdownList в свою очередь без items работать не может в принципе, чтобы не было скачущей верстки, пока данные не долетели и компонент пуст - поддерживаю возможность
+               //задать значение по умолчанию
+               return;
+            }
             if (this._isEnumTypeData()){
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
             }
@@ -807,6 +814,21 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
+         },
+
+         _getItemsCount: function() {
+            var items = this.getItems();
+            if (items){
+               if (this._isEnumTypeData()) {
+                  var count = 0;
+                  items.each(function () {
+                     count++;
+                  });
+                  return count;
+               }
+               return items.getCount();
+            }
+            return 0;
          },
 
          _drawSelectedValue: function(id, textValue){
