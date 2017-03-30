@@ -98,17 +98,17 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
             }
             return opts
          },
-         setStartValue: function (parentFnc, value, silent) {
+         setStartValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
-            if (opts.selectionMode === 'single') {
+            if (this._options.selectionMode === 'single' && changed) {
                this.setEndValue(value, silent);
             }
             return changed;
          },
 
-         setEndValue: function (parentFnc, value, silent) {
+         setEndValue: function (parentFunc, value, silent) {
             var changed = parentFunc.call(this, value, silent);
-            if (opts.selectionMode === 'single') {
+            if (this._options.selectionMode === 'single' && changed) {
                this.setStartValue(value, silent);
             }
             return changed;
