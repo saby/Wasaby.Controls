@@ -6,8 +6,7 @@
     width: 100%;
     height: 100%;
     z-index: 1000000;/*16777271 2147483647*/
-    background-color: rgba(255, 0, 0, 0.25);
-    /*###pointer-events: none;*/
+    background-color: rgba(255, 255, 255, 0.05);
     cursor: default !important;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -20,6 +19,16 @@
 }
 
 .ws-wait-indicator_small {
+}
+
+.ws-wait-indicator_no-overlay {
+    background-color: transparent;
+    pointer-events: none;
+    cursor: auto !important;
+}
+
+.ws-wait-indicator_dark-overlay {
+    background-color: rgba(0, 0, 0, 0.1);
 }
 
 .ws-wait-indicator-in {
@@ -36,6 +45,8 @@
     margin: auto;
     border-radius: 8px;
     background: rgb(255, 255, 255) url('/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-indicator.gif') 50% 50% no-repeat;
+    cursor: default !important;
+    pointer-events: auto;
     font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
     font-size: 14px;
     line-height: 18px;

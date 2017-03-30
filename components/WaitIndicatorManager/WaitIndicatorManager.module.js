@@ -21,7 +21,7 @@
        * TODO: (+) Может, перенести работу с target-ами полностью в manager ?
        * TODO: ### Добавить опцию для настройки времени удаления приостановленных индикаторов
        * TODO:     и ограничивающую максимальную константу
-       * TODO: (+-) Сделать реальный шаблон индикатора
+       * TODO: (+) Сделать реальный шаблон индикатора
        * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
        * TODO: ### Привести к новым реалиям isVisible
        * TODO: (+) Модуляризировать в requirejs
@@ -43,6 +43,7 @@
        * TODO: ### Возможно стоит механизировать разбор опций ?
        * TODO: ### Разобраться с урлами картинок
        * TODO: ### Пересмотреть аргументы методов класса Inner
+       * TODO: ### Добавить возможность менять сообщение на лету
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -88,14 +89,21 @@
                message = options ? options.message : null,
                delay = options ? options.delay : -1,
                hidden = options ? options.hidden : false,
-               small = options ? options.small : false;
+               small = options ? options.small : false,
+               noOverlay = false,
+               darkOverlay = false;
+            if (options && options.overlay && typeof options.overlay == 'string') {
+               let overlay = options.overlay.toLowerCase();
+               noOverlay = overlay === 'no' || overlay === 'none';
+               darkOverlay = overlay === 'dark';
+            }
 
             let id = ++WaitIndicatorCounter;
             //////////////////////////////////////////////////
             console.log('DBG: getWaitIndicator: id=', id, ';');
             //////////////////////////////////////////////////
             let container = WaitIndicatorManager._getContainer(target);
-            let indicator = new WaitIndicator(id, container, message, {small:small});
+            let indicator = new WaitIndicator(id, container, message, {small, noOverlay, darkOverlay});
             if (!hidden) {
                indicator.start(0 <= delay ? delay : WaitIndicatorManager.DEFAULT_DELAY);
             }
@@ -611,6 +619,12 @@
             if (look) {
                if (look.small) {
                   $spinner.addClass('ws-wait-indicator_small');
+               }
+               if (look.noOverlay || look.small) {
+                  $spinner.addClass('ws-wait-indicator_no-overlay');
+               }
+               if (look.darkOverlay) {
+                  $spinner.addClass('ws-wait-indicator_dark-overlay');
                }
             }
             if (hasMsg) {
