@@ -111,6 +111,7 @@
       height: @date-range-choose-year-height;
       line-height: @date-range-choose-year-height + 1;
       vertical-align: middle;
+      padding-left: @date-range-choose-year-padding-left; //2px;
       .flex-grow(1);
       &.controls-DateRangeChoose__year-clickable{
          cursor: pointer;
@@ -118,9 +119,6 @@
             background-color: @date-range-choose-year-bg-hover-color;
          }
       }
-   }
-   .controls-DateRangeChoose__year {
-      padding-left: 2px;
    }
    // В зависимости от режима немного меняется позиционирование элементов в шапке
    &.controls-DateRangeChoose__showMonths {
@@ -379,8 +377,13 @@
       text-align: center;
       height: @date-range-choose-year-height;
       line-height: @date-range-choose-year-height;
+      .box-sizing(border-box);
       &:hover {
          background-color: @date-range-choose-bg-hover-color;
+      }
+      &:not(.controls-DateRangeChoose__yearsMode-bold):hover {
+         border: @date-range-choose-border-hover;
+         line-height: @date-range-choose-year-height - 2px;
       }
    }
    .controls-DateRangeChoose__yearsMode-bold {
@@ -413,9 +416,9 @@
       :hover {
          border-color: @date-range-choose-home-button-border-color !important;
       }
-      &.icon-primary.controls-IconButton {
-         color: @date-range-choose-home-color !important;
-      }
+      //&.icon-primary.controls-IconButton {
+      //   color: @date-range-choose-home-color !important;
+      //}
    }
 
    .controls-DateRangeChoose__extended-period {
