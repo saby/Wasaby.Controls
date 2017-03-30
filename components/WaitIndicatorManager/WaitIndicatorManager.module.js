@@ -42,7 +42,7 @@
        * TODO: (+) Избавиться от jQuery
        * TODO: ### Возможно стоит механизировать разбор опций ?
        * TODO: ### Разобраться с урлами картинок
-       * TODO: ### Пересмотреть аргументы методов класса Inner
+       * TODO: (+) Пересмотреть аргументы методов класса Inner
        * TODO: ### Добавить возможность менять сообщение на лету
        * TODO: ### Сделать подробные описания к демам
        * TODO: ### Сделать вывод сообщений в демо (псевдо-консоль)
@@ -223,6 +223,15 @@
          }
 
          /**
+          * Геттер свойства, возвращает идентификатор
+          * @public
+          * @type {number}
+          */
+         get id () {
+            return this._id;
+         }
+
+         /**
           * Геттер свойства, возвращает DOM элемент контейнера
           * @public
           * @type {HTMLElement}
@@ -293,7 +302,7 @@
           * @protected
           */
          _start () {
-            WaitIndicatorInner.start(this._id, this._container, this._message, this._look);
+            WaitIndicatorInner.start(this);
          }
 
          /**
@@ -313,7 +322,7 @@
           * @protected
           */
          _suspend () {
-            WaitIndicatorInner.suspend(this._id, this._container, this._message);
+            WaitIndicatorInner.suspend(this);
          }
 
          /**
@@ -332,7 +341,7 @@
           * @protected
           */
          _remove () {
-            WaitIndicatorInner.remove(this._id, this._container, this._message);
+            WaitIndicatorInner.remove(this);
          }
 
          /**
@@ -431,12 +440,12 @@
          /**
           * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
           * @public
-          * @param {number} id Идентификатор индикатора
-          * @param {HTMLElement} container Контейнер индикатора
-          * @param {string} message Текст сообщения индикатора
-          * @param {object} look Параметры внешнего вида индикатора
+          * @param {WaitIndicator} indicator Индикатор
           */
-         static start (id, container, message, look) {
+         static start (indicator) {
+            let id = indicator.id;
+            let container = indicator.container;
+            let message = indicator.message;
             let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (poolIndex !== -1) {
                // Индикатор уже есть в DOM-е
@@ -450,7 +459,7 @@
             }
             else {
                // Индикатора в DOM-е не содержиться
-               let spinner = WaitIndicatorSpinner.create(container, message, look);
+               let spinner = WaitIndicatorSpinner.create(container, message, indicator.look);
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
@@ -464,23 +473,19 @@
          /**
           * Запросить скрытие DOM-элемент индикатора без удаления из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
-          * @param {number} id Идентификатор индикатора
-          * @param {HTMLElement} container Контейнер индикатора
-          * @param {string} message Текст сообщения индикатора
+          * @param {WaitIndicator} indicator Индикатор
           */
-         static suspend (id, container, message) {
-            WaitIndicatorInner._remove(id, container, message, false);
+         static suspend (indicator) {
+            WaitIndicatorInner._remove(indicator.id, indicator.container, indicator.message, false);
          }
 
          /**
           * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
-          * @param {number} id Идентификатор индикатора
-          * @param {HTMLElement} container Контейнер индикатора
-          * @param {string} message Текст сообщения индикатора
+          * @param {WaitIndicator} indicator Индикатор
           */
-         static remove (id, container, message) {
-            WaitIndicatorInner._remove(id, container, message, true);
+         static remove (indicator) {
+            WaitIndicatorInner._remove(indicator.id, indicator.container, indicator.message, true);
          }
 
          /**
