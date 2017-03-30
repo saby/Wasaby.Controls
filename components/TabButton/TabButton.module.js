@@ -9,8 +9,9 @@ define(
       'js!SBIS3.CONTROLS.RadioButtonBase',
       'tmpl!SBIS3.CONTROLS.TabButton',
       'js!SBIS3.CONTROLS.IconMixin',
+      'Core/Sanitize',
       'css!SBIS3.CONTROLS.TabButton'
-   ], function (RadioButtonBase, dotTplFn, IconMixin) {
+   ], function (RadioButtonBase, dotTplFn, IconMixin, Sanitize) {
 
    'use strict';
    /**
@@ -37,6 +38,15 @@ define(
          }
       },
       _dotTplFn: dotTplFn,
+
+      _modifyOptions: function() {
+         //TODO костыль какой-то
+         var opts = TabButton.superclass._modifyOptions.apply(this, arguments);
+         opts.sanitize = function(markup) {
+            return Sanitize (markup.caption, {validNodes: {component: true} })
+         };
+         return opts;
+      },
 
       $constructor: function () {
          if (this._options.icon){

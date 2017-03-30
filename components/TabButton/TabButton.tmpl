@@ -2,7 +2,9 @@
    <div class="controls-TabButton__inner">
       <div>
          <span class="controls-TabButton__icon"></span>
-         <span class="controls-TabButton__caption">{{caption|sanitize}}</span>
+         <span class="controls-TabButton__caption">
+            <ws:partial template="{{sanitize}}" scope="{{ {'caption' : caption} }}" />
+         </span>
       </div>
    </div>
    <div class="controls-tabButton__overlay"></div>
