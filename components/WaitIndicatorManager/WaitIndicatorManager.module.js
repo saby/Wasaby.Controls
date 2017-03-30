@@ -23,7 +23,7 @@
        * TODO:     и ограничивающую максимальную константу
        * TODO: (+) Сделать реальный шаблон индикатора
        * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
-       * TODO: ### Привести к новым реалиям isVisible
+       * TODO: (+) Привести к новым реалиям isVisible
        * TODO: (+) Модуляризировать в requirejs
        * TODO: (+) Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
        * TODO: (+) Предусмотреть очередь в менеджере
@@ -43,9 +43,11 @@
        * TODO: ### Возможно стоит механизировать разбор опций ?
        * TODO: ### Разобраться с урлами картинок
        * TODO: (+) Пересмотреть аргументы методов класса Inner
-       * TODO: ### Добавить возможность менять сообщение на лету
+       * TODO: (+-) Добавить возможность менять сообщение на лету
        * TODO: ### Сделать подробные описания к демам
        * TODO: ### Сделать вывод сообщений в демо (псевдо-консоль)
+       * TODO: ### Собрать всё про Pool в класс
+       * TODO: ### Стоит ли убрать совсем методы _start, _suspend, _remove ?
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -254,10 +256,23 @@
           * @public
           * @type {boolean}
           */
-         /*### Это уже не так !!!*/
-         /*###get isVisible () {
-            return !!this._spinner && !!this._spinner.parentNode;
-         }*/
+         get isVisible () {
+            let poolIndex = WaitIndicatorInner._searchQuequeIndex(this._container);
+            if (poolIndex !== -1) {
+               let poolItem = WaitIndicatorPool[poolIndex];
+               return poolItem.spinner.style.display !== 'none';
+            }
+            return false;
+         }
+
+         /**
+          * Геттер свойства, указывает, что элемент индикатора находиться в DOM-е
+          * @public
+          * @type {boolean}
+          */
+         get isInTheDOM () {
+            return WaitIndicatorInner._searchQuequeIndex(this._container) !== -1;
+         }
 
          /**
           * Сеттер свойства, устанавливает текст сообщения
@@ -265,7 +280,15 @@
           * @type {string}
           */
          set message (msg) {
+            let prevMsg = this._message;
             this._message = msg && typeof msg == 'string' ? msg : null;
+            if (this._message !== prevMsg) {
+               let poolIndex = WaitIndicatorInner._searchQuequeIndex(this._container);
+               if (poolIndex !== -1) {
+                  let poolItem = WaitIndicatorPool[poolIndex];
+                  WaitIndicatorSpinner.changeMessage(poolItem.spinner, this._message);
+               }
+            }
          }
 
          /**
@@ -564,12 +587,6 @@
           */
          static _searchQuequeIndex (container) {
             return WaitIndicatorPool.length ? WaitIndicatorPool.findIndex(item => item.container === container) : -1;
-            /*###return WaitIndicatorPool.length ? WaitIndicatorPool.reduce((acc, item, i) => {
-               if (item.container === container) {
-                  acc.push(i);
-               }
-               return acc;
-            }, []) : [];*/
          }
 
          /**
