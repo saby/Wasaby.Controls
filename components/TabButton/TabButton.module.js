@@ -7,7 +7,7 @@ define(
    'js!SBIS3.CONTROLS.TabButton',
    [
       'js!SBIS3.CONTROLS.RadioButtonBase',
-      'html!SBIS3.CONTROLS.TabButton',
+      'tmpl!SBIS3.CONTROLS.TabButton',
       'js!SBIS3.CONTROLS.IconMixin',
       'css!SBIS3.CONTROLS.TabButton'
    ], function (RadioButtonBase, dotTplFn, IconMixin) {

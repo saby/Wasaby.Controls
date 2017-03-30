@@ -5,8 +5,8 @@ define(
    'js!SBIS3.CONTROLS.TabButtons',
    [
       'js!SBIS3.CONTROLS.RadioGroupBase',
-      'html!SBIS3.CONTROLS.TabButtons',
-      'html!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS.TabButtons',
+      'tmpl!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'Core/ParserUtilities',
       'Core/core-instance',
