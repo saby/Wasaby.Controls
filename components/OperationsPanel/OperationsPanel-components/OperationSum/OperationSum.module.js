@@ -32,7 +32,8 @@ define('js!SBIS3.CONTROLS.OperationSum', [
                  */
                 icon: 'sprite:icon-24 icon-Sum icon-primary action-hover',
                 command: 'sumItems',
-                caption: rk('Суммировать')
+                caption: rk('Суммировать'),
+                allowChangeEnable: false
             }
         }
     });
