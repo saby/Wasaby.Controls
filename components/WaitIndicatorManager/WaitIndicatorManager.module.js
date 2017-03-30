@@ -37,13 +37,15 @@
        * TODO: ### Добавить локально-глобальную блокировку
        * TODO: (+-) Перейти от тестов к демо
        * TODO: (+) Убрать lastUse
-       * TODO: ### Стилевые классы на все случаи
-       * TODO: ### Сообщение меняется с ошибкой
-       * TODO: ### Избавиться от jQuery
+       * TODO: (+-) Стилевые классы на все случаи
+       * TODO: (+) Сообщение меняется с ошибкой
+       * TODO: (+) Избавиться от jQuery
        * TODO: ### Возможно стоит механизировать разбор опций ?
        * TODO: ### Разобраться с урлами картинок
        * TODO: ### Пересмотреть аргументы методов класса Inner
        * TODO: ### Добавить возможность менять сообщение на лету
+       * TODO: ### Сделать подробные описания к демам
+       * TODO: ### Сделать вывод сообщений в демо (псевдо-консоль)
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -597,41 +599,40 @@
           * @public
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
+          * @param {object} look Параметры внешнего вида индикатора
           * @return {HTMLElement}
           */
          static create (container, message, look) {
+            //###let _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');
             //////////////////////////////////////////////////
             console.log('DBG: Spinner create: look=', look, ';');
             //////////////////////////////////////////////////
-            // Здесь единственное место использования jQuery (###возможно временно?)
-            /*^^^let _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');*/
-            //////////////////////////////////////////////////
-            //console.log('DBG: Spinner create: _dotTplFn=', _dotTplFn, ';');
-            //////////////////////////////////////////////////
-            // ### Зависит от шаблона !
-            let $container = $(container || document.body);
-            //////////////////////////////////////////////////
-            console.log('DBG: Spinner create: $container=', $container, ';');
-            //////////////////////////////////////////////////
-            //###let notSmall = !(look && look.small);
             let hasMsg = !(look && look.small) && !!message;
-            let $spinner = $('<div class="ws-wait-indicator"><div class="ws-wait-indicator-in">' + (hasMsg ? message : '') + '</div></div>');
+            let html = '<div class="ws-wait-indicator"><div class="ws-wait-indicator-in" data-node="message">' + (hasMsg ? message : '') + '</div></div>';
+
+            let spinner = document.createElement('div');
+            spinner.innerHTML = html;
+            spinner = spinner.firstElementChild;
+            /*###if (hasMsg) {
+               WaitIndicatorSpinner.changeMessage(spinner, message);
+            }*/
+            let cls = spinner.classList;
             if (look) {
                if (look.small) {
-                  $spinner.addClass('ws-wait-indicator_small');
+                  cls.add('ws-wait-indicator_small');
                }
                if (look.noOverlay || look.small) {
-                  $spinner.addClass('ws-wait-indicator_no-overlay');
+                  cls.add('ws-wait-indicator_no-overlay');
                }
                if (look.darkOverlay) {
-                  $spinner.addClass('ws-wait-indicator_dark-overlay');
+                  cls.add('ws-wait-indicator_dark-overlay');
                }
             }
             if (hasMsg) {
-               $spinner.addClass('ws-wait-indicator_text');
+               cls.add('ws-wait-indicator_text');
             }
-            $container.append($spinner);
-            return $spinner[0];
+            (container || document.body).appendChild(spinner);
+            return spinner;
          }
 
          /**
@@ -641,8 +642,13 @@
           * @param {string} message Текст сообщения индикатора
           */
          static changeMessage (spinner, message) {
-            // ### Зависит от шаблона !
-            spinner.firstElementChild.innerHTML = message || '';
+            if (!('ws' in spinner)) {
+               spinner.ws = {};
+            }
+            if (!('message' in spinner.ws)) {
+               spinner.ws.message = [].slice.call(spinner.querySelectorAll('[data-node="message"]'));
+            }
+            spinner.ws.message.forEach(node => {node.innerHTML = message || ''});
          }
 
          /**
