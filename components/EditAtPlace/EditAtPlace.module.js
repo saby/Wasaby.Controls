@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          // Проверяем не ушел ли фокус на одного из детей редактора (например выпадашка у поля связи)
          _isEditorChild: function(focusedControl, control){
-            return !!ControlHierarchyManager.checkInclusion(control, focusedControl.getContainer());
+            return focusedControl && !!ControlHierarchyManager.checkInclusion(control, focusedControl.getContainer());
          },
 
          /**
