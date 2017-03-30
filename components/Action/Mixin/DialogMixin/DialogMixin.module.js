@@ -241,6 +241,13 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'Используйте публичный метод execute для работы с action\'ом открытия диалога редактирования');
          meta.template = dialogComponent;
          this._openComponent.call(this, meta, mode);
+      },
+
+      destroy : function() {
+         if (this._dialog) {
+            this._dialog.destroy();
+            this._dialog = undefined;
+         }
       }
 
    };

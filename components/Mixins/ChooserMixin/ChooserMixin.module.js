@@ -163,7 +163,10 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
 
          requirejs([this._chooserConfig.type[version][this._options.chooserMode]], function(ctrl) {
-            new ctrl(cMerge(cFunctions.clone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
+            self._chooserDialog = new ctrl(cMerge(cFunctions.clone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
+            self._chooserDialog.subscribe('onAfterClose', function() {
+               self._chooserDialog = undefined;
+            });
          });
       },
 
@@ -173,6 +176,13 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
       _chooseCallback : function() {
          /*Method must be implemented*/
+      },
+
+      destroy : function() {
+         if (this._chooserDialog) {
+            this._chooserDialog.destroy();
+            this._chooserDialog = undefined;
+         }
       }
    };
 
