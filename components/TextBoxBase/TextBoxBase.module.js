@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.DataBindMixin",
-   "js!SBIS3.CORE.CompoundActiveFixMixin"
-], function( constants, IoC, ConsoleLogger,CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin) {
+   "js!SBIS3.CORE.CompoundActiveFixMixin",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager"
+], function( constants, IoC, ConsoleLogger,CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin, ControlHierarchyManager) {
 
    'use strict';
 
@@ -241,8 +242,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       },
 
-      _focusOutHandler: function() {
-         if(this._textChanged) {
+      _focusOutHandler: function(event, isDestroyed, focusedControl) {
+         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl)) {
             this.validate();
          }
       },

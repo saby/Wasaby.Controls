@@ -817,7 +817,9 @@ define('js!SBIS3.CONTROLS.ListView',
             _touchSupport: false,
             _editByTouch: false,
             _dragInitHandler: undefined, //метод который инициализирует dragNdrop
-            _inScrollContainerControl: false
+            _inScrollContainerControl: false,
+            _allowMouseMoveEvent: true,
+            _horisontalDragNDrop: false
          },
 
          $constructor: function () {
@@ -902,7 +904,8 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _eventProxyHandler: function(e) {
-            var originalEvent = e.originalEvent,
+            var self = this,
+                originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix';
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
@@ -917,12 +920,21 @@ define('js!SBIS3.CONTROLS.ListView',
                (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
             );
 
+
             switch (e.type) {
                case 'mousemove':
-                  this._mouseMoveHandler(e);
+                  self._allowMouseMoveEvent && this._mouseMoveHandler(e);
                   break;
                case 'touchstart':
                   this._touchstartHandler(e);
+                  // На windows 10 планшетах между touch-событиями прилетают события мыши
+                  // поэтому на секунду игнорируем mouseMove событие т.к. произошло касание и мыши быть не может
+                  if(self._allowMouseMoveEvent && !constants.browser.isMobileIOS) {
+                     self._allowMouseMoveEvent = false;
+                     setTimeout(function () {
+                        self._allowMouseMoveEvent = true;
+                     }, 1000);
+                  }
                   break;
                case 'swipe':
                   this._swipeHandler(e);
@@ -1942,6 +1954,12 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options._decorators) {
                this._options._decorators.update(this);
             }
+            // скрываем тулбар на время перерисовки т.к. если изменится количество элементов -> изменится размер таблицы,
+            // то операции повиснут в воздухе до проверки в drawItemsCallback
+            // синхронно пересчитывать позицию тулбара нельзя т.к это существенно увеличит время отрисовки
+            if(this._itemsToolbar && this._itemsToolbar.isVisible()) {
+               this._itemsToolbar.hide();
+            }
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
@@ -2484,9 +2502,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _removeItems: function(items, groupId){
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items, groupId);
-            if (this._getSourceNavigationType() == 'Offset'){
-               this._scrollOffset.bottom -= this._getAdditionalOffset(items);
-            }
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
@@ -3554,11 +3569,35 @@ define('js!SBIS3.CONTROLS.ListView',
                   })
                );
                this._hideItemsToolbar();
+               if (this._checkHorisontalDragndrop(target)) {
+                  this._horisontalDragNDrop = true;
+                  this.getContainer().addClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
+               } else {
+                  this._horisontalDragNDrop = false;
+                  this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().addClass('controls-ListView__verticalDragNDrop');
+               }
                return true;
             }
             return false;
          },
-
+         /**
+          * Определяет направление элементов в списке    
+          * @param target
+          * @returns {boolean}
+          * @private
+          */
+         _checkHorisontalDragndrop: function (target) {
+            if (target.css('display') == 'inline-block' || target.css('float') != 'none') {
+               return true;
+            }
+            var parent = target.parent();
+            if (parent.css('display') == 'flex' && parent.css('flex-direction') == 'row') {
+               return true;
+            }
+            return false;
+         },
          _onDragHandler: function(dragObject, e) {
             this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {
@@ -3589,10 +3628,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getDragTarget: function(dragObject) {
             var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
-               item;
+               item,
+               projection = this._getItemsProjection();
 
             if (target.length > 0) {
-               item = this._getItemsProjection().getByHash(target.data('hash'));
+               item = projection.getByHash(target.data('hash'));
+            } else if (this._horisontalDragNDrop) {
+               item = projection.at(projection.getCount()-1);
             }
 
             return item ? item.getContents() : undefined;
@@ -3635,10 +3677,14 @@ define('js!SBIS3.CONTROLS.ListView',
             domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
          },
          _getDirectionOrderChange: function(e, target) {
-            return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height());
+            if (this._horisontalDragNDrop) {
+               return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+            } else {
+               return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+            }
          },
-         _getOrderPosition: function(offset, metric) {
-            return offset < 10 ? DRAG_META_INSERT.before : offset > metric - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+         _getOrderPosition: function(offset, metric, orderOffset) {
+            return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
          },
 
          _createAvatar: function(dragObject) {
