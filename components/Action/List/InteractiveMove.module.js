@@ -212,9 +212,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                   }
                }, this);
             }
-            if (!result.buttonCaption) {
-               result.buttonCaption = 'Перенести';
-            }
             return result;
          },
 
