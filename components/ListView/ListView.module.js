@@ -3753,7 +3753,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   movedItems = [];
                   colHelpers.forEach(idArray, function (item, i) {
                      if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                        movedItems.push(items.getRecordById(item));
+                        var temp = items.getRecordById(item);
+                        if (!temp) {//чтобы отобразить элемент обязательно нужен рекорд, если он отсутсвует в основном рекордсете, то скоре всего он будет в выделенных
+                           var enumerator =  this.getSelectedItems().getEnumerator(),
+                              index = enumerator.getIndexByValue(this._options.idProperty, item);
+                           temp = this.getSelectedItems().at(index);
+                        }
+                        if (temp) {
+                           movedItems.push(temp);
+                        }
                      } else {
                         movedItems.push(item);
                      }
