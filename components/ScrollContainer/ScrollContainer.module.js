@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._subscribeOnScroll();
 
             // Что бы до инициализации в IE не было видно никаких скроллов
-            this._content.removeClass('controls-ScrollContainer__ie-overflow-hidden');
+            this._content.removeClass('.controls-ScrollContainer__ie-overflow-hidden');
 
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
