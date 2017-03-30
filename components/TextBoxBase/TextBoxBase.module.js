@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl)) {
+         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl && focusedControl.getContainer())) {
             this.validate();
          }
       },
