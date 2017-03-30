@@ -21,7 +21,7 @@
        * TODO: (+) Может, перенести работу с target-ами полностью в manager ?
        * TODO: ### Добавить опцию для настройки времени удаления приостановленных индикаторов
        * TODO:     и ограничивающую максимальную константу
-       * TODO: ### Сделать реальный шаблон индикатора
+       * TODO: (+-) Сделать реальный шаблон индикатора
        * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
        * TODO: ### Привести к новым реалиям isVisible
        * TODO: (+) Модуляризировать в requirejs
@@ -39,6 +39,10 @@
        * TODO: (+) Убрать lastUse
        * TODO: ### Стилевые классы на все случаи
        * TODO: ### Сообщение меняется с ошибкой
+       * TODO: ### Избавиться от jQuery
+       * TODO: ### Возможно стоит механизировать разбор опций ?
+       * TODO: ### Разобраться с урлами картинок
+       * TODO: ### Пересмотреть аргументы методов класса Inner
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -83,14 +87,15 @@
             let target = options ? options.target : null,
                message = options ? options.message : null,
                delay = options ? options.delay : -1,
-               hidden = options ? options.hidden : false;
+               hidden = options ? options.hidden : false,
+               small = options ? options.small : false;
 
             let id = ++WaitIndicatorCounter;
             //////////////////////////////////////////////////
             console.log('DBG: getWaitIndicator: id=', id, ';');
             //////////////////////////////////////////////////
             let container = WaitIndicatorManager._getContainer(target);
-            let indicator = new WaitIndicator(id, container, message);
+            let indicator = new WaitIndicator(id, container, message, {small:small});
             if (!hidden) {
                indicator.start(0 <= delay ? delay : WaitIndicatorManager.DEFAULT_DELAY);
             }
@@ -192,14 +197,16 @@
           * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
+          * @param {object} look Параметры внешнего вида индикатора
           */
-         constructor (id, container, message) {
+         constructor (id, container, message, look) {
             //////////////////////////////////////////////////
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
             this._id = id;
             this._container = container;
-            this._message = message;
+            this.message = message;
+            this._look = look && typeof look == 'object' ? look : null;
             this._starting = null;
             this._suspending = null;
             this._removing = null;
@@ -234,12 +241,30 @@
          }*/
 
          /**
+          * Сеттер свойства, устанавливает текст сообщения
+          * @public
+          * @type {string}
+          */
+         set message (msg) {
+            this._message = msg && typeof msg == 'string' ? msg : null;
+         }
+
+         /**
           * Геттер свойства, возвращает текст сообщения
           * @public
-          * @type {HTMLElement}
+          * @type {string}
           */
          get message () {
             return this._message;
+         }
+
+         /**
+          * Геттер свойства, возвращает параметры внешнего вида
+          * @public
+          * @type {object}
+          */
+         get look () {
+            return this._look;
          }
 
          /**
@@ -258,7 +283,7 @@
           * @protected
           */
          _start () {
-            WaitIndicatorInner.start(this._id, this._container, this._message);
+            WaitIndicatorInner.start(this._id, this._container, this._message, this._look);
          }
 
          /**
@@ -399,8 +424,9 @@
           * @param {number} id Идентификатор индикатора
           * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
+          * @param {object} look Параметры внешнего вида индикатора
           */
-         static start (id, container, message) {
+         static start (id, container, message, look) {
             let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
             if (poolIndex !== -1) {
                // Индикатор уже есть в DOM-е
@@ -414,7 +440,7 @@
             }
             else {
                // Индикатора в DOM-е не содержиться
-               let spinner = WaitIndicatorSpinner.create(container, message);
+               let spinner = WaitIndicatorSpinner.create(container, message, look);
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
@@ -565,7 +591,10 @@
           * @param {string} message Текст сообщения индикатора
           * @return {HTMLElement}
           */
-         static create (container, message) {
+         static create (container, message, look) {
+            //////////////////////////////////////////////////
+            console.log('DBG: Spinner create: look=', look, ';');
+            //////////////////////////////////////////////////
             // Здесь единственное место использования jQuery (###возможно временно?)
             /*^^^let _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');*/
             //////////////////////////////////////////////////
@@ -576,7 +605,17 @@
             //////////////////////////////////////////////////
             console.log('DBG: Spinner create: $container=', $container, ';');
             //////////////////////////////////////////////////
-            let $spinner = $('<div class="ws-wait-indicator"><div class="ws-wait-indicator-in">' + (message || '') + '</div></div>');
+            //###let notSmall = !(look && look.small);
+            let hasMsg = !(look && look.small) && !!message;
+            let $spinner = $('<div class="ws-wait-indicator"><div class="ws-wait-indicator-in">' + (hasMsg ? message : '') + '</div></div>');
+            if (look) {
+               if (look.small) {
+                  $spinner.addClass('ws-wait-indicator_small');
+               }
+            }
+            if (hasMsg) {
+               $spinner.addClass('ws-wait-indicator_text');
+            }
             $container.append($spinner);
             return $spinner[0];
          }
@@ -589,7 +628,7 @@
           */
          static changeMessage (spinner, message) {
             // ### Зависит от шаблона !
-            spinner.innerHTML = message || '';
+            spinner.firstElementChild.innerHTML = message || '';
          }
 
          /**

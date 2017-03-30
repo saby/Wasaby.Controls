@@ -1,0 +1,56 @@
+﻿
+.ws-wait-indicator {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000000;/*16777271 2147483647*/
+    background-color: rgba(255, 0, 0, 0.25);
+    /*###pointer-events: none;*/
+    cursor: default !important;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.ws-wait-indicator_text {
+}
+
+.ws-wait-indicator_small {
+}
+
+.ws-wait-indicator-in {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 48px;
+    height: 48px;
+    overflow: hidden;
+    margin: auto;
+    border-radius: 8px;
+    background: rgb(255, 255, 255) url('/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-indicator.gif') 50% 50% no-repeat;
+    font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
+    font-size: 14px;
+    line-height: 18px;
+    color: rgb(0, 0, 0);
+}
+
+.ws-wait-indicator_text .ws-wait-indicator-in {
+    width: 214px;
+    padding: 15px 8px 0 48px;
+    background-position: 8px 50%;
+}
+
+.ws-wait-indicator_small .ws-wait-indicator-in {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    background-image: url('/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-16x16-wheel.gif');
+}
