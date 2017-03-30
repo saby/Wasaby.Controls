@@ -46,7 +46,7 @@
        * TODO: (+-) Добавить возможность менять сообщение на лету
        * TODO: ### Сделать подробные описания к демам
        * TODO: ### Сделать вывод сообщений в демо (псевдо-консоль)
-       * TODO: ### Собрать всё про Pool в класс
+       * TODO: (+) Собрать всё про Pool в класс
        * TODO: ### Стоит ли убрать совсем методы _start, _suspend, _remove ?
        * TODO: ###
        * TODO: ### Привести к ES5
@@ -188,7 +188,7 @@
             }
             return container !== window && container !== document && container !== document.body ? container : null;
          }
-      }
+      };
 
       /**
        * Счётчик экземпляров
@@ -257,12 +257,8 @@
           * @type {boolean}
           */
          get isVisible () {
-            let poolIndex = WaitIndicatorInner._searchQuequeIndex(this._container);
-            if (poolIndex !== -1) {
-               let poolItem = WaitIndicatorPool[poolIndex];
-               return poolItem.spinner.style.display !== 'none';
-            }
-            return false;
+            let poolItem = WaitIndicatorPool.search(this._container);
+            return poolItem ? poolItem.spinner.style.display !== 'none' : false;
          }
 
          /**
@@ -271,7 +267,7 @@
           * @type {boolean}
           */
          get isInTheDOM () {
-            return WaitIndicatorInner._searchQuequeIndex(this._container) !== -1;
+            return WaitIndicatorPool.searchIndex(this._container) !== -1;
          }
 
          /**
@@ -283,9 +279,8 @@
             let prevMsg = this._message;
             this._message = msg && typeof msg == 'string' ? msg : null;
             if (this._message !== prevMsg) {
-               let poolIndex = WaitIndicatorInner._searchQuequeIndex(this._container);
-               if (poolIndex !== -1) {
-                  let poolItem = WaitIndicatorPool[poolIndex];
+               let poolItem = WaitIndicatorPool.search(this._container);
+               if (poolItem) {
                   WaitIndicatorSpinner.changeMessage(poolItem.spinner, this._message);
                }
             }
@@ -452,7 +447,7 @@
          get nextRemove () {
             return this._removing ? this._removing.promise : null;
          }
-      }
+      };
 
 
 
@@ -469,10 +464,9 @@
             let id = indicator.id;
             let container = indicator.container;
             let message = indicator.message;
-            let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
-            if (poolIndex !== -1) {
+            let poolItem = WaitIndicatorPool.search(container);
+            if (poolItem) {
                // Индикатор уже есть в DOM-е
-               let poolItem =  WaitIndicatorPool[poolIndex];
                if (!poolItem.list.length) {
                   poolItem.spinner.style.display = '';
                }
@@ -486,9 +480,9 @@
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
-               WaitIndicatorPool.push({container, spinner, list:[{id, message}]});
+               WaitIndicatorPool.add({container, spinner, list:[{id, message}]});
                //////////////////////////////////////////////////
-               console.log('DBG: start: WaitIndicatorPool=', WaitIndicatorPool, ';');
+               console.log('DBG: start: WaitIndicatorPool._list=', WaitIndicatorPool._list, ';');
                //////////////////////////////////////////////////
             }
          }
@@ -520,9 +514,8 @@
           * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
           */
          static _remove (id, container, message, force) {
-            let poolIndex = WaitIndicatorInner._searchQuequeIndex(container);
-            if (poolIndex !== -1) {
-               let poolItem =  WaitIndicatorPool[poolIndex];
+            let poolItem = WaitIndicatorPool.search(container);
+            if (poolItem) {
                let i = poolItem.list.length ? poolItem.list.findIndex(item => item.id === id) : -1;
                if (i !== -1) {
                   if (1 < poolItem.list.length) {
@@ -542,7 +535,7 @@
                         }, WaitIndicatorManager.SUSPEND_TIME);
                      }
                      else {
-                        // Удалить из DOM-а и из очереди
+                        // Удалить из DOM-а и из пула
                         WaitIndicatorInner._delete(poolItem);
                      }
                   }
@@ -551,23 +544,23 @@
          }
 
          /**
-          * Удалить из DOM-а и из очереди
+          * Удалить из DOM-а и из пула
           * @protected
-          * @param {object} poolItem Элемент очереди
+          * @param {object} poolItem Элемент пула
           */
          static _delete (poolItem) {
             // Сбросить отсчёт времени до принудительного удаления из DOM-а
             WaitIndicatorInner._unclear(poolItem);
             // Удалить из DOM-а
             WaitIndicatorSpinner.remove(poolItem.spinner);
-            // Удалить из очереди
-            WaitIndicatorInner._removeQuequeItem(poolItem);
+            // Удалить из пула
+            WaitIndicatorPool.remove(poolItem);
          }
 
          /**
           * Сбросить отсчёт времени до принудительного удаления из DOM-а
           * @protected
-          * @param {object} poolItem Элемент очереди
+          * @param {object} poolItem Элемент пула
           */
          static _unclear (poolItem) {
             if ('clearing' in poolItem) {
@@ -578,37 +571,66 @@
                //////////////////////////////////////////////////
             }
          }
+      };
+
+
+
+      /**
+       * Пул содержащий информацию о находящихся в DOM-е элементах индикаторов
+       * @type {object}
+       */
+      let WaitIndicatorPool = {
+         /**
+          * Список элементов пула
+          * @protected
+          * @type {object[]}
+          */
+         _list: [],
 
          /**
-          * Найти индекс элемента очереди по контейнеру
+          * Добавить элемент пула
           * @protected
+          * @param {object} item Элемент пула
+          */
+         add (item) {
+            this._list.push(item);
+         },
+
+         /**
+          * Найти индекс элемента пула по контейнеру
+          * @public
           * @param {HTMLElement} container Контейнер индикатора
           * @return {number}
           */
-         static _searchQuequeIndex (container) {
-            return WaitIndicatorPool.length ? WaitIndicatorPool.findIndex(item => item.container === container) : -1;
-         }
+         searchIndex (container) {
+            return this._list.length ? this._list.findIndex(item => item.container === container) : -1;
+         },
 
          /**
-          * Удалить элемент очереди
-          * @protected
-          * @param {object} item Элемент очереди
+          * Найти элемента пула по контейнеру
+          * @public
+          * @param {HTMLElement} container Контейнер индикатора
+          * @return {object}
           */
-         static _removeQuequeItem (poolItem) {
-            if (WaitIndicatorPool.length) {
-               let i = WaitIndicatorPool.findIndex(item => item === poolItem);
+         search (container) {
+            let i = this.searchIndex(container);
+            return i !== -1 ? this._list[i] : null;
+         },
+
+         /**
+          * Удалить элемент пула
+          * @protected
+          * @param {object} item Элемент пула
+          */
+         remove (item) {
+            if (this._list.length) {
+               let i = this._list.indexOf(item);//###.findIndex(v => v === item)
                if (i !== -1) {
-                  WaitIndicatorPool.splice(i, 1);
+                  this._list.splice(i, 1);
                }
             }
          }
-      }
-
-      /**
-       * ### Очередь ...
-       * @type {object[]}
-       */
-      let WaitIndicatorPool = [];
+      };
 
 
 
@@ -681,7 +703,7 @@
          static remove (spinner) {
             spinner.parentNode.removeChild(spinner);
          }
-      }
+      };
 
 
 
