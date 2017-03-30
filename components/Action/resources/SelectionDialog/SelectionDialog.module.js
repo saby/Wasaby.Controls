@@ -34,7 +34,6 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
       },
       $constructor: function() {
          this.subscribe('onReady', this._onReady.bind(this));
-         CommandDispatcher.declareCommand(this, 'applySelect', this._onSelectButtonActivated.bind(this));
       },
       
       _onReady: function() {
@@ -43,14 +42,10 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
          this._treeView = this.getChildControlByName('SelectionDialog-TreeDataGridView');
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
-      },
-
-      _onSelectButtonActivated: function() {
-         var moveTo = this._treeView.getSelectedKey();
-         if (moveTo !== null) {
-            moveTo = this._treeView.getItems().getRecordById(moveTo);
+         if (this._treeView.getMultiselect()) {
+            //по стандарту кнопку выбора надо показывать только если включен мультеселект
+            this.getChildControlByName('SelectorControllerButton').show()
          }
-         this.sendCommand('close', moveTo);
       },
 
       getDataSource: function() {
