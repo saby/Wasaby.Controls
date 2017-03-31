@@ -19,7 +19,7 @@
        * TODO: (+) Объединить схожий код в start, suspend и remove, clearDelays
        * TODO: (+) Добавить очистку DOM-а по тайауту ?
        * TODO: (+) Может, перенести работу с target-ами полностью в manager ?
-       * TODO: ### Добавить опцию для настройки времени удаления приостановленных индикаторов
+       * TODO: (+-) Добавить опцию для настройки времени удаления приостановленных индикаторов
        * TODO:     и ограничивающую максимальную константу
        * TODO: (+) Сделать реальный шаблон индикатора
        * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
@@ -59,6 +59,7 @@
        * TODO: (+) Порефакторить формат элементов пула
        * TODO: (+) Возможно, лучше не удалять при локально-глобальной блокировке ?
        * TODO: ### Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
+       * TODO: ### Возможно, стоит ограничит набор глобальных параметров дефолтными ?
        * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: ### Привести к ES5
@@ -87,7 +88,7 @@
           * @type {number}
           */
          static get SUSPEND_LIFETIME () {
-            return 10000;
+            return 15000;
          }
 
          /**
@@ -121,7 +122,7 @@
             let container = WaitIndicatorManager._getContainer(target);
             let indicator = new WaitIndicator(id, container, message, {small, noOverlay, darkOverlay});
             if (!hidden) {
-               indicator.start(0 <= delay ? delay : WaitIndicatorManager.DEFAULT_DELAY);
+               indicator.start(0 <= delay ? delay : WaitIndicatorManager.getParam('defaultDelay'));
             }
 
             /*###let list = WaitIndicatorManager._instances;
@@ -172,6 +173,42 @@
          }
 
          /**
+          * Установить глобальные параметры
+          * @public
+          * @static
+          * @param {object} settings Набор параметров
+          */
+         static putParams (settings) {
+            if (settings && typeof settings == 'object') {
+               Object.assign(WaitIndicatorParams, settings);
+            }
+         }
+
+         /**
+          * Установить значение глобального параметра по имени. Возвращает предыдущее значение
+          * @public
+          * @static
+          * @param {string} name Имя параметра
+          * @return {any}
+          */
+         static setParam (name, value) {
+            let prev = WaitIndicatorParams[name];
+            WaitIndicatorParams[name] = value;
+            return prev;
+         }
+
+         /**
+          * Получить глобальный параметр по имени
+          * @public
+          * @static
+          * @param {string} name Имя параметра
+          * @return {any}
+          */
+         static getParam (name) {
+            return WaitIndicatorParams[name];
+         }
+
+         /**
           * Определить элемент DOM, соответствующий указанному объекту привязки
           * @protected
           * @static
@@ -204,6 +241,15 @@
        * @type {number}
        */
       let WaitIndicatorCounter = 0;
+
+      /**
+       * Глобальные параметры
+       * @type {object}
+       */
+      let WaitIndicatorParams = {
+         defaultDelay: WaitIndicatorManager.DEFAULT_DELAY,
+         suspendLifetime: WaitIndicatorManager.SUSPEND_LIFETIME
+      };
 
 
 
@@ -522,7 +568,7 @@
                         // Начать отсчёт времени до принудительного удаления из DOM-а
                         poolItem.clearing = setTimeout(() => {
                            WaitIndicatorInner._delete(poolItem);
-                        }, WaitIndicatorManager.SUSPEND_LIFETIME);
+                        }, WaitIndicatorManager.getParam('suspendLifetime'));
                      }
                      else {
                         // Удалить из DOM-а и из пула
