@@ -266,7 +266,7 @@
           */
          get isVisible () {
             let poolItem = WaitIndicatorPool.search(this._container);
-            return poolItem ? poolItem.spinner.style.display !== 'none' : false;
+            return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
          }
 
          /**
@@ -458,7 +458,7 @@
             if (poolItem) {
                // Индикатор уже есть в DOM-е
                if (!poolItem.indicators.length) {
-                  poolItem.spinner.style.display = '';
+                  WaitIndicatorSpinner.show(poolItem.spinner);
                }
                poolItem.indicators.push(indicator);
                // Сбросить отсчёт времени до принудительного удаления из DOM-а
@@ -516,7 +516,7 @@
                   else {
                      if (!force) {
                         poolItem.indicators.splice(i, 1);
-                        poolItem.spinner.style.display = 'none';
+                        WaitIndicatorSpinner.hide(poolItem.spinner);
                         // Начать отсчёт времени до принудительного удаления из DOM-а
                         poolItem.clearing = setTimeout(() => {
                            WaitIndicatorInner._delete(poolItem);
@@ -713,6 +713,18 @@
          }
 
          /**
+          * Удалить из DOM элемент индикатора
+          * @public
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static remove (spinner) {
+            let p = spinner.parentNode;
+            if (p) {
+               p.removeChild(spinner);
+            }
+         }
+
+         /**
           * Изменить сообщение в DOM-элементе индикатора
           * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
@@ -729,15 +741,31 @@
          }
 
          /**
-          * Удалить из DOM элемент индикатора
+          * Показать временно скрытый элемент индикатора
           * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static remove (spinner) {
-            let p = spinner.parentNode;
-            if (p) {
-               p.removeChild(spinner);
-            }
+         static show (spinner) {
+            spinner.style.display = '';
+         }
+
+         /**
+          * Временно скрыть элемент индикатора
+          * @public
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static hide (spinner) {
+            spinner.style.display = 'none';
+         }
+
+         /**
+          * Определить, является ли элемент индикатора видимым
+          * @public
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @return {boolean}
+          */
+         static isVisible (spinner) {
+            return spinner.style.display !== 'none';
          }
       };
 
