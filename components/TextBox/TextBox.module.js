@@ -458,7 +458,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
          TextBox.superclass._focusOutHandler.apply(this, arguments);
 
-         if(!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
+         if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
             this._checkInputVal();
          }
       },
