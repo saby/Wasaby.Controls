@@ -57,17 +57,20 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
 
             recalcPosition: function() {
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
+               var
+                  inputOffset = this.getParent().getInputContainer().offset().top,
+                  panelOffset = this._container.offset().top,
+                  inputHeight = this.getParent().getInputContainer().height();
                this._container.css('width',this.getTarget().width());
                this._container.css('height','32px'); // dich3000
                this._container.css('overflow-y','hidden'); // dich3000
                if (this._container.hasClass('controls-popup-revert-vertical')) {
-                  if (this._container.offset().top + imagePanelhOffset < this.getParent().getInputContainer().offset().top) {
-                     this._container.css('top', this.getParent().getInputContainer().offset().top - imagePanelhOffset);
+                  if (panelOffset + imagePanelhOffset < inputOffset) {
+                     this._container.css('top', inputOffset - imagePanelhOffset);
                   }
                } else {
-                  if (this._container.offset().top > this.getParent().getInputContainer().offset().top + this.getParent().getInputContainer().height() + imagePanelhOffsetBottom) {
-                     this._container.css('top', this.getParent().getInputContainer().offset().top + this.getParent().getInputContainer().height());
-                     console.log(this._container.offset().top , this.getParent().getInputContainer().offset().top, this.getParent().getInputContainer().height());
+                  if (panelOffset > inputOffset + inputHeight + imagePanelhOffsetBottom) {
+                     this._container.css('top', inputOffset + this.getParent().getInputContainer().height());
                   }
                }
             },
