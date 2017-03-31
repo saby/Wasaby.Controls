@@ -170,22 +170,28 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _onResizeHandler: function(){
             ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
-               /**
-                * По умолчанию на контенте висит стиль overflow-y: scroll.
-                * В ie при overflow-y: scroll добавляется 1px для скроллирования.
-                * Поэтому, что бы не появлялся лишний скролл, в ie используем overflow-y: auto.
-                * Скрывая скролл через отрицательный правый маржин, мы рассчитываем,
-                * что скролл всегда есть, из за overflow-y: scroll.
-                * Но в ie, из за overflow-y: auto, его может не быть - тогда из за отрицательного маржина
-                * контент уедет вправо. В связи с этим мы вешаем класс, который убирает отрицательный маржин когда нет скролла.
-                */
-               this._container.toggleClass('controls-ScrollContainer_no-scrollbar', this._getScrollHeight() <= this._content[0].offsetHeight);
+               if (cDetection.IEVersion >= 10) {
+                  this._notHideScrollbar();
+               }
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
                if (this._options.stickyContainer) {
                   this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
                }
             }
+         },
+
+         _notHideScrollbar: function() {
+            /**
+             * По умолчанию на контенте висит стиль overflow-y: scroll.
+             * В ie при overflow-y: scroll добавляется 1px для скроллирования.
+             * Поэтому, что бы не появлялся лишний скролл, в ie используем overflow-y: auto.
+             * Скрывая скролл через отрицательный правый маржин, мы рассчитываем,
+             * что скролл всегда есть, из за overflow-y: scroll.
+             * Но в ie, из за overflow-y: auto, его может не быть - тогда из за отрицательного маржина
+             * контент уедет вправо. В связи с этим мы вешаем класс, который убирает отрицательный маржин когда нет скролла.
+             */
+            this._container.toggleClass('controls-ScrollContainer_no-scrollbar', this._getScrollHeight() <= this._content[0].offsetHeight);
          },
 
          _getScrollTop: function(){
@@ -206,6 +212,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                if (cDetection.IEVersion >= 10) {
                   this._content.css('overflow-y', 'auto');
+                  this._notHideScrollbar();
                }
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
