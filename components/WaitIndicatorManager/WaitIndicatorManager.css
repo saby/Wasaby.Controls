@@ -57,6 +57,7 @@
     width: 214px;
     padding: 15px 8px 0 48px;
     background-position: 8px 50%;
+    white-space: nowrap;
 }
 
 .ws-wait-indicator_small .ws-wait-indicator-in {

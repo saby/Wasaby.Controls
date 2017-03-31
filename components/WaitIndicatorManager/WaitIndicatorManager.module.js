@@ -53,7 +53,10 @@
        * TODO: ### Возможно, нужна поддержка настраиваемых цветов для оверлея (не просто тёмный или прозрачный) ?
        * TODO: ### Оверлей для локальных индикаторов
        * TODO: ### Сделать конверторы promise <--> Deffered ?
-       * TODO: ### Переименовать константу SUSPEND_TIME в SUSPEND_LIFETIME
+       * TODO: (+) Переименовать константу SUSPEND_TIME в SUSPEND_LIFETIME
+       * TODO: (+) Есть ошибка при установке сообщения
+       * TODO: (+) Порефакторить аргументы _remove в Inner
+       * TODO: (+) Порефакторить формат элементов пула
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -80,7 +83,7 @@
           * @static
           * @type {number}
           */
-         static get SUSPEND_TIME () {
+         static get SUSPEND_LIFETIME () {
             return 10000;
          }
 
@@ -284,7 +287,7 @@
             if (this._message !== prevMsg) {
                let poolItem = WaitIndicatorPool.search(this._container);
                if (poolItem) {
-                  WaitIndicatorSpinner.changeMessage(poolItem.spinner, this._message);
+                  WaitIndicatorInner.checkMessage(poolItem, this._message);
                }
             }
          }
@@ -446,10 +449,10 @@
             let poolItem = WaitIndicatorPool.search(container);
             if (poolItem) {
                // Индикатор уже есть в DOM-е
-               if (!poolItem.list.length) {
+               if (!poolItem.indicators.length) {
                   poolItem.spinner.style.display = '';
                }
-               poolItem.list.push({id, message});
+               poolItem.indicators.push(indicator);
                // Сбросить отсчёт времени до принудительного удаления из DOM-а
                WaitIndicatorInner._unclear(poolItem);
             }
@@ -459,7 +462,7 @@
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
-               WaitIndicatorPool.add({container, spinner, list:[{id, message}]});
+               WaitIndicatorPool.add({container, spinner, indicators:[indicator]});
                //////////////////////////////////////////////////
                console.log('DBG: start: WaitIndicatorPool._list=', WaitIndicatorPool._list, ';');
                //////////////////////////////////////////////////
@@ -472,7 +475,7 @@
           * @param {WaitIndicator} indicator Индикатор
           */
          static suspend (indicator) {
-            WaitIndicatorInner._remove(indicator.id, indicator.container, indicator.message, false);
+            WaitIndicatorInner._remove(indicator, false);
          }
 
          /**
@@ -481,37 +484,33 @@
           * @param {WaitIndicator} indicator Индикатор
           */
          static remove (indicator) {
-            WaitIndicatorInner._remove(indicator.id, indicator.container, indicator.message, true);
+            WaitIndicatorInner._remove(indicator, true);
          }
 
          /**
           * Общая реализация для методов suspend и remove
           * @protected
-          * @param {number} id Идентификатор индикатора
-          * @param {HTMLElement} container Контейнер индикатора
-          * @param {string} message Текст сообщения индикатора
+          * @param {WaitIndicator} indicator Индикатор
           * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
           */
-         static _remove (id, container, message, force) {
-            let poolItem = WaitIndicatorPool.search(container);
+         static _remove (indicator, force) {
+            let poolItem = WaitIndicatorPool.search(indicator.container);
             if (poolItem) {
-               let i = poolItem.list.length ? poolItem.list.findIndex(item => item.id === id) : -1;
+               let id = indicator.id;
+               let i = poolItem.indicators.length ? poolItem.indicators.findIndex(item => item.id === id) : -1;
                if (i !== -1) {
-                  if (1 < poolItem.list.length) {
-                     poolItem.list.splice(i, 1);
-                     let msg = poolItem.list[0].message;
-                     if (message !== msg) {
-                        WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
-                     }
+                  if (1 < poolItem.indicators.length) {
+                     poolItem.indicators.splice(i, 1);
+                     WaitIndicatorInner.checkMessage(poolItem, indicator.message);
                   }
                   else {
                      if (!force) {
-                        poolItem.list.splice(i, 1);
+                        poolItem.indicators.splice(i, 1);
                         poolItem.spinner.style.display = 'none';
                         // Начать отсчёт времени до принудительного удаления из DOM-а
                         poolItem.clearing = setTimeout(() => {
                            WaitIndicatorInner._delete(poolItem);
-                        }, WaitIndicatorManager.SUSPEND_TIME);
+                        }, WaitIndicatorManager.SUSPEND_LIFETIME);
                      }
                      else {
                         // Удалить из DOM-а и из пула
@@ -534,6 +533,22 @@
             WaitIndicatorSpinner.remove(poolItem.spinner);
             // Удалить из пула
             WaitIndicatorPool.remove(poolItem);
+         }
+
+         /**
+          * Проверить, и обновить, если нужно, отображаемое сообщение
+          * @protected
+          * @param {object} poolItem Элемент пула
+          * @param {string} prevMessage Текущее (отображаемое) сообщение
+          */
+         static checkMessage (poolItem, prevMessage) {
+            let inds = poolItem.indicators;
+            if (inds.length) {
+               let msg = inds[0].message;
+               if (prevMessage !== msg) {
+                  WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
+               }
+            }
          }
 
          /**
