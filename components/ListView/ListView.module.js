@@ -146,15 +146,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
-          * @param {WS.Data/Entity/Model} record Элемент коллекции, на который перевели курсор.
           * @param {Number|String} hoveredItem.key Первичный ключ элемента.
           * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
-          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
-          * @param {Number} hoveredItem.position.top Отступ от верхней границы контейнера визуального отображения элемента до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
-          * @param {Number} hoveredItem.position.left Отступ от левой границы контейнера визуального отображения элемента до левой границы контейнера визуального отображения списка. Значение в px.
-          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину контейнера визуального отображения элемента.
-          * @param {Number} hoveredItem.size.height Высота контейнера визуального отображения элемента. Значение в px.
-          * @param {Number} hoveredItem.size.width Ширина контейнера визуального отображения элемента. Значение в px.
+          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты container.
+          * @param {Number} hoveredItem.position.top Отступ от верхней границы container до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
+          * @param {Number} hoveredItem.position.left Отступ от левой границы container до левой границы контейнера визуального отображения списка. Значение в px.
+          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину container.
+          * @param {Number} hoveredItem.size.height Высота container в px.
+          * @param {Number} hoveredItem.size.width Ширина container в px.
           * @example
           * При наведении курсора мыши на запись справа от неё отображаются операции (см. <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>).
           * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
@@ -164,7 +163,8 @@ define('js!SBIS3.CONTROLS.ListView',
           *           instances = actions.getItemsInstances();
           *       for (var i in instances) {
           *          if (instances.hasOwnProperty(i)) {
-          *             //Будем скрывать кнопку удаления для всех строк
+          *
+          *             // Будем скрывать кнопку удаления для всех строк
           *             instances[i][i === 'delete' ? 'show' : 'hide']();
           *          }
           *       }
