@@ -1091,7 +1091,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (itemActions) {
                delInstance = itemActions.getItemInstance('delete');
             }
-            return this.isEnabled() && !!delInstance && delInstance.isVisible();
+            //Не нужно проверять на видимость операции удаления, т.к. выделена одна запись, а курсор может находиться над другой.
+            //И при наведении на другую запись, прикладники могут скрыть операцию удаления, и тогда hotkey не отработает.
+            return this.isEnabled() && !!delInstance;
          },
          /**
           * Возвращает следующий элемент
