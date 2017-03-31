@@ -368,7 +368,8 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          this.getContainer().find(
             ['.', this._cssDateRangeChoose.currentValue].join('')
          ).text(
-            dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true})
+            dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(),
+               {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')})
          );
       },
 
