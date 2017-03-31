@@ -2528,6 +2528,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   }
 	               break;
 
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                  }, this);
+                  break;
+
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);
 	               break;
