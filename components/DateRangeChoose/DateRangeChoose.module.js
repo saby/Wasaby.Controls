@@ -229,6 +229,9 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          var target = $(event.target),
             closestCssClass;
          if (target.hasClass(this._cssDateRangeChoose.yearButton)) {
+            if (!this._options.showYears) {
+               return;
+            }
             closestCssClass = 'controls-DateRangeChoose';
          }
          switch (e.type) {
@@ -502,20 +505,51 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
       _updateYears: function () {
          var self = this,
-            currentYear = (new Date()).getFullYear(),
+            start = this.getStartValue(),
+            selectedYear = start ? start.getFullYear() : null,
             year, containers;
          if (this._options.showMonths || this._options.showQuarters || this._options.showHalfyears) {
             return;
          }
          containers = this.getContainer().find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join(''));
          containers.removeClass('controls-DateRangeChoose__yearsMode-bold');
-         containers.each(function (index) {
-            year = self.getYear() - index;
-            if (currentYear === year) {
-               $(this).addClass('controls-DateRangeChoose__yearsMode-bold');
-            }
-            $(this).text(year);
-         });
+         if (selectedYear) {
+            containers.each(function (index) {
+               year = self.getYear() - index;
+               if (selectedYear === year) {
+                  $(this).addClass('controls-DateRangeChoose__yearsMode-bold');
+               }
+               $(this).text(year);
+            });
+         }
+      },
+      /**
+       * Обновляет состояние компонента при повторном открытии
+       * @private
+       */
+      _onShow: function () {
+         if (!this._options.showYears || this._options.showHalfyears || this._options.showQuarters || this._options.showMonths) {
+            return;
+         }
+
+         var start = this.getStartValue(),
+            currentYear = (new Date()).getFullYear(),
+            selectedYear = start ? start.getFullYear() : null,
+            startYear;
+
+         if (!selectedYear) {
+            return;
+         }
+
+         if (selectedYear >= currentYear) {
+            startYear = selectedYear;
+         } else if (currentYear - selectedYear >= 5){
+            startYear = selectedYear + 4;
+         } else {
+            startYear = currentYear;
+         }
+
+         this.setYear(startYear);
       }
    });
 
