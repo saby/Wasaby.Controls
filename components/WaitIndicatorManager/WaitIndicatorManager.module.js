@@ -34,7 +34,7 @@
        * TODO: (+) Переименовать очередь в Pool (это ведь не очередь)
        * TODO: (+) Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: (+) Обособить методы, связанные с DOM-ом
-       * TODO: (+-) Добавить локально-глобальную блокировку
+       * TODO: (+) Добавить локально-глобальную блокировку
        * TODO: (+-) Перейти от тестов к демо
        * TODO: (+) Убрать lastUse
        * TODO: (+-) Стилевые классы на все случаи
@@ -57,7 +57,8 @@
        * TODO: (+) Есть ошибка при установке сообщения
        * TODO: (+) Порефакторить аргументы _remove в Inner
        * TODO: (+) Порефакторить формат элементов пула
-       * TODO: ### Возможно, лучше не удалять при локально-глобальной блокировке ?
+       * TODO: (+) Возможно, лучше не удалять при локально-глобальной блокировке ?
+       * TODO: ### Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
        * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: ### Привести к ES5
@@ -450,7 +451,8 @@
             if (isGlobal) {
                WaitIndicatorPool.each(item => {
                   if (item.container) {
-                     WaitIndicatorSpinner.remove(item.spinner);//###
+                     WaitIndicatorSpinner.hide(item.spinner);
+                     item.isLocked = true;
                   }
                });
             }
@@ -532,7 +534,8 @@
             if (isGlobal) {
                WaitIndicatorPool.each(item => {
                   if (item.container) {
-                     WaitIndicatorSpinner.insert(item.container, item.spinner);
+                     WaitIndicatorSpinner.show(item.spinner);//###.insert(item.container, item.spinner)
+                     item.isLocked = false;
                   }
                });
             }
