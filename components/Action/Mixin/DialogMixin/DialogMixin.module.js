@@ -147,6 +147,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
+            needSetDocumentTitle: false,
             opener: this._getOpener(),
             template: meta.template || this._options.template,
             target: undefined,

@@ -12,8 +12,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel'
    ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
       'use strict';
-
+      //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var
+         imagePanelhOffset = 24,// 32 - 6 - 2*1?  height - input padding - 2 * border
+         imagePanelhOffsetBottom = 4,// 6 - 2*1? input padding - 2 * border
          ImageOptionsPanel =  CompoundControl.extend([PopupMixin], {
             _dotTplFn: dotTplFn,
             $protected: {
@@ -55,7 +57,24 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
 
             recalcPosition: function() {
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
+               var
+                  scrollContainer = this.getTarget().closest('.controls-ScrollContainer'),
+                  linkedContainer = scrollContainer.length ? scrollContainer : this.getParent().getInputContainer(),
+                  inputOffset = linkedContainer.offset().top,
+                  panelOffset = this._container.offset().top,
+                  inputHeight = linkedContainer.height();
                this._container.css('width',this.getTarget().width());
+               this._container.css('height','32px'); // dich3000
+               this._container.css('overflow-y','hidden'); // dich3000
+               if (this._container.hasClass('controls-popup-revert-vertical')) {
+                  if (panelOffset + imagePanelhOffset < inputOffset) {
+                     this._container.css('top', inputOffset - imagePanelhOffset);
+                  }
+               } else {
+                  if (panelOffset > inputOffset + inputHeight + imagePanelhOffsetBottom) {
+                     this._container.css('top', inputOffset + inputHeight);
+                  }
+               }
             },
 
             getFileLoader: function() {
