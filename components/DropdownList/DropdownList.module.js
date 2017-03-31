@@ -427,6 +427,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.setSelectedKeys.call(this, idArray);
                this._updateCurrentSelection();
+               this.validate();
             }
          },
          _updateCurrentSelection: function(){
