@@ -146,15 +146,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
           * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
-          * @param {WS.Data/Entity/Model} record Элемент коллекции, на который перевели курсор.
           * @param {Number|String} hoveredItem.key Первичный ключ элемента.
           * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
-          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты контейнера визуального отображения элемента.
-          * @param {Number} hoveredItem.position.top Отступ от верхней границы контейнера визуального отображения элемента до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
-          * @param {Number} hoveredItem.position.left Отступ от левой границы контейнера визуального отображения элемента до левой границы контейнера визуального отображения списка. Значение в px.
-          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину контейнера визуального отображения элемента.
-          * @param {Number} hoveredItem.size.height Высота контейнера визуального отображения элемента. Значение в px.
-          * @param {Number} hoveredItem.size.width Ширина контейнера визуального отображения элемента. Значение в px.
+          * @param {Object} hoveredItem.position Объект, свойства которого описывают координаты container.
+          * @param {Number} hoveredItem.position.top Отступ от верхней границы container до верхней границы контейнера визуального отображения списка. Значение в px. При расчете учитывается текущий скролл в списке.
+          * @param {Number} hoveredItem.position.left Отступ от левой границы container до левой границы контейнера визуального отображения списка. Значение в px.
+          * @param {Object} hoveredItem.size Объект, свойства которого описывают высоту и ширину container.
+          * @param {Number} hoveredItem.size.height Высота container в px.
+          * @param {Number} hoveredItem.size.width Ширина container в px.
           * @example
           * При наведении курсора мыши на запись справа от неё отображаются операции (см. <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>).
           * Ниже приведён код, с помощью которого можно изменять отображение набора операций для записей списка.
@@ -164,7 +163,8 @@ define('js!SBIS3.CONTROLS.ListView',
           *           instances = actions.getItemsInstances();
           *       for (var i in instances) {
           *          if (instances.hasOwnProperty(i)) {
-          *             //Будем скрывать кнопку удаления для всех строк
+          *
+          *             // Будем скрывать кнопку удаления для всех строк
           *             instances[i][i === 'delete' ? 'show' : 'hide']();
           *          }
           *       }
@@ -470,7 +470,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *    <li>id - идентификатор записи.</li>
                 *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
                 * </ul>
-                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link $ws.proto.Control#enabled}).
+                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link SBIS3.CORE.Control#enabled}).
                 * <ul>
                 *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
                 *     <li>false. Действия доступны всегда.</li>
@@ -481,7 +481,7 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
                 * @remark
-                * Если для контрола установлено значение false в опции {@link $ws.proto.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
+                * Если для контрола установлено значение false в опции {@link SBIS3.CORE.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
                 * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 * @example
@@ -3749,7 +3749,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,
@@ -3763,7 +3763,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   movedItems = [];
                   colHelpers.forEach(idArray, function (item, i) {
                      if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                        movedItems.push(items.getRecordById(item));
+                        var temp = items.getRecordById(item);
+                        if (!temp) {//чтобы отобразить элемент обязательно нужен рекорд, если он отсутсвует в основном рекордсете, то скоре всего он будет в выделенных
+                           var enumerator =  this.getSelectedItems().getEnumerator(),
+                              index = enumerator.getIndexByValue(this._options.idProperty, item);
+                           temp = this.getSelectedItems().at(index);
+                        }
+                        if (temp) {
+                           movedItems.push(temp);
+                        }
                      } else {
                         movedItems.push(item);
                      }
@@ -3785,12 +3793,10 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
-            var selectedItems = this.getSelectedItems(false);
-            if (cInstance.instanceOfMixin(selectedItems, 'WS.Data/Collection/IList')){
-               selectedItems = selectedItems.toArray();
-            }
-
-            this._getMover().move(selectedItems, target).addCallback(function(res){
+            this._getMover().move(
+               this._normalizeItems(this.getSelectedItems(false)),
+               target
+            ).addCallback(function(res){
                if (res !== false) {
                   this.removeItemsSelectionAll();
                }
@@ -3867,12 +3873,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * <pre>
           *    new ListView({
           *       itemsActions: {
-      	 *	         name: 'moveSelected'
-      	 *	         tooltip: 'Переместить выделленые записи внутрь папки'
-      	 *	         onActivated: function(tr, id, record) {
-      	 *             this.move(this.getSelectedItems().toArray(), record, 'on')
-      	 *	         }
-      	 *	      }
+          *          name: 'moveSelected'
+          *          tooltip: 'Переместить выделленые записи внутрь папки'
+          *          onActivated: function(tr, id, record) {
+          *             this.move(this.getSelectedItems().toArray(), record, 'on')
+          *          }
+          *       }
           *    })
           * </pre>
           */

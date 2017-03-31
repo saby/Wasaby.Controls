@@ -79,6 +79,12 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
+       * @returns {Boolean|Error|Deferred}
+       * <ul>
+       *    <li><b>Boolean</b> - сохранение записи прервется, если вернули false</li>
+       *    <li><b>Error</b> - сохранение записи прервется, текст для сообщения об ошибке берется из error.message</li>
+       *    <li><b>Deferred</b> - сохранение приостановится до тех пор, пока deferred не завершит свою работу. В колбэк deferred'a отдается так же False|Error для того, чтобы прервать сохранение.</li>
+       * </ul>
        * @see submit
        * @see update
        * @see onCreateModel
@@ -322,16 +328,15 @@ define('js!SBIS3.CONTROLS.FormController', [
          var self = this,
              record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
-         //Если нет записи или она была удалена, то закрываем панель
-         if (!record || (record.getState() === Record.RecordState.DELETED)){
-            return;
+
+         if (!record || (record.getState() === Record.RecordState.DELETED)) {
+            //Если нет записи или она была удалена, то закрываем панель
          }
          //Если запись еще сохраняется, то отменяем закрытие (защита от множественного вызова закрытия панели)
-         if (self._isRecordSaving()){
+         else if (self._isRecordSaving()) {
             event.setResult(false);
-            return;
          }
-         if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         else if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length) {
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -342,12 +347,12 @@ define('js!SBIS3.CONTROLS.FormController', [
                });
                event.setResult(false);
             }
-            self._resetTitle();
-            return;
          }
-         event.setResult(false);
-         if (!closeAfterConfirmDialogHandler) {
-            self._showConfirmDialog();
+         else {
+            event.setResult(false);
+            if (!closeAfterConfirmDialogHandler) {
+               self._showConfirmDialog();
+            }
          }
       },
 
@@ -963,6 +968,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._unsubscribeFromRecordChange();
+         this._resetTitle();
          FormController.superclass.destroy.apply(this, arguments);
       }
    });

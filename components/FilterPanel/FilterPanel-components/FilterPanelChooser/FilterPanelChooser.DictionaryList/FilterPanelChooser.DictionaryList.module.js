@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
      *
      * <h2>Создание пользовательского редактора</h2>
      * Вы можете создать собственный класс редактора, на основе класса редактора "Список со справочником".
-     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__ListView".
      *
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
