@@ -48,6 +48,12 @@
        * TODO: (+) Сделать вывод поясняющих сообщений в демо (псевдо-консоль)
        * TODO: (+) Собрать всё про Pool в класс
        * TODO: (+) Стоит ли убрать совсем методы _start, _suspend, _remove ?
+       * TODO: (+) Отправлять в промисы при разрешении инстанс индикатора
+       * TODO: (+) Совсем не показывать индикаторы с параметром hidden
+       * TODO: ### Возможно, нужна поддержка настраиваемых цветов для оверлея (не просто тёмный или прозрачный) ?
+       * TODO: ### Оверлей для локальных индикаторов
+       * TODO: ### Сделать конверторы promise <--> Deffered ?
+       * TODO: ### Переименовать константу SUSPEND_TIME в SUSPEND_LIFETIME
        * TODO: ###
        * TODO: ### Привести к ES5
        */
@@ -110,9 +116,6 @@
             let indicator = new WaitIndicator(id, container, message, {small, noOverlay, darkOverlay});
             if (!hidden) {
                indicator.start(0 <= delay ? delay : WaitIndicatorManager.DEFAULT_DELAY);
-            }
-            else {
-               indicator.remove(0 <= delay ? delay : 0);
             }
 
             /*###let list = WaitIndicatorManager._instances;
@@ -359,7 +362,7 @@
                      console.log('DBG: ' + method + ': TIMEOUT this.' + storing + '=', this[storing], ';');
                      //////////////////////////////////////////////////
                      WaitIndicatorInner[method](this);
-                     this[storing].success.call(null);
+                     this[storing].success.call(null, this);
                      this[storing] = null;
                   }, delay),
                   success: success,
@@ -370,7 +373,7 @@
             }
             else {
                WaitIndicatorInner[method](this);
-               return Promise.resolve();
+               return Promise.resolve(this);
             }
          }
 
