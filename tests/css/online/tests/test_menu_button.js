@@ -36,7 +36,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
 	gemini.suite('right_side', function (test) {
 
-        test.setUrl('/regression_menu_button_online.html').setCaptureElements('html')
+        test.setUrl('/regression_menu_button_online.html').skip('firefox').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="MenuButton 1"]', 40000);
@@ -48,8 +48,8 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width()
-                    window.$('[sbisname="MenuButton 1"]').offset({'left': offset});
+					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width() - 20
+                    window.$('[sbisname="MenuButton 1"]').offset({'left': offset, 'top': 20});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -84,7 +84,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-                    window.$('[sbisname="MenuButton 1"]').offset({'top': 850});
+                    window.$('[sbisname="MenuButton 1"]').offset({'left': 20, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -104,7 +104,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_1);
             })
     });
-	/*
+	
 	gemini.suite('bottom_right_side', function (test) {
 
         test.setUrl('/regression_menu_button_online.html').skip('firefox').setCaptureElements('html')
@@ -119,7 +119,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width()
+					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width() - 20
                     window.$('[sbisname="MenuButton 1"]').offset({'left': offset, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
@@ -139,7 +139,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_1);
             })
-    });*/
+    });
 
 	gemini.suite('with_scroll', function (test) {
 
@@ -894,10 +894,10 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_3);
             })
     });
-    /*
+    
 	gemini.suite('right_side_with_submenu', function (test) {
 
-        test.setUrl('/regression_menu_button_online_15.html').setCaptureElements('html')
+        test.setUrl('/regression_menu_button_online_15.html').skip('firefox').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="MenuButton 1"]', 40000);
@@ -910,8 +910,8 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width()
-                    window.$('[sbisname="MenuButton 1"]').offset({'left': offset});
+					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width() - 20
+                    window.$('[sbisname="MenuButton 1"]').offset({'left': offset, 'top': 20});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -935,7 +935,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_3);
             })
-    });*/
+    });
 	
 	gemini.suite('bottom_side_with_submenu', function (test) {
 
@@ -951,7 +951,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-                    window.$('[sbisname="MenuButton 1"]').offset({'top': 850});
+                    window.$('[sbisname="MenuButton 1"]').offset({'left': 20, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -971,7 +971,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
                 actions.mouseMove(this.item_1);
             })
     });
-	/*
+	
 	gemini.suite('bottom_right_side_with_submenu', function (test) {
 
         test.setUrl('/regression_menu_button_online_15.html').skip('firefox').setCaptureElements('html')
@@ -986,7 +986,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width()
+					var offset = document.body.clientWidth - $('[sbisname="MenuButton 1"]').width() - 20
                     window.$('[sbisname="MenuButton 1"]').offset({'left': offset, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
@@ -1006,7 +1006,7 @@ gemini.suite('SBIS3.CONTROLS.MenuButton Online', function () {
 			.capture('hovered_item', function (actions) {
                 actions.mouseMove(this.item_1);
             })
-    });*/
+    });
 
     gemini.suite('disabled_base_with_submenu', function (test) {
 
