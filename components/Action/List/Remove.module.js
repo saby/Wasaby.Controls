@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
          /**
           * Удаляет переданные записи
           * @param {Array} items
-          * @returns {$ws.proto.Deferred}
+          * @returns {CORE/Deferred}
           * @private
           */
          _remove: function(items) {

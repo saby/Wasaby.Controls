@@ -117,7 +117,7 @@ define(['js!SBIS3.CORE.CompoundControl', 'Core/helpers/generate-helpers', 'Core/
          },
          /**
           * Отложенно инстанцирует дочерние компоненты
-          * @returns {$ws.proto.Deferred} - Deferred готовности
+          * @returns {Core/Deferred} - Deferred готовности
           */
          loadChildControls: function() {
             var def = new Deferred();
