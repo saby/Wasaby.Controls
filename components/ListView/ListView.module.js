@@ -2689,7 +2689,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _hasNextPage: function(more, offset) {
             if (this._infiniteScrollState.mode == 'up'){
-               return this._scrollOffset.top >= 0;
+               if (this._options.saveReloadPosition) {
+                  return this._scrollOffset.top >= 0;
+               } else {
+                  return this._scrollOffset.top > 0;
+               }
             } else {
                // Если загружена последняя страница, то вниз грузить больше не нужно
                // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
