@@ -816,6 +816,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
 
+         _callQuery: function() {
+            //Перед новым запросом данных, если у нас уже есть незавершеный запрос на получение selectedItems - прервываем его, т.к. его данные уже не актуальны, фильтр мог поменяться
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
+            return DropdownList.superclass._callQuery.apply(this, arguments);
+         },
+
          _getItemsCount: function() {
             var items = this.getItems();
             if (items){
