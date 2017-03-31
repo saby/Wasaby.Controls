@@ -243,13 +243,14 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          this._openComponent.call(this, meta, mode);
       },
 
-      destroy : function() {
-         if (this._dialog) {
-            this._dialog.destroy();
-            this._dialog = undefined;
+      after : {
+         destroy: function () {
+            if (this._dialog) {
+               this._dialog.destroy();
+               this._dialog = undefined;
+            }
          }
       }
-
    };
 
    return DialogMixin;

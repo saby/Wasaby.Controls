@@ -178,10 +178,12 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
          /*Method must be implemented*/
       },
 
-      destroy : function() {
-         if (this._chooserDialog) {
-            this._chooserDialog.destroy();
-            this._chooserDialog = undefined;
+      after : {
+         destroy: function () {
+            if (this._chooserDialog) {
+               this._chooserDialog.destroy();
+               this._chooserDialog = undefined;
+            }
          }
       }
    };
