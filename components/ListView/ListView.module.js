@@ -3739,7 +3739,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.stack(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"', 1);
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,
@@ -3753,7 +3753,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   movedItems = [];
                   colHelpers.forEach(idArray, function (item, i) {
                      if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                        movedItems.push(items.getRecordById(item));
+                        var temp = items.getRecordById(item);
+                        if (!temp) {//чтобы отобразить элемент обязательно нужен рекорд, если он отсутсвует в основном рекордсете, то скоре всего он будет в выделенных
+                           var enumerator =  this.getSelectedItems().getEnumerator(),
+                              index = enumerator.getIndexByValue(this._options.idProperty, item);
+                           temp = this.getSelectedItems().at(index);
+                        }
+                        if (temp) {
+                           movedItems.push(temp);
+                        }
                      } else {
                         movedItems.push(item);
                      }
