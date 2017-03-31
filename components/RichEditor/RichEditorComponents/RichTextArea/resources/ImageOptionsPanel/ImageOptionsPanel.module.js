@@ -12,8 +12,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel'
    ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
       'use strict';
-
+      //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var
+         imagePanelhOffset = 24,// 32 - 6 - 2*1?  height - input padding - 2 * border
+         imagePanelhOffsetBottom = 4,// 6 - 2*1? input padding - 2 * border
          ImageOptionsPanel =  CompoundControl.extend([PopupMixin], {
             _dotTplFn: dotTplFn,
             $protected: {
@@ -56,6 +58,18 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             recalcPosition: function() {
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
                this._container.css('width',this.getTarget().width());
+               this._container.css('height','32px'); // dich3000
+               this._container.css('overflow-y','hidden'); // dich3000
+               if (this._container.hasClass('controls-popup-revert-vertical')) {
+                  if (this._container.offset().top + imagePanelhOffset < this.getParent().getInputContainer().offset().top) {
+                     this._container.css('top', this.getParent().getInputContainer().offset().top - imagePanelhOffset);
+                  }
+               } else {
+                  if (this._container.offset().top > this.getParent().getInputContainer().offset().top + this.getParent().getInputContainer().height() + imagePanelhOffsetBottom) {
+                     this._container.css('top', this.getParent().getInputContainer().offset().top + this.getParent().getInputContainer().height());
+                     console.log(this._container.offset().top , this.getParent().getInputContainer().offset().top, this.getParent().getInputContainer().height());
+                  }
+               }
             },
 
             getFileLoader: function() {
