@@ -484,13 +484,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                  selectedKeys = this.getSelectedKeys(),
                  isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
                  selected;
-            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === 0)) {
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
                if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length &&
                   (selectedKeys.length > 1 || selectedKeys[0] != this._defaultId) || isCheckBoxClick){
-                  var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, itemId);
+                  var changedSelectionIndex = this._changedSelectedKeys.indexOf(itemId);
                   if (changedSelectionIndex < 0){
                      this._changedSelectedKeys.push(itemId);
                   }
@@ -524,7 +524,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _dblClickItemHandler : function(e){
             e.stopImmediatePropagation();
             var  row = $(e.target).closest('.' + this._getItemClass());
-            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === 0)) {
                if (this._options.multiselect) {
                   this._hideAllowed = true;
                   this.setSelectedKeys([this._getIdByRow(row)]);
@@ -767,6 +767,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 len = id.length,
                 self = this,
                 item, def;
+            if (!this._getItemsCount()) {
+               //Если нет данных - не нужно запускать перерисовку. в этом случае обнулится опция text, которая может использоваться как значение по умолчанию (пока не установят данные)
+               //_drawSelectedItems запускается после init'a, в поле связи могут задать selectedItems, не задавая items, поэтому проблему в mixin'e решать нельзя
+               //DropdownList в свою очередь без items работать не может в принципе, чтобы не было скачущей верстки, пока данные не долетели и компонент пуст - поддерживаю возможность
+               //задать значение по умолчанию
+               return;
+            }
             if (this._isEnumTypeData()){
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
             }
@@ -807,6 +814,21 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
+         },
+
+         _getItemsCount: function() {
+            var items = this.getItems();
+            if (items){
+               if (this._isEnumTypeData()) {
+                  var count = 0;
+                  items.each(function () {
+                     count++;
+                  });
+                  return count;
+               }
+               return items.getCount();
+            }
+            return 0;
          },
 
          _drawSelectedValue: function(id, textValue){

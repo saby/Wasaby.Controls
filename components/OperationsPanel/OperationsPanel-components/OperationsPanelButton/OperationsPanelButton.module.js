@@ -38,7 +38,9 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
              * </pre>
              * @see getLinkedPanel
              */
-            linkedPanel: undefined
+            linkedPanel: undefined,
+            //Панель должна открываться даже если ресстр enabled = false, т.к. могут присутствовать операции требующую только чтения (печать, выгрузка, суммирование ...)
+            allowChangeEnable: false
          },
          _internalHandlers: undefined
       },

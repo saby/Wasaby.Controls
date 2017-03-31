@@ -183,6 +183,41 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
+      _getEditArrowPosition: function() {
+         if (this._options.viewMode === 'tile') {
+            return this._getEditArrowPositionTile.apply(this, arguments);
+         } else {
+            return TreeCompositeView.superclass._getEditArrowPosition.apply(this, arguments);
+         }
+      },
+
+      _getEditArrowPositionTile: function(hoveredItem) {
+         var
+            top, left,
+            arrowCords, titleCords,
+            item = hoveredItem.container,
+            folderTitle = item.find('.controls-CompositeView__tileTitle'),
+            containerCords = this._container[0].getBoundingClientRect(),
+            arrowContainer = folderTitle.find('.js-controls-TreeView__editArrow');
+
+         if(arrowContainer.length) {
+            arrowCords = arrowContainer.get(0).getBoundingClientRect();
+            titleCords = folderTitle.get(0).getBoundingClientRect();
+
+            if (arrowCords.top > titleCords.top + titleCords.height) {
+               arrowCords = arrowContainer.get(1).getBoundingClientRect();
+            }
+            left = arrowCords.left - containerCords.left;
+            top = arrowCords.top - containerCords.top + this._container[0].scrollTop;
+
+
+            return {
+               top: top,
+               left: left
+            }
+         }
+      },
+
       _onChangeHoveredItem: function(hoveredItem) {
          this._setHoveredStyles(hoveredItem.container);
          TreeCompositeView.superclass._onChangeHoveredItem.apply(this, arguments);

@@ -782,6 +782,7 @@
 @text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
 @text-box-color:                          @text-color;
+@text-box-text-decoration:                inherit;
 
 @text-box-field-font:                     inherit;
 @text-box-field-font-size:                inherit;
@@ -999,9 +1000,6 @@
 
 @combo-box-arrow-width:                         16px;
 @combo-box-arrow-height:                        16px;
-@combo-box-arrow-margin:                        -8px 0 0;
-@combo-box-arrow-top-offset:                    50%;
-@combo-box-arrow-right-offset:                  0;
 
 @combo-box-arrow-border-width:                  0;
 @combo-box-arrow-border-style:                  solid;
@@ -1396,6 +1394,7 @@
 @date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
 @date-range-choose-year-bg-hover-color:         inherit;
+@date-range-choose-year-padding-left:           2px;
 
 @date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
@@ -1422,7 +1421,7 @@
 @date-range-choose-quarter-with-quarters-margin:            0;
 @date-range-choose-quarter-with-month-margin:               0 0 @date-range-choose-indents 0;
 @date-range-choose-quarter-caption-width:                   28px;
-@date-range-choose-quarter-caption-hover-color:             @date-range-choose-halfyear-caption-with-quarters-color;
+@date-range-choose-quarter-caption-hover-color:             @black-color;
 @date-range-choose-quarter-caption-text-align:              @date-range-choose-caption-text-align;
 @date-range-choose-quarter-caption-with-month-text-align:   @date-range-choose-caption-text-align;
 
@@ -1446,20 +1445,14 @@
 @date-range-choose-home-button-line-height:     22px;
 @date-range-choose-home-button-border-color:    inherit;
 @date-range-choose-home-color:                  @date-range-choose-color;
-@date-range-choose-home-button-margin:          4px auto 0;
+@date-range-choose-home-button-margin:          0 auto 12px;
 
 
 // -------------- //
 // Date Range Big //
 // -------------- //
 
-@date-range-big-spritesheet:                   'img/DateRangeBig-images.png';
 @date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
-
-@date-range-big-left-arrow-icon-bg:             url(@date-range-big-spritesheet) 0 0 no-repeat;
-@date-range-big-left-arrow-icon-hover-bg:       url(@date-range-big-spritesheet) 0 -24px no-repeat;
-@date-range-big-right-arrow-icon-bg:            url(@date-range-big-spritesheet) 0 -48px no-repeat;
-@date-range-big-right-arrow-icon-hover-bg:      url(@date-range-big-spritesheet) 0 -72px no-repeat;
 
 @date-range-big-choose-font-family:                @font-basic-name;
 @date-range-big-choose-width:                      350px;
@@ -2145,17 +2138,17 @@
 
 //CommandsSeparator
 @controls-commandsSeparator-lineHeight:   20px !important;
-@controls-commandsSeparator-fontSize:     26px !important;
-@controls-commandsSeparator-fontFamily:   acordion-font !important;
+@controls-commandsSeparator-fontSize:     28px !important;
+@controls-commandsSeparator-fontFamily:   cbuc-icons24 !important;
 @controls-commandsSeparator-height:       24px;
 
-@controls-commandsSeparator-icon-width:   24px;
+@controls-commandsSeparator-icon-width:   26px;
 @controls-commandsSeparator-icon-height:  24px;
 @controls-commandsSeparator-icon-top:     2px;
-@controls-commandsSeparator-icon-left:    -1px;
+@controls-commandsSeparator-icon-left:    -2px;
 @controls-commandsSeparator-icon-style:   normal;
-@controls-commandsSeparator-icon-down:    "\e902";
-@controls-commandsSeparator-icon-up:      "\e904";
+@controls-commandsSeparator-icon-down:    "\e9d7";
+@controls-commandsSeparator-icon-up:      "\e9d8";
 @controls-commandsSeparator-color:        #CCCCCC !important;
 
 @controls-commandsSeparator-border:       none;

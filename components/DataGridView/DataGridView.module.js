@@ -120,7 +120,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators : tplOptions.decorators,
                highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
-               displayProperty: tplOptions.displayProperty
+               displayProperty: tplOptions.displayProperty,
+               escapeHtml: tplOptions.escapeHtml
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
             buildTplArgsLadder(tplOptions.cellData, cfg);
@@ -268,11 +269,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
                sorting = cfg.sorting,
                sortingValue;
 
-            sorting.forEach(function(sortingElem){
-               if (sortingElem[column.field]) {
-                  sortingValue = sortingElem[column.field];
-               }
-            });
+            if (sorting instanceof Array) {
+               sorting.forEach(function (sortingElem) {
+                  if (sortingElem[column.field]) {
+                     sortingValue = sortingElem[column.field];
+                  }
+               });
+            }
 
             return TemplateUtil.prepareTemplate(SortingTemplate)({
                column: column,
@@ -675,7 +678,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                if(colValue && !colValue.getAttribute('title')) {
                   colValueText = colValue.innerText;
 
-                  if (dcHelpers.getTextWidth(colValueText) > colValue.offsetWidth) {
+                  if (dcHelpers.getTextWidth(strHelpers.escapeHtml(colValueText)) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
                   }
                }
@@ -750,7 +753,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             decorators : args.decorators,
             displayField : args.displayProperty,
             displayProperty : args.displayProperty,
-            isSearch : args.isSearch
+            isSearch : args.isSearch,
+            escapeHtml: args.escapeHtml
          };
          args.startScrollColumn = cfg.startScrollColumn;
          args.currentScrollPosition = this._getColumnsScrollPosition();

@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers",
+   'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
@@ -51,6 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    cInstance,
    fcHelpers,
    fHelpers,
+   strHelpers,
    SourceUtil) {
 
    function propertyUpdateWrapper(func) {
@@ -159,6 +161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
+      tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
@@ -953,19 +956,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
-               if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-                  $itemsContainer.append(markup);
-               } else {
-                  itemsContainer.innerHTML = markup;
-               }
+               itemsContainer.innerHTML = markup;
             }
             else {
                if (this._options.easyGroup) {
-                  if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-                     $itemsContainer.empty();
-                  } else {
-                     itemsContainer.innerHTML = '';
-                  }
+                  itemsContainer.innerHTML = '';
                }
             }
             for (var i = 0; i < comps.length; i++) {
@@ -1031,12 +1026,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
-            if (constants.browser.isIE8 || constants.browser.isIE9) {
-               targetElement.after(markup).remove();
-            }
-            else {
-               targetElement.get(0).outerHTML = markup;
-            }
+
+            targetElement.get(0).outerHTML = markup;
+
             for (var i = 0; i < comps.length; i++) {
                if (comps[i]) {
                   comps[i].destroy();
@@ -1142,11 +1134,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _optimizedInsertMarkup: function(markup, config) {
          var container = config.container;
          if (config.inside) {
-            if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
-               container[config.prepend ? 'prepend' : 'append'](markup);
-            } else {
-               container.get(0).insertAdjacentHTML(config.prepend ? 'afterBegin' : 'beforeEnd', markup);
-            }
+            container.get(0).insertAdjacentHTML(config.prepend ? 'afterBegin' : 'beforeEnd', markup);
          } else {
             container[config.prepend ? 'before' : 'after'](markup);
          }
@@ -1290,13 +1278,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _destroyInnerComponents: function(container, easy) {
          var compsArray = this._destroyControls(container, easy);
-         if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-            container.empty();
-         } else {
-            if (!easy) {
-               container.get(0).innerHTML = '';
-            }
+
+         if (!easy) {
+            container.get(0).innerHTML = '';
          }
+
          if (container.get(0) === this._getItemsContainer().get(0)) {
             this._itemsInstances = {};
          }

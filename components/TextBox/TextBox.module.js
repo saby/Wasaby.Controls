@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             if (scrollWidth > this._inputField[0].clientWidth) {
                this._container.attr('title', this._options.text);
             }
-            else {
+            else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
             }
             this._tooltipText = this._options.text;

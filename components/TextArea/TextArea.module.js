@@ -363,6 +363,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._updateCompatPlaceholderVisibility();
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
+            this._autosizeTextArea(true);
          }
          if (this._options.autoResize.state) {
             this._inputField.trigger('autosize.resize');

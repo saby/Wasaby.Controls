@@ -266,11 +266,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var self = this;
          return function (cfg) {
             var
+                className,
                 item = cfg.item,
                 options = item.get('options') || {},
                 type = self._getItemType(item.get('type'));
-            options.className = 'js-controls-operationsPanel__action controls-operationsPanel__actionType-' + type;
-            return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
+            className = 'js-controls-operationsPanel__action controls-operationsPanel__actionType-' + type;
+            return '<component class="' + className + '" data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
          };
       },
       _getItemType: function (type) {
@@ -279,11 +280,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
-
-         //TODO: Скрывать кнопки просто через модификатор нельзя, иначе обход по tab будет учитывать невидимые кнопки.
-         //Пока что добавим на кнопки ws-hidden, чтобы они не участвовали в обходе.
-         $('.controls-operationsPanel__actionType-mass', this._container).toggleClass('ws-hidden', !!idArray.length);
-         $('.controls-operationsPanel__actionType-selection', this._container).toggleClass('ws-hidden', !idArray.length);
 
          if (this._itemsDrawn) {
             this._onSelectedItemsChange(idArray);

@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/constants",
    'js!SBIS3.CONTROLS.SearchController',
    'js!SBIS3.CONTROLS.HistoryList',
+   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
    "Core/core-instance",
@@ -14,6 +15,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    constants,
    SearchController,
    HistoryList,
+   ControlHierarchyManager,
    RecordSet,
    Di,
    cInstance,
@@ -162,6 +164,15 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          },
          _onListItemSelectNotify: function(item){
             if (this._historyController) {
+               //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
+               //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
+               //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
+               //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
+               var idProp = this.getList().getItems().getIdProperty(),
+                   index = this._historyController.getIndexByValue(idProp, item.get(idProp));
+               if(index !== -1) {
+                  this._historyController.removeAt(index);
+               }
                this._historyController.prepend(item.getRawData());
             }
          }
@@ -258,6 +269,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                delete listFilter[this._options.searchParam];
                this.setListFilter(listFilter, true);
             }
+         },
+         destroy: function() {
+            if (this._historyController) {
+               this._historyController.destroy();
+               this._historyController = null;
+            }
          }
       },
       around: {
@@ -269,20 +286,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var isChildControl = false,
                 list = this._list;
 
-            /* Рекурсивный поиск списка, чтобы автодополнение не закрывалось,
-               когда фокус уходит на компонент, который был открыт из автодополнения. */
-            function isSuggestParent(target) {
-               do {
-                  target = target.getParent() || (target.getOpener instanceof Function ? target.getOpener() : null);
-               }
-               while (target && target !== list);
-
-               return target === list;
-            }
-
             /* focusedControl может не приходить при разрушении контрола */
             if(list && focusedControl) {
-               isChildControl = isSuggestParent(focusedControl);
+               isChildControl = ControlHierarchyManager.checkInclusion(list, focusedControl.getContainer());
 
                if(!isChildControl) {
                   isChildControl = list.getChildControls(false, true, function(ctrl) {
@@ -293,7 +299,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
             if(!isChildControl) {
                this.hidePicker();
-               parentFunc.apply(this, arguments);
+               parentFunc.call(this, event, isDestroyed, focusedControl);
             }
          },
 
