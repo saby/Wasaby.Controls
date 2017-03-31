@@ -289,7 +289,7 @@
             if (this._message !== prevMsg) {
                let poolItem = WaitIndicatorPool.search(this._container);
                if (poolItem) {
-                  WaitIndicatorInner.checkMessage(poolItem, this._message);
+                  WaitIndicatorInner.checkMessage(poolItem, prevMsg);
                }
             }
          }
