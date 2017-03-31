@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
     * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
     * @class SBIS3.CONTROLS.ActionBase
     * @public
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @author Крайнов Дмитрий Олегович
     * @deprecated используйте SBIS3.CONTROLS.Action.Action
     *

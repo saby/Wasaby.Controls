@@ -147,7 +147,7 @@ define('js!SBIS3.CONTROLS.Image',
             /**
              * @event onBeginSave Возникает при сохранении изображения
              * Позволяет динамически формировать параметры обрезки изображения
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе SBIS3.CORE.Abstract
              * @param {Object} sendObject Параметры обрезки изображения
              * @example
              * <pre>
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.Image',
              */
             /**
              * @event onEndSave Возникает после обрезки изображения
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе $ws.proto.Abstract
+             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе SBIS3.CORE.Abstract
              * @param {Object} response Ответ бизнес-логики.
              * @see onBeginSave
              */

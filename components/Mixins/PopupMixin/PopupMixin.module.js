@@ -254,11 +254,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
-         this._targetChanges = dcHelpers.trackElement(this._options.target, true);
-         //перемещаем вслед за таргетом
-         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
-         //скрываем если таргет скрылся
-         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+         if (this._options.target) {
+            this._targetChanges = dcHelpers.trackElement(this._options.target, true);
+            //перемещаем вслед за таргетом
+            this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+            //скрываем если таргет скрылся
+            this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+         }
       },
 
       _unsubscribeTargetMove: function(){
