@@ -34,7 +34,7 @@
        * TODO: (+) Переименовать очередь в Pool (это ведь не очередь)
        * TODO: (+) Объединить suspend и remove (в inner) во избежание дублирования кода
        * TODO: (+) Обособить методы, связанные с DOM-ом
-       * TODO: ### Добавить локально-глобальную блокировку
+       * TODO: (+-) Добавить локально-глобальную блокировку
        * TODO: (+-) Перейти от тестов к демо
        * TODO: (+) Убрать lastUse
        * TODO: (+-) Стилевые классы на все случаи
@@ -44,7 +44,7 @@
        * TODO: ### Разобраться с урлами картинок
        * TODO: (+) Пересмотреть аргументы методов класса Inner
        * TODO: (+) Добавить возможность менять сообщение на лету
-       * TODO: (+-) Сделать подробные описания к демам
+       * TODO: (+) Сделать подробные описания к демам
        * TODO: (+) Сделать вывод поясняющих сообщений в демо (псевдо-консоль)
        * TODO: (+) Собрать всё про Pool в класс
        * TODO: (+) Стоит ли убрать совсем методы _start, _suspend, _remove ?
@@ -57,7 +57,9 @@
        * TODO: (+) Есть ошибка при установке сообщения
        * TODO: (+) Порефакторить аргументы _remove в Inner
        * TODO: (+) Порефакторить формат элементов пула
+       * TODO: ### Возможно, лучше не удалять при локально-глобальной блокировке ?
        * TODO: ###
+       * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: ### Привести к ES5
        */
 
@@ -443,9 +445,15 @@
           * @param {WaitIndicator} indicator Индикатор
           */
          static start (indicator) {
-            let id = indicator.id;
             let container = indicator.container;
-            let message = indicator.message;
+            let isGlobal = !container;
+            if (isGlobal) {
+               WaitIndicatorPool.each(item => {
+                  if (item.container) {
+                     WaitIndicatorSpinner.remove(item.spinner);//###
+                  }
+               });
+            }
             let poolItem = WaitIndicatorPool.search(container);
             if (poolItem) {
                // Индикатор уже есть в DOM-е
@@ -457,8 +465,8 @@
                WaitIndicatorInner._unclear(poolItem);
             }
             else {
-               // Индикатора в DOM-е не содержиться
-               let spinner = WaitIndicatorSpinner.create(container, message, indicator.look);
+                // Индикатора в DOM-е не содержиться
+               let spinner = WaitIndicatorSpinner.create(container, indicator.message, indicator.look);
                //////////////////////////////////////////////////
                console.log('DBG: start: spinner=', spinner, ';');
                //////////////////////////////////////////////////
@@ -494,7 +502,9 @@
           * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
           */
          static _remove (indicator, force) {
-            let poolItem = WaitIndicatorPool.search(indicator.container);
+            let container = indicator.container;
+            let isGlobal = !container;
+            let poolItem = WaitIndicatorPool.search(container);
             if (poolItem) {
                let id = indicator.id;
                let i = poolItem.indicators.length ? poolItem.indicators.findIndex(item => item.id === id) : -1;
@@ -518,6 +528,13 @@
                      }
                   }
                }
+            }
+            if (isGlobal) {
+               WaitIndicatorPool.each(item => {
+                  if (item.container) {
+                     WaitIndicatorSpinner.insert(item.container, item.spinner);
+                  }
+               });
             }
          }
 
@@ -623,8 +640,17 @@
                   this._list.splice(i, 1);
                }
             }
+         },
+
+         /**
+          * Выполнить указанную функцию со всеми элементами
+          * @public
+          * @param {function} func Функция
+          */
+         each (func) {
+            this._list.forEach(func);
          }
-      };
+};
 
 
 
@@ -669,8 +695,21 @@
             if (hasMsg) {
                cls.add('ws-wait-indicator_text');
             }
-            (container || document.body).appendChild(spinner);
+            WaitIndicatorSpinner.insert(container, spinner);
             return spinner;
+         }
+
+         /**
+          * Добавить в DOM элемент индикатора
+          * @public
+          * @param {HTMLElement} container Контейнер индикатора
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static insert (container, spinner) {
+            let p = container || document.body;
+            if (p !== spinner.parentNode) {
+               p.appendChild(spinner);
+            }
          }
 
          /**
@@ -695,7 +734,10 @@
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
          static remove (spinner) {
-            spinner.parentNode.removeChild(spinner);
+            let p = spinner.parentNode;
+            if (p) {
+               p.removeChild(spinner);
+            }
          }
       };
 
