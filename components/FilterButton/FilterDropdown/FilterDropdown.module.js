@@ -46,8 +46,15 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
          this._hideAllowed = true;
          this._options.selectedKeys = [this._options.resetKey];
          this._notifyOnPropertyChanged('selectedKeys');
+         this._executeCommand();
          this.hide();
-         this._notifyOnPropertyChanged('visible'); // Убрать, как полечится https://inside.tensor.ru/opendoc.html?guid=552af000-7778-4e34-a177-7b704cdf5643&des=
+      },
+
+      _executeCommand: function() {
+         if (!!this._options.command) {
+            var args = [this._options.command].concat(this._options.commandArgs);
+            this.sendCommand.apply(this, args);
+         }
       },
 
       setInvertedVisible: function (invertedVisible) {
