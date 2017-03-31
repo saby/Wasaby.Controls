@@ -2713,12 +2713,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _loadNextPage: function() {
             if (this._dataSource) {
-               var offset = this._getNextOffset();
+               var offset = this._getNextOffset(),
+                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+               //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
-               //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
-                  this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -2730,7 +2730,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._updateScrollOffset();
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
-                  this._hideLoadingIndicator();
                   if (!hasNextPage) {
                      this._toggleEmptyData(!this.getItems().getCount());
                   }
@@ -2754,10 +2753,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                }, this)).addErrback(function (error) {
-                  this._hideLoadingIndicator();
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
-                  }.bind(this));
+               }.bind(this));
             }
          },
 
