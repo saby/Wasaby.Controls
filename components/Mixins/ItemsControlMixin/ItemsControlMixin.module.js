@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers",
+   'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
@@ -51,6 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    cInstance,
    fcHelpers,
    fHelpers,
+   strHelpers,
    SourceUtil) {
 
    function propertyUpdateWrapper(func) {
@@ -159,6 +161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
+      tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
@@ -2289,6 +2292,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
+      },
+
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
@@ -2513,6 +2527,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      this._onCollectionAddMoveRemove.apply(this, arguments);
                   }
 	               break;
+
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                  }, this);
+                  break;
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);

@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
             self = this;
          //todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.field === this._searchParamName) {
-            return this._items.toArray();
+            return this._normalizeItems(this._items);
          }
          var path = this._options.openedPath;
          this.hierIterate(this._items , function(record) {

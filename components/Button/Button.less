@@ -38,6 +38,7 @@
       }
    }
 
+
    &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
       background-color: #ffffff;
    }
@@ -61,6 +62,7 @@
       border: @button-primary-border;
       .box-shadow(@button-primary-shadow);
       background: @button-primary-bg;
+
 
       &.controls-Click__active {
          color: @button-primary-active-text-color;
@@ -91,6 +93,8 @@
       .border-radius(@button-big-border-radius);
       .box-shadow(@button-big-shadow);
       background: @button-big-bg;
+
+
 
       &.controls-Click__active {
          color: @button-big-active-text-color;
@@ -158,6 +162,7 @@
       background: @button-active-bg;
    }
 
+
    &.ws-disabled {
       cursor: default;
       color: @button-disabled-text-color;
@@ -169,6 +174,7 @@
       }
    }
 }
+
 .ws-is-desktop-platform {
    .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
       &:hover {
@@ -190,10 +196,11 @@
       &.controls-Button__big {
          &:hover {
             color: @button-big-hover-text-color;
-            border: @button-big-hover-border;
+            border: @button-big-border;
             .box-shadow(@button-big-hover-shadow);
             background: @button-big-hover-bg;
          }
+
 
          &.controls-Button__primary {
             &:hover {
