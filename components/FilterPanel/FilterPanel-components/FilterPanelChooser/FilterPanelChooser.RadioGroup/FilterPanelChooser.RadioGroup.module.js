@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
     *
     * <h2>Создание пользовательского редактора</h2>
     * Вы можете создать собственный класс редактора, на основе класса редактора "Набор радиокнопок".
-    * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__RadioGroup".
+    * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__RadioGroup".
     *
     * @class SBIS3.CONTROLS.FilterPanelChooser.RadioGroup
     * @extends SBIS3.CONTROLS.FilterPanelChooser.Base

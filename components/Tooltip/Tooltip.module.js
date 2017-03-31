@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Tooltip', ['js!SBIS3.CORE.Control'], function(Control)
    /**
     * Всплывающая подсказка.
     * @class SBIS3.CONTROLS.Tooltip
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @author Крайнов Дмитрий Олегович
     */
 
