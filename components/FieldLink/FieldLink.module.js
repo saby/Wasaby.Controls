@@ -19,7 +19,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
        "html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
        "tmpl!SBIS3.CONTROLS.FieldLink/textFieldWrapper",
-       "js!SBIS3.CONTROLS.Utils.DialogOpener",
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
@@ -62,7 +61,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         beforeFieldWrapper,
         textFieldWrapper,
         /********************************************/
-        DialogOpener,
         ITextValue,
         TemplateUtil,
         ToSourceModel
@@ -724,29 +722,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**********************************************************************************************/
 
           _getAdditionalChooserConfig: function () {
-             var oldRecArray = [],
-                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
-                selectedItems, oldRec;
-
-             if(this._options.oldViews) {
-                selectedItems = this.getSelectedItems();
-
-                if(selectedItems) {
-                   selectedItems.each(function(rec) {
-                      oldRec = DialogOpener.convertRecord(rec);
-                      if(oldRec) {
-                         oldRecArray.push(oldRec);
-                      }
-                   });
-                }
-             }
+             var
+                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys();
 
              return {
                 currentValue: selectedKeys,
                 currentSelectedKeys: selectedKeys,
                 selectorFieldLink: true,
                 multiSelect: this._options.multiselect,
-                selectedRecords: oldRecArray
+                selectedRecords: []
              };
           },
 
