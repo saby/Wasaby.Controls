@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.SwitchableArea', [
     * В каждый момент времени отображается только одна область.
     * Отображаемая область может переключаться при помощи команд.
     * @class SBIS3.CONTROLS.SwitchableArea
-    * @extends $ws.proto.SwitchableArea
+    * @extends SBIS3.CORE.SwitchableArea
     * @author Авраменко Алексей Сергеевич
     * @public
     */

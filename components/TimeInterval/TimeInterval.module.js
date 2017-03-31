@@ -70,7 +70,7 @@ define(
                "HH:II"
             ],
             /**
-             * объект $ws.proto.TimeInterval
+             * объект Core/TimeInterval
              */
             timeInterval: null,
             /**

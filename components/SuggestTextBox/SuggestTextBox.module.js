@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @mixes SBIS3.CONTROLS.SearchMixin
     * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
     * @author Крайнов Дмитрий Олегович

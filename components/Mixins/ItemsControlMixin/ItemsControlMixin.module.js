@@ -2292,6 +2292,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
+      },
+
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
@@ -2516,6 +2527,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      this._onCollectionAddMoveRemove.apply(this, arguments);
                   }
 	               break;
+
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                  }, this);
+                  break;
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);

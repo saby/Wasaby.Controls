@@ -79,6 +79,12 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
+       * @returns {Boolean|Error|Deferred}
+       * <ul>
+       *    <li><b>Boolean</b> - сохранение записи прервется, если вернули false</li>
+       *    <li><b>Error</b> - сохранение записи прервется, текст для сообщения об ошибке берется из error.message</li>
+       *    <li><b>Deferred</b> - сохранение приостановится до тех пор, пока deferred не завершит свою работу. В колбэк deferred'a отдается так же False|Error для того, чтобы прервать сохранение.</li>
+       * </ul>
        * @see submit
        * @see update
        * @see onCreateModel

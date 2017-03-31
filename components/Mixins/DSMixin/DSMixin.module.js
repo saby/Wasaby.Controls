@@ -1085,6 +1085,17 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._reviveItems();
       },
 
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
+      },
+
       _reviveItems : function() {
          this.reviveComponents().addCallback(this._notifyOnDrawItems.bind(this)).addErrback(function(e){
             throw e;
@@ -1603,6 +1614,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 	               //this._view.checkEmpty(); toggleEmtyData
 	               this._reviveItems();
 	               break;
+
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                  }, this);
+                  break;
 
 	            case IBindCollection.ACTION_MOVE:
                    //TODO: код понадобится для частичной перерисовки после перемещения
