@@ -2613,7 +2613,7 @@ define('js!SBIS3.CONTROLS.ListView',
                initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
-            this._inScrollContainerControl = this._scrollWatcher.getScrollContainer().hasClass('controls-ScrollContainer__content')
+            this._inScrollContainerControl = this._scrollWatcher.getScrollContainer().hasClass('controls-ScrollContainer__content');
          },
 
          _onTotalScrollHandler: function(event, type){
@@ -2689,9 +2689,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _hasNextPage: function(more, offset) {
             if (this._infiniteScrollState.mode == 'up'){
+               //перезагрузка с сохранением страницы может произойти на нулевой странице
+               //TODO: Должен быть один сценарий, для этого нужно, что бы оффсеты всегда считались и обновлялись до запроса
                if (this._options.saveReloadPosition) {
                   return this._scrollOffset.top >= 0;
                } else {
+                  // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
                   return this._scrollOffset.top > 0;
                }
             } else {
