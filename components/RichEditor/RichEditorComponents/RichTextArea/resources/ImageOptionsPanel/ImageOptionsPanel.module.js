@@ -58,9 +58,11 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             recalcPosition: function() {
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
                var
-                  inputOffset = this.getParent().getInputContainer().offset().top,
+                  scrollContainer = this.getTarget().closest('.controls-ScrollContainer'),
+                  linkedContainer = scrollContainer.length ? scrollContainer : this.getParent().getInputContainer(),
+                  inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
-                  inputHeight = this.getParent().getInputContainer().height();
+                  inputHeight = linkedContainer.height();
                this._container.css('width',this.getTarget().width());
                this._container.css('height','32px'); // dich3000
                this._container.css('overflow-y','hidden'); // dich3000
@@ -70,7 +72,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   }
                } else {
                   if (panelOffset > inputOffset + inputHeight + imagePanelhOffsetBottom) {
-                     this._container.css('top', inputOffset + this.getParent().getInputContainer().height());
+                     this._container.css('top', inputOffset + inputHeight);
                   }
                }
             },
