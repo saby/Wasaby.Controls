@@ -169,6 +169,9 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
+            if (target && target.getId() == null) {
+               target = null; //selectorwrapper возвращает корень как модель с идентификатором null
+            }
             return this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
