@@ -427,6 +427,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
                DropdownList.superclass.setSelectedKeys.call(this, idArray);
                this._updateCurrentSelection();
+               this.validate();
             }
          },
          _updateCurrentSelection: function(){
@@ -814,6 +815,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
+         },
+
+         _callQuery: function() {
+            //Перед новым запросом данных, если у нас уже есть незавершеный запрос на получение selectedItems - прервываем его, т.к. его данные уже не актуальны, фильтр мог поменяться
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
+            return DropdownList.superclass._callQuery.apply(this, arguments);
          },
 
          _getItemsCount: function() {
