@@ -690,6 +690,11 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
                shortMonths : constants.Date.months,
                weekdays: constants.Date.longDays,
                thousandsSep : ' '
+            },
+            plotOptions: {
+               series: {
+                  animation: !constants.browser.isIE10
+               }
             }
          });
 
