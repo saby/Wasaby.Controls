@@ -2104,7 +2104,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                itemsToolbar.unlockToolbar();
                /* Меняем выделенный элемент на редактируемую/добавляемую запись */
-               this._changeHoveredItem(this._getElementByModel(model));
+                this._hoveredItem = this._getElementData(this._getElementByModel(model));
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
                if (!this.getItems().getRecordById(model.getId())) {
