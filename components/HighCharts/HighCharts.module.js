@@ -688,6 +688,11 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                shortMonths : constants.Date.months,
                weekdays: constants.Date.longDays,
                thousandsSep : ' '
+            },
+            plotOptions: {
+               series: {
+                  animation: !constants.browser.isIE10
+               }
             }
          });
 
