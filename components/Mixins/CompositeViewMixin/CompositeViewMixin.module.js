@@ -88,6 +88,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       return parentOptions;
    };
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
+       /**
+        * @event onViewModeChanged Происходит при изменении режима отображения {@link mode}.
+        * @param {$ws.proto.EventObject} Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
       $protected: {
          _tileWidth: null,
@@ -292,8 +296,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
        * Устанавливает режим отображения данных.
        * @param {String} mode Режим отображения данных: table (таблица), list (список) и tile (плитка).
        * Подробнее о каждом режиме отображения вы можете прочитать в описании к опции {@link viewMode}.
+       * При изменении режима происходит событие {@link onViewModeChanged}.
        * @see viewMode
        * @see getViewMode
+       * @see onViewModeChanged
        */
       setViewMode: function(mode) {
          if (this._options.viewMode === mode) {

@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
          /**
           * Возращает элемент тулбара с указанным именем или false (если он отсутствует)
           * @param {String} name Имя элемента
-          * @returns {$ws.proto.Button|$ws.proto.MenuButton|Boolean}
+          * @returns {SBIS3.CORE.Button|SBIS3.CORE.MenuButton|Boolean}
           * @deprecated
           */
          getToolbarItem: function(buttonName){

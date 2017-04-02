@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 ], function( ParallelDeferred, cHelpers, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
 
    var EMPTY_SELECTION = [null],
-       onCollectionItemChangeSelected = function(eventObject, item, index, property) {},
        convertToKeys = function(list, keyField) {
           var keys = [],
              key;
@@ -181,18 +180,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       after : {
          init: function () {
             this._drawSelectedItems(this._options.selectedKeys, {});
-         },
-         _setItemsEventHandlers: function() {
-            if (!this._onCollectionItemChangeSelected) {
-               this._onCollectionItemChangeSelected = onCollectionItemChangeSelected.bind(this);
-            }
-            this.subscribeTo(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
-         },
-         _unsetItemsEventHandlers : function() {
-            if (this._getItemsProjection() && this._onCollectionItemChangeSelected) {
-               this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionItemChange', this._onCollectionItemChangeSelected);
-            }
-
          },
          destroy: function() {
             if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {

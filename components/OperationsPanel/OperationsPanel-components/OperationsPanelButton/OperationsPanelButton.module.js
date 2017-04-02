@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     *
     * SBIS3.CONTROLS.OperationsPanelButton
     * @class SBIS3.CONTROLS.OperationsPanelButton
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @author Сухоручкин Андрей Сергеевич
     *
     * @control

@@ -12,12 +12,12 @@ define('js!SBIS3.CONTROLS.Button', [
     * Контрол, отображающий обычную кнопку
     * Можно настроить:
     * <ol>
-    *    <li>{@link $ws.proto.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
+    *    <li>{@link SBIS3.CORE.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
     *    <li>{@link SBIS3.CONTROLS.ButtonBase#caption текст на кнопке};</li>
-    *    <li>{@link $ws.proto.Control#enabled возможность взаимодействия с кнопкой};</li>
+    *    <li>{@link SBIS3.CORE.Control#enabled возможность взаимодействия с кнопкой};</li>
     *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
     *    <li>{@link primary по умолчанию ли кнопка};</li>
-    *    <li>{@link $ws.proto.Control#visible видимость кнопки};</li>
+    *    <li>{@link SBIS3.CORE.Control#visible видимость кнопки};</li>
     * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.ButtonBase
@@ -72,6 +72,8 @@ define('js!SBIS3.CONTROLS.Button', [
          _options: {
             /**
              * @cfg {Boolean} Кнопка по умолчанию
+             * @name SBIS3.CONTROLS.Button#foo
+             * @var {Boolean} foo=true
              * Кнопка будет срабатывать при нажатии клавиши Enter, и будет визуально отличаться от других кнопок.
              * На странице может быть только одна кнопка по умолчанию.
              * Возможные значения:

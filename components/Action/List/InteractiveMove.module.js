@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/Indicator',
       'Core/core-merge',
       "Core/helpers/collection-helpers",
-      "Core/IoC"
+      "Core/IoC",
+      'Core/core-instance'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC, cInstance) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -130,6 +131,12 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.displayField является устаревшей, используйте componentOptions.displayProperty');
                cfg.componentOptions.displayProperty = cfg.componentOptions.displayField;
             }
+            if (cInstance.instanceOfMixin(cfg.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+               cMerge(cfg, {
+                  parentProperty: cfg.linkedObject.getParentProperty(),
+                  nodeProperty: cfg.linkedObject.getNodeProperty()
+               }, {preferSource: true});
+            }
             return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
@@ -169,6 +176,9 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
+            if (target && target.getId() == null) {
+               target = null; //selectorwrapper возвращает корень как модель с идентификатором null
+            }
             return this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
@@ -198,7 +208,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             });
          },
          _getComponentOptions: function() {
-            var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
+            var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {
@@ -211,9 +221,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                      }
                   }
                }, this);
-            }
-            if (!result.buttonCaption) {
-               result.buttonCaption = 'Перенести';
             }
             return result;
          },

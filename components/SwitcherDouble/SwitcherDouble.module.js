@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     * </ol>
     *
     * @class SBIS3.CONTROLS.SwitcherDouble
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     *
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.Clickable

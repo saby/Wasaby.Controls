@@ -447,25 +447,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             hierField: null,
             /**
-             * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
+             * @cfg {String} Устанавливает поле, по значениям которого определяются иерархические отношения элементов списка.
              * @remark
              * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
              * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
-             * @example
-             * <pre>
-             *    <option name="parentProperty">Раздел</option>
-             * </pre>
+             * @see nodeProperty
              */
             parentProperty: null,
             /**
-             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
-             * @remark
-             * null - лист, false - скрытый узел, true - узел
-             *
-             * @example
-             * <pre>
-             *    <option name="parentProperty">Раздел@</option>
-             * </pre>
+             * @cfg {String} Устанавливает поле, по значениям которого определяется <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>типа записи в иерархии</a>.
+             * @see parentProperty
              */
             nodeProperty: null,
             /**

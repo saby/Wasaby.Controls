@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FieldLink', [
      *
      * <h2>Создание пользовательского редактора</h2>
      * Вы можете создать собственный класс редактора, на основе класса редактора "Поле связи".
-     * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__FieldLink-component".
+     * Особенность: контрол, который будет использован в редакторе, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__FieldLink-component".
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.FieldLink
      * @extends SBIS3.CONTROLS.FilterPanelChooser.Base

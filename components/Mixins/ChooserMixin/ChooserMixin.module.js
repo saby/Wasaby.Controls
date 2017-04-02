@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    function recordConverter(rec) {
       var idProp;
 
-      /** !ВНИМАНИЕ! rec - $ws.proto.Record **/
+      /** !ВНИМАНИЕ! rec - Deprecated/Record **/
 
       if(rec.hasColumn(this._options.idProperty)) {
          idProp = this._options.idProperty;

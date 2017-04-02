@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
        * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
        * @class SBIS3.CONTROLS.Action.Action
        * @public
-       * @extends $ws.proto.Control
+       * @extends SBIS3.CORE.Control
        * @author Крайнов Дмитрий Олегович
        *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip

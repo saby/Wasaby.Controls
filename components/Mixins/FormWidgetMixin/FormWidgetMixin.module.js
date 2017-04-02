@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * <br/>
        * При работе с диалогами редактирования, валидации по умолчанию производится при попытке сохранения редактируемой записи.
        * <br/>
-       * Если для контрола ограничено взаимодействие через опцию {@link $ws.proto.Control#enabled}, то для него валидация не производится.
+       * Если для контрола ограничено взаимодействие через опцию {@link SBIS3.CORE.Control#enabled}, то для него валидация не производится.
        * <br/>
        * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
@@ -312,10 +312,10 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * <pre>
        *    fieldString.subscribe('onChange', function(eventObject, value) {
        *       //создаём объект бизнес-логики
-       *       var bl = new $ws.proto.BLObject('Пользователи'),
+       *       var bl = new BLObject('Пользователи'),
        *          self = this;
        *       //вызываем метод бизнес-логики с нужными нам параметрами
-       *       bl.call('ПолучитьСписокПользователей', {'Логин': value}, $ws.proto.BLObject.RETURN_TYPE_RECORDSET).addCallback(function(recordSet) {
+       *       bl.call('ПолучитьСписокПользователей', {'Логин': value}, BLObject.RETURN_TYPE_RECORDSET).addCallback(function(recordSet) {
        *          //проверяем число принятых записей
        *          if (recordSet.getRecordCount() > 0) {
        *             self.markControl('Пользователь с таким логином уже существует!');

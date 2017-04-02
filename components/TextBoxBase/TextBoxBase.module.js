@@ -145,12 +145,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * Если полей несколько, то, как правило, появление клавиатуры неуместно. Ожидается, что пользователь сам
              * выберет поле для ввода значения.
              * В других случаях, когда на странице или диалоге всего одно поле ввода, появления клавиатуры считается уместным.
-             * Установить или изменить фокус для поля ввода можно с помощью метода {@link $ws.proto.Control#setActive}.
+             * Установить или изменить фокус для поля ввода можно с помощью метода {@link SBIS3.CORE.Control#setActive}.
              * @example
              * <pre class="brush:xml">
              *    <option name="focusOnActivatedOnMobiles">true</option>
              * </pre>
-             * @see $ws.proto.Control#setActive
+             * @see SBIS3.CORE.Control#setActive
              */
             focusOnActivatedOnMobiles: false
          }
@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl)) {
+         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl && focusedControl.getContainer())) {
             this.validate();
          }
       },
