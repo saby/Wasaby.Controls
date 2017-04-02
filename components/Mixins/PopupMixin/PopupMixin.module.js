@@ -88,7 +88,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          _zIndex: null,
          _currentAlignment: {},
          _parentFloatArea: null,
-         _scrollbarFix: false,
          _options: {
             visible: false,
             /**
@@ -226,7 +225,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          if (this._options.parentContainer) {
             var appendContainer;
             if (this._options.target) {
-               appendContainer = this._options.target.closest('.' + this._options.parentContainer);
+               appendContainer = this._options.target.closest('.' + this._options.parentContainer)
             }
             else {
                appendContainer = $('.' + this._options.parentContainer);
@@ -376,18 +375,6 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                offset.top = this._calculateOverflow(offset, 'vertical');
                offset.left = this._calculateOverflow(offset, 'horizontal');
 
-               // после _calculateOverflow может добавиться скролл и ширина сэлемента увеличится на ширину скролла
-               // и если при этом popup находится у границы экрана - может появиться горизонтальный скроллбар
-               // для фикса - пересчитаем заново все размеры с учетом новой ширины
-               var browserScrollWidth = dcHelpers.getScrollWidth(),
-                  scrollbarFixNeeded = this._containerSizes.requiredOffset.left + dcHelpers.getScrollWidth() > this._windowSizes.width;
-               if (this._overflowedV && scrollbarFixNeeded && !this._scrollbarFix) {
-                  this._containerSizes.originWidth += browserScrollWidth;
-                  this._scrollbarFix = true;
-                  this.recalcPosition();
-                  return;
-               }
-
                this._notifyOnAlignmentChange();
 
                this._container.css({
@@ -429,7 +416,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
        * Получить текущий  таргет
        */
       getTarget: function() {
-         return this._options.target;
+         return this._options.target
       },
 
       /**
@@ -625,7 +612,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._options.parentContainer) {
                var parContainer;
                if (this._options.target) {
-                  parContainer = this._options.target.closest('.' + this._options.parentContainer);
+                  parContainer = this._options.target.closest('.' + this._options.parentContainer)
                }
                else {
                   parContainer = $('.' + this._options.parentContainer);
@@ -640,12 +627,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if(detection.isMobileAndroid){
                this._targetSizes.offset.top-=$(window).scrollTop();
                this._targetSizes.offset.left-=$(window).scrollLeft();
-            }
+            };
 
             // Для фиксированого таргета считаем оффсеты как boundingClientRect
             // Но на айпаде это неправильно, так как fixed слой там сдвигается вместе с клавиатурой
             if (this._fixed && !detection.isMobileIOS) {
-               this._targetSizes.offset = this._targetSizes.boundingClientRect;
+               this._targetSizes.offset = this._targetSizes.boundingClientRect
             }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;

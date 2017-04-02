@@ -2759,6 +2759,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      // Если пришла пустая страница, но есть еще данные - догрузим их
                      if (hasNextPage){
                         this._scrollLoadNextPage();
+                     } else {
+                        // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
+                        this._hideLoadingIndicator();
                      }
                   }
                }, this)).addErrback(function (error) {
