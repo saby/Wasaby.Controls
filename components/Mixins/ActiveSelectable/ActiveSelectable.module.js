@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
        */
       getSelectedItem: function(loadItem) {
          if(!loadItem) {
-            return this._options.selectedItems;
+            return this._options.selectedItem;
          } else if (this._loadItemDeferred && !this._loadItemDeferred.isReady()) {
             return this._loadItemDeferred;
          }
