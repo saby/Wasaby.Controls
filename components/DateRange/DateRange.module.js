@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
             locationStrategy: 'bodyBounds',
             horizontalAlign: {
                side: 'left',
-               offset: -135
+               offset: -139
             },
             verticalAlign: {
                side: 'top',
