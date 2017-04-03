@@ -16,9 +16,9 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
    'js!WS.Data/Display/Display',
    'js!SBIS3.CONTROLS.DragEntity.List',
    'js!SBIS3.CONTROLS.DragEntity.Row',
-   'js!WS.Data/Display/Collection'
-
-], function (Mover, IMoveStrategy, Abstract, Deferred, RecordSet, Display, DragList, DragRow) {
+   'js!WS.Data/Entity/Model',
+   'js!WS.Data/Collection/List'
+], function (Mover, IMoveStrategy, Abstract, Deferred, RecordSet, Display, DragList, DragRow, Model, List) {
 
    'use strict';
    var moverWithMS,
@@ -198,6 +198,12 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
                   done();
                });
             });
+
+            it('should move a record before another record if target is id', function(){
+               var id = items.at(2).getId();
+               mover.move([items.at(2)], items.at(0).getId(), 'before');
+               assert.equal(items.at(0).getId(), id);
+            });
          });
       });
       describe('onBeginMove', function () {
@@ -256,6 +262,12 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             });
             mover.move([items.at(0)], items.at(2), 'after');
             assert.equal(items.at(2).getId(), id);
+         });
+      });
+      describe('_checkRecordsForMove', function () {
+         it('should return false if target undefined', function(){
+            var id = items.at(0).getId();
+            assert.isFalse(mover._checkRecordsForMove([items.at(0)], undefined, true));
          });
       });
       describe('onEndMove', function () {
@@ -400,6 +412,91 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             var count = treeItems.getCount();
             treeMoverWithMS.moveFromOutside(list, targetRow, outsideRs, true);
             assert.equal(count, treeItems.getCount());
+         });
+
+         it('should add model when collection is list', function(){
+            var model = new Model(),
+               targetmodel = new Model(),
+               targetRow = new DragRow({
+                  model: targetmodel,
+                  position: 'after'
+               }),
+               list = new List({
+                  items: [model]
+               }),
+               mover = new Mover({
+                  items: list,
+                  projection: projection
+               });
+            listAction.setOperation('add');
+            listAction.setAction(function () {
+               return true;
+            })
+            mover.moveFromOutside(listAction, targetRow, undefined, true);
+            assert.equal(list.getCount(), 2);
+         });
+      });
+      describe('._getDataSource', function () {
+         it('should return datasource', function() {
+            var dataSource = {},
+               mover = new Mover({
+                  items: items,
+                  projection: projection,
+                  dataSource: dataSource
+               });
+            assert.equal(mover._getDataSource(), dataSource);
+         })
+      });
+
+      describe('.setMoveStrategy', function () {
+         it('should set movestrategy', function() {
+            var moveStrategy = {},
+               mover = new Mover({
+                  items: items,
+                  projection: projection
+               });
+            mover.setMoveStrategy(moveStrategy);
+            assert.equal(mover.getMoveStrategy(), moveStrategy);
+         })
+      });
+
+      describe('._callMoveMethod', function () {
+         it('should call return datasource', function(done) {
+            var dataSource = {},
+               movedItems = [1,2],
+               target = null,
+               position = 'on',
+               mover = new Mover({
+                  items: items,
+                  projection: projection,
+                  dataSource: {
+                     move: function (argMovedItems, argTarget, meta) {
+                        assert.deepEqual(argMovedItems, movedItems);
+                        assert.equal(argTarget, target);
+                        assert.equal(meta.position, position);
+                        done();
+                        return new Deferred().callback();
+                     }
+                  }
+               });
+            mover._callMoveMethod(movedItems, target, position);
+         })
+      });
+
+      describe('._moveInItems', function () {
+         it('should add item if it not exist into items', function() {
+            var item = new Model({
+                  rawData: {'id': 121, title: 'Один'}
+               });
+            mover._moveInItems([item], items.at(0), 'before');
+            assert.equal(items.at(0).getId(), 121);
+         });
+         it('should add item if it not exist into items and it move on hierarchy', function() {
+            var item = new Model({
+               rawData: {'id': 121, title: 'Один', parent: null, 'parent@': true}
+            });
+            treeMover._moveInItems([item], items.at(0), 'on');
+            assert.equal(items.getRecordById('121').get('parent'), items.at(0).getId());
          });
       });
    });

@@ -181,10 +181,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
 
       _move: function (movedItems, target, position, result) {
          if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
-            this.moveInItems(movedItems, target, position);
+            this._moveInItems(movedItems, target, position);
          } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
             return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
-               this.moveInItems(movedItems, target, position);
+               this._moveInItems(movedItems, target, position);
                return result;
             }.bind(this)).addBoth(function (result) {
                this._notify('onEndMove', result, movedItems, target, position);
@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */
       setMoveStrategy: function (moveStrategy) {
-         this._options.moveStrategy = strategy;
+         this._options.moveStrategy = moveStrategy;
       },
 
       /**
@@ -256,11 +256,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * @private
        */
       _getDataSource: function() {
-         if (this._options.dataSource) {
-            return this._options.dataSource;
-         } else if (this._options.listView) {
-            return this._options.listView.getDataSource();
-         }
+         return this._options.dataSource;
       },
       /**
        * Перемещает записи в связанной коллекции.
@@ -268,7 +264,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * @param target
        * @param position
        */
-      moveInItems: function(movedItems, target, position) {
+      _moveInItems: function(movedItems, target, position) {
          var items = this.getItems();
          if (items) {
             movedItems.forEach(function (movedItem) {
