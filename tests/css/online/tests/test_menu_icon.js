@@ -36,7 +36,7 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
 	gemini.suite('right_side', function (test) {
 
-        test.setUrl('/regression_menu_icon_online.html').setCaptureElements('html')
+        test.setUrl('/regression_menu_icon_online.html').skip('firefox').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="MenuIcon 1"]', 40000);
@@ -48,8 +48,8 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width()
-                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset});
+					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width() - 20
+                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset, 'top': 20});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -84,7 +84,7 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-                    window.$('[sbisname="MenuIcon 1"]').offset({'top': 910});
+                    window.$('[sbisname="MenuIcon 1"]').offset({'left': 20, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -119,8 +119,8 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width()
-                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset, 'top': 910});
+					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width() - 20
+                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -965,7 +965,7 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 	
 	gemini.suite('right_side_with_icon16_with_submenu', function (test) {
 
-        test.setUrl('/regression_menu_icon_online_17.html').setCaptureElements('html')
+        test.setUrl('/regression_menu_icon_online_17.html').skip('firefox').setCaptureElements('html')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="MenuIcon 1"]', 40000);
@@ -978,8 +978,8 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
             .capture('plain', function (actions) {
 				actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width()
-                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset});
+					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width() - 20
+                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset, 'top': 20});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -1019,7 +1019,7 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-                    window.$('[sbisname="MenuIcon 1"]').offset({'top': 910});
+                    window.$('[sbisname="MenuIcon 1"]').offset({'left': 20, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
             })
@@ -1054,8 +1054,8 @@ gemini.suite('SBIS3.CONTROLS.MenuIcon Online', function () {
 
             .capture('plain', function (actions) {
                 actions.executeJS(function (window) {
-					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width()
-                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset, 'top': 910});
+					var offset = document.body.clientWidth - $('[sbisname="MenuIcon 1"]').width() - 20
+                    window.$('[sbisname="MenuIcon 1"]').offset({'left': offset, 'top': 850});
                 });
 				actions.mouseMove(this.text_box);
             })

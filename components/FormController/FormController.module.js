@@ -301,6 +301,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._toggleOverlay(false);
          }
          this._updateIndicatorZIndex();
+         this.activateFirstControl();
          this._notifyOnAfterFormLoadEvent();
       },
 

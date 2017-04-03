@@ -1091,7 +1091,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (itemActions) {
                delInstance = itemActions.getItemInstance('delete');
             }
-            return this.isEnabled() && !!delInstance && delInstance.isVisible();
+            //Не нужно проверять на видимость операции удаления, т.к. выделена одна запись, а курсор может находиться над другой.
+            //И при наведении на другую запись, прикладники могут скрыть операцию удаления, и тогда hotkey не отработает.
+            return this.isEnabled() && !!delInstance;
          },
          /**
           * Возвращает следующий элемент
@@ -2102,7 +2104,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                itemsToolbar.unlockToolbar();
                /* Меняем выделенный элемент на редактируемую/добавляемую запись */
-               this._changeHoveredItem(this._getElementByModel(model));
+                this._hoveredItem = this._getElementData(this._getElementByModel(model));
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
                if (!this.getItems().getRecordById(model.getId())) {
@@ -2637,7 +2639,7 @@ define('js!SBIS3.CONTROLS.ListView',
                initOnBottom: this._options.infiniteScroll == 'up'
             };
             this._scrollWatcher = new ScrollWatcher(scrollWatcherConfig);
-            this._inScrollContainerControl = this._scrollWatcher.getScrollContainer().hasClass('controls-ScrollContainer__content')
+            this._inScrollContainerControl = this._scrollWatcher.getScrollContainer().hasClass('controls-ScrollContainer__content');
          },
 
          _onTotalScrollHandler: function(event, type){
@@ -2713,7 +2715,14 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _hasNextPage: function(more, offset) {
             if (this._infiniteScrollState.mode == 'up'){
-               return this._scrollOffset.top >= 0;
+               //перезагрузка с сохранением страницы может произойти на нулевой странице
+               //TODO: Должен быть один сценарий, для этого нужно, что бы оффсеты всегда считались и обновлялись до запроса
+               if (this._options.saveReloadPosition) {
+                  return this._scrollOffset.top >= 0;
+               } else {
+                  // А подгрузка вверх должна остановиться на нулевой странице и не запрашивать больше
+                  return this._scrollOffset.top > 0;
+               }
             } else {
                // Если загружена последняя страница, то вниз грузить больше не нужно
                // при этом смотреть на .getMetaData().more - бесполезно, так как при загруке страниц вверх more == true
@@ -2723,12 +2732,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _loadNextPage: function() {
             if (this._dataSource) {
-               var offset = this._getNextOffset();
+               var offset = this._getNextOffset(),
+                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+               //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
-               //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up',
-                  this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse == true));
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -2740,7 +2749,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._updateScrollOffset();
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                   this.getItems().setMetaData(dataSet.getMetaData());
-                  this._hideLoadingIndicator();
                   if (!hasNextPage) {
                      this._toggleEmptyData(!this.getItems().getCount());
                   }
@@ -2761,13 +2769,15 @@ define('js!SBIS3.CONTROLS.ListView',
                      // Если пришла пустая страница, но есть еще данные - догрузим их
                      if (hasNextPage){
                         this._scrollLoadNextPage();
+                     } else {
+                        // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
+                        this._hideLoadingIndicator();
                      }
                   }
                }, this)).addErrback(function (error) {
-                  this._hideLoadingIndicator();
                   //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                   return error;
-                  }.bind(this));
+               }.bind(this));
             }
          },
 
