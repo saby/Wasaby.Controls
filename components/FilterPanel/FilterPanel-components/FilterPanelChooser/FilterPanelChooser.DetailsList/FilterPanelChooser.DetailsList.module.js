@@ -33,8 +33,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
          CommandDispatcher.declareCommand(this, 'toggleHierarchy', this._toggleHierarchy);
       },
 
-      _toggleHierarchy: function(item) {
-         item.set('hierarchy', !item.get('hierarchy'));
+      _toggleHierarchy: function(item, value) {
+         item.set('hierarchy', value);
+         // Согласно стандарту, при включении иерархии запись должна автоматически отмечаться
+         if (value) {
+            this._getListView().addItemsSelection([item.getId()]);
+         }
          this._updateValue();
       },
 
@@ -65,7 +69,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
                isMainAction: true,
                tooltip: 'Включить отображение с разделами',
                onActivated: function(element, id, item) {
-                  this.sendCommand('toggleHierarchy', item);
+                  this.sendCommand('toggleHierarchy', item, true);
                }
             },
             {
@@ -74,7 +78,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
                isMainAction: true,
                tooltip: 'Выключить отображение с разделами',
                onActivated: function(element, id, item) {
-                  this.sendCommand('toggleHierarchy', item);
+                  this.sendCommand('toggleHierarchy', item, false);
                }
             }
          ];
@@ -116,11 +120,15 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       _onChangeHoveredItem: function(event, hoveredItem) {
          var
             itemsInstances,
-            item = hoveredItem.record;
+            item = hoveredItem.record,
+            isItemSelected;
          if (item) {
             itemsInstances = this._getListView().getItemsActions().getItemsInstances();
-            itemsInstances['enableHierarchy'].toggle(item.get('hierarchy') === false);
-            itemsInstances['disableHierarchy'].toggle(item.get('hierarchy') === true);
+            isItemSelected = this._getListView().getSelectedKeys().indexOf(item.getId()) !== -1;
+            // Согласно стандарту, отображаем иконку включения иерархии если иерархия отключена или иерархия включена, но запись не отмечена
+            itemsInstances['enableHierarchy'].toggle(item.get('hierarchy') === false || (item.get('hierarchy') === true && !isItemSelected));
+            // Согласно стандарту, отображаем иконку выключения иерархии если иерархия включена и запись отмечена
+            itemsInstances['disableHierarchy'].toggle(item.get('hierarchy') === true && isItemSelected);
          }
       },
 
