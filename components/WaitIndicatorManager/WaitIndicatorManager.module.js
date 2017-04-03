@@ -61,7 +61,7 @@
        * TODO: (+) Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
        * TODO: (+) Возможно, стоит ограничит набор глобальных параметров дефолтными ?
        * TODO: (+-) Выделить защищённые члены классов в важных местах
-       * TODO: ### Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно
+       * TODO: (+-) Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно)
        * TODO: (+) Привязка мелких локальных индикаторов
        * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
@@ -783,9 +783,10 @@
             let hasMsg = !(look && look.small) && !!message;
             let html = '<div class="ws-wait-indicator"><div class="ws-wait-indicator-in" data-node="message">' + (hasMsg ? message : '') + '</div></div>';
 
-            let spinner = document.createElement('div');
-            spinner.innerHTML = html;
-            spinner = spinner.firstElementChild;
+            let p = document.createElement('div');
+            p.innerHTML = html;
+            let spinner = p.firstElementChild;
+            p.removeChild(spinner);
             /*###if (hasMsg) {
                WaitIndicatorSpinner.changeMessage(spinner, message);
             }*/
@@ -828,14 +829,38 @@
          static insert (container, spinner) {
             let p = container || document.body;
             if (p !== spinner.parentNode) {
-               if (container && getComputedStyle(p, null).position === 'static') {
-                  let s = spinner.style;
-                  s.left = p.offsetLeft + 'px';
-                  s.top = p.offsetTop + 'px';
-                  s.width = p.offsetWidth + 'px';
-                  s.height = p.offsetHeight + 'px';
+               let needPlace = !!container && getComputedStyle(p, null).position === 'static';
+               if (needPlace) {
+                  WaitIndicatorSpinner._place(spinner, p);
                }
                p.insertBefore(spinner, p.firstChild);
+               if (needPlace) {
+                  WaitIndicatorSpinner._watchResize(spinner);
+               }
+            }
+         }
+
+         /**
+          * Позиционировать элемент индикатора на странице
+          * @protected
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {HTMLElement} parent Родительский элемент DOM-а (опционально)
+          */
+         static _place (spinner, parent) {
+            //////////////////////////////////////////////////
+            console.log('DBG: _place: spinner=', spinner, ';');
+            console.log('DBG: _place: parent=', parent, ';');
+            //////////////////////////////////////////////////
+            let p = spinner.parentNode || parent;
+            //////////////////////////////////////////////////
+            console.log('DBG: _place: p=', p, ';');
+            //////////////////////////////////////////////////
+            if (p) {
+               let s = spinner.style;
+               s.left = p.offsetLeft + 'px';
+               s.top = p.offsetTop + 'px';
+               s.width = p.offsetWidth + 'px';
+               s.height = p.offsetHeight + 'px';
             }
          }
 
@@ -847,6 +872,7 @@
          static remove (spinner) {
             let p = spinner.parentNode;
             if (p) {
+               WaitIndicatorSpinner._unwatchResize(spinner);
                p.removeChild(spinner);
             }
          }
@@ -873,6 +899,7 @@
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
          static show (spinner) {
+            WaitIndicatorSpinner._watchResize(spinner);
             spinner.style.display = '';
          }
 
@@ -883,6 +910,7 @@
           */
          static hide (spinner) {
             spinner.style.display = 'none';
+            WaitIndicatorSpinner._unwatchResize(spinner);
          }
 
          /**
@@ -893,6 +921,32 @@
           */
          static isVisible (spinner) {
             return getComputedStyle(spinner, null).style.display !== 'none';
+         }
+
+         /**
+          * Включить наблюдение за изменением размеров страницы
+          * @protected
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static _watchResize (spinner) {
+            if (!('ws' in spinner)) {
+               spinner.ws = {};
+            }
+            if (!('onResize' in spinner.ws)) {
+               spinner.ws.onResize = WaitIndicatorSpinner._place.bind(null, spinner);
+            }
+            window.addEventListener('resize', spinner.ws.onResize);
+         }
+
+         /**
+          * Выключить наблюдение за изменением размеров страницы
+          * @protected
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          */
+         static _unwatchResize (spinner) {
+            if (spinner.ws && spinner.ws.onResize) {
+               window.removeEventListener('resize', spinner.ws.onResize);
+            }
          }
       };
 
