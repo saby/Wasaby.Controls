@@ -7,9 +7,7 @@
  * - Получение индекса элемента с проверкой по типу (String/Integer)
  * - Проверка наличия элемента в массиве
  */
-define('js!SBIS3.CONTROLS.ArraySimpleValuesUtil', [
-   "Core/constants"
-], function( constants) {
+define('js!SBIS3.CONTROLS.ArraySimpleValuesUtil', [], function() {
 
    'use strict';
 
@@ -18,16 +16,12 @@ define('js!SBIS3.CONTROLS.ArraySimpleValuesUtil', [
          return this.invertTypeIndexOf(array, elem) !== -1;
       },
 
-      indexOf: function(array, value) {
-         return array.indexOf(value);
-      },
-
       invertTypeIndexOf: function(array, elem) {
-         var index = this.indexOf(array, elem);
+         var index = array.indexOf(elem);
 
          if(index === -1) {
             elem = (typeof elem === 'string') ? Number(elem) : String(elem);
-            index = this.indexOf(array, elem);
+            index = array.indexOf(elem);
          }
 
          return index;
