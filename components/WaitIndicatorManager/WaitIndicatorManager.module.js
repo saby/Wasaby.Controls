@@ -40,7 +40,7 @@
        * TODO: (+) Стилевые классы на все случаи
        * TODO: (+) Сообщение меняется с ошибкой
        * TODO: (+) Избавиться от jQuery
-       * TODO: ### Возможно стоит механизировать разбор опций ?
+       * TODO: (+) Возможно стоит механизировать разбор опций ?
        * TODO: ### Разобраться с урлами картинок
        * TODO: (+) Пересмотреть аргументы методов класса Inner
        * TODO: (+) Добавить возможность менять сообщение на лету
@@ -118,23 +118,21 @@
             let target = options ? options.target : null,
                message = options ? options.message : null,
                delay = options ? options.delay : -1,
-               hidden = options ? options.hidden : false,
-               noOverlay = false,
-               darkOverlay = false,
-               small = options ? options.small : false,
-               align = options ? options.align : null;
-            if (options && options.overlay && typeof options.overlay == 'string') {
-               let overlay = options.overlay.toLowerCase();
-               noOverlay = overlay === 'no' || overlay === 'none';
-               darkOverlay = overlay === 'dark';
-            }
+               hidden = options ? options.hidden : false;
+
+            let look = {overlay:null, small:false, align:null};
+            Object.keys(look).forEach(name => {
+               if (name in options) {
+                  look[name] = options[name];
+               }
+            });
 
             let id = ++WaitIndicatorCounter;
             //////////////////////////////////////////////////
             console.log('DBG: getWaitIndicator: id=', id, ';');
             //////////////////////////////////////////////////
             let container = WaitIndicatorManager._getContainer(target);
-            let indicator = new WaitIndicator(id, container, message, {noOverlay, darkOverlay, small, align});
+            let indicator = new WaitIndicator(id, container, message, look);
             if (!hidden) {
                indicator.start(0 <= delay ? delay : WaitIndicatorManager.getParam('defaultDelay'));
             }
@@ -195,7 +193,7 @@
           * @param {object} params Набор параметров
           */
          static putParams (params) {
-            if (params && typeof params == 'object') {
+            if (params && typeof params === 'object') {
                //###Object.assign(WaitIndicatorParams, params);
                for (name in params) {
                   WaitIndicatorManager.setParam(name, params[name]);
@@ -213,7 +211,7 @@
           * @return {number}
           */
          static setParam (name, value) {
-            if (name in WaitIndicatorParams && typeof value == 'number' && 0 <= value) {
+            if (name in WaitIndicatorParams && typeof value === 'number' && 0 <= value) {
                let prev = WaitIndicatorParams[name];
                WaitIndicatorParams[name] = value;
                return prev;
@@ -298,7 +296,7 @@
             //this._container = container;
             WaitIndicator_protected.container.set(this, container);
             this.message = message;
-            //this._look = look && typeof look == 'object' ? look : null;
+            //this._look = look && typeof look === 'object' ? look : null;
             WaitIndicator_protected.look.set(this, look);
             //this._starting = null;
             //this._suspending = null;
@@ -360,7 +358,7 @@
           */
          set message (msg) {
             let prevMsg = this.message;
-            let newMsg = msg && typeof msg == 'string' ? msg : null;
+            let newMsg = msg && typeof msg === 'string' ? msg : null;
             if (newMsg !== prevMsg) {
                //this._message = newMsg;
                WaitIndicator_protected.message.set(this, newMsg);
@@ -806,10 +804,11 @@
                      cls.add(aligns[look.align]);
                   }
                }
-               if (look.noOverlay || look.small) {
+               let overlay = look.overlay && typeof look.overlay === 'string' ? look.overlay.toLowerCase() : null;
+               if (look.small || overlay === 'no' || overlay === 'none') {
                   cls.add('ws-wait-indicator_no-overlay');
                }
-               if (look.darkOverlay && !look.small) {
+               if (!look.small && overlay === 'dark') {
                   cls.add('ws-wait-indicator_dark-overlay');
                }
             }
