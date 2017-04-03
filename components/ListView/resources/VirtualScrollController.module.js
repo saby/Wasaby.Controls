@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
    function(cAbstract) {
 
    var BATCH_SIZE = 20;
+   var PAGES_COUNT = 5;
 
    var VirtualScrollController = cAbstract.extend({
       $protected: {
@@ -10,12 +11,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             view: null,
             mode: 'up'
          },
+         _currentVirtualPage: 0,
          _virtualPages: [{offset: 0}],
          _bottomIndex: null,
-         _topWrapper: null,
-         _bottomWrapper: null,
+         _beginWrapper: null,
+         _endWrapper: null,
          _newItemsCount: 0,
-         _additionalHeight: 0
+         _additionalHeight: 0,
+         _DEBUG: false
       },
 
       init: function(){
@@ -24,19 +27,21 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          
          view.subscribe('onDataLoad', function(){
             this._virtualPages = [{offset: 0}];
+            this.updateVirtualPages();
+            this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
          }.bind(this));
 
          if (this._options.mode == 'down') {
-            this._topWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
-            this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
+            this._beginWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
+            this._endWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
          } else {
          // при загрузке вверх все в точности наборот, так проще выставлять размеры - так как алгоритм одинаковый
-            this._bottomWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
-            this._topWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
+            this._endWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
+            this._beginWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
          }
          //this._onVirtualPageChangeDebounce = this._onVirtualPageChange.debounce(10);
-         this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, 5);
-         view._scrollWatcher.subscribe('onScroll', this._scrollHandler.bind(this));
+         this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
+         view._scrollWatcher.getScrollContainer()[0].addEventListener('scroll', this._scrollHandler.bind(this), { passive: true });
       },
 
       _scrollHandler: function(e, scrollTop){
@@ -45,8 +50,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             var page = this._getPage();
             if (page >= 0 && this._currentVirtualPage!= page) {
                this._scrollingDown = this._currentVirtualPage < page;
-               this._currentVirtualPage = page;
                this._onVirtualPageChange(page);
+               this._currentVirtualPage = page;
             }
          }.bind(this), 0);
       },
@@ -75,23 +80,30 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       _onVirtualPageChange: function(pageNumber) {
          var pages = this._virtualPages,
             at = 0,
+            offset = 0,
             segments = [],
             haveToAdd = false, 
             haveToRemove = false,
-            newWindow = this._getRangeToShow(pageNumber, BATCH_SIZE, 5),
-            diff = this._getDiff(this._currentWindow, newWindow),
-            pagesToRemove, pagesToAdd;
+            newWindow = this._getRangeToShow(pageNumber, BATCH_SIZE, PAGES_COUNT);
 
-         console.log('page', pageNumber);
-         console.log('widnow', newWindow);
-         
+         if (newWindow[0] >= BATCH_SIZE && this._newItemsCount) {
+            newWindow[0] -= (BATCH_SIZE - this._newItemsCount);
+         }
+
+         var diff = this._getDiff(this._currentWindow, newWindow),
+            pagesToRemove, pagesToAdd, i;
+
          if (!diff) {
             this._currentWindow = newWindow;
             return;
          }
-         
-         console.log('diff.top', diff.top);
-         console.log('diff.bottom', diff.bottom);
+
+         if (this._DEBUG) {
+            console.log('page', pageNumber);
+            console.log('widnow', newWindow);
+            console.log('diff.top', diff.top);
+            console.log('diff.bottom', diff.bottom);
+         }
 
          if (this._currentWindow[0] < newWindow[0]) {
             segments[0] = diff.top;
@@ -101,79 +113,84 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             if (this._options.mode == 'down') {
                at = diff.bottom[0];
             }
+            offset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
          } else {
             segments[0] = diff.bottom;
             segments[1] = diff.top;
             pagesToRemove = this._getPagesByRange(segments[0], BATCH_SIZE);
             pagesToAdd = this._getPagesByRange(segments[1], BATCH_SIZE);
             if (this._options.mode == 'up') {
-               // TODO: тут вообще не должно этого быть, нужно только в событии сообщать в начало или в конец
-               at = this._options.view._getItemsProjection().getCount() - pagesToAdd.length * BATCH_SIZE;
+               at = this._options.view._getItemsProjection().getCount() - (diff.top[1] - diff.top[0] + 1);
             }
          }
 
          // Помечаем страницы как удаленные
-         for (var i = 0; i < pagesToRemove.length; i++) {
+         for (i = 0; i < pagesToRemove.length; i++) {
             if (pages[pagesToRemove[i]]){
-               pages[pagesToRemove[i]].detached = true;
+               pages[pagesToRemove[i]].dettached = true;
                haveToRemove = true;
             }
          }
          // Помечаем страницы как отображаемые
-         for (var i = 0; i < pagesToAdd.length; i++) {
-            if (pages[pagesToAdd[i]] && pages[pagesToAdd[i]].detached) {
-               pages[pagesToAdd[i]].detached = false;
+         for (i = 0; i < pagesToAdd.length; i++) {
+            if (pages[pagesToAdd[i]] && pages[pagesToAdd[i]].dettached) {
+               pages[pagesToAdd[i]].dettached = false;
                haveToAdd = true;
             }
          }
          // удаляем записи
          if (haveToRemove) {
-            this._remove(segments[0]);
+            this._remove(segments[0], BATCH_SIZE - this._newItemsCount);
          }   
          // добавляем записи
          if (haveToAdd){
-            this._add(segments[1], at);
+            this._add(segments[1], at, offset);
+         }
+
+         if (this._currentVirtualPage !== pageNumber || this._currentWindow[1] > newWindow[1]) {
+            this._currentWindow = newWindow;
+            this._notify('onVirtualWinodowChange', newWindow[0], newWindow[1]);
          }
 
          this._setWrappersHeight(pageNumber);
-
-         this._currentWindow = newWindow;
-         if (!this._checkOrder()){
-         //   debugger;
-         }
       },
 
       _setWrappersHeight: function(page) {
          var pages = this._virtualPages,
-            bottomPage = page + 3,
-            topPage = page - 2;
-         if (this._virtualPages[bottomPage]) {
-            this._bottomWrapperHeight = pages[pages.length - 1].offset - pages[bottomPage].offset;
+            bottomPage = page + 3 < 5 ? 5 : page + 3,
+            topPage = page - 3 < 0 ? 0 : page - 3;
+         if (pages[bottomPage] && pages[bottomPage].dettached) {
+            this._endWrapperHeight = pages[pages.length - 1].offset - pages[bottomPage].offset;
          } else {
-            this._bottomWrapperHeight = 0;
+            this._endWrapperHeight = 0;
          }
-         if (this._virtualPages[topPage]) {
-            this._topWrapperHeight = pages[topPage].offset + this._additionalHeight;
+         if (pages[topPage] && pages[topPage].dettached) {
+            this._beginWrapperHeight = pages[topPage + 1].offset + this._additionalHeight;
          } else {
-            this._topWrapperHeight = 0;
+            this._beginWrapperHeight = 0;
          }
-         console.log('top height', this._bottomWrapperHeight);
-         console.log('bottom height', this._topWrapperHeight);
-         this._topWrapper.height(this._topWrapperHeight);
-         this._bottomWrapper.height(this._bottomWrapperHeight);
+         if (this._DEBUG) {
+            console.log('top height', this._endWrapperHeight);
+            console.log('bottom height', this._beginWrapperHeight);
+         }
+         this._beginWrapper.height(this._beginWrapperHeight);
+         this._endWrapper.height(this._endWrapperHeight);
       },
 
       /**
        * по двум индексам получить номера страниц входящих в этот промежуток
        * @param  {Array} range    индексы 
        * @param  {Number} pageSize размер страницы
-       * @return {Array}          номера станиц в промежутке
+       * @return {Array} номера станиц в промежутке
        * @private
        */
       _getPagesByRange: function(range, pageSize){
-         from = Math.floor((range[0] + 1) / pageSize);
-         to = Math.floor((range[1] + 1) / pageSize);
          var pages = [];
+         if (Math.abs(range[0] - range[1]) < pageSize - 1) {
+            return [Math.floor(range[0] / pageSize)];
+         }
+         from = Math.ceil((range[0]) / pageSize);
+         to = Math.ceil((range[1]) / pageSize);
          for (var i = from; i < to; i++) {
             pages.push(i);
          }
@@ -199,10 +216,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             toRemove.push(prjItem);
          }
          this._options.view._removeItems(toRemove);
-         console.log('remove from', from, 'to', to);
+         if (this._DEBUG) {
+            console.log('remove from', from, 'to', to);
+         }
       },
 
-      _add: function(range, at) {
+      _add: function(range, at, offset) {
          var toAdd = [],
             from = range[0],
             to = range[1], 
@@ -212,9 +231,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             if (this._options.mode == 'down'){
                index = i;
             } else {
-               index = projection.getCount() - i - 1;
+               index = projection.getCount() - i - 1;// + offset;
             }
-            prjItem = this._options.view._getItemsProjection().at(index);
+            prjItem = projection.at(index);
             if (!prjItem){
                break;
             }
@@ -224,7 +243,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             toAdd.reverse();
          }
          this._options.view._addItems(toAdd, at);
-         console.log('add from', from, 'to', to, 'at', at);
+         if (this._DEBUG) {
+            console.log('add from', from, 'to', to, 'at', at);
+         }
       },
 
       _getRangeToShow: function(pageNumber, pageSize, pagesCount) {
@@ -285,30 +306,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          };
       },
 
-      _checkOrder: function(){
-         var check = true;
-         var broken;
-         var prev;
-         var sign = this._options.mode == 'down' ? 1 : -1;
-         $('.controls-DataGridView__tr').each(function(){
-            var id = $(this).data('id');
-            if (prev && id !== prev + 1 * sign){
-               check = false;
-               broken = this;
-               return false;
-            }
-            prev = id;
-         });
-         console.log('order check: ', check);
-         if (broken){
-            console.log('broke at ', broken);
-            return false;
-         }
-         return true;
-      },
-
       _getOffsets: function(){
-         var offsets = []
+         var offsets = [];
          for (var i = 0; i < this._virtualPages.length; i++){
             offsets.push(this._virtualPages[i].offset);
          }
@@ -321,7 +320,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          var view = this._options.view;
          if (this._options.mode == 'down') {
             var next = element.next('.controls-ListView__item');
-            return element.position().top + element.outerHeight(true) + this._topWrapperHeight;;
+            return element.position().top + element.outerHeight(true) + this._beginWrapperHeight;
          } else {
             return this._viewHeight - element.position().top;
          }
@@ -340,7 +339,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          
          var dettachedCount = 0;
          for (var i = 0; i < this._virtualPages.length; i++){
-            if (this._virtualPages[i].detached){
+            if (this._virtualPages[i].dettached){
                dettachedCount++;
             } else {
                break;
@@ -363,7 +362,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             // При этом нужно учесть отступ сверху от view и фиксированую шапку
             if (++count == BATCH_SIZE) {
                self._virtualPages.push({
-                  offset: self._getElementOffset(this)
+                  offset: self._getElementOffset(this) - self._additionalHeight
                });
                count = 0;
             }
@@ -376,24 +375,19 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          
          // Пока рассчитываем, что добавляется один элемент за раз
          if (items.length == 1) {
-            if (this._newItemsCount == 0) {
-               this._virtualPages.unshift({offset: 0});
+            if (this._newItemsCount === 0) {
+               this._onVirtualPageChange(this._currentVirtualPage);
+               this._virtualPages.unshift({offset: -this._additionalHeight});
             }
             this._newItemsCount += 1;
             hash = items[0].getHash();
-            // кек
             this._additionalHeight += $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
             this._virtualPages[0].offset = -this._additionalHeight;
-            // for (var i = 1; i < this._virtualPages.length; i++) {
-            //    this._virtualPages[i].offset += additionalHeight;
-            //    console.log(this._virtualPages[i], this._virtualPages.length, this._newItemsCount);
-            // }
          }
 
          if (this._newItemsCount == BATCH_SIZE) {
             this._newItemsCount = 0;
             this._currentWindow[1] += BATCH_SIZE;
-            this._onVirtualPageChange(this._currentVirtualPage);
          }
       },
 
