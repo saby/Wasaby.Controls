@@ -51,7 +51,7 @@
        * TODO: (+) Отправлять в промисы при разрешении инстанс индикатора
        * TODO: (+) Совсем не показывать индикаторы с параметром hidden
        * TODO: ### Возможно, нужна поддержка настраиваемых цветов для оверлея (не просто тёмный или прозрачный) ?
-       * TODO: ### Оверлей для локальных индикаторов
+       * TODO: (+) Оверлей для локальных индикаторов
        * TODO: ### Сделать конверторы promise <--> Deffered ?
        * TODO: (+) Переименовать константу SUSPEND_TIME в SUSPEND_LIFETIME
        * TODO: (+) Есть ошибка при установке сообщения
@@ -61,6 +61,8 @@
        * TODO: ### Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
        * TODO: (+) Возможно, стоит ограничит набор глобальных параметров дефолтными ?
        * TODO: (+-) Выделить защищённые члены классов в важных местах
+       * TODO: ### Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно
+       * TODO: ### Привязка мелких локальных индикаторов
        * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: ### Привести к ES5
@@ -789,6 +791,7 @@
                WaitIndicatorSpinner.changeMessage(spinner, message);
             }*/
             let cls = spinner.classList;
+            cls.add(container ? 'ws-wait-indicator_local' : 'ws-wait-indicator_global');
             if (look) {
                if (look.small) {
                   cls.add('ws-wait-indicator_small');
@@ -796,7 +799,7 @@
                if (look.noOverlay || look.small) {
                   cls.add('ws-wait-indicator_no-overlay');
                }
-               if (look.darkOverlay) {
+               if (look.darkOverlay && !look.small) {
                   cls.add('ws-wait-indicator_dark-overlay');
                }
             }
@@ -816,7 +819,14 @@
          static insert (container, spinner) {
             let p = container || document.body;
             if (p !== spinner.parentNode) {
-               p.appendChild(spinner);
+               if (container && getComputedStyle(p, null).position === 'static') {
+                  let s = spinner.style;
+                  s.left = p.offsetLeft + 'px';
+                  s.top = p.offsetTop + 'px';
+                  s.width = p.offsetWidth + 'px';
+                  s.height = p.offsetHeight + 'px';
+               }
+               p.insertBefore(spinner, p.firstChild);
             }
          }
 
@@ -873,7 +883,7 @@
           * @return {boolean}
           */
          static isVisible (spinner) {
-            return spinner.style.display !== 'none';
+            return getComputedStyle(spinner, null).style.display !== 'none';
          }
       };
 

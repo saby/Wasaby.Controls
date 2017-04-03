@@ -1,10 +1,5 @@
 ﻿
 .ws-wait-indicator {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
     z-index: 1000000;/*16777271 2147483647*/
     background-color: rgba(255, 255, 255, 0.05);
     cursor: default !important;
@@ -13,6 +8,22 @@
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
+}
+
+.ws-wait-indicator_global {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ws-wait-indicator_local {
+    position: absolute;
+    /*###left: 0;*/
+    /*###top: 0;*/
+    width: 100%;
+    height: 100%;
 }
 
 .ws-wait-indicator_text {
@@ -31,18 +42,32 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.ws-wait-indicator-in {
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+
+
+.ws-wait-indicator_global .ws-wait-indicator-in {
     position: fixed;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
+    margin: auto;
+}
+
+.ws-wait-indicator_local .ws-wait-indicator-in {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+.ws-wait-indicator-in {
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     width: 48px;
     height: 48px;
     overflow: hidden;
-    margin: auto;
     border-radius: 8px;
     background: rgb(255, 255, 255) url('/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-indicator.gif') 50% 50% no-repeat;
     cursor: default !important;
