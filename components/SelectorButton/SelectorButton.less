@@ -1,6 +1,6 @@
 .controls-SelectorButton {
    .inline-flexbox();
-   align-items: baseline;
+   .align-items(baseline);
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
@@ -20,7 +20,7 @@
 
 .controls-SelectorButton__icon,
 .controls-SelectorButton__cross {
-   align-self: center;
+   .align-self(center);
    text-decoration: none;
 }
 
@@ -46,24 +46,6 @@
 .ws-is-desktop-platform {
    .controls-SelectorButton__asLink {
       .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-SelectorButton__text);
-   }
-}
-// Для ie, которые плохо поддерживают flexbox =(
-.ws-is-ie10 {
-   .controls-SelectorButton {
-      display: inline-block;
-      white-space: nowrap;
-      vertical-align: middle;
-
-      .controls-SelectorButton__cross,
-      .controls-SelectorButton__icon {
-         margin-top: 4px;
-         vertical-align: top;
-      }
-
-      .controls-SelectorButton__text {
-         display: inline-block;
-      }
    }
 }
 
