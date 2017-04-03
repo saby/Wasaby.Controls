@@ -651,10 +651,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       _showAllButtonHandler: function() {
-         var showAllConfig = this._getShowAllConfig();
-
          this.hidePicker();
-         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, showAllConfig.selectionType || null);
+         this.showSelector(this._getShowAllConfig());
       },
 
       /**
