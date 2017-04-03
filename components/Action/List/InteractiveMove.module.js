@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/IoC',
       'Core/core-instance'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC, cInstance) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.

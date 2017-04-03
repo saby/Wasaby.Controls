@@ -501,11 +501,9 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             var item = new Model({
                rawData: {'id': 121, title: 'Один', parent: null, 'parent@': true}
             });
-            treeMover._moveInItems([item], items.at(0), 'on');
-            assert.equal(items.getRecordById('121').get('parent'), items.at(0).getId());
+            treeMover._moveInItems([item], treeItems.at(0), 'on');
+            assert.equal(treeItems.getRecordById('121').get('parent'), treeItems.at(0).getId());
          });
-
-         
       });
    });
 });
