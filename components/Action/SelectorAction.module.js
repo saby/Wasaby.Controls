@@ -32,9 +32,12 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
 
              cMerge(cfg, {
                 selectedItems: metaConfig.selectedItems,
-                multiselect: metaConfig.multiselect,
-                selectionType: metaConfig.selectionType
+                multiselect: metaConfig.multiselect
              });
+             
+             if(metaConfig.selectionType) {
+                cfg.selectionType = metaConfig.selectionType;
+             }
 
              if(cfg.handlers) {
                 if (cfg.handlers.onSelectComplete) {
