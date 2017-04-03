@@ -205,15 +205,16 @@ define('js!SBIS3.CONTROLS.DateRange', [
          return {
             corner: 'tl',
             bodyBounds: true,
+            locationStrategy: 'bodyBounds',
             horizontalAlign: {
                side: 'left',
-               offset: -133
+               offset: -139
             },
             verticalAlign: {
                side: 'top',
-               offset: -11
+               offset: -9
             }
-         }
+         };
       },
 
       _addDefaultValidator: function() {

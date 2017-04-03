@@ -79,6 +79,12 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
+       * @returns {Boolean|Error|Deferred}
+       * <ul>
+       *    <li><b>Boolean</b> - сохранение записи прервется, если вернули false</li>
+       *    <li><b>Error</b> - сохранение записи прервется, текст для сообщения об ошибке берется из error.message</li>
+       *    <li><b>Deferred</b> - сохранение приостановится до тех пор, пока deferred не завершит свою работу. В колбэк deferred'a отдается так же False|Error для того, чтобы прервать сохранение.</li>
+       * </ul>
        * @see submit
        * @see update
        * @see onCreateModel
@@ -134,6 +140,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          _overlay: undefined,
          _onBeforeCloseHandler: undefined,
          _onAfterShowHandler: undefined,
+         _onRecordChangeHandler: undefined,
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи {@link record}.
@@ -199,19 +206,16 @@ define('js!SBIS3.CONTROLS.FormController', [
       $constructor: function() {
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
-         this._subscribeToGlobalEvents();
+         this._panel = this.getTopParent();
+         this._initHandlers();
+         this._subscribeToEvents();
 
          this._updateDocumentTitle();
          this._setDefaultContextRecord();
+         this._setPanelRecord(this.getRecord());
 
          this._newRecord = this._options.isNewRecord;
          this._panelReadyDeferred = new Deferred();
-         this._panel = this.getTopParent();
-         this._onBeforeCloseHandler = this._onBeforeClose.bind(this);
-         this._onAfterShowHandler = this._onAfterShow.bind(this);
-         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
-         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
-         this._setPanelRecord(this.getRecord());
 
          if (this._getDelayedRemoteWayDeferred()) {
             this._processingRecordDeferred();
@@ -231,11 +235,20 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _subscribeToGlobalEvents: function(){
+      _initHandlers: function() {
+         this._onBeforeCloseHandler = this._onBeforeClose.bind(this);
+         this._onAfterShowHandler = this._onAfterShow.bind(this);
+         this._onRecordChangeHandler = this._onRecordChange.bind(this);
          this._onBeforeNavigateHandler = this._onBeforeNavigate.bind(this);
          this._onBeforeUnloadHandler = this._onBeforeUnload.bind(this);
+      },
+
+      _subscribeToEvents: function() {
          this.subscribeTo(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.addEventListener("beforeunload", this._onBeforeUnloadHandler);
+         this._panel.subscribe('onBeforeClose', this._onBeforeCloseHandler);
+         this._panel.subscribe('onAfterShow', this._onAfterShowHandler);
+         this._subscribeToRecordChange();
       },
 
       _declareCommands: function(){
@@ -288,6 +301,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._toggleOverlay(false);
          }
          this._updateIndicatorZIndex();
+         this.activateFirstControl();
          this._notifyOnAfterFormLoadEvent();
       },
 
@@ -315,16 +329,15 @@ define('js!SBIS3.CONTROLS.FormController', [
          var self = this,
              record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
-         //Если нет записи или она была удалена, то закрываем панель
-         if (!record || (record.getState() === Record.RecordState.DELETED)){
-            return;
+
+         if (!record || (record.getState() === Record.RecordState.DELETED)) {
+            //Если нет записи или она была удалена, то закрываем панель
          }
          //Если запись еще сохраняется, то отменяем закрытие (защита от множественного вызова закрытия панели)
-         if (self._isRecordSaving()){
+         else if (self._isRecordSaving()) {
             event.setResult(false);
-            return;
          }
-         if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         else if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length) {
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -335,12 +348,12 @@ define('js!SBIS3.CONTROLS.FormController', [
                });
                event.setResult(false);
             }
-            self._resetTitle();
-            return;
          }
-         event.setResult(false);
-         if (!closeAfterConfirmDialogHandler) {
-            self._showConfirmDialog();
+         else {
+            event.setResult(false);
+            if (!closeAfterConfirmDialogHandler) {
+               self._showConfirmDialog();
+            }
          }
       },
 
@@ -373,6 +386,28 @@ define('js!SBIS3.CONTROLS.FormController', [
                this._previousDocumentTitle = document.title;
             }
             document.title = newTitle;
+         }
+      },
+
+      _subscribeToRecordChange: function() {
+         var record = this.getRecord();
+         if (record) {
+            this.subscribeTo(record, 'onPropertyChange', this._onRecordChangeHandler);
+         }
+      },
+
+      _unsubscribeFromRecordChange: function() {
+         var record = this.getRecord();
+         if (record) {
+            this.unsubscribeFrom(record, 'onPropertyChange', this._onRecordChangeHandler);
+         }
+      },
+
+      _onRecordChange: function(event, fields) {
+         //Если изменился title - обновим заголовок вкладки браузера
+         //Если fields пустой, значит установили новые сырые данные (вызывали setRawData)
+         if (fields.title || Object.isEmpty(fields)) {
+            this._updateDocumentTitle();
          }
       },
 
@@ -409,7 +444,6 @@ define('js!SBIS3.CONTROLS.FormController', [
             }
          });
 
-         record.acceptChanges();
          return changedRec;
       },
 
@@ -527,6 +561,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       setRecord: function(record, updateKey){
          var newKey;
+         this._unsubscribeFromRecordChange(); // отписываемся от отслеживания изменений старой записи
          this._options.record = record;
          this._setPanelRecord(record);
          if (updateKey){
@@ -534,6 +569,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._options.key = newKey;
             this._newRecord = true;
          }
+         this._subscribeToRecordChange();
          this._updateDocumentTitle();
          this._setContextRecord(record);
          var self = this;
@@ -782,6 +818,7 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          if (this._options.record.isChanged() || self._newRecord) {
             this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
+               self.getRecord().acceptChanges(); //Выпилить вообще весь функционал _getRecordForUpdate, задача с отправкой только измененных полей решается через опцию sbisService
                updateConfig.additionalData.key = key;
                self._newRecord = false;
                return key;
@@ -931,6 +968,8 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._panel.unsubscribe('onBeforeClose', this._onBeforeCloseHandler);
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
+         this._unsubscribeFromRecordChange();
+         this._resetTitle();
          FormController.superclass.destroy.apply(this, arguments);
       }
    });

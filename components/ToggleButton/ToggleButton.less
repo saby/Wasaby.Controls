@@ -9,7 +9,7 @@
 }
 
 .controls-Button {
-  &.controls-Checked__checked {
+  &.controls-Checked__checked:not(.ws-disabled) {
     color: @button-checked-text-color;
     border: @button-checked-border;
     font-weight: @button-checked-font-weight;
@@ -55,7 +55,7 @@
   }
 }
 
-.controls-Button.controls-Button__big.controls-Checked__checked {
+.controls-Button.controls-Button__big.controls-Checked__checked:not(.ws-disabled) {
     .controls-Button__text {
       margin-left: @button-big-checked-text-margin-left;
       margin-right: @button-big-checked-text-margin-right;

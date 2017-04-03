@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
    [
       'js!SBIS3.CONTROLS.SBISStorageAdapter',
-      'Core/UserConfig'
+      'Core/UserConfig',
+      'js!SBIS3.CONTROLS.IStorage'
    ],
 
    function(SBISStorageAdapter, UserConfig) {
@@ -21,7 +22,6 @@ define('js!SBIS3.CONTROLS.SBISUserConfigStorage',
        * @author Герасимов Александр
        * @class SBIS3.CONTROLS.SBISUserConfigStorage
        * @mixes SBIS3.CONTROLS.IStorage
-       * @singleton
        * @public
        */
 

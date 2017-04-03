@@ -109,7 +109,9 @@ define(
                verticalAlign: {
                   side: 'top',
                   offset: -9
-               }
+               },
+               bodyBounds: true,
+               locationStrategy: 'bodyBounds'
             }
          },
          _onFocusInHandler: undefined

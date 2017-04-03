@@ -18,11 +18,13 @@
                   <option name="icon">sprite:icon-24 icon-OpenedFolder icon-primary</option>
                   <option name="title">Из файла</option>
                </options>
+               {{? it.webCam}}
                <options>
                   <option name="id" type="string">fromWebCam</option>
                   <option name="icon">sprite:icon-24 icon-VideoCallNull icon-primary</option>
                   <option name="title">С веб-камеры</option>
                </options>
+               {{?}}
             </options>
          </component>
          <component data-component="SBIS3.CONTROLS.Link" name="ButtonEdit" class="controls-image__button-edit">

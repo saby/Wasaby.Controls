@@ -12,6 +12,7 @@
     "gulp": "^3.9.1",
     "gulp-less": "^3.3.0",
     "humanize": "0.0.9",
+    "less": "^2.7.2",
     "merge": "1.2.0",
     "minimatch": "^3.0.3"
   },

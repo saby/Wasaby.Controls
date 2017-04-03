@@ -83,7 +83,6 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
          if (locked) {
             for (i = 0; i < dateRanges.length - 1; i++) {
                this._steps[i] = this._getMonthCount(dateRanges[i].getStartValue(), dateRanges[i+1].getStartValue());
-               console.log(this._steps[i]);
             }
          }
 

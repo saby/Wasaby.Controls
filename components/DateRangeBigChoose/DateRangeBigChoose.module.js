@@ -256,8 +256,11 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          if (endDate && date > endDate) {
             // setRange не вызываем, диапазон установится в обработчике _onDatePickerEndDateChanged
             // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
-            // this._endDatePicker.setDate(date);
-            return;
+            if (!this._options.rangeselect) {
+               this._endDatePicker.setDate(date);
+            } else {
+               return;
+            }
          } else {
             if (this._options.rangeselect) {
                this.setStartValue(date);

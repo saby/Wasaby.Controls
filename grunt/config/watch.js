@@ -8,7 +8,7 @@ module.exports = function() {
             'themes/**/*.less',
             'components/**/*.less'
          ],
-         tasks: ['less:normal'],
+         tasks: ['css:normal'],
          options: {
             spawn: false
          }

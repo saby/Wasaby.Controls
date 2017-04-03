@@ -133,11 +133,15 @@
    color: @link-hover-text-color;
 }
 
-.controls-Popup-border{
+.controls-Popup-border {
    .border-radius(@menu-border-radius);
    border-width: @menu-border-width;
    border-style: @menu-border-style;
    border-color: @menu-border-color;
+}
+
+.controls-Popup__touchScroll-fix .controls-ScrollContainer__content {
+   -webkit-overflow-scrolling: touch!important;
 }
 
 .ws-moneyDecorator {

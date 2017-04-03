@@ -322,7 +322,11 @@ define('js!SBIS3.CONTROLS.SuggestView',
                    self._viewsIterator(function(view, tabOpts) {
                       if(!founded && view.getItems().getCount()) {
                          founded = true;
+                         /* Если вкладку меняем программно, то скрываем на вермя смены SwitchableArea,
+                            чтобы не было морганий и не убегал фокус */
+                         self._getSwitchableArea().hide();
                          self.getTabControl().setSelectedKey(tabOpts[self._options.idProperty]);
+                         self._getSwitchableArea().show();
                       }
                    });
                 }

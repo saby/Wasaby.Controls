@@ -92,7 +92,8 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
 
       _modifyOptions: function() {
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue, {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          return opts;
       },
 
@@ -107,7 +108,8 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       },
 
       _updateValueView: function () {
-         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(),
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          if (this._options.type === 'normal') {
             this.getContainer().find(['.', this._cssRangeSlider.value].join('')).text(caption);
          } else {

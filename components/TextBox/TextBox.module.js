@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
    "Core/helpers/functional-helpers",
-   "Core/detection",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
    'css!SBIS3.CONTROLS.TextBox'
 
 ], function(
@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TextBoxUtils,
     Sanitize,
     dcHelpers,
-    fHelpers) {
+    fHelpers,
+    ControlHierarchyManager) {
 
    'use strict';
 
@@ -204,6 +205,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
          });
 
+         this._inputField.on('drop', function(){
+            window.setTimeout(function(){
+               // в момент события в поле ввода нет перенесенных данных,
+               // поэтому вставка выполняется с задержкой, чтобы позволить браузеру обработать перенесенные данные (картинка, верстка)
+               self._setTextByKeyboard(self._getInputValue());
+            }, 100);
+         });
+
          this._inputField.change(function(){
             var newText = $(this).val();
             if (newText != self._options.text) {
@@ -298,7 +307,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             if (scrollWidth > this._inputField[0].clientWidth) {
                this._container.attr('title', this._options.text);
             }
-            else {
+            else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
             }
             this._tooltipText = this._options.text;
@@ -452,7 +461,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
             EventBus.globalChannel().notify('MobileInputFocusOut');
             this._fromTouch = false;
          }
-         this._checkInputVal();
+      },
+
+      _focusOutHandler: function(event, isDestroyed, focusedControl) {
+         TextBox.superclass._focusOutHandler.apply(this, arguments);
+
+         if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
+            this._checkInputVal();
+         }
       },
 
       _inputFocusInHandler: function(e) {

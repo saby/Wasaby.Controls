@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
        * Подготовить отчет в виде html-текста
        * @param xsl
        * @param dataSet
-       * @returns {$ws.proto.Deferred}
+       * @returns {Core/Deferred}
        */
       prepareReport: function(xsl, dataSet){
          xsl =   this._getTransform(this._options.report, this._options.dataSet, xsl);

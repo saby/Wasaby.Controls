@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTR
    /**
     * Контрол, отображающий обычный переключатель.
     * @class SBIS3.CONTROLS.Switcher
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS.Checkable
     * @mixes SBIS3.CONTROLS.Clickable
     * @author Крайнов Дмитрий Олегович

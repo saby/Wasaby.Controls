@@ -307,6 +307,10 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._fastDataFilter = this._getFastDataFilter();
 
          if (this._filterButton) {
+            this.subscribeTo(this._filterButton, 'onApplyFilter', function() {
+               self.getView().setActive(true);
+            });
+
             if(this._options.historyId) {
                this._bindFilterHistory();
             } else {

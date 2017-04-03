@@ -1,0 +1,91 @@
+.controls-SearchForm {
+  .icon-size {
+    font-size: 2rem !important;
+    width: @icon-width;
+    height: @icon-height;
+  }
+}
+
+.controls-ComboBox {
+  &.controls-Picker__show {
+    border-width: 0;
+    border-style: @text-box-hover-border-style;
+    border-color: @text-box-hover-border-color;
+  }
+}
+
+.controls-ComboBox__picker {
+  .controls-ComboBox__itemRow {
+    &.controls-ComboBox__itemRow__selected {
+      font-weight: bold;
+    }
+  }
+}
+
+.controls-Button__closeButton {
+   display: inline-block;
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
+   background: @closeButtonImage;
+   &:hover {
+      background: @closeButtonImageHover;
+   }
+   &:active {
+      background: @closeButtonImageHover;
+   }
+}
+
+.controls-PopupMixin__closeButton {
+  position: absolute;
+  top: @controls-Popup-closeButton-top;
+  right: @controls-Popup-closeButton-right;
+  width: @closeBigButtonWidth;
+  height: @closeBigButtonHeight;
+  cursor: pointer;
+  background: @closeBigButtonImage;
+  &:hover {
+    background: @closeBigButtonImageHover;
+  }
+  &:active {
+    background: @closeBigButtonImageHover;
+  }
+  z-index: 1;
+}
+
+.controls-Button {
+  white-space: normal;
+   padding-bottom: 0; // FF only
+}
+.controls-Button__text {
+  line-height: 20px;//for 1 or 2 lines
+}
+
+@text-box-height-prestoBig:   50px;
+@text-box-height-prestoFont:  36px;
+.controls-TextBox {
+   &.controls-TextBox__big {
+      height: @text-box-height-prestoBig;
+      font-size: @text-box-height-prestoFont;
+   }
+}
+
+.ws-float-area-stack-panel-shadow {
+  background: #202835 !important;
+}
+.ws-sticky-header__block.ws-sticky-header__fixed,
+.ws-sticky-header__table-header-copy {
+  background-color: #202835 !important;
+}
+
+.ws-window {
+  background-color: #293543 !important;
+}
+.ws-window-content {
+  background-color: #202835 !important;
+}
+body .ws-enabled .icon-primary{
+  color: #e4e4e4 !important;
+}
+.controls-listView td {
+  font-size: 1rem;
+}

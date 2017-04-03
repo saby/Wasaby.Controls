@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
        * @property {WS.Data/Entity/Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
-       * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
+       * @property {CORE/Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
       $constructor: function() {
 
@@ -147,6 +147,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
+            needSetDocumentTitle: false,
             opener: this._getOpener(),
             template: meta.template || this._options.template,
             target: undefined,
@@ -156,11 +157,22 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _getOpener: function(){
          //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
          //В идеале они должны делать это сами и тогда этот код не нужен
-         var topParent = this.getTopParent(),
-            floatArea, floatAreaContainer;
-         if (topParent !== this) {
-            floatAreaContainer = topParent.getContainer().closest('.ws-float-area'),
-            floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+         var popup = this.getContainer() && this.getContainer().closest('.controls-FloatArea'),
+             topParent,
+             floatArea,
+             floatAreaContainer;
+         //Указываем opener'ом всплывающую панель, в которой лежит action, это может быть либо controls.FloatArea, либо core.FloatArea
+         //Нужно в ситуации, когда запись перерисовывается в уже открытой панели, чтобы по opener'aм добраться до панелей, которые открыты из той,
+         //которую сейчас перерисовываем, и закрыть их.
+         if (popup && popup.length) {
+            return popup.wsControl();
+         }
+         else {
+            topParent = this.getTopParent();
+            if (topParent !== this) {
+               floatAreaContainer = topParent.getContainer().closest('.ws-float-area');
+               floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+            }
          }
          return floatArea || this;
       },
@@ -230,8 +242,16 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'Используйте публичный метод execute для работы с action\'ом открытия диалога редактирования');
          meta.template = dialogComponent;
          this._openComponent.call(this, meta, mode);
-      }
+      },
 
+      after : {
+         destroy: function () {
+            if (this._dialog) {
+               this._dialog.destroy();
+               this._dialog = undefined;
+            }
+         }
+      }
    };
 
    return DialogMixin;

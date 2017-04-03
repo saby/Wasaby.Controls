@@ -222,10 +222,14 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             methodName = this._getSaveMethodName(false);
             if (methodName) {
                fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
-               filter = new Record({
-                  adapter: new SbisAdapter(),
-                  rawData: fullFilter['Filter']
-               });
+               if (fullFilter['Filter'] instanceof Record) {
+                   filter = fullFilter['Filter'];
+               } else {
+                   filter = new Record({
+                      adapter: new SbisAdapter(),
+                      rawData: fullFilter['Filter']
+                   });
+               }
                filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
                filter.set('selectedIds', this._getView().getSelectedKeys());
                fullFilter['MethodName'] = methodName;

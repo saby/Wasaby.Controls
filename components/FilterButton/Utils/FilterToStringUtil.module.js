@@ -31,8 +31,8 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
 
                 if (template) {
                    templateRes = template(elem);
-                   if (templateRes) {
-                      res.push(template(elem));
+                   if (templateRes && templateRes.trim()) {
+                      res.push(templateRes);
                    }
                    return res;
                 } else if (template === null) {

@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.Pager', [
       },
       /**
        * Получить SBIS3.CORE.Paging
-       * @returns {$ws.proto.Paging}
+       * @returns {SBIS3.CORE.Paging}
        */
       getPaging: function(){
          return this._paging;

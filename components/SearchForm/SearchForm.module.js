@@ -19,7 +19,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
+    *
     * @mixes SBIS3.CONTROLS.SearchMixin
+    * @mixes SBIS3.CONTROLS.SuggestMixin
+    * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
+    * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
     *

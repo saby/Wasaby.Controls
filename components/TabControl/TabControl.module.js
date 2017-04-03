@@ -185,6 +185,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
 
       _onSelectedItemChange: function(event, id, index) {
          this._setActiveArea(id).addCallback(function(){
+            this._notifyOnPropertyChanged('selectedKey');
             this._notify('onSelectedItemChange', id, index);
          }.bind(this));
       },

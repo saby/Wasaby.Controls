@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    "Core/defaultRenders",
    "Core/constants",
    "js!SBIS3.CONTROLS.NumberTextBox",
-   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
+   'tmpl!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
    'css!SBIS3.CONTROLS.MoneyTextBox'
 ], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
 
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @extends SBIS3.CONTROLS.NumberTextBox
      * @public
      * @control
-     *
+     * @author Крайнов Дмитрий Олегович
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
@@ -73,16 +73,19 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              * </pre>
              * @see text
              */
-             moneyValue: null,
-             className: 'controls-MoneyTextBox'
+             moneyValue: null
          }
       },
 
       _modifyOptions: function(options){
+         var value;
          options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
-         if (options.text){
+         options.className = ' controls-MoneyTextBox';
+
+         value = options.text || options.moneyValue;
+         if (value){
             options.text = formatText(
-                options.text,
+                value,
                 options.integers,
                 options.maxLength
             );

@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.DropdownListMixin', [
             },
            _clickItemHandler : function (e) {
               var row = $(e.target).closest('.' + self._getItemClass());
-              if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+              if (row.length && (e.button === 0)) {
                  self.setSelectedKeys([row.data('id')]);
                  self.hidePicker();
               }

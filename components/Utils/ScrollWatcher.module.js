@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
 
    /**
     * @class SBIS3.CONTROLS.ScrollWatcher
-    * @extends $ws.proto.Abstract
+    * @extends SBIS3.CORE.Abstract
     * @author Крайнов Дмитрий Олегович
     */
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{

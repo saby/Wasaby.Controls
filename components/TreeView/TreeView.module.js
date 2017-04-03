@@ -25,13 +25,10 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * @initial
     * <component data-component='SBIS3.CONTROLS.TreeView'>
     *    <option name="idProperty">key</option>
-    *    <option name="idProperty">key</option>
     *    <option name="displayProperty">title</option>
     *    <option name="emptyHTML">Нет записей</option>
     *    <option name="parentProperty">parent</option>
     * </component>
-    *
-    *
     */
 
    var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {

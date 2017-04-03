@@ -6,6 +6,31 @@
          .flex-wrap(wrap);
       }
    }
+   &.controls-CompositeView-tile__static {
+      .controls-ListView__item-type-node {
+         .controls-CompositeView__tileImg-container {
+            .flexbox();
+            .align-items(center);
+            .justify-content(center);
+         }
+         .controls-CompositeView__tileTitle {
+            font-weight: bold;
+            color: #313E78;
+            cursor: pointer;
+            word-break: break-all;
+         }
+         .controls-TreeView__editArrow {
+            display: inline-block;
+            visibility: hidden;
+            position: relative;
+            top: 3px;
+            vertical-align: top;
+         }
+         .controls-TreeView__editArrow-overflow {
+            top: 23px;
+         }
+      }
+   }
    &.controls-CompositeView-tile__static:not(.controls-CompositeView-tile__static-smallImage) {
       .controls-ListView__item-type-node {
          height: 40px;

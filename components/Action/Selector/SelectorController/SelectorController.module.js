@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                  */
                 selectionType: 'all',
                 /**
-                 * @cfg {String} Устанавливает имя кнопки (см. {@link $ws.proto.Control#name}), клик по которой завершает выбор отмеченных элементов.
+                 * @cfg {String} Устанавливает имя кнопки (см. {@link SBIS3.CORE.Control#name}), клик по которой завершает выбор отмеченных элементов.
                  */
                 selectButton: 'SelectorControllerButton',
                 /**

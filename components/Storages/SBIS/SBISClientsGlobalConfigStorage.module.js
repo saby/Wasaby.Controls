@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
    [
       'js!SBIS3.CONTROLS.SBISStorageAdapter',
-      'Core/ClientsGlobalConfig'
+      'Core/ClientsGlobalConfig',
+      'js!SBIS3.CONTROLS.IStorage'
    ],
 
    function(SBISStorageAdapter, ClientsGlobalConfig) {
@@ -19,7 +20,6 @@ define('js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage',
        * @author Герасимов Александр
        * @class SBIS3.CONTROLS.SBISClientsGlobalConfigStorage
        * @mixes SBIS3.CONTROLS.IStorage
-       * @singleton
        * @public
        */
 

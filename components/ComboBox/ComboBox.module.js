@@ -430,7 +430,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _drawSelectedEmptyRecord: function(){
-         this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
+         if (this.isEditable()) {
+            //Если выбрали emptyValue и включен ввод значения в инпут - выставляем пустой текст, чтобы было видно placeholder
+            //Текст "не выбрано" в этом случае никому не нужен, он лишь мешает вводить значение.
+            ComboBox.superclass.setText.call(this, '');
+         }
+         else {
+            this._drawSelectedItemText(null, this._options._emptyRecordProjection.getContents());
+         }
+
          this._options.selectedKey = null;
          this.setSelectedIndex(-1);
          this.hidePicker();
@@ -563,16 +571,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
             self = this,
             filterFieldObj = {};
-
-         if (this._dataSource) {
+         //сначала поищем по рекордсету
+         if (this.getItems()) {
+            this._findItemByKey(this.getItems());
+         }
+         else if (this._dataSource) {
             filterFieldObj[this._options.displayProperty] = self._options.text;
 
             self._callQuery(filterFieldObj).addCallback(function (DataSet) {
                self._findItemByKey(DataSet);
             });
-         }
-         else if (this.getItems()) {
-            this._findItemByKey(this.getItems());
          }
          else {
             this._delayedSettingTextByKey = true;
@@ -582,15 +590,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _findItemByKey: function(items) {
          //Алгоритм ищет нужный рекорд по текстовому полю. Это нужно в случае, если в комбобокс
          //передают текст, и надо оперделить ключ записи
-         var noItems = true,
+         var hasItems = false,
+            hasFindedKey = false,
             selKey,
             oldKey = this._options.selectedKey,
             oldIndex = this._options.selectedIndex,
             oldText = this.getText(),
             self = this;
          items.each(function (item) {
-            noItems = false;
+            hasItems = true;
             if (self._propertyValueGetter(item, self._options.displayProperty) == self._options.text) {
+               hasFindedKey = true;
                //для рекордов и перечисляемого чуть разный механизм
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
                   selKey = item.getId();
@@ -618,7 +628,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
          });
 
-         if (noItems && oldKey !== null) {
+         if ((!hasFindedKey || !hasItems) && oldKey !== null) {
             ComboBox.superclass.setSelectedKey.call(self, null);
             self._drawText(oldText);
          }
