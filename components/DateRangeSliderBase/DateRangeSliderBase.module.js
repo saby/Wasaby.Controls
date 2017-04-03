@@ -53,18 +53,6 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
              */
             showLock: false,
 
-            pickerConfig: {
-               corner: 'tl',
-               horizontalAlign: {
-                  side: 'left'
-                  // offset: -3
-               },
-               verticalAlign: {
-                  side: 'top',
-                  offset: -6
-               }
-            },
-
             locked: true
          },
          _cssRangeSlider: {
@@ -98,13 +86,17 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       },
 
       _onPrevBtnClick: function () {
-         this.setPrev();
-         this._updateValueView();
+         if (this.isEnabled()) {
+            this.setPrev();
+            this._updateValueView();
+         }
       },
 
       _onNextBtnClick: function () {
-         this.setNext();
-          this._updateValueView();
+         if (this.isEnabled()) {
+            this.setNext();
+            this._updateValueView();
+         }
       },
 
       _updateValueView: function () {
