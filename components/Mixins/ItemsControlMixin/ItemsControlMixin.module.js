@@ -997,6 +997,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             needToRevive = false,
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
+            inlineStyles = targetElement.attr('style') || '',
             data;
 
          //TODO в 3.7.5 избавиться от проверки на _path
@@ -1027,7 +1028,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
 
-            targetElement.get(0).outerHTML = markup;
+            if (inlineStyles) {
+               targetElement.replaceWith($(markup).attr('style', inlineStyles));
+            } else {
+               targetElement.get(0).outerHTML = markup;
+            }
 
             for (var i = 0; i < comps.length; i++) {
                if (comps[i]) {
