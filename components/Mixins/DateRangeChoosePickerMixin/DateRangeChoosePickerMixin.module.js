@@ -124,6 +124,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
                this._chooserControl.updateIcons();
+               this._chooserControl._onShow();
             }
          }
       },
