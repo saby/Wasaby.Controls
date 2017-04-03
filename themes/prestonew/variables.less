@@ -7,13 +7,14 @@
 
 @primary-color:                           #ffcc99;
 @secondary-color:                         #4e5762;
-
+@back-button-caption-hover-color : rgb(185, 233, 255);
+@back-button-caption-active-color: @back-button-caption-hover-color;
 @bg:                                      @secondary-color;
 @text-color:                              @white-color;
-
+@blue-dark-color: #FFCC99;
 @font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
 @font-basic-size:                         .5rem;
-@font-popup-size:                         .5rem;
+@font-popup-size:                         1.14rem;
 @font-folder-size:                        .5rem;
 @font-basic-line-height:                  20px;
 
@@ -30,9 +31,9 @@
 // Link //
 // ---- //
 
-@link-text-color:                         #A8ACC3;
+@link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
-@link-font-size:                          0.86rem;
+@link-font-size:                          1.14rem;
 @link-hover-text-color:                   #FFA34F;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
@@ -97,7 +98,7 @@
 @filter-panel-chooser-list-view-title-shadow-right:               0;
 @filter-panel-chooser-list-view-title-shadow-top:                 36px;
 @filter-panel-chooser-list-view-title-shadow-width:               15px;
-@filter-panel-chooser-list-view-title-shadow-height:              18px;
+@filter-panel-chooser-list-view-title-shadow-height:              1.14rem;
 @filter-panel-chooser-list-view-title-shadow-box-shadow:          @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-default-color;
 @filter-panel-chooser-list-view-title-hovered-shadow-box-shadow:  @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-hovered-color;
 @filter-panel-chooser-list-view-title-selected-shadow-box-shadow: @filter-panel-chooser-list-view-title-box-shadow-pos @filter-panel-chooser-selected-color;
@@ -240,8 +241,8 @@
 @radio-button-disabled-text-color:              @gray-color;
 @radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
 
-@radio-button-icon-width:                       18px;
-@radio-button-icon-height:                      18px;
+@radio-button-icon-width:                       1.14rem;
+@radio-button-icon-height:                      1.14rem;
 @radio-button-icon-line-height:                 normal;
 
 @radio-button-icon-bg:                          transparent;
@@ -267,9 +268,9 @@
 
 @check-box-disabled-text-color:                 @gray-color;
 
-@check-box-icon-width:                          18px;
-@check-box-icon-height:                         18px;
-@check-box-icon-line-height:                    18px;
+@check-box-icon-width:                          1.14rem;
+@check-box-icon-height:                         1.14rem;
+@check-box-icon-line-height:                    1.14rem;
 
 @check-box-icon-spritesheet:                    'img/checkbox.png';
 
@@ -312,8 +313,8 @@
 // ---- //
 
 @menu-subpopup-margin:                    @menu-margin;
-@menu-border-width:                       1px;
-@menu-border-color:                       @gray-color;
+@menu-border-width:                       2px;
+@menu-border-color:                       #23b8ff;
 
 @menu-expand-width:                       8px;
 @menu-expand-top-offset:                  20px;
@@ -335,15 +336,15 @@
 // --------- //
 // Menu item //
 // --------- //
-@menu-item-height:                        2rem;
+@menu-item-height:                        3.57rem;
 @menu-big-item-height:                    32px;
 @menu-item-padding:                       0 32px 0 16px;
 
-@menu-item-text-color:                    @text-color;
-@menu-item-bg:                            @text-box-focus-bg;
+@menu-item-text-color:                    #273B4D;
+@menu-item-bg:                            #f0f5fb;
 
-@menu-item-hover-text-color:              @secondary-color;
-@menu-item-hover-bg:                      @default-color;
+@menu-item-hover-text-color:              #273B4D;
+@menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
 
 @menu-item-icon-top-offset:               0px;
@@ -421,8 +422,8 @@
 
 // Menu
 @menu-button-menu-top-margin:                           3px;
-@menu-button-menu-border-width:                         @menu-border-width;
-@menu-button-menu-border-color:                         @menu-border-color;
+@menu-button-menu-border-width:                         2px;
+@menu-button-menu-border-color:                         #23b8ff;
 @menu-button-menu-bg:                                   @white-color;
 
 // --------- //
@@ -937,7 +938,7 @@
 
 @controls-OperationsPanelButton-width:             0.86rem;
 @controls-OperationsPanelButton-vert-height:       0.86rem;
-@controls-OperationsPanelButton-font:              18px 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-font:              1.14rem 'TensorFont Regular', 'TensorFont';
 @controls-OperationsPanelButton-icon-left:         6px;
 
 // ----------------------- //
@@ -959,8 +960,8 @@
 @listView-check-box-left:                           3px;
 @listView-check-box-top:                            5px;
 @listView-check-box-border:                         1px solid;
-@listView-check-box-width:                          18px;
-@listView-check-box-height:                         18px;
+@listView-check-box-width:                          1.14rem;
+@listView-check-box-height:                         1.14rem;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-image-margin:                  10px 40px;
@@ -1021,7 +1022,7 @@
 
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
-@controls-FieldLink-linkItem-line-height:          18px;
+@controls-FieldLink-linkItem-line-height:          1.14rem;
 @controls-FieldLink-showAllLinks-width:            20px;
 
 @controls-FieldLink-linkItem-margin:               2px 0;
@@ -1047,7 +1048,7 @@
 @controls-SelectorButton-align:                    middle;
 
 // BackButton
-@back-button-font-size:                            18px;
+@back-button-font-size:                            1.14rem;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
 
