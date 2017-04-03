@@ -60,6 +60,7 @@
        * TODO: (+) Возможно, лучше не удалять при локально-глобальной блокировке ?
        * TODO: ### Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
        * TODO: (+) Возможно, стоит ограничит набор глобальных параметров дефолтными ?
+       * TODO: (+-) Выделить защищённые члены классов в важных местах
        * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: ### Привести к ES5
@@ -273,11 +274,11 @@
 
 
       /**
-       * ###
+       * Класс содержащий методы управления индикатором
        */
       class WaitIndicator {
          /**
-          * ###
+          * Конструктор
           * @public
           * @constructor
           * @param {number} id Идентификатор индикатора
@@ -289,13 +290,16 @@
             //////////////////////////////////////////////////
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
-            this._id = id;
-            this._container = container;
+            //this._id = id;
+            WaitIndicator_protected.id.set(this, id);
+            //this._container = container;
+            WaitIndicator_protected.container.set(this, container);
             this.message = message;
-            this._look = look && typeof look == 'object' ? look : null;
-            this._starting = null;
-            this._suspending = null;
-            this._removing = null;
+            //this._look = look && typeof look == 'object' ? look : null;
+            WaitIndicator_protected.look.set(this, look);
+            //this._starting = null;
+            //this._suspending = null;
+            //this._removing = null;
          }
 
          /**
@@ -304,7 +308,8 @@
           * @type {number}
           */
          get id () {
-            return this._id;
+            //return this._id;
+            return WaitIndicator_protected.id.get(this);
          }
 
          /**
@@ -313,7 +318,8 @@
           * @type {HTMLElement}
           */
          get container () {
-            return this._container;
+            //return this._container;
+            return WaitIndicator_protected.container.get(this);
          }
 
          /**
@@ -322,7 +328,7 @@
           * @type {boolean}
           */
          get isGlobal () {
-            return !this._container;
+            return !this.container;
          }
 
          /**
@@ -331,7 +337,7 @@
           * @type {boolean}
           */
          get isVisible () {
-            let poolItem = WaitIndicatorPool.search(this._container);
+            let poolItem = WaitIndicatorPool.search(this.container);
             return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
          }
 
@@ -341,7 +347,7 @@
           * @type {boolean}
           */
          get isInTheDOM () {
-            return WaitIndicatorPool.searchIndex(this._container) !== -1;
+            return WaitIndicatorPool.searchIndex(this.container) !== -1;
          }
 
          /**
@@ -350,10 +356,12 @@
           * @type {string}
           */
          set message (msg) {
-            let prevMsg = this._message;
-            this._message = msg && typeof msg == 'string' ? msg : null;
-            if (this._message !== prevMsg) {
-               let poolItem = WaitIndicatorPool.search(this._container);
+            let prevMsg = this.message;
+            let newMsg = msg && typeof msg == 'string' ? msg : null;
+            if (newMsg !== prevMsg) {
+               //this._message = newMsg;
+               WaitIndicator_protected.message.set(this, newMsg);
+               let poolItem = WaitIndicatorPool.search(this.container);
                if (poolItem) {
                   WaitIndicatorInner.checkMessage(poolItem, prevMsg);
                }
@@ -366,7 +374,8 @@
           * @type {string}
           */
          get message () {
-            return this._message;
+            //return this._message;
+            return WaitIndicator_protected.message.get(this);
          }
 
          /**
@@ -375,7 +384,8 @@
           * @type {object}
           */
          get look () {
-            return this._look;
+            //return this._look;
+            return WaitIndicator_protected.look.get(this);
          }
 
          /**
@@ -386,7 +396,8 @@
           * @return {Promise}
           */
          start (delay) {
-            return this._callDelayed('start','_starting', delay);
+            //return this._callDelayed('start', '_starting', delay);
+            return this._callDelayed('start', 'starting', delay);
          }
 
          /**
@@ -398,7 +409,8 @@
           * @return {Promise}
           */
          suspend (delay) {
-            return this._callDelayed('suspend','_suspending', delay);
+            //return this._callDelayed('suspend', '_suspending', delay);
+            return this._callDelayed('suspend', 'suspending', delay);
          }
 
          /**
@@ -409,7 +421,8 @@
           * @return {Promise}
           */
          remove (delay) {
-            return this._callDelayed('remove','_removing', delay);
+            //return this._callDelayed('remove', '_removing', delay);
+            return this._callDelayed('remove', 'removing', delay);
          }
 
          /**
@@ -427,19 +440,24 @@
                   success = resolve;
                   fail = reject;
                });
-               this[storing] = {
+               //this[storing] = {
+               WaitIndicator_protected[storing].set(this, {
                   id: setTimeout(() => {
                      //////////////////////////////////////////////////
-                     console.log('DBG: ' + method + ': TIMEOUT this.' + storing + '=', this[storing], ';');
+                     console.log('DBG: ' + method + ': TIMEOUT this.' + storing + '=', WaitIndicator_protected[storing].get(this), ';');
                      //////////////////////////////////////////////////
                      WaitIndicatorInner[method](this);
-                     this[storing].success.call(null, this);
-                     this[storing] = null;
+                     //this[storing].success.call(null, this);
+                     let ms = WaitIndicator_protected[storing];
+                     ms.get(this).success.call(null, this);
+                     //this[storing] = null;
+                     ms.set(this, null);
                   }, delay),
                   success: success,
                   fail: fail,
                   promise: promise
-               };
+               //};
+               });
                return promise.catch((err) => {});
             }
             else {
@@ -454,20 +472,23 @@
           */
          _clearDelays () {
             //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: this._starting=', this._starting, '; this._suspending=', this._suspending, '; this._removing=', this._removing, ';');
+            console.log('DBG: _clearDelays: this._starting=', WaitIndicator_protected.starting.get(this), '; this._suspending=', WaitIndicator_protected.suspending.get(this), '; this._removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
-            for (let storing of ['_starting', '_suspending', '_removing']) {
-               let o = this[storing];
+            //for (let storing of ['_starting', '_suspending', '_removing']) {
+            for (let storing of ['starting', 'suspending', 'removing']) {
+               //let o = this[storing];
+               let o = WaitIndicator_protected[storing].get(this);
                if (o) {
                   clearTimeout(o.id);
                   if (o.fail) {
                      o.fail.call();
                   }
-                  this[storing] = null;
+                  //this[storing] = null;
+                  WaitIndicator_protected[storing].set(this, null);
                }
             }
             //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: this._starting=', this._starting, '; this._suspending=', this._suspending, '; this._removing=', this._removing, ';');
+            console.log('DBG: _clearDelays: this._starting=', WaitIndicator_protected.starting.get(this), '; this._suspending=', WaitIndicator_protected.suspending.get(this), '; this._removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
          }
 
@@ -477,7 +498,9 @@
           * @type {Promise}
           */
          get nextStart () {
-            return this._starting ? this._starting.promise : null;
+            //return this._starting ? this._starting.promise : null;
+            let o = WaitIndicator_protected.starting.get(this);
+            return o ? o.promise : null;
          }
 
          /**
@@ -486,7 +509,9 @@
           * @type {Promise}
           */
          get nextSuspend () {
-            return this._suspending ? this._suspending.promise : null;
+            //return this._suspending ? this._suspending.promise : null;
+            let o = WaitIndicator_protected.suspending.get(this);
+            return o ? o.promise : null;
          }
 
          /**
@@ -495,8 +520,23 @@
           * @type {Promise}
           */
          get nextRemove () {
-            return this._removing ? this._removing.promise : null;
+            //return this._removing ? this._removing.promise : null;
+            let o = WaitIndicator_protected.removing.get(this);
+            return o ? o.promise : null;
          }
+      };
+
+      /**
+       * Защищённые члены класа WaitIndicator
+       */
+      let WaitIndicator_protected ={
+         id: new WeakMap(),
+         container: new WeakMap(),
+         message: new WeakMap(),
+         look: new WeakMap(),
+         starting: new WeakMap(),
+         suspending: new WeakMap(),
+         removing: new WeakMap()
       };
 
 
@@ -622,7 +662,7 @@
 
          /**
           * Проверить, и обновить, если нужно, отображаемое сообщение
-          * @protected
+          * @public
           * @param {object} poolItem Элемент пула
           * @param {string} prevMessage Текущее (отображаемое) сообщение
           */
@@ -668,7 +708,7 @@
 
          /**
           * Добавить элемент пула
-          * @protected
+          * @public
           * @param {object} item Элемент пула
           */
          add (item) {
@@ -698,7 +738,7 @@
 
          /**
           * Удалить элемент пула
-          * @protected
+          * @public
           * @param {object} item Элемент пула
           */
          remove (item) {
