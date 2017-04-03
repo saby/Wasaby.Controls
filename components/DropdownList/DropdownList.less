@@ -230,18 +230,16 @@
    }
    &.controls-popup-revert-horizontal{
       &.controls-DropdownList__type-fastDataFilter {
+         .flexbox();
+         .flex-direction(column);
          .controls-DropdownList__body {
             border-radius: @DropdownList-picker-list-left-border-radius;
          }
          .controls-DropdownList__header{
-            position: absolute;
-            right: 0;
+            .align-self(flex-end);
             .controls-DropdownList{
                margin: @DropdownList-picker-hor-revert-head-margin !important;
             }
-         }
-         .controls-DropdownList__body{
-            margin-top: @DropdownList-height;
          }
       }
    }

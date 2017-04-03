@@ -110,7 +110,7 @@
       }
    }
    &.controls-ListView__pagerNoSizePicker .controls-Pager-container {
-      .controls-Pager__pageSize-container, {
+      .controls-Pager__pageSize-container {
          display: none;
       }
       .controls-Pager__table .controls-text-extra{
@@ -218,17 +218,28 @@
 }
 
 .dragdropBody {
-  .controls-DragNDrop__insertBefore{
-    &, > td {
-      border-top: @drag-and-drop-border;
-    }
-  }
-  .controls-DragNDrop__insertAfter {
-    &, > td {
-      border-bottom: @drag-and-drop-border;
-    }
+   .controls-ListView__verticalDragNDrop {
+      .controls-DragNDrop__insertBefore {
+         &, > td {
+            border-top: @drag-and-drop-border;
+         }
+      }
+      .controls-DragNDrop__insertAfter {
+         &, > td {
+            border-bottom: @drag-and-drop-border;
+         }
+      }
+   }
+  .controls-ListView__horisontalDragNDrop {
+     .controls-DragNDrop__insertBefore{
+        border-left: @drag-and-drop-border;
+     }
+     .controls-DragNDrop__insertAfter {
+        border-right: @drag-and-drop-border;
+     }
   }
 }
+
 
 .controls-ListView__results{
   background: #FFF;

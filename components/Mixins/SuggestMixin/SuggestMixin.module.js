@@ -265,7 +265,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _showAllButton: undefined,              /* {$ws.proto.Control} Кнопка открытия всех записей */
          _listReversed: false
       },
-
       $constructor: function () {
          if (!cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.PickerMixin')) {
             throw new Error('Mixin SBIS3.CONTROLS.PickerMixin is required.');
@@ -294,6 +293,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          _modifyOptions: function(parentFnc, opts) {
             var options = parentFnc.call(this, opts);
             options.className += ' controls-Suggest';
+            options.pickerClassName += ' controls-Suggest__picker';
             return options;
          }
       },
@@ -753,7 +753,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       _setPickerContent: function () {
-         this._picker.getContainer().addClass('controls-Suggest__picker');
          /* Заглушка, picker автодополнения не должен вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
          this._picker._notifyOnSizeChanged = fHelpers.nop;
       },

@@ -210,6 +210,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /** @typedef {Object} Dictionaries
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
+                 * @property {Object} dialogOptions Опции для диалога.
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
                  * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
                  * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
@@ -537,7 +538,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Метод  используется для открытия справочника из JS-кода компонента.
            * Подробно о настройке и работе со справочниками можно прочесть в описании к опции {@link dictionaries}.
            * @example
-           * @param {String} template Компонент, который будет использован для построения справочника.
+           * @param {String|Object.<String, *>} template Компонент или конфигурация (объект) компонета, который будет использован для построения справочника.
            * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
            * Подробное описание можно прочесть {@link SBIS3.CONTROLS.FieldLink/dictionaries.typedef здесь}.
            * @example
@@ -553,20 +554,30 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions, selectionType) {
+             var cfg;
+
+             if(typeof template !== 'object') {
+                cfg = {
+                   template: template,
+                   componentOptions: componentOptions
+                }
+             } else {
+                cfg = template;
+             }
+
              this.hidePicker();
              this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
                 var selectedItems = this.getSelectedItems();
-                this._getSelectorAction().execute({
-                   template: template,
-                   componentOptions: componentOptions,
-                   multiselect: this.getMultiselect(),
-                   selectionType: selectionType,
-                   selectedItems: selectedItems ? selectedItems.clone() : selectedItems
-                });
+
+                if(selectedItems) {
+                   cfg.selectedItems = selectedItems.clone();
+                }
+                cfg.multiselect = this.getMultiselect();
+                this._getSelectorAction().execute(cfg);
              } else {
-                this._showChooser(template, componentOptions);
+                this._showChooser(cfg.template, cfg.componentOptions);
              }
           },
 
@@ -590,7 +601,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(config) {
-                this.showSelector(config.template, config.componentOptions, config.selectionType);
+                this.showSelector(config);
                 /* Чтобы остановить всплытие комманды */
                 return true;
              }

@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers",
+   'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
@@ -51,6 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    cInstance,
    fcHelpers,
    fHelpers,
+   strHelpers,
    SourceUtil) {
 
    function propertyUpdateWrapper(func) {
@@ -159,6 +161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
+      tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;

@@ -435,6 +435,12 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             mover.moveFromOutside(listAction, targetRow, undefined, true);
             assert.equal(list.getCount(), 2);
          });
+         it('should not move the source row if default move off', function(){
+            targetRow.setPosition('after');
+            var count = treeItems.getCount();
+            treeMover.moveFromOutside(list, targetRow, outsideRs, false);
+            assert.equal(count, treeItems.getCount());
+         });
       });
       describe('._getDataSource', function () {
          it('should return datasource', function() {
@@ -498,6 +504,8 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             treeMover._moveInItems([item], items.at(0), 'on');
             assert.equal(items.getRecordById('121').get('parent'), items.at(0).getId());
          });
+
+         
       });
    });
 });
