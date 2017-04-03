@@ -37,7 +37,7 @@
        * TODO: (+) Добавить локально-глобальную блокировку
        * TODO: (+) Перейти от тестов к демо
        * TODO: (+) Убрать lastUse
-       * TODO: (+-) Стилевые классы на все случаи
+       * TODO: (+) Стилевые классы на все случаи
        * TODO: (+) Сообщение меняется с ошибкой
        * TODO: (+) Избавиться от jQuery
        * TODO: ### Возможно стоит механизировать разбор опций ?
@@ -62,7 +62,7 @@
        * TODO: (+) Возможно, стоит ограничит набор глобальных параметров дефолтными ?
        * TODO: (+-) Выделить защищённые члены классов в важных местах
        * TODO: ### Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно
-       * TODO: ### Привязка мелких локальных индикаторов
+       * TODO: (+) Привязка мелких локальных индикаторов
        * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: ### Привести к ES5
@@ -119,9 +119,10 @@
                message = options ? options.message : null,
                delay = options ? options.delay : -1,
                hidden = options ? options.hidden : false,
-               small = options ? options.small : false,
                noOverlay = false,
-               darkOverlay = false;
+               darkOverlay = false,
+               small = options ? options.small : false,
+               align = options ? options.align : null;
             if (options && options.overlay && typeof options.overlay == 'string') {
                let overlay = options.overlay.toLowerCase();
                noOverlay = overlay === 'no' || overlay === 'none';
@@ -133,7 +134,7 @@
             console.log('DBG: getWaitIndicator: id=', id, ';');
             //////////////////////////////////////////////////
             let container = WaitIndicatorManager._getContainer(target);
-            let indicator = new WaitIndicator(id, container, message, {small, noOverlay, darkOverlay});
+            let indicator = new WaitIndicator(id, container, message, {noOverlay, darkOverlay, small, align});
             if (!hidden) {
                indicator.start(0 <= delay ? delay : WaitIndicatorManager.getParam('defaultDelay'));
             }
@@ -795,6 +796,15 @@
             if (look) {
                if (look.small) {
                   cls.add('ws-wait-indicator_small');
+                  let aligns = {
+                     left: 'ws-wait-indicator_left',
+                     right: 'ws-wait-indicator_right',
+                     top: 'ws-wait-indicator_top',
+                     bottom: 'ws-wait-indicator_bottom'
+                  };
+                  if (look.align && aligns[look.align]) {
+                     cls.add(aligns[look.align]);
+                  }
                }
                if (look.noOverlay || look.small) {
                   cls.add('ws-wait-indicator_no-overlay');

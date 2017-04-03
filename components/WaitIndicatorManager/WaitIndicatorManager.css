@@ -26,12 +26,6 @@
     height: 100%;
 }
 
-.ws-wait-indicator_text {
-}
-
-.ws-wait-indicator_small {
-}
-
 .ws-wait-indicator_no-overlay {
     background-color: transparent;
     pointer-events: none;
@@ -40,6 +34,12 @@
 
 .ws-wait-indicator_dark-overlay {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.ws-wait-indicator_text {
+}
+
+.ws-wait-indicator_small {
 }
 
 
@@ -89,5 +89,22 @@
     width: 20px;
     height: 20px;
     border-radius: 5px;
+    background-color: transparent;
     background-image: url('/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-16x16-wheel.gif');
+}
+
+.ws-wait-indicator_small.ws-wait-indicator_left .ws-wait-indicator-in {
+    margin-left: 6px;
+}
+
+.ws-wait-indicator_small.ws-wait-indicator_right .ws-wait-indicator-in {
+    margin-right: 6px;
+}
+
+.ws-wait-indicator_small.ws-wait-indicator_top .ws-wait-indicator-in {
+    margin-top: 6px;
+}
+
+.ws-wait-indicator_small.ws-wait-indicator_bottom .ws-wait-indicator-in {
+    margin-bottom: 6px;
 }
