@@ -12,16 +12,35 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       'use strict';
       /**
        * @class SBIS3.CONTROLS.EditAtPlaceGroup
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
        * @category Inputs
+       *
        * @mixes SBIS3.CONTROLS.PickerMixin
+       * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
+       *
        * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyEditAtPlace
        */
 
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
+         /**
+          * @event onCancel Происходит при отмене сохранения изменений.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @remark
+          * Выход из режима редактирования производится нажатием клавиши Esc или кнопки "Нет" в диалоге, который появляется при клике вне области редактирования.
+          */
+         /**
+          * @event onApply Происходит при сохранении изменений.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @remark
+          * Сохранение изменений производится нажатием клавиши "Enter" или кнопки "Да" в диалоге, который появляется при клике вне области редактирования.
+          */
+          /**
+           * @event onShowEditor Происходит при переходе в режим редактирования.
+           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           */
          _dotTplFn: dotTplFn,
          $protected: {
             _textField: null,
@@ -90,7 +109,10 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             }
             for (var i = 0; i < children.length; i++) {
                if (children[i] instanceof EditAtPlace) {
-                  func(children[i], i);
+                  var res = func(children[i], i);
+                  if (res === false) {
+                     break;
+                  }
                }
             }
          },
@@ -134,29 +156,37 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             }, this._picker);
          },
 
+         _getActiveChildControlIndex: function(){
+            var index = 0;
+            this._iterateChildEditAtPlaces(function(child, i){
+               if (child.isActive()) {
+                  index = i;
+                  return false;
+               }
+            });
+            return index;
+         },
+
          _clickHandler: function () {
             if (this.isEnabled()) {
                this._iterateChildEditAtPlaces(function (child) {
                   child._saveOldText();
                });
                if (this._options.editInPopup) {
+                  var index = this._getActiveChildControlIndex();
+                  this.once('onPickerOpen', function(){
+                     this._iterateChildEditAtPlaces(function(child, i){
+                        if (i == index) {
+                           child.setActive(true);
+                        }
+                     }, this._picker);
+                  }.bind(this));
+               }
+               if (this._options.editInPopup) {
                   this.showPicker();
                } else {
                   this.setInPlaceEditMode(true);
                   this._addControlPanel(this._container);
-               }
-               if (this._options.editInPopup) {
-                  if ($('.js-controls-TextBox__field', this._picker._container).get(0)) {
-                     $('.js-controls-TextBox__field', this._picker._container).get(0).focus();
-                  } else if ($('.controls-TextArea__inputField', this._picker._container).get(0)) {
-                     $('.controls-TextArea__inputField', this._picker._container).get(0).focus();
-                  }
-               } else {
-                  if ($('.js-controls-TextBox__field', this._container).get(0)) {
-                     $('.js-controls-TextBox__field', this._container).get(0).focus();
-                  } else if ($('.controls-TextArea__inputField', this._container).get(0)) {
-                     $('.controls-TextArea__inputField', this._container).get(0).focus();
-                  }
                }
             }
          },

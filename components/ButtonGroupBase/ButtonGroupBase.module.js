@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
    /**
     * Класс, реализующий поведение выбора одного из нескольких значений при помощи набора радиокнопок. Отображения не имеет.
     * @class SBIS3.CONTROLS.ButtonGroupBase
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     *
     * @mixes SBIS3.CONTROLS.ItemsControlMixin
     *

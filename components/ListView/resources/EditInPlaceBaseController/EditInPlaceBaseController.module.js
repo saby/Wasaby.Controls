@@ -12,13 +12,14 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!SBIS3.CORE.PendingOperationProducerMixin",
    "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
    "js!SBIS3.CONTROLS.EditInPlace",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    'css!SBIS3.CONTROLS.EditInPlaceBaseController'
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, Model, Record, cInstance, fcHelpers) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers) {
 
       'use strict';
 
@@ -226,6 +227,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _getNextTarget: function(currentTarget, editNextRow) {
                //Ищем с помощью nextAll и prevAll т.к. между строками таблицы могут находиться блоки группировки, футеры папок и т.д. и
                //при помощи next и prev при указанном селекторе мы бы ни чего не нашли, хотя нужные строки могли быть.
+               currentTarget = this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + currentTarget.attr('data-id') + '"]:not(".controls-editInPlace")');
                return currentTarget[editNextRow ? 'nextAll' : 'prevAll']('.js-controls-ListView__item:not(".controls-editInPlace")').eq(0);
             },
             _getCurrentTarget: function() {
@@ -244,8 +246,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             edit: function (model, withoutActivateFirstControl) {
-               var self = this;
+               var
+                  self = this,
+                  reReadModel;
                return this.endEdit(true).addCallback(function() {
+                  //TODO: Постепенно нужно отказываться от начала редактирования по моделе, нужно редактировать по ключу(хэшу).
+                  //Сейчас возникают ошибки, из-за того, что в метод edit передаётся модель, а затем вызвается endEdit,
+                  //в следствии чего может случиться reload и переданная нам модель, станет оторванной от recordSet'а.
+                  //Из-за этого при сохранении оторванной записи, изменённые данные не попадают в recordSet.
+                  //Переход на редактирование по ключам будет по задаче https://inside.tensor.ru/opendoc.html?guid=00cb0405-e407-4502-b067-06098aabdfd2
+                  if (model.getState() === Record.RecordState.DETACHED) {
+                     reReadModel = self._options.items.getRecordById(model.get(self._options.idProperty));
+                     model = reReadModel || model;
+                  }
                   return self._prepareEdit(model).addCallback(function(preparedRecord) {
                      var editingRecord;
                      if (preparedRecord) {
@@ -389,18 +402,22 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
-               var self = this;
+               var
+                   self = this,
+                   needValidate;
                //TODO: Поддержка старого варианта результата.
                if (typeof endEditResult === "boolean") {
                   endEditResult = endEditResult ? EndEditResult.SAVE : EndEditResult.NOT_SAVE;
                   IoC.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
 
-               if (endEditResult) {
+               //Не портим переменную withSaving в случае CUSTOM_LOGIC
+               if (endEditResult && endEditResult !== EndEditResult.CUSTOM_LOGIC) {
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
+               needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
 
-               if (endEditResult === EndEditResult.CANCEL || withSaving && !eip.validate()) {
+               if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
@@ -408,7 +425,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return Deferred.success();
                } else {
                   this._updateModel(eip, withSaving).addCallback(function () {
-                     self._removePendingOperation();
                      self._afterEndEdit(eip, withSaving);
                   }).addErrback(function() {
                      self._savingDeferred.errback();
@@ -450,6 +466,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var isAdd = this._isAdd;
+               //После завершения редактирования, обязательно нужно удалить навешенный pending
+               this._removePendingOperation();
                //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
                //Иначе если сначала скрыть редакторы, курсор мыши может оказаться над фейковой строкой и произойдёт
                //нотификация о смене hoveredItem, которой быть не должно, т.к. у hoveredItem не будет ни рекорда ни контейнера.
@@ -516,8 +534,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (preparedModel instanceof Model) {
                   return Deferred.success(preparedModel);
                } else {
-                  return this._options.dataSource.create(modelOptions).addBoth(function(model) {
+                  return this._options.dataSource.create(modelOptions).addCallback(function(model) {
                      return model;
+                  }).addErrback(function (error) {
+                     fcHelpers.alert(error);
+                     return error;
                   });
                }
             },
@@ -591,11 +612,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             _isAnotherTarget: function(target, control) {
-               do {
-                  target = target.getParent() || target.getOpener();
-               }
-               while (target && target !== control);
-               return target !== control;
+               return !ControlHierarchyManager.checkInclusion(control, target.getContainer());
             },
             _isCurrentTarget: function(control) {
                var currentTarget = this._getEditingEip().getTarget(),

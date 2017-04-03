@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter'];
        /**
         * SBIS3.CORE.SuggestShowAll
-        * @extends $ws.proto.CompoundControl
+        * @extends SBIS3.CORE.CompoundControl
         */
        var SuggestShowAllDialog = CompoundControl.extend({
           _dotTplFn: dotTplFn,

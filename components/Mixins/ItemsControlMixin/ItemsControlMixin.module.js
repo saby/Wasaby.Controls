@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers",
+   'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
@@ -51,6 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    cInstance,
    fcHelpers,
    fHelpers,
+   strHelpers,
    SourceUtil) {
 
    function propertyUpdateWrapper(func) {
@@ -159,6 +161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
+      tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
@@ -580,8 +583,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @example
              * <pre class="brush:xml">
              *     <options name="sorting" type="array">
-             *        <option name="date" value="ASC"></option>
-             *        <option name="name" value="DESC"></option>
+             *        <options>
+             *           <option name="date" value="ASC"></option>
+             *        </options>
+             *        <options>
+             *           <option name="name" value="DESC"></option>
+             *        </options>
              *     </options>
              * </pre>
              */
@@ -949,19 +956,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //TODO это может вызвать тормоза
             var comps = this._destroyInnerComponents($itemsContainer, this._options.easyGroup);
             if (markup.length) {
-               if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-                  $itemsContainer.append(markup);
-               } else {
-                  itemsContainer.innerHTML = markup;
-               }
+               itemsContainer.innerHTML = markup;
             }
             else {
                if (this._options.easyGroup) {
-                  if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-                     $itemsContainer.empty();
-                  } else {
-                     itemsContainer.innerHTML = '';
-                  }
+                  itemsContainer.innerHTML = '';
                }
             }
             for (var i = 0; i < comps.length; i++) {
@@ -1027,12 +1026,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup = markupExt.markup;
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
-            if (constants.browser.isIE8 || constants.browser.isIE9) {
-               targetElement.after(markup).remove();
-            }
-            else {
-               targetElement.get(0).outerHTML = markup;
-            }
+
+            targetElement.get(0).outerHTML = markup;
+
             for (var i = 0; i < comps.length; i++) {
                if (comps[i]) {
                   comps[i].destroy();
@@ -1138,11 +1134,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _optimizedInsertMarkup: function(markup, config) {
          var container = config.container;
          if (config.inside) {
-            if (constants.browser.isIE8 || constants.browser.isIE9) { // В IE8-9 insertAdjacentHTML ломает верстку при вставке
-               container[config.prepend ? 'prepend' : 'append'](markup);
-            } else {
-               container.get(0).insertAdjacentHTML(config.prepend ? 'afterBegin' : 'beforeEnd', markup);
-            }
+            container.get(0).insertAdjacentHTML(config.prepend ? 'afterBegin' : 'beforeEnd', markup);
          } else {
             container[config.prepend ? 'before' : 'after'](markup);
          }
@@ -1286,13 +1278,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _destroyInnerComponents: function(container, easy) {
          var compsArray = this._destroyControls(container, easy);
-         if (constants.browser.isIE8 || constants.browser.isIE9) { // Для IE8-9 у tbody innerHTML - readOnly свойство (https://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx)
-            container.empty();
-         } else {
-            if (!easy) {
-               container.get(0).innerHTML = '';
-            }
+
+         if (!easy) {
+            container.get(0).innerHTML = '';
          }
+
          if (container.get(0) === this._getItemsContainer().get(0)) {
             this._itemsInstances = {};
          }
@@ -2067,19 +2057,24 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _hasNextPage: function (hasMore, offset) {
          offset = offset === undefined ? this._offset : offset;
          //n - приходит true, false || общее количество записей в списочном методе
-         //Если offset отрицательный, значит запрашивали последнюю страницу
-         return offset < 0 ? false : (typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore);
+         var hasNextPage = typeof (hasMore) !== 'boolean' ? hasMore > (offset + this._options.pageSize) : !!hasMore;
+         if (this._getSourceNavigationType() == 'Offset') {
+            return hasNextPage;
+         } else {
+            //Если offset отрицательный, значит запрашивали последнюю страницу
+            return offset < 0 ? false : hasNextPage;
+         }
       },
-      _scrollTo: function scrollTo(target, toBottom) {
+      _scrollTo: function scrollTo(target, toBottom, depth) {
          if (typeof target === 'string') {
             target = $(target);
          }
-         LayoutManager.scrollToElement(target, toBottom);
+         LayoutManager.scrollToElement(target, toBottom, depth);
       },
-      _scrollToItem: function(itemId, toBottom) {
+      _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            this._scrollTo(itemContainer, toBottom);
+            this._scrollTo(itemContainer, toBottom, depth);
          }
       },
       /**
@@ -2295,6 +2290,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          } else {
             this._notifyOnDrawItems();
          }
+      },
+
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
       },
 
       /*TODO второй параметр нужен для поддержи старой группировки*/
@@ -2521,6 +2527,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      this._onCollectionAddMoveRemove.apply(this, arguments);
                   }
 	               break;
+
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                  }, this);
+                  break;
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);

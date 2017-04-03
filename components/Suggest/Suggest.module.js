@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Suggest', [
     * Компонент автодополнения. Можно подключить к любому узлу DOM, в т.ч. в котором уже подключен другой компонент.
     *
     * @class SBIS3.CONTROLS.Suggest
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin

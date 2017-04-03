@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "html!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
-   "js!SBIS3.CORE.PluginManager",
+   'js!WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
    "Core/helpers/collection-helpers",
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
    'css!SBIS3.CONTROLS.RichTextArea'
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, PluginManager, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
+], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, Di, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
@@ -254,8 +254,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + '//www.youtube.com/embed/' + id + '"',
-                  ' frameborder="0"',
-                  ' allowfullscreen>',
+                  ' frameborder="0" >',
                   '</iframe>'
                ].join('');
                this.insertHtml(content);
@@ -432,6 +431,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._readyContolDeffered.errback();
             }
             this._inputControl.unbind('mouseup dblclick click mousedown touchstart scroll');
+            if (this._imageOptionsPanel) {
+               this._imageOptionsPanel.destroy();
+            }
             RichTextArea.superclass.destroy.apply(this, arguments);
          },
 
@@ -464,6 +466,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   event.stopPropagation();
                   event.preventDefault();
                   return false;
+               },
+               service = {
+                  destroy: function(){}
                },
                createDialog = function() {
                   cIndicator.hide();
@@ -506,30 +511,41 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                         }
                      });
                   });
+                  service.destroy();
                };
+
             cIndicator.show();
-            PluginManager.getPlugin('Clipboard', '1.0.1.0', {silent: true}).addCallback(function(clipboard) {
-               if (clipboard.getContentType && clipboard.getHtml) {
-                  clipboard.getContentType().addCallback(function(ContentType) {
-                     clipboard[ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText']()
-                        .addCallback(function(content) {
-                           cIndicator.hide();
-                           prepareAndInsertContent(content);
-                           if (typeof onAfterCloseHandler === 'function') {
-                              onAfterCloseHandler();
-                           }
-                        }).addErrback(function() {
-                           createDialog();
-                        });
-                  }).addErrback(function() {
+            if (Di.isRegistered('SBIS3.Plugin/Source/LocalService')) {
+               //service создаётся каждый раз и destroy`тся каждый раз тк плагин может перезагрузиться и сервис протухнет
+               //см прохождение по задаче:https://inside.tensor.ru/opendoc.html?guid=c3362ff8-4a31-4caf-a284-c0832c4ac4d5&des=
+               service = Di.resolve('SBIS3.Plugin/Source/LocalService',{
+                  endpoint: {
+                     address: 'Clipboard-1.0.1.0',
+                     contract: 'Clipboard'
+                  },
+                  options: { mode: 'silent' }
+               });
+               service.isReady().addCallback(function() {
+                  service.call("getContentType", {}).addCallback(function (ContentType) {
+                     service.call(ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText', {}).addCallback(function (content) {
+                        cIndicator.hide();
+                        prepareAndInsertContent(content);
+                        if (typeof onAfterCloseHandler === 'function') {
+                           onAfterCloseHandler();
+                        }
+                        service.destroy();
+                     }).addErrback(function () {
+                        createDialog();
+                     });
+                  }).addErrback(function () {
                      createDialog();
                   });
-               } else {
+               }).addErrback(function () {
                   createDialog();
-               }
-            }).addErrback(function() {
+               });
+            } else {
                createDialog();
-            });
+            }
          },
          /**
           * <wiTag group="Управление">
@@ -941,7 +957,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _setText: function(text) {
             if (text !== this.getText()) {
-               if (!this._isEmptyValue(text) && !this._isEmptyValue(this._options.text)) {
+               if (!this._isEmptyValue(text)) {
                   this._textChanged = true;
                }
                this._options.text = text;
@@ -1022,18 +1038,25 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            var
                               target = e.target;
                            if (target.nodeName === 'IMG' && target.className.indexOf('mce-object-iframe') === -1) {
-                              callback(target);
+                              callback(e, target);
                            }
                         }
                      });
                   };
                //По двойному клику на изображение показывать диалог редактирования размеров
-               bindImageEvent('dblclick', function(target) {
+               bindImageEvent('dblclick', function(event, target) {
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(target) {
+               bindImageEvent('mousedown touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
+                  //Проблема:
+                  //    При клике на изображение в ie появляются квадраты ресайза
+                  //Решение:
+                  //    отменять дефолтное действие
+                  if(cConstants.browser.isIE) {
+                     event.preventDefault();
+                  }
                });
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
@@ -1054,8 +1077,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (!cConstants.browser.firefox) { //в firefox работает нативно
                   this._inputControl.bind('mouseup', function (e) { //в ie криво отрабатывает клик
                      if (e.ctrlKey) {
-                        var target = e.target;
-                        if (target.nodeName === 'A' && target.href) {
+                         //По ctrl+click по ссылке внутри редктора открывается ссылка в новой вкладке
+                         //если перед этим текст делали зеленым то выходит вёрстка
+                         //<a><span green>text</span></a>
+                         //в момент ctrl+click необходимо смотреть на тег и на его родителя
+                        var
+                           target = e.target.nodeName === 'A' ? e.target :$(e.target).parent('a')[0]; //ccылка может быть отформатирована
+                        if (target && target.nodeName === 'A' && target.href) {
                            window.open(target.href, '_blank');
                         }
                      }
@@ -1109,7 +1137,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
-               if (!self._mouseIsPressed) {
+               //upd: в костроме форматная вставка, не нужно вырезать лишние теги
+               if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
                   e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -1613,7 +1642,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             after = after ? after: '';
             img.on('load', function() {
                var
-                  isIEMore8 = cConstants.browser.isIE && !cConstants.browser.isIE8,
+                  isIEMore8 = cConstants.browser.isIE,
                // naturalWidth и naturalHeight - html5, работают IE9+
                   imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
                   imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
@@ -1621,9 +1650,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   style = ' style="width: 25%"';
                self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
             });
-            if (cConstants.browser.isIE8) {
-               $('body').append(img);
-            }
          },
 
          _onChangeAreaValue: function() {

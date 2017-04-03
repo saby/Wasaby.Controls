@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
    /**
     * Класс контрола выбора диапазона дат.
     * @class SBIS3.CONTROLS.DateRange
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @mixes SBIS3.CONTROLS.RangeMixin
     * @mixes SBIS3.CONTROLS.DateRangeMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
@@ -205,15 +205,16 @@ define('js!SBIS3.CONTROLS.DateRange', [
          return {
             corner: 'tl',
             bodyBounds: true,
+            locationStrategy: 'bodyBounds',
             horizontalAlign: {
                side: 'left',
-               offset: -133
+               offset: -139
             },
             verticalAlign: {
                side: 'top',
-               offset: -11
+               offset: -9
             }
-         }
+         };
       },
 
       _addDefaultValidator: function() {

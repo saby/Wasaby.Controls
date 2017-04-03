@@ -7,6 +7,7 @@
 @gray-light-color:                        #E4E4E4;
 @gray-ccc-color:                          #CCC;
 @lightgray-color:                         #CBD5E5;
+@gray-f4f4f4-color:                       #F4F4F4;
 @darkcyan-color:                          #0055BB;
 @dodgerblue-color:                        #0066FF;
 @red-color:                               #ef463a;
@@ -39,8 +40,8 @@
 @font-folder-size:                        15px;
 @font-basic-line-height:                  20px;
 
-@closeButtonImage:                        url('img/areaCloseButton.png') -30px 0;
-@closeButtonImageHover:                   url('img/areaCloseButton.png') -30px -24px;
+@closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
+@closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
 @closeButtonWidth:                        36px;
 @closeButtonHeight:                       24px;
 
@@ -668,17 +669,17 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
 @menu-expand-right-offset:                8px;
-@menu-expand-spritesheet:                'img/MenuExpand.png';
 
 @menu-expand-border-width:                0;
 @menu-expand-border-style:                solid;
 @menu-expand-border-color:                transparent;
-@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-bg:                          none;
+@menu-expand-content:                     "\e9ab";
 
 @menu-expand-hover-border-width:          @menu-expand-border-width;
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
-@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-hover-bg:                    none;
 
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
@@ -781,6 +782,7 @@
 @text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
 @text-box-color:                          @text-color;
+@text-box-text-decoration:                inherit;
 
 @text-box-field-font:                     inherit;
 @text-box-field-font-size:                inherit;
@@ -998,9 +1000,6 @@
 
 @combo-box-arrow-width:                         16px;
 @combo-box-arrow-height:                        16px;
-@combo-box-arrow-margin:                        -8px 0 0;
-@combo-box-arrow-top-offset:                    50%;
-@combo-box-arrow-right-offset:                  0;
 
 @combo-box-arrow-border-width:                  0;
 @combo-box-arrow-border-style:                  solid;
@@ -1132,7 +1131,7 @@
 @suggest-picker-border:                         1px solid #cccccc;
 @suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
-@suggest-picker-margin:                         -1px 0 0 0 !important;
+@suggest-picker-margin:                         -2px 0 0 0;
 @suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
@@ -1340,6 +1339,7 @@
 @date-range-slider-color:                       @darkcyan-color;
 @date-range-slider-disabled-text-color:         @link-disabled-text-color;
 @date-range-slider-hover-color:                 @blue-dark-color;
+@date-range-slider-unlocked-icon-hover-color:   @gray-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
@@ -1355,63 +1355,104 @@
 // ----------------- //
 // Date Range Choose //
 // ----------------- //
-@date-range-choose-bg-color:                    @white-color;
-@date-range-choose-bg-hover-color:              @default-itemHover-color;
+@date-range-choose-bg-color:                    @gray-f4f4f4-color;
+@date-range-choose-years-only-bg-color:         @white-color;
+@date-range-choose-item-bg-color:               @white-color;
+@date-range-choose-bg-hover-color:              @white-color;
 @date-range-choose-bg-active-color:             #e1ecf6;
-@date-range-choose-border-color:                @gray-light-color;
-@date-range-choose-border-width:                3px;
-@date-range-choose-border-radius:               4px;
+@date-range-choose-border-color:                @gray-ccc-color;
+@date-range-choose-border-width:                1px;
+@date-range-choose-border-radius:               0;
+@date-range-choose-border-hover:                1px solid @gray-lamantin-color;
 @date-range-choose-font-family:                 @font-basic-name;
-@date-range-choose-font-size:                   @font-basic-size;
-@date-range-choose-color:                       @darkcyan-color;
+@date-range-choose-font-size:                   15px;
+@date-range-choose-color:                       @black-color;
 @date-range-choose-hover-color:                 @blue-dark-color;
-@date-range-choose-width:                       150px;
+@date-range-choose-width:                       178px;
+@date-range-choose-short-width:                 146px;
 @date-range-choose-year-state-width:            80px;
-@date-range-choose-padding:                     0 0 4px;
+@date-range-choose-padding:                     0;
 
+@date-range-choose-standart-line-height:        32px;
 
-@date-range-choose-current-value-font-size:     15px;
-@date-range-choose-current-value-font-weight:   bold;
-@date-range-choose-current-value-height:        32px;
-@date-range-choose-current-value-line-height:   @date-range-choose-current-value-height;
-@date-range-choose-current-value-bg-color:      @date-range-choose-bg-color;
-@date-range-choose-current-value-bg-hover-color:   @date-range-choose-bg-hover-color;
-@date-range-choose-current-value-border-bottom: 1px solid @date-range-choose-border-color;
-@date-range-choose-current-value-margin-bottom: 4px;
+@date-range-choose-current-value-font-size:           15px;
+@date-range-choose-current-value-font-weight:         bold;
+@date-range-choose-current-value-color:               @blue-dark-color;
+@date-range-choose-current-value-height:              32px;
+@date-range-choose-current-value-line-height:         @date-range-choose-current-value-height;
+@date-range-choose-current-value-bg-color:            transparent;
+@date-range-choose-current-value-bg-hover-color:      transparent;
+@date-range-choose-current-value-border-bottom:       none;
+@date-range-choose-current-value-margin-bottom:       0;
 @date-range-choose-current-value-padding-left-right: 10px;
+
+@date-range-choose-year-wrapper-bg-color:       @white-color;
 
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-font-weight:            bold;
-@date-range-choose-year-height:                 24px;
+@date-range-choose-year-color:                  @darkcyan-color;
+@date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
+@date-range-choose-year-bg-hover-color:         inherit;
+@date-range-choose-year-padding-left:           2px;
 
-@date-range-choose-year-prev-next-btns-width:         24px;
+@date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
 @date-range-choose-year-prev-next-btns-font-weight:   normal;
+@date-range-choose-year-prev-next-btns-color:         @darkcyan-color;
 
+@date-range-choose-indents:                           4px;
 
-@date-range-choose-month-height:                24px;
+@date-range-choose-caption-background-color:          @white-color;
+@date-range-choose-caption-text-align:                center;
+
+@date-range-choose-halfyear-caption-with-quarters-color: @darkcyan-color;
+@date-range-choose-halfyear-caption-line-height:      6*@date-range-choose-month-height;
+@date-range-choose-halfyear-caption-width:            30px;
+@date-range-choose-halfyear-caption-right:            initial;
+@date-range-choose-halfyear-caption-left:             0;
+@date-range-choose-halfyear-caption-text-align:       @date-range-choose-caption-text-align;
+
+@date-range-choose-quarter-caption-line-height:             @date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-with-month-line-height:  3*@date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-height:                  @date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-with-month-height:       auto;
+@date-range-choose-quarter-with-halfyears-margin:           0 0 @date-range-choose-indents 34px; //(@date-range-choose-halfyear-caption-width + @date-range-choose-indents)
+@date-range-choose-quarter-with-quarters-margin:            0;
+@date-range-choose-quarter-with-month-margin:               0 0 @date-range-choose-indents 0;
+@date-range-choose-quarter-caption-width:                   28px;
+@date-range-choose-quarter-caption-hover-color:             @black-color;
+@date-range-choose-quarter-caption-text-align:              @date-range-choose-caption-text-align;
+@date-range-choose-quarter-caption-with-month-text-align:   @date-range-choose-caption-text-align;
+
+@date-range-choose-month-height:                @date-range-choose-standart-line-height;
+@date-range-choose-month-margin:                0 0 0 32px; // (@date-range-choose-quarter-caption-width + @date-range-choose-indents);
+@date-range-choose-month-padding:               0 0 0 8px;
+@date-range-choose-month-text-align:            left;
+@date-range-choose-month-month-only-text-align: center;
+@date-range-choose-month-width:                 110px;
+
+@date-range-choose-checkbox-right:              12px;
+@date-range-choose-checkbox-top:                6px;
+
 @date-range-choose-container-caption-width:     32px;
+@date-range-choose-container-caption-padding:   0;
+
+@date-range-choose-years-only-curent-year-color:   @darkcyan-color;
 
 @date-range-choose-home-button-size:            24px;
 @date-range-choose-home-button-font-size:       14px;
 @date-range-choose-home-button-line-height:     22px;
 @date-range-choose-home-button-border-color:    inherit;
 @date-range-choose-home-color:                  @date-range-choose-color;
-@date-range-choose-home-button-margin:          4px auto 0;
+@date-range-choose-home-button-margin:          0 auto 12px;
 
 
 // -------------- //
 // Date Range Big //
 // -------------- //
 
-@date-range-big-spritesheet:                   'img/DateRangeBig-images.png';
 @date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
-
-@date-range-big-left-arrow-icon-bg:             url(@date-range-big-spritesheet) 0 0 no-repeat;
-@date-range-big-left-arrow-icon-hover-bg:       url(@date-range-big-spritesheet) 0 -24px no-repeat;
-@date-range-big-right-arrow-icon-bg:            url(@date-range-big-spritesheet) 0 -48px no-repeat;
-@date-range-big-right-arrow-icon-hover-bg:      url(@date-range-big-spritesheet) 0 -72px no-repeat;
 
 @date-range-big-choose-font-family:                @font-basic-name;
 @date-range-big-choose-width:                      350px;
@@ -1621,6 +1662,9 @@
 @list-view-actions-menu-margin:                 4px 0 0 5px;
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 
+@list-view-context-menu-close-right:            6px;
+@list-view-context-menu-close-top:              7px;
+
 @list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
@@ -1750,7 +1794,7 @@
 
 @data-grid-row-bg:                              transparent;
 @data-grid-row-hover-bg:                        @default-itemHover-color;
-@data-grid-row-selected-bg:                     @default-itemSelected-color;
+@data-grid-row-selected-bg:                     transparent;
 @data-grid-row-hover-bg-mobile:                 transparent;
 
 @data-grid-row-hover-header-cell-text-color:    inherit;
@@ -1819,6 +1863,7 @@
 @data-grid-partScroll-cursor:                   pointer;
 @data-grid-partScroll-wrapper-height:           1px;
 @data-grid-partScroll-notScrolledCell-Color:    @data-grid-bg;
+@data-grid-multiselect-notScrolledCell-Color:   @data-grid-partScroll-notScrolledCell-Color;
 
 @data-grid-partScroll-thumb-height-hover:       6px;
 @data-grid-partScroll-thumb-height:             3px;
@@ -1951,7 +1996,7 @@
 @multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
 @multiView-tile-item-image-margin:                  4px auto 0 auto;
 @multiView-tile-item-text-margin:                   8px;
-@multiView-tile-selected-item-bg:                   @default-itemSelected-color;
+@multiView-tile-selected-item-bg:                   transparent;
 @multiView-tile-selected-item-border:               1px solid @multiView-tile-selected-item-border-color;
 @multiView-tile-selected-item-border-color:         #FF9C6C;
 @multiView-default-folder-border:                   1px solid transparent;
@@ -2093,17 +2138,17 @@
 
 //CommandsSeparator
 @controls-commandsSeparator-lineHeight:   20px !important;
-@controls-commandsSeparator-fontSize:     26px !important;
-@controls-commandsSeparator-fontFamily:   acordion-font !important;
+@controls-commandsSeparator-fontSize:     28px !important;
+@controls-commandsSeparator-fontFamily:   cbuc-icons24 !important;
 @controls-commandsSeparator-height:       24px;
 
-@controls-commandsSeparator-icon-width:   24px;
+@controls-commandsSeparator-icon-width:   26px;
 @controls-commandsSeparator-icon-height:  24px;
 @controls-commandsSeparator-icon-top:     2px;
-@controls-commandsSeparator-icon-left:    -1px;
+@controls-commandsSeparator-icon-left:    -2px;
 @controls-commandsSeparator-icon-style:   normal;
-@controls-commandsSeparator-icon-down:    "\e902";
-@controls-commandsSeparator-icon-up:      "\e904";
+@controls-commandsSeparator-icon-down:    "\e9d7";
+@controls-commandsSeparator-icon-up:      "\e9d8";
 @controls-commandsSeparator-color:        #CCCCCC !important;
 
 @controls-commandsSeparator-border:       none;
@@ -2185,6 +2230,9 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 
+@controls-FieldLink-big-fontSize:                  15px;
+@controls-FieldLink-big-fontSize-color:            #313E78;
+
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
@@ -2244,12 +2292,12 @@
 @controls-NotificationPopup-border-left:                                     @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
-@controls-NotificationPopup-header-padding:                                  8px 12px 8px 12px;
-@controls-NotificationPopup-header-padding-with-close-button:                8px 48px 8px 12px;
+@controls-NotificationPopup-header-padding:                                  8px;
+@controls-NotificationPopup-header-padding-with-close-button:                8px 44px 8px 8px;
 
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
-@controls-NotificationPopup-header-icon-right-margin:                        12px;
+@controls-NotificationPopup-header-icon-right-margin:                        8px;
 @controls-NotificationPopup-max-width:                                       440px;
 
 //SubmitPopup
@@ -2261,7 +2309,7 @@
 @controls-SubmitPopup-message-margin-bottom:       8px;
 @controls-SubmitPopup-details-font-size:           14px;
 @controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           @float-area-border;
+@controls-SubmitPopup-footer-border-top:           1px solid #EAEAEA;;
 @controls-SubmitPopup-footer-padding:              16px;
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;

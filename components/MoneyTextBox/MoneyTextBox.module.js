@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    "Core/defaultRenders",
    "Core/constants",
    "js!SBIS3.CONTROLS.NumberTextBox",
-   'html!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
+   'tmpl!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
    'css!SBIS3.CONTROLS.MoneyTextBox'
 ], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
 
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @extends SBIS3.CONTROLS.NumberTextBox
      * @public
      * @control
-     *
+     * @author Крайнов Дмитрий Олегович
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
@@ -73,16 +73,19 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              * </pre>
              * @see text
              */
-             moneyValue: null,
-             className: 'controls-MoneyTextBox'
+             moneyValue: null
          }
       },
 
       _modifyOptions: function(options){
+         var value;
          options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
-         if (options.text){
+         options.className = ' controls-MoneyTextBox';
+
+         value = options.text || options.moneyValue;
+         if (value){
             options.text = formatText(
-                options.text,
+                value,
                 options.integers,
                 options.maxLength
             );
@@ -94,19 +97,19 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          this._decimalsContainer = $('.js-MoneyTextBox__decimals', this.getContainer().get(0));
       },
 
-      setEnabled: function(enabled){
+      _setEnabled: function(enabled){
          var text = this._inputField.text();
-         if(enabled !== this._options.enabled) {
-            this._inputField[0].contentEditable = enabled;
-            if(!enabled) {
-               this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
-               this._setInputValue(this._getIntegerPart(this._getInputValue()));
-            }else{
-               this._setInputValue(this._options.text);
-            }
-            this._decimalsContainer.toggleClass('ws-hidden', enabled);
-            MoneyTextBox.superclass.setEnabled.apply(this, arguments);
+         this._inputField[0].contentEditable = enabled;
+         if(!enabled) {
+            // Рассчеты и отрисовку нужно разделить
+            // TODO сделать это в рамках работы по стандартизации полей ввода
+            this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
+            this._setInputValue(this._getIntegerPart(this._getInputValue()));
+         }else{
+            this._setInputValue(this._options.text);
          }
+         this._decimalsContainer.toggleClass('ws-hidden', enabled);
+         MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
       /**
        * Возвращает текущее значение денежного поля ввода.

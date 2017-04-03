@@ -341,11 +341,13 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.setDragging(true);
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
-                    $('body').addClass('dragdropBody ws-unSelectable');
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
+                        $('body').addClass('dragdropBody ws-unSelectable');
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
+                    } else {
+                        DragObject.reset();
                     }
                 } else {
                     DragObject.reset();

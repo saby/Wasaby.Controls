@@ -125,6 +125,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * </pre>
              * @see decimals
              * @see hideEmptyDecimals
+             * @see setOnlyInteger
              */
             onlyInteger: false,
             /**
@@ -317,7 +318,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       setNumericValue: function(value) {
-         if (value !== this._options.numericValue){
+         if (value !== this._options.numericValue && value < 9007199254740992){ // проверка на вернюю границу 2^53
             this._setNumericValue(value);
             this.setText(value + '');
          }
@@ -325,10 +326,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       _setNumericValue: function(value){
          if (typeof(value) == 'string'){
-             value = value.replace(/\s+/g,"");
+             value = value.replace(/\s+/g,'');
          }
          if (this._options.onlyInteger) {
-            this._options.numericValue = parseInt(value);
+            this._options.numericValue = parseInt(value, 10);
          } else {
             this._options.numericValue = parseFloat(value);
          }
@@ -352,6 +353,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          if (typeof integers === 'number') {
             this._options.integers = integers;
          }
+      },
+      /**
+       * Установить возможность ввода только целых чисел
+       * @param {Boolean} onlyInteger Ввод только целых чисел
+       * @see onlyInteger
+       */
+      setOnlyInteger: function(onlyInteger){
+         this._options.onlyInteger = Boolean(onlyInteger);
       },
 
       _updateCompatPlaceholderVisibility: function() {
@@ -431,14 +440,14 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._deleteHandler();
          } else if (keyCode == 8){ /*Backspace*/
             this._backspaceHandler();
-         } else if (keyCode >= 48 && keyCode <= 57){ /*Numbers*/
+         } else if (keyCode >= 48 && keyCode <= 57 && !this._SHIFT_KEY){ /*Numbers*/
             event.preventDefault();
             this._numberPressHandler(keyCode);
             return true;
          }
-         if (this._getInputValue().indexOf('.') == 0){
+         if (this._getInputValue().indexOf('.') === 0){
             this._setText('0' + this._getInputValue());
-            this._setCaretPosition(1)
+            this._setCaretPosition(1);
          }
          if (this._CTRL_KEY){
             return true;

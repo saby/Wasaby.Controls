@@ -148,6 +148,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             pathElem[cfg.idProperty] = curParentContents.getId();
             pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
+            pathElem['item'] = curParentContents;
             curPath.push(pathElem);
             lastNode = item;
          }
@@ -192,6 +193,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       restoreFilterAndRunEventRaising(projection, projectionFilter, analyzeChanges);
 
       cfg._searchFolders = {};
+      cfg.hasNodes = false;
       if (cfg.hierarchyViewMode) {
          records = searchProcessing(projection, cfg);
       }
@@ -445,25 +447,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             hierField: null,
             /**
-             * @cfg {String} Устанавливает поле иерархии, по которому будут установлены иерархические связи записей списка.
+             * @cfg {String} Устанавливает поле, по значениям которого определяются иерархические отношения элементов списка.
              * @remark
              * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
              * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
-             * @example
-             * <pre>
-             *    <option name="parentProperty">Раздел</option>
-             * </pre>
+             * @see nodeProperty
              */
             parentProperty: null,
             /**
-             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
-             * @remark
-             * null - лист, false - скрытый узел, true - узел
-             *
-             * @example
-             * <pre>
-             *    <option name="parentProperty">Раздел@</option>
-             * </pre>
+             * @cfg {String} Устанавливает поле, по значениям которого определяется <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>типа записи в иерархии</a>.
+             * @see parentProperty
              */
             nodeProperty: null,
             /**
@@ -1055,7 +1048,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       _getAdditionalOffset: function(items){
          var currentRootItems = 0;
          for (i = 0; i < items.length; i++){
-            if (items[i].getContents().get(this._options.hierField) == this.getCurrentRoot()){
+            if (items[i].getContents().get(this._options.parentProperty) == this.getCurrentRoot()){
                currentRootItems++;
             }
          }
@@ -1064,7 +1057,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _afterAddItems: function() {
          // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
-         if (this._isSearchMode()) {
+         if (this._options.hasNodes && this._isSearchMode()) {
             this.redraw();
          }
       },
@@ -1088,6 +1081,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (cfg.parentProperty && !cfg.nodeProperty) {
                cfg.nodeProperty = cfg.parentProperty + '@';
             }
+         },
+         _addItems: function() {
+            // При добавлении новых элементов восстанавливаем раскрытые узлы, т.к. записи, необходимые для восстановления
+            // состояния дерева могут придти и на второй странице
+            // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
+            applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
          reload: function() {
             // сохраняем текущую страницу при проваливании в папку

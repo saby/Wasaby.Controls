@@ -41,9 +41,20 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </pre>
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрыть ползунок
        *
        * @control
        * @public
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ScrollContainer' name="MyScrollContainer>
+       *     <option name="content">
+       *         <component data-component="SBIS3.CONTROLS.ListView" name="ContentList">
+       *             <option name="idProperty">key</option>
+       *             <option name="displayProperty">title</option>
+       *         </component>
+       *     </option>
+       * </component>
        */
       var ScrollContainer = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
 
@@ -99,10 +110,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //Под android оставляем нативный скролл
             if (this._showScrollbar){
                this._initScrollbar = this._initScrollbar.bind(this);
-               if (!cDetection.isIE8){
-                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               }
+               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                this._container.one('mousemove', this._initScrollbar);
+               this._container.one('wheel', this._initScrollbar);
                this._hideScrollbar();
             }
             this._subscribeOnScroll();
@@ -119,16 +129,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content.on('scroll', this._onScroll.bind(this));
          },
 
-         _onScroll: function(){
+         _onScroll: function() {
             var scrollTop = this._getScrollTop();
-            if (this._showScrollbar && this._scrollbar){
+            if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
          },
 
          _hideScrollbar: function(){
-            if (!cDetection.safari && !cDetection.chrome){
+            if (!cDetection.webkit && !cDetection.chrome){
                var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
                   };
@@ -149,7 +159,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             scrollbarWidth = outer.offsetWidth - outer.clientWidth;
             document.body.removeChild(outer);
             return scrollbarWidth;
-         },
+          },
 
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
@@ -160,12 +170,28 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _onResizeHandler: function(){
             ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
+               if (cDetection.IEVersion >= 10) {
+                  this._notHideScrollbar();
+               }
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
                if (this._options.stickyContainer) {
                   this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
                }
             }
+         },
+
+         _notHideScrollbar: function() {
+            /**
+             * По умолчанию на контенте висит стиль overflow-y: scroll.
+             * В ie при overflow-y: scroll добавляется 1px для скроллирования.
+             * Поэтому, что бы не появлялся лишний скролл, в ie используем overflow-y: auto.
+             * Скрывая скролл через отрицательный правый маржин, мы рассчитываем,
+             * что скролл всегда есть, из за overflow-y: scroll.
+             * Но в ie, из за overflow-y: auto, его может не быть - тогда из за отрицательного маржина
+             * контент уедет вправо. В связи с этим мы вешаем класс, который убирает отрицательный маржин когда нет скролла.
+             */
+            this._container.toggleClass('controls-ScrollContainer_no-scrollbar', this._getScrollHeight() <= this._content[0].offsetHeight);
          },
 
          _getScrollTop: function(){
@@ -177,15 +203,20 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _initScrollbar: function(){
-            this._scrollbar = new Scrollbar({
-               element: $('> .controls-ScrollContainer__scrollbar', this._container),
-               contentHeight: this._getScrollHeight(),
-               parent: this
-            });
-            if (!cDetection.isIE8){
+            if (!this._scrollbar) {
+               this._scrollbar = new Scrollbar({
+                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
+                  contentHeight: this._getScrollHeight(),
+                  parent: this
+               });
+
+               if (cDetection.IEVersion >= 10) {
+                  this._content.css('overflow-y', 'auto');
+                  this._notHideScrollbar();
+               }
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
+               this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
-            this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
          },
 
          _getScrollHeight: function(){

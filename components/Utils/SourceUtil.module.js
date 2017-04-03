@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Utils.SourceUtil', ['Core/core-instance'], function(cI
                   result = sourceOpt;
                }
                if ('module' in sourceOpt) {
-                  var DataSourceConstructor = require(sourceOpt.module);
+                  var DataSourceConstructor = requirejs(sourceOpt.module);
                   result = new DataSourceConstructor(sourceOpt.options || {});
                }
                break;

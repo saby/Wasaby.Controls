@@ -109,7 +109,9 @@ define(
                verticalAlign: {
                   side: 'top',
                   offset: -9
-               }
+               },
+               bodyBounds: true,
+               locationStrategy: 'bodyBounds'
             }
          },
          _onFocusInHandler: undefined
@@ -166,6 +168,10 @@ define(
          }
       },
 
+      showPicker: function () {
+         DatePicker.superclass.showPicker.call(this);
+         this._chooserControl.setRange(this.getDate(), this.getDate());
+      },
       /**
        * Определение контента пикера. Переопределённый метод
        * @private

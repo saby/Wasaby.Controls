@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.SuggestMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @mixes SBIS3.CONTROLS.SearchMixin
     * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
     * @author Крайнов Дмитрий Олегович
@@ -85,7 +86,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       _setEqualPickerWidth: function() {
          var textBoxWidth = this.getContainer()[0].clientWidth,
-             pickerContainer = this._picker.getContainer()[0];
+             pickerContainer = this._picker.getContainer()[0],
+             minWidth;
 
          if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
             /* Почему установлен maxWidth и width ?
@@ -94,10 +96,18 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                устанавливаем maxWidth (maxWidth не стирается при пересчётах popup'a).
                Но учитываем, что maxWidth не будет учитываться, если автодополнение меньше поля ввода, и поэтому после
                расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
-               Прикладной программист может увеличить ширину автодополнения установив min-width. */
+               Прикладной программист может увеличить ширину автодополнения установив min-width.
+               Для правильного позиционирования popup необходимо чтобы в момент расчета размеры соотвествовали конечным
+               поэтому устанавливаем min-width, а после его затираем, чтобы не перебивать прикладные стили
+                */
             pickerContainer.style.maxWidth = textBoxWidth + 'px';
-            this._picker.recalcPosition(true, true);
+            minWidth = parseInt(this._picker.getContainer().css('min-width'));
+            if(!minWidth || minWidth < textBoxWidth) {
+               pickerContainer.style.minWidth = textBoxWidth + 'px';
+            }
+            this._picker.recalcPosition(true);
             pickerContainer.style.width = textBoxWidth + 'px';
+            pickerContainer.style.minWidth = '';
          }
       }
    });

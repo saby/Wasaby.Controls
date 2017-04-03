@@ -71,10 +71,10 @@ define('js!SBIS3.CONTROLS.SearchMixin',
             this._clearSearchDelay();
          },
          init: function () {
-            /* Чтобы запустился поиск, если компонент уже создаётся с проставленной опцией text */
+            /* Чтобы была возможность сбросить поиск, если контрол создаётся с уже проставленной опцией text */
             var text = this.getText();
-            if(text) {
-               this._applySearch(text);
+            if(text && text.length >= this._options.startCharacter) {
+               this._onResetIsFired = false;
             }
          }
       },

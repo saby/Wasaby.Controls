@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
    var ABSTRACT_FIELD_NAME = '*';
 
    var _private = {
-      callSourceMethod: function(source, elem) {
+      callSourceMethod: function(source, elem, readMetaData) {
          var isMemory = instance.instanceOfModule(source, 'WS.Data/Source/Memory'),
              method = isMemory ? 'read' : 'call',
              sourceBindings, callArgs;
@@ -28,6 +28,10 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
                'ИмяМетода': sourceBindings.format || null,
                'Связь': elem.field
             }];
+            
+            if(readMetaData) {
+               wsCoreMerge(callArgs[1], readMetaData);
+            }
          }
 
          return source[method].apply(source, callArgs);
@@ -41,7 +45,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
    /**
     * Контроллер, который умеет обновлять поля связной записи при изменении идентификатора свзяи.
     * @class SBIS3.CONTROLS.LinkFieldController
-    * @extends $ws.proto.Abstract
+    * @extends SBIS3.CORE.Abstract
     * @demo SBIS3.CONTROLS.Demo.LinkFieldController
     * @author Герасимов Александр Максимович
     * @public
@@ -95,7 +99,11 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
              * @see setRecord
              * @see dataSource
              */
-            record: null
+            record: null,
+            /**
+             * @cfg {Object} Дополнительные мета-данные, которые будут переданы в метод прочитать
+             */
+            readMetaData: null
          },
 
          _recordChangeHandler: null
@@ -134,7 +142,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
          /* Загрузим сразу все изменения, чтобы применить пачкой */
          colHelpers.forEach(fieldsToUpdate, function(elem) {
             if(elem.value !== null) {
-               readDeferred.push(_private.callSourceMethod(self._options.dataSource, elem).addCallback(function (rec) {
+               readDeferred.push(_private.callSourceMethod(self._options.dataSource, elem, self._options.readMetaData).addCallback(function (rec) {
                   var loadedRecord = _private.prepareRecord(rec);
 
                   /* Запомним изменения, чтобы применить их пачкой */

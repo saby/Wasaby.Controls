@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeSliderBase',
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
+   'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link'
-], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil) {
+], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
    /**
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
     *
     * SBIS3.CONTROLS.DateRangeSlider
     * @class SBIS3.CONTROLS.DateRangeSlider
-    * @extends $ws.proto.DateRangeSliderBase
+    * @extends SBIS3.CONTROLS.DateRangeSliderBase
     * @mixes SBIS3.CONTROLS.DateRangeChoosePickerMixin
     * @author Миронов Александр Юрьевич
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeSlider
@@ -83,6 +84,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          return opts;
       },
 
@@ -134,7 +137,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                if (!silent) {
                   this._notifyOnStartValueChanged();
                }
-               if (this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
+               if (value && this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
                   if (!silent) {
                      this._notifyOnEndValueChanged();
                   }
@@ -158,7 +161,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                if (!silent) {
                   this._notifyOnEndValueChanged();
                }
-               if (this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
+               if (value && this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
                   if (!silent) {
                      this._notifyOnStartValueChanged();
                   }

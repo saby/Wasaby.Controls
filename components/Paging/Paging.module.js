@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3
 
    /**
     * @class SBIS3.CONTROLS.Paging
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @category Decorate
     * @public

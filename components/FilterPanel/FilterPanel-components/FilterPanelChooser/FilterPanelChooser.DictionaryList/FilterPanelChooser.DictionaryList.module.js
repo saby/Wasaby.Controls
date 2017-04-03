@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
      *
      * <h2>Создание пользовательского редактора</h2>
      * Вы можете создать собственный класс редактора, на основе класса редактора "Список со справочником".
-     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link $ws.proto.Control#name} - "controls-FilterPanelChooser__ListView".
+     * Особенность: контрол, который будет отображать список записей, должен иметь фиксированное имя в опции {@link SBIS3.CORE.Control#name} - "controls-FilterPanelChooser__ListView".
      *
      *
      * @class SBIS3.CONTROLS.FilterPanelChooser.DictionaryList
@@ -81,8 +81,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                 dictionaryOptions: {},
                 defaultItems: undefined
             },
-            _selectorAction: undefined,
-            _afterSelection: false
+            _selectorAction: undefined
         },
 
         $constructor: function() {
@@ -117,16 +116,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             var
                 item,
                 items = this._getListView().getItems();
-            if (this._afterSelection) {
-                colHelpers.forEach(changed.removed, function(id) {
-                    item = items.getRecordById(id);
-                    if (item) {
-                        items.remove(item);
-                    }
-                }, this);
-                this._addItemsFromDefault();
-                this._toggleAllButton();
-            }
+            colHelpers.forEach(changed.removed, function(id) {
+                item = items.getRecordById(id);
+                if (item) {
+                    items.remove(item);
+                }
+            }, this);
+            this._addItemsFromDefault();
+            this._toggleAllButton();
         },
 
         _addItemsFromDefault: function() {
@@ -165,8 +162,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                 this._updateValue();
                 this._addItemsFromDefault();
                 this._toggleFullState(false);
-                this._afterSelection = true;
-                this._container.addClass('controls-FilterPanelChooser__dictionaryAfterSelection');
             }
         },
 

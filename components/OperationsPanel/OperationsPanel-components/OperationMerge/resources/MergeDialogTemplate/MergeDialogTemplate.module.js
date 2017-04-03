@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 mergeDataSource = new SbisServiceSource({
                     idProperty: originalDataSource.getIdProperty(),
                     endpoint: originalDataSource.getEndpoint(),
+                    model: originalDataSource.getModel(),
                     binding: {
                         query: this._options.queryMethodName || binding.query
                     }

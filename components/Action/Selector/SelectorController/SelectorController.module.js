@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
         * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/selector-action/'>Окно выбора из справочника</a>.
         *
         * @class SBIS3.CONTROLS.SelectorController
-        * @extends $ws.proto.CompoundControl
+        * @extends SBIS3.CORE.CompoundControl
         * @public
         * @author Герасимов Александр Максимович
         * @control
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                  */
                 selectionType: 'all',
                 /**
-                 * @cfg {String} Устанавливает имя кнопки (см. {@link $ws.proto.Control#name}), клик по которой завершает выбор отмеченных элементов.
+                 * @cfg {String} Устанавливает имя кнопки (см. {@link SBIS3.CORE.Control#name}), клик по которой завершает выбор отмеченных элементов.
                  */
                 selectButton: 'SelectorControllerButton',
                 /**

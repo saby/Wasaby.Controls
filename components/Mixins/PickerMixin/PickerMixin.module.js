@@ -11,6 +11,14 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
     * @author Крайнов Дмитрий Олегович
     */
    var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
+      /**
+       * @event onPickerOpen Происходит при открытии блока.
+       * @param {$ws.proto.EventObject} Дескриптор события.
+       */
+       /**
+        * @event onPickerClose Происходит при закрытии блока.
+        * @param {$ws.proto.EventObject} Дескриптор события.
+        */
       $protected: {
          _picker : null,
          _border : 0,
@@ -64,6 +72,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              })
              .subscribe('onClose', function(){
                 container.removeClass('controls-Picker__show');
+                self._notify('onPickerClose');
              });
 
          container
@@ -176,7 +185,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          if(this._picker) {
             this._container.removeClass('controls-Picker__show');
             this._picker.hide();
-            this._notify('onPickerClose');
          }
       },
      /**

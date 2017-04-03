@@ -56,17 +56,21 @@
   &.controls-Checked__checked:before {
     content: @toggle-header-checked-before-content;
   }
-   
+
    &.ws-disabled {
       border: @toggle-header-border;
-   } 
+   }
 
-  &, &.controls-Checked__checked {
+  &, &.controls-Checked__checked:not(.ws-disabled) {
     .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
     border: @toggle-header-border;
     background: @toggle-header-background;
 
     &.controls-Click__active:active {
+      border: @toggle-header-border;
+      background: @toggle-header-background;
+    }
+    &.controls-Click__active.controls-Link {
       border: @toggle-header-border;
       background: @toggle-header-background;
     }
@@ -122,7 +126,6 @@
     font: @toggle-header-font;
     color: @toggle-header-hover-color;
   }
-
   .controls-Button:not(.ws-disabled).ws-toggleHeader {
     &, &.controls-Checked__checked {
       &:hover {
@@ -141,7 +144,7 @@
 
 .controls-Link {
   &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-    &.controls-Click__active:active {
+    &.controls-Click__active {
       text-decoration: @link-header-text-decoration;
       color: @link-header-hover-color;
     }
@@ -149,8 +152,8 @@
 }
 
 .controls-Button.ws-toggleHeader {
-  &, &.controls-Checked__checked {
-    &, &.controls-Click__active:active {
+  &, &.controls-Checked__checked:not(.ws-disabled) {
+    &, &.controls-Click__active {
       border: @toggle-header-border;
       background: @toggle-header-background;
       font: @toggle-header-font;
@@ -158,7 +161,7 @@
 
     color: @toggle-header-color;
 
-    &.controls-Click__active:active {
+    &.controls-Click__active {
       color: @toggle-header-hover-color;
     }
   }

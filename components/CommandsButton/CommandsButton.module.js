@@ -34,6 +34,14 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
          opts.className += ' controls-Menu__hide-menu-header';
          opts.icon = 'sprite:icon-24 icon-ExpandDown icon-primary';
          opts.pickerClassName += ' controls-CommandsButton__picker controls-MenuIcon__Menu';
+         if (opts.pickerConfig) {
+            opts.pickerConfig.locationStrategy = 'bodyBounds';
+         }
+         else {
+            opts.pickerConfig = {
+               locationStrategy: 'bodyBounds'
+            };
+         }
          return CommandsButton.superclass._modifyOptions.call(this, opts);
       },
       _modifyPickerOptions: function(opts) {

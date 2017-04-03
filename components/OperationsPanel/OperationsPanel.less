@@ -27,7 +27,16 @@
          white-space: nowrap;
          background-color: @controls-OperationsPanel-bg;
       }
-      
+
+      .controls-operationsPanel__container, .controls-operationsPanel__actions {
+         .inline-flexbox();
+         .align-items(center);
+      }
+
+      .controls-operationsPanel__actions {
+        overflow: hidden;
+      }
+
       .controls-operationsPanel__actionMark {
          padding-left: @controls-OperationsPanel-actions-padding-left;
          &:after {
@@ -49,34 +58,6 @@
       .controls-operationsPanel__actionType-mark,
       .controls-operationsPanel__actionType-all {
          margin: @controls-OperationsPanel-actions-margin;
-         line-height: @controls-OperationsPanel-height !important;
-      }
-   }
-
-   &.controls-operationsPanel_withItemsMenu {
-      .controls-operationsPanel__wrapper {
-         .controls-operationsPanel__itemsMenu {
-            display: inline-block;
-            bottom: 2px;
-         }
-
-         .controls-operationsPanel__actions {
-            margin-right: 26px;
-         }
-      }
-   }
-
-   .controls-operationsPanel__wrapper {
-      .controls-operationsPanel__container {
-         position: relative;
-         display: inline;
-      }
-
-      .controls-operationsPanel__actionMark,
-      .controls-operationsPanel__actionType-mass,
-      .controls-operationsPanel__actionType-selection,
-      .controls-operationsPanel__actionType-all {
-         float: left;
       }
    }
 }

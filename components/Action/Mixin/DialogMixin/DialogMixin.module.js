@@ -59,7 +59,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
           * Отдельно храним ключ для модели из связного списка, т.к. он может не совпадать с ключом редактируемой модели
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
-         _linkedModelKey: undefined
+         _linkedModelKey: undefined,
+         _isExecuting: false //Открывается ли сейчас панель
       },
       /**
        * @typedef {Object} ExecuteMetaConfig
@@ -69,7 +70,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
        * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
        * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
        * @property {WS.Data/Entity/Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
-       * @property {$ws.proto.Context} ctx Контекст, который нужно установить для диалога редактирования записи.
+       * @property {CORE/Context} ctx Контекст, который нужно установить для диалога редактирования записи.
        */
       $constructor: function() {
 
@@ -109,15 +110,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _openComponent: function(meta, mode) {
+         meta = meta || {};
+         mode = mode || this._options.mode;
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta, mode || this._options.mode);
+         this._createComponent(config, meta, mode);
       },
 
       _buildComponentConfig: function(meta) {
-         var
-            config = cMerge({}, this._options.componentOptions || {}),
-            metaConfig = meta && meta.componentOptions ? meta.componentOptions : {};
-         return cMerge(config,  metaConfig )
+         var config = cMerge({}, this._options.componentOptions || {});
+         return cMerge(config,  meta.componentOptions || {});
       },
 
       _createComponent: function(config, meta, mode) {
@@ -128,72 +129,79 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
             this._dialog._options.componentOptions = {};
             cMerge(this._dialog._options, config);
-            this._dialog.reload();
+            this._dialog.reload(true);
          }
-         else{
+         else {
+            this._isExecuting = true;
             this._dialog = new Component(config);
          }
       },
       /**
        * Возвращает конфигурацию диалога по умолчанию.
-       * @param mode
+       * @param meta
        * @returns {*}
        * @private
        */
-      _getDeafuiltDialogConfig: function() {
-         var config = this._options.dialogOptions || {};
+      _getDefaultDialogConfig: function(meta) {
          return cMerge({
             isStack: true,
             showOnControlsReady: false,
             autoCloseOnHide: true,
-            opener: undefined,
-            side: 'left',
-            direction: '',
+            needSetDocumentTitle: false,
+            opener: this._getOpener(),
+            template: meta.template || this._options.template,
             target: undefined,
-            offset: {
-               x: 0,
-               y: 0
-            },
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
-         }, config)
+         }, this._options.dialogOptions || {});
+      },
+      _getOpener: function(){
+         //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
+         //В идеале они должны делать это сами и тогда этот код не нужен
+         var popup = this.getContainer() && this.getContainer().closest('.controls-FloatArea'),
+             topParent,
+             floatArea,
+             floatAreaContainer;
+         //Указываем opener'ом всплывающую панель, в которой лежит action, это может быть либо controls.FloatArea, либо core.FloatArea
+         //Нужно в ситуации, когда запись перерисовывается в уже открытой панели, чтобы по opener'aм добраться до панелей, которые открыты из той,
+         //которую сейчас перерисовываем, и закрыть их.
+         if (popup && popup.length) {
+            return popup.wsControl();
+         }
+         else {
+            topParent = this.getTopParent();
+            if (topParent !== this) {
+               floatAreaContainer = topParent.getContainer().closest('.ws-float-area');
+               floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
+            }
+         }
+         return floatArea || this;
       },
       /**
        * Возвращает конфигурацию диалога - всплывающей панели или окна.
        * @param {Object} meta
-       * @param {String} template
-       * @param {String} mode
        * @returns {Object}
        * @private
        */
       _getDialogConfig: function(meta) {
-         var config = this._getDeafuiltDialogConfig(),
-             compOptions = this._buildComponentConfig(meta),
+         var config = this._getDefaultDialogConfig(meta),
              self = this;
-         colHelpers.forEach(config, function(defaultValue, key){
-            if (meta.hasOwnProperty(key)){
-               IoC.resolve('ILogger').log('OpenDialogAction', 'Опция ' + key + 'должна задаваться через meta.dialogOptions');
-               config[key] = meta[key];
-            }
-         });
-         cMerge(config, meta.dialogOptions  ||  {});
-         cMerge(config, {
-            opener: this,
-            template: meta.template || this._options.template,
-            componentOptions: compOptions,
-            handlers: { 
-               onAfterClose: function(e, result){
-                  self._notifyOnExecuted(meta, result);
-                  self._dialog = undefined;
-               },
-               onBeforeShow: function(){
-                  self._notify('onBeforeShow');
-               },
-               onAfterShow: function(){
-                  self._notify('onAfterShow');
-               }
-            }
-         });
 
+         cMerge(config, meta.dialogOptions);
+         config.componentOptions = this._buildComponentConfig(meta);
+         config.handlers = {
+            onAfterClose: function (e, result) {
+               self._isExecuting = false;
+               self._notifyOnExecuted(meta, result);
+               self._dialog = undefined;
+            },
+            onBeforeShow: function () {
+               self._notify('onBeforeShow');
+            },
+            onAfterShow: function () {
+               self._isExecuting = false;
+               self._notify('onAfterShow');
+            }
+         };
          return config;
       },
 
@@ -213,7 +221,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
       /**
        * Устанавливает название шаблона
-       * @param {String} Название модуля шаблона.
+       * @param {String} template Название модуля шаблона.
        * @deprecated
        */
       setDialogComponent: function (template) {
@@ -234,8 +242,16 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          IoC.resolve('ILogger').error('SBIS3.CONTROLS.OpenEditDialog', 'Используйте публичный метод execute для работы с action\'ом открытия диалога редактирования');
          meta.template = dialogComponent;
          this._openComponent.call(this, meta, mode);
-      }
+      },
 
+      after : {
+         destroy: function () {
+            if (this._dialog) {
+               this._dialog.destroy();
+               this._dialog = undefined;
+            }
+         }
+      }
    };
 
    return DialogMixin;

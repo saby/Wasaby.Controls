@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
         * Если список один - то вкладки скрываются и отображается просто список.
         *
         * @class SBIS3.CONTROLS.SuggestView
-        * @extends $ws.proto.CompoundControl
+        * @extends SBIS3.CORE.CompoundControl
         *
         * @author Герасимов Александр Максимович
         *
@@ -322,7 +322,11 @@ define('js!SBIS3.CONTROLS.SuggestView',
                    self._viewsIterator(function(view, tabOpts) {
                       if(!founded && view.getItems().getCount()) {
                          founded = true;
-                         self.getTabControl().setSelectedKey(tabOpts[self._options.keyField]);
+                         /* Если вкладку меняем программно, то скрываем на вермя смены SwitchableArea,
+                            чтобы не было морганий и не убегал фокус */
+                         self._getSwitchableArea().hide();
+                         self.getTabControl().setSelectedKey(tabOpts[self._options.idProperty]);
+                         self._getSwitchableArea().show();
                       }
                    });
                 }

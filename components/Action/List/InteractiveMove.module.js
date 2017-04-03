@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/Indicator',
       'Core/core-merge',
       "Core/helpers/collection-helpers",
-      "Core/IoC"
+      "Core/IoC",
+      'Core/core-instance'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC, cInstance) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -104,7 +105,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
              * @property {Boolean} partialyReload Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
              */
             _options : {
-               template : 'js!SBIS3.CONTROLS.MoveDialogTemplate',
+               template : 'js!SBIS3.CONTROLS.SelectionDialog',
                parentProperty: undefined,
                nodeProperty: undefined,
                /**
@@ -130,38 +131,41 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.displayField является устаревшей, используйте componentOptions.displayProperty');
                cfg.componentOptions.displayProperty = cfg.componentOptions.displayField;
             }
+            if (cInstance.instanceOfMixin(cfg.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+               cMerge(cfg, {
+                  parentProperty: cfg.linkedObject.getParentProperty(),
+                  nodeProperty: cfg.linkedObject.getNodeProperty()
+               }, {preferSource: true});
+            }
             return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
          _doExecute: function(meta) {
             meta = meta || {};
-            var movedItems = meta.movedItems || meta.records || this.getSelectedItems();
-            meta.movedItems = movedItems;
-            meta.dialogOptions = meta.dialogOptions || {};
-            cMerge(meta.dialogOptions, {
-               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
-               opener: this._getListView(),
-               movedItems: movedItems,
-               componentOptions: meta.componentOptions || {}
-            });
-            this._openComponent(meta);
+            meta.movedItems = meta.movedItems || meta.records || this.getSelectedItems();
+            return InteractiveMove.superclass._doExecute.call(this, meta);
          },
 
          _buildComponentConfig: function(meta) {
-            var self = this,
-               options = cMerge(meta.componentOptions||{}, this._getComponentOptions());
+            var
+               options = cMerge(meta.componentOptions||{}, this._getComponentOptions()),
+               movedItems = meta.movedItems;
             cMerge(options, {
                linkedView: this._getListView(),
                dataSource: this.getDataSource(),
                parentProperty: this._options.parentProperty,
                nodeProperty: this._options.nodeProperty,
-               records: meta.movedItems,
+               records: movedItems,
                handlers: {
-                  onMove: function(e, movedItems, target) {
-                     self._move(movedItems, target);
+                  onSelectComplete: function(event, list) {
+                     this.sendCommand('close', list.at(0));
                   }
                }
             });
+            options.filter = options.filter || {};
+            if (!options.filter.hasOwnProperty('ВидДерева')) {
+               options.filter['ВидДерева'] = "Только узлы";
+            }
             if (options.pageSize) {
                //todo пейджинг нормально выглядит только с кнопкой еще, догрузка по скроллу не работает, потому что окно может не скролится, а обычный педжинг не отображает корень только на первой странице
                //нужен стандарт на пейджинг в окне перемещения.
@@ -172,13 +176,26 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
 
          _move: function(movedItems, target) {
             Indicator.show();
-            this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
+            if (target && target.getId() == null) {
+               target = null; //selectorwrapper возвращает корень как модель с идентификатором null
+            }
+            return this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
             }.bind(this)).addBoth(function() {
                Indicator.hide();
             });
+         },
+
+         _getDialogConfig: function (meta) {
+            var config = InteractiveMove.superclass._getDialogConfig.call(this, meta),
+               movedItems = meta.movedItems;
+            cMerge(config, {
+               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
+               opener: this._getListView()
+            }, {preferSource: true});
+            return config;
          },
 
          _makeMoveStrategy: function () {
@@ -191,7 +208,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             });
          },
          _getComponentOptions: function() {
-            var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'parentProperty', 'nodeProperty', 'displayProperty'],
+            var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {
@@ -206,8 +223,17 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                }, this);
             }
             return result;
-         }
+         },
 
+         _notifyOnExecuted: function (meta, result) {
+            if (result !== undefined) { //если ни чего не выбрали то не надо вызывать move
+               this._move(meta.movedItems, result).addBoth(function () {
+                  InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
+               }.bind(this));
+            } else {
+               InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
+            }
+         }
       });
       return InteractiveMove;
    }

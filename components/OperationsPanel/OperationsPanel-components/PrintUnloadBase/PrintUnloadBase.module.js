@@ -54,7 +54,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
 
       $protected: {
          _options: {
-            fileName : ''
+            fileName : '',
+            allowChangeEnable: false
          },
          _view : undefined
       },
@@ -68,11 +69,6 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _clickHandler: function() {
          this._onOperationActivated();
          PrintUnloadBase.superclass._clickHandler.apply(this, arguments);
-      },
-
-      _modifyOptions : function(options) {
-         options.pickerClassName += ' controls-OperationPanel__Menu';
-         return MenuLink.superclass._modifyOptions.apply(this, arguments);
       },
 
       _onOperationActivated: function() {

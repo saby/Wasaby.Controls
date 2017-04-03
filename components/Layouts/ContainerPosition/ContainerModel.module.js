@@ -1,6 +1,8 @@
    /* Ответственный за модуль: Дубровин Игорь Михайлович */
 /** Created by im.dubrovin */
-define('js!SBIS3.CONTROLS.ContainerModel',[],function() {
+define('js!SBIS3.CONTROLS.ContainerModel',[
+   'Core/core-extend'
+],function(cExtend) {
    /**
     * Модель контейнера - может использоваться в алгоритмах манипулируюх контейнерами,
     * например в алгоритме позиционирования контейнера относителоьно таргета
@@ -23,7 +25,7 @@ define('js!SBIS3.CONTROLS.ContainerModel',[],function() {
     */
    var TOP_LEFT_CORNER = {vertical:'top', horizontal:'left'},
 
-   ContainerModel = $ws.core.extend({
+   ContainerModel = cExtend({
 
       _height: 0,
       _width: 0,

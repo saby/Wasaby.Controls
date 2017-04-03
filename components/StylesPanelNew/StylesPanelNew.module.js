@@ -23,15 +23,15 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    /**
     * Панель выбора цвета с возможностью выбора цвета, начертания шрифта, установки предвыбранных стилей и сохранения истории
     *
-    * @class SBIS3.CONTROLS.StylesPanel
-    * @extends $ws.proto.CompoundControl
+    * @class SBIS3.CONTROLS.StylesPanelNew
+    * @extends SBIS3.CORE.CompoundControl
     * @control
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.PopupMixin
     * @public
     */
 
-   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
+   var StylesPanel = CompoundControl.extend([PopupMixin], /** @lends SBIS3.CONTROLS.StylesPanelNew.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              colorsCount, i;
 
          this._publish('changeFormat');
-         CommandDispatcher.declareCommand(this, 'save', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'saveStylesPanel', this.saveHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.

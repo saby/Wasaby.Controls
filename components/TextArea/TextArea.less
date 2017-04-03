@@ -90,24 +90,6 @@
    &.controls-TextArea__autoheight {
       height: auto !important;
    }
-   .controls-TextArea__disabled-wrapper{
-      line-height: @text-area-field-line-height;
-      top: @text-area-top-padding;
-      left: @text-area-left-padding;
-      right: @text-area-right-padding;
-      bottom: @text-area-bottom-padding;
-      background: @text-area-bg;
-      padding: 0;
-      box-sizing: border-box;
-      overflow: auto;
-      white-space: pre-wrap;
-      text-overflow: ellipsis;
-      word-wrap: break-word;
-      min-height: @text-box-height - @text-area-top-padding - @text-area-bottom-padding - (@text-area-disabled-border-width * 2);
-      &.controls-TextArea__disabled-wrapper-empty {
-         color: @text-area-placeholder-color;
-      }
-   }
    .controls-TextArea__placeholder {
       position: absolute;
       top: 0;
@@ -116,6 +98,24 @@
       font: @text-area-compat-placeholder-font;
       padding: @text-area-compat-placeholder-padding;
       text-align: @text-area-compat-placeholder-alignment;
+   }
+}
+.controls-TextArea__disabled-wrapper{
+   line-height: @text-area-field-line-height;
+   top: @text-area-top-padding;
+   left: @text-area-left-padding;
+   right: @text-area-right-padding;
+   bottom: @text-area-bottom-padding;
+   background: @text-area-bg;
+   padding: 0;
+   box-sizing: border-box;
+   overflow: auto;
+   white-space: pre-wrap;
+   text-overflow: ellipsis;
+   word-wrap: break-word;
+   min-height: @text-box-height - @text-area-top-padding - @text-area-bottom-padding - (@text-area-disabled-border-width * 2);
+   &.controls-TextArea__disabled-wrapper-empty {
+      color: @text-area-placeholder-color;
    }
 }
 .controls-TextArea__heightInit {

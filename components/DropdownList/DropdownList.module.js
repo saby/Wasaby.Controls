@@ -32,12 +32,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "html!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
    "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "Core/core-instance",
-   "Core/helpers/dom&controls-helpers",
    "i18n!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance, dcHelpers) {
+   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance) {
 
       'use strict';
       /**
@@ -59,7 +58,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * </pre>
        *
        * @class SBIS3.CONTROLS.DropdownList
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        *
        * @author Красильников Андрей Сергеевич
        *
@@ -359,15 +358,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
             this._setVariables();
-            this.reload(); //todo - убрать в 375. Если нужен reload, должны позвать сами. Наша логика перерисовки содержится в itemsControlMixin'e
             this._bindItemSelect();
 
-            if(this._isHoverMode()) {
-               this._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, true));
-               this._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, false));
-               pickerContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, null));
-            }
-            else {
+            if(!this._isHoverMode()) {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
          },
@@ -407,35 +400,35 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          setSelectedKeys: function(idArray){
-            if (this._options.emptyValue && idArray[0] == this._defaultId){
-               this._setSelectedEmptyRecord();
-               return;
+            //Если выбрана запись "Не выбрано", то отрисуем ее вручную, т.к. эта запись отсуствует в рекордсете и не может быть обработана по стандартной логике
+            if (this._options.emptyValue && idArray.length === 1 && idArray[0] == this._defaultId){
+               var oldKeys = this.getSelectedKeys();
+               this._options.selectedItems && this._options.selectedItems.clear();
+               this._options.selectedKeys = idArray;
+               this._drawSelectedValue(null, [this._emptyText]);
+               this._notifySelectedItems(this._options.selectedKeys,{
+                  added : idArray,
+                  removed : oldKeys
+               });
             }
-            //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
-            //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
-            if (idArray.length > 1) {
-               for (var i = 0; i < idArray.length; i++) {
-                  if (idArray[i] == this._defaultId){
-                     idArray.splice(i, 1);
-                     break;
+            else {
+               //Если у нас есть выбранные элементы, нцжно убрать DefaultId из набора
+               //Т.к. ключи могут отличаться по типу (0 !== '0'), то придется перебирать массив самостоятельно.
+               if (idArray.length > 1) {
+                  for (var i = 0; i < idArray.length; i++) {
+                     if (idArray[i] == this._defaultId){
+                        idArray.splice(i, 1);
+                        break;
+                     }
                   }
                }
+               if (this._isEnumTypeData()) {
+                  this.getItems().set(idArray[0]);
+               }
+               DropdownList.superclass.setSelectedKeys.call(this, idArray);
+               this._updateCurrentSelection();
+               this.validate();
             }
-            if (this._isEnumTypeData()) {
-               this.getItems().set(idArray[0]);
-            }
-            DropdownList.superclass.setSelectedKeys.call(this, idArray);
-            this._updateCurrentSelection();
-         },
-         _setSelectedEmptyRecord: function(){
-            var oldKeys = this.getSelectedKeys();
-            this._options.selectedItems && this._options.selectedItems.clear();
-            this._options.selectedKeys = [null];
-            this._drawSelectedValue(null, [this._emptyText]);
-            this._notifySelectedItems(this._options.selectedKeys,{
-               added : [null],
-               removed : oldKeys
-            });
          },
          _updateCurrentSelection: function(){
             var keys;
@@ -492,13 +485,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                  selectedKeys = this.getSelectedKeys(),
                  isCheckBoxClick = !!$(e.target).closest('.js-controls-DropdownList__itemCheckBox').length,
                  selected;
-            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === 0)) {
 
                //Если множественный выбор, то после клика скрыть менюшку можно только по кнопке отобрать
                this._hideAllowed = !this._options.multiselect;
                if (this._options.multiselect && !$(e.target).closest('.controls-ListView__defaultItem').length &&
                   (selectedKeys.length > 1 || selectedKeys[0] != this._defaultId) || isCheckBoxClick){
-                  var changedSelectionIndex = Array.indexOf(this._changedSelectedKeys, itemId);
+                  var changedSelectionIndex = this._changedSelectedKeys.indexOf(itemId);
                   if (changedSelectionIndex < 0){
                      this._changedSelectedKeys.push(itemId);
                   }
@@ -532,7 +525,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _dblClickItemHandler : function(e){
             e.stopImmediatePropagation();
             var  row = $(e.target).closest('.' + this._getItemClass());
-            if (row.length && (e.button === (constants.browser.isIE8 ? 1 : 0))) {
+            if (row.length && (e.button === 0)) {
                if (this._options.multiselect) {
                   this._hideAllowed = true;
                   this.setSelectedKeys([this._getIdByRow(row)]);
@@ -544,7 +537,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          showPicker: function(ev) {
             if (this.isEnabled()) {
                //Если мы не в режиме хоевера, то клик по крестику нужно пропустить до его обработчика
-               if (!this._isHoverMode() && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
+               if (!this._isHoverMode() && ev && $(ev.target).hasClass('controls-DropdownList__crossIcon')) {
                   return true;
                }
                var items = this._getPickerContainer().find('.controls-DropdownList__item');
@@ -586,7 +579,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Ширина шапки не больше, чем ширина контейнера
             if (needResizeHead){
                this._pickerHeadContainer.width(containerWidth);
-               pickerHeaderWidth = containerWidth; //изменилась ширина контейрена, нужно взять актуальную
+               //изменилась ширина контейрена, нужно взять актуальную
+               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
+               pickerHeaderWidth = containerWidth;
             }
 
             //Контейнер с итемами ресайзится в 2-х случаях
@@ -622,26 +617,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _pickerMouseLeaveHandler: function(fromHeader, e) {
-            var pickerContainer = this._picker.getContainer(),
-                toElement = $(e.toElement || e.relatedTarget),
-                containerToCheck;
-
-            if(fromHeader) {
-               containerToCheck = this._pickerBodyContainer;
-            } else if(fromHeader === null) {
-               containerToCheck = pickerContainer;
-            } else {
-               containerToCheck = dcHelpers.hasScrollbar(pickerContainer) ? pickerContainer : this._pickerHeadContainer;
-            }
-
-            if(this._hideAllowed && !toElement.closest(containerToCheck, pickerContainer).length) {
-               this.hidePicker();
-            }
-         },
          _drawItemsCallback: function() {
-            if (this._isEmptyValueSelected()){
-               this._options.selectedKeys = [null];
+            if (this._isEmptyValueSelected()) {
+               if (this.getSelectedKeys()[0] !== null) {
+                  this._options.selectedKeys = [null];
+               }
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
@@ -698,7 +678,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               this._options.selectedKeys = [id];
+               this._options.selectedKeys.push(id);
             }
          },
          _setHasMoreButtonVisibility: function(){
@@ -788,6 +768,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 len = id.length,
                 self = this,
                 item, def;
+            if (!this._getItemsCount()) {
+               //Если нет данных - не нужно запускать перерисовку. в этом случае обнулится опция text, которая может использоваться как значение по умолчанию (пока не установят данные)
+               //_drawSelectedItems запускается после init'a, в поле связи могут задать selectedItems, не задавая items, поэтому проблему в mixin'e решать нельзя
+               //DropdownList в свою очередь без items работать не может в принципе, чтобы не было скачущей верстки, пока данные не долетели и компонент пуст - поддерживаю возможность
+               //задать значение по умолчанию
+               return;
+            }
             if (this._isEnumTypeData()){
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
             }
@@ -828,6 +815,29 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
                def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
+         },
+
+         _callQuery: function() {
+            //Перед новым запросом данных, если у нас уже есть незавершеный запрос на получение selectedItems - прервываем его, т.к. его данные уже не актуальны, фильтр мог поменяться
+            if(this._loadItemsDeferred && !this._loadItemsDeferred.isReady()) {
+               this._loadItemsDeferred.cancel();
+            }
+            return DropdownList.superclass._callQuery.apply(this, arguments);
+         },
+
+         _getItemsCount: function() {
+            var items = this.getItems();
+            if (items){
+               if (this._isEnumTypeData()) {
+                  var count = 0;
+                  items.each(function () {
+                     count++;
+                  });
+                  return count;
+               }
+               return items.getCount();
+            }
+            return 0;
          },
 
          _drawSelectedValue: function(id, textValue){
@@ -938,8 +948,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   offset: offset.left
                },
                className: pickerClassName,
-               //Если мы не в ховер-моде, нужно отключить эту опцию, чтобы попап после клика сразу не схлапывался
-               closeByExternalOver: this._isHoverMode() && !this._options.multiselect,
+               closeByExternalOver: false,
                closeByExternalClick : true,
                activableByClick: false,
                targetPart: true,

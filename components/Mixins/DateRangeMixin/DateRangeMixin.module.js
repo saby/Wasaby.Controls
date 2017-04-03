@@ -59,13 +59,13 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
          },
 
          getStartValue: function (parentFnc) {
-            value = parentFnc.apply(this);
+            var value = parentFnc.apply(this);
             setSQLSerializationMode(value, this._getSQLSerializationMode());
             return value;
          },
 
          getEndValue: function (parentFnc) {
-            value = parentFnc.call(this);
+            var value = parentFnc.call(this);
             setSQLSerializationMode(value, this._getSQLSerializationMode());
             return value;
          }

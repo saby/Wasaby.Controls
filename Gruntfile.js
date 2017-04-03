@@ -14,7 +14,7 @@ module.exports = function(grunt) {
    grunt.loadTasks('grunt/tasks');
 
    grunt.registerTask('css', [
-      'less1by1:online'
+      'less1by1'
    ]);
 
    grunt.registerTask('js', [
@@ -44,4 +44,13 @@ module.exports = function(grunt) {
    grunt.registerTask('default', [
       'build'
    ]);
+
+
+    // Event handling
+    grunt.event.on('watch', function(action, filepath){
+        // Update the config to only build the changed less file.
+        console.log('zdarove');
+        console.log(filepath);
+        grunt.config.set('changed', filepath );
+    });
 };

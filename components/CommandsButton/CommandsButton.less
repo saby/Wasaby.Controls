@@ -1,14 +1,18 @@
-.controls-CommandsButton__picker{
-   margin: -5px -34px 0 0 !important;
+.controls-MenuIcon__Menu.controls-Menu__Popup.controls-CommandsButton__picker{
+   margin: -9px -33px 0 0;
 }
 .controls-CommandsButton__picker .controls-PopupMixin__closeButton {
    z-index:10;
    background-image: none;
-   width: 24px;
-   height: 24px;
-   top: 8px;
-   right: 8px;
+   width: 32px;
+   height: 32px;
+   top: 4px;
+   right: 0;
    color: @blue-dark-color !important;
+   &:before {
+      position: absolute;
+      top: 4px;
+   }
    &:hover {
       background-image: none;
    }

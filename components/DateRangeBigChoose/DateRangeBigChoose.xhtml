@@ -20,6 +20,20 @@
                <option name="onTextChangeMode">onTextEnter</option>
                <option name="tabindex">2</option>
                <option name="mask">{{=it.mask}}</option>
+               {{? it.rangeselect }}
+               <options name="validators" type="array">
+                  <options>
+                     <option name="validator" type="function" value="js!SBIS3.CONTROLS.DateRangeBigChoose.Validators:compareExt"></option>
+                     <option name="option">date</option>
+                     <option name="errorMessage">{{=rk('Дата конца периода должна быть больше даты начала.')}}</option>
+                     <options name="params" type="array">
+                        <option>DatePickerStart</option>
+                        <option>getDate</option>
+                        <option>>=</option>
+                     </options>
+                  </options>
+               </options>
+               {{?}}
             </component>
             <div class="controls-DateRangeBigChoose__header-rangeDash"></div>
          </div>
@@ -38,7 +52,7 @@
    <div class="controls-DateRangeBigChoose__years">
       <div class="controls-DateRangeBigChoose__left">
          <component data-component="SBIS3.CONTROLS.IconButton" name="PrevYearButton" class="controls-DateRangeBigChoose__years-prevYearBtn">
-            <option name="icon">sprite:icon-24 controls-DateRangeBigChoose__iconPrevYear icon-primary</option>
+            <option name="icon">sprite:icon-24 icon-ArrowTimeBackward icon-primary</option>
             <option name="activableByClick" type="boolean">false</option>
             <option name="tabindex">0</option>
          </component>
@@ -82,7 +96,7 @@
       </div>
       <div class="controls-DateRangeBigChoose__right">
          <component data-component="SBIS3.CONTROLS.IconButton" name="NextYearButton" class="controls-DateRangeBigChoose__years-nextYearBtn">
-            <option name="icon">sprite:icon-24 controls-DateRangeBigChoose__iconNextYear icon-primary</option>
+            <option name="icon">sprite:icon-24 icon-ArrowTimeForward icon-primary</option>
             <option name="activableByClick" type="boolean">false</option>
             <option name="tabindex">0</option>
          </component>

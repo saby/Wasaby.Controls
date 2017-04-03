@@ -23,6 +23,10 @@
     }
   }
 
+  &.controls-Link__underline {
+    text-decoration: underline;
+  }
+
   &.ws-disabled {
     color: @link-disabled-text-color;
     cursor: default;
@@ -30,15 +34,14 @@
     .controls-Link__icon{
       color: @icon-color-disabled !important;
     }
+    &.controls-Link__underline {
+      text-decoration: none;
+    }
   }
 
   .controls-Link__icon {
     vertical-align: @link-icon-vertical-alignment;
     margin: @link-icon-margin;
-  }
-
-  &.controls-Button__IE8Hack .controls-Link__icon:before {
-    content: '\00ad';
   }
 
   .controls-Link__field {
@@ -64,10 +67,6 @@
      text-decoration: inherit;
      cursor: inherit;
   }
-
-  &.controls-Link__underline {
-    text-decoration: underline;
-  }
 }
 .ws-is-ie10 {
   .controls-Link {
@@ -75,6 +74,14 @@
       .controls-Link-link {
         background-color: transparent;
       }
+    }
+  }
+}
+
+.ws-is-mobile-platform {
+  .controls-Link__withoutCaptionOnMobile {
+    .controls-Link__field {
+      display: none;
     }
   }
 }

@@ -21,4 +21,11 @@
 /tests/css/presto/node_modules
 /tests/css/presto/gemini-report
 /tests/css/presto/gemini-coverage
+/tests/reg/.idea
+/tests/reg/config.ini
+/tests/reg/result.db
+/tests/reg/js_errors
+/tests/reg/preprocessor_logs
+/tests/reg/screenshots
+/tests/reg/capture_reports
 /__pycache__

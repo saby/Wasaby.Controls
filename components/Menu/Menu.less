@@ -25,11 +25,14 @@
    .controls-Menu__hasChild {
       &:after {
          position: absolute;
+         font-family: 'cbuc-icons' !important;
+         font-size: 16px;
          top: @menu-expand-top-offset;
          right: @menu-expand-right-offset;
          width: @menu-expand-width;
          height: @menu-expand-height;
-         content: " ";
+         content: @menu-expand-content;
+         color: @default-color;
          border-width: @menu-expand-border-width;
          border-style: @menu-expand-border-style;
          border-color: @menu-expand-border-color;
@@ -69,7 +72,6 @@
    .controls-MenuItem {
       min-height: @menu-item-height;
       height: auto;
-      padding: @menu-item-default-padding;
    }
    .controls-Menu__header + .controls-Menu__itemsContainer {
       padding: @menu-link-menu-item-container-padding;

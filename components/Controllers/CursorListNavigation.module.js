@@ -9,10 +9,10 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
        * @author Крайнов Дмитрий
        * @class SBIS3.CONTROLS.CursorListNavigation
        * @extends Core/Abstract
-       * @mixse SBIS3.CONTROLS.IListNavigation
+       * @mixes SBIS3.CONTROLS.IListNavigation
        * @public
        */
-      var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
+      var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS.CursorListNavigation.prototype*/{
          prepareQueryParams: function(projection, direction) {
             var edgeRecord, filterValue, additionalFilter = {};
             if (direction == 'up') {

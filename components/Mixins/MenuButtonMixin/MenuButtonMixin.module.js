@@ -164,7 +164,17 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
                this.togglePicker();
             } else {
                if (this._items.getCount() == 1) {
-                  var id = this._items.at(0).getId();
+                  var firstItem = this._items.at(0);
+                  //Эмулируем послыание команды, если пункт меню всего 1 и в нем есть команда
+                  if (firstItem.has('command')) {
+                     var sendCommandArgs = [];
+                     sendCommandArgs.push(firstItem.get('command'));
+                     if (firstItem.has('commandArgs')) {
+                        sendCommandArgs.push(firstItem.get('commandArgs'));
+                     }
+                     this.sendCommand.apply(this, sendCommandArgs);
+                  }
+                  var id = firstItem.getId();
                   this._notify('onMenuItemActivate', id, event);
                }
             }

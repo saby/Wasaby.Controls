@@ -8,12 +8,14 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
    'use strict';
 
    /**
-    * Действие открытия диалога с заданным шаблоном
+    * Класс, описывающий действие открытия диалога с заданным шаблоном.
     * @class SBIS3.CONTROLS.Action.OpenDialog
-    * @mixes SBIS3.CONTROLS.Action.DialogMixin
     * @extends SBIS3.CONTROLS.Action.Action
+    *
+    * @mixes SBIS3.CONTROLS.Action.DialogMixin
+    *
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Красильников Андрей Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable
@@ -39,27 +41,23 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
 
       /**
        * @typedef {Object} ExecuteMetaConfig
-       * @property {String|Number} id Первичный ключ записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#key}.
-       * @property {Object} filter Объект, свойства которого могут быть использованы для установки инициализирующих данных при создании новой записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#initValues}.
-       * @property {Object} readMetaData Дополнительные мета-данные, которые будут переданы в метод прочитать. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#readMetaData}.
-       * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Передается в конфигурацию диалога в опцию {@link SBIS3.CONTROLS.FormController#record}.
-       * @property {String} initializingWay Способ инициализации данных диалога, подробнее о котором вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">здесь</a>.
-       * @property {Object} componentOptions Пользовательские опции, которые будут переданы в диалог в секцию _options.
-       * @property {Object} dialogOptions Опции, которые переопределяют конфигурацию диалога. Набор опций зависит от типа диалога (см. {@link mode}).
-       * <ul>
-       *    <li>Если <i>mode=dialog</i>, то набор опций такой: {@link $ws.proto.Dialog#title title}, {@link $ws.proto.Dialog#border border} и {@link $ws.proto.Dialog#buildMarkupWithContext buildMarkupWithContext}.</li>
-       *    <li>Если <i>mode=floatArea</i>, то набор опций такой: {@link $ws.proto.FloatArea#title title}, {@link $ws.proto.FloatArea#border border}, {@link $ws.proto.FloatArea#buildMarkupWithContext buildMarkupWithContext}, {@link $ws.proto.FloatArea#animation animation}, {@link $ws.proto.FloatArea#autoCloseOnHide autoCloseOnHide}, {@link $ws.proto.FloatArea#showOnControlsReady showOnControlsReady}, {@link $ws.proto.FloatArea#autoHide autoHide}, {@link $ws.proto.FloatArea#isStack isStack}, {@link $ws.proto.FloatArea#side side} и {@link $ws.proto.FloatArea#target target}.</li>
-       * </ul>
-       * Производит открытие диалога.
+       * @property {String|Number} id Идентификатор записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#key key}.
+       * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#record record}.
+       * @property {Object} filter Набор инициализирующих значений, который используется при создании новой записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#initValues initValues}.
+       * @property {Object} readMetaData Набор инициализирующих значений, который используется при чтении записи. Переопределяет значение опции  {@link SBIS3.CONTROLS.FormController#readMetaData readMetaData}.
+       * @property {String} initializingWay переопределяет <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/initializing-way/'>способ инициализации данных диалога</a>.
+       * @property {Object} dialogOptions Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/oop/#configuration-class-parameters'>секцию _options</a>.
+       * @property {Object} componentOptions Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
+       * @property {Boolean} isNewRecord Установив этот флаг, при закрытии диалога будет отображено диалоговое окно для подтверждения действия. Если в диалоге выбран ответ "Нет", то запись будет удалена из БД при выполнении условий: на диалоге открыта новая запись (создана в БД и ей присвоен ID) и для записи не были изменены поля.
+       */
+      /**
+       * Производит <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/open/'>открытие диалога редактирования</a>.
        * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
-       * @remark
-       * Подробнее об использовании параметров вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/open-dialog/#_2">Изменение конфигурации данных диалога</a>.
        * @example
-       * Открытие диалога при нажатии на кнопку.
        * <pre>
        * // myButton - экземпляр класса кнопки
        * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
-       * myButton.subscribe('onActivated', function(){
+       * myButton.subscribe('onActivated', function() {
        *    myDialogAction.execute({
        *       id: myId,
        *       item: myItem

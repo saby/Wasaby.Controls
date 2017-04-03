@@ -5,10 +5,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox',
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'js!SBIS3.CONTROLS.TextBoxUtils',
    'Core/Sanitize',
    "Core/helpers/dom&controls-helpers",
    "Core/helpers/functional-helpers",
-   "Core/detection",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
    'css!SBIS3.CONTROLS.TextBox'
 
 ], function(
@@ -18,9 +19,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
     dotTplFn,
     textFieldWrapper,
     TemplateUtil,
+    TextBoxUtils,
     Sanitize,
     dcHelpers,
-    fHelpers) {
+    fHelpers,
+    ControlHierarchyManager) {
 
    'use strict';
 
@@ -159,38 +162,54 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       $constructor: function() {
+         this._publish('onPaste');
          var self = this;
          this._inputField = this._getInputField();
          this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
-         this._inputField.on('paste', function(){
-            self._pasteProcessing++;
-            window.setTimeout(function(){
-               self._pasteProcessing--;
-               if (!self._pasteProcessing) {
-                  var text = self._getInputValue(),
-                     newText = '';
-                  if (self._options.inputRegExp){
-                     var regExp = new RegExp(self._options.inputRegExp);
-                     for (var i = 0; i < text.length; i++){
-                        if (regExp.test(text[i])){
-                           newText = newText + text[i];
-                        }
-                     }
-                     text = newText;
-                  }
-                  text = self._formatText(text);
-                  self._drawText(text);
-                  /* Событие paste может срабатывать:
-                     1) При нажатии горячих клавиш
-                     2) При вставке из котекстного меню.
+         this._inputField.on('paste', function(event){
+            var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
 
-                     Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
-                     но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
-                     можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
-                     которые на это рассчитывают.
-                   */
-                  self._setTextByKeyboard(text);
-               }
+            if(userPasteResult !== false){
+               self._pasteProcessing++;
+               window.setTimeout(function(){
+                  self._pasteProcessing--;
+                  if (!self._pasteProcessing) {
+                     var text = self._getInputValue(),
+                         newText = '';
+                     if (self._options.inputRegExp){
+                        var regExp = new RegExp(self._options.inputRegExp);
+                        for (var i = 0; i < text.length; i++){
+                           if (regExp.test(text[i])){
+                              newText = newText + text[i];
+                           }
+                        }
+                        text = newText;
+                     }
+                     text = self._formatText(text);
+                     self._drawText(text);
+                     /* Событие paste может срабатывать:
+                      1) При нажатии горячих клавиш
+                      2) При вставке из котекстного меню.
+
+                      Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
+                      но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
+                      можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
+                      которые на это рассчитывают.
+                      */
+                     self._setTextByKeyboard(text);
+                  }
+               }, 100);
+            }else {
+               event.preventDefault();
+            }
+
+         });
+
+         this._inputField.on('drop', function(){
+            window.setTimeout(function(){
+               // в момент события в поле ввода нет перенесенных данных,
+               // поэтому вставка выполняется с задержкой, чтобы позволить браузеру обработать перенесенные данные (картинка, верстка)
+               self._setTextByKeyboard(self._getInputValue());
             }, 100);
          });
 
@@ -288,7 +307,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             if (scrollWidth > this._inputField[0].clientWidth) {
                this._container.attr('title', this._options.text);
             }
-            else {
+            else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
             }
             this._tooltipText = this._options.text;
@@ -442,7 +461,14 @@ define('js!SBIS3.CONTROLS.TextBox', [
             EventBus.globalChannel().notify('MobileInputFocusOut');
             this._fromTouch = false;
          }
-         this._checkInputVal();
+      },
+
+      _focusOutHandler: function(event, isDestroyed, focusedControl) {
+         TextBox.superclass._focusOutHandler.apply(this, arguments);
+
+         if(!isDestroyed  && (!focusedControl || !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) ) {
+            this._checkInputVal();
+         }
       },
 
       _inputFocusInHandler: function(e) {
@@ -460,14 +486,25 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this.setActive(true, false, true);
             e.stopPropagation();
          }
+         // убираем курсор на ipad'e при нажатии на readonly поле ввода
+         if(!this.isEnabled() && constants.browser.isMobilePlatform){
+            this._inputField.blur();
+         }
       },
 
       _createCompatPlaceholder : function() {
-         var self = this;
-         this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
+         var self = this,
+             compatPlaceholder = this.getContainer().find('.controls-TextBox__placeholder');
+
+         if(compatPlaceholder.length) {
+            this._compatPlaceholder = compatPlaceholder;
+         } else {
+            this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
+            this._inputField.after(this._compatPlaceholder);
+         }
+
          this._updateCompatPlaceholderVisibility();
          this._inputField.attr('placeholder', '');
-         this._inputField.after(this._compatPlaceholder);
          this._compatPlaceholder.css({
             'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
             'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)

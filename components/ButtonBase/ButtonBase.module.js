@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
     * Отображение и вёрстка задаются именно в унаследованных классах.
     * @class SBIS3.CONTROLS.ButtonBase
     * @public
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
@@ -101,17 +101,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
             caption = strHelpers.escapeHtml(caption);
          }
          this._options.caption = caption || '';
-      },
-      _setEnabled: function() {
-         ButtonBase.superclass._setEnabled.apply(this, arguments);
-         // В IE8 при цвета смене иконки не происходит автоматическая её перерисовка, а вызывается она лишь при смене контента в before
-         // http://stackoverflow.com/questions/14227751/ie8-update-inherited-color-of-before-content-based-on-parent-elements-class
-         if (constants.browser.isIE8) {
-            this._container.addClass('controls-Button__IE8Hack');
-            setTimeout(function() {
-               this._container.removeClass('controls-Button__IE8Hack')
-            }.bind(this), 1);
-         }
       },
 
       validate: function() {

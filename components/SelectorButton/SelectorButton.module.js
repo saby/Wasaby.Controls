@@ -47,19 +47,19 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
     /* Функция рендера текста в шаблоне компонента */
     function itemTemplateRender(opts) {
-       var items = [],
-           res = [];
+       var res = [],
+          items;
 
        if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
           items = [opts.selectedItem];
        } else if (opts.selectedItems) {
-          items = opts.selectedItems.toArray();
+          items = opts.selectedItems;
        }
 
-       if(items.length) {
-          colHelpers.forEach(items, function(item) {
+       if (items) {
+          items.forEach(function(item) {
              res.push(item.get(opts.displayProperty));
-          })
+          });
        }
 
        return res.join('');
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
       _checkWidth: function() {
          // Хак для старых ие
-         if (constants.browser.isIE8 || constants.browser.isIE9 || constants.browser.isIE10) {
+         if (constants.browser.isIE10) {
             if(!this.isVisibleWithParents()) {
                return;
             }

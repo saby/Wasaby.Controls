@@ -17,6 +17,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.MenuIcon',
    'css!SBIS3.CONTROLS.OperationsPanel'
 ], function(Control, dotTplFn, DSMixin, colHelpers, fHelpers, mkpHelpers, cInstance, StickyHeaderManager) {
+
+   var ITEMS_MENU_WIDTH = 28;
+
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
     * с записями которых требуется производить манипуляции. Он состоит из всплывающей панели, скрытой по умолчанию, и
@@ -44,7 +47,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     *
     * Также допустимо создание новых действий, для которых настраивается иконка и поведение при клике.
     * @class SBIS3.CONTROLS.OperationsPanel
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
@@ -263,11 +266,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var self = this;
          return function (cfg) {
             var
+                className,
                 item = cfg.item,
                 options = item.get('options') || {},
                 type = self._getItemType(item.get('type'));
-            options.className = 'controls-operationsPanel__actionType-' + type;
-            return '<component data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
+            className = 'js-controls-operationsPanel__action controls-operationsPanel__actionType-' + type;
+            return '<component class="' + className + '" data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
          };
       },
       _getItemType: function (type) {
@@ -276,6 +280,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       onSelectedItemsChange: function(idArray) {
          this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+
          if (this._itemsDrawn) {
             this._onSelectedItemsChange(idArray);
          } else {
@@ -306,9 +311,37 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
 
+      /*
+      * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
+      * */
       _checkCapacity: function(){
-         this._itemsMenu.getContainer().toggleClass('ws-hidden', !(this._blocks.wrapper.height() < this._blocks.wrapper.children().height()));
+         var container = this.getContainer();
+         /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
+         var allowedWidth = container.width() - this._blocks.markOperations.width() - ITEMS_MENU_WIDTH;
+
+         var operations = this._blocks.allOperations.find('.js-controls-operationsPanel__action:visible');
+
+         var width = 0;
+         var isMenuNecessary = false;
+         this._blocks.allOperations.css('width', '');
+
+         for(var i = 0, l = operations.length; i < l; i++){
+            var elemWidth = $(operations[i]).outerWidth(true);
+
+            /* Если текущая ширина привышает доступную, то ограничеваем ее, таким образом, кнопка с меню прижмется справа */
+            if(width + elemWidth > allowedWidth){
+               isMenuNecessary = true;
+               this._blocks.allOperations.css('width', width);
+               break;
+            }
+            else {
+               width += elemWidth;
+            }
+         }
+
+         this.getChildControlByName('itemsMenu').getContainer().toggleClass('ws-hidden', !isMenuNecessary);
       },
+
       destroy: function() {
          this._blocks = null;
          OperationsPanel.superclass.destroy.apply(this);

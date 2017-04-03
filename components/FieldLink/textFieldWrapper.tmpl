@@ -1,0 +1,11 @@
+<input
+	class="controls-TextBox__field js-controls-TextBox__field {{textTransform === 'uppercase' ? 'controls-TextBox__field-uppercase'}} {{textTransform === 'lowercase' ? 'controls-TextBox__field-lowercase'}}"
+	type="text"
+	autocomplete="off"
+	value="{{text}}"
+	placeholder="{{enabled && _useNativePlaceholder ? placeholder}}"
+	maxlength="{{maxLength ? maxLength}}"
+/>
+<div if="{{ !_useNativePlaceholder }}" class="controls-TextBox__placeholder">
+  {{ placeholder|sanitize }}
+</div>

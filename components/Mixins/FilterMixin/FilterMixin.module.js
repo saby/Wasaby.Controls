@@ -236,6 +236,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          propertyUpdateWrapper(function() {
             if (context) {
                toSet[this._options.internalContextFilterName] = {
+                  caption: this._mapFilterStructureByProp('resetCaption'),
                   filter: resetFilter,
                   visibility: this.getResetVisibilityValue()
                };

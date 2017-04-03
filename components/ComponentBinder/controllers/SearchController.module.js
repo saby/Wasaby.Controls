@@ -120,7 +120,9 @@ define('js!SBIS3.CONTROLS.SearchController',
          });
 
          view.reload(filter, view.getSorting(), 0).addCallback(function() {
-            view._container.addClass('controls-GridView__searchMode');
+            if (self._options.hierarchyViewMode) {
+               view._container.addClass('controls-GridView__searchMode');
+            }
          });
          this._searchMode = true;
 

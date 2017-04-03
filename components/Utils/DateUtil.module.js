@@ -10,9 +10,9 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
     */
    var DateUtil = {
       dateFromIsoString: function (isoDate) {
-         if (constants.browser.isIE8
+         if (
             // не поддерживает даты с часовым пояслм вида '2016-07-31 22:10:01+03'
-            || constants.browser.firefox
+               constants.browser.firefox
             // не поддерживает даты с часовым поясом и разделитель в виде пробела '2016-07-31 22:10:01+03'
             || constants.browser.safari
             // на ios все браузеры работают через Apple UIWebView и ведут себя так же как safari
@@ -33,12 +33,7 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
          if(!(date instanceof Date)) {
             return false;
          }
-
-         if (constants.browser.isIE8) {
-            return this._dateToIsoString(date); //IE8 only
-         } else {
-            return date.toISOString();
-         }
+         return date.toISOString();
       },
 
       _dateToIsoString: function(date) {

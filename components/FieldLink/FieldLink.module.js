@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/helpers/functional-helpers",
        "Core/helpers/string-helpers",
        "Core/helpers/collection-helpers",
+       "Core/ParserUtilities",
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
        "js!SBIS3.CONTROLS.MultiSelectable",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
        "html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
        "html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
-       "js!SBIS3.CONTROLS.Utils.DialogOpener",
+       "tmpl!SBIS3.CONTROLS.FieldLink/textFieldWrapper",
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
@@ -38,6 +39,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         fHelpers,
         strHelpers,
         colHelpers,
+        ParserUtilities,
         SuggestTextBox,
         ItemsControlMixin,
 
@@ -57,8 +59,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /* Служебные шаблоны поля связи */
         afterFieldWrapper,
         beforeFieldWrapper,
+        textFieldWrapper,
         /********************************************/
-        DialogOpener,
         ITextValue,
         TemplateUtil,
         ToSourceModel
@@ -76,6 +78,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
           INVISIBLE: 'ws-invisible',
           HIDDEN: 'ws-hidden'
+       };
+
+       var _private = {
+          keysFix: function(keys) {
+             if(keys !== undefined && !Array.isArray(keys)) {
+                keys = [keys];
+             }
+             return keys;
+          }
        };
 
        /**
@@ -138,6 +149,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
         * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
+        * @cssModifier controls-FieldLink__big-fontSize Выбранные записи в поле связи отображаются с увеличенным (15px) и жирным шрифтом.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
@@ -178,6 +190,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
+                textFieldWrapper: textFieldWrapper,
                 /**********************************************************************************************/
                  list: {
                    component: 'js!SBIS3.CONTROLS.DataGridView',
@@ -191,10 +204,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @variant node выбираются только узлы
                  * @variant leaf выбираются только листья
                  * @variant all выбираются все записи
-                 *
-                 * @typedef {Object} Dictionaries
+                 */
+                /** @typedef {Object} Dictionaries
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
+                 * @property {Object} dialogOptions Опции для диалога.
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
                  * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
                  * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
@@ -205,10 +219,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
                  * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
-                 * - использование компонента {@link SBIS3.CONTROLS.DataGridView}:
-                 * ![](/FieldLink00.png)
-                 * - использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}:
-                 * ![](/FieldLink01.png)
+                 * <ul>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
+                 *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
+                 * </ul>
                  * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
@@ -522,7 +536,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * Метод  используется для открытия справочника из JS-кода компонента.
            * Подробно о настройке и работе со справочниками можно прочесть в описании к опции {@link dictionaries}.
            * @example
-           * @param {String} template Компонент, который будет использован для построения справочника.
+           * @param {String|Object.<String, *>} template Компонент или конфигурация (объект) компонета, который будет использован для построения справочника.
            * @param {Object} componentOptions Опции, которые будут использованы в компоненте при построении справочника.
            * Подробное описание можно прочесть {@link SBIS3.CONTROLS.FieldLink/dictionaries.typedef здесь}.
            * @example
@@ -538,20 +552,30 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions, selectionType) {
+             var cfg;
+
+             if(typeof template !== 'object') {
+                cfg = {
+                   template: template,
+                   componentOptions: componentOptions
+                }
+             } else {
+                cfg = template;
+             }
+
              this.hidePicker();
              this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
                 var selectedItems = this.getSelectedItems();
-                this._getSelectorAction().execute({
-                   template: template,
-                   componentOptions: componentOptions,
-                   multiselect: this.getMultiselect(),
-                   selectionType: selectionType,
-                   selectedItems: selectedItems ? selectedItems.clone() : selectedItems
-                });
+
+                if(selectedItems) {
+                   cfg.selectedItems = selectedItems.clone();
+                }
+                cfg.multiselect = this.getMultiselect();
+                this._getSelectorAction().execute(cfg);
              } else {
-                this._showChooser(template, componentOptions);
+                this._showChooser(cfg.template, cfg.componentOptions);
              }
           },
 
@@ -575,7 +599,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(config) {
-                this.showSelector(config.template, config.componentOptions, config.selectionType);
+                this.showSelector(config);
                 /* Чтобы остановить всплытие комманды */
                 return true;
              }
@@ -619,6 +643,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
              this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
+          },
+
+          // FIXME костыль, выписана задача:
+          // https://inside.tensor.ru/opendoc.html?guid=90fbc224-849e-485d-b843-2a0bb47871e7&des=
+          // Задача в разработку 15.03.2017 Подумать, как жить в условиях что типы полей фильтра могут меняться, а в историю может сохраниться п…
+          setSelectedKeys: function(keys) {
+             keys = _private.keysFix(keys);
+             FieldLink.superclass.setSelectedKeys.call(this, keys);
           },
 
           /** Эти сеттеры нужны, потому что опцию надо пробросить в дочерний компонент, рисующий записи **/
@@ -690,36 +722,25 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**********************************************************************************************/
 
           _getAdditionalChooserConfig: function () {
-             var oldRecArray = [],
-                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys(),
-                selectedItems, oldRec;
-
-             if(this._options.oldViews) {
-                selectedItems = this.getSelectedItems();
-
-                if(selectedItems) {
-                   selectedItems.each(function(rec) {
-                      oldRec = DialogOpener.convertRecord(rec);
-                      if(oldRec) {
-                         oldRecArray.push(oldRec);
-                      }
-                   });
-                }
-             }
+             var
+                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys();
 
              return {
                 currentValue: selectedKeys,
                 currentSelectedKeys: selectedKeys,
                 selectorFieldLink: true,
                 multiSelect: this._options.multiselect,
-                selectedRecords: oldRecArray
+                selectedRecords: []
              };
           },
 
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
-                 selectedKeysLength = cfg.selectedKeys.length;
+                 selectedKeysLength;
+
+             cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
+             selectedKeysLength = cfg.selectedKeys.length;
 
              if(cfg.multiselect) {
                 classesToAdd.push(classes.MULTISELECT);
@@ -731,6 +752,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 if(selectedKeysLength === 1 || !selectedKeysLength) {
                    classesToAdd.push(classes.SELECTED_SINGLE);
                 }
+             }
+
+             /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
+             cfg._useNativePlaceholder = cfg.placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+
+             if(!cfg._useNativePlaceholder) {
+                cfg.placeholder = ParserUtilities.buildInnerComponentsExtended(cfg.placeholder, cfg).markup;
              }
 
              /* className вешаем через modifyOptions,
@@ -1041,27 +1069,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._getLinkCollection().isPickerVisible() || !this._isInputVisible()) {
                 return;
              }
-
-             // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
-             // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
-             if (constants.browser.isMobilePlatform) {
-                $('.controls-ScrollContainer').addClass('controls-ScrollContainer-overflow-scrolling-auto');
-             }
-
              FieldLink.superclass.showPicker.apply(this, arguments);
              /* После отображения автодополнение поля связи может быть перевёрнуто (не влезло на экран вниз),
                 при этом необходимо, чтобы самый нижний элемент в автодополнении был виден, а он может находить за скролом,
                 поэтому при перевороте проскролим вниз автодополнение */
              this._scrollListToBottom();
-          },
-          
-          // TODO: временный фикс для https://inside.tensor.ru/opendoc.html?guid=116810c1-efac-4acd-8ced-ff42f84a624f&des=
-          // при открытии автодополнения, выключаем всем скролл контейнерам -webkit-overflow-scrolling touch
-          hidePicker: function(){
-             FieldLink.superclass.hidePicker.apply(this, arguments);
-             if (constants.browser.isMobilePlatform) {
-                $('.controls-ScrollContainer').removeClass('controls-ScrollContainer-overflow-scrolling-auto');
-             }
           },
 
           _setEnabled: function() {

@@ -21,7 +21,7 @@ define(
        * Календарь имеет соответствующее названию контрола визуальное отображение.
        * Предназначен для задания даты путём выбора.
        * @class SBIS3.CONTROLS.Calendar
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @demo SBIS3.CONTROLS.Demo.MyCalendar
        *

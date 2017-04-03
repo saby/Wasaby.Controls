@@ -5,7 +5,7 @@ define(['js!SBIS3.CORE.CompoundControl', 'Core/helpers/generate-helpers', 'Core/
 
       /**
        * @class SBIS3.CONTROLS.SwitchableAreaItem
-       * @extends $ws.proto.CompoundControl
+       * @extends SBIS3.CORE.CompoundControl
        * @author Крайнов Дмитрий Олегович
        * @public
        * @ignoreOptions name, allowChangeEnable, className, contextRestriction, enabled, independentContext, tabIndex
@@ -117,7 +117,7 @@ define(['js!SBIS3.CORE.CompoundControl', 'Core/helpers/generate-helpers', 'Core/
          },
          /**
           * Отложенно инстанцирует дочерние компоненты
-          * @returns {$ws.proto.Deferred} - Deferred готовности
+          * @returns {Core/Deferred} - Deferred готовности
           */
          loadChildControls: function() {
             var def = new Deferred();

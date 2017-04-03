@@ -29,11 +29,11 @@ define('js!SBIS3.CONTROLS.CheckBoxGroup',
     * <component data-component='SBIS3.CONTROLS.CheckBoxGroup'>
     *    <options name="items" type="array">
     *       <options>
-    *          <option name="id">1</option>
+    *          <option name="id" type="string">1</option>
     *          <option name="caption">CheckBox 1</option>
     *       </options>
     *       <options>
-    *          <option name="id">2</option>
+    *          <option name="id" type="string">2</option>
     *          <option name="caption">CheckBox 2</option>
     *       </options>
     *    </options>

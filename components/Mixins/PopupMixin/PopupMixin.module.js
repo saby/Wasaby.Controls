@@ -11,8 +11,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    "Core/helpers/helpers",
    "Core/helpers/dom&controls-helpers",
-   "Core/detection"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection) {
+   "Core/detection",
+   "Core/constants"
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -160,9 +161,14 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             targetOverlay: false,
             /**
+             * @cfg {Boolean} переводить ли активность на панель после открытия
+             */
+            activateAfterShow: false,
+            /**
              * Способ подстраивания всплывающей панели под свободное рядом с таргетом пространство
              * @typedef {Object} loacationStrategyEnum
              * @variant dontMove всплывающая панель не двигается относительно таргета
+             * @variant bodyBounds контейнер всплывающей панели ограничивается краем экрана, если не влезает в экран
              */
             locationStrategy: null,
             /**
@@ -248,11 +254,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
-         this._targetChanges = dcHelpers.trackElement(this._options.target, true);
-         //перемещаем вслед за таргетом
-         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
-         //скрываем если таргет скрылся
-         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+         if (this._options.target) {
+            this._targetChanges = dcHelpers.trackElement(this._options.target, true);
+            //перемещаем вслед за таргетом
+            this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+            //скрываем если таргет скрылся
+            this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+         }
       },
 
       _unsubscribeTargetMove: function(){
@@ -559,6 +567,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
+      //Если клик был по другой всплывашке, определяем, нужно ли закрывать текущий popup
       _isLinkedPanel: function (target) {
          //По ошибке https://inside.tensor.ru/opendoc.html?guid=b935c090-ccf6-4a9e-a205-5fc9c96a7c04 убрали всплытие события при mousedown (для чего описано в ошибке)
          //FloatArea теперь не может превентить событие, поэтому при клике по панели закрывается попап, из которого была открыта floatArea.
@@ -567,12 +576,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
          if (floatArea.length){
             target = floatArea.wsControl().getOpener();
-            while (target && target !== this) {
-               target = target.getParent() || target.getOpener();
-            }
-            return target === this;
+            return ControlHierarchyManager.checkInclusion(this, target && target.getContainer());
          }
-         return false;
+         //Если кликнули по инфобоксу - popup закрывать не нужно
+         var infoBox = $(target).closest('.ws-info-box');
+         return !!infoBox.length;
       },
 
       _checkTargetPosition: function () {
@@ -820,21 +828,36 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /* в режиме донт мув мы донт мув */
             case 'dontMove':
                  return offset;
-
+            case 'bodyBounds':
+               var scrollY = this._fixed ? 0 : $(window).scrollTop(),
+                  scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
+               if (this._isHorizontalOverflow() && this._options.horizontalAlign.side !== 'right') {
+                  offset.left = this._windowSizes.width + scrollX - this._containerSizes.originWidth;
+               }
+               //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
+               if (this._isVerticalOverflow() && this._options.verticalAlign.side !== 'bottom') {
+                  offset.top = this._windowSizes.height + scrollY - this._containerSizes.originHeight;
+               }
+               if (offset.top < 0){
+                  offset.top = 0;
+               }
+               if (offset.left < 0){
+                  offset.left = 0;
+               }
+               return offset;
             /* по умаолчанию учитываем свободное место на экране */
             default:
-               var buf = this._targetSizes.offset,
-                   scrollY = this._fixed ? 0 : $(window).scrollTop(),
-                   scrollX = this._fixed ? 0 : $(window).scrollLeft();
+               var buf = this._targetSizes.offset;
                //Проверяем убираемся ли в экран снизу. Если позиционируем нижней стороной, не нужно менять положение если не влезаем снизу
-               if (this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
+               if (this._isVerticalOverflow() && !this._isMovedV && this._options.verticalAlign.side !== 'bottom') {
                   this._isMovedV = true;
                   offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
                   offset.top = this._addOffset(offset, buf).top;
                }
 
                //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по вертикали
-               if (this._containerSizes.requiredOffset.top < this._windowSizes.height + scrollY && this._isMovedV) {
+               if (!this._isVerticalOverflow() && this._isMovedV) {
                   this._isMovedV = false;
                   offset.top = this._getOppositeOffset(this._options.corner, 'vertical').top;
                   offset.top = this._addOffset(offset, buf).top;
@@ -842,20 +865,30 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                //TODO Избавиться от дублирования
                //Проверяем убираемся ли в экран справа. Если позиционируем правой стороной, не нужно менять положение если не влезаем справа
-               if (this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
+               if (this._isHorizontalOverflow() && !this._isMovedH && this._options.horizontalAlign.side !== 'right') {
                   this._isMovedH = true;
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
 
                //Возможно уже меняли положение и теперь хватает места что бы вернуться на нужную позицию по горизонтали
-               if (this._containerSizes.requiredOffset.left < this._windowSizes.width + scrollX && this._isMovedH) {
+               if (!this._isHorizontalOverflow() && this._isMovedH) {
                   this._isMovedH = false;
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
                return offset;
          }
+      },
+
+      _isHorizontalOverflow: function() {
+         var scrollX = this._fixed ? 0 : $(window).scrollLeft();
+         return this._containerSizes.requiredOffset.left > this._windowSizes.width + scrollX;
+      },
+
+      _isVerticalOverflow: function() {
+         var scrollY = this._fixed ? 0 : $(window).scrollTop();
+         return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY;
       },
 
       _calculateOverflow: function (offset, orientation) {
@@ -877,13 +910,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var vOffset = this._options.verticalAlign.offset || 0,
             hOffset = this._options.verticalAlign.offset || 0,
             scrollHeight = this._container.get(0).scrollHeight,
+            height = "",
             spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
             if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
-               var height = this._container.get(0).scrollHeight > this._windowSizes.height ? this._windowSizes.height : '';
+               //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
+               if (this._container.get(0).scrollHeight > this._windowSizes.height) {
+                  height = this._windowSizes.height;
+               }
+               // При рассчете свободного места снизу учитываем виртуальную клавиатуру
                spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
                if (spaces.top < spaces.bottom) {
                   if (this._options.targetOverlay){
@@ -903,8 +941,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                      height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
                   }
                }
-               this._container.css('height', height);
             }
+            this._container.css('height', height);
             if (this._containerSizes.originHeight + vOffset + this._margins.top - this._margins.bottom < spaces.bottom && this._overflowedV) {
                this._container.css('overflow-y', 'visible');
                this._container.css('height', '');
@@ -1057,6 +1095,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (this._parentFloatArea){
                this._parentFloatArea.setHasPopupInside(true);
             }
+            if (this._options.activateAfterShow) {
+               this.activateFirstControl();
+            }
          }
       },
 
@@ -1067,6 +1108,19 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                top: '-10000px'
             });
             this._subscribeTargetMove();
+
+            /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
+            if(constants.browser.isMobilePlatform) {
+               var topWindow = cWindowManager.getMaxZWindow();
+
+               constants.$body.addClass('controls-ScrollContainer-overflow-scrolling-auto');
+               /* У верхнего по стеку окна убираем класс, чтобы оно не портило сролл у нового окна */
+               if(topWindow) {
+                  topWindow.getContainer().removeClass('controls-Popup__touchScroll-fix');
+               }
+               this.getContainer().addClass('controls-Popup__touchScroll-fix');
+            }
+
             ControlHierarchyManager.setTopWindow(this);
             //Показываем оверлей
             if (!this._zIndex) {
@@ -1107,7 +1161,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
          hide: function() {
-            dcHelpers.trackElement(this._options.target, false);
+            if (this._options.target) {
+               dcHelpers.trackElement(this._options.target, false);
+            }
          }
       },
 
@@ -1142,7 +1198,23 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                       if (this._parentFloatArea) {
                          this._parentFloatArea.setHasPopupInside(false);
                       }
+
                    }.bind(this));
+                   /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
+                   if(constants.browser.isMobilePlatform) {
+                      var topWindow = cWindowManager.getMaxZWindow(),
+                          isPopUp = coreHelpers.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
+
+                      /* При скрытии popUp'a:
+                         если ниже по стеку тоже popup вешаем на него класс, который фиксит скролл
+                         если нет, то убираем класс с body, фиксить скролл не надо */
+                      if(isPopUp) {
+                         topWindow.getContainer().addClass('controls-Popup__touchScroll-fix');
+                      } else {
+                         constants.$body.removeClass('controls-ScrollContainer-overflow-scrolling-auto');
+                      }
+                      self.getContainer().removeClass('controls-Popup__touchScroll-fix');
+                   }
                 };
             if (result instanceof Deferred) {
                result.addCallback(function (res) {

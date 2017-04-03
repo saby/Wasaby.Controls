@@ -4,6 +4,7 @@
 @carry-big-height:                        60px;
 @text-box-height-carryFont:               42px;
 @float-area-top-offset:                   10px;
+@browser-path-height:                     32px;
 
 .icon-size {
    font-size: @icon-size !important;
@@ -395,6 +396,34 @@
     left: 0px!important;
   }
 }
+// стилизуем хлебные крошки и кнопку назад для Розницы, т.к. Engine не поддерживает тематизации
+.engine-Browser__path-wrapper {
+   .engine-Browser__path {
+      max-height: @browser-path-height;
+   }
+   .controls-Browser__breadCrumbs {
+      max-height: @browser-path-height;
+      top: -7px;
+   }
+   .controls-Browser__backButton {
+      max-height: @browser-path-height;
+   }
+   &.engine-Browser__path-wrapper-in-head {
+      .engine-Browser__path {
+         height: @browser-path-height;
+      }
+   }
+}
+.ws-is-webkit {
+   .engine-Browser__path-wrapper {
+      .controls-Browser__breadCrumbs {
+         top: 0;
+         .controls-BreadCrumbs__arrow {
+            top: 0;
+         }
+      }
+   }
+}
 .controls-BreadCrumbs {
    .controls-BreadCrumbs__itemsContainer{
       vertical-align: top;
@@ -430,3 +459,19 @@
    }
 }
 
+.ws-window {
+   #FileCamLoader-CameraWindow__hint {
+      height: 60px;
+   }
+   .FileCamLoader-CameraWindow__photoButton {
+      border: 1px solid #587ab0 !important;
+      background-color: transparent !important;
+      &:hover {
+         background-color: #EAEAEA !important;
+      }
+   }
+   .FileCamLoader-CameraWindow__loadButton {
+      width: auto;
+      right: 64px;
+   }
+}

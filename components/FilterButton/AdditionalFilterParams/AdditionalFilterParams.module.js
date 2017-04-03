@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
        /**
         * Контрол, отображающий блок с набираемыми фильтрами в кнопке фильтров
         * @class SBIS3.CONTROLS.AdditionalFilterParams
-        * @extends $ws.proto.CompoundControl
+        * @extends SBIS3.CORE.CompoundControl
         */
 
        var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.AdditionalFilterParams.prototype */ {

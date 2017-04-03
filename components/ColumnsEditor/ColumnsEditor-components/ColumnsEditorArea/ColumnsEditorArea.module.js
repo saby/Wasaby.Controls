@@ -12,7 +12,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'js!SBIS3.CONTROLS.Button',
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CheckBoxGroup',
-   'css!SBIS3.CONTROLS.ColumnsEditorArea'
+   'css!SBIS3.CONTROLS.ColumnsEditorArea',
+   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl'
  ],
    function(CompoundControl, CommandDispatcher, cHelpers, ItemsMoveController, dotTplFn, ItemContentTpl) {
 
@@ -35,6 +36,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                   _selectableItems: [],
                   _selectableMarkedKeys: [],
                   _itemContentTpl: ItemContentTpl,
+                  moveMode: true,
                   columns: undefined,
                   selectedColumns: [],
                   title: ''
@@ -57,9 +59,11 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                ColumnsEditorArea.superclass.init.apply(this, arguments);
                this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedView');
                this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableView');
-               this._itemsMoveController = new ItemsMoveController({
-                  linkedView: this._selectableView
-               });
+               if (this._options.moveMode) {
+                  this._itemsMoveController = new ItemsMoveController({
+                     linkedView: this._selectableView
+                  });
+               }
             },
             _prepareItems: function(columns, selectedColumns) {
                var
@@ -99,6 +103,12 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                this._options.selectedColumns = selectedColumns;
                this._notifyOnPropertyChanged('selectedColumns');
                this._notify('onSelectedColumnsChange', selectedColumns);
+            },
+            destroy: function() {
+               if (this._itemsMoveController) {
+                  this._itemsMoveController.destroy();
+               }
+               ColumnsEditorArea.superclass.destroy.apply(this, arguments);
             }
       });
 

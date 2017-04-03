@@ -1,5 +1,6 @@
 {
    "Поставить текущую дату": "Set the current date",
    "Выбор нескольких лет": "Select few years",
-   "Смена режима календаря на годовой": "Change the calendar mode to an annual"
+   "Смена режима календаря на годовой": "Change the calendar mode to an annual",
+   "Дата конца периода должна быть больше даты начала.": "The end of the period must be greater than the start date."
 }

@@ -50,10 +50,9 @@
         }
       }
     }
-
-     &.controls-ListView__item__multiSelected {
-        background: @multiView-tile-selected-item-bg;
-     }
+    &.controls-ListView__item__multiSelected {
+      background: @multiView-tile-selected-item-bg;
+    }
   }
   &.controls-CompositeView-table .controls-Pager-container {
      display : none
@@ -122,7 +121,7 @@
             }
          }
          &.controls-ListView__item__multiSelected {
-            background: @multiView-tile-selected-item-bg;
+           background: @multiView-tile-selected-item-bg;
          }
          .controls-CompositeView__tileImg {
             display: block;
@@ -186,12 +185,12 @@
             }
          }
 
-         &.controls-ListView__hoveredItem, &.controls-ListView__item__selected, &.controls-ListView__item__multiSelected, &.controls-ItemActions__activeItem {
+         &.controls-ListView__hoveredItem, &.controls-ListView__item__selected, &.controls-ItemActions__activeItem {
             background-color: #fff !important;
          }
 
          &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
-            z-index: 2;
+            z-index: 1;
             box-shadow: 0 0 5px #587AB0;
          }
 
@@ -236,6 +235,11 @@
          content: "";
          display: block;
          padding-top: 90%;
+      }
+
+      .controls-CompositeView__tileImg {
+         max-width: 100%;
+         max-height: 100%;
       }
    }
 
@@ -283,7 +287,7 @@
             }
 
             .controls-CompositeView__tileTitle {
-               margin: 4px 8px 0 8px;
+               margin: 4px 16px 0 16px;
                height: 40px;
                overflow: hidden;
                text-align: center;
@@ -294,6 +298,8 @@
                .controls-CompositeView__tileTitle-text {
                   line-height: 20px;
                   display: inline-block;
+                  max-height: 40px;
+                  max-width: 100%;
                   &:hover {
                      text-decoration: underline;
                   }
@@ -301,20 +307,22 @@
             }
          }
 
-         &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
-            padding-bottom: 26px;
-            margin-bottom: -24px;
-            &:after {
-               content: '';
-               height: 26px;
-               width: 100%;
-               display: inline-block;
-               background-color: #E1ECF6;
-               position: absolute;
-               bottom: 0;
-            }
-            .controls-CompositeView__tileContainer {
-               margin-bottom: 26px;
+         &:not(.controls-CompositeView__item-withoutItemsAction) {
+            &.controls-ListView__hoveredItem, &.controls-ItemActions__activeItem {
+               padding-bottom: 26px;
+               margin-bottom: -24px;
+               &:after {
+                  content: '';
+                  height: 26px;
+                  width: 100%;
+                  display: inline-block;
+                  background-color: #E1ECF6;
+                  position: absolute;
+                  bottom: 0;
+               }
+               .controls-CompositeView__tileContainer {
+                  margin-bottom: 26px;
+               }
             }
          }
       }

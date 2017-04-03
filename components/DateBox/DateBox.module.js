@@ -36,7 +36,6 @@ define(
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDateBox
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
@@ -345,7 +344,7 @@ define(
 
          if (date === null || typeof date === 'undefined') {
             options.date = date;
-            options.text = this._getFormatModel(options).getStrMask(this._getMaskReplacer(options));
+            options.text = '';
             isCorrect = true;
          }
          if (date instanceof Date) {

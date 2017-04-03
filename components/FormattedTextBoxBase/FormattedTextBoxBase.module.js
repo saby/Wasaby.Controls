@@ -153,7 +153,7 @@ define(
       _getCursor = function(position) {
          var
              formatModel = this._getFormatModel(),
-             selection = constants.browser.isIE8 || constants.browser.isIE9 || constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
+             selection = constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
          if (selection.type !== 'None') {
             selection = selection.getRangeAt(0);
             this._lastSelection = selection;
@@ -224,8 +224,10 @@ define(
 
    /**
     * Класс для модели форматного поля
+    * @class SBIS3.CONTROLS.FormatModel
+    * @author Крайнов Дмитрий Олегович
     */
-   var FormatModel = cExtend({}, /** @lends $ws.proto.FormatModel.prototype */{
+   var FormatModel = cExtend({}, /** @lends SBIS3.CONTROLS.FormatModel.prototype */{
       $protected: {
          _options: {
             /* позиция курсора: храним индекс группы в модели + позцию символа в ней. */

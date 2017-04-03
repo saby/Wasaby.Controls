@@ -13,6 +13,7 @@
       .controls-DropdownList__textWrapper{
         .flex-shrink(1);
         overflow: hidden;
+        text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
         &:hover{
@@ -118,8 +119,8 @@
     cursor: @DropdownList-cursor;
   }
 
-  &.controls-DropdownList__equalsWidth.controls-FloatArea {
-      .controls-DropdownList__body {
+  &.controls-DropdownList__equalsWidth, &.controls-DropdownList__equalsWidth.controls-DropdownList__type-fastDataFilter {
+      &.controls-FloatArea .controls-DropdownList__body {
          border-radius: @DropdownList-picker-list-border-radius-equal;
       }
    }
@@ -229,22 +230,22 @@
    }
    &.controls-popup-revert-horizontal{
       &.controls-DropdownList__type-fastDataFilter {
+         .flexbox();
+         .flex-direction(column);
          .controls-DropdownList__body {
             border-radius: @DropdownList-picker-list-left-border-radius;
          }
          .controls-DropdownList__header{
-            float: right;
+            .align-self(flex-end);
             .controls-DropdownList{
                margin: @DropdownList-picker-hor-revert-head-margin !important;
             }
-         }
-         .controls-DropdownList__body{
-            margin-top: @DropdownList-height;
          }
       }
    }
    .controls-DropdownList__header {
       display: none;
+      position: relative;
       background: @DropdownList-header-bg;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-head-border-radius;
@@ -457,17 +458,14 @@
 .ws-is-mobile-platform {
    //На мобильной платформе при сглаживании появляется линия в пол пикселя в вертикальной ориентации. Перекрываю через псевдо-элемент
    .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      .controls-DropdownList__header{
-         position: relative;
-         &:before {
-            content: '';
-            position: absolute;
-            right: 0;
-            left: 0;
-            bottom: -1px;
-            height: 2px;
-            background: @DropdownList-header-bg;
-         }
+      .controls-DropdownList__header:before {
+         content: '';
+         position: absolute;
+         right: 0;
+         left: 0;
+         bottom: -1px;
+         height: 2px;
+         background: @DropdownList-header-bg;
       }
    }
 }

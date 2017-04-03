@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
    /**
     * Контрол, отображающий историю фильтров в кнопке фильтров
     * @class SBIS3.CONTROLS.FilterHistory
-    * @extends $ws.proto.CompoundControl
+    * @extends SBIS3.CORE.CompoundControl
     */
 
    var FilterHistory = CompoundControl.extend([], /** @lends SBIS3.CONTROLS.FilterHistory.prototype*/ {

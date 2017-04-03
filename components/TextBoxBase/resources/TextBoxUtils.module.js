@@ -1,7 +1,7 @@
-define('js!SBIS3.CONTROLS.TextBoxUtils', ["Core/constants"], function(constants){
+define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants){
    return {
       getTextFromDropEvent: function(event) {
-         return event.originalEvent.dataTransfer.getData('text')
+         return event.originalEvent.dataTransfer.getData('text');
       },
       getTextFromPasteEvent: function(event) {
          return event.originalEvent.clipboardData ? event.originalEvent.clipboardData.getData('text') : window.clipboardData.getData('text');
