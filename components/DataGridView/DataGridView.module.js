@@ -1161,7 +1161,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._lastLeftPos = null;
       },
 
-      _getDragContainer: function() {
+      _getDragAndDropContainer: function() {
          return this._thead.find('.controls-DataGridView__PartScroll__thumb, .controls-DataGridView__scrolledCell');
       },
 
