@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * TODO: (+) Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно)
        * TODO: (+) Привязка мелких локальных индикаторов
        * TODO: ### Почистить код, откоментировать неоткоментированное
-       * TODO: !### Привести к ES5
+       * TODO: (+-) Привести к ES5
        * TODO: !### Изменить API с более очевидным простейшим способом использования. Описать API. (~WaitIndicatorManager.register(message, deferred, cfg))
        * TODO: !### Повсеместно учесть дуализм Promise/Deferred
        * TODO: ###
@@ -267,271 +267,296 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @class WaitIndicator
        * @protected
        */
-      /**
-       * Конструктор
-       * @public
-       * @constructor
-       * @param {number} id Идентификатор индикатора
-       * @param {HTMLElement} container Контейнер индикатора
-       * @param {string} message Текст сообщения индикатора
-       * @param {object} look Параметры внешнего вида индикатора
-       */
-      function WaitIndicator (id, container, message, look) {
-         //////////////////////////////////////////////////
-         console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
-         //////////////////////////////////////////////////
-         //this._id = id;
-         WaitIndicator_protected.id.set(this, id);
-         //this._container = container;
-         WaitIndicator_protected.container.set(this, container);
-         this.message = message;
-         //this._look = look && typeof look === 'object' ? look : null;
-         WaitIndicator_protected.look.set(this, look);
-         //this._starting = null;
-         //this._suspending = null;
-         //this._removing = null;
-      };
-
-      WaitIndicator.prototype = {
+      var WaitIndicator = (function () {
          /**
-          * Геттер свойства, возвращает идентификатор
+          * Конструктор
           * @public
-          * @type {number}
+          * @constructor
+          * @param {number} id Идентификатор индикатора
+          * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
+          * @param {object} look Параметры внешнего вида индикатора
           */
-         get id () {
-            //return this._id;
-            return WaitIndicator_protected.id.get(this);
-         },
+         function WaitIndicator (id, container, message, look) {
+            //////////////////////////////////////////////////
+            console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
+            //////////////////////////////////////////////////
+            //this._id = id;
+            var pSelf = protect(this);
+            pSelf.id = id;
+            //this._container = container;
+            pSelf.container = container;
+            this.message = message;
+            //this._look = look && typeof look === 'object' ? look : null;
+            pSelf.look = look && typeof look === 'object' ? look : null;
+            //this._starting = null;
+            //this._suspending = null;
+            //this._removing = null;
+         };
 
-         /**
-          * Геттер свойства, возвращает DOM элемент контейнера
-          * @public
-          * @type {HTMLElement}
-          */
-         get container () {
-            //return this._container;
-            return WaitIndicator_protected.container.get(this);
-         },
+         WaitIndicator.prototype = {
+            /**
+             * Геттер свойства, возвращает идентификатор
+             * @public
+             * @type {number}
+             */
+            get id () {
+               //return this._id;
+               return protect(this).id;
+            },
 
-         /**
-          * Геттер свойства, указывает, что индикатор является глобальным
-          * @public
-          * @type {boolean}
-          */
-         get isGlobal () {
-            return !this.container;
-         },
+            /**
+             * Геттер свойства, возвращает DOM элемент контейнера
+             * @public
+             * @type {HTMLElement}
+             */
+            get container () {
+               //return this._container;
+               return protect(this).container;
+            },
 
-         /**
-          * Геттер свойства, указывает, что индикатор показывается в данный момент
-          * @public
-          * @type {boolean}
-          */
-         get isVisible () {
-            var poolItem = WaitIndicatorPool.search(this.container);
-            return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
-         },
+            /**
+             * Геттер свойства, указывает, что индикатор является глобальным
+             * @public
+             * @type {boolean}
+             */
+            get isGlobal () {
+               return !this.container;
+            },
 
-         /**
-          * Геттер свойства, указывает, что элемент индикатора находиться в DOM-е
-          * @public
-          * @type {boolean}
-          */
-         get isInTheDOM () {
-            return WaitIndicatorPool.searchIndex(this.container) !== -1;
-         },
-
-         /**
-          * Сеттер свойства, устанавливает текст сообщения
-          * @public
-          * @type {string}
-          */
-         set message (msg) {
-            var prevMsg = this.message,
-               newMsg = msg && typeof msg === 'string' ? msg : null;
-            if (newMsg !== prevMsg) {
-               //this._message = newMsg;
-               WaitIndicator_protected.message.set(this, newMsg);
+            /**
+             * Геттер свойства, указывает, что индикатор показывается в данный момент
+             * @public
+             * @type {boolean}
+             */
+            get isVisible () {
                var poolItem = WaitIndicatorPool.search(this.container);
-               if (poolItem) {
-                  WaitIndicatorInner.checkMessage(poolItem, prevMsg);
+               return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
+            },
+
+            /**
+             * Геттер свойства, указывает, что элемент индикатора находиться в DOM-е
+             * @public
+             * @type {boolean}
+             */
+            get isInTheDOM () {
+               return WaitIndicatorPool.searchIndex(this.container) !== -1;
+            },
+
+            /**
+             * Сеттер свойства, устанавливает текст сообщения
+             * @public
+             * @type {string}
+             */
+            set message (msg) {
+               var prevMsg = this.message,
+                  newMsg = msg && typeof msg === 'string' ? msg : null;
+               if (newMsg !== prevMsg) {
+                  //this._message = newMsg;
+                  protect(this).message = newMsg;
+                  var poolItem = WaitIndicatorPool.search(this.container);
+                  if (poolItem) {
+                     WaitIndicatorInner.checkMessage(poolItem, prevMsg);
+                  }
                }
-            }
-         },
+            },
 
-         /**
-          * Геттер свойства, возвращает текст сообщения
-          * @public
-          * @type {string}
-          */
-         get message () {
-            //return this._message;
-            return WaitIndicator_protected.message.get(this);
-         },
+            /**
+             * Геттер свойства, возвращает текст сообщения
+             * @public
+             * @type {string}
+             */
+            get message () {
+               //return this._message;
+               return protect(this).message;
+            },
 
-         /**
-          * Геттер свойства, возвращает параметры внешнего вида
-          * @public
-          * @type {object}
-          */
-         get look () {
-            //return this._look;
-            return WaitIndicator_protected.look.get(this);
-         },
+            /**
+             * Геттер свойства, возвращает параметры внешнего вида
+             * @public
+             * @type {object}
+             */
+            get look () {
+               //return this._look;
+               return protect(this).look;
+            },
 
-         /**
-          * Начать показ индикатора через (опциональное) время задержки
-          * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
-          * @public
-          * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
-          */
-         start: function (delay) {
-            //return this._callDelayed('start', '_starting', delay);
-            return this._callDelayed('start', 'starting', delay);
-         },
+            /**
+             * Начать показ индикатора через (опциональное) время задержки
+             * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
+             * @public
+             * @param {number} delay Время задержки в миллисекундах
+             * @return {Promise}
+             */
+            start: function (delay) {
+               //return this._callDelayed('start', '_starting', delay);
+               return this._callDelayed('start', 'starting', delay);
+            },
 
-         /**
-          * ВРЕМЕННО скрыть индикатор (без удаления из DOM) через (опциональное) время задержки
-          * Будьте осторожны при использовании, не забывайте очищать DOM вызовом метода remove
-          * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
-          * @public
-          * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
-          */
-         suspend: function (delay) {
-            //return this._callDelayed('suspend', '_suspending', delay);
-            return this._callDelayed('suspend', 'suspending', delay);
-         },
+            /**
+             * ВРЕМЕННО скрыть индикатор (без удаления из DOM) через (опциональное) время задержки
+             * Будьте осторожны при использовании, не забывайте очищать DOM вызовом метода remove
+             * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
+             * @public
+             * @param {number} delay Время задержки в миллисекундах
+             * @return {Promise}
+             */
+            suspend: function (delay) {
+               //return this._callDelayed('suspend', '_suspending', delay);
+               return this._callDelayed('suspend', 'suspending', delay);
+            },
 
-         /**
-          * Завершить показ индикатора через (опциональное) время задержки
-          * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
-          * @public
-          * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
-          */
-         remove: function (delay) {
-            //return this._callDelayed('remove', '_removing', delay);
-            return this._callDelayed('remove', 'removing', delay);
-         },
+            /**
+             * Завершить показ индикатора через (опциональное) время задержки
+             * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
+             * @public
+             * @param {number} delay Время задержки в миллисекундах
+             * @return {Promise}
+             */
+            remove: function (delay) {
+               //return this._callDelayed('remove', '_removing', delay);
+               return this._callDelayed('remove', 'removing', delay);
+            },
 
-         /**
-          * Общая реализация для методов start, suspend и remove
-          * @protected
-          * @param {string} method Имя подлежащего (protected) метода
-          * @param {string} storing Имя (protected) свойства для хранения данных об отложенном вызове
-          * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
-          */
-         _callDelayed: function (method, storing, delay) {
-            this._clearDelays();
-            if (typeof delay === 'number' && 0 < delay) {
-               var success, fail, promise = new Promise(function (resolve, reject) {
-                  success = resolve;
-                  fail = reject;
-               });
-               //this[storing] = {
-               WaitIndicator_protected[storing].set(this, {
-                  id: setTimeout(function () {
-                     //////////////////////////////////////////////////
-                     console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', WaitIndicator_protected[storing].get(this), ';');
-                     //////////////////////////////////////////////////
-                     WaitIndicatorInner[method](this);
-                     //this[storing].success.call(null, this);
-                     var ms = WaitIndicator_protected[storing];
-                     ms.get(this).success.call(null, this);
+            /**
+             * Общая реализация для методов start, suspend и remove
+             * @protected
+             * @param {string} method Имя подлежащего (protected) метода
+             * @param {string} storing Имя (protected) свойства для хранения данных об отложенном вызове
+             * @param {number} delay Время задержки в миллисекундах
+             * @return {Promise}
+             */
+            _callDelayed: function (method, storing, delay) {
+               this._clearDelays();
+               if (typeof delay === 'number' && 0 < delay) {
+                  var success, fail, promise = new Promise(function (resolve, reject) {
+                     success = resolve;
+                     fail = reject;
+                  });
+                  //this[storing] = {
+                  protect(this)[storing] = {
+                     id: setTimeout(function () {
+                        //////////////////////////////////////////////////
+                        console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', protect(this)[storing], ';');
+                        //////////////////////////////////////////////////
+                        WaitIndicatorInner[method](this);
+                        //this[storing].success.call(null, this);
+                        var pSelf = protect(this);
+                        pSelf[storing].success.call(null, this);
+                        //this[storing] = null;
+                        pSelf[storing] = null;
+                     }.bind(this), delay),
+                     success: success,
+                     fail: fail,
+                     promise: promise
+                  //};
+                  };
+                  return promise.catch(function (err) {});
+               }
+               else {
+                  WaitIndicatorInner[method](this);
+                  return Promise.resolve(this);
+               }
+            },
+
+            /**
+             * Сбросить все таймауты
+             * @protected
+             */
+            _clearDelays: function () {
+               //////////////////////////////////////////////////
+               console.log('DBG: _clearDelays: starting=', protect(this).starting, '; suspending=', protect(this).suspending, '; removing=', protect(this).removing, ';');
+               //////////////////////////////////////////////////
+               //for (var storing of ['_starting', '_suspending', '_removing']) {
+               for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
+                  var storing = storings[i];
+                  //var o = this[storing];
+                  var pSelf = protect(this);
+                  var o = pSelf[storing];
+                  if (o) {
+                     clearTimeout(o.id);
+                     if (o.fail) {
+                        o.fail.call();
+                     }
                      //this[storing] = null;
-                     ms.set(this, null);
-                  }.bind(this), delay),
-                  success: success,
-                  fail: fail,
-                  promise: promise
-               //};
-               });
-               return promise.catch(function (err) {});
+                     pSelf[storing] = null;
+                  }
+               }
+               //////////////////////////////////////////////////
+               console.log('DBG: _clearDelays: starting=', protect(this).starting, '; suspending=', protect(this).suspending, '; removing=', protect(this).removing, ';');
+               //////////////////////////////////////////////////
+            },
+
+            /**
+             * Возвращает обещание, соответствующее последнему актуальному вызову метода start. Если актуального вызова нет - вернётся null
+             * @public
+             * @type {Promise}
+             */
+            get nextStart () {
+               //return this._starting ? this._starting.promise : null;
+               var o = protect(this).starting;
+               return o ? o.promise : null;
+            },
+
+            /**
+             * Возвращает обещание, соответствующее последнему актуальному вызову метода suspend. Если актуального вызова нет - вернётся null
+             * @public
+             * @type {Promise}
+             */
+            get nextSuspend () {
+               //return this._suspending ? this._suspending.promise : null;
+               var o = protect(this).suspending;
+               return o ? o.promise : null;
+            },
+
+            /**
+             * Возвращает обещание, соответствующее последнему актуальному вызову метода remove. Если актуального вызова нет - вернётся null
+             * @public
+             * @type {Promise}
+             */
+            get nextRemove () {
+               //return this._removing ? this._removing.promise : null;
+               var o = protect(this).removing;
+               return o ? o.promise : null;
+            }
+         };
+
+         WaitIndicator.prototype.constructor = WaitIndicator;
+
+         /**
+          * Защищённые члены класа WaitIndicator
+          */
+         var protect = function (self) {
+            var map = protect.members;
+            if (false &&/*###*/ typeof WeakMap != 'undefined') {
+               if (!map) {
+                  map = protect.members = new WeakMap();
+               }
+               if (!map.has(self)) {
+                  map.set(self, {});
+               }
+               return map.get(self);
             }
             else {
-               WaitIndicatorInner[method](this);
-               return Promise.resolve(this);
-            }
-         },
-
-         /**
-          * Сбросить все таймауты
-          * @protected
-          */
-         _clearDelays: function () {
-            //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
-            //////////////////////////////////////////////////
-            //for (var storing of ['_starting', '_suspending', '_removing']) {
-            for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
-               var storing = storings[i];
-               //var o = this[storing];
-               var o = WaitIndicator_protected[storing].get(this);
-               if (o) {
-                  clearTimeout(o.id);
-                  if (o.fail) {
-                     o.fail.call();
-                  }
-                  //this[storing] = null;
-                  WaitIndicator_protected[storing].set(this, null);
+               if (!map) {
+                  map = protect.members = {};
                }
+               var idProp = '__instanceId__';
+               if (!(idProp in self)) {
+                  var n = 'counter' in protect ? protect.counter + 1 : 1;
+                  Object.defineProperty(self, idProp, {value:n});
+                  protect.counter = n;
+               }
+               var id = self[idProp];
+               if (!(id in map)) {
+                  map[id] = {};
+               }
+               return map[id];
             }
-            //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
-            //////////////////////////////////////////////////
-         },
+         };
 
-         /**
-          * Возвращает обещание, соответствующее последнему актуальному вызову метода start. Если актуального вызова нет - вернётся null
-          * @public
-          * @type {Promise}
-          */
-         get nextStart () {
-            //return this._starting ? this._starting.promise : null;
-            var o = WaitIndicator_protected.starting.get(this);
-            return o ? o.promise : null;
-         },
-
-         /**
-          * Возвращает обещание, соответствующее последнему актуальному вызову метода suspend. Если актуального вызова нет - вернётся null
-          * @public
-          * @type {Promise}
-          */
-         get nextSuspend () {
-            //return this._suspending ? this._suspending.promise : null;
-            var o = WaitIndicator_protected.suspending.get(this);
-            return o ? o.promise : null;
-         },
-
-         /**
-          * Возвращает обещание, соответствующее последнему актуальному вызову метода remove. Если актуального вызова нет - вернётся null
-          * @public
-          * @type {Promise}
-          */
-         get nextRemove () {
-            //return this._removing ? this._removing.promise : null;
-            var o = WaitIndicator_protected.removing.get(this);
-            return o ? o.promise : null;
-         }
-      };
-
-      WaitIndicator.prototype.constructor = WaitIndicator;
-
-      /**
-       * Защищённые члены класа WaitIndicator
-       */
-      var WaitIndicator_protected ={
-         id: new WeakMap(),
-         container: new WeakMap(),
-         message: new WeakMap(),
-         look: new WeakMap(),
-         starting: new WeakMap(),
-         suspending: new WeakMap(),
-         removing: new WeakMap()
-      };
+         return WaitIndicator;
+      })();
 
 
 
