@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
       WaitIndicatorManager.putParams = function (params) {
          if (params && typeof params === 'object') {
             //###Object.assign(WaitIndicatorParams, params);
-            for (name in params) {
+            for (var name in params) {
                WaitIndicatorManager.setParam(name, params[name]);
             }
          }
@@ -202,6 +202,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @public
        * @static
        * @param {string} name Имя параметра
+       * @param {number} value Значение параметра
        * @return {number}
        */
       WaitIndicatorManager.setParam = function (name, value) {
@@ -217,7 +218,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @public
        * @static
        * @param {string} name Имя параметра
-       * @return {any}
+       * @return {number}
        */
       WaitIndicatorManager.getParam = function (name) {
          return WaitIndicatorParams[name];
@@ -266,32 +267,32 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @class WaitIndicator
        * @protected
        */
-      class WaitIndicator {
-         /**
-          * Конструктор
-          * @public
-          * @constructor
-          * @param {number} id Идентификатор индикатора
-          * @param {HTMLElement} container Контейнер индикатора
-          * @param {string} message Текст сообщения индикатора
-          * @param {object} look Параметры внешнего вида индикатора
-          */
-         constructor (id, container, message, look) {
-            //////////////////////////////////////////////////
-            console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
-            //////////////////////////////////////////////////
-            //this._id = id;
-            WaitIndicator_protected.id.set(this, id);
-            //this._container = container;
-            WaitIndicator_protected.container.set(this, container);
-            this.message = message;
-            //this._look = look && typeof look === 'object' ? look : null;
-            WaitIndicator_protected.look.set(this, look);
-            //this._starting = null;
-            //this._suspending = null;
-            //this._removing = null;
-         }
+      /**
+       * Конструктор
+       * @public
+       * @constructor
+       * @param {number} id Идентификатор индикатора
+       * @param {HTMLElement} container Контейнер индикатора
+       * @param {string} message Текст сообщения индикатора
+       * @param {object} look Параметры внешнего вида индикатора
+       */
+      function WaitIndicator (id, container, message, look) {
+         //////////////////////////////////////////////////
+         console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
+         //////////////////////////////////////////////////
+         //this._id = id;
+         WaitIndicator_protected.id.set(this, id);
+         //this._container = container;
+         WaitIndicator_protected.container.set(this, container);
+         this.message = message;
+         //this._look = look && typeof look === 'object' ? look : null;
+         WaitIndicator_protected.look.set(this, look);
+         //this._starting = null;
+         //this._suspending = null;
+         //this._removing = null;
+      };
 
+      WaitIndicator.prototype = {
          /**
           * Геттер свойства, возвращает идентификатор
           * @public
@@ -300,7 +301,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          get id () {
             //return this._id;
             return WaitIndicator_protected.id.get(this);
-         }
+         },
 
          /**
           * Геттер свойства, возвращает DOM элемент контейнера
@@ -310,7 +311,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          get container () {
             //return this._container;
             return WaitIndicator_protected.container.get(this);
-         }
+         },
 
          /**
           * Геттер свойства, указывает, что индикатор является глобальным
@@ -319,7 +320,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           */
          get isGlobal () {
             return !this.container;
-         }
+         },
 
          /**
           * Геттер свойства, указывает, что индикатор показывается в данный момент
@@ -329,7 +330,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          get isVisible () {
             var poolItem = WaitIndicatorPool.search(this.container);
             return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
-         }
+         },
 
          /**
           * Геттер свойства, указывает, что элемент индикатора находиться в DOM-е
@@ -338,7 +339,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           */
          get isInTheDOM () {
             return WaitIndicatorPool.searchIndex(this.container) !== -1;
-         }
+         },
 
          /**
           * Сеттер свойства, устанавливает текст сообщения
@@ -356,7 +357,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                   WaitIndicatorInner.checkMessage(poolItem, prevMsg);
                }
             }
-         }
+         },
 
          /**
           * Геттер свойства, возвращает текст сообщения
@@ -366,7 +367,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          get message () {
             //return this._message;
             return WaitIndicator_protected.message.get(this);
-         }
+         },
 
          /**
           * Геттер свойства, возвращает параметры внешнего вида
@@ -376,7 +377,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          get look () {
             //return this._look;
             return WaitIndicator_protected.look.get(this);
-         }
+         },
 
          /**
           * Начать показ индикатора через (опциональное) время задержки
@@ -385,10 +386,10 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise}
           */
-         start (delay) {
+         start: function (delay) {
             //return this._callDelayed('start', '_starting', delay);
             return this._callDelayed('start', 'starting', delay);
-         }
+         },
 
          /**
           * ВРЕМЕННО скрыть индикатор (без удаления из DOM) через (опциональное) время задержки
@@ -398,10 +399,10 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise}
           */
-         suspend (delay) {
+         suspend: function (delay) {
             //return this._callDelayed('suspend', '_suspending', delay);
             return this._callDelayed('suspend', 'suspending', delay);
-         }
+         },
 
          /**
           * Завершить показ индикатора через (опциональное) время задержки
@@ -410,10 +411,10 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise}
           */
-         remove (delay) {
+         remove: function (delay) {
             //return this._callDelayed('remove', '_removing', delay);
             return this._callDelayed('remove', 'removing', delay);
-         }
+         },
 
          /**
           * Общая реализация для методов start, suspend и remove
@@ -423,7 +424,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise}
           */
-         _callDelayed (method, storing, delay) {
+         _callDelayed: function (method, storing, delay) {
             this._clearDelays();
             if (typeof delay === 'number' && 0 < delay) {
                var success, fail, promise = new Promise(function (resolve, reject) {
@@ -454,13 +455,13 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                WaitIndicatorInner[method](this);
                return Promise.resolve(this);
             }
-         }
+         },
 
          /**
           * Сбросить все таймауты
           * @protected
           */
-         _clearDelays () {
+         _clearDelays: function () {
             //////////////////////////////////////////////////
             console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
@@ -480,7 +481,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             //////////////////////////////////////////////////
             console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
-         }
+         },
 
          /**
           * Возвращает обещание, соответствующее последнему актуальному вызову метода start. Если актуального вызова нет - вернётся null
@@ -491,7 +492,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             //return this._starting ? this._starting.promise : null;
             var o = WaitIndicator_protected.starting.get(this);
             return o ? o.promise : null;
-         }
+         },
 
          /**
           * Возвращает обещание, соответствующее последнему актуальному вызову метода suspend. Если актуального вызова нет - вернётся null
@@ -502,7 +503,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             //return this._suspending ? this._suspending.promise : null;
             var o = WaitIndicator_protected.suspending.get(this);
             return o ? o.promise : null;
-         }
+         },
 
          /**
           * Возвращает обещание, соответствующее последнему актуальному вызову метода remove. Если актуального вызова нет - вернётся null
@@ -515,6 +516,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             return o ? o.promise : null;
          }
       };
+
+      WaitIndicator.prototype.constructor = WaitIndicator;
 
       /**
        * Защищённые члены класа WaitIndicator
