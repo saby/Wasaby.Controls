@@ -108,26 +108,38 @@ define('js!SBIS3.CONTROLS.DropdownList',
          return emptyItemProjection.at(0);
       }
 
-      function getSelectedItems(items, keys, idProperty) {
+      function prepareSelectedItems(cfg) {
          //Подготавливаем данные для построения на шаблоне
-         var list;
+         var items = cfg._items,
+             keys = cfg.selectedKeys,
+             list,
+             textArray = [];
          if (items && keys && keys.length > 0){
             list = new List({
                ownerShip: false
             });
             items.each(function (record, index) {
-               var id = record.get(idProperty);
+               var id = record.get(cfg.idProperty);
                for (var i = 0, l = keys.length; i < l; i++) {
                   //Сравниваем с приведением типов, т.к. ключи могут отличаться по типу (0 !== '0')
                   //Зачем такое поведение поддерживалось изначально не знаю. Подобные проверки есть и в других методах (к примеру setSelectedKeys)
                   if (keys[i] == id) {
                      list.add(record);
+                     textArray.push(record.get(cfg.displayProperty));
                      return;
                   }
                }
             });
+            cfg.text = prepareText(textArray);
+            cfg.selectedItems = list;
          }
-         return list;
+      }
+
+      function prepareText(textValue) {
+         if (textValue.length > 1) {
+            return textValue[0] + ' и еще ' + (textValue.length - 1);
+         }
+         return textValue.join('');
       }
 
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
@@ -338,7 +350,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             cfg.pickerClassName += ' controls-DropdownList__picker';
             cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
             if (!cfg.selectedItems) {
-               cfg.selectedItems = getSelectedItems(cfg._items, cfg.selectedKeys, cfg.idProperty);
+               prepareSelectedItems(cfg);
             }
             return cfg;
          },
@@ -847,17 +859,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                pickerContainer.find('.controls-DropdownList__item__selected').removeClass('controls-DropdownList__item__selected');
                pickerContainer.find('[data-id="' + id + '"]').addClass('controls-DropdownList__item__selected');
             }
-            this._setText(this._prepareText(textValue));
+            this._setText(prepareText(textValue));
             this._redrawHead(isDefaultIdSelected);
             this._setHasMoreButtonVisibility();
             this._resizeFastDataFilter();
-         },
-
-         _prepareText: function(textValue){
-            if (textValue.length > 1){
-               return textValue[0] + ' и еще ' + (textValue.length - 1);
-            }
-            return textValue.join('');
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
