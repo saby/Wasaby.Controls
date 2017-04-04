@@ -115,6 +115,8 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
        * @see setSelectedItem
        */
       getSelectedItem: function(loadItem) {
+         this._syncSelectedItem();
+         
          if(!loadItem) {
             return this._options.selectedItem;
          } else if (this._loadItemDeferred && !this._loadItemDeferred.isReady()) {
@@ -123,8 +125,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
 
          var dResult = new Deferred(),
              selItem, selKey, self = this;
-
-         this._syncSelectedItem();
+         
          this._loadItemDeferred = dResult;
 
          selItem = this._options.selectedItem;
