@@ -466,7 +466,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
             //for (var storing of ['_starting', '_suspending', '_removing']) {
-            for (var storing of ['starting', 'suspending', 'removing']) {
+            for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
+               var storing = storings[i];
                //var o = this[storing];
                var o = WaitIndicator_protected[storing].get(this);
                if (o) {
@@ -569,7 +570,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             else {
                 // Индикатора в DOM-е не содержиться
                var spinner = WaitIndicatorSpinner.create(container, indicator.message, indicator.look);
-               WaitIndicatorPool.add({container, spinner, indicators:[indicator]});
+               WaitIndicatorPool.add({container:container, spinner:spinner, indicators:[indicator]});
             }
          },
 
@@ -602,16 +603,25 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                isGlobal = !container,
                poolItem = WaitIndicatorPool.search(container);
             if (poolItem) {
-               var id = indicator.id,
-                  i = poolItem.indicators.length ? poolItem.indicators.findIndex(function (item) { return item.id === id; }) : -1;
+               var inds = poolItem.indicators,
+                  id = indicator.id,
+                  i = -1;
+               if (inds.length) {
+                  for (var j = 0; j < inds.length; j++) {
+                     if (inds[j].id === id) {
+                        i = j;
+                        break;
+                     }
+                  }
+               }
                if (i !== -1) {
-                  if (1 < poolItem.indicators.length) {
-                     poolItem.indicators.splice(i, 1);
+                  if (1 < inds.length) {
+                     inds.splice(i, 1);
                      this.checkMessage(poolItem, indicator.message);
                   }
                   else {
                      if (!force) {
-                        poolItem.indicators.splice(i, 1);
+                        inds.splice(i, 1);
                         WaitIndicatorSpinner.hide(poolItem.spinner);
                         // Начать отсчёт времени до принудительного удаления из DOM-а
                         poolItem.clearing = setTimeout(function () {
@@ -709,7 +719,15 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @return {number}
           */
          searchIndex: function (container) {
-            return this._list.length ? this._list.findIndex(function (item) { return item.container === container; }) : -1;
+            if (this._list.length) {
+               for (var j = 0; j < this._list.length; j++) {
+                  var item = this._list[j];
+                  if (item.container === container) {
+                     return j;
+                  }
+               }
+            }
+            return -1;
          },
 
          /**
