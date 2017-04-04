@@ -16,7 +16,7 @@
 }
 
 .controls-CheckBox__caption_size {
-  font-size: @font-basic-size;
+  font-size: @default-font-size;
   width: calc(e("100% - 24px"));
   padding: @check-box-caption-padding;
 }
@@ -61,7 +61,7 @@
 
 .ws-enabled {
   &.controls-CheckBox {
-    .default-pointer-cursor();
+    cursor: @default-hover-cursor;
   }
   .controls-CheckBox__caption {
     color: @text-color;
@@ -83,7 +83,7 @@
 
 .ws-disabled {
   &.controls-CheckBox {
-  .default-default-cursor();
+  cursor: @disabled-hover-cursor;
   }
   .controls-CheckBox__caption {
     color: @disabled-text-color;
