@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Clickable', [
              *     <option name="clickThrottle">false</option>
              * </pre>
              */
-            clickThrottle: true
+            clickThrottle: false
          },
          _keysWeHandle: [
             constants.key.enter,

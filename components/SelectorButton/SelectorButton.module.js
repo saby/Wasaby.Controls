@@ -102,6 +102,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            clickThrottle: true,
             _preRender: itemTemplateRender,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
