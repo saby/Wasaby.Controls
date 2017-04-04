@@ -61,11 +61,13 @@
        * TODO: (+) Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
        * TODO: (+) Возможно, стоит ограничит набор глобальных параметров дефолтными ?
        * TODO: (+-) Выделить защищённые члены классов в важных местах
-       * TODO: (+-) Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно)
+       * TODO: (+) Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно)
        * TODO: (+) Привязка мелких локальных индикаторов
-       * TODO: ###
        * TODO: ### Почистить код, откоментировать неоткоментированное
-       * TODO: ### Привести к ES5
+       * TODO: !### Привести к ES5
+       * TODO: !### Изменить API с более очевидным простейшим способом использования. Описать API. (~WaitIndicatorManager.register(message, deferred, cfg))
+       * TODO: !### Повсеместно учесть дуализм Promise/Deferred
+       * TODO: ###
        */
 
 
@@ -787,7 +789,7 @@
             p.innerHTML = html;
             let spinner = p.firstElementChild;
             p.removeChild(spinner);
-            /*###if (hasMsg) {
+            /*if (hasMsg) {
                WaitIndicatorSpinner.changeMessage(spinner, message);
             }*/
             let cls = spinner.classList;
@@ -847,14 +849,7 @@
           * @param {HTMLElement} parent Родительский элемент DOM-а (опционально)
           */
          static _place (spinner, parent) {
-            //////////////////////////////////////////////////
-            console.log('DBG: _place: spinner=', spinner, ';');
-            console.log('DBG: _place: parent=', parent, ';');
-            //////////////////////////////////////////////////
             let p = spinner.parentNode || parent;
-            //////////////////////////////////////////////////
-            console.log('DBG: _place: p=', p, ';');
-            //////////////////////////////////////////////////
             if (p) {
                let s = spinner.style;
                s.left = p.offsetLeft + 'px';
@@ -899,8 +894,8 @@
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
          static show (spinner) {
-            WaitIndicatorSpinner._watchResize(spinner);
             spinner.style.display = '';
+            WaitIndicatorSpinner._watchResize(spinner);
          }
 
          /**
@@ -909,8 +904,8 @@
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
          static hide (spinner) {
-            spinner.style.display = 'none';
             WaitIndicatorSpinner._unwatchResize(spinner);
+            spinner.style.display = 'none';
          }
 
          /**
