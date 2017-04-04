@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                hidden = options ? options.hidden : false;
 
             let look = {overlay:null, small:false, align:null};
-            Object.keys(look).forEach(name => {
+            Object.keys(look).forEach(function (name) {
                if (name in options) {
                   look[name] = options[name];
                }
@@ -153,11 +153,11 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             let indicator;
             if (isGlobal) {
                // Запрошен глобальный индикатор, он может быть только один - попробовать найти существующий
-               indicator = list.length ? list.find(item => item.isGlobal) : null;
+               indicator = list.length ? list.find(function (item) { return item.isGlobal; }) : null;
             }
             else {
                // Запрошен локальный индикатор, их может быть много, но только один на каждый объект привязки
-               indicator = list.length ? list.find(item => item.container === container) : null;
+               indicator = list.length ? list.find(function (item) { return item.container === container; }) : null;
             }
             if (indicator) {
                // Найден существующий индикатор - использовать применимые опции
@@ -431,15 +431,15 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          _callDelayed (method, storing, delay) {
             this._clearDelays();
             if (typeof delay === 'number' && 0 < delay) {
-               let success, fail, promise = new Promise((resolve, reject) => {
+               let success, fail, promise = new Promise(function (resolve, reject) {
                   success = resolve;
                   fail = reject;
                });
                //this[storing] = {
                WaitIndicator_protected[storing].set(this, {
-                  id: setTimeout(() => {
+                  id: setTimeout(function () {
                      //////////////////////////////////////////////////
-                     console.log('DBG: ' + method + ': TIMEOUT this.' + storing + '=', WaitIndicator_protected[storing].get(this), ';');
+                     console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', WaitIndicator_protected[storing].get(this), ';');
                      //////////////////////////////////////////////////
                      WaitIndicatorInner[method](this);
                      //this[storing].success.call(null, this);
@@ -447,13 +447,13 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                      ms.get(this).success.call(null, this);
                      //this[storing] = null;
                      ms.set(this, null);
-                  }, delay),
+                  }.bind(this), delay),
                   success: success,
                   fail: fail,
                   promise: promise
                //};
                });
-               return promise.catch((err) => {});
+               return promise.catch(function (err) {});
             }
             else {
                WaitIndicatorInner[method](this);
@@ -537,21 +537,21 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
 
       /**
-       * Класс с внутренними методами модуля
-       * @class WaitIndicatorInner
+       * Объект с внутренними методами модуля
+       * @type {object}
        * @protected
        */
-      class WaitIndicatorInner {
+      let WaitIndicatorInner = {
          /**
           * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
           * @public
           * @param {WaitIndicator} indicator Индикатор
           */
-         static start (indicator) {
+         start (indicator) {
             let container = indicator.container;
             let isGlobal = !container;
             if (isGlobal) {
-               WaitIndicatorPool.each(item => {
+               WaitIndicatorPool.each(function (item) {
                   if (item.container) {
                      WaitIndicatorSpinner.hide(item.spinner);
                      item.isLocked = true;
@@ -566,32 +566,32 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                }
                poolItem.indicators.push(indicator);
                // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               WaitIndicatorInner._unclear(poolItem);
+               this._unclear(poolItem);
             }
             else {
                 // Индикатора в DOM-е не содержиться
                let spinner = WaitIndicatorSpinner.create(container, indicator.message, indicator.look);
                WaitIndicatorPool.add({container, spinner, indicators:[indicator]});
             }
-         }
+         },
 
          /**
           * Запросить скрытие DOM-элемент индикатора без удаления из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
           * @param {WaitIndicator} indicator Индикатор
           */
-         static suspend (indicator) {
-            WaitIndicatorInner._remove(indicator, false);
-         }
+         suspend (indicator) {
+         this._remove(indicator, false);
+         },
 
          /**
           * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
           * @param {WaitIndicator} indicator Индикатор
           */
-         static remove (indicator) {
-            WaitIndicatorInner._remove(indicator, true);
-         }
+         remove (indicator) {
+         this._remove(indicator, true);
+         },
 
          /**
           * Общая реализация для методов suspend и remove
@@ -599,57 +599,57 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {WaitIndicator} indicator Индикатор
           * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
           */
-         static _remove (indicator, force) {
+         _remove (indicator, force) {
             let container = indicator.container;
             let isGlobal = !container;
             let poolItem = WaitIndicatorPool.search(container);
             if (poolItem) {
                let id = indicator.id;
-               let i = poolItem.indicators.length ? poolItem.indicators.findIndex(item => item.id === id) : -1;
+               let i = poolItem.indicators.length ? poolItem.indicators.findIndex(function (item) { return item.id === id; }) : -1;
                if (i !== -1) {
                   if (1 < poolItem.indicators.length) {
                      poolItem.indicators.splice(i, 1);
-                     WaitIndicatorInner.checkMessage(poolItem, indicator.message);
+                     this.checkMessage(poolItem, indicator.message);
                   }
                   else {
                      if (!force) {
                         poolItem.indicators.splice(i, 1);
                         WaitIndicatorSpinner.hide(poolItem.spinner);
                         // Начать отсчёт времени до принудительного удаления из DOM-а
-                        poolItem.clearing = setTimeout(() => {
-                           WaitIndicatorInner._delete(poolItem);
-                        }, Math.min(WaitIndicatorManager.getParam('suspendLifetime'), WaitIndicatorManager.SUSPEND_MAX_LIFETIME));
+                        poolItem.clearing = setTimeout(function () {
+                           this._delete(poolItem);
+                        }.bind(this), Math.min(WaitIndicatorManager.getParam('suspendLifetime'), WaitIndicatorManager.SUSPEND_MAX_LIFETIME));
                      }
                      else {
                         // Удалить из DOM-а и из пула
-                        WaitIndicatorInner._delete(poolItem);
+                        this._delete(poolItem);
                      }
                   }
                }
             }
             if (isGlobal) {
-               WaitIndicatorPool.each(item => {
+               WaitIndicatorPool.each(function (item) {
                   if (item.container) {
                      WaitIndicatorSpinner.show(item.spinner);
                      item.isLocked = false;
                   }
                });
             }
-         }
+         },
 
          /**
           * Удалить из DOM-а и из пула
           * @protected
           * @param {object} poolItem Элемент пула
           */
-         static _delete (poolItem) {
+         _delete (poolItem) {
             // Сбросить отсчёт времени до принудительного удаления из DOM-а
-            WaitIndicatorInner._unclear(poolItem);
+            this._unclear(poolItem);
             // Удалить из DOM-а
             WaitIndicatorSpinner.remove(poolItem.spinner);
             // Удалить из пула
             WaitIndicatorPool.remove(poolItem);
-         }
+         },
 
          /**
           * Проверить, и обновить, если нужно, отображаемое сообщение
@@ -657,7 +657,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {object} poolItem Элемент пула
           * @param {string} prevMessage Текущее (отображаемое) сообщение
           */
-         static checkMessage (poolItem, prevMessage) {
+         checkMessage (poolItem, prevMessage) {
             let inds = poolItem.indicators;
             if (inds.length) {
                let msg = inds[0].message;
@@ -665,14 +665,14 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                   WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
                }
             }
-         }
+         },
 
          /**
           * Сбросить отсчёт времени до принудительного удаления из DOM-а
           * @protected
           * @param {object} poolItem Элемент пула
           */
-         static _unclear (poolItem) {
+         _unclear (poolItem) {
             if ('clearing' in poolItem) {
                clearTimeout(poolItem.clearing);
                delete poolItem.clearing;
@@ -711,7 +711,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @return {number}
           */
          searchIndex (container) {
-            return this._list.length ? this._list.findIndex(item => item.container === container) : -1;
+            return this._list.length ? this._list.findIndex(function (item) { return item.container === container; }) : -1;
          },
 
          /**
@@ -752,11 +752,11 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
 
       /**
-       * Класс в котором собраны методы, непосредственно оперирующими с DOM-ом
-       * @class WaitIndicatorSpinner
+       * Объект, в котором собраны методы, непосредственно оперирующими с DOM-ом
        * @protected
+       * @type {object}
        */
-      class WaitIndicatorSpinner {
+      let WaitIndicatorSpinner = {
          /**
           * Создать и добавить в DOM элемент индикатора
           * @public
@@ -765,7 +765,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {object} look Параметры внешнего вида индикатора
           * @return {HTMLElement}
           */
-         static create (container, message, look) {
+         create (container, message, look) {
             //###let _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');
             //////////////////////////////////////////////////
             console.log('DBG: Spinner create: look=', look, ';');
@@ -778,7 +778,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             let spinner = p.firstElementChild;
             p.removeChild(spinner);
             /*if (hasMsg) {
-               WaitIndicatorSpinner.changeMessage(spinner, message);
+               this.changeMessage(spinner, message);
             }*/
             let cls = spinner.classList;
             cls.add(container ? 'ws-wait-indicator_local' : 'ws-wait-indicator_global');
@@ -806,9 +806,9 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             if (hasMsg) {
                cls.add('ws-wait-indicator_text');
             }
-            WaitIndicatorSpinner.insert(container, spinner);
+            this.insert(container, spinner);
             return spinner;
-         }
+         },
 
          /**
           * Добавить в DOM элемент индикатора
@@ -816,19 +816,19 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {HTMLElement} container Контейнер индикатора
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static insert (container, spinner) {
+         insert (container, spinner) {
             let p = container || document.body;
             if (p !== spinner.parentNode) {
                let needPlace = !!container && getComputedStyle(p, null).position === 'static';
                if (needPlace) {
-                  WaitIndicatorSpinner._place(spinner, p);
+                  this._place(spinner, p);
                }
                p.insertBefore(spinner, p.firstChild);
                if (needPlace) {
-                  WaitIndicatorSpinner._watchResize(spinner);
+                  this._watchResize(spinner);
                }
             }
-         }
+         },
 
          /**
           * Позиционировать элемент индикатора на странице
@@ -836,7 +836,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {HTMLElement} spinner DOM-элемент индикатора
           * @param {HTMLElement} parent Родительский элемент DOM-а (опционально)
           */
-         static _place (spinner, parent) {
+         _place (spinner, parent) {
             let p = spinner.parentNode || parent;
             if (p) {
                let s = spinner.style;
@@ -845,20 +845,20 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                s.width = p.offsetWidth + 'px';
                s.height = p.offsetHeight + 'px';
             }
-         }
+         },
 
          /**
           * Удалить из DOM элемент индикатора
           * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static remove (spinner) {
+         remove (spinner) {
             let p = spinner.parentNode;
             if (p) {
-               WaitIndicatorSpinner._unwatchResize(spinner);
+               this._unwatchResize(spinner);
                p.removeChild(spinner);
             }
-         }
+         },
 
          /**
           * Изменить сообщение в DOM-элементе индикатора
@@ -866,35 +866,35 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {HTMLElement} spinner DOM-элемент индикатора
           * @param {string} message Текст сообщения индикатора
           */
-         static changeMessage (spinner, message) {
+         changeMessage (spinner, message) {
             if (!('ws' in spinner)) {
                spinner.ws = {};
             }
             if (!('message' in spinner.ws)) {
                spinner.ws.message = [].slice.call(spinner.querySelectorAll('[data-node="message"]'));
             }
-            spinner.ws.message.forEach(node => {node.innerHTML = message || ''});
-         }
+            spinner.ws.message.forEach(function (node) { node.innerHTML = message || ''; });
+         },
 
          /**
           * Показать временно скрытый элемент индикатора
           * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static show (spinner) {
+         show (spinner) {
             spinner.style.display = '';
-            WaitIndicatorSpinner._watchResize(spinner);
-         }
+            this._watchResize(spinner);
+         },
 
          /**
           * Временно скрыть элемент индикатора
           * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static hide (spinner) {
-            WaitIndicatorSpinner._unwatchResize(spinner);
+         hide (spinner) {
+            this._unwatchResize(spinner);
             spinner.style.display = 'none';
-         }
+         },
 
          /**
           * Определить, является ли элемент индикатора видимым
@@ -902,31 +902,31 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           * @param {HTMLElement} spinner DOM-элемент индикатора
           * @return {boolean}
           */
-         static isVisible (spinner) {
+         isVisible (spinner) {
             return getComputedStyle(spinner, null).style.display !== 'none';
-         }
+         },
 
          /**
           * Включить наблюдение за изменением размеров страницы
           * @protected
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static _watchResize (spinner) {
+         _watchResize (spinner) {
             if (!('ws' in spinner)) {
                spinner.ws = {};
             }
             if (!('onResize' in spinner.ws)) {
-               spinner.ws.onResize = WaitIndicatorSpinner._place.bind(null, spinner);
+               spinner.ws.onResize = this._place.bind(null, spinner);
             }
             window.addEventListener('resize', spinner.ws.onResize);
-         }
+         },
 
          /**
           * Выключить наблюдение за изменением размеров страницы
           * @protected
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         static _unwatchResize (spinner) {
+         _unwatchResize (spinner) {
             if (spinner.ws && spinner.ws.onResize) {
                window.removeEventListener('resize', spinner.ws.onResize);
             }
