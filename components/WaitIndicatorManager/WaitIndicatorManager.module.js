@@ -1,4 +1,7 @@
-﻿define('js!SBIS3.CONTROLS.WaitIndicatorManager'/*###WaitIndicatorManager.module*/,
+﻿/**
+ * Модуль WaitIndicatorManager
+ */
+define('js!SBIS3.CONTROLS.WaitIndicatorManager',
    [
       'css!SBIS3.CONTROLS.WaitIndicatorManager'
    ],
@@ -73,7 +76,9 @@
 
 
       /**
-       * ###
+       * Класс для создания индикаторов ожидания завершения процессов
+       * @class SBIS3.CONTROLS.WaitIndicatorManager
+       * @public
        */
       class WaitIndicatorManager {
          /**
@@ -107,10 +112,10 @@
          }
 
          /**
-          * ###Создаёт### индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями
+          * Возвращает индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями
           * @public
           * @param {object} options Опции конфигурации
-          * @param {###Component|jQuery|HTMLElement} options.target Объект привязки индикатора
+          * @param {jQuery|HTMLElement} options.target Объект привязки индикатора
           * @param {boolean} options.delay Задержка перед началом показа/скрытия индикатора
           * @param {boolean} options.hidden Состояние - скрыть / показать
           * @return {WaitIndicator}
@@ -130,9 +135,6 @@
             });
 
             let id = ++WaitIndicatorCounter;
-            //////////////////////////////////////////////////
-            console.log('DBG: getWaitIndicator: id=', id, ';');
-            //////////////////////////////////////////////////
             let container = WaitIndicatorManager._getContainer(target);
             let indicator = new WaitIndicator(id, container, message, look);
             if (!hidden) {
@@ -147,9 +149,6 @@
             // Запрошен ли глобальный индикатор?
             let container = WaitIndicatorManager._getContainer(target);
             let isGlobal = !container;
-            //////////////////////////////////////////////////
-            console.log('DBG: getWaitIndicator: isGlobal=', isGlobal, ';');
-            //////////////////////////////////////////////////
 
             let indicator;
             if (isGlobal) {
@@ -172,9 +171,6 @@
             else {
                // индикатор не найден - создать новый
                let id = ++WaitIndicatorCounter;
-               //////////////////////////////////////////////////
-               console.log('DBG: getWaitIndicator: id=', id, ';');
-               //////////////////////////////////////////////////
                indicator = new WaitIndicator(id, container, message);
                if (!hidden) {
                   indicator.start(delay);
@@ -235,19 +231,13 @@
           * Определить элемент DOM, соответствующий указанному объекту привязки
           * @protected
           * @static
-          * @param {###Component|jQuery|HTMLElement} target Объект привязки индикатора
+          * @param {jQuery|HTMLElement} target Объект привязки индикатора
           * @return {HTMLElement}
           */
          static _getContainer (target) {
-            //////////////////////////////////////////////////
-            console.log('DBG: _getContainer: (target && typeof target === object)=', (target && typeof target === 'object'), ';');
-            //////////////////////////////////////////////////
             if (!target || typeof target !== 'object') {
                return null;
             }
-            //////////////////////////////////////////////////
-            console.log('DBG: _getContainer: (target.jquery && typeof target.jquery === string)=', (target.jquery && typeof target.jquery === 'string'), ';');
-            //////////////////////////////////////////////////
             let container = target;
             if (target.jquery && typeof target.jquery === 'string') {
                if (!target.length) {
@@ -278,6 +268,8 @@
 
       /**
        * Класс содержащий методы управления индикатором
+       * @class WaitIndicator
+       * @protected
        */
       class WaitIndicator {
          /**
@@ -475,7 +467,7 @@
           */
          _clearDelays () {
             //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: this._starting=', WaitIndicator_protected.starting.get(this), '; this._suspending=', WaitIndicator_protected.suspending.get(this), '; this._removing=', WaitIndicator_protected.removing.get(this), ';');
+            console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
             //for (let storing of ['_starting', '_suspending', '_removing']) {
             for (let storing of ['starting', 'suspending', 'removing']) {
@@ -491,7 +483,7 @@
                }
             }
             //////////////////////////////////////////////////
-            console.log('DBG: _clearDelays: this._starting=', WaitIndicator_protected.starting.get(this), '; this._suspending=', WaitIndicator_protected.suspending.get(this), '; this._removing=', WaitIndicator_protected.removing.get(this), ';');
+            console.log('DBG: _clearDelays: starting=', WaitIndicator_protected.starting.get(this), '; suspending=', WaitIndicator_protected.suspending.get(this), '; removing=', WaitIndicator_protected.removing.get(this), ';');
             //////////////////////////////////////////////////
          }
 
@@ -546,6 +538,8 @@
 
       /**
        * Класс с внутренними методами модуля
+       * @class WaitIndicatorInner
+       * @protected
        */
       class WaitIndicatorInner {
          /**
@@ -577,13 +571,7 @@
             else {
                 // Индикатора в DOM-е не содержиться
                let spinner = WaitIndicatorSpinner.create(container, indicator.message, indicator.look);
-               //////////////////////////////////////////////////
-               console.log('DBG: start: spinner=', spinner, ';');
-               //////////////////////////////////////////////////
                WaitIndicatorPool.add({container, spinner, indicators:[indicator]});
-               //////////////////////////////////////////////////
-               console.log('DBG: start: WaitIndicatorPool._list=', WaitIndicatorPool._list, ';');
-               //////////////////////////////////////////////////
             }
          }
 
@@ -642,7 +630,7 @@
             if (isGlobal) {
                WaitIndicatorPool.each(item => {
                   if (item.container) {
-                     WaitIndicatorSpinner.show(item.spinner);//###.insert(item.container, item.spinner)
+                     WaitIndicatorSpinner.show(item.spinner);
                      item.isLocked = false;
                   }
                });
@@ -688,9 +676,6 @@
             if ('clearing' in poolItem) {
                clearTimeout(poolItem.clearing);
                delete poolItem.clearing;
-               //////////////////////////////////////////////////
-               console.log('DBG: _unclear: (clearing in poolItem)=', ('clearing' in poolItem), ';');
-               //////////////////////////////////////////////////
             }
          }
       };
@@ -700,6 +685,7 @@
       /**
        * Пул содержащий информацию о находящихся в DOM-е элементах индикаторов
        * @type {object}
+       * @protected
        */
       let WaitIndicatorPool = {
          /**
@@ -746,7 +732,7 @@
           */
          remove (item) {
             if (this._list.length) {
-               let i = this._list.indexOf(item);//###.findIndex(v => v === item)
+               let i = this._list.indexOf(item);
                if (i !== -1) {
                   this._list.splice(i, 1);
                }
@@ -761,12 +747,14 @@
          each (func) {
             this._list.forEach(func);
          }
-};
+      };
 
 
 
       /**
        * Класс в котором собраны методы, непосредственно оперирующими с DOM-ом
+       * @class WaitIndicatorSpinner
+       * @protected
        */
       class WaitIndicatorSpinner {
          /**
