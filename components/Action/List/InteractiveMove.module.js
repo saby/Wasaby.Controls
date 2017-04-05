@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             var config = InteractiveMove.superclass._getDialogConfig.call(this, meta),
                movedItems = meta.movedItems;
             cMerge(config, {
-               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
+               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись'), ' ' + rk('записи')) + ' ' + rk('в'),
                opener: this._getListView()
             }, {preferSource: true});
             return config;
