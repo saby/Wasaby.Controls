@@ -385,17 +385,14 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             //////////////////////////////////////////////////
             console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
             //////////////////////////////////////////////////
-            //this._id = id;
             var pSelf = protect(this);
             pSelf.id = id;
-            //this._container = container;
             pSelf.container = container;
             this.message = message;
-            //this._look = look && typeof look === 'object' ? look : null;
             pSelf.look = look && typeof look === 'object' ? look : null;
-            //this._starting = null;
-            //this._suspending = null;
-            //this._removing = null;
+            //pSelf.starting = null;
+            //pSelf.suspending = null;
+            //pSelf.removing = null;
          };
 
          /**
@@ -410,7 +407,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @type {number}
              */
             get id () {
-               //return this._id;
                return protect(this).id;
             },
 
@@ -420,7 +416,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @type {HTMLElement}
              */
             get container () {
-               //return this._container;
                return protect(this).container;
             },
 
@@ -461,7 +456,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                var prevMsg = this.message,
                   newMsg = msg && typeof msg === 'string' ? msg : null;
                if (newMsg !== prevMsg) {
-                  //this._message = newMsg;
                   protect(this).message = newMsg;
                   var poolItem = WaitIndicatorPool.search(this.container);
                   if (poolItem) {
@@ -476,7 +470,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @type {string}
              */
             get message () {
-               //return this._message;
                return protect(this).message;
             },
 
@@ -486,7 +479,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @type {object}
              */
             get look () {
-               //return this._look;
                return protect(this).look;
             },
 
@@ -498,7 +490,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @return {Promise}
              */
             start: function (delay) {
-               //return this._callDelayed('start', '_starting', delay);
                return this._callDelayed('start', 'starting', delay);
             },
 
@@ -511,7 +502,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @return {Promise}
              */
             suspend: function (delay) {
-               //return this._callDelayed('suspend', '_suspending', delay);
                return this._callDelayed('suspend', 'suspending', delay);
             },
 
@@ -523,7 +513,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @return {Promise}
              */
             remove: function (delay) {
-               //return this._callDelayed('remove', '_removing', delay);
                return this._callDelayed('remove', 'removing', delay);
             },
 
@@ -536,29 +525,42 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @return {Promise}
              */
             _callDelayed: function (method, storing, delay) {
-               this._clearDelays();
+               var pSelf = protect(this);
+               //////////////////////////////////////////////////
+               console.log('DBG: _callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
+               //////////////////////////////////////////////////
+               for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
+                  var storing = storings[i];
+                  var o = pSelf[storing];
+                  if (o) {
+                     clearTimeout(o.id);
+                     if (o.fail) {
+                        o.fail.call();
+                     }
+                     pSelf[storing] = null;
+                  }
+               }
+               //////////////////////////////////////////////////
+               console.log('DBG: callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
+               //////////////////////////////////////////////////
                if (typeof delay === 'number' && 0 < delay) {
                   var success, fail, promise = new Promise(function (resolve, reject) {
                      success = resolve;
                      fail = reject;
                   });
-                  //this[storing] = {
-                  protect(this)[storing] = {
+                  pSelf[storing] = {
                      id: setTimeout(function () {
+                        var pSelf = protect(this);
                         //////////////////////////////////////////////////
-                        console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', protect(this)[storing], ';');
+                        console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', pSelf[storing], ';');
                         //////////////////////////////////////////////////
                         WaitIndicatorInner[method](this);
-                        //this[storing].success.call(null, this);
-                        var pSelf = protect(this);
                         pSelf[storing].success.call(null, this);
-                        //this[storing] = null;
                         pSelf[storing] = null;
                      }.bind(this), delay),
                      success: success,
                      fail: fail,
                      promise: promise
-                  //};
                   };
                   return promise.catch(function (err) {});
                }
@@ -569,40 +571,11 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             },
 
             /**
-             * Сбросить все таймауты
-             * @protected
-             */
-            _clearDelays: function () {
-               //////////////////////////////////////////////////
-               console.log('DBG: _clearDelays: starting=', protect(this).starting, '; suspending=', protect(this).suspending, '; removing=', protect(this).removing, ';');
-               //////////////////////////////////////////////////
-               //for (var storing of ['_starting', '_suspending', '_removing']) {
-               for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
-                  var storing = storings[i];
-                  //var o = this[storing];
-                  var pSelf = protect(this);
-                  var o = pSelf[storing];
-                  if (o) {
-                     clearTimeout(o.id);
-                     if (o.fail) {
-                        o.fail.call();
-                     }
-                     //this[storing] = null;
-                     pSelf[storing] = null;
-                  }
-               }
-               //////////////////////////////////////////////////
-               console.log('DBG: _clearDelays: starting=', protect(this).starting, '; suspending=', protect(this).suspending, '; removing=', protect(this).removing, ';');
-               //////////////////////////////////////////////////
-            },
-
-            /**
              * Возвращает обещание, соответствующее последнему актуальному вызову метода start. Если актуального вызова нет - вернётся null
              * @public
              * @type {Promise}
              */
             get nextStart () {
-               //return this._starting ? this._starting.promise : null;
                var o = protect(this).starting;
                return o ? o.promise : null;
             },
@@ -613,7 +586,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @type {Promise}
              */
             get nextSuspend () {
-               //return this._suspending ? this._suspending.promise : null;
                var o = protect(this).suspending;
                return o ? o.promise : null;
             },
@@ -624,7 +596,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
              * @type {Promise}
              */
             get nextRemove () {
-               //return this._removing ? this._removing.promise : null;
                var o = protect(this).removing;
                return o ? o.promise : null;
             }
