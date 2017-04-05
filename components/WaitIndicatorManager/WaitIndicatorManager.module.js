@@ -132,9 +132,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             }
          });
 
-         var id = ++WaitIndicatorCounter,
-            container = WaitIndicatorInner.getContainer(target),
-            indicator = new WaitIndicator(id, container, message, look);
+         var indicator = new WaitIndicator(WaitIndicatorInner.getContainer(target), message, look);
          if (!hidden) {
             indicator.start(0 <= delay ? delay : WaitIndicatorManager.getParam('defaultDelay'));
          }
@@ -167,8 +165,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          }
          else {
             // индикатор не найден - создать новый
-            var id = ++WaitIndicatorCounter;
-            indicator = new WaitIndicator(id, container, message);
+            var indicator = new WaitIndicator(container, message);
             if (!hidden) {
                indicator.start(delay);
             }
@@ -224,13 +221,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
       WaitIndicatorManager.getParam = function (name) {
          return WaitIndicatorParams[name];
       };
-
-      /**
-       * Счётчик экземпляров
-       * @protected
-       * @type {number}
-       */
-      var WaitIndicatorCounter = 0;
 
       /**
        * Глобальные параметры
@@ -356,17 +346,16 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * Конструктор
        * @public
        * @constructor
-       * @param {number} id Идентификатор индикатора
        * @param {HTMLElement} container Контейнер индикатора
        * @param {string} message Текст сообщения индикатора
        * @param {object} look Параметры внешнего вида индикатора
        */
-      function WaitIndicator (id, container, message, look) {
+      function WaitIndicator (container, message, look) {
          //////////////////////////////////////////////////
          console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
          //////////////////////////////////////////////////
          var pSelf = WaitIndicatorProtected(this);
-         pSelf.id = id;
+         pSelf.id = ++WaitIndicatorCounter;
          pSelf.container = container;
          this.message = message;
          pSelf.look = look && typeof look === 'object' ? look : null;
@@ -381,6 +370,13 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @type {function}
        */
       var WaitIndicatorProtected = Pr0tected.create();
+
+      /**
+       * Счётчик экземпляров класа WaitIndicator
+       * @protected
+       * @type {number}
+       */
+      var WaitIndicatorCounter = 0;
 
       WaitIndicator.prototype = {
          /**
