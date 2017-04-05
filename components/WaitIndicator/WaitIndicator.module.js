@@ -191,19 +191,31 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @param {jQuery|HTMLElement} target Объект привязки индикатора
        * @param {string} message Текст сообщения индикатора
        * @param {object} look Параметры внешнего вида индикатора
+       * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
-      function WaitIndicator (target, message, look) {
+      function WaitIndicator (target, message, look, delay) {
          //////////////////////////////////////////////////
          console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
          //////////////////////////////////////////////////
+         var oLook = {overlay:null, small:false, align:null};
+         if (look && typeof look === 'object') {
+            Object.keys(look).forEach(function (name) {
+               if (name in look) {
+                  oLook[name] = look[name];
+               }
+            });
+         }
          var pSelf = WaitIndicatorProtected(this);
          pSelf.id = ++WaitIndicatorCounter;
          pSelf.container = WaitIndicatorInner.getContainer(target);
          this.message = message;
-         pSelf.look = look && typeof look === 'object' ? look : null;
+         pSelf.look = oLook;
          //pSelf.starting = null;
          //pSelf.suspending = null;
          //pSelf.removing = null;
+         if (typeof delay === 'number' && 0 <= delay) {
+            this.start(delay);
+         }
       };
 
       /**
@@ -245,23 +257,12 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @return {WaitIndicator}
        */
       WaitIndicator.make = function (options) {
-         // Разобрать опции
-         var target = options ? options.target : null,
-            message = options ? options.message : null,
-            delay = options ? options.delay : -1,
-            hidden = options ? options.hidden : false;
-
-         var look = {overlay:null, small:false, align:null};
-         Object.keys(look).forEach(function (name) {
-            if (name in options) {
-               look[name] = options[name];
-            }
-         });
-
-         var indicator = new WaitIndicator(target, message, look);
-         if (!hidden) {
-            indicator.start(0 <= delay ? delay : WaitIndicator.getParam('defaultDelay'));
-         }
+         var indicator = new WaitIndicator(
+            options ? options.target : null,
+            options ? options.message : null,
+            options,
+            options && options.hidden ? null : options && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
+         );
 
          /*###var list = WaitIndicatorManager._instances;
           if (!list) {
