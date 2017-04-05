@@ -1050,7 +1050,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   break;
                case constants.key.enter:
                   if(selectedKey !== undefined && selectedKey !== null) {
-                     var selectedItem = $('[data-id="' + selectedKey + '"]', this._getItemsContainer());
+                     var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
                      this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
                   }
                   break;
