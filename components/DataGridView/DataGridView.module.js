@@ -1190,6 +1190,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
+         /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
+            если таблица лежит в контейнере с display: flex */
          var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
 
          this._setThumbPosition(this._currentScrollPosition);
