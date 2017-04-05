@@ -142,11 +142,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _subscribeItemToHandlers : function(item){
             var self = this;
 
-            this._subscribeToMouseEvents(item);
-
             this.subscribeTo(item, 'onClickMore', function(){
                self._notify('onClickMore', item);
             });
+
+            //Выпилить и событие и метод после перехода на новый стандарт
+            this.subscribeTo(item, 'onPickerInitializing', this._subscribeToMouseEvents.bind(this, item));
 
             this.subscribeTo(item, 'onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
@@ -175,6 +176,9 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
                self._setItemPositionForIE10();
             });
+         },
+         _initializeDDLPicker: function() {
+
          },
          _subscribeToMouseEvents: function (item) {
             item._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, true));
