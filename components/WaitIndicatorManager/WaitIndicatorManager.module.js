@@ -63,13 +63,14 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * TODO: (+) Возможно, лучше не удалять при локально-глобальной блокировке ?
        * TODO: (+) Похоже есть задержка при локально-глобальной блокировке - проверить/разобраться
        * TODO: (+) Возможно, стоит ограничит набор глобальных параметров дефолтными ?
-       * TODO: (+-) Выделить защищённые члены классов в важных местах
+       * TODO: (+) Выделить защищённые члены классов в важных местах
        * TODO: (+) Сделать слежение за изменением геометрии области локальных индикаторов (тогда, когда это нужно)
        * TODO: (+) Привязка мелких локальных индикаторов
        * TODO: ### Почистить код, откоментировать неоткоментированное
-       * TODO: (+-) Привести к ES5
+       * TODO: (+) Привести к ES5
        * TODO: !### Изменить API с более очевидным простейшим способом использования. Описать API. (~WaitIndicatorManager.register(message, deferred, cfg))
        * TODO: !### Повсеместно учесть дуализм Promise/Deferred
+       * TODO: ### Сделатьь примеры с прокруткой таблиц
        * TODO: ###
        */
 
@@ -286,7 +287,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @type {string}
        */
       if (!Pr0tected.hasWeakMap) {
-         Object.defineProperty(Pr0tected, 'idProp', {value:'__instanceId__', /*writable:false,*/ enumerable:true});
+         Object.defineProperty(Pr0tected, 'idProp', {value:'__pr0tectedId__', /*writable:false,*/ enumerable:true});
       }
 
       /**
