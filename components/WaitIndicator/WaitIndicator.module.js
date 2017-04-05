@@ -1,9 +1,9 @@
 ﻿/**
- * Модуль SBIS3.CONTROLS.WaitIndicatorManager
+ * Модуль SBIS3.CONTROLS.WaitIndicator
  */
-define('js!SBIS3.CONTROLS.WaitIndicatorManager',
+define('js!SBIS3.CONTROLS.WaitIndicator',
    [
-      'css!SBIS3.CONTROLS.WaitIndicatorManager'
+      'css!SBIS3.CONTROLS.WaitIndicator'
    ],
    function () {
       'use strict';
