@@ -6,11 +6,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!WS.Data/Di',
       'Core/Indicator',
       'Core/core-merge',
-      "Core/helpers/collection-helpers",
-      "Core/IoC",
+      'Core/IoC',
       'Core/core-instance'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC, cInstance) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -73,7 +72,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *    ...
        *    move = new InteractiveMove({
        *       linkedObject: this.getChildControlByName('MyListView')
-       *       moveStrategy: 'movestrategy.base'
        *    });
        *    ...
        * </pre>
@@ -179,11 +177,11 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             if (target && target.getId() == null) {
                target = null; //selectorwrapper возвращает корень как модель с идентификатором null
             }
-            return this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
+            return this._getMover().move(movedItems, target, 'on').addCallback(function (result) {
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
-            }.bind(this)).addBoth(function() {
+            }.bind(this)).addBoth(function () {
                Indicator.hide();
             });
          },
@@ -198,21 +196,12 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             return config;
          },
 
-         _makeMoveStrategy: function () {
-            return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty,
-               listView: this._getListView()
-            });
-         },
          _getComponentOptions: function() {
             var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {
-               colHelpers.forEach(options, function (name) {
+               options.forEach(function (name) {
                   if (!result.hasOwnProperty(name)) {
                      try {
                         result[name] = listView.getProperty(name);

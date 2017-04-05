@@ -518,6 +518,11 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
                shortMonths : constants.Date.months,
                weekdays: constants.Date.longDays,
                thousandsSep : ' '
+            },
+            plotOptions: {
+               series: {
+                  animation: !constants.browser.isIE10
+               }
             }
          });
 

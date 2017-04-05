@@ -101,9 +101,9 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
          _move: function (movedItem) {
             var to = this._getNearestItem(movedItem);
             if (to) {
-               return this.getMoveStrategy().move([movedItem], to, (this._options.moveDirection === 'down'));
+               return this._getMover().move([movedItem], to, (this._options.moveDirection === 'down') ? 'after' : 'before');
             }
-            return (new Deferred()).callback(true);
+            return (new Deferred()).callback();
          },
          /**
           * Возвращает соседий элемент

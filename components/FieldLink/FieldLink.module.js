@@ -552,13 +552,18 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @see setDictionaries
            */
           showSelector: function(template, componentOptions, selectionType) {
-             var cfg;
+             var actionCfg = {
+                   selectionType: selectionType,
+                   selectedItems: this.getSelectedItems(),
+                   multiselect: this.getMultiselect()
+                },
+                cfg;
 
              if(typeof template !== 'object') {
                 cfg = {
                    template: template,
                    componentOptions: componentOptions
-                }
+                };
              } else {
                 cfg = template;
              }
@@ -567,13 +572,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
-                var selectedItems = this.getSelectedItems();
-
-                if(selectedItems) {
-                   cfg.selectedItems = selectedItems.clone();
-                }
-                cfg.multiselect = this.getMultiselect();
-                this._getSelectorAction().execute(cfg);
+                this._getSelectorAction().execute(wsCoreMerge(cfg, actionCfg));
              } else {
                 this._showChooser(cfg.template, cfg.componentOptions);
              }

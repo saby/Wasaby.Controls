@@ -180,6 +180,32 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          if (this.isEnabled()) {
             DateRangeSlider.superclass.showPicker.apply(this, arguments);
          }
+      },
+
+      _setPickerConfig: function() {
+         var pickerWidth = 0,
+            baseWidth = this.getContainer().outerWidth();
+         // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
+         if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
+            pickerWidth = 80;
+         } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
+            pickerWidth = 178;
+         } else {
+            pickerWidth = 146;
+         }
+         return {
+            corner: 'tl',
+            bodyBounds: true,
+            locationStrategy: 'bodyBounds',
+            horizontalAlign: {
+               side: 'left',
+               offset: (baseWidth - pickerWidth)/2
+            },
+            verticalAlign: {
+               side: 'top',
+               offset: -4
+            }
+         };
       }
    });
 

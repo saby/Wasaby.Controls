@@ -29,12 +29,16 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
              function onSelectComplete(event, meta) {
                 this.sendCommand('close', meta);
              }
-
-             cMerge(cfg, {
-                selectedItems: metaConfig.selectedItems,
-                multiselect: metaConfig.multiselect,
-                selectionType: metaConfig.selectionType
-             });
+             
+             cfg.multiselect = metaConfig.multiselect;
+             
+             if(metaConfig.selectedItems) {
+                cfg.selectedItems = metaConfig.selectedItems.clone();
+             }
+             
+             if(metaConfig.selectionType) {
+                cfg.selectionType = metaConfig.selectionType;
+             }
 
              if(cfg.handlers) {
                 if (cfg.handlers.onSelectComplete) {

@@ -102,6 +102,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            clickThrottle: true,
             _preRender: itemTemplateRender,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
@@ -174,7 +175,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             });
          }
       },
-      _drawSelectedItems: function(keysArr) {
+      _drawSelectedItems: function() {
          var self = this,
              isSelected = !this._isEmptySelection();
 
@@ -221,62 +222,21 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          text.html(resultText);
          /* Скрываем, если текст пустой */
          text.toggleClass('ws-hidden', !resultText);
-         this._checkWidth();
          this._notifyOnSizeChanged();
       },
 
-      _checkWidth: function() {
-         // Хак для старых ие
-         if (constants.browser.isIE10) {
-            if(!this.isVisibleWithParents()) {
-               return;
-            }
-
-            var additionalWidth = this._container.find('.controls-SelectorButton__icon:visible').width() + this._container.find('.controls-SelectorButton__cross:visible').width(),
-                text = this._container.find('.controls-SelectorButton__text'),
-                containerWidth = this._container.width(),
-                resultWidth;
-
-            if (containerWidth < (additionalWidth + text.width())) {
-               resultWidth = containerWidth - additionalWidth;
-               if(resultWidth > 0) {
-                  text.width(containerWidth - additionalWidth);
-               }
-            } else {
-               text.width('auto');
-            }
-         }
-      },
-
-      _onResizeHandler: function() {
-         SelectorButton.superclass._onResizeHandler.apply(this, arguments);
-         this._checkWidth();
-      },
-
       _clickHandler: function(e) {
-         var selectedItems = this.getSelectedItems();
+         var cfg = this.getDictionaries()[0];
 
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
-            //люди биндятся на опцию selectedItem. И при сбросе значения на крестик, selectedItem тоже должен сбрасываться.
-            this.setSelectedKey(null);
          } else {
-            //TODO Пока делаю выбор из одного справочника, в дальнейшем доработать выбор из нескольких
-            var dic = this._options.dictionaries[0];
-
-            if(this._options.useSelectorAction && dic.template) {
-               this._getSelectorAction().execute({
-                  template: dic.template,
-                  componentOptions: dic.componentOptions || {},
-                  multiselect: this.getMultiselect(),
-                  selectionType: dic.selectionType || 'all',
-                  selectedItems: selectedItems ? selectedItems.clone() : selectedItems
-               })
+            if(this.getProperty('useSelectorAction')) {
+               cfg.multiselect = this.getMultiselect();
+               cfg.selectedItems = this.getSelectedItems();
+               this._getSelectorAction().execute(cfg);
             } else {
-               this._showChooser(
-                  dic && dic.template,
-                  dic && dic.componentOptions
-               )
+               this._showChooser(cfg.template, cfg.componentOptions);
             }
          }
       },

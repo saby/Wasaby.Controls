@@ -93,17 +93,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
              *
              * @see updateIcons
              */
-            iconsHandler: null,
-
-            pickerConfig: {
-               corner: 'tl',
-               horizontalAlign: {
-                  side: 'left'
-               },
-               verticalAlign: {
-                  side: 'top'
-               }
-            }
+            iconsHandler: null
          },
 
          _chooserControl: null
