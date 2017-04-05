@@ -262,6 +262,109 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
 
 
+
+
+      /**
+       * Класс для создания защищённых членов классов
+       * @class Pr0tected
+       * @protected
+       */
+      function Pr0tected () {
+         this.members = null;
+      }
+
+      /**
+       * Константа, показывающая достуность WeakMap
+       * @public
+       * @type {boolean}
+       */
+      Object.defineProperty(Pr0tected, 'hasWeakMap', {value:typeof WeakMap != 'undefined', /*writable:false,*/ enumerable:true});
+
+      /**
+       * Константа, содержащая имя свойства-идентификатора
+       * @public
+       * @type {string}
+       */
+      if (!Pr0tected.hasWeakMap) {
+         Object.defineProperty(Pr0tected, 'idProp', {value:'__instanceId__', /*writable:false,*/ enumerable:true});
+      }
+
+      /**
+       * Возвращает хранилище защищённых свойств в виде функции
+       * @public
+       * @static
+       * @return {function}
+       */
+      Pr0tected.create = function () {
+         var p = new Pr0tected();
+         var f = p.scope.bind(p);
+         f.clear = p.clear.bind(p)
+         return f;
+      };
+
+      Pr0tected.prototype = {
+         /**
+          * Возвращает объект - хранилище защищённых свойств для указанного объекта-владельцаа
+          * @public
+          * @param {object} obj Владелец защищённых свойств
+          * @return {object}
+          */
+         scope: Pr0tected.hasWeakMap ?
+            function (obj) {
+               var map = this.members;
+               if (!this.members) {
+                  map = this.members = new WeakMap();
+               }
+               if (!map.has(obj)) {
+                  map.set(obj, {});
+               }
+               return map.get(obj);
+            } :
+            function (obj) {
+               var map = this.members;
+               if (!map) {
+                  map = this.members = {};
+               }
+               var idProp = Pr0tected.idProp;
+               if (!(idProp in obj)) {
+                  var n = 'counter' in this ? this.counter + 1 : 1;
+                  Object.defineProperty(obj, idProp, {value:n});
+                  this.counter = n;
+               }
+               var id = obj[idProp];
+               if (!(id in map)) {
+                  map[id] = {};
+               }
+               return map[id];
+            },
+
+         /**
+          * Очищает хранилище защищённых свойств для указанного объекта-владельцаа
+          * @public
+          * @param {object} obj Владелец защищённых свойств
+          */
+         clear: Pr0tected.hasWeakMap ?
+            function (obj) {
+               if (this.members) {
+                  this.members.delete(obj);
+               }
+            } :
+            function (obj) {
+               if (this.members) {
+                  var idProp = Pr0tected.idProp;
+                  if (idProp in obj) {
+                     delete this.members[obj[idProp]];
+                  }
+               }
+            }
+      };
+
+      Pr0tected.prototype.constructor = Pr0tected;
+
+
+
+
+
       /**
        * Класс содержащий методы управления индикатором
        * @class WaitIndicator
@@ -293,6 +396,11 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             //this._suspending = null;
             //this._removing = null;
          };
+
+         /**
+          * Защищённые члены класа WaitIndicator
+          */
+         var protect = Pr0tected.create();
 
          WaitIndicator.prototype = {
             /**
@@ -421,8 +529,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             /**
              * Общая реализация для методов start, suspend и remove
              * @protected
-             * @param {string} method Имя подлежащего (protected) метода
-             * @param {string} storing Имя (protected) свойства для хранения данных об отложенном вызове
+             * @param {string} method Имя подлежащего метода
+             * @param {string} storing Имя защищённого свойства для хранения данных об отложенном вызове
              * @param {number} delay Время задержки в миллисекундах
              * @return {Promise}
              */
@@ -523,40 +631,10 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
          WaitIndicator.prototype.constructor = WaitIndicator;
 
-         /**
-          * Защищённые члены класа WaitIndicator
-          */
-         var protect = function (self) {
-            var map = protect.members;
-            if (false &&/*###*/ typeof WeakMap != 'undefined') {
-               if (!map) {
-                  map = protect.members = new WeakMap();
-               }
-               if (!map.has(self)) {
-                  map.set(self, {});
-               }
-               return map.get(self);
-            }
-            else {
-               if (!map) {
-                  map = protect.members = {};
-               }
-               var idProp = '__instanceId__';
-               if (!(idProp in self)) {
-                  var n = 'counter' in protect ? protect.counter + 1 : 1;
-                  Object.defineProperty(self, idProp, {value:n});
-                  protect.counter = n;
-               }
-               var id = self[idProp];
-               if (!(id in map)) {
-                  map[id] = {};
-               }
-               return map[id];
-            }
-         };
-
          return WaitIndicator;
       })();
+
+
 
 
 
@@ -715,6 +793,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
 
 
+
+
       /**
        * Пул содержащий информацию о находящихся в DOM-е элементах индикаторов
        * @type {object}
@@ -789,6 +869,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             this._list.forEach(func);
          }
       };
+
+
 
 
 
