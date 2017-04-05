@@ -249,10 +249,15 @@ define(
       _keyDownBind: function(event) {
          var
              curDate = this.getDate(),
-             key = event.which || event.keyCode;
+             key = event.which || event.keyCode,
+             date;
 
          if (key == constants.key.insert) {
-            this.setDate(new Date());
+            date = new Date();
+            if (this.getType() === 'date') {
+               date.setHours(0, 0, 0, 0);
+            }
+            this.setDate(date);
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
                curDate = new Date(curDate);
