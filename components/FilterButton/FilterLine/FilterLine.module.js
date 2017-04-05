@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-      'html!SBIS3.CONTROLS.FilterButton.FilterLine',
+      'tmpl!SBIS3.CONTROLS.FilterButton.FilterLine',
       'Core/helpers/string-helpers',
       'Core/Sanitize'
    ],

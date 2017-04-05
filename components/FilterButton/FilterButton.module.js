@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/CommandDispatcher",
    "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.FilterButton",
-   "html!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate",
+   "tmpl!SBIS3.CONTROLS.FilterButton",
+   "tmpl!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate",
    "js!SBIS3.CONTROLS.FilterMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
                   * @see filterLineTemplate
                   */
-                filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
+                filterLineComponent: 'js!SBIS3.CONTROLS.FilterButton.FilterLine',
                  /**
                   * @cfg {*} Устанавливает шаблон, который отображает строку применённых фильтров.
                   * @remark
