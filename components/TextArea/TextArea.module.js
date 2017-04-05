@@ -3,11 +3,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "js!SBIS3.CONTROLS.TextBoxBase",
    "html!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
+   'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
    "Core/helpers/dom&controls-helpers",
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
-], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, dcHelpers) {
+], function( constants,TextBoxBase, dotTplFn, strHelpers, LinkWrap, IoC, dcHelpers) {
 
    'use strict';
 
@@ -67,6 +68,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _pasteCommand: 'insertText',
          _compatPlaceholder: null,
          _options: {
+            wrapUrls: LinkWrap.wrapUrls,
+            escapeHtml: strHelpers.escapeHtml,
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
               * @remark
@@ -266,7 +269,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       setText: function(text){
          TextArea.superclass.setText.call(this, text);
          var newText = strHelpers.escapeHtml(text);
-         this._disabledWrapper.html(strHelpers.wrapURLs(newText));
+         this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
          this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !text);
       },
 
