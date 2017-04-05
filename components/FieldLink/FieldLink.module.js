@@ -572,7 +572,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this._getLinkCollection().hidePicker();
 
              if(this._options.useSelectorAction) {
-                this._getSelectorAction().execute(wsCoreMerge(cfg, actionCfg));
+                this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
              } else {
                 this._showChooser(cfg.template, cfg.componentOptions);
              }
