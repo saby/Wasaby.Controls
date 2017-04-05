@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
 
       _setNumericValue: function(value) {
          if (typeof(value) == 'string'){
-            value = value.replace(/\s+/g,"");
+            value = value.replace(/\s+/g,'');
          }
          this._options.numericValue = parseFloat(value);
          this._options.moneyValue = value;
@@ -144,7 +144,14 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _getInputValue: function() {
-         return this._inputField[0].innerHTML;
+         var decimalsPart,
+             value = this._inputField[0].innerHTML;
+
+         if(!this.isEnabled()){
+            decimalsPart = this._decimalsContainer[0].innerHTML;
+            value += decimalsPart;
+         }
+         return value;
       },
 
       _setInputValue: function(value) {
@@ -156,9 +163,9 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          return $('.js-MoneyTextBox__input', this.getContainer().get(0));
       },
 
-      _getIntegerPart: function(value) {
-         var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
-         return value.substr(0, dotPosition);
+       _getIntegerPart: function(value) {
+        var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
+        return value.substr(0, dotPosition);
       },
 
       _formatText: function(value){
