@@ -307,32 +307,32 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          /**
           * Возвращает объект - хранилище защищённых свойств для указанного объекта-владельцаа
           * @public
-          * @param {object} obj Владелец защищённых свойств
+          * @param {object} owner Владелец защищённых свойств
           * @return {object}
           */
          scope: Pr0tected.hasWeakMap ?
-            function (obj) {
+            function (owner) {
                var map = this.members;
                if (!this.members) {
                   map = this.members = new WeakMap();
                }
-               if (!map.has(obj)) {
-                  map.set(obj, {});
+               if (!map.has(owner)) {
+                  map.set(owner, {});
                }
-               return map.get(obj);
+               return map.get(owner);
             } :
-            function (obj) {
+            function (owner) {
                var map = this.members;
                if (!map) {
                   map = this.members = {};
                }
                var idProp = Pr0tected.idProp;
-               if (!(idProp in obj)) {
+               if (!(idProp in owner)) {
                   var n = 'counter' in this ? this.counter + 1 : 1;
-                  Object.defineProperty(obj, idProp, {value:n});
+                  Object.defineProperty(owner, idProp, {value:n});
                   this.counter = n;
                }
-               var id = obj[idProp];
+               var id = owner[idProp];
                if (!(id in map)) {
                   map[id] = {};
                }
@@ -342,19 +342,19 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          /**
           * Очищает хранилище защищённых свойств для указанного объекта-владельцаа
           * @public
-          * @param {object} obj Владелец защищённых свойств
+          * @param {object} owner Владелец защищённых свойств
           */
          clear: Pr0tected.hasWeakMap ?
-            function (obj) {
+            function (owner) {
                if (this.members) {
-                  this.members.delete(obj);
+                  this.members.delete(owner);
                }
             } :
-            function (obj) {
+            function (owner) {
                if (this.members) {
                   var idProp = Pr0tected.idProp;
-                  if (idProp in obj) {
-                     delete this.members[obj[idProp]];
+                  if (idProp in owner) {
+                     delete this.members[owner[idProp]];
                   }
                }
             }
