@@ -18,7 +18,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          _endWrapper: null,
          _newItemsCount: 0,
          _additionalHeight: 0,
-         _DEBUG: false
+         _lastPageHeight: 0,
+         _DEBUG: true
       },
 
       init: function(){
@@ -150,9 +151,13 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          if (this._currentVirtualPage !== pageNumber || this._currentWindow[1] > newWindow[1]) {
             this._currentWindow = newWindow;
             this._notify('onVirtualWinodowChange', newWindow[0], newWindow[1]);
+            if (this._DEBUG) {
+               console.log('displayed from ', newWindow[0], 'to', newWindow[1]);
+            }
          }
-
-         this._setWrappersHeight(pageNumber);
+         if (haveToRemove || haveToAdd) {
+             this._setWrappersHeight(pageNumber);
+         }
       },
 
       _setWrappersHeight: function(page) {
@@ -311,7 +316,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          for (var i = 0; i < this._virtualPages.length; i++){
             offsets.push(this._virtualPages[i].offset);
          }
-         console.log(offsets);
          return offsets;
       },
 
@@ -375,19 +379,22 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          
          // Пока рассчитываем, что добавляется один элемент за раз
          if (items.length == 1) {
+            this._currentWindow[1] += 1;
             if (this._newItemsCount === 0) {
                this._onVirtualPageChange(this._currentVirtualPage);
                this._virtualPages.unshift({offset: -this._additionalHeight});
             }
             this._newItemsCount += 1;
             hash = items[0].getHash();
-            this._additionalHeight += $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
+            var itemHeight = $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
+            this._additionalHeight += itemHeight;
+            this._lastPageHeight += itemHeight;
             this._virtualPages[0].offset = -this._additionalHeight;
          }
 
          if (this._newItemsCount == BATCH_SIZE) {
             this._newItemsCount = 0;
-            this._currentWindow[1] += BATCH_SIZE;
+            this._lastPageHeight = 0;
          }
       },
 

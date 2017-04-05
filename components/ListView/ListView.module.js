@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CursorListNavigation',
    'js!WS.Data/Source/SbisService',
    'Core/detection',
+   'js!SBIS3.CONTROLS.VirtualScrollController',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, VirtualScrollController) {
 
      'use strict';
 
@@ -852,7 +853,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._prepareInfiniteScroll();
             
-            this._options.virtualScrolling = this.getName() == 'ПерепискаПоЧату';
             if (this._options.virtualScrolling){
                this._virtualScrollController = new VirtualScrollController({
                   view: this
@@ -2509,7 +2509,6 @@ define('js!SBIS3.CONTROLS.ListView',
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items, groupId);
             if (this.isInfiniteScroll()) {
-               // НЕ ЗАБЫТЬ ВЕРНУТЬ И РАЗОБРАТЬСЯ
                this._preScrollLoading();
             }
          },
