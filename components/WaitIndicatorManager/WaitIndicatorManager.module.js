@@ -1,5 +1,5 @@
 ﻿/**
- * Модуль WaitIndicatorManager
+ * Модуль SBIS3.CONTROLS.WaitIndicatorManager
  */
 define('js!SBIS3.CONTROLS.WaitIndicatorManager',
    [
@@ -73,164 +73,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * TODO: ### Сделатьь примеры с прокруткой таблиц
        * TODO: ###
        */
-
-
-
-      /**
-       * Класс для создания индикаторов ожидания завершения процессов
-       * @class SBIS3.CONTROLS.WaitIndicatorManager
-       * @public
-       */
-      function WaitIndicatorManager () {
-      };
-      WaitIndicatorManager.prototype.constructor = WaitIndicatorManager;
-
-      /**
-       * Константа - время задержки по умолчанию перед показом индикатора
-       * @public
-       * @static
-       * @type {number}
-       */
-      Object.defineProperty(WaitIndicatorManager, 'DEFAULT_DELAY', {value:2000, writable:false, enumerable:true});
-
-      /**
-       * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
-       * @public
-       * @static
-       * @type {number}
-       */
-      Object.defineProperty(WaitIndicatorManager, 'SUSPEND_LIFETIME', {value:15000, writable:false, enumerable:true});
-
-      /**
-       * Константа - максимальное время до удаления приостановленных индикаторов из DOM-а
-       * @public
-       * @static
-       * @type {number}
-       */
-      Object.defineProperty(WaitIndicatorManager, 'SUSPEND_MAX_LIFETIME', {value:600000, writable:false, enumerable:true});
-
-      /**
-       * Возвращает индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями
-       * @public
-       * @param {object} options Опции конфигурации
-       * @param {jQuery|HTMLElement} options.target Объект привязки индикатора
-       * @param {boolean} options.delay Задержка перед началом показа/скрытия индикатора
-       * @param {boolean} options.hidden Состояние - скрыть / показать
-       * @return {WaitIndicator}
-       */
-      WaitIndicatorManager.getWaitIndicator = function (options) {
-         // Разобрать опции
-         var target = options ? options.target : null,
-            message = options ? options.message : null,
-            delay = options ? options.delay : -1,
-            hidden = options ? options.hidden : false;
-
-         var look = {overlay:null, small:false, align:null};
-         Object.keys(look).forEach(function (name) {
-            if (name in options) {
-               look[name] = options[name];
-            }
-         });
-
-         var indicator = new WaitIndicator(WaitIndicatorInner.getContainer(target), message, look);
-         if (!hidden) {
-            indicator.start(0 <= delay ? delay : WaitIndicatorManager.getParam('defaultDelay'));
-         }
-
-         /*###var list = WaitIndicatorManager._instances;
-         if (!list) {
-            WaitIndicatorManager._instances = list = [];
-         }
-
-         // Запрошен ли глобальный индикатор?
-         var container = WaitIndicatorInner.getContainer(target),
-            isGlobal = !container,
-            indicator;
-         if (isGlobal) {
-            // Запрошен глобальный индикатор, он может быть только один - попробовать найти существующий
-            indicator = list.length ? list.find(function (item) { return item.isGlobal; }) : null;
-         }
-         else {
-            // Запрошен локальный индикатор, их может быть много, но только один на каждый объект привязки
-            indicator = list.length ? list.find(function (item) { return item.container === container; }) : null;
-         }
-         if (indicator) {
-            // Найден существующий индикатор - использовать применимые опции
-            if (hidden) {
-               indicator.remove(delay);
-            }
-            else {
-               indicator.start(delay);
-            }
-         }
-         else {
-            // индикатор не найден - создать новый
-            var indicator = new WaitIndicator(container, message);
-            if (!hidden) {
-               indicator.start(delay);
-            }
-            list.push(indicator);
-         }*/
-
-         // и вернуть
-         return indicator;
-      };
-
-      /**
-       * Установить глобальные параметры.
-       * Принимаются только параметры с именами defaultDelay и suspendLifetime
-       * Все значения параметров должны быть неотрицательными числами
-       * @public
-       * @static
-       * @param {object} params Набор параметров
-       */
-      WaitIndicatorManager.putParams = function (params) {
-         if (params && typeof params === 'object') {
-            //###Object.assign(WaitIndicatorParams, params);
-            for (var name in params) {
-               WaitIndicatorManager.setParam(name, params[name]);
-            }
-         }
-      };
-
-      /**
-       * Установить значение глобального параметра по имени. Возвращает предыдущее значение
-       * Принимаются только параметры с именами defaultDelay и suspendLifetime
-       * Все значения параметров должны быть неотрицательными числами
-       * @public
-       * @static
-       * @param {string} name Имя параметра
-       * @param {number} value Значение параметра
-       * @return {number}
-       */
-      WaitIndicatorManager.setParam = function (name, value) {
-         if (name in WaitIndicatorParams && typeof value === 'number' && 0 <= value) {
-            var prev = WaitIndicatorParams[name];
-            WaitIndicatorParams[name] = value;
-            return prev;
-         }
-      };
-
-      /**
-       * Получить глобальный параметр по имени
-       * @public
-       * @static
-       * @param {string} name Имя параметра
-       * @return {number}
-       */
-      WaitIndicatorManager.getParam = function (name) {
-         return WaitIndicatorParams[name];
-      };
-
-      /**
-       * Глобальные параметры
-       * @protected
-       * @type {object}
-       */
-      var WaitIndicatorParams = {
-         defaultDelay: WaitIndicatorManager.DEFAULT_DELAY,
-         suspendLifetime: WaitIndicatorManager.SUSPEND_LIFETIME
-      };
 
 
 
@@ -338,30 +180,126 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
 
       /**
-       * Класс содержащий методы управления индикатором
+       * Класс описывающий индикаторы ожидания завершения процесса
        * @class WaitIndicator
-       * @protected
+       * @public
        */
       /**
        * Конструктор
        * @public
        * @constructor
-       * @param {HTMLElement} container Контейнер индикатора
+       * @param {jQuery|HTMLElement} target Объект привязки индикатора
        * @param {string} message Текст сообщения индикатора
        * @param {object} look Параметры внешнего вида индикатора
        */
-      function WaitIndicator (container, message, look) {
+      function WaitIndicator (target, message, look) {
          //////////////////////////////////////////////////
          console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
          //////////////////////////////////////////////////
          var pSelf = WaitIndicatorProtected(this);
          pSelf.id = ++WaitIndicatorCounter;
-         pSelf.container = container;
+         pSelf.container = WaitIndicatorInner.getContainer(target);
          this.message = message;
          pSelf.look = look && typeof look === 'object' ? look : null;
          //pSelf.starting = null;
          //pSelf.suspending = null;
          //pSelf.removing = null;
+      };
+
+      /**
+       * Константа - время задержки по умолчанию перед показом индикатора
+       * @public
+       * @static
+       * @type {number}
+       */
+      Object.defineProperty(WaitIndicator, 'DEFAULT_DELAY', {value:2000, writable:false, enumerable:true});
+
+      /**
+       * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
+       * @public
+       * @static
+       * @type {number}
+       */
+      Object.defineProperty(WaitIndicator, 'SUSPEND_LIFETIME', {value:15000, writable:false, enumerable:true});
+
+      /**
+       * Константа - максимальное время до удаления приостановленных индикаторов из DOM-а
+       * @public
+       * @static
+       * @type {number}
+       */
+      Object.defineProperty(WaitIndicator, 'SUSPEND_MAX_LIFETIME', {value:600000, writable:false, enumerable:true});
+
+      /**
+       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями
+       * @public
+       * @static
+       * @param {object} options Опции конфигурации
+       * @param {jQuery|HTMLElement} options.target Объект привязки индикатора
+       * @param {string} options.message Текст сообщения индикатора
+       * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
+       * @param {boolean} options.hidden Не показывать созданный индикатор
+       * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
+       * @param {boolean} options.small Использовать уменьшеный размер
+       * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom. Если не задан - индикатор центрируется
+       * @return {WaitIndicator}
+       */
+      WaitIndicator.make = function (options) {
+         // Разобрать опции
+         var target = options ? options.target : null,
+            message = options ? options.message : null,
+            delay = options ? options.delay : -1,
+            hidden = options ? options.hidden : false;
+
+         var look = {overlay:null, small:false, align:null};
+         Object.keys(look).forEach(function (name) {
+            if (name in options) {
+               look[name] = options[name];
+            }
+         });
+
+         var indicator = new WaitIndicator(target, message, look);
+         if (!hidden) {
+            indicator.start(0 <= delay ? delay : WaitIndicator.getParam('defaultDelay'));
+         }
+
+         /*###var list = WaitIndicatorManager._instances;
+          if (!list) {
+          WaitIndicatorManager._instances = list = [];
+          }
+
+          // Запрошен ли глобальный индикатор?
+          var container = WaitIndicatorInner.getContainer(target),
+          isGlobal = !container,
+          indicator;
+          if (isGlobal) {
+          // Запрошен глобальный индикатор, он может быть только один - попробовать найти существующий
+          indicator = list.length ? list.find(function (item) { return item.isGlobal; }) : null;
+          }
+          else {
+          // Запрошен локальный индикатор, их может быть много, но только один на каждый объект привязки
+          indicator = list.length ? list.find(function (item) { return item.container === container; }) : null;
+          }
+          if (indicator) {
+          // Найден существующий индикатор - использовать применимые опции
+          if (hidden) {
+          indicator.remove(delay);
+          }
+          else {
+          indicator.start(delay);
+          }
+          }
+          else {
+          // индикатор не найден - создать новый
+          var indicator = new WaitIndicator(container, message);
+          if (!hidden) {
+          indicator.start(delay);
+          }
+          list.push(indicator);
+          }*/
+
+         // и вернуть
+         return indicator;
       };
 
       /**
@@ -377,6 +315,62 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
        * @type {number}
        */
       var WaitIndicatorCounter = 0;
+
+      /**
+       * Статические параметры
+       * @protected
+       * @type {object}
+       */
+      var WaitIndicatorParams = {
+         defaultDelay: WaitIndicator.DEFAULT_DELAY,
+         suspendLifetime: WaitIndicator.SUSPEND_LIFETIME
+      };
+
+      /**
+       * Установить статические параметры.
+       * Принимаются только параметры с именами defaultDelay и suspendLifetime
+       * Все значения параметров должны быть неотрицательными числами
+       * @public
+       * @static
+       * @param {object} params Набор параметров
+       */
+      WaitIndicator.putParams = function (params) {
+         if (params && typeof params === 'object') {
+            //###Object.assign(WaitIndicatorParams, params);
+            for (var name in params) {
+               WaitIndicator.setParam(name, params[name]);
+            }
+         }
+      };
+
+      /**
+       * Установить значение статического параметра по имени. Возвращает предыдущее значение
+       * Принимаются только параметры с именами defaultDelay и suspendLifetime
+       * Все значения параметров должны быть неотрицательными числами
+       * @public
+       * @static
+       * @param {string} name Имя параметра
+       * @param {number} value Значение параметра
+       * @return {number}
+       */
+      WaitIndicator.setParam = function (name, value) {
+         if (name in WaitIndicatorParams && typeof value === 'number' && 0 <= value) {
+            var prev = WaitIndicatorParams[name];
+            WaitIndicatorParams[name] = value;
+            return prev;
+         }
+      };
+
+      /**
+       * Получить статический параметр по имени
+       * @public
+       * @static
+       * @param {string} name Имя параметра
+       * @return {number}
+       */
+      WaitIndicator.getParam = function (name) {
+         return WaitIndicatorParams[name];
+      };
 
       WaitIndicator.prototype = {
          /**
@@ -509,14 +503,14 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
             console.log('DBG: _callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
             //////////////////////////////////////////////////
             for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
-               var storing = storings[i];
-               var o = pSelf[storing];
+               var s = storings[i];
+               var o = pSelf[s];
                if (o) {
                   clearTimeout(o.id);
                   if (o.fail) {
                      o.fail.call();
                   }
-                  pSelf[storing] = null;
+                  pSelf[s] = null;
                }
             }
             //////////////////////////////////////////////////
@@ -698,7 +692,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
                         // Начать отсчёт времени до принудительного удаления из DOM-а
                         poolItem.clearing = setTimeout(function () {
                            this._delete(poolItem);
-                        }.bind(this), Math.min(WaitIndicatorManager.getParam('suspendLifetime'), WaitIndicatorManager.SUSPEND_MAX_LIFETIME));
+                        }.bind(this), Math.min(WaitIndicator.getParam('suspendLifetime'), WaitIndicator.SUSPEND_MAX_LIFETIME));
                      }
                      else {
                         // Удалить из DOM-а и из пула
@@ -1027,6 +1021,6 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
 
 
-      return WaitIndicatorManager;
+      return WaitIndicator;
    }
 );
