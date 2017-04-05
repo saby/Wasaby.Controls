@@ -176,7 +176,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           /**
            * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {Object} meta Объект, описывающий метаданные события. В его свойствах передаются идентификатор и экземпляр выбранного значения.
            * @param {String} meta.id Идентификатор выбранного значения.
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.

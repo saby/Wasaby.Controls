@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
       var Remove = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.List.Remove.prototype */{
          /**
           * @event onRemove Срабатывает перед удалением
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} items Массив моделей которые надо удалить
           * @see execute
           */
