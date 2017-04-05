@@ -292,7 +292,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             e.returnValue = message;
             return message;
          }
-         return null;
+         //Нужно вернуть undefined, любой другой результат ie воспримет как текст для окна с вопросом
+         return undefined;
       },
 
       _onAfterShow: function() {
