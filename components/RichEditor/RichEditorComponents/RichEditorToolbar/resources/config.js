@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                }.bind(this), this._container);
             }
          },
-         visible: !constants.browser.isIE8,
+         visible: true,
          order: 100
       },
 
@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             onActivated: onButtonClick
          },
          enabled: false,
-         visible: !constants.browser.isIE8,
+         visible: true,
          order: 110
       },
 

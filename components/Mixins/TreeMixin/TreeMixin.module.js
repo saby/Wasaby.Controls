@@ -148,6 +148,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             pathElem[cfg.idProperty] = curParentContents.getId();
             pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
+            pathElem['item'] = curParentContents;
             curPath.push(pathElem);
             lastNode = item;
          }

@@ -93,17 +93,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
              *
              * @see updateIcons
              */
-            iconsHandler: null,
-
-            pickerConfig: {
-               corner: 'tl',
-               horizontalAlign: {
-                  side: 'left'
-               },
-               verticalAlign: {
-                  side: 'top'
-               }
-            }
+            iconsHandler: null
          },
 
          _chooserControl: null
@@ -124,6 +114,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
             if (this._chooserControl) {
                this._chooserControl.setRange(this.getStartValue(), this.getEndValue());
                this._chooserControl.updateIcons();
+               this._chooserControl._onShow();
             }
          }
       },

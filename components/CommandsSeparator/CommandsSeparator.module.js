@@ -6,7 +6,7 @@
 define('js!SBIS3.CONTROLS.CommandsSeparator', [
    'js!SBIS3.CONTROLS.ButtonBase',
    'js!SBIS3.CONTROLS.Checkable',
-   'html!SBIS3.CONTROLS.CommandsSeparator',
+   'tmpl!SBIS3.CONTROLS.CommandsSeparator',
    'css!SBIS3.CONTROLS.CommandsSeparator'
 ], function(ButtonBase, Checkable, dotTplFn) {
 

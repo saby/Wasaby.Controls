@@ -44,10 +44,6 @@
     margin: @link-icon-margin;
   }
 
-  &.controls-Button__IE8Hack .controls-Link__icon:before {
-    content: '\00ad';
-  }
-
   .controls-Link__field {
     margin: @link-field-margin;
   }
@@ -78,6 +74,14 @@
       .controls-Link-link {
         background-color: transparent;
       }
+    }
+  }
+}
+
+.ws-is-mobile-platform {
+  .controls-Link__withoutCaptionOnMobile {
+    .controls-Link__field {
+      display: none;
     }
   }
 }

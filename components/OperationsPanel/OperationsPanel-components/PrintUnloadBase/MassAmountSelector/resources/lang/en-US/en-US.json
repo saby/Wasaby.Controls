@@ -2,5 +2,6 @@
   "Текущую страницу": "Current page",
   "Все записи": "All records",
   "Количество записей": "Number of records",
-  "Выполнить": "Make"
+  "Выполнить": "Make",
+  "Для завершения обработки команды вам необходимо указать количество записей": "To complete processing, you must specify the number of records"
 }

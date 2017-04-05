@@ -331,12 +331,20 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        */
       markControl: function (s, showInfoBox) {
          var
-            message = (s && (typeof s == 'string' || s instanceof Array && s.length)) ? s : 'Введите значение';
+            message = (s && (typeof s == 'string' || s instanceof Array && s.length)) ? s : 'Введите значение',
+            target;
          this._calcValidationErrorCount(message);
          this._createErrorMessage(message);
          if (showInfoBox === true) {
             this._getInfoBox().addCallback(function(){
-               this._infobox.show(this._getExtendedTooltipTarget(), this._alterTooltipText(), 'auto');
+               target = this._getExtendedTooltipTarget()[0];
+               if (this._infobox.getCurrentTarget() !== target){
+                  this._infobox.show({
+                     control: target,
+                     message: this._alterTooltipText(),
+                     autoHide: true
+                  });
+               }
             }.bind(this));
          }
          this._container.addClass('ws-validation-error');

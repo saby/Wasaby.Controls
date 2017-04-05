@@ -55,10 +55,6 @@
       }
   }
 
-   &.controls-Button__IE8Hack .controls-Button__icon:before {
-      content: '\00ad';
-   }
-
    // Normal primary button
    &.controls-Button__primary {
       color: @button-primary-text-color;
@@ -248,15 +244,6 @@
    }
 }
 
-@ie8: \0screen;
-@media @ie8 {
-   .controls-Button__icon {
-      top: 0 !important;
-      &.icon-24 {
-         top: -3px !important;
-      }
-   }
-}
 // хак для ie9, 10, 11 выравнивающий иконки
 @media screen and (min-width:~"0\0") {
    .controls-Button__icon {
