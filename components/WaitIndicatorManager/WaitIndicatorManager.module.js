@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          });
 
          var id = ++WaitIndicatorCounter,
-            container = WaitIndicatorManager._getContainer(target),
+            container = WaitIndicatorInner.getContainer(target),
             indicator = new WaitIndicator(id, container, message, look);
          if (!hidden) {
             indicator.start(0 <= delay ? delay : WaitIndicatorManager.getParam('defaultDelay'));
@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
          }
 
          // Запрошен ли глобальный индикатор?
-         var container = WaitIndicatorManager._getContainer(target),
+         var container = WaitIndicatorInner.getContainer(target),
             isGlobal = !container,
             indicator;
          if (isGlobal) {
@@ -226,34 +226,15 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
       };
 
       /**
-       * Определить элемент DOM, соответствующий указанному объекту привязки
-       * @protected
-       * @static
-       * @param {jQuery|HTMLElement} target Объект привязки индикатора
-       * @return {HTMLElement}
-       */
-      WaitIndicatorManager._getContainer = function (target) {
-         if (!target || typeof target !== 'object') {
-            return null;
-         }
-         var container = target;
-         if (target.jquery && typeof target.jquery === 'string') {
-            if (!target.length) {
-               return null;
-            }
-            container = target[0];
-         }
-         return container !== window && container !== document && container !== document.body ? container : null;
-      };
-
-      /**
        * Счётчик экземпляров
+       * @protected
        * @type {number}
        */
       var WaitIndicatorCounter = 0;
 
       /**
        * Глобальные параметры
+       * @protected
        * @type {object}
        */
       var WaitIndicatorParams = {
@@ -267,8 +248,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
       /**
        * Класс для создания защищённых членов классов
-       * @class Pr0tected
        * @protected
+       * @class Pr0tected
        */
       function Pr0tected () {
          this.members = null;
@@ -396,6 +377,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
       /**
        * Хранилище защищённых членов класа WaitIndicator
+       * @protected
+       * @type {function}
        */
       var WaitIndicatorProtected = Pr0tected.create();
 
@@ -609,10 +592,31 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
       /**
        * Объект с внутренними методами модуля
-       * @type {object}
        * @protected
+       * @type {object}
        */
       var WaitIndicatorInner = {
+         /**
+          * Определить элемент DOM, соответствующий указанному объекту привязки
+          * @protected
+          * @static
+          * @param {jQuery|HTMLElement} target Объект привязки индикатора
+          * @return {HTMLElement}
+          */
+         getContainer: function (target) {
+            if (!target || typeof target !== 'object') {
+               return null;
+            }
+            var container = target;
+            if (target.jquery && typeof target.jquery === 'string') {
+               if (!target.length) {
+                  return null;
+               }
+               container = target[0];
+            }
+            return container !== window && container !== document && container !== document.body ? container : null;
+         },
+
          /**
           * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
           * @public
@@ -766,8 +770,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
 
       /**
        * Пул содержащий информацию о находящихся в DOM-е элементах индикаторов
-       * @type {object}
        * @protected
+       * @type {object}
        */
       var WaitIndicatorPool = {
          /**
