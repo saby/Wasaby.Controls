@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
        /**
         * @event onValidate Происходит при прохождении валидации.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Boolean} result Результат прохождения валидации.
         * @param {Array} errors Массив ошибок валидации.
         * @param {Boolean} previousStatus Предыдущий результат валидации.

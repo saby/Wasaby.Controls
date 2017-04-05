@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.MenuButtonMixin', ['js!SBIS3.CONTROLS.ContextMenu', 'C
         * @event onMenuItemActivate Происходит при активации пункта меню.
         * @remark
         * Например, при клике по пункту меню.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {String} id Идентификатор пункта меню.
         * @example
         * <pre>
