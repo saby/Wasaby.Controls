@@ -68,10 +68,9 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Привязка мелких локальных индикаторов
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: (+) Привести к ES5
-       * TODO: !### Изменить API с более очевидным простейшим способом использования. Описать API. (~WaitIndicatorManager.register(message, deferred, cfg))
+       * TODO: (+-) Изменить API с более очевидным простейшим способом использования. Описать API. (~WaitIndicatorManager.register(message, deferred, cfg))
        * TODO: !### Повсеместно учесть дуализм Promise/Deferred
        * TODO: ### Сделатьь примеры с прокруткой таблиц
-       * TODO: ###
        */
 
 
@@ -243,17 +242,21 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
       Object.defineProperty(WaitIndicator, 'SUSPEND_MAX_LIFETIME', {value:600000, writable:false, enumerable:true});
 
       /**
-       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями
+       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. Если в опциях присутствует отложенный
+       * стоп - он будет использован для удаления индикатора. Возвращает колбэк, при вызове которого индикатор будет удалён. С задержкой, если она
+       * будет указана при вызове колбэка.
        * @public
        * @static
        * @param {object} options Опции конфигурации
        * @param {jQuery|HTMLElement} options.target Объект привязки индикатора
        * @param {string} options.message Текст сообщения индикатора
        * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
+       * @param {Promise} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
        * @param {boolean} options.hidden Не показывать созданный индикатор
        * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
        * @param {boolean} options.small Использовать уменьшеный размер
-       * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom. Если не задан - индикатор центрируется
+       * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom. Если не задан -
+       *                               индикатор центрируется
        * @return {WaitIndicator}
        */
       WaitIndicator.make = function (options) {
@@ -261,46 +264,19 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
             options ? options.target : null,
             options ? options.message : null,
             options,
-            options && options.hidden ? null : options && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
+            options.hidden ? null : options && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
          );
-
-         /*###var list = WaitIndicatorManager._instances;
-          if (!list) {
-          WaitIndicatorManager._instances = list = [];
-          }
-
-          // Запрошен ли глобальный индикатор?
-          var container = WaitIndicatorInner.getContainer(target),
-          isGlobal = !container,
-          indicator;
-          if (isGlobal) {
-          // Запрошен глобальный индикатор, он может быть только один - попробовать найти существующий
-          indicator = list.length ? list.find(function (item) { return item.isGlobal; }) : null;
-          }
-          else {
-          // Запрошен локальный индикатор, их может быть много, но только один на каждый объект привязки
-          indicator = list.length ? list.find(function (item) { return item.container === container; }) : null;
-          }
-          if (indicator) {
-          // Найден существующий индикатор - использовать применимые опции
-          if (hidden) {
-          indicator.remove(delay);
-          }
-          else {
-          indicator.start(delay);
-          }
-          }
-          else {
-          // индикатор не найден - создать новый
-          var indicator = new WaitIndicator(container, message);
-          if (!hidden) {
-          indicator.start(delay);
-          }
-          list.push(indicator);
-          }*/
-
-         // и вернуть
-         return indicator;
+         var cb = function (delay) {
+            indicator.remove(delay);
+         };
+         if (options && options.stopper && options.stopper instanceof Promise) {
+            options.stopper
+               .then(cb)
+               .catch(function (err) {
+                  indicator.remove();
+               });
+         }
+         return cb;
       };
 
       /**
@@ -337,7 +313,6 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        */
       WaitIndicator.putParams = function (params) {
          if (params && typeof params === 'object') {
-            //###Object.assign(WaitIndicatorParams, params);
             for (var name in params) {
                WaitIndicator.setParam(name, params[name]);
             }
