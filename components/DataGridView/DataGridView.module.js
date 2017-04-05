@@ -1172,6 +1172,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dragMove: function(event, cords) {
          if(this._isHeaderScrolling) {
             var pos;
+            
+            if(!this._isPartScrollVisible) {
+               return;
+            }
 
             /* Выставим начальную координату, чтобы потом правильно передвигать колонки */
             if(this._lastLeftPos === null) {
