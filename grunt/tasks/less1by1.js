@@ -61,7 +61,7 @@ module.exports = function less1by1Task(grunt) {
     }, function writeCSS(compileLessError, output) {
 
         if (compileLessError) {
-            grunt.log.error(compileLessError);
+            console.error(compileLessError);
         }
         let suffix = '';
 

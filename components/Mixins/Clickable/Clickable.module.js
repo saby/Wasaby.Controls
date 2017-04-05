@@ -35,7 +35,17 @@ define('js!SBIS3.CONTROLS.Clickable', [
             /**
              * @cfg {Array} Аргументы, которые будут переданы при вызове команды
              */
-            commandArgs: []
+            commandArgs: [],
+            /**
+             * @cfg {Boolean} После клика включает задержку (определяется браузерам) перед следующим кликом.
+             * Если опция отключена, то все клики будут вызывать событие
+             * Если опция включена, то появляется задержка между кликами (определяется браузером)
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="clickThrottle">false</option>
+             * </pre>
+             */
+            clickThrottle: false
          },
          _keysWeHandle: [
             constants.key.enter,
@@ -108,8 +118,10 @@ define('js!SBIS3.CONTROLS.Clickable', [
                if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
-               this._clickHandler(e);
-               this._notifyOnActivated(e);
+               if(!this._options.clickThrottle || (this._options.clickThrottle && e.originalEvent.detail === 1)) {
+                  this._clickHandler(e);
+                  this._notifyOnActivated(e);
+               }
             }
             e.stopImmediatePropagation();
          }
