@@ -434,7 +434,8 @@ define('js!SBIS3.CONTROLS.WaitIndicatorManager',
           */
          get isVisible () {
             var poolItem = WaitIndicatorPool.search(this.container);
-            return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
+            //return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
+            return poolItem ? !(poolItem.isLocked || !poolItem.indicators.length) : false;
          },
 
          /**
