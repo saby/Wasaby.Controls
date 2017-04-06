@@ -69,6 +69,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          $protected : {
             _options : {
                /**
+                * @cfg {Boolean} Поддержка смены шаблонов для изображений
+                *     <option name="templates">true</option>
+                * </pre>
+                */
+               templates: true,
+               /**
                 * @cfg {Boolean} Включение режима автовысоты
                 * <wiTag group="Управление">
                 * Режим автовысоты текстового редактора.
@@ -1369,33 +1375,35 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                imageOptionsPanel = this._getImageOptionsPanel(target);
             imageOptionsPanel.show();
          },
-            _changeImageTemplate: function(target, template) {
-               var
-                  parent = target.parent();
-               parent.removeClass();
-               parent.attr('contenteditable', true);
-               target.removeClass();
-               switch (template) {
-                  case "1":
-                     target.addClass('image-template-left');
-                     parent.addClass('without-margin');
-                     break;
-                  case "2":
-                     target.select();
-                     this._insertImg(target.attr('src'), '', target.attr('alt'), '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>', target.css('width'));
-                     break;
-                  case "3":
-                     target.addClass('image-template-right');
-                     parent.addClass('without-margin');
-                     break;
-               };
-               this._setTrimmedText(this._getTinyEditorValue());
-            },
+         _changeImageTemplate: function(target, template) {
+            var
+               parent = target.parent();
+            parent.removeClass();
+            parent.attr('contenteditable', true);
+            target.removeClass();
+            switch (template) {
+               case "1":
+                  target.addClass('image-template-left');
+                  parent.addClass('without-margin');
+                  break;
+               case "2":
+                  target.select();
+                  this._insertImg(target.attr('src'), '', target.attr('alt'), '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>',target[0].style.width || (target.width() + 'px'));
+                  target.remove();
+                  break;
+               case "3":
+                  target.addClass('image-template-right');
+                  parent.addClass('without-margin');
+                  break;
+            };
+            this._setTrimmedText(this._getTinyEditorValue());
+         },
          _getImageOptionsPanel: function(target){
             var
                self = this;
             if (!this._imageOptionsPanel) {
                this._imageOptionsPanel = new ImageOptionsPanel({
+                  templates: self._options.templates,
                   parent: self,
                   target: target,
                   targetPart: true,
