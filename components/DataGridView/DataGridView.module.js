@@ -1194,11 +1194,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
-         var movePosition = this._getColumnsScrollPosition();
+         /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
+            если таблица лежит в контейнере с display: flex */
+         var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
 
          this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
-            this._movableElems[i].style.left = movePosition + 'px';
+            this._movableElems[i].style.transform = movePosition;
          }
       },
 
