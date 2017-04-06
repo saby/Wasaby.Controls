@@ -3,14 +3,14 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ButtonBase', [
-   "Core/constants",
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.Clickable",
-   "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CONTROLS.DataBindMixin",
-   "js!SBIS3.CONTROLS.IconMixin",
-   "Core/helpers/string-helpers"
+define('js!WS.Controls.ButtonBase', [
+   'Core/constants',
+   'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.Clickable',
+   'js!SBIS3.CONTROLS.FormWidgetMixin',
+   'js!SBIS3.CONTROLS.DataBindMixin',
+   'js!SBIS3.CONTROLS.IconMixin',
+   'Core/helpers/string-helpers'
 ], function( constants,Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, strHelpers) {
 
    'use strict';
@@ -19,9 +19,9 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса.
     * Отображение и вёрстка задаются именно в унаследованных классах.
-    * @class SBIS3.CONTROLS.ButtonBase
+    * @class SBIS3.CONTROLS.WSButtonBase
     * @public
-    * @extends SBIS3.CORE.CompoundControl
+    * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
 
-   var ButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.ButtonBase.prototype*/ {
+   var WSButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.WSButtonBase.prototype*/ {
 
       $protected: {
          _tooltipSettings: {
@@ -73,11 +73,11 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
       },
 
       $constructor: function() {
-         
+
       },
 
       init : function() {
-         ButtonBase.superclass.init.call(this);
+         WSButtonBase.superclass.init.call(this);
          /*TODO хак чтоб не срабатывал клик на кнопку при нажатии на дочерние компоненты*/
          $('[data-component]', this._container.get(0)).mousedown(function(e){
             e.stopPropagation();
@@ -102,11 +102,22 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
          }
          this._options.caption = caption || '';
       },
+      _setEnabled: function() {
+         WSButtonBase.superclass._setEnabled.apply(this, arguments);
+         // В IE8 при цвета смене иконки не происходит автоматическая её перерисовка, а вызывается она лишь при смене контента в before
+         // http://stackoverflow.com/questions/14227751/ie8-update-inherited-color-of-before-content-based-on-parent-elements-class
+         if (constants.browser.isIE8) {
+            this._container.addClass('controls-Button__IE8Hack');
+            setTimeout(function() {
+               this._container.removeClass('controls-Button__IE8Hack')
+            }.bind(this), 1);
+         }
+      },
 
       validate: function() {
          /* Т.к. buttonBase это составной контрол, то он должен валидировать как себя (радиокнопки должны валидировать себя),
             так и детей. */
-         return ButtonBase.superclass.validate.apply(this, arguments) && Control.prototype.validate.apply(this, arguments);
+         return WSButtonBase.superclass.validate.apply(this, arguments) && Control.prototype.validate.apply(this, arguments);
       },
       /**
        * Получить текст на кнопке.
@@ -134,6 +145,6 @@ define('js!SBIS3.CONTROLS.ButtonBase', [
       }
    });
 
-   return ButtonBase;
+   return WSButtonBase;
 
 });

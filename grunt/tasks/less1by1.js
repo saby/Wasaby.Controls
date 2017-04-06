@@ -72,7 +72,7 @@ module.exports = function less1by1Task(grunt) {
         if (output) {
             fs.writeFile(newName, output.css, function writeFileCb(writeFileError) {
                 if (writeFileError) grunt.log.error(`Не могу записать файл. Ошибка: ${writeFileError.message}.`);
-                grunt.log.ok(`file ${filePath} successfuly compiled. Theme: ${theme}`);
+               // grunt.log.ok(`file ${filePath} successfuly compiled. Theme: ${theme}`);
             });
         }
     });

@@ -9,7 +9,7 @@ gemini.suite('SBIS3.CONTROLS.DatePicker Online', function () {
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DatePicker 1"]', 40000);
                 this.picker = find('[name="DatePicker 1"]');
-                this.icon = find('[sbisname="CalendarButton"].icon-Calendar2')
+                this.icon = find('[sbisname="CalendarButton"] .icon-Calendar2')
 				actions.waitForElementToShow('[sbisname="TextBox 1"]', 40000);
 				this.input = find('[sbisname="TextBox 1"] input')
 				actions.executeJS(function (window) {
