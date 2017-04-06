@@ -17,8 +17,12 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
+                  windowTitle: 'Вставка изображения',
                   closeButton: true,
-                  canMultiSelect: false
+                  canMultiSelect: false,
+                  corner: 'tr',
+                  closeByExternalClick: true,
+                  onlyTemplate: false
                }
             },
             _selectedTemplate: undefined,
@@ -32,7 +36,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             $constructor: function() {
                var
                   self = this;
-               this._publish('onImageChange');
+               this._publish('onImageChange', 'onTemplateChange');
                this._container.find('.controls-ImagePanel__Button').wsControl = function() { return self; };
                this._container.find('.controls-ImagePanel__Button').on('click', this._buttonClickHandler.bind(this));
             },
@@ -40,17 +44,21 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             getFileLoader: function() {
                return Di.resolve('ImageUploader').getFileLoader();
             },
-
+            _onTargetChangeVisibility: function(){},
             _buttonClickHandler: function(event) {
                var
                   target = $(event.delegateTarget);
-
-               this._selectedTemplate =  target.attr('data-id');
-               this.getFileLoader().startFileLoad(target, this._selectedTemplate == COLLAGE_TEMPLATE, this._options.imageFolder).addCallback(function(fileobj) {
-                  this._notify('onImageChange', this._selectedTemplate, fileobj);
+               this._selectedTemplate = target.attr('data-id');
+               if (this._options.onlyTemplate) {
+                  this._notify('onTemplateChange', this._selectedTemplate);
                   this.hide();
-               }.bind(this))
-            }
+               } else {
+                  this.getFileLoader().startFileLoad(target, this._selectedTemplate === COLLAGE_TEMPLATE, this._options.imageFolder).addCallback(function(fileobj) {
+                     this._notify('onImageChange', this._selectedTemplate, fileobj);
+                     this.hide();
+                  }.bind(this))
+               }
+            },
          });
       return ImagePanel;
    });
