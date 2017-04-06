@@ -189,14 +189,24 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @constructor
        * @param {jQuery|HTMLElement} target Объект привязки индикатора
        * @param {string} message Текст сообщения индикатора
-       * @param {object} look Параметры внешнего вида индикатора
+       * @param {object} look Параметры внешнего вида индикатора:
+       * @param {string} look.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
+       * @param {string} look.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
+       * @param {boolean} look.small Использовать уменьшеный размер
+       * @param {string} look.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
+       *                            Если не задан - индикатор центрируется
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
       function WaitIndicator (target, message, look, delay) {
          //////////////////////////////////////////////////
          console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
          //////////////////////////////////////////////////
-         var oLook = {overlay:null, small:false, align:null};
+         var oLook = {
+            scroll: null,
+            overlay: null,
+            small: false,
+            align: null
+         };
          if (look && typeof look === 'object') {
             Object.keys(look).forEach(function (name) {
                if (name in look) {
@@ -253,18 +263,19 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
        * @param {Promise} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
        * @param {boolean} options.hidden Не показывать созданный индикатор
+       * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
        * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
        * @param {boolean} options.small Использовать уменьшеный размер
-       * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom. Если не задан -
-       *                               индикатор центрируется
-       * @return {WaitIndicator}
+       * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
+       *                               Если не задан - индикатор центрируется
+       * @return {function}
        */
       WaitIndicator.make = function (options) {
          var indicator = new WaitIndicator(
             options ? options.target : null,
             options ? options.message : null,
             options,
-            options.hidden ? null : options && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
+            options.hidden ? null : options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
          );
          var cb = function (delay) {
             indicator.remove(delay);
@@ -844,32 +855,70 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
             }*/
             var cls = spinner.classList;
             cls.add(container ? 'ws-wait-indicator_local' : 'ws-wait-indicator_global');
-            if (look) {
-               if (look.small) {
-                  cls.add('ws-wait-indicator_small');
-                  var aligns = {
-                     left: 'ws-wait-indicator_left',
-                     right: 'ws-wait-indicator_right',
-                     top: 'ws-wait-indicator_top',
-                     bottom: 'ws-wait-indicator_bottom'
-                  };
-                  if (look.align && aligns[look.align]) {
-                     cls.add(aligns[look.align]);
-                  }
-               }
-               var overlay = look.overlay && typeof look.overlay === 'string' ? look.overlay.toLowerCase() : null;
-               if (look.small || overlay === 'no' || overlay === 'none') {
-                  cls.add('ws-wait-indicator_no-overlay');
-               }
-               if (!look.small && overlay === 'dark') {
-                  cls.add('ws-wait-indicator_dark-overlay');
-               }
-            }
             if (hasMsg) {
                cls.add('ws-wait-indicator_text');
             }
+            if (look) {
+               var sides = ['left', 'right', 'top', 'bottom'];
+               var scroll = look.scroll && typeof look.scroll === 'string' ? this._checkValue(look.scroll.toLowerCase(), sides) : null;
+               var small;
+               if (!scroll) {
+                  small = look.small ? (typeof look.small === 'string' ? this._checkValue(look.small.toLowerCase(), sides, 'yes') : 'yes') : null;
+                  if (small === 'yes' && look.align && typeof look.align === 'string') {
+                     small = this._checkValue(look.align.toLowerCase(), sides, 'yes');
+                  }
+               }
+               var overlay;
+               if (scroll) {
+                  overlay = null;
+               }
+               else
+               if (small) {
+                  overlay = 'no';
+               }
+               else {
+                  overlay = look.overlay && typeof look.overlay === 'string' ? this._checkValue(look.overlay.toLowerCase(), ['no', 'none', 'dark']) : null;
+               }
+               if (scroll) {
+                  var list = {
+                     left: 'ws-wait-indicator_scroll-left',
+                     right: 'ws-wait-indicator_scroll-right',
+                     top: 'ws-wait-indicator_scroll-top',
+                     bottom: 'ws-wait-indicator_scroll-bottom'
+                  };
+                  //if (list[scroll]) {
+                     cls.add(list[scroll]);
+                  //}
+               }
+               if (small) {
+                  var list = {
+                     left: 'ws-wait-indicator_small-left',
+                     right: 'ws-wait-indicator_small-right',
+                     top: 'ws-wait-indicator_small-top',
+                     bottom: 'ws-wait-indicator_small-bottom'
+                  };
+                  cls.add(list[small] ? list[small] : 'ws-wait-indicator_small');
+               }
+               if (overlay === 'no' || overlay === 'none') {
+                  cls.add('ws-wait-indicator_overlay-no');
+               }
+               if (overlay === 'dark') {
+                  cls.add('ws-wait-indicator_overlay-dark');
+               }
+            }
             this.insert(container, spinner);
             return spinner;
+         },
+
+         /**
+          * Проверить значение по списку допустимых
+          * @protected
+          * @param {string} value Проверяемое значение
+          * @param {string[]} allowed Список допустимых значений
+          * @return {string}
+          */
+         _checkValue: function (value, allowed, defValue) {
+            return allowed.some(function (v) { return v === value; }) ? value : defValue;
          },
 
          /**

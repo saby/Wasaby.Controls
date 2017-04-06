@@ -26,17 +26,45 @@
     height: 100%;
 }
 
-.ws-wait-indicator_no-overlay {
+.ws-wait-indicator_text {
+}
+
+.ws-wait-indicator_overlay-no {
     background-color: transparent;
     pointer-events: none;
     cursor: auto !important;
 }
 
-.ws-wait-indicator_dark-overlay {
+.ws-wait-indicator_overlay-dark {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.ws-wait-indicator_text {
+.ws-wait-indicator_scroll-left {
+    background-image: -webkit-linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -moz-linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -o-linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+}
+
+.ws-wait-indicator_scroll-right {
+    background-image: -webkit-linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -moz-linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -o-linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+}
+
+.ws-wait-indicator_scroll-top {
+    background-image: -webkit-linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -moz-linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -o-linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+}
+
+.ws-wait-indicator_scroll-bottom {
+    background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -moz-linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: -o-linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    background-image: linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
 }
 
 .ws-wait-indicator_small {
@@ -85,7 +113,27 @@
     white-space: nowrap;
 }
 
-.ws-wait-indicator_small .ws-wait-indicator-in {
+.ws-wait-indicator_scroll-left .ws-wait-indicator-in {
+    margin-left: 0;
+}
+
+.ws-wait-indicator_scroll-right .ws-wait-indicator-in {
+    margin-right: 0;
+}
+
+.ws-wait-indicator_scroll-top .ws-wait-indicator-in {
+    margin-top: 0;
+}
+
+.ws-wait-indicator_scroll-bottom .ws-wait-indicator-in {
+    margin-bottom: 0;
+}
+
+.ws-wait-indicator_small .ws-wait-indicator-in,
+.ws-wait-indicator_small-left .ws-wait-indicator-in,
+.ws-wait-indicator_small-right .ws-wait-indicator-in,
+.ws-wait-indicator_small-top .ws-wait-indicator-in,
+.ws-wait-indicator_small-bottom .ws-wait-indicator-in {
     width: 20px;
     height: 20px;
     border-radius: 5px;
@@ -93,18 +141,18 @@
     background-image: url('/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-16x16-wheel.gif');
 }
 
-.ws-wait-indicator_small.ws-wait-indicator_left .ws-wait-indicator-in {
+.ws-wait-indicator_small-left .ws-wait-indicator-in {
     margin-left: 6px;
 }
 
-.ws-wait-indicator_small.ws-wait-indicator_right .ws-wait-indicator-in {
+.ws-wait-indicator_small-right .ws-wait-indicator-in {
     margin-right: 6px;
 }
 
-.ws-wait-indicator_small.ws-wait-indicator_top .ws-wait-indicator-in {
+.ws-wait-indicator_small-top .ws-wait-indicator-in {
     margin-top: 6px;
 }
 
-.ws-wait-indicator_small.ws-wait-indicator_bottom .ws-wait-indicator-in {
+.ws-wait-indicator_small-bottom .ws-wait-indicator-in {
     margin-bottom: 6px;
 }
