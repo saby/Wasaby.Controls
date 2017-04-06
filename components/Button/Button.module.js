@@ -70,17 +70,7 @@ define('js!SBIS3.CONTROLS.Button', [
 
          options.className += ' controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
          return options;
-      },
-
-      init : function() {
-         Button.superclass.init.call(this);
-         /*Хак чтобы в IE не прыгал тег button при зажатии мышки*/
-         if (constants.browser.isIE) {
-            this._container.mousedown(function(e){
-               e.preventDefault();
-            });
-         }
-      },
+      }
    });
 
    return Button;
