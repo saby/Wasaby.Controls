@@ -798,7 +798,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
 
 
                   /*если стоит автообновление из контекста*/
-                  if (filter.refresh) {
+                  if (!this._isRefresh && filter.refresh) {
                      this._isRefresh = true;
                      /* Первое на смену поля в контексте. Второе на смену рекорда во всплывающей панели
                      *  из-за WS приходится делать два разных события*/

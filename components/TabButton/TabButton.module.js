@@ -39,9 +39,6 @@ define(
       _dotTplFn: dotTplFn,
 
       $constructor: function () {
-         if (this._options.icon){
-            this.setIcon(this._options.icon);
-         }
       },
 
       _checkEnabledByClick: function(){

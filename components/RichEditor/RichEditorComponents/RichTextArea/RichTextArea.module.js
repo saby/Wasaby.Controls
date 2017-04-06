@@ -1096,7 +1096,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      self._readyContolDeffered.callback();
                   });
                }
-
+               // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
+               // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
+               // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
+               for (var i = 1; i <= 9; i++) {
+                  editor.shortcuts.remove('access+' + i);
+               }
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
                self._tinyReady.callback();
@@ -1361,7 +1366,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
-
          },
 
          _showImageOptionsPanel: function(target) {

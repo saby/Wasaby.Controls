@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.Image',
          Image = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Image.prototype */{
             /**
              * @event onBeginLoad Происходит перед началом загрузки изображения в компоненте.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROL.Image} control Экземпляр класса контрола, для которого произошло событие.
              * @returns {Boolean} В случае если из обработчика события возвращается результат false, то загрузка изображения отменяется.
              * @example
@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Image',
              */
             /**
              * @event onEndLoad Происходит после загрузки изображения в компоненте.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {Object} response Ответ бизнес-логики.
              * @example
              * <pre>
@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Image',
              * @event onErrorLoad Происходит в случае ошибки при загрузке изображения.
              * @remark
              * Ошибка может происходит, если сервер не отвечает либо переданы неверные параметры при вызове метода бизнес-логики.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {Object} error Описание ошибки, которое получено от бизнес-логики.
              * @example
              * <pre>
@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Image',
              */
             /**
              * @event onChangeImage Происходит при смене изображения.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} image Адрес изображения.
              * @example
              * <pre>
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Image',
              */
              /**
              * @event onDataLoaded Происходит при загрузке изображения в компонент.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} imageUrl Адрес изображения.
              * @param {Boolean} firstload Первый ли раз прошла загрузка: false - первый, true- не первый.
              * @example
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.Image',
              * @event onResetImage Происходит при сбросе изображения.
              * @remark
              * Происходит при вызове команды {@link resetImage}.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @example
              * <pre>
              *    Image.subscribe('onResetImage', function(event) {
@@ -140,14 +140,14 @@ define('js!SBIS3.CONTROLS.Image',
              * @event onShowEdit Происходит при отображении диалога редактирования изображения.
              * @remark
              * Происходит при вызове команды {@link editImage}.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} imageType Тип изображения: 'current' - текущее, 'new' - новое.
              * @see editImage
              */
             /**
              * @event onBeginSave Возникает при сохранении изображения
              * Позволяет динамически формировать параметры обрезки изображения
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе SBIS3.CORE.Abstract
+             * @param {Core/EventObject} eventObject Дескриптор события описание в классе SBIS3.CORE.Abstract
              * @param {Object} sendObject Параметры обрезки изображения
              * @example
              * <pre>
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.Image',
              */
             /**
              * @event onEndSave Возникает после обрезки изображения
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события описание в классе SBIS3.CORE.Abstract
+             * @param {Core/EventObject} eventObject Дескриптор события описание в классе SBIS3.CORE.Abstract
              * @param {Object} response Ответ бизнес-логики.
              * @see onBeginSave
              */
