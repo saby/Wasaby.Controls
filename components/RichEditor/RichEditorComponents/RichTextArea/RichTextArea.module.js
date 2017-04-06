@@ -1379,7 +1379,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                parent = target.parent();
             parent.removeClass();
-            parent.attr('contenteditable', true);
+            parent.removeAttr ('contenteditable');
             target.removeClass();
             switch (template) {
                case "1":
