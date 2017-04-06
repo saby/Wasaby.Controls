@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        *                            Если не задан - индикатор центрируется
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
-      function WaitIndicator (target, message, look, delay) {
+      function WaitIndicator (target, message, look, delay, useDeferred) {
          //////////////////////////////////////////////////
          console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
          //////////////////////////////////////////////////
@@ -225,6 +225,9 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          //pSelf.starting = null;
          //pSelf.suspending = null;
          //pSelf.removing = null;
+         if (useDeferred) {
+            pSelf.useDeferred = typeof useDeferred === 'function' ? useDeferred : true;
+         }
          if (typeof delay === 'number' && 0 <= delay) {
             this.start(delay);
          }
@@ -499,44 +502,41 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
             console.log('DBG: _callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
             //////////////////////////////////////////////////
             for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
-               var s = storings[i];
-               var o = pSelf[s];
-               if (o) {
-                  clearTimeout(o.id);
-                  if (o.fail) {
-                     o.fail.call();
+               var key = storings[i];
+               var inf = pSelf[key];
+               if (inf) {
+                  clearTimeout(inf.id);
+                  if (inf.fail) {
+                     if (inf.promise.catch) {
+                        inf.promise.catch(function (err) {});
+                     }
+                     inf.fail.call();
                   }
-                  pSelf[s] = null;
+                  pSelf[key] = null;
                }
             }
             //////////////////////////////////////////////////
             console.log('DBG: callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
             //////////////////////////////////////////////////
+            var promInf = emptyPromise(pSelf.useDeferred);
             if (typeof delay === 'number' && 0 < delay) {
-               var success, fail, promise = new Promise(function (resolve, reject) {
-                  success = resolve;
-                  fail = reject;
-               });
-               pSelf[storing] = {
-                  id: setTimeout(function () {
-                     var pSelf = WaitIndicatorProtected(this);
-                     //////////////////////////////////////////////////
-                     console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', pSelf[storing], ';');
-                     //////////////////////////////////////////////////
-                     WaitIndicatorInner[method](this);
-                     pSelf[storing].success.call(null, this);
-                     pSelf[storing] = null;
-                  }.bind(this), delay),
-                  success: success,
-                  fail: fail,
-                  promise: promise
-               };
-               return promise.catch(function (err) {});
+               promInf.id = setTimeout(function () {
+                  var pSelf = WaitIndicatorProtected(this),
+                     prev = pSelf[storing];
+                  //////////////////////////////////////////////////
+                  console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', prev, ';');
+                  //////////////////////////////////////////////////
+                  pSelf[storing] = null;
+                  WaitIndicatorInner[method](this);
+                  prev.success.call(null, this);
+               }.bind(this), delay);
+               pSelf[storing] = promInf;
             }
             else {
                WaitIndicatorInner[method](this);
-               return Promise.resolve(this);
+               promInf.success.call(null, this);
             }
+            return promInf.promise;
          },
 
          /**
@@ -571,6 +571,32 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
       };
 
       WaitIndicator.prototype.constructor = WaitIndicator;
+
+
+
+
+
+      var emptyPromise = function (useDeferred) {
+         var promise,
+            success,
+            fail;
+         if (useDeferred || typeof Promise === 'undefined') {
+            promise = new (typeof useDeferred === 'function' ? useDeferred : $ws.proto.Deferred)();
+            success = promise.callback.bind(promise);
+            fail = promise.errback.bind(promise);
+         }
+         else {
+            promise = new Promise(function (resolve, reject) {
+               success = resolve;
+               fail = fail;
+            });
+         }
+         return {
+            promise: promise,
+            success: success,
+            fail: fail
+         };
+      }
 
 
 
