@@ -1,15 +1,16 @@
 .controls-MenuItem {
-  position: relative;
-  .flexbox();
-  overflow: hidden;
-  align-items: center;
-  .box-sizing(border-box);
-  cursor: @menu-item-cursor;
-  width: @menu-item-width;
-  height: @menu-item-height;
-  padding: @menu-item-default-padding;
-  color: @menu-item-text-color;
-  background: @menu-item-bg;
+   position: relative;
+   .flexbox();
+   overflow: hidden;
+   align-items: center;
+   .box-sizing(border-box);
+   cursor: @menu-item-cursor;
+   width: @menu-item-width;
+   height: @menu-item-height;
+   padding: @menu-item-default-padding;
+   color: @menu-item-text-color;
+   background: @menu-item-bg;
+   text-align: left;
 
    &.controls-MenuItem__padding-16{
       padding-left: 33px;
@@ -19,44 +20,39 @@
       padding-left: 42px;
    }
 
-  &.controls-Click__active {
-    color: @menu-item-hover-text-color;
-    background: @menu-item-hover-bg;
-  }
+   .controls-MenuItem__content {
+      position: relative;
+      width: 100%;
+      min-height: @menu-item-height;
 
-  .controls-MenuItem__content {
-    position: relative;
-    width: 100%;
-    min-height: @menu-item-height;
-
-    .icon-16 ~ .controls-MenuItem__text{
-      margin: 6px 0 6px 22px;
-    }
-
-    .icon-24 ~ .controls-MenuItem__text{
-    	margin: @menu-item-icon-24-margin;
-    }
-
-    .icon-32 ~ .controls-MenuItem__text{
-      margin: @menu-item-icon-32-margin;
-    }
-
-    .controls-MenuItem__icon {
-      position: absolute;
-      top: @menu-item-icon-top-offset;
-      left: @menu-item-icon-left-offset;
-      &.icon-24 {
-         top: @menu-item-icon24-top-offset;
-         left: @menu-item-icon24-left-offset;
+      .icon-16 ~ .controls-MenuItem__text{
+         margin: 6px 0 6px 22px;
       }
-    }
 
-    .controls-MenuItem__text {
-       margin: @menu-item-text-margin;
-       line-height: @menu-item-line-height;
-       display: block;
-    }
-  }
+      .icon-24 ~ .controls-MenuItem__text{
+         margin: @menu-item-icon-24-margin;
+      }
+
+      .icon-32 ~ .controls-MenuItem__text{
+         margin: @menu-item-icon-32-margin;
+      }
+
+      .controls-MenuItem__icon {
+         position: absolute;
+         top: @menu-item-icon-top-offset;
+         left: @menu-item-icon-left-offset;
+         &.icon-24 {
+            top: @menu-item-icon24-top-offset;
+            left: @menu-item-icon24-left-offset;
+         }
+      }
+
+      .controls-MenuItem__text {
+         margin: @menu-item-text-margin;
+         line-height: @menu-item-line-height;
+         display: block;
+      }
+   }
 }
 
 .icon-offset24 .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__text {
@@ -75,10 +71,30 @@
 }
 
 .ws-is-desktop-platform {
-  .controls-MenuItem:not(.ws-disabled) {
-    &:hover {
-      color: @menu-item-hover-text-color;
-      background: @menu-item-hover-bg;
-    }
-  }
+   .controls-MenuItem:not(.ws-disabled) {
+      &:hover {
+         color: @menu-item-hover-text-color;
+         background: @menu-item-hover-bg;
+      }
+   }
+   // т.к. IE8 не поддерживает :not, то делаю для него отдельный фикс подсветки по ховеру,
+   // усилил селектор задизейбленного состояния т.к. иначе ховер его перебьет
+   &.ws-is-ie8 {
+      .controls-MenuItem{
+         &:hover {
+            color: @menu-item-hover-text-color;
+            background: @menu-item-hover-bg;
+         }
+         &.ws-disabled {
+            color: @menu-item-disabled-text-color;
+            background: transparent;
+            cursor: default;
+
+            .controls-MenuItem__icon {
+               color: @menu-item-disabled-text-color !important;
+            }
+         }
+
+      }
+   }
 }

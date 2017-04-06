@@ -8,12 +8,14 @@ define('js!SBIS3.CONTROLS.List.Remove', [
    function (ActionBase, ListMixin, fcHelpers, cInstance) {
       'use strict';
       /**
-       * Акшен удаления записей
+       * Экшен удаления записей
        * @class SBIS3.CONTROLS.List.Remove
        * @public
        * @extends SBIS3.CONTROLS.Action.Action
        * @mixes SBIS3.CONTROLS.Action.List.ListMixin
        * @author Крайнов Дмитрий Олегович
+       * @example
+       * Пример использования
        * <pre>
        *    var remove = new Remove({
        *       linkedObject : myListView
@@ -42,7 +44,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
       var Remove = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.List.Remove.prototype */{
          /**
           * @event onRemove Срабатывает перед удалением
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} items Массив моделей которые надо удалить
           * @see execute
           */

@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Menu', [
    var Menu = ButtonGroupBase.extend([hierarchyMixin, TreeMixin], /** @lends SBIS3.CONTROLS.Menu.prototype */ {
       /**
        * @event onMenuItemActivate При активации пункта меню
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} id Идентификатор нажатого пункта.
        * @example
        * При выборе пункта меню данный ключ ставится в значение комбобокса

@@ -21,16 +21,13 @@
    }
 
    .controls-DateRange__Button {
-      font-size: @date-range-icon-button-size !important;
-      line-height: @date-range-icon-button-size !important;
-      height: @date-range-icon-button-size;
-      width: @date-range-icon-button-size;
-      margin: @date-range-icon-button-margin;
-      position: relative;
-
-      // TODO: Когда сделают все кнопки синими при наведении убрать
-      &.icon-primary.controls-IconButton.action-hover:hover {
-         color: @date-range-icon-button-hover-color;
+      .controls-Button__icon {
+         font-size: @date-range-icon-button-size !important;
+         line-height: @date-range-icon-button-size !important;
+         height: @date-range-icon-button-size;
+         width: @date-range-icon-button-size;
+         margin: @date-range-icon-button-margin;
+         position: relative;
       }
    }
 

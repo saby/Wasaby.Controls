@@ -39,14 +39,14 @@
    &.ws-disabled {
       .controls__filterButton-button {
          cursor: default;
-         color: @icon-color-disabled !important;
+         color: @default-disabled-color !important;
       }
       .controls__filterButton__filterLine-arrow {
-         color: @icon-color-disabled !important;
+         color: @default-disabled-color !important;
       }
       .controls__filterButton__filterLine-cross {
          cursor: default;
-         color: @icon-color-disabled !important;
+         color: @default-disabled-color !important;
       }
    }
 }
@@ -225,16 +225,16 @@
 
    &.ws-disabled {
       .controls__filterButton__filterLine-items {
-         color: @link-disabled-text-color;
+         color: @default-disabled-color;
          cursor: default;
 
          .controls__filterButton__filterLine-arrow {
-            color: @icon-color-disabled !important;
+            color: @default-disabled-color !important;
             cursor: default;
          }
 
          &:hover {
-            color: @link-disabled-text-color;
+            color: @default-disabled-color;
             .controls__filterButton__filterLine-text {
                text-decoration: none;
             }

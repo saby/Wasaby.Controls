@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
        var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.SelectorController.prototype  */{
            /**
             * @event onSelectComplete Происходит при выборе элементов коллекции.
-            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+            * @param {Core/EventObject} eventObject Дескриптор события.
             * @param {Array.<String>} Набор выбранных элементов (см. {@link selectedItems}).
             */
           $protected: {

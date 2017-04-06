@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _dotTplFn: dotTplFn,
          /**
           * @event onClickMore Происходит при клике на кнопку "Ещё", которая отображается в выпадающем списке.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           */
          $protected: {
             _options: {

@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} error Объект с описанием ошибки. В свойстве message хранится текст ошибки, например для вывода в пользовательский интерфейс.
        * @see submit
        * @see update
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
        * @see read
        * @see dataSource
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
        * @returns {Boolean|Error|Deferred}
        * <ul>
@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
        * @param {String} key Первичный ключ сохраняемой записи.
        * @see submit
@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
        * @see destroy
        * @see dataSource
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была создана в источнике данных.
        * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
        * @see create
@@ -292,7 +292,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             e.returnValue = message;
             return message;
          }
-         return null;
+         //Нужно вернуть undefined, любой другой результат ie воспримет как текст для окна с вопросом
+         return undefined;
       },
 
       _onAfterShow: function() {

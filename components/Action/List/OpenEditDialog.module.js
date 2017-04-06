@@ -52,23 +52,23 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.Action.OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {String} key Первичный ключ сохраняемой записи.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       $protected: {

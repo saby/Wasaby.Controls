@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     [
    "Core/constants",
    "html!SBIS3.CONTROLS.SelectorButton",
-   "js!SBIS3.CONTROLS.ButtonBase",
+   "js!WS.Controls.ButtonBase",
    "js!SBIS3.CONTROLS.DSMixin",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.ActiveMultiSelectable",
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     function(
        constants,
        dotTplFn,
-       ButtonBase,
+       WSButtonBase,
        DSMixin,
        MultiSelectable,
        ActiveMultiSelectable,
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
     *
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends SBIS3.CONTROLS.WSButtonBase
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @public
     */
 
-   var SelectorButton = ButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
+   var SelectorButton = WSButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

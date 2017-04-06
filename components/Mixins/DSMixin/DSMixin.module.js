@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
        /**
         * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function(){
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
        /**
         * @event onDataLoad Происходит после загрузки данных.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
         * <pre>
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @event onDataLoadError Происходит после загрузки данных, завершенной с ошибкой.
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {HTTPError} error Произошедшая ошибка.
        * @return {Boolean} Если вернуть:
        * <ol>
@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @event onBeforeDataLoad Происходит перед загрузкой данных.
        * @remark
        * Событие сработает перед запросом к источнику данных.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    myView.subscribe('onBeforeDataLoad', function(event, error){
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @event onItemsReady Происходит при готовности экземпляра коллекции iList.
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    myView.subscribe('onItemsReady', function(event){
@@ -1585,7 +1585,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       /**
        * Обрабатывает событие об изменении коллекции.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
        * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
