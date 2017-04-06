@@ -1389,7 +1389,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                case "2":
                   target.select();
                   this._insertImg(target.attr('src'), '', target.attr('alt'), '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>',target[0].style.width || (target.width() + 'px'));
-                  target.remove();
                   break;
                case "3":
                   target.addClass('image-template-right');
