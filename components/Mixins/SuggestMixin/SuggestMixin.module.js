@@ -774,6 +774,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
 
             this._listReversed = !this._listReversed;
+            /* Сбрасываем выбранную запись в списке, после сброса курсор устанавливается на первую запись
+             и после переворота будет на последней.
+             Если запись не сбрасывать курсор будет вверху после переворота. */
+            this.getList().setSelectedKey(null);
             items.assign(itemsArray.reverse());
          }
       }
