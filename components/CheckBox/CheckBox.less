@@ -1,10 +1,12 @@
 .controls-CheckBox {
   display: inline-block;
+  line-height: @default-height;
 }
 
 .controls-CheckBox__caption {
   display: inline-block;
   word-wrap: break-word;
+  line-height: @default-height - 2 * extract(@check-box-caption-padding, 1);
 }
 
 .controls-CheckBox__icon {
@@ -45,6 +47,7 @@
     font-size: @check-box-icon-font-size;
     height: @check-box-icon-height;
     width: @check-box-icon-width;
+    line-height: @check-box-icon-height;
     margin: @check-box-icon-margin;
   }
 }
@@ -55,6 +58,7 @@
     position: absolute;
     height: @check-box-icon-null-height;
     width: @check-box-icon-null-width;
+    line-height: @check-box-icon-null-height;
     margin: (@default-height - @check-box-icon-null-height) / 2;
   }
 }
