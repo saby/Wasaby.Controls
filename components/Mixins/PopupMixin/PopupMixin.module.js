@@ -53,15 +53,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
        /**
         * @event onShow Происходит при открытии окна.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         */
        /**
         * @event onClose Происходит при закрытии окна.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         */
        /**
         * @event onAlignmentChange Происходит при изменении вертикального {@link verticalAlign} или горизонтального {@link horizontalAlign} выравнивания.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Object} newAlignment Объект с конфигурацией выравнивания.
         * @param {Object} [newAlignment.verticalAlign] Вертикальное выравнивание.
         * @param {Object} [newAlignment.horizontalAlign] Горизонтальное выравнивание.
@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
         */
        /**
         * @event onChangeFixed Происходит при изменении способа позиционирования окна браузера или других объектов на веб-странице.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Boolean} fixed В значении true - CSS-свойство position=fixed, иначе position=absolute.
         */
        $protected: {
