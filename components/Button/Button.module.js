@@ -1,78 +1,145 @@
+define('js!SBIS3.CONTROLS.Button',
+   [
+      'Core/core-extend',
+      'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'tmpl!SBIS3.CONTROLS.Button',
+      'js!SBIS3.CONTROLS.Button/babelHelpers',
+      'Core/tmpl/js/helpers2/entityHelpers',
+      'Core/helpers/dom&controls-helpers',
+      'css!SBIS3.CONTROLS.Button',
+      'css!WS.Controls.Button/resources/ButtonCommonStyles'
+   ],
 
-define('js!SBIS3.CONTROLS.Button', [
-   'Core/constants',
-   'js!WS.Controls.Button',
-   'css!SBIS3.CONTROLS.Button'
-], function(constants, WSButton) {
+   function (extend,
+             Compatible,
+             template,
+             babelHelpers,
+             entityHelpers,
+             controlsHelpers) {
 
-   'use strict';
+      'use strict';
 
-   /**
-    * Контрол, отображающий обычную кнопку
-    * Можно настроить:
-    * <ol>
-    *    <li>{@link SBIS3.CORE.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
-    *    <li>{@link SBIS3.CONTROLS.WSButtonBase#caption текст на кнопке};</li>
-    *    <li>{@link SBIS3.CORE.Control#enabled возможность взаимодействия с кнопкой};</li>
-    *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
-    *    <li>{@link primary по умолчанию ли кнопка};</li>
-    *    <li>{@link SBIS3.CORE.Control#visible видимость кнопки};</li>
-    * </ol>
-    * @class SBIS3.CONTROLS.Button
-    * @extends SBIS3.CONTROLS.WSButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
-    *
-    * @author Крайнов Дмитрий Олегович
-    *
-    * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
-    * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
-    * @ignoreOptions subcontrol verticalAlignment
-    *
-    * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
-    * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
-    * @ignoreMethods focusCatch getActiveChildControl getChildControlById getChildControlByName getChildControls
-    * @ignoreMethods getClassName getContext getEventBusOf getEventHandlers getEvents getExtendedTooltip getOpener
-    * @ignoreMethods getImmediateChildControls getLinkedContext getNearestChildControlByName getOwner getOwnerId
-    * @ignoreMethods getReadyDeferred getStateKey getUserData getValue hasActiveChildControl hasChildControlByName
-    * @ignoreMethods hasEventHandlers isActive isAllReady isDestroyed isMarked isReady makeOwnerName setOwner setSize
-    * @ignoreMethods markControl moveFocus moveToTop once registerChildControl registerDefaultButton saveToContext
-    * @ignoreMethods sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener setStateKey activate
-    * @ignoreMethods setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
-    * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
-    *
-    * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
-    * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
-    * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
-    *
-    * @cssModifier controls-Button__filled непрозрачный фон кнопки
-    * @cssModifier controls-Button__big Большая кнопка.
-    * @cssModifier controls-Button__ellipsis Кнопка, на которой в тексте появляется многоточие при нехватке ширины.
-    * @cssModifier controls-Button__withoutCaption Кнопка, без заголовка
-    * !Важно: при добавлении этого класса сломается "Базовая линия".
-    *
-    * @css controls-Button__icon Класс для изменения отображения иконки кнопки.
-    * @css controls-Button__text Класс для изменения отображения текста на кнопке.
-    *
-    * @control
-    * @category Buttons
-    * @public
-    * @initial
-    * <component data-component='SBIS3.CONTROLS.Button'>
-    *    <option name='caption' value='Кнопка'></option>
-    * </component>
-    */
+      var Button = function () {
+         babelHelpers.createClass(Button, [{
+            key: '_controlName',
+            get: function get() {
+               return 'SBIS3.CONTROLS.Button';
+            }
+         }, {
+            key: '_template',
+            get: function get() {
+               return template;
+            }
+         }, {
+            key: '_container',
+            get: function get() {
+               return this.container;
+            },
+            set: function set(val) {
+               if (this.container && !this.container.startTag && typeof(this.container.unbind) === 'function')
+                  this.container.unbind();
 
-   var Button = WSButton.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
+               this.container = val;
 
-      _modifyOptions: function () {
-         var
-             options = Button.superclass._modifyOptions.apply(this, arguments);
+               try{
+                  this.container[0].wsControl = this;
+               }catch (e){}
 
-         options.className += ' controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
-         return options;
-      }
+               this._initInnerAction();
+            }
+         }]);
+
+         function Button(cfg) {
+            babelHelpers.classCallCheck(this, Button);
+
+            this._options = cfg;
+            this._container = cfg.container;
+
+            if (!this._container)
+            {
+               this._container = cfg.element;
+            }
+            var defaultInstanceData = controlsHelpers.getDefaultInstanceData(Button);
+            this._options = controlsHelpers.mergeOptionsToDefaultOptions(Button, this._options, {_options:defaultInstanceData});
+
+            this.deprecatedContr(cfg);
+
+            this._thisIsInstance = true;
+
+            this._publish('onActivated');
+         }
+
+         babelHelpers.createClass(Button, [{
+            key: 'render',
+            value: function render(redraw) {
+
+               var decOptions = this._container ? entityHelpers.createRootDecoratorObject(this._options.id, true, this.getAttr('data-component'), {}) : {},
+                  attributes = {};
+
+               try {
+                  var attrs = this._container.attributes||this._container[0].attributes;
+                  for (var atr in attrs)
+                  {
+                     if (attrs.hasOwnProperty(atr))
+                     {
+                        var name = attrs[atr].name?attrs[atr].name:atr,
+                           value = attrs[atr].value||attrs[atr];
+                        decOptions[name] = attributes[name] = value;
+
+                     }
+                  }
+
+               }catch(e){
+
+               }
+
+               //decOptions = entityHelpers.resolveDecOptionsClassMerge(decOptions, this._options, this._options);
+               if (!this._options['class'])
+               {
+                  var className = (this._options['class']?this._options['class']+' ':'')+
+                     (this._options['className']?this._options['className']+' ':'')+
+                     (this._options['cssClassName']?this._options['cssClassName']+' ':'')+
+                     (attributes['class']?attributes['class']+' ':'');
+                  this._options['class'] = className;
+               }
+
+               decOptions['class'] = this._options['class'];
+               decOptions['class'] += ' controls-Button ' + (this._options.enabled?' ws-enabled ':' ws-disabled ')+(this._options.visible?'':' ws-hidden ') +
+                  (this._options.primary?' controls-Button__primary' : ' controls-Button__default')+" ";
+//
+               decOptions['disabled'] = this._options.enabled?undefined:'disabled';
+
+               this._options['config'] = decOptions['config'];
+
+               var markup = this._template(this, decOptions);
+               if (redraw) {
+                  try {
+                     var temp = $(markup);
+
+                     $(this._container).before(temp);
+                     $(this._container).remove();
+                     this._container = temp;
+                  }catch (e){}
+               }
+               return markup;
+            }
+         }, {
+            key: '_initInnerAction',
+            value: function _initInnerAction()
+            {
+               var self = this;
+
+               if (window && this.container && !this.container.startTag) {
+                  this.container.click(function (e) {
+                     self._onClickHandler(e);
+                  });
+               }
+            }
+         }]);
+         return Button;
+      }();
+
+      Object.assign(Button.prototype, Compatible);
+      Button.extend = Button.prototype.extend;
+      return Button;
    });
-
-   return Button;
-
-});
