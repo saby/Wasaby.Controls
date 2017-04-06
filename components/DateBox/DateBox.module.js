@@ -47,7 +47,7 @@ define(
         * 1. через выбор в календаре;
         * 2. через установку нового значения в поле ввода с клавиатуры;
         * 3. методами {@link setText} или {@link setDate}.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Date} date Дата, которую установили.
         * @example
         * <pre>

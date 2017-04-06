@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
         * @event onSelectedItemsChange Происходит при смене выбранных элементов коллекции.
         * @remark
         * Событие происходит сразу после изменения списка выбранных коллекции элементов, когда хотя бы один элемент был добавлен либо удален из списка.
-        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Core/EventObject} Дескриптор события.
         * @param {Array.<String>} idArray Массив ключей выбранных элементов.
         * @param {ChangedKeys} changed Измененные ключи.
         * @example

@@ -31,12 +31,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearch При нажатии кнопки поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
        */
       /**
        * @event onReset При нажатии кнопки отмена (крестик)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       _dotTplFn : dotTplFn,
       $protected: {

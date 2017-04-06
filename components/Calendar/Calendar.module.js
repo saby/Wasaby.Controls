@@ -52,7 +52,7 @@ define(
       var Calendar = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Calendar.prototype */{
           /**
            * @event onDateChange Срабатывает при изменении даты.
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} date Дата.
            * @example
            * <pre>

@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
    var DateRange = CompoundControl.extend([RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRange.prototype */{
       /**
        * @event onDateRangeChange При изменении диапазона дат как через поле ввода, так и через календарь.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Date|String} startDate Начальная дата диапазона.
        * @param {Date|String} endDate Конечная дата диапазона.
        */
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @event onStartDateChange При изменении начальной даты диапазона как через поле ввода, так и через календарь.
        * @remark
        * Событие также происходит при использовании метода {@link setStartDate}.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Date|String} startDate Начальная дата диапазона.
        * @see setStartDate
        */
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
        * @event onStartDateChange При изменении конечной даты диапазона как через поле ввода, так и через календарь.
        * @remark
        * Событие также происходит при использовании метода {@link setEndDate}.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Date|String} endDate Конечная дата диапазона.
        * @see setEndDate
        */

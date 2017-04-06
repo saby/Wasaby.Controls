@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
        /**
         * @event onViewModeChanged Происходит при изменении режима отображения {@link mode}.
-        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Core/EventObject} Дескриптор события.
         */
       _dotTplFn : dotTplFn,
       $protected: {

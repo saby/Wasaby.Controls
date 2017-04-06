@@ -42,7 +42,7 @@
    height: 24px;
    background-color: @fieldRichEditorToolbarColor;
    text-align: left;
-   display: block;
+   display: flex;
    padding-left: 6px;
    overflow: hidden;
    -webkit-touch-callout: none;
@@ -298,10 +298,10 @@
       &.controls-Button {
          &.controls-ListView__item {
             &.ws-disabled:hover .controls-Button__icon {
-               color: @icon-color-disabled !important;
+               color: @default-disabled-color !important;
             }
             &:hover .controls-Button__icon {
-               color: @blue-dark-color !important;
+               color: @icon-active-color !important;
             }
          }
       }

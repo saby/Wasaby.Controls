@@ -1,13 +1,9 @@
 define('js!SBIS3.CONTROLS.MenuButton', [
-   'js!SBIS3.CONTROLS.Button',
-   'js!SBIS3.CONTROLS.ContextMenu',
-   'js!SBIS3.CONTROLS.PickerMixin',
-   'js!SBIS3.CONTROLS.DSMixin',
-   'js!SBIS3.CONTROLS.MenuButtonMixin',
-   'Core/helpers/dom&controls-helpers',
+   'js!WS.Controls.MenuButton',
+   'css!SBIS3.CONTROLS.Button',
    'css!SBIS3.CONTROLS.MenuButton',
-   'css!SBIS3.CONTROLS.MenuButtonMixin'
-], function(Button, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin, dcHelpers) {
+   'css!WS.Controls.MenuButton'
+], function(WSMenuButton) {
 
    'use strict';
 
@@ -22,7 +18,6 @@ define('js!SBIS3.CONTROLS.MenuButton', [
     *
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -60,67 +55,12 @@ define('js!SBIS3.CONTROLS.MenuButton', [
     * </component>
     */
 
-   var MenuButton = Button.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
-      $protected: {
-      },
-
+   var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _modifyOptions : function() {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.pickerClassName += ' controls-MenuButton__Menu';
+         opts.className += ' controls-Button' + (opts.primary ? ' controls-Button__primary' : ' controls-Button__default');
          return opts;
-      },
-
-      init: function(){
-         var self = this;
-         this._container.addClass('controls-MenuButton');
-         if(this._container.hasClass('controls-Button__big')){
-            this._options.pickerClassName += ' controls-Menu__big';
-         }
-         this.reload();
-         MenuButton.superclass.init.call(this);
-      },
-
-      _clickHandler: function(){
-         if (this._dataSet){
-            if (this._dataSet.getCount() > 1) {
-               this.togglePicker();
-            } else {
-               if (this._dataSet.getCount() == 1) {
-                  var id = this._dataSet.at(0).getId();
-                  this._notify('onMenuItemActivate', id);
-               }
-            }
-         }
-      },
-      /**
-       * Показывает меню у кнопки
-       */
-      showPicker: function() {
-         MenuButton.superclass.showPicker.call(this);
-      },
-
-      _initializePicker: function(){
-         MenuButton.superclass._initializePicker.call(this);
-         var self = this;
-         this._picker._oppositeCorners.tl.horizontal.top = 'tr';
-         this._picker._oppositeCorners.tr.horizontal.top = 'tl';
-         this._picker.subscribe('onDrawItems', function(){
-            self._picker.recalcPosition(true);
-         });
-      },
-
-      _dataLoadedCallback : function() {
-         if (this._dataSet.getCount() > 1) {
-            $('.js-controls-MenuButton__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuButton__withoutMenu');
-         } else {
-            $('.js-controls-MenuButton__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuButton__withoutMenu');
-            this._container.removeClass('controls-Picker__show');
-         }
-         if (this._picker){
-            this.hidePicker();
-         }
       }
    });
 

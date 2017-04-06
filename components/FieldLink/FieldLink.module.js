@@ -16,12 +16,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ActiveSelectable",
        "js!SBIS3.CONTROLS.SyncSelectionMixin",
        "js!SBIS3.CONTROLS.FieldLinkItemsCollection",
-       "html!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
-       "html!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
+       "tmpl!SBIS3.CONTROLS.FieldLink/afterFieldWrapper",
+       "tmpl!SBIS3.CONTROLS.FieldLink/beforeFieldWrapper",
        "tmpl!SBIS3.CONTROLS.FieldLink/textFieldWrapper",
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
+       "js!WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -63,12 +64,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
         /********************************************/
         ITextValue,
         TemplateUtil,
-        ToSourceModel
+        ToSourceModel,
+        List
     ) {
 
        'use strict';
 
-       var INPUT_WRAPPER_PADDING = 8;
        var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
 
@@ -176,7 +177,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           /**
            * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {Object} meta Объект, описывающий метаданные события. В его свойствах передаются идентификатор и экземпляр выбранного значения.
            * @param {String} meta.id Идентификатор выбранного значения.
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
@@ -184,7 +185,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
           $protected: {
              _linkCollection: null,   /* Контрол отображающий выбранные элементы */
              _selectorAction: null,   /* Action выбора */
-             _isDynamicInputWidth: false,
              _lastFieldLinkWidth: null,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
@@ -337,9 +337,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  self = this;
 
              this._publish('onItemActivate');
-             /* Флаг, как с css модификатор удалится в 3.7.5, т.к. сделаем ширину везде динамической,
-                а базовую линию меток будем выставлять через line-height */
-             this._isDynamicInputWidth = this.getContainer().hasClass('controls-FieldLink__dynamicInputWidth');
 
              commandDispatcher.declareCommand(this, 'clearAllItems', this._dropAllItems);
              commandDispatcher.declareCommand(this, 'showAllItems', this._showAllItems);
@@ -444,7 +441,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              if(this._options.menuSelector) {
-                this.getChildControlByName('fieldLinkMenu').setItems(this._options.dictionaries);
+                var flMenu = this.getChildControlByName('fieldLinkMenu');
+                flMenu.setItems(this._options.dictionaries);
+                this.subscribeTo(flMenu, 'onMenuItemActivate', this._menuItemActivatedHandler);
              }
           },
 
@@ -736,7 +735,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _modifyOptions: function() {
              var cfg = FieldLink.superclass._modifyOptions.apply(this, arguments),
                  classesToAdd = ['controls-FieldLink'],
-                 selectedKeysLength;
+                 selectedKeysLength, items;
 
              cfg.selectedKeys = _private.keysFix(cfg.selectedKeys);
              selectedKeysLength = cfg.selectedKeys.length;
@@ -751,6 +750,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 if(selectedKeysLength === 1 || !selectedKeysLength) {
                    classesToAdd.push(classes.SELECTED_SINGLE);
                 }
+             }
+
+             if(cfg.selectedItem && cInstance.instanceOfModule(cfg.selectedItem, 'WS.Data/Entity/Model')) {
+                items = new List({items: [cfg.selectedItem]});
+             } else if (cfg.selectedItems) {
+                items = cfg.selectedItems;
+             }
+
+             if(items) {
+                cfg.preRenderItems = items;
              }
 
              /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
@@ -831,13 +840,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          this._toggleShowAll(false);
                       }
                    }
-                }
-             }
-
-             if(!this._isDynamicInputWidth) {
-                if(needResizeInput) {
-                   this._setInputWidth(0);
-                   this._updateInputWidth();
                 }
              }
           },
@@ -1213,48 +1215,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this.isPickerVisible() && !show) {
                 this.hidePicker();
              }
-          },
-
-          /**
-           * Рассчитывает ширину поля ввода, учитывая всевозможные wrapper'ы и отступы
-           * @returns {number}
-           * @private
-           */
-          _getInputWidth: function() {
-             var width = this._container[0].clientWidth -
-                 ( this._getAfterFieldWrapper().outerWidth() +
-                   this._getBeforeFieldWrapper().outerWidth() +
-                   INPUT_WRAPPER_PADDING );
-
-             /* Когда поле связи скрыто, могут происходить неправильные расчёты, самый дешёвый способ этого избежать,
-                просто считать что ширина  - 0 */
-             return (width >= 0) ? width : 0;
-          },
-          /**
-           * Обновляет ширину поля ввода
-           */
-          _updateInputWidth: function() {
-             var isEmptySelection = this._isEmptySelection(),
-                 inputWidth;
-
-             /* Для поля связи в задизейбленом состоянии считаем (если есть выбранные элементы (по стандарту) ),
-                ширина инпута - 0, т.к. он визуально не отображается */
-             if(this.isEnabled() || isEmptySelection) {
-                inputWidth = this._getInputWidth();
-
-                /* По неустановленным причинам, после обновления хрома, он для некоторых элементов начинает возвращать нулевую ширину,
-                   после чистки кэша или перезагрузки браузера проблема исчезает, но надо от этого защититься (повторялось только в хроме) */
-                if(!inputWidth && isEmptySelection) {
-                   inputWidth = 'auto';
-                }
-             } else  {
-                inputWidth = 0;
-             }
-             this._setInputWidth(inputWidth);
-          },
-
-          _setInputWidth: function(width) {
-             this._inputField[0].style.width = (width === 'auto' ? width : width + 'px');
           },
 
           /* Заглушка, само поле связи не занимается отрисовкой */

@@ -4,18 +4,19 @@
    cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
+   align-items: baseline;
 
    &.ws-validation-error {
       outline: @controls-SelectorButton-error-outline;
       outline-offset: -1px;
    }
-
    &.ws-disabled {
       cursor: default;
       .controls-SelectorButton__cross {
          display: none;
       }
    }
+
 }
 
 .controls-SelectorButton__icon,

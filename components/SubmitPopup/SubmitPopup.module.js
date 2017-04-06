@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
           */
          /**
           * @event onChoose Происходит при нажатии на кнопку диалога.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {ChosenStatus} Вариант диалога, выбранный нажатием соответствующей кнопки.
           * @variant
           */

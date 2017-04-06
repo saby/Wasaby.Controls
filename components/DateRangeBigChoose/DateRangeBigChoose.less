@@ -82,12 +82,14 @@
       padding: @date-range-big-choose-header-padding;
 
       .controls-DateRangeBigChoose__homeBtn {
-         margin: @date-range-big-choose-header-home-button-margin;
          height: @date-range-big-choose-header-home-button-size;
          width: @date-range-big-choose-header-home-button-size;
+         margin: @date-range-big-choose-header-home-button-margin;
          border-radius: @date-range-big-choose-header-home-button-size/2;
-         font-size: @date-range-big-choose-header-home-button-font-size !important;
          line-height: @date-range-big-choose-header-home-button-line-height !important;
+         .controls-Button__icon {
+            font-size: @date-range-big-choose-header-home-button-font-size !important;
+         }
       }
 
       .controls-DateRangeBigChoose__header-date-pickers {
@@ -98,10 +100,13 @@
          height: @date-range-big-choose-header-apply-button-size;
          width: @date-range-big-choose-header-apply-button-size;
          border-radius: @date-range-big-choose-header-apply-button-size/2;
-         font-size: @date-range-big-choose-header-apply-button-font-size !important;
          line-height: @date-range-big-choose-header-apply-button-line-height !important;
          margin-left: @date-range-big-choose-header-apply-button-margin-left;
          float: right;
+         .controls-Button__icon {
+            font-size: @date-range-big-choose-header-apply-button-font-size !important;
+            width: @date-range-big-choose-header-apply-button-font-size;
+         }
       }
       .controls-DateRangeBigChoose__header-rangeDash {
          float: right;
@@ -229,7 +234,7 @@
       }
 
       .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
-         margin: 0 22px 0 18px;
+         margin: 0 18px 0 25px;
          font-size: @date-range-big-choose-years-panel-current-year-button-font-size !important;
          line-height: @date-range-big-choose-years-panel-current-year-button-line-height !important;
 
@@ -257,17 +262,21 @@
       }
 
       .controls-DateRangeBigChoose__years-back {
-         font-weight: normal;
-         font-size: @date-range-big-choose-years-panel-back-button-font-size !important;
-         line-height: @date-range-big-choose-years-panel-back-button-line-height !important;
-         padding-left: 2px;
          border: 1px dotted transparent;
+         margin: 0 20px 0 19px;
          width: @date-range-big-choose-years-panel-back-button-line-height + 2;
          height: @date-range-big-choose-years-panel-back-button-line-height + 2;
          .box-sizing(border-box);
-         &.icon-primary.controls-IconButton.action-hover:hover {
-            border: 1px dotted @gray-color;
-            color: @date-range-big-choose-link-text-color !important;
+         &.controls-IconButton {
+            .controls-Button__icon {
+               font-weight: normal;
+               font-size: @date-range-big-choose-years-panel-back-button-font-size !important;
+               line-height: @date-range-big-choose-years-panel-back-button-line-height !important;
+               &.icon-primary.action-hover:hover {
+                  border: 1px dotted @gray-color;
+                  color: @date-range-big-choose-link-text-color !important;
+               }
+            }
          }
       }
    }
@@ -407,6 +416,7 @@
             padding-left: 8px;
             border-left-color: transparent;
             background-color: transparent;
+            justify-content: flex-start;
 
             &:first-child {
                height: @date-range-big-choose-months-button-first-height;

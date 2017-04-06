@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
            *    <li>Если вернуть false - диалог выбора открыт не будет.</li>
            *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
            * </ol>
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            */
       $protected: {
          _options: {
