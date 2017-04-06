@@ -1437,6 +1437,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 // при клике по ссылке необходимо показывать стандартное меню,
                 // т.к. иначе ломаем привычное для пользователя поведение
                 && event.target.nodeName.toLowerCase() !== 'a'
+                && event.target.className.indexOf('LinkDecorator__image') === -1
          },
 
          /*
