@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/IoC",
    "Core/core-merge",
    "Core/constants",
+   'Core/helpers/dom&controls-helpers',
    "js!SBIS3.CONTROLS.DataGridView",
    "html!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants,DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( IoC, cMerge, constants, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -437,7 +438,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
          if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
-            return this.getEditArrow().getContainer()[0] === target[0];
+            return dcHelpers.contains(this.getEditArrow().getContainer()[0], target[0]);
          }
          return res;
       },

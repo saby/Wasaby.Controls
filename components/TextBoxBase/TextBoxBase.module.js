@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             this._drawText(newText);
             //снимаем выделение валидатора на время ввода
             this.clearMark();
+            console.log(newText);
             this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }

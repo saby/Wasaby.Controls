@@ -1,4 +1,8 @@
-define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CONTROLS.Link', 'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate', 'css!SBIS3.CONTROLS.Link'], function(ButtonBase, dotTplFn, hrefTemplate) {
+define('js!SBIS3.CONTROLS.Link', [
+   'js!WS.Controls.Button',
+   'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
+   'css!SBIS3.CONTROLS.Link'
+], function(WSButton, hrefTemplate) {
 
    'use strict';
 
@@ -6,7 +10,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
     * Класс контрол "Кнопка в виде ссылки". Используется только в онлайн.
     *
     * @class SBIS3.CONTROLS.Link
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends SBIS3.CONTROLS.WSButtonBase
     * @author Крайнов Дмитрий Олегович
     *
     * @demo SBIS3.CONTROLS.Demo.MyLink
@@ -53,11 +57,9 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
     * </component>
     */
 
-   var Link = ButtonBase.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
-      _dotTplFn: dotTplFn,
+   var Link = WSButton.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
       $protected: {
          _options: {
-            hrefTemplate: hrefTemplate,
              /**
               * @cfg {String} Адрес документа, к которому нужно перейти
               * @example
@@ -77,6 +79,20 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
               */
             inNewTab: false
          }
+      },
+
+      _modifyOptions: function (opts) {
+         var
+             options = Link.superclass._modifyOptions.apply(this, arguments);
+         options.className += ' controls-Link';
+
+         // в случае когда задана ссылка передаем отдельный шаблон
+         if(options.href) {
+            options.contentTemplate = hrefTemplate;
+         }else {
+            options._textClass = ' controls-Link__field';
+         }
+         return options;
       },
 
       $constructor: function() {},
@@ -101,7 +117,10 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
       },
 
       _drawIcon: function (icon) {
-         this._container.get(0).innerHTML = hrefTemplate(this._options);
+         Link.superclass._drawIcon.call(this, icon);
+         if(this._options.href) {
+            this._container.get(0).innerHTML = hrefTemplate(this._options);
+         }
       },
       /**
        * Установить ссылку.
@@ -112,7 +131,7 @@ define('js!SBIS3.CONTROLS.Link', ['js!SBIS3.CONTROLS.ButtonBase', 'tmpl!SBIS3.CO
        */
       setHref: function (href) {
          this._options.href = href;
-         this._container.html(this._options.hrefTemplate(this._options));
+         this._container.html(hrefTemplate(this._options));
       }
 
    });
