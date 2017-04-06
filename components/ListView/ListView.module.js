@@ -2534,9 +2534,9 @@ define('js!SBIS3.CONTROLS.ListView',
                range = this._virtualScrollController.getCurrentRange();
                for (var i = 0; i < itemsToAdd.length; i++) {
                   index = this._getItemsProjection().getIndexByHash(itemsToAdd[i].getHash());
-                  if (index < range[0] && index > range[1]) {
-                     itemsToAdd.splice(i, 1);
-                  }
+                  // if (index < range[0] || index > range[1]) {
+                  //    itemsToAdd.splice(i, 1);
+                  // }
                }
             } 
             return itemsToAdd;
@@ -3530,7 +3530,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                }
-            }).bind(this)
+            }).bind(this);
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.

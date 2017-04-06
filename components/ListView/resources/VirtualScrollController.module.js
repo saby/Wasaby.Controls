@@ -42,19 +42,17 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          //this._onVirtualPageChangeDebounce = this._onVirtualPageChange.debounce(10);
          this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
+         this._scrollHandler = this._scrollHandler.debounce(0);
          view._scrollWatcher.getScrollContainer()[0].addEventListener('scroll', this._scrollHandler.bind(this), { passive: true });
       },
 
       _scrollHandler: function(e, scrollTop){
-         clearTimeout(this._scrollTimeout);
-         this._scrollTimeout = setTimeout(function(){
-            var page = this._getPage();
-            if (page >= 0 && this._currentVirtualPage!= page) {
-               this._scrollingDown = this._currentVirtualPage < page;
-               this._onVirtualPageChange(page);
-               this._currentVirtualPage = page;
-            }
-         }.bind(this), 0);
+         var page = this._getPage();
+         if (page >= 0 && this._currentVirtualPage!= page) {
+            this._scrollingDown = this._currentVirtualPage < page;
+            this._onVirtualPageChange(page);
+            this._currentVirtualPage = page;
+         }
       },
 
       _getPage: function() {
@@ -81,18 +79,25 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       _onVirtualPageChange: function(pageNumber) {
          var pages = this._virtualPages,
             at = 0,
-            offset = 0,
+            removeOffset = 0, addOffset = 0,
             segments = [],
             haveToAdd = false, 
             haveToRemove = false,
             newWindow = this._getRangeToShow(pageNumber, BATCH_SIZE, PAGES_COUNT);
 
+         // Может добавиться меньше BATCH_SIZE новых элементов, учтем это
          if (newWindow[0] >= BATCH_SIZE && this._newItemsCount) {
             newWindow[0] -= (BATCH_SIZE - this._newItemsCount);
          }
+         var projCount =  this._options.view._getItemsProjection().getCount();
+         if (newWindow[1] > projCount) {
+            newWindow[1] = projCount;
+         }
 
          var diff = this._getDiff(this._currentWindow, newWindow),
-            pagesToRemove, pagesToAdd, i;
+            pagesToRemove = [],
+            pagesToAdd = [],
+            i;
 
          if (!diff) {
             this._currentWindow = newWindow;
@@ -114,15 +119,18 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             if (this._options.mode == 'down') {
                at = diff.bottom[0];
             }
-            offset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
+            addOffset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
          } else {
             segments[0] = diff.bottom;
             segments[1] = diff.top;
-            pagesToRemove = this._getPagesByRange(segments[0], BATCH_SIZE);
+            if (diff.bottom[1] - diff.bottom[0] >= BATCH_SIZE - 1) {
+               pagesToRemove = this._getPagesByRange(segments[0], BATCH_SIZE);
+            }
             pagesToAdd = this._getPagesByRange(segments[1], BATCH_SIZE);
             if (this._options.mode == 'up') {
                at = this._options.view._getItemsProjection().getCount() - (diff.top[1] - diff.top[0] + 1);
             }
+            removeOffset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
          }
 
          // Помечаем страницы как удаленные
@@ -141,11 +149,15 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          // удаляем записи
          if (haveToRemove) {
-            this._remove(segments[0], BATCH_SIZE - this._newItemsCount);
+            this._remove(segments[0], removeOffset);
          }   
          // добавляем записи
          if (haveToAdd){
-            this._add(segments[1], at, offset);
+            this._add(segments[1], at, addOffset);
+         }
+
+         if (haveToRemove || haveToAdd) {
+             this._setWrappersHeight(pageNumber);
          }
 
          if (this._currentVirtualPage !== pageNumber || this._currentWindow[1] > newWindow[1]) {
@@ -154,9 +166,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             if (this._DEBUG) {
                console.log('displayed from ', newWindow[0], 'to', newWindow[1]);
             }
-         }
-         if (haveToRemove || haveToAdd) {
-             this._setWrappersHeight(pageNumber);
          }
       },
 
@@ -202,17 +211,17 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          return pages;
       },
 
-      _remove: function(range){
+      _remove: function(range, offset){
          var toRemove = [],
             from = range[0],
             to = range[1], 
             projection = this._options.view._getItemsProjection(),
             prjItem, index;
          for (var i = from; i <= to; i++) {
-            if (this._options.mode == 'down'){
+            if (this._options.mode == 'down') {
                index = i;
             } else {
-               index = projection.getCount() - i - 1;
+               index = projection.getCount() - i - 1 + offset;
             }
             prjItem = projection.at(index);
             if (!prjItem){
@@ -222,7 +231,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          this._options.view._removeItems(toRemove);
          if (this._DEBUG) {
-            console.log('remove from', from, 'to', to);
+            //console.log('remove from', from, 'to', to);
          }
       },
 
@@ -236,7 +245,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             if (this._options.mode == 'down'){
                index = i;
             } else {
-               index = projection.getCount() - i - 1;// + offset;
+               index = projection.getCount() - i - 1 + offset;
             }
             prjItem = projection.at(index);
             if (!prjItem){
@@ -249,7 +258,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          this._options.view._addItems(toAdd, at);
          if (this._DEBUG) {
-            console.log('add from', from, 'to', to, 'at', at);
+            //console.log('add from', from, 'to', to, 'at', at);
          }
       },
 
@@ -381,20 +390,18 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          if (items.length == 1) {
             this._currentWindow[1] += 1;
             if (this._newItemsCount === 0) {
-               this._onVirtualPageChange(this._currentVirtualPage);
                this._virtualPages.unshift({offset: -this._additionalHeight});
             }
             this._newItemsCount += 1;
             hash = items[0].getHash();
             var itemHeight = $('[data-hash="' + hash + '"]', this._options.view.getContainer()).height();
             this._additionalHeight += itemHeight;
-            this._lastPageHeight += itemHeight;
             this._virtualPages[0].offset = -this._additionalHeight;
          }
 
          if (this._newItemsCount == BATCH_SIZE) {
+            this._onVirtualPageChange(this._currentVirtualPage);
             this._newItemsCount = 0;
-            this._lastPageHeight = 0;
          }
       },
 
