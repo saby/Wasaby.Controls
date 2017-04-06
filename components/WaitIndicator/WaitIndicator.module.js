@@ -1,5 +1,7 @@
 ﻿/**
- * Модуль SBIS3.CONTROLS.WaitIndicator
+ * Индикатор ожидания завершения процесса WaitIndicator
+ * @public
+ * @class SBIS3.CONTROLS.WaitIndicator
  */
 define('js!SBIS3.CONTROLS.WaitIndicator',
    [
@@ -68,8 +70,9 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Привязка мелких локальных индикаторов
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: (+) Привести к ES5
-       * TODO: (+-) Изменить API с более очевидным простейшим способом использования. Описать API. (~WaitIndicatorManager.register(message, deferred, cfg))
-       * TODO: !### Повсеместно учесть дуализм Promise/Deferred
+       * TODO: (+) Изменить API с более очевидным простейшим способом использования. (~WaitIndicatorManager.register(message, deferred, cfg))
+       * TODO: ### Описать API
+       * TODO: (+-) Повсеместно учесть дуализм Promise/Deferred
        * TODO: ### Сделатьь примеры с прокруткой таблиц
        */
 
@@ -91,7 +94,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @public
        * @type {boolean}
        */
-      Object.defineProperty(Pr0tected, 'hasWeakMap', {value:typeof WeakMap != 'undefined', /*writable:false,*/ enumerable:true});
+      Object.defineProperty(Pr0tected, 'hasWeakMap', {value:typeof WeakMap !== 'undefined', /*writable:false,*/ enumerable:true});
 
       /**
        * Константа, содержащая имя свойства-идентификатора
@@ -261,7 +264,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @param {jQuery|HTMLElement} options.target Объект привязки индикатора
        * @param {string} options.message Текст сообщения индикатора
        * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
-       * @param {Promise} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
+       * @param {Promise|Deferred} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
        * @param {boolean} options.hidden Не показывать созданный индикатор
        * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
        * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
@@ -280,12 +283,18 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          var cb = function (delay) {
             indicator.remove(delay);
          };
-         if (options && options.stopper && options.stopper instanceof Promise) {
-            options.stopper
-               .then(cb)
-               .catch(function (err) {
-                  indicator.remove();
-               });
+         if (options && options.stopper) {
+            var erfun = function (err) {
+               indicator.remove();
+            };
+            if (typeof Promise !== 'undefined' && options.stopper instanceof Promise) {
+               options.stopper.then(cb, erfun);
+            }
+            else
+            // Будем определять instanceOf Deferred не прямо, чтобы не создавать зависимости и не подгружать класс (утиная типизация)
+            if (['addBoth', 'addCallback', 'addCallbacks', 'addErrback', 'callback', 'errback'].every(function (method) { return typeof options.stopper[method] === 'function'; })) {
+               options.stopper.addCallbacks(cb, erfun);
+            }
          }
          return cb;
       };
