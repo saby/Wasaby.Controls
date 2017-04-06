@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Совсем не показывать индикаторы с параметром hidden
        * TODO: ### Возможно, нужна поддержка настраиваемых цветов для оверлея (не просто тёмный или прозрачный) ?
        * TODO: (+) Оверлей для локальных индикаторов
-       * TODO: ### Сделать конверторы promise <--> Deffered ?
+       * TODO: (+-) Сделать конверторы promise <--> Deffered ?
        * TODO: (+) Переименовать константу SUSPEND_TIME в SUSPEND_LIFETIME
        * TODO: (+) Есть ошибка при установке сообщения
        * TODO: (+) Порефакторить аргументы _remove в Inner
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Привести к ES5
        * TODO: (+) Изменить API с более очевидным простейшим способом использования. (~WaitIndicatorManager.register(message, deferred, cfg))
        * TODO: ### Описать API
-       * TODO: (+-) Повсеместно учесть дуализм Promise/Deferred
+       * TODO: (+) Повсеместно учесть дуализм Promise/Deferred
        * TODO: ### Сделатьь примеры с прокруткой таблиц
        */
 
