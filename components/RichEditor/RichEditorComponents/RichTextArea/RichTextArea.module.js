@@ -1381,6 +1381,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             parent.removeClass();
             parent.removeAttr ('contenteditable');
             target.removeClass();
+
             switch (template) {
                case "1":
                   target.addClass('image-template-left');
@@ -1388,10 +1389,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   break;
                case "2":
                   target.select();
-                  this._insertImg(target.attr('src'), '', target.attr('alt'), '<p class="controls-RichEditor__noneditable image-template-center">', '</p>', target[0].style.width || (target.width() + 'px'));
-                  if (!cConstants.browser.chrome) { //в хроме изображение исчезнет при вставке нового, в остальных браузерах необходимо принудительно его удалять
+                  this._insertImg(
+                     target.attr('src'),
+                     '',
+                     target.attr('alt'),
+                     '<p class="controls-RichEditor__noneditable image-template-center">',
+                     '</p>',
+                     target[0].style.width || (target.width() + 'px')
+                  ).addCallback(function(){
                      target.remove();
-                  }
+                  });
                   break;
                case "3":
                   target.addClass('image-template-right');
@@ -1667,6 +1674,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _insertImg: function(path, className, meta,  before, after, size) {
             var
+               def =new Deferred(),
                self = this,
                img =  $('<img src="' + path + '"></img>').css({
                   visibility: 'hidden',
@@ -1681,7 +1689,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var
                   style = size ? ' style="width: ' + size + '"':' style="width: 25%"';
                self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
+               def.callback();
             });
+            return def;
          },
 
          _onChangeAreaValue: function() {
