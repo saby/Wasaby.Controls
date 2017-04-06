@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    'use strict';
 
    function formatText(value, integers, maxLength){
-      value = value + "";
+      value = value + '';
 
       value = cDefaultRenders.numeric(
           value,
@@ -73,12 +73,15 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              * </pre>
              * @see text
              */
-             moneyValue: null
+             moneyValue: null,
+             _decimalsPart: '00',
+             _integersPart: '0'
          }
       },
 
       _modifyOptions: function(options){
-         var value;
+         var value,
+             dotPos;
          options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
          options.className = ' controls-MoneyTextBox';
 
@@ -89,6 +92,11 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
                 options.integers,
                 options.maxLength
             );
+             dotPos = options.text.indexOf('.');
+             if(dotPos){
+                 options._integersPart = options.text.substring(0, options.text.length - 3);
+                 options._decimalsPart = options.text.substring(options.text.length - 2);
+             }
          }
          return options;
       },
