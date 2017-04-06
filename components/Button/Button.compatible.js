@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       _isControlActive: false,
+      _needRegistWhenParent: false,
 
       getAttr: function (attrName) {
          if (!window) {
@@ -73,6 +74,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
 
          this.fixIcon();
+
+         if (this._options.primary === true) {
+            this._registerDefaultButton();
+         }
       },
 
       _onResizeHandler: function () {
@@ -161,6 +166,56 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this._options.hidden = !value;
             this._setDirty();
          }
+      },
+
+      isDefaultButton: function(){
+         return !!this._options.primary;
+      },
+
+      _unregisterDefaultButton: function() {
+         this.sendCommand('unregisterDefaultButtonAction');
+      },
+
+      _registerDefaultButton: function() {
+         if (!this._options.parent) {
+            this._needRegistWhenParent = true;
+            return;
+         }
+         function defaultAction(e) {
+            if (self && self.isEnabled()) {
+               self._onClickHandler(e);
+               return false;
+            } else {
+               return true;
+            }
+         }
+         var self = this;
+
+         // регистрироваться имеют права только видимые кнопки. если невидимая кнопка зарегистрируется, мы нажмем enter и произойдет неведомое действие
+         if (this.isVisible()) {
+            // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
+            this._unregisterDefaultButton();
+            this.sendCommand('registerDefaultButtonAction', defaultAction, this);
+         }
+      },
+
+      /**
+       * @noShow
+       * @param isDefault
+       */
+      setDefaultButton: function(isDefault){
+         if (isDefault === undefined) {
+            isDefault = true;
+         }
+
+         if (isDefault) {
+            this._registerDefaultButton();
+         }
+         else {
+            this._unregisterDefaultButton();
+         }
+
+         this.setPrimary(isDefault);
       },
 
       setCaption: function(value)
@@ -263,10 +318,17 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       //for working getChildControlByName
       setParent: function (parent) {
+         this._options.parent = parent;
          if (!parent._childsMapId[this._options.id]) {
             parent._childControls.push(this);
             parent._childsMapId[this._options.id] = parent._childControls.length - 1;
             parent._childsMapName[this._options.name] = parent._childControls.length - 1;
+         }
+
+         if (this._needRegistWhenParent)
+         {
+            this._needRegistWhenParent = false;
+            this._registerDefaultButton();
          }
       },
 

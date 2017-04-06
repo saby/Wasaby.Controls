@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.Button',
                   (this._options.primary?' controls-Button__primary' : ' controls-Button__default')+" ";
 //
                decOptions['disabled'] = this._options.enabled?undefined:'disabled';
-
+               decOptions['tabindex'] = 0;
                this._options['config'] = decOptions['config'];
 
                var markup = this._template(this, decOptions);
