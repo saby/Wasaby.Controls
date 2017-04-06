@@ -314,11 +314,42 @@ define('js!WS.Controls.MenuButton', [
          }
       },
 
-      _dataLoadedCallback : function() {
+       _dataLoadedCallback : function() {
          if (this._picker){
             this.hidePicker();
          }
-      }
+       },
+
+      /*TODO блок сеттеров для временного решения проблем с названиями опций полей. Избавиться с переходм на интерфейсы вместо миксинов*/
+       setKeyField: function(prop) {
+           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setKeyField устарел, используйте setIdProperty');
+           this.setIdProperty(prop);
+       },
+
+       setIdProperty: function(prop) {
+           this._options.idProperty = prop;
+       },
+
+       setDisplayField: function(prop) {
+           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setDisplayField устарел, используйте setDisplayProperty');
+           this.setDisplayProperty(prop);
+       },
+
+       setDisplayProperty: function(prop) {
+           this._options.displayProperty = prop;
+       },
+
+       setHierField: function(prop) {
+           IoC.resolve('ILogger').log('MenuButtonMixin', 'Метод setHierField устарел, используйте setParentProperty/setNodeProperty');
+           this.setParentProperty(prop);
+       },
+
+       setParentProperty: function(prop) {
+           this._options.parentProperty = prop;
+       },
+       setNodeProperty: function(prop) {
+           this._options.nodeProperty = prop;
+       }
    });
 
    return MenuButton;
