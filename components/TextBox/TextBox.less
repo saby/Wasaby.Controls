@@ -63,22 +63,22 @@
 }
 
 .controls-TextBox__afterFieldWrapper {
-  position: relative;
-  float: right;
-  width: @text-box-after-width;
-  min-height: @text-box-after-min-height;
-  margin: @text-box-after-margin;
-  height: 100%;
-
-  & + .controls-TextBox__fieldWrapper {
-    margin: @text-box-field-after-margin;
-  }
+	position: relative;
+	float: right;
+	width: @text-box-after-width;
+	min-height: @text-box-after-min-height;
+	margin: @text-box-after-margin;
+	height: 100%;
+	
+	& + .controls-TextBox__fieldWrapper {
+		margin: @text-box-field-after-margin;
+	}
 }
 
 .controls-TextBox__beforeFieldWrapper {
-  position: relative;
-  float: left;
-  height: 100%;
+	position: relative;
+	float: left;
+	height: 100%;
 }
 
 .controls-TextBox__fieldWrapper {
@@ -125,12 +125,14 @@
      right: 0;
      pointer-events: none;
    }
-   &.controls-TextBox__field-uppercase {
-      text-transform: uppercase;
-   }
-   &.controls-TextBox__field-lowercase {
-      text-transform: lowercase;
-   }
+}
+
+.controls-TextBox__field-uppercase {
+   text-transform: uppercase;
+}
+
+.controls-TextBox__field-lowercase {
+   text-transform: lowercase;
 }
 
 .controls-TextBox__placeholder {
