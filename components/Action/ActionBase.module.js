@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
    var ActionBase = Control.Control.extend(/** @lends SBIS3.CONTROLS.ActionBase.prototype */{
       /**
        * @event onExecuted Происходит после завершения работы действия.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Boolean|Object} meta Результат работы.
        * @param {WS.Data/Entity/Record} record Редактируемая запись.
        */

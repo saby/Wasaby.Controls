@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Object} hoveredItem Объект, свойства которого описывают данные элемента коллекции списка, на который навели курсор мыши.
           * @param {Number|String} hoveredItem.key Первичный ключ элемента.
           * @param {jQuery|false} hoveredItem.container Контейнер визуального отображения элемента (DOM-элемент).
@@ -187,14 +187,14 @@ define('js!SBIS3.CONTROLS.ListView',
            *        ... // пользовательская логика клика по записи.
            *    });
            * </pre>
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
            * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
            * @param {jQuery} target DOM-элемент, на который кликнули.
            */
           /**
           * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Object} meta Объект
           * @param {String} meta.id Первичный ключ записи.
           * @param {WS.Data/Entity/Model} meta.item Экземпляр класса записи.
@@ -204,7 +204,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Событие срабатывает при подгрузке по скроллу, при подгрузке в ветку дерева.
           * Т.е. при любой вспомогательной загрузке данных.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Object} dataSet - dataSet с загруженными данными
           * @example
           * <pre>
@@ -220,7 +220,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @event onItemValueChanged Происходит при смене значения в одном из полей редактирования по месту и потере фокуса этим полем.
           * @deprecated Будет удалено в 3.7.3.100. Временное решение
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей.
           * @param {WS.Data/Entity/Model} model Модель с измененными данными.
           */
@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onBeginEdit Происходит перед началом редактирования.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
           * @param {Boolean} isAdd Флаг, означающий что событию предшествовал запуск добавления по месту.
           * @returns {BeginEditResult|Deferred} Deferred - используется для асинхронной подготовки редактируемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на редактирование.
@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Событие происходит при вызове команды {@link beginAdd} и при <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>добавлении по месту</a> из пользовательского интерфейса.
           * В обработчике события можно установить инициализирующие значения полей для создаваемого элемента коллекции.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @example
           * В качестве результата события передают Object или экземпляр класса {@link WS.Data/Entity/Model}.
           * <pre>
@@ -256,12 +256,12 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onAfterBeginEdit Происходит после начала редактирования.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
           */
          /**
           * @event onEndEdit Происходит перед окончанием редактирования (и перед валидацией области редактирования).
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
           * <ul>
@@ -273,7 +273,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onAfterEndEdit Происходит после окончания редактирования по месту.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Отредактированная запись.
           * @param {jQuery} target DOM-элемент, отображающий запись.
           * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
@@ -284,19 +284,19 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onPrepareFilterOnMove Происходит при определении фильтра, с которым будет показан диалог перемещения.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} records Список перемещаемых записей.
           * @returns {Object} filter Фильтр, который будет помещён в диалог перемещения.
           */
          /**
           * @event onEndDelete Происходит после удаления записей.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
           * @param {*} result Результат удаления.
           */
          /**
           * @event onBeginDelete Происходит перед удалением записей.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array.<String>|Array.<Number>} idArray Массив ключей удаляемых записей.
           * @returns {*|Boolean|Deferred} result Если result=false, то отменяется логика удаления записи, установленная по умолчанию.
           */
@@ -331,7 +331,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onBeginMove Происходит перед началом перемещения записей
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} moveItems Массив перемещаемых записей.
           * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
           * @param {MovePosition} position Как перемещать записи.
@@ -341,7 +341,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onEndMove Происходит после перемещения записей.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {undefined|Object|Error} result Результат вызова метода перемещения на источнике данных.
           * @param {Array} moveItems Массив перемещаемых записей.
           * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.

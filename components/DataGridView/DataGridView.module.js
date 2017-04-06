@@ -368,7 +368,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dotTplFn : dotTplFn,
       /**
        * @event onDrawHead Возникает после отрисовки шапки
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected: {
          _rowTpl : rowTpl,

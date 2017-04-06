@@ -34,27 +34,27 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         $protected: {
             /**
              * @event onBeginDrag При начале перемещения элемента. Если из события вернуть false, то перемещение будет отменено.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
             /**
              * @event onDragMove В процессе перемещения элемента, принадлежащего контролу, на каждое изменение его положения. Если из события вернуть false, то стандартное действие будет отменено.
              * @remark Не важно над каким контролом находится элемент, событие происходит у контрола элемент которого перемещают.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
             /**
              * @event onDragOver В процессе перемещения элемента над контролом, на каждое изменение его положения. Элемент при этом может принадлежать другому контролу.
              * @remark Событие происходит у контрола над которым сейчас находится курсор мыши или палец, для touch интерфейса.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
             /**
              * @event onEndDrag При окончании перемещения элемента. Если из события вернуть false, то стандартное действие будет отменено.
-             * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+             * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
              * @see SBIS3.CONTROLS.DragObject
              */
@@ -462,7 +462,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Срабывает когда отпустили мышь за пределами контрола.
-         * @param {$ws.proto.EventObject} buse Дескриптор события.
+         * @param {Core/EventObject} buse Дескриптор события.
          * @param {Event} e Браузерное событие.
          */
         _onMouseupOutside: function(buse, e) {
@@ -497,7 +497,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Обработчик на событие перемещения курсора - Mousemove, Touchmove.
-         * @param {$ws.proto.EventObject} buse Дескриптор события.
+         * @param {Core/EventObject} buse Дескриптор события.
          * @param {Event} e Браузерное событие.
          */
         _onMousemove: function (buse, e) {

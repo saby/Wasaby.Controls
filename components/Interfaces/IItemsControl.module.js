@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
    var IItemsControl =/** @lends SBIS3.CONTROLS.IItemsControl.prototype */ {
       /**
        * @event onDrawItems После отрисовки всех элементов коллекции
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *     Menu.subscribe('onDrawItems', function(){
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        */
       /**
        * @event onDataLoad При загрузке данных
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {SBIS3.CONTROLS.DataSet} dataSet Набор данных.
        * @example
        * <pre>
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        * @event onDataLoadError При ошибке загрузки данных
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {HTTPError} error Произошедшая ошибка.
        * @return {Boolean} Если вернуть:
        * <ol>
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        * @event onItemsReady при готовности экземпляра коллекции iList
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    myView.subscribe('onItemsReady', function(event){

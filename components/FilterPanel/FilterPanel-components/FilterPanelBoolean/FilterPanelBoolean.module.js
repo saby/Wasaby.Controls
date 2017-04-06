@@ -22,7 +22,7 @@ var
    FilterPanelBoolean = CompoundControl.extend([IFilterItem],/** @lends SBIS3.CONTROLS.FilterPanelBoolean.prototype  */{
         /**
          * @event onValueChange Происходит при изменении значения контрола.
-         * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+         * @param {Core/EventObject} eventObject Дескриптор события.
          * @remark
          * Изменение значения можно производить с помощью метода {@link setValue}.
          */
