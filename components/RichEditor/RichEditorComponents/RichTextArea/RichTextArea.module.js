@@ -1388,7 +1388,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   break;
                case "2":
                   target.select();
-                  this._insertImg(target.attr('src'), '', target.attr('alt'), '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>',target[0].style.width || (target.width() + 'px'));
+                  this._insertImg(target.attr('src'), '', target.attr('alt'), '<p class="controls-RichEditor__noneditable image-template-center">', '</p>', target[0].style.width || (target.width() + 'px'));
+                  if (!cConstants.browser.chrome) { //в хроме изображение исчезнет при вставке нового, в остальных браузерах необходимо принудительно его удалять
+                     target.remove();
+                  }
                   break;
                case "3":
                   target.addClass('image-template-right');
