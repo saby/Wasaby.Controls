@@ -34,6 +34,7 @@
 
    .controls-DateRangeChoose__border {
       border: @date-range-choose-border-hover;
+      border-width: @date-range-choose-border-hover-width;
       background-color: @date-range-choose-bg-hover-color;
       position: absolute;
       top: 0;
@@ -109,7 +110,7 @@
       font-size: @date-range-choose-year-font-size;
       font-weight: @date-range-choose-year-font-weight;
       height: @date-range-choose-year-height;
-      line-height: @date-range-choose-year-height + 1;
+      line-height: @date-range-choose-year-line-height;
       vertical-align: middle;
       .flex-grow(1);
       &.controls-DateRangeChoose__year-clickable{
@@ -121,6 +122,7 @@
    }
    .controls-DateRangeChoose__year {
       padding-left: 2px;
+      margin-left: @controls-date-range-year-marginleft;
    }
    // В зависимости от режима немного меняется позиционирование элементов в шапке
    &.controls-DateRangeChoose__showMonths {

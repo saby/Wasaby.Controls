@@ -221,7 +221,6 @@
 
 @tab-button-large-secondAddText-font-size:      13px;
 
-@tab-button-inner-height:                       29px;
 
 // ------------ //
 // Radio button //
@@ -329,9 +328,11 @@
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
 @menu-expand-hover-bg:                    @menu-expand-bg;
 
-@menu-header-height:                      0.86rem;
+@menu-header-height:                      3.57rem;
 @menu-big-header-height:                  32px;
 @menu-header-padding:                     4px;
+@popup-header-font-weight:                  normal;
+@popup-header-caption-color:                #e4e4e4;
 
 // --------- //
 // Menu item //
@@ -453,7 +454,7 @@
 
 // Menu
 @menu-link-menu-margin:                   0 0 0 -9px;
-@menu-link-header-bg-color:               @menu-button-menu-bg;
+@menu-link-header-bg-color:               #5bafe7;
 @menu-link-menu-border-width:             @menu-border-width;
 @menu-link-icon-24-top:                   -4px;
 
@@ -759,11 +760,11 @@
 // Data Range Slider //
 // ----------------- //
 @date-range-slider-font-family:                 'TensorFont Regular', 'TensorFont', sans-serif;
-@date-range-slider-color:                       @white-color;
-@date-range-slider-hover-color:                 #ff7033;
+@date-range-slider-color:                       #26B8FF;
+@date-range-slider-hover-color:                rgb(187, 233, 255);
 @date-range-slider-hover-text-decoration:       underline;
-@date-range-slider-font-size:                   20px;
-@date-range-slider-value-font-weight:           bold;
+@date-range-slider-font-size:                   1.14rem;
+@date-range-slider-value-font-weight:           normal;
 @date-range-slider-prev-next-buttons-hover-color:  @blue-dark-color;
 @date-range-slider-prev-next-buttons-font-weight:  normal;
 
@@ -772,19 +773,36 @@
 // Date Range Choose //
 // ----------------- //
 @date-range-choose-bg-active-color:             #e1ecf6;
-@date-range-choose-border-color:                @gray-light-color;
+@date-range-choose-border-color:                #26b8ff;
+@date-range-choose-item-bg-color                :#2c3e50;
+@date-range-choose-bg-hover-color:              #2c3e50;
+@date-range-choose-border-hover-width: 2px 0 2px 0;
+@date-range-choose-border-hover:                  solid #26b8ff;
+@date-range-choose-month-height:                 1.85rem;
+@date-range-choose-short-width:                   11.78rem;
 @date-range-choose-font-family:                 'TensorFont Regular', 'TensorFont', sans-serif;
-@date-range-choose-font-size:                   20px;
+@date-range-choose-font-size:                   1rem;
 @date-range-choose-hover-color:                 @blue-dark-color;
 
+@date-range-choose-years-only-bg-color :       #2c3e50;
+@date-range-choose-bg-color:                      #2c3e50;
+@date-range-choose-color:                       #E4E4E4;
+@date-range-choose-current-value-color:         #fff;
+@date-range-choose-current-value-bg-color:      #26b8ff;
+@date-range-choose-current-value-font-size:     1.14rem;
+@date-range-choose-current-value-font-weight:   normal;
+@date-range-choose-current-value-height:        3.57rem;
+@date-range-choose-current-value-line-height:   3.43rem;
+@date-range-choose-border-width:                2px;
+@date-range-choose-year-height:                 3.285rem;
 
-@date-range-choose-current-value-font-size:     @date-range-choose-font-size;
-@date-range-choose-current-value-font-weight:   bold;
-@date-range-choose-current-value-height:        54px;
-@date-range-choose-current-value-line-height:   52px;
 
-@date-range-choose-year-font-size:              @date-range-choose-font-size;
+@date-range-choose-year-font-size:              1.14rem;
 @date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
+@date-range-choose-year-color:                #e4e4e4;
+@date-range-choose-year-line-height:        3.78rem;
+@controls-date-range-year-marginleft:       2.2rem;
+@date-range-choose-year-prev-next-btns-color:   #ffffff;
 
 // -------------- //
 // Date Range Big //
@@ -1110,6 +1128,18 @@
 
 //TabButton
 @tab-buttons-border-bottom:                     1px solid #293543;
+@tab-button-height:                               3.57rem;
+@tab-button-inner-line-height:                    3.57rem;
+@tab-button-inner-height:                        3.57rem;
+@tab-button-checked-height:                       3.57rem;
+@@tab-control-smple-bottomline-height:          .214rem;
+@tab-button-color:                               #8991A9;
+
+@tab-button-font:                               1.43rem 'TensorFont', sans-serif;
+@tab-button-checked-font-size:                  1.43rem;
+@tab-button-checked-inner-font-size:            1.43rem;
+@tab-button-checked-inner-color:                rgb(255, 204, 153);
+@tab-button-simple-checked-bottomline-color:    rgb(255, 204, 153);
 
 //Browser
 @controls-Browser-ListView-minHeight:           90px;
