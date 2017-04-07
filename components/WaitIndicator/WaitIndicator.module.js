@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (-) Понять, нужно ли Proxy-рование
        * TODO: (+) Применить опции
        * TODO: (+) Локальные индикаторы
-       * TODO: ### Будем ли использовать Component-ы в качестве объектов привязки ?
+       * TODO: (+) Будем ли использовать Component-ы в качестве объектов привязки ?
        * TODO: (-) Нужен ли cancel как псевдоним remove ?
        * TODO: (+) Нужен ли массив экземпляров индикаторов (не в DOM-е)? Если нужен, то как его чистить ?
        * TODO:     Если не нужен, то как контролировать единственность неглобальных?
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Добавить опцию для настройки времени удаления приостановленных индикаторов
        * TODO:     и ограничивающую максимальную константу
        * TODO: (+) Сделать реальный шаблон индикатора
-       * TODO: ### Актуальны ли много-элементные объекты привязки (наборы элементов)
+       * TODO: (-) Актуальны ли много-элементные объекты привязки (наборы элементов)
        * TODO: (+) Привести к новым реалиям isVisible
        * TODO: (+) Модуляризировать в requirejs
        * TODO: (+) Перенести методы _start, _suspend, _remove в менеджер с контолем единственности
@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Изменить API с более очевидным простейшим способом использования. (~WaitIndicatorManager.register(message, deferred, cfg))
        * TODO: ### Описать API
        * TODO: (+) Повсеместно учесть дуализм Promise/Deferred
-       * TODO: ### Сделатьь примеры с прокруткой таблиц
+       * TODO: (+-) Сделатьь примеры с прокруткой таблиц
        */
 
 
@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * Конструктор
        * @public
        * @constructor
-       * @param {jQuery|HTMLElement} target Объект привязки индикатора
+       * @param {HTMLElement|jQuery|SBIS3.CORE.Control} target Объект привязки индикатора
        * @param {string} message Текст сообщения индикатора
        * @param {object} look Параметры внешнего вида индикатора:
        * @param {string} look.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
             align: null
          };
          if (look && typeof look === 'object') {
-            Object.keys(look).forEach(function (name) {
+            Object.keys(oLook).forEach(function (name) {
                if (name in look) {
                   oLook[name] = look[name];
                }
@@ -264,7 +264,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @public
        * @static
        * @param {object} options Опции конфигурации
-       * @param {jQuery|HTMLElement} options.target Объект привязки индикатора
+       * @param {HTMLElement|jQuery|SBIS3.CORE.Control} options.target Объект привязки индикатора
        * @param {string} options.message Текст сообщения индикатора
        * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
        * @param {Promise|Deferred} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
@@ -459,7 +459,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
           * @public
           * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
+          * @return {Promise|Deferred}
           */
          start: function (delay) {
             return this._callDelayed('start', 'starting', delay);
@@ -471,7 +471,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
           * @public
           * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
+          * @return {Promise|Deferred}
           */
          suspend: function (delay) {
             return this._callDelayed('suspend', 'suspending', delay);
@@ -482,7 +482,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
           * @public
           * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
+          * @return {Promise|Deferred}
           */
          remove: function (delay) {
             return this._callDelayed('remove', 'removing', delay);
@@ -494,7 +494,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           * @param {string} method Имя подлежащего метода
           * @param {string} storing Имя защищённого свойства для хранения данных об отложенном вызове
           * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise}
+          * @return {Promise|Deferred}
           */
          _callDelayed: function (method, storing, delay) {
             var pSelf = WaitIndicatorProtected(this);
@@ -542,7 +542,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          /**
           * Возвращает обещание, соответствующее последнему актуальному вызову метода start. Если актуального вызова нет - вернётся null
           * @public
-          * @type {Promise}
+          * @type {Promise|Deferred}
           */
          get nextStart () {
             var o = WaitIndicatorProtected(this).starting;
@@ -552,7 +552,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          /**
           * Возвращает обещание, соответствующее последнему актуальному вызову метода suspend. Если актуального вызова нет - вернётся null
           * @public
-          * @type {Promise}
+          * @type {Promise|Deferred}
           */
          get nextSuspend () {
             var o = WaitIndicatorProtected(this).suspending;
@@ -562,7 +562,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          /**
           * Возвращает обещание, соответствующее последнему актуальному вызову метода remove. Если актуального вызова нет - вернётся null
           * @public
-          * @type {Promise}
+          * @type {Promise|Deferred}
           */
          get nextRemove () {
             var o = WaitIndicatorProtected(this).removing;
@@ -612,19 +612,28 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           * Определить элемент DOM, соответствующий указанному объекту привязки
           * @protected
           * @static
-          * @param {jQuery|HTMLElement} target Объект привязки индикатора
+          * @param {HTMLElement|jQuery|SBIS3.CORE.Control} target Объект привязки индикатора
           * @return {HTMLElement}
           */
          getContainer: function (target) {
-            if (!target || typeof target !== 'object') {
+            if (!target || typeof target !== 'object' || target === window || target === document) {
                return null;
             }
-            var container = target;
+            var container;
+            if (target instanceof Element) {
+               container = target;
+            }
+            else
             if (target.jquery && typeof target.jquery === 'string') {
                if (!target.length) {
                   return null;
                }
                container = target[0];
+            }
+            else
+            // Будем определять instanceOf SBIS3.CORE.Control не прямо, чтобы не создавать зависимости и не подгружать класс (утиная типизация)
+            if (['getContainer', 'init', 'isInitialized', 'destroy', 'isDestroyed', 'describe', 'isSubControl', 'getMinSize'].every(function (method) { return typeof target[method] === 'function'; })) {
+               container = target.getContainer()[0];
             }
             return container !== window && container !== document && container !== document.body ? container : null;
          },
