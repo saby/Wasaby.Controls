@@ -8,6 +8,7 @@
 /ws-data
 /node_modules
 /SBIS3.CONTROLS/*
+/resources/SBIS3.CONTROLS
 /themes/**/*.css
 /tests/unit/artifacts/*
 /tests/unit/contents.js*
