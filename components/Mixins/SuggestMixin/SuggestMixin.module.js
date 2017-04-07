@@ -651,10 +651,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       _showAllButtonHandler: function() {
-         var showAllConfig = this._getShowAllConfig();
-
          this.hidePicker();
-         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, showAllConfig.selectionType || null);
+         this.showSelector(this._getShowAllConfig());
       },
 
       /**
@@ -776,6 +774,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
 
             this._listReversed = !this._listReversed;
+            /* Сбрасываем выбранную запись в списке, чтобы после перерисовки курсор установился на первую запись
+             и после переворота был на последней.
+             Если запись не сбрасывать курсор будет вверху после переворота. */
+            this.getList().setSelectedKey(null);
             items.assign(itemsArray.reverse());
          }
       }

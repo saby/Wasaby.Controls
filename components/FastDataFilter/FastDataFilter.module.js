@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          _recalcDropdownWidth: function(){
             this._resetMaxWidth();
-            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
                    ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
                    containerWidth = this.getContainer().width() + ieWidth;
@@ -247,7 +247,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _resetMaxWidth: function(){
             var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
                dropdownLimitProperty = 'flex-shrink';
-            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
                dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
                dropdownLimitProperty = 'max-width';
             }

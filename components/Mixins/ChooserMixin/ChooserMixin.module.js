@@ -169,6 +169,10 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             });
          });
       },
+      
+      showSelector: function(cfg) {
+         this._showChooser(cfg.template, cfg.componentOptions);
+      },
 
       _getAdditionalChooserConfig: function () {
          return {};

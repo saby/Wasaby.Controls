@@ -122,6 +122,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
                     items.remove(item);
                 }
             }, this);
+            this._getListView().redraw();
             this._addItemsFromDefault();
             this._toggleAllButton();
         },
