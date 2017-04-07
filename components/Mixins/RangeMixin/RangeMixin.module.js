@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
    var RangeMixin = /**@lends SBIS3.CONTROLS.RangeMixin.prototype  */{
       /**
        * @event onStartValueChange После изменения начального значения диапазона
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {*} startValue Новое значение начала диапазона.
        * @example
        * <pre>
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        */
       /**
        * @event onEndValueChange После изменения конечного значения диапазона
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {*} startValue Новое значение конца диапазона.
        * @example
        * <pre>
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        */
       /**
        * @event onRangeChange После изменения диапазона
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {*} startValue Начало измененного диапазона.
        * @param {*} endValue Конец измененного диапазона.
        * @example

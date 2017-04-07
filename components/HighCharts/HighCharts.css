@@ -2,7 +2,7 @@
    position: relative;
 }
 
-.ws-is-mobile-platform .ws-HighCharts {
+.ws-is-ie .ws-HighCharts, .ws-is-mobile-safari .ws-HighCharts, .ws-is-mobile-chrome-ios .ws-HighCharts{
    -webkit-transform: none !important;
 }
 

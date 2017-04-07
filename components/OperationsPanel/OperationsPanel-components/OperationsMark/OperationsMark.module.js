@@ -64,7 +64,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
              * @deprecated
              */
             deepReload: false,
-            idProperty: 'name'
+            idProperty: 'name',
+            allowChangeEnable: false
          },
          _useSelectAll: false,
          _markCheckBox: undefined

@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
        /**
         * @event onTextChange Происходит при изменении текста в поле ввода.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {String} text Текст в поле ввода.
         * @example
         * <pre>
@@ -145,12 +145,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * Если полей несколько, то, как правило, появление клавиатуры неуместно. Ожидается, что пользователь сам
              * выберет поле для ввода значения.
              * В других случаях, когда на странице или диалоге всего одно поле ввода, появления клавиатуры считается уместным.
-             * Установить или изменить фокус для поля ввода можно с помощью метода {@link $ws.proto.Control#setActive}.
+             * Установить или изменить фокус для поля ввода можно с помощью метода {@link SBIS3.CORE.Control#setActive}.
              * @example
              * <pre class="brush:xml">
              *    <option name="focusOnActivatedOnMobiles">true</option>
              * </pre>
-             * @see $ws.proto.Control#setActive
+             * @see SBIS3.CORE.Control#setActive
              */
             focusOnActivatedOnMobiles: false
          }
@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             this._drawText(newText);
             //снимаем выделение валидатора на время ввода
             this.clearMark();
+            console.log(newText);
             this._notify('onTextChange', newText);
             this._notifyOnPropertyChanged('text');
          }
@@ -243,7 +244,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
-         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl)) {
+         if(this._textChanged && !ControlHierarchyManager.checkInclusion(this, focusedControl && focusedControl.getContainer())) {
             this.validate();
          }
       },

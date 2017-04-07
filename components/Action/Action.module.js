@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
        * Класс базовый для всех стандартных действий, которые можно использовать в интерфейсе
        * @class SBIS3.CONTROLS.Action.Action
        * @public
-       * @extends $ws.proto.Control
+       * @extends SBIS3.CORE.Control
        * @author Крайнов Дмитрий Олегович
        *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
@@ -37,26 +37,26 @@ define('js!SBIS3.CONTROLS.Action.Action',
           * @event onExecute Происходит перед началом работы действия.
           * @remark
           * Если из события вернуть deferred то основное действие выполнится в коллбеке, если вернуть false или 'custom' то действие будет отменено.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Object} meta Объект содержащий мета параметры Action'а.
           * @see execute
           */
          /**
           * @event onExecuted Происходит после выполнения основного действия.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Object} meta Объект, содержащий мета параметры Action'а.
           * @see execute
           */
           /**
           * @event onError Происходит при возникновении ошибки при выполнении Action'a.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Error} error Инстанс ошибки произошедшей при выполнении основного действия.
           * @param {Object} meta Объект содержащий мета параметры Action'а
           * @see execute
           */
           /**
           * @event onChangeCanExecute Происходит при изменении признака {@link CanExecute}.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Boolean} canExecute
           * @see execute
           * @see setCanExecute

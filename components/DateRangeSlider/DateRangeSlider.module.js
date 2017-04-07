@@ -84,7 +84,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue, {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          return opts;
       },
 
@@ -136,7 +137,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                if (!silent) {
                   this._notifyOnStartValueChanged();
                }
-               if (this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
+               if (value && this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
                   if (!silent) {
                      this._notifyOnEndValueChanged();
                   }
@@ -160,7 +161,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                if (!silent) {
                   this._notifyOnEndValueChanged();
                }
-               if (this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
+               if (value && this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
                   if (!silent) {
                      this._notifyOnStartValueChanged();
                   }
@@ -179,6 +180,32 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          if (this.isEnabled()) {
             DateRangeSlider.superclass.showPicker.apply(this, arguments);
          }
+      },
+
+      _setPickerConfig: function() {
+         var pickerWidth = 0,
+            baseWidth = this.getContainer().outerWidth();
+         // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
+         if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
+            pickerWidth = 80;
+         } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
+            pickerWidth = 178;
+         } else {
+            pickerWidth = 146;
+         }
+         return {
+            corner: 'tl',
+            bodyBounds: true,
+            locationStrategy: 'bodyBounds',
+            horizontalAlign: {
+               side: 'left',
+               offset: (baseWidth - pickerWidth)/2
+            },
+            verticalAlign: {
+               side: 'top',
+               offset: -4
+            }
+         };
       }
    });
 

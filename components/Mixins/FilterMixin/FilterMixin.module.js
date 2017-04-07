@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
        * @event onResetFilter Происходит при сбросе фильтра.
        * @remark
        * Значения структуры value сбрасываются в resetValue.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Boolean} internal Значения были сброшены только на панели фильтрации.
        */
       $protected: {

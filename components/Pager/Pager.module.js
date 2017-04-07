@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.Pager', [
        * @event onPageChange При изменении страницы
        * <wiTag group="Управление">
        * Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Number} number номер новой страницы
        * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.
        * @example
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.Pager', [
       },
       /**
        * Получить SBIS3.CORE.Paging
-       * @returns {$ws.proto.Paging}
+       * @returns {SBIS3.CORE.Paging}
        */
       getPaging: function(){
          return this._paging;

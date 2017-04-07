@@ -1,56 +1,27 @@
-.button-mixin(@icon-top, @icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
-   left: @icon-left - @border-width;
-   top: @icon-top - @border-width;
-
-   & + .controls-Button__text {
-      margin-right: @margin-right - @border-width;
-      margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
-   }
-}
-
 .controls-Button {
-  &.controls-Checked__checked:not(.ws-disabled) {
-    color: @button-checked-text-color;
-    border: @button-checked-border;
-    font-weight: @button-checked-font-weight;
-    .box-shadow(@button-checked-shadow);
-    background: @button-checked-bg;
-
-    &.controls-Button__primary {
-      color: @button-primary-checked-text-color;
-      border: @button-primary-checked-border;
-      font-weight: @button-checked-font-weight;
-      .box-shadow(@button-primary-checked-shadow);
-      background: @button-primary-checked-bg;
-    }
-
-    &.controls-Button__big {
-      color: @button-big-checked-text-color;
-      border: @button-big-checked-border;
-      font-weight: @button-checked-font-weight;
-      .box-shadow(@button-big-checked-shadow);
-      background: @button-big-checked-bg;
-
-      &.controls-Button__primary {
-        color: @button-big-primary-checked-text-color;
-        border: @button-big-primary-checked-border;
-        font-weight: @button-checked-font-weight;
-        .box-shadow(@button-big-primary-checked-shadow);
-        background: @button-big-primary-checked-bg;
+  &.controls-ToggleButton__normal {
+    &.controls-Checked__checked:not(.ws-disabled) {
+      &.controls-Button__default {
+        border: @button-checked-border;
+        background: @button-checked-bg;
       }
-    }
+      &.controls-Button__primary {
+        border: @button-primary-checked-border;
+        background: @button-primary-checked-bg;
+      }
 
-    .controls-Button__text {
-      margin-left: @button-checked-text-margin-left;
-      margin-right: @button-checked-text-margin-right;
-    }
+      .controls-Button__text {
+        margin-left: @button-checked-text-margin-left;
+        margin-right: @button-checked-text-margin-right;
+      }
 
-    .controls-Button__icon {
-      .button-mixin(@button-icon-top-offset; @button-icon-left-offset; 16px; @button-checked-border-width; @button-text-margin-left; @button-text-margin-right);
-    }
+      .controls-Button__icon {
+        .button-mixin(@button-checked-border-width; @button-text-margin-left; @button-text-margin-right; 16px);
+      }
 
-    .controls-Button__icon.icon-24 {
-      .button-mixin(@button-icon-big-top-offset, @button-icon-big-left-offset, 24px, @button-checked-border-width, @button-text-margin-left, @button-text-margin-right);
+      .controls-Button__icon.icon-24 {
+        .button-mixin(@button-checked-border-width; @button-text-margin-left; @button-text-margin-right; 24px);
+      }
     }
   }
 }
@@ -61,32 +32,26 @@
       margin-right: @button-big-checked-text-margin-right;
     }
     .controls-Button__icon {
-      .button-mixin(@button-big-icon-top-offset, @button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+      .button-mixin(@button-checked-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 16px);
     }
     .controls-Button__icon.icon-24 {
-      .button-mixin(@button-big-icon-big-top-offset, @button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+      .button-mixin(@button-checked-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 24px);
     }
     .controls-Button__icon.icon-32 {
-      .button-mixin(@button-big-icon-32-top-offset, @button-big-icon-32-left-offset, 32px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+      .button-mixin(@button-checked-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 32px);
     }
 }
 
 
 .ws-is-desktop-platform {
   .controls-Button:not(.ws-disabled) {
-    &:hover {
-      &.controls-Checked__checked.controls-Button {
-        border: @button-checked-border;
-
-        &.controls-Button__primary {
-          border: @button-primary-checked-border;
+    &.controls-ToggleButton__normal {
+      &:hover {
+        &.controls-Button__default.controls-Checked__checked {
+          border: @button-checked-border !important;
         }
-        &.controls-Button__big {
-          border: @button-big-checked-border;
-
-          &.controls-Button__primary {
-            border: @button-big-primary-checked-border;
-          }
+        &.controls-Button__primary.controls-Checked__checked {
+          border: @button-primary-checked-border !important;
         }
       }
     }
@@ -114,19 +79,9 @@
     }
   }
 }
-// хак для ie9, 10, 11 выравнивающий иконки в залипшей кнопке
-@media screen and (min-width:~"0\0") {
-   .controls-Checked__checked {
-      .controls-Button__icon {
-         &.icon-24 {
-            top: @button-icon-big-top-offset - @button-border-width - 2 !important;
-         }
-      }
-   }
-}
 // хак для мозиллы, выравнивающий иконки в залипшей кнопке
 @-moz-document url-prefix() {
-   .controls-Checked__checked:not(.controls-Button__big) {
+   .controls-Button.controls-Checked__checked:not(.controls-Button__big) {
       .controls-Button__icon {
          &.icon-24 {
             top: @button-icon-big-top-offset - @button-border-width - 2 !important;

@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ProgressBar', ['html!SBIS3.CONTROLS.ProgressBar', 'js!
    /**
     * Контрол, индикатор прохождения процесса
     * @class SBIS3.CONTROLS.ProgressBar
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @control
     * @author Крайнов Дмитрий Олегович
     * @initial

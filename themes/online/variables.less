@@ -17,8 +17,11 @@
 @blue-dark-color:                         #313E78;
 
 @default-color:                           #587AB0;
+@default-disabled-color:                  @gray-ccc-color;
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
+@default-border-width:                    1px;
+@default-border-style:                    solid;
 
 @icon-color-attention:                    #FEC63F;
 @icon-color-done:                         #72be44;
@@ -26,22 +29,23 @@
 @icon-color-primary:                      @default-color;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
+@icon-active-color:                       @blue-dark-color;
 
 @float-area-border-color:                 #bdbdbd;
-@float-area-border:                       1px solid @float-area-border-color;
+@float-area-border:                       @default-border-width @default-border-style @float-area-border-color;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 
 @bg:                                      transparent;
-@text-color:                              @black-color;
+@default-text-color:                      @black-color;
 
 @font-basic-name:                         'TensorFont', sans-serif;
 @font-basic-size:                         14px;
-@font-popup-size:                         15px;
+@popup-font-size:                         15px;
 @font-folder-size:                        15px;
 @font-basic-line-height:                  20px;
 
-@closeButtonImage:                        url('img/areaCloseButton.png') -30px 0;
-@closeButtonImageHover:                   url('img/areaCloseButton.png') -30px -24px;
+@closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
+@closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
 @closeButtonWidth:                        36px;
 @closeButtonHeight:                       24px;
 
@@ -58,6 +62,8 @@
 @link-font:                               @font-basic-size @font-basic-name;
 @link-cursor:                             pointer;
 @link-text-color:                         #05b;
+@link-background:                         transparent;
+@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
@@ -72,7 +78,7 @@
 @link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        -3px 0 0;
+@link-icon-margin:                        0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
@@ -85,6 +91,7 @@
 
 // Normal button
 @button-font:                             @font-basic-size @font-basic-name;
+@button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           24px;
@@ -158,24 +165,23 @@
 @filter-panel-chooser-all-button-float:                           left;
 
 // Normal default button
-@button-text-color:                       @black-color;
 @button-border-width:                     1px;
 @button-border:                           @button-border-width solid @default-color;
 @button-shadow:                           none;
 @button-bg:                               transparent;
 
-@button-hover-text-color:                 @button-text-color;
+@button-hover-text-color:                 @default-text-color;
 @button-hover-border:                     @button-border;
 @button-hover-shadow:                     @button-shadow;
 @button-hover-bg:                         #F0F5FB;
 
-@button-active-text-color:                @button-text-color;
+@button-active-text-color:                @default-text-color;
 @button-active-border:                    @button-border;
 @button-active-shadow:                    @button-shadow;
 @button-active-bg:                        #E1ECF6;
 
 // Normal primary button
-@button-primary-text-color:               @button-text-color;
+@button-primary-text-color:               @default-text-color;
 @button-primary-border:                   1px solid @primary-color;
 @button-primary-shadow:                   @button-shadow;
 @button-primary-bg:                       @button-bg;
@@ -192,20 +198,19 @@
 
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  1px solid @gray-ccc-color;
+@button-disabled-border:                  1px solid @default-disabled-color;
 @button-disabled-shadow:                  @button-shadow;
 @button-disabled-bg:                      @button-bg;
 
 
 
 // Big button
-@button-big-font:                         18px @font-basic-name;
-@button-big-text-alignment:               @button-text-alignment;
+@button-big-font-size:                    18px;
+@button-big-font:                         @button-big-font-size @font-basic-name;
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       48px;
 @button-big-line-height:                  normal;
 @button-big-padding:                      15px 24px;
-@button-big-margin:                       @button-margin;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -218,43 +223,6 @@
 @button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
-
-@button-big-text-color:                   @button-text-color;
-@button-big-border:                       @button-border;
-@button-big-shadow:                       @button-shadow;
-@button-big-bg:                           @button-bg;
-
-@button-big-hover-text-color:             @button-big-text-color;
-@button-big-hover-border:                 @button-big-border;
-@button-big-hover-shadow:                 @button-hover-shadow;
-@button-big-hover-bg:                     @button-hover-bg;
-
-@button-big-active-text-color:            @button-big-text-color;
-@button-big-active-border:                @button-big-border;
-@button-big-active-shadow:                @button-active-shadow;
-@button-big-active-bg:                    @button-active-bg;
-
-// Big primary button
-@button-big-primary-text-color:           @button-primary-text-color;
-@button-big-primary-border:               @button-primary-border;
-@button-big-primary-shadow:               @button-primary-shadow;
-@button-big-primary-bg:                   @button-primary-bg;
-
-@button-big-primary-hover-text-color:     @button-big-primary-text-color;
-@button-big-primary-hover-border:         @button-big-primary-border;
-@button-big-primary-hover-shadow:         @button-big-primary-shadow;
-@button-big-primary-hover-bg:             @button-primary-hover-bg;
-
-@button-big-primary-active-text-color:    @button-big-primary-text-color;
-@button-big-primary-active-border:        @button-big-primary-border;
-@button-big-primary-active-shadow:        @button-active-shadow;
-@button-big-primary-active-bg:            @button-primary-active-bg;
-
-// Big disabled button
-@button-big-disabled-text-color:          @button-disabled-text-color;
-@button-big-disabled-border:              @button-disabled-border;
-@button-big-disabled-shadow:              @button-disabled-shadow;
-@button-big-disabled-bg:                  @button-disabled-bg;
 
 @button-icon-32-top-offset:               0;
 @button-icon-32-left-offset:              0;
@@ -274,15 +242,15 @@
 //  Icon Button //
 // ------------ //
 
-@button-icon-done-color: #72BE44;
-@button-icon-error-color: #EF463A;
+@icon-button-done-color: #72BE44;
+@icon-button-error-color: #EF463A;
 
 // ------------- //
 // Toggle button //
 // ------------- //
 
 // Normal default button
-@button-checked-text-color:               @button-text-color;
+@button-checked-text-color:               @default-text-color;
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
 @button-checked-font-weight:              normal;
@@ -302,10 +270,6 @@
 @button-primary-checked-bg:               @button-primary-hover-bg;
 
 // Big default button
-@button-big-checked-text-color:           @button-checked-text-color;
-@button-big-checked-border:               @button-checked-border;
-@button-big-checked-shadow:               @button-big-active-shadow;
-@button-big-checked-bg:                   @button-big-active-bg;
 @button-big-checked-text-margin-left:     @button-big-text-margin-left - 1px;
 @button-big-checked-text-margin-right:    @button-big-text-margin-right - 1px;
 @button-big-checked-icon-top-offset:      @button-big-icon-top-offset - 1px;
@@ -314,10 +278,7 @@
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset - 1px;
 
 // Big primary button
-@button-big-primary-checked-text-color:   @button-big-primary-active-text-color;
 @button-big-primary-checked-border:       @button-primary-checked-border;
-@button-big-primary-checked-shadow:       @button-big-primary-active-shadow;
-@button-big-primary-checked-bg:           @button-big-primary-active-bg;
 
 
 
@@ -669,17 +630,17 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
 @menu-expand-right-offset:                8px;
-@menu-expand-spritesheet:                'img/MenuExpand.png';
 
 @menu-expand-border-width:                0;
 @menu-expand-border-style:                solid;
 @menu-expand-border-color:                transparent;
-@menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-bg:                          none;
+@menu-expand-content:                     "\e9ab";
 
 @menu-expand-hover-border-width:          @menu-expand-border-width;
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
-@menu-expand-hover-bg:                    url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-hover-bg:                    none;
 
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
@@ -781,7 +742,7 @@
 @text-box-height:                         24px;
 @text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
-@text-box-color:                          @text-color;
+@text-box-color:                          @default-text-color;
 @text-box-text-decoration:                inherit;
 
 @text-box-field-font:                     inherit;
@@ -921,7 +882,6 @@
 
 @money-text-box-min-width:            102px;
 
-@money-text-box-decimals-margin-left: -4px;
 @money-text-box-decimals-padding:     2px 0;
 @money-text-box-decimals-font-size:   12px;
 
@@ -1044,7 +1004,7 @@
 @compo-box-fieldWrapper-margin-right:           16px;
 @combo-box-after-width:                         @text-box-after-width;
 
-@compo-box-picker-show-color:                   @text-color;
+@compo-box-picker-show-color:                   @default-text-color;
 @combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 
@@ -1131,7 +1091,7 @@
 @suggest-picker-border:                         1px solid #cccccc;
 @suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
-@suggest-picker-margin:                         -1px 0 0 0 !important;
+@suggest-picker-margin:                         -2px 0 0 0;
 @suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
@@ -1394,6 +1354,7 @@
 @date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
 @date-range-choose-year-bg-hover-color:         inherit;
+@date-range-choose-year-padding-left:           2px;
 
 @date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
@@ -1420,7 +1381,7 @@
 @date-range-choose-quarter-with-quarters-margin:            0;
 @date-range-choose-quarter-with-month-margin:               0 0 @date-range-choose-indents 0;
 @date-range-choose-quarter-caption-width:                   28px;
-@date-range-choose-quarter-caption-hover-color:             @date-range-choose-halfyear-caption-with-quarters-color;
+@date-range-choose-quarter-caption-hover-color:             @black-color;
 @date-range-choose-quarter-caption-text-align:              @date-range-choose-caption-text-align;
 @date-range-choose-quarter-caption-with-month-text-align:   @date-range-choose-caption-text-align;
 
@@ -1442,9 +1403,8 @@
 @date-range-choose-home-button-size:            24px;
 @date-range-choose-home-button-font-size:       14px;
 @date-range-choose-home-button-line-height:     22px;
-@date-range-choose-home-button-border-color:    inherit;
 @date-range-choose-home-color:                  @date-range-choose-color;
-@date-range-choose-home-button-margin:          4px auto 0;
+@date-range-choose-home-button-margin:          0 auto 12px;
 
 
 // -------------- //
@@ -1490,7 +1450,7 @@
 @date-range-big-choose-years-panel-wrapper-font-size:          18px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 40px;
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;

@@ -5,9 +5,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ItemsControlMixin',
       'js!SBIS3.CONTROLS.PickerMixin',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
-      'html!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
+      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection',
+      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
+      'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/helpers/collection-helpers',
       'Core/core-instance',
       'Core/helpers/functional-helpers'
@@ -21,38 +21,13 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        * @extends SBIS3.CORE.CompoundControl
        */
 
-      function itemTemplateRender(opts) {
-         var items = [],
-             tplArgs ={},
-             res = [];
-
-         if(opts._preRenderValues.selectedItem && cInstance.instanceOfModule(opts._preRenderValues.selectedItem, 'WS.Data/Entity/Model')) {
-            items = [opts._preRenderValues.selectedItem];
-         } else if (opts._preRenderValues.selectedItems) {
-            items = opts._preRenderValues.selectedItems.toArray();
-         }
-
-         if(items.length) {
-            tplArgs = opts._buildTplArgs(opts);
-            tplArgs.className = 'controls-ListView__item';
-            tplArgs.itemTemplate = opts.itemTemplate;
-            colHelpers.forEach(items, function(item) {
-               tplArgs.item = item;
-               res.push(tplArgs.defaultItemTpl(tplArgs));
-            })
-         }
-
-         return res.join('');
-      }
-
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                _defaultItemContentTemplate: defaultItemContentTemplate,
                _defaultItemTemplate: defaultItemTemplate,
-               _preRenderFunction: itemTemplateRender,
-               _preRenderValues: {}
+               _canServerRender: true
             },
             _parentFieldLink: undefined
          },
@@ -62,6 +37,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
             /* Запомним контейнер поля связи */
             this._parentFieldLink = this.getParent();
+            this._options._buildTplArgs = this._options._buildTplArgs.callNext(this._buildTplArgs);
          },
 
          _onClickHandler: function(e) {
@@ -81,23 +57,18 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          /**
           * Аргументы для шаблона
           */
-         _buildTplArgs: function(item) {
-            var args = FieldLinkItemsCollection.superclass._buildTplArgs.apply(this, arguments),
-                projection = this._getItemsProjection();
-
-            args.itemTemplate = this._options.itemTemplate;
-            args.projection = projection;
-            args.itemsCount = projection.getCount();
+         _buildTplArgs: function(cfg, newCfg) {
+            newCfg.itemsCount = this._getItemsProjection().getCount();
             /* При отображении выбранных элементов в выпадающем списке надо их сортировать,
                чтобы визуально казалось, что последние выбранные будут вверху,
                делается это с помощью аттрибута order (на css), чтобы ускорить отрисовку,
                order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
                поэтому добавляю проверку на видимость выпадающего списка */
-            args.needSort = this.isPickerVisible();
+            newCfg.needSort = this.isPickerVisible();
             /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
                в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
-            args.needTitle = !this._options.itemContentTpl;
-            return args;
+            newCfg.needTitle = !this._options.itemContentTpl;
+            return newCfg;
          },
 
          /**

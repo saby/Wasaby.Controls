@@ -53,18 +53,6 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
              */
             showLock: false,
 
-            pickerConfig: {
-               corner: 'tl',
-               horizontalAlign: {
-                  side: 'left'
-                  // offset: -3
-               },
-               verticalAlign: {
-                  side: 'top',
-                  offset: -6
-               }
-            },
-
             locked: true
          },
          _cssRangeSlider: {
@@ -92,22 +80,28 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
 
       _modifyOptions: function() {
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue, {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          return opts;
       },
 
       _onPrevBtnClick: function () {
-         this.setPrev();
-         this._updateValueView();
+         if (this.isEnabled()) {
+            this.setPrev();
+            this._updateValueView();
+         }
       },
 
       _onNextBtnClick: function () {
-         this.setNext();
-          this._updateValueView();
+         if (this.isEnabled()) {
+            this.setNext();
+            this._updateValueView();
+         }
       },
 
       _updateValueView: function () {
-         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(), {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(),
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          if (this._options.type === 'normal') {
             this.getContainer().find(['.', this._cssRangeSlider.value].join('')).text(caption);
          } else {

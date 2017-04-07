@@ -26,22 +26,23 @@
 @icon-color-primary:                      #587ab0;
 @icon-color-hover:                        #ff7033;
 @icon-color-disabled:                     #CCC;
+@icon-active-color:                       @blue-dark-color;
 
 
 @float-area-border-color:                 #bdbdbd;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 
 @bg:                                      transparent;
-@text-color:                              @black-color;
+@default-text-color:                      @black-color;
 
 @font-basic-name:                         'TensorFont', sans-serif;
 @font-basic-size:                         14px;
-@font-popup-size:                         13px;
+@popup-font-size:                         13px;
 @font-folder-size:                        14px;
 @font-basic-line-height:                  20px;
 
-@closeButtonImage:                        url('img/areaCloseButton.png') -30px 0;
-@closeButtonImageHover:                   url('img/areaCloseButton.png') -30px -24px;
+@closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
+@closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
 @closeButtonWidth:                        36px;
 @closeButtonHeight:                       24px;
 
@@ -63,6 +64,8 @@
 @link-font:                               @font-basic-size @font-basic-name;
 @link-cursor:                             pointer;
 @link-text-color:                         @primary-color;
+@link-background:                         transparent;
+@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
@@ -78,7 +81,7 @@
 @link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        -2px 0 0;
+@link-icon-margin:                        0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 4px;
@@ -91,6 +94,7 @@
 
 // Normal button
 @button-font:                             @font-basic-size @font-basic-name;
+@button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           30px;
@@ -164,7 +168,6 @@
 @filter-panel-chooser-all-button-float:                           left;
 
 // Normal default button
-@button-text-color:                       @gray-color;
 @button-border-width:                     1px;
 @button-border:                           @button-border-width solid @gray-light-color;
 @button-shadow:                           none;
@@ -203,7 +206,8 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font:                         (@font-basic-size * 1.2) @font-basic-name;
+@button-big-font-size:                    (@font-basic-size * 1.2);
+@button-big-font:                         @button-big-font-size @font-basic-name;
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       54px;
@@ -222,43 +226,6 @@
 @button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-padding:                 11px 0 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
-
-@button-big-text-color:                   @button-text-color;
-@button-big-border:                       @button-border;
-@button-big-shadow:                       @button-shadow;
-@button-big-bg:                           @button-bg;
-
-@button-big-hover-text-color:             @button-hover-text-color;
-@button-big-hover-border:                 @button-hover-border;
-@button-big-hover-shadow:                 @button-hover-shadow;
-@button-big-hover-bg:                     @button-hover-bg;
-
-@button-big-active-text-color:            @button-active-text-color;
-@button-big-active-border:                @button-active-border;
-@button-big-active-shadow:                @button-active-shadow;
-@button-big-active-bg:                    @button-active-bg;
-
-// Big primary button
-@button-big-primary-text-color:           @button-primary-text-color;
-@button-big-primary-border:               @button-primary-border;
-@button-big-primary-shadow:               @button-primary-shadow;
-@button-big-primary-bg:                   @button-primary-bg;
-
-@button-big-primary-hover-text-color:     @button-primary-hover-text-color;
-@button-big-primary-hover-border:         @button-primary-hover-border;
-@button-big-primary-hover-shadow:         @button-primary-hover-shadow;
-@button-big-primary-hover-bg:             @button-primary-hover-bg;
-
-@button-big-primary-active-text-color:    @button-primary-active-text-color;
-@button-big-primary-active-border:        @button-primary-active-border;
-@button-big-primary-active-shadow:        @button-primary-active-shadow;
-@button-big-primary-active-bg:            @button-primary-active-bg;
-
-// Big disabled button
-@button-big-disabled-text-color:          @button-disabled-text-color;
-@button-big-disabled-border:              @button-disabled-border;
-@button-big-disabled-shadow:              @button-disabled-shadow;
-@button-big-disabled-bg:                  @button-disabled-bg;
 
 @button-icon-32-top-offset:               0;
 @button-icon-32-left-offset:              0;
@@ -280,8 +247,8 @@
 //  Icon Button //
 // ------------ //
 
-@button-icon-done-color: #72BE44;
-@button-icon-error-color: #EF463A;
+@icon-button-done-color: #72BE44;
+@icon-button-error-color: #EF463A;
 
 // ------------- //
 // Toggle button //
@@ -308,24 +275,12 @@
 @button-primary-checked-bg:               @button-primary-active-bg;
 
 // Big default button
-@button-big-checked-text-color:           @button-checked-text-color;
-@button-big-checked-border:               @button-big-active-border;
-@button-big-checked-shadow:               @button-big-active-shadow;
-@button-big-checked-bg:                   @button-big-active-bg;
 @button-big-checked-text-margin-left:     @button-big-text-margin-left;
 @button-big-checked-text-margin-right:    @button-big-text-margin-right;
 @button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
 @button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
-
-// Big primary button
-@button-big-primary-checked-text-color:   @button-big-primary-active-text-color;
-@button-big-primary-checked-border:       @button-big-primary-active-border;
-@button-big-primary-checked-shadow:       @button-big-primary-active-shadow;
-@button-big-primary-checked-bg:           @button-big-primary-active-bg;
-
-
 
 // ---------- //
 // Tab button //
@@ -678,6 +633,7 @@
 @menu-expand-border-style:                solid;
 @menu-expand-border-color:                transparent;
 @menu-expand-bg:                          url(@menu-expand-spritesheet) 0 0 no-repeat;
+@menu-expand-content:                     " ";
 
 @menu-expand-hover-border-width:          @menu-expand-border-width;
 @menu-expand-hover-border-style:          @menu-expand-border-style;
@@ -857,7 +813,7 @@
 @text-box-height:                         24px;
 @text-box-wrapper-padding:                0 7px;
 @text-box-border-radius:                  2px;
-@text-box-color:                          @text-color;
+@text-box-color:                          @default-text-color;
 @text-box-text-decoration:                inherit;
 
 @text-box-field-font:                     inherit;
@@ -997,7 +953,6 @@
 
 @money-text-box-min-width:            102px;
 
-@money-text-box-decimals-margin-left: -4px;
 @money-text-box-decimals-padding:     2px 0;
 @money-text-box-decimals-font-size:   12px;
 
@@ -1118,7 +1073,7 @@
 @compo-box-fieldWrapper-margin-right:           16px;
 @combo-box-after-width:                         @text-box-after-width;
 
-@compo-box-picker-show-color:                   @text-color;
+@compo-box-picker-show-color:                   @default-text-color;
 @combo-box-picker-show-border-color:            @primary-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 

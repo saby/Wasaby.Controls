@@ -1,7 +1,11 @@
 <div class="controls-TabButton controls-TabButton__{{=it.align}}-align{{?it.checked}} controls-Checked__checked{{?}}">
     <div class="controls-TabButton__inner">
         <div>
-            <span class="controls-TabButton__icon"></span>
+            <span class="controls-TabButton__icon">
+                {{?it._iconClass}}
+                    <span class="{{=it._iconClass}}"></span>
+                {{?}}
+            </span>
             <span class="controls-TabButton__caption">{{=it.caption}}</span>
         </div>
     </div>

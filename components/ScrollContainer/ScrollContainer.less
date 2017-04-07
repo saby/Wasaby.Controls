@@ -57,10 +57,8 @@
    -webkit-overflow-scrolling: auto!important;
 }
 
-.ws-is-firefox, .ws-is-ie {
-   .controls-ScrollContainer__ie-overflow-hidden {
-      overflow: hidden;
-   }
+.controls-ScrollContainer__content-overflowHidden {
+   overflow: hidden;
 }
 
 .ws-is-desktop-platform {
@@ -107,13 +105,12 @@
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex {
-   display: flex;
-   flex-direction: column;
-   align-content: stretch;
+   .flexbox();
+   .flex-direction(column);
+   .align-content(stretch);
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
-   overflow: auto;
    height:100%;
 }
 
