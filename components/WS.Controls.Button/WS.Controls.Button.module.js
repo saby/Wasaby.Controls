@@ -95,12 +95,6 @@ define('js!WS.Controls.Button', [
          }
       },
 
-      _modifyOptions : function() {
-         var options = Button.superclass._modifyOptions.apply(this, arguments);
-         options.className += ' controls-ButtonBase';
-         return options;
-      },
-
       $constructor: function() {
          if (this._options.primary === true) {
             this._registerDefaultButton();
