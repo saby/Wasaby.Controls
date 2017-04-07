@@ -108,11 +108,13 @@ define('js!WS.Controls.Button', [
       },
 
       init : function() {
-          Button.superclass.init.call(this);
+         Button.superclass.init.call(this);
          /*Хак чтобы в IE не прыгал тег button при зажатии мышки*/
-         this._container.click(function(e){
-            e.preventDefault();
-         });
+         if (constants.browser.isIE) {
+            this._container.mousedown(function(e){
+               e.preventDefault();
+            });
+         }
       },
 
       setCaption: function(caption){

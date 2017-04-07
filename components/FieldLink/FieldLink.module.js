@@ -169,11 +169,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @name SBIS3.CONTROLS.FieldLink#textValue
            * @cfg {String} Хранит строку, сформированную из значений поля отображения выбранных элементов коллекции.
            * @remark
-           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
+           * Значения в строке перечислены через запятую. Отображаемые значения в строке определяются с помощью опции {@link displayProperty} или {@link itemContentTpl}.
            * Опция доступна только на чтение. Запрещена двусторонняя привязка к полю контекста.
            * @see getTexValue
            * @see displayProperty
-           * @see itemTemplate
+           * @see itemContentTpl
            */
           /**
            * @event onItemActivate Происходит при клике по выбранному элементу коллекции.
@@ -290,20 +290,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @deprecated
                  */
                 alwaysShowTextBox: false,
-                /**
-                 * @cfg {String} Устанавливает шаблон, по которому будет построено отображение каждого выбранного значения в поле связи.
-                 * @remark
-                 * Шаблон - это вёрстка, по которой будет построено отображение каждого выбранного значения в поле связи.
-                 * Внутри шаблона допускается использование {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template конструкций шаблонизатора}.
-                 * Шаблон может быть реализован отдельным XHTML-файлом.
-                 * В этом случае чтобы передать его содержимое в опцию, он должен быть подключен в массив зависимостей компонента (см. примеры).
-                 * @example
-                 * Пример. Шаблон создан в отдельном XHTML-файле. Сначала его нужно подключить в массив зависимостей компонента, затем в опции указать путь до шаблона.
-                 * <pre class="brush: xml">
-                 *     <option name="itemTemplate" type="string">html!SBIS3.MyArea.MyComponent/resources/myTemplate</option>
-                 * </pre>
-                 */
-                itemTemplate: null,
                 /**
                  * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
                  */
@@ -772,7 +758,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
              cfg.className += ' ' + classesToAdd.join(' ');
-             cfg.itemTemplate = TemplateUtil.prepareTemplate(cfg.itemTemplate);
              return cfg;
           },
 
@@ -921,11 +906,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
             * Метод формирует строку из значений полей выбранных элементов коллекции. Значения в строке будут перечислены через запятую.
-            * Отображаемые значения определяются с помощью опции {@link displayProperty} или {@link itemTemplate}.
+            * Отображаемые значения определяются с помощью опции {@link displayProperty} или {@link itemContentTpl}.
             * @returns {string} Строка, сформированная из отображаемых значений в поле связи.
             * @see texValue
             * @see displayProperty
-            * @see itemTemplate
+            * @see itemContentTpl
             */
           getTextValue: function() {
               var displayFields = [],
