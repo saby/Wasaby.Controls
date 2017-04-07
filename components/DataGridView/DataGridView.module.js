@@ -620,7 +620,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          //TODO Костыль. Чтоб в шаблоне позвать Sanitize с компонентами приходится прокидывать в виде функции свой sanitize
          newCfg.sanitize = function(obj) {
-            return Sanitize (obj.value, {validNodes: {component: true} })
+            return Sanitize (obj.value, {validNodes: {component: true}, validAttributes : {config : true} })
          };
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
