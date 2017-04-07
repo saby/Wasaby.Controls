@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
+   'Core/Sanitize',
    'css!SBIS3.CONTROLS.DataGridView'
 ],
    function(
@@ -58,7 +59,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       SortingTemplate,
       colHelpers,
       strHelpers,
-      dcHelpers
+      dcHelpers,
+      Sanitize
    ) {
 
    'use strict';
@@ -265,6 +267,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                prepareResultsData(cfg, headData, cfg._items.getMetaData().results);
                headData.hasResults = true;
             }
+
+            headData.sanitize = cfg.sanitize;
 
             return headData;
          },
@@ -605,6 +609,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _modifyOptions: function(cfg, parsedCfg) {
+
          if (parsedCfg._ladderInstance) {
             cfg._ladderInstance = parsedCfg._ladderInstance;
          } else if (!cfg._ladderInstance) {
@@ -612,6 +617,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
+
+         //TODO Костыль. Чтоб в шаблоне позвать Sanitize с компонентами приходится прокидывать в виде функции свой sanitize
+         newCfg.sanitize = function(obj) {
+            return Sanitize (obj.value, {validNodes: {component: true} })
+         };
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
