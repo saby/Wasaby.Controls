@@ -73,7 +73,9 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Изменить API с более очевидным простейшим способом использования. (~WaitIndicatorManager.register(message, deferred, cfg))
        * TODO: ### Описать API
        * TODO: (+) Повсеместно учесть дуализм Promise/Deferred
-       * TODO: (+-) Сделатьь примеры с прокруткой таблиц
+       * TODO: (+-) Сделать примеры с прокруткой таблиц
+       * TODO: (+) Добавить экономную реализацию приватоности для страых браузеров
+       * TODO: (+-) Исправить недоработку при конкуренции индикаторов
        */
 
 
@@ -517,7 +519,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          _callDelayed: function (method, storing, delay) {
             var pSelf = WaitIndicatorProtected(this);
             //////////////////////////////////////////////////
-            console.log('DBG: _callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
+            //console.log('DBG: _callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
             //////////////////////////////////////////////////
             for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
                var key = storings[i];
@@ -534,7 +536,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                }
             }
             //////////////////////////////////////////////////
-            console.log('DBG: callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
+            //console.log('DBG: callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
             //////////////////////////////////////////////////
             var promInf = emptyPromise(pSelf.useDeferred);
             if (typeof delay === 'number' && 0 < delay) {
@@ -542,7 +544,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                   var pSelf = WaitIndicatorProtected(this),
                      prev = pSelf[storing];
                   //////////////////////////////////////////////////
-                  console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', prev, ';');
+                  //console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', prev, ';');
                   //////////////////////////////////////////////////
                   pSelf[storing] = null;
                   WaitIndicatorInner[method](this);
@@ -733,6 +735,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                   if (1 < inds.length) {
                      inds.splice(i, 1);
                      this.checkMessage(poolItem, indicator.message);
+                     this.updateLook(poolItem, indicator.look);
                   }
                   else {
                      if (!force) {
@@ -787,6 +790,19 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                if (prevMessage !== msg) {
                   WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
                }
+            }
+         },
+
+         /**
+          * Обновить внешний вид индикатор
+          * @public
+          * @param {object} poolItem Элемент пула
+          */
+         updateLook: function (poolItem, prevLook) {
+            var inds = poolItem.indicators;
+            if (inds.length) {
+               var look = inds[0].look;
+               WaitIndicatorSpinner.changeLook(poolItem.spinner, look);
             }
          },
 
@@ -902,9 +918,6 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           */
          create: function (container, message, look) {
             //###var _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');
-            //////////////////////////////////////////////////
-            console.log('DBG: Spinner create: look=', look, ';');
-            //////////////////////////////////////////////////
             var hasMsg = !(look && look.small) && !!message;
             var html = '<div class="ws-wait-indicator"><div class="ws-wait-indicator-in" data-node="message">' + (hasMsg ? message : '') + '</div></div>';
 
@@ -921,75 +934,19 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                cls.add('ws-wait-indicator_text');
             }
             if (look) {
-               var sides = ['left', 'right', 'top', 'bottom'];
-               var scroll = look.scroll && typeof look.scroll === 'string' ? this._checkValue(look.scroll.toLowerCase(), sides) : null;
-               var small;
-               if (!scroll) {
-                  small = look.small ? (typeof look.small === 'string' ? this._checkValue(look.small.toLowerCase(), sides, 'yes') : 'yes') : null;
-                  if (small === 'yes' && look.align && typeof look.align === 'string') {
-                     small = this._checkValue(look.align.toLowerCase(), sides, 'yes');
-                  }
-               }
-               var overlay;
-               if (scroll) {
-                  overlay = null;
-               }
-               else
-               if (small) {
-                  overlay = 'no';
-               }
-               else {
-                  overlay = look.overlay && typeof look.overlay === 'string' ? this._checkValue(look.overlay.toLowerCase(), ['no', 'none', 'dark']) : null;
-               }
-               if (scroll) {
-                  var list = {
-                     left: 'ws-wait-indicator_scroll-left',
-                     right: 'ws-wait-indicator_scroll-right',
-                     top: 'ws-wait-indicator_scroll-top',
-                     bottom: 'ws-wait-indicator_scroll-bottom'
-                  };
-                  //if (list[scroll]) {
-                     cls.add(list[scroll]);
-                  //}
-               }
-               if (small) {
-                  var list = {
-                     left: 'ws-wait-indicator_small-left',
-                     right: 'ws-wait-indicator_small-right',
-                     top: 'ws-wait-indicator_small-top',
-                     bottom: 'ws-wait-indicator_small-bottom'
-                  };
-                  cls.add(list[small] ? list[small] : 'ws-wait-indicator_small');
-               }
-               if (overlay === 'no' || overlay === 'none') {
-                  cls.add('ws-wait-indicator_overlay-no');
-               }
-               if (overlay === 'dark') {
-                  cls.add('ws-wait-indicator_overlay-dark');
-               }
+               this.changeLook(spinner, look);
             }
-            this.insert(container, spinner);
+            this._insert(container, spinner);
             return spinner;
          },
 
          /**
-          * Проверить значение по списку допустимых
-          * @protected
-          * @param {string} value Проверяемое значение
-          * @param {string[]} allowed Список допустимых значений
-          * @return {string}
-          */
-         _checkValue: function (value, allowed, defValue) {
-            return allowed.some(function (v) { return v === value; }) ? value : defValue;
-         },
-
-         /**
           * Добавить в DOM элемент индикатора
-          * @public
+          * @protected
           * @param {HTMLElement} container Контейнер индикатора
           * @param {HTMLElement} spinner DOM-элемент индикатора
           */
-         insert: function (container, spinner) {
+         _insert: function (container, spinner) {
             var p = container || document.body;
             if (p !== spinner.parentNode) {
                var needPlace = !!container && getComputedStyle(p, null).position === 'static';
@@ -1047,6 +1004,79 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                spinner.ws.message = [].slice.call(spinner.querySelectorAll('[data-node="message"]'));
             }
             spinner.ws.message.forEach(function (node) { node.innerHTML = message || ''; });
+            spinner.classList[message ? 'add' : 'remove']('ws-wait-indicator_text');
+         },
+
+         /**
+          * Изменить внешний вид DOM-элемента индикатора
+          * @public
+          * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {object} look Параметры внешнего вида индикатора
+          */
+         changeLook: function (spinner, look) {
+            if (look && typeof look == 'object') {
+               // Раобрать параметры с учётом приоритетности
+               var sides = ['left', 'right', 'top', 'bottom'];
+               var scroll = look.scroll && typeof look.scroll === 'string' ? this._checkValue(look.scroll.toLowerCase(), sides) : null;
+               var small;
+               if (!scroll) {
+                  small = look.small ? (typeof look.small === 'string' ? this._checkValue(look.small.toLowerCase(), sides, 'yes') : 'yes') : null;
+                  if (small === 'yes' && look.align && typeof look.align === 'string') {
+                     small = this._checkValue(look.align.toLowerCase(), sides, 'yes');
+                  }
+               }
+               var overlay;
+               if (scroll) {
+                  overlay = null;
+               }
+               else
+               if (small) {
+                  overlay = 'no';
+               }
+               else {
+                  overlay = look.overlay && typeof look.overlay === 'string' ? this._checkValue(look.overlay.toLowerCase(), ['none', 'dark']) : null;
+               }
+               // Применить параметры
+               var cls = spinner.classList;
+               var scrolls = {
+                  left: 'ws-wait-indicator_scroll-left',
+                  right: 'ws-wait-indicator_scroll-right',
+                  top: 'ws-wait-indicator_scroll-top',
+                  bottom: 'ws-wait-indicator_scroll-bottom'
+               };
+               for (var p in scrolls) {
+                  cls[p === scroll ? 'add' : 'remove'](scrolls[p]);
+               }
+               var smalls = {
+                  yes: 'ws-wait-indicator_small',
+                  left: 'ws-wait-indicator_small-left',
+                  right: 'ws-wait-indicator_small-right',
+                  top: 'ws-wait-indicator_small-top',
+                  bottom: 'ws-wait-indicator_small-bottom'
+               };
+               for (var p in smalls) {
+                  cls[p === small ? 'add' : 'remove'](smalls[p]);
+               }
+
+               var overlays = {
+                  none: 'ws-wait-indicator_overlay-none',
+                  dark: 'ws-wait-indicator_overlay-dark'
+               };
+               for (var p in overlays) {
+                  cls[p === overlay ? 'add' : 'remove'](overlays[p]);
+               }
+            }
+         },
+
+         /**
+          * Проверить значение по списку допустимых
+          * @protected
+          * @param {string} value Проверяемое значение
+          * @param {string[]} allowed Список допустимых значений
+          * @return {string}
+          */
+         _checkValue: function (value, allowed, defValue) {
+            return allowed.some(function (v) { return v === value; }) ? value : defValue;
          },
 
          /**

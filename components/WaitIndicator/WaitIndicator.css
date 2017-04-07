@@ -29,7 +29,7 @@
 .ws-wait-indicator_text {
 }
 
-.ws-wait-indicator_overlay-no {
+.ws-wait-indicator_overlay-none {
     background-color: transparent;
     pointer-events: none;
     cursor: auto !important;
