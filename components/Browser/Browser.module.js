@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @event onEdit Происходит при редактировании или создании новой записи реестра.
        * @remark
        * Для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a> событие происходит только для записей типа "Лист" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} meta Мета параметры события.
        * @param {String|Number} meta.id Идентификатор записи. В случае создания новой записи значение параметра - null.
        * @param {WS.Data/Entity/Record} meta.item Экземпляр класса записи. В случае создания новой записи значение параметра - null.
@@ -52,12 +52,12 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @remark
        * Подробнее о типах записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
        * Событие актуально только для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a>.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} id Идентификатор редактируемой папки. В случае добавления новой папки значение параметра - null.
        */
       /**
        * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS.FastDataFilter}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS.FilterButton}).
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       /**
        * @typedef {Object} СolumnsConfigObject
@@ -307,6 +307,10 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._fastDataFilter = this._getFastDataFilter();
 
          if (this._filterButton) {
+            this.subscribeTo(this._filterButton, 'onApplyFilter', function() {
+               self.getView().setActive(true);
+            });
+
             if(this._options.historyId) {
                this._bindFilterHistory();
             } else {

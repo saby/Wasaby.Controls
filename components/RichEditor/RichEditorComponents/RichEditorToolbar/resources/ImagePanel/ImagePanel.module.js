@@ -7,8 +7,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!WS.Data/Di',
       'Core/helpers/fast-control-helpers',
       'html!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      "Core/EventBus",
       'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn) {
+   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
       'use strict';
 
       var
@@ -22,6 +23,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                }
             },
             _selectedTemplate: undefined,
+            _buttonHandlerInstance: undefined,
 
             _modifyOptions: function(options) {
                options = ImagePanel.superclass._modifyOptions.apply(this, arguments);
@@ -33,12 +35,23 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                var
                   self = this;
                this._publish('onImageChange');
+               this._buttonHandlerInstance = this._buttonClickHandler.bind(this);
                this._container.find('.controls-ImagePanel__Button').wsControl = function() { return self; };
-               this._container.find('.controls-ImagePanel__Button').on('click', this._buttonClickHandler.bind(this));
+               this._container.find('.controls-ImagePanel__Button').on('click', this._buttonHandlerInstance);
+               this._container.on('mousedown focus', this._blockFocusEvents);
             },
 
             getFileLoader: function() {
                return Di.resolve('ImageUploader').getFileLoader();
+            },
+            _blockFocusEvents: function(event) {
+               var eventsChannel = EventBus.channel('WindowChangeChannel');
+               event.preventDefault();
+               event.stopPropagation();
+               //Если случился mousedown то нужно нотифицировать о клике, перебив дефолтное событие перехода фокуса
+               if(event.type === 'mousedown') {
+                  eventsChannel.notify('onDocumentClick', event);
+               }
             },
 
             _buttonClickHandler: function(event) {
@@ -50,6 +63,11 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                   this._notify('onImageChange', this._selectedTemplate, fileobj);
                   this.hide();
                }.bind(this))
+            },
+            destroy: function() {
+               this._container.find('.controls-ImagePanel__Button').off('click', this._buttonHandlerInstance);
+               this._container.off('mousedown focus', this._blockFocusEvents);
+               ImagePanel.superclass.destroy.apply(this, arguments);
             }
          });
       return ImagePanel;

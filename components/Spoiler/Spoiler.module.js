@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.Spoiler', [
-   'js!SBIS3.CONTROLS.ButtonBase',
+   'js!WS.Controls.ButtonBase',
    'js!SBIS3.CONTROLS.Expandable',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.Spoiler',
@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'Core/helpers/collection-helpers',
    'Core/helpers/dom&controls-helpers',
    'css!SBIS3.CONTROLS.Spoiler'
-], function(ButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
+], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
 
    'use strict';
 
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     * @remark
     * Длинный заголовок спойлера по умолчанию обрезается.
     * @class SBIS3.CONTROLS.Spoiler
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends SBIS3.CONTROLS.WSButtonBase
     * @mixes SBIS3.CONTROLS.Expandable
     *
 	 * @demo SBIS3.CONTROLS.Demo.MySpoiler
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     */
-   var Spoiler = ButtonBase.extend([Expandable], /** @lends SBIS3.CONTROLS.Spoiler.prototype */ {
+   var Spoiler = WSButtonBase.extend([Expandable], /** @lends SBIS3.CONTROLS.Spoiler.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {

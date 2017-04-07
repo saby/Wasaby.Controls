@@ -1,7 +1,6 @@
 .controls-BackButton {
    cursor: pointer;
    display: inline-block;
-   line-height: 24px;
    position: relative;
    white-space: nowrap;
    font-weight: 700;
@@ -10,15 +9,16 @@
    .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @blue-dark-color;
-      overflow: hidden;
       padding-left: 4px;
-      text-overflow: ellipsis;
       white-space: nowrap;
       text-align: left;
       max-width: calc(~"100% - 8px");
-      line-height: normal;
       font-weight: 700;
       font-size: @back-button-font-size;
+      .controls-Link-link {
+         overflow: hidden;
+         text-overflow: ellipsis;
+      }
    }
    &:before {
       width: 8px;
@@ -55,7 +55,7 @@
       }
       .controls-BackButton__arrow {
          position: relative;
-         top: -3px;
+         top: 2px;
          &:before{
             float: right;
             position: relative;

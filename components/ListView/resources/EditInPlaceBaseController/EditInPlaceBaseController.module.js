@@ -411,7 +411,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   IoC.resolve('ILogger').log('onEndEdit', 'Boolean result is deprecated. Use constants EditInPlaceBaseController.EndEditResult.');
                }
 
-               if (endEditResult) {
+               //Не портим переменную withSaving в случае CUSTOM_LOGIC
+               if (endEditResult && endEditResult !== EndEditResult.CUSTOM_LOGIC) {
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
                needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
@@ -533,8 +534,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (preparedModel instanceof Model) {
                   return Deferred.success(preparedModel);
                } else {
-                  return this._options.dataSource.create(modelOptions).addBoth(function(model) {
+                  return this._options.dataSource.create(modelOptions).addCallback(function(model) {
                      return model;
+                  }).addErrback(function (error) {
+                     fcHelpers.alert(error);
+                     return error;
                   });
                }
             },

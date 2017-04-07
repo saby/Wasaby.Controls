@@ -36,7 +36,6 @@ define(
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
-    * @demo SBIS3.CONTROLS.Demo.MyDateBox
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
@@ -48,7 +47,7 @@ define(
         * 1. через выбор в календаре;
         * 2. через установку нового значения в поле ввода с клавиатуры;
         * 3. методами {@link setText} или {@link setDate}.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Date} date Дата, которую установили.
         * @example
         * <pre>
@@ -250,10 +249,15 @@ define(
       _keyDownBind: function(event) {
          var
              curDate = this.getDate(),
-             key = event.which || event.keyCode;
+             key = event.which || event.keyCode,
+             date;
 
          if (key == constants.key.insert) {
-            this.setDate(new Date());
+            date = new Date();
+            if (this.getType() === 'date') {
+               date.setHours(0, 0, 0, 0);
+            }
+            this.setDate(date);
          } else if (key == constants.key.plus || key == constants.key.minus) {
             if (curDate) {
                curDate = new Date(curDate);

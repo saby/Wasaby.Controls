@@ -9,11 +9,11 @@
 @secondary-color:                         #4e5762;
 
 @bg:                                      @secondary-color;
-@text-color:                              @white-color;
+@default-text-color:                      @white-color;
 
 @font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
 @font-basic-size:                         14px;
-@font-popup-size:                         14px;
+@popup-font-size:                         14px;
 @font-folder-size:                        14px;
 @font-basic-line-height:                  20px;
 
@@ -32,11 +32,12 @@
 
 @link-text-color:                         #A8ACC3;
 @link-line-height:                        normal;
+@link-height:                             31px;
 @link-font-size:                          24px;
 @link-hover-text-color:                   #FFA34F;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
-@link-icon-margin:                        -2px 0 0;
+@link-icon-margin:                        1px 0 0;
 
 @link-icon-field-margin:                  0 0 0 4px;
 
@@ -47,6 +48,8 @@
 // Normal button
 @button-font-size:                        24px;
 @button-font:                             @button-font-size @font-basic-name;
+@button-text-color:                       @black-color;
+@button-hover-text-color:                 @button-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-padding:                          0 8px;
@@ -141,7 +144,8 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font:                         (@font-basic-size * 1.285714285714286) @font-basic-name;
+@button-big-font-size:                    (@font-basic-size * 1.285714285714286);
+@button-big-font:                         @button-big-font-size @font-basic-name;
 @button-big-height:                       58px;
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
@@ -159,15 +163,6 @@
 
 @button-big-active-text-color:            @button-active-text-color;
 @button-big-active-border:                @button-active-border;
-
-// Big primary button
-@button-big-primary-hover-text-color:     @button-primary-hover-text-color;
-@button-big-primary-hover-border:         @button-primary-hover-border;
-@button-big-primary-hover-shadow:         @button-primary-hover-shadow;
-
-@button-big-primary-active-text-color:    @button-primary-active-text-color;
-@button-big-primary-active-border:        @button-primary-active-border;
-@button-big-primary-active-shadow:        @button-primary-active-shadow;
 
 @button-icon-32-top-offset:               0;
 @button-icon-32-left-offset:              0;
@@ -205,9 +200,6 @@
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 
-// Big primary button
-@button-big-primary-checked-border:       @button-big-primary-active-border;
-
 // ---------- //
 // Tab button //
 // ---------- //
@@ -224,7 +216,7 @@
 @radio-button-height:                           auto;
 @radio-button-lineheight:                       normal;
 
-@radio-button-text-color:                       @text-color;
+@radio-button-text-color:                       @default-text-color;
 
 @radio-button-hover-text-decoration:            none;
 
@@ -256,7 +248,7 @@
 
 @check-box-text-margin:                         0 8px;
 
-@check-box-text-color:                          @text-color;
+@check-box-text-color:                          @default-text-color;
 @check-box-hover-text-color:                    @primary-color;
 
 @check-box-disabled-text-color:                 @gray-color;
@@ -315,10 +307,8 @@
 
 @menu-expand-border-width:                8px 0 8px 8px;
 @menu-expand-border-color:                transparent transparent transparent @primary-color;
-@menu-expand-bg:                          transparent;
 
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
-@menu-expand-hover-bg:                    @menu-expand-bg;
 
 @menu-header-height:                      24px;
 @menu-big-header-height:                  32px;
@@ -331,7 +321,7 @@
 @menu-big-item-height:                    32px;
 @menu-item-padding:                       0 32px 0 16px;
 
-@menu-item-text-color:                    @text-color;
+@menu-item-text-color:                    @default-text-color;
 @menu-item-bg:                            @text-box-focus-bg;
 
 @menu-item-hover-text-color:              @secondary-color;
@@ -649,7 +639,7 @@
 @calendar-bg:                                   darken(@secondary-color, 5%);
 
 @data-grid-cell-box-sizing: 									border-box;
-@calendar-day-cell-text-color:                  @text-color;
+@calendar-day-cell-text-color:                  @default-text-color;
 @calendar-day-cell-bg:                          @secondary-color;
 @calendar-day-cell-hover-text-color:            @black-color;
 @calendar-day-cell-hover-bg:                    @default-color;
@@ -724,7 +714,7 @@
 @month-picker-wrapper-border:                   1px solid @gray-color;
 @month-picker-wrapper-bg:                       @text-box-focus-bg;
 
-@month-picker-item-text-color:                  @text-color;
+@month-picker-item-text-color:                  @default-text-color;
 
 @month-picker-item-hover-text-color:            @black-color;
 @month-picker-item-hover-bg:                    @default-color;
@@ -871,6 +861,7 @@
 
 @data-grid-row-hover-bg:                        @default-color;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
+@data-grid-row-hover-cell-bg: 					#e7f0f9;
 
 @data-grid-row-hover-cell-text-color:           @black-color;
 

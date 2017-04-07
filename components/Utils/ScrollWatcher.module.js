@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
 
    /**
     * @class SBIS3.CONTROLS.ScrollWatcher
-    * @extends $ws.proto.Abstract
+    * @extends SBIS3.CORE.Abstract
     * @author Крайнов Дмитрий Олегович
     */
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
        * @remark
        *
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} type - какое именно событие произошло. Достигли дна окна, контейнера, всплывающей панели.
        * Или это наоборот доскроллили вверх
        * @param {jQuery} event - то самое соыбтие scroll, на которое подписан ScrollWatcher
