@@ -84,9 +84,10 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * Класс для создания защищённых членов классов
        * @protected
        * @class Pr0tected
+       * @param {boolean} oldForced Для старых браузеров обеспечить сокрытие несмотря на больший расход памяти
        */
-      function Pr0tected () {
-         this.members = null;
+      function Pr0tected (oldForced) {
+         this.oldForced = oldForced;
       }
 
       /**
@@ -102,17 +103,18 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @type {string}
        */
       if (!Pr0tected.hasWeakMap) {
-         Object.defineProperty(Pr0tected, 'idProp', {value:'__pr0tectedId__', /*writable:false,*/ enumerable:true});
+         Object.defineProperty(Pr0tected, 'oldProp', {value:'__pr0tected__', /*writable:false,*/ enumerable:true});
       }
 
       /**
        * Возвращает хранилище защищённых свойств в виде функции
        * @public
        * @static
+       * @param {boolean} oldForced Для старых браузеров обеспечить сокрытие несмотря на больший расход памяти
        * @return {function}
        */
-      Pr0tected.create = function () {
-         var p = new Pr0tected();
+      Pr0tected.create = function (oldForced) {
+         var p = new Pr0tected(oldForced);
          var f = p.scope.bind(p);
          f.clear = p.clear.bind(p)
          return f;
@@ -137,21 +139,29 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                return map.get(owner);
             } :
             function (owner) {
-               var map = this.members;
-               if (!map) {
-                  map = this.members = {};
+               var prop = Pr0tected.oldProp;
+               if (this.oldForced) {
+                  var map = this.members;
+                  if (!map) {
+                     map = this.members = {};
+                  }
+                  if (!(prop in owner)) {
+                     var n = 'oldCounter' in this ? this.oldCounter + 1 : 1;
+                     Object.defineProperty(owner, prop, {value:n});
+                     this.oldCounter = n;
+                  }
+                  var id = owner[prop];
+                  if (!(id in map)) {
+                     map[id] = {};
+                  }
+                  return map[id];
                }
-               var idProp = Pr0tected.idProp;
-               if (!(idProp in owner)) {
-                  var n = 'counter' in this ? this.counter + 1 : 1;
-                  Object.defineProperty(owner, idProp, {value:n});
-                  this.counter = n;
+               else {
+                  if (!(prop in owner)) {
+                     owner[prop] = {};
+                  }
+                  return owner[prop];
                }
-               var id = owner[idProp];
-               if (!(id in map)) {
-                  map[id] = {};
-               }
-               return map[id];
             },
 
          /**
@@ -166,10 +176,15 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                }
             } :
             function (owner) {
-               if (this.members) {
-                  var idProp = Pr0tected.idProp;
-                  if (idProp in owner) {
-                     delete this.members[owner[idProp]];
+               var prop = Pr0tected.oldProp;
+               if (prop in owner) {
+                  if (this.oldForced) {
+                     if (this.members) {
+                        delete this.members[owner[prop]];
+                     }
+                  }
+                  else {
+                     delete owner[prop];
                   }
                }
             }
@@ -231,6 +246,9 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          if (typeof delay === 'number' && 0 <= delay) {
             this.start(delay);
          }
+         //////////////////////////////////////////////////
+         console.log('DBG: WaitIndicator: this=', this, ';');
+         //////////////////////////////////////////////////
       };
 
       /**
@@ -307,7 +325,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @protected
        * @type {function}
        */
-      var WaitIndicatorProtected = Pr0tected.create();
+      var WaitIndicatorProtected = Pr0tected.create(true);
 
       /**
        * Счётчик экземпляров класа WaitIndicator
