@@ -353,10 +353,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (cfg.type == 'duplicateHeader'){
-               cfg.pickerClassName += 'controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
+               cfg.pickerClassName += ' controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
             }
             else if (cfg.type == 'titleHeader'){
-               cfg.pickerClassName += 'controls-dropdownlist__showHead controls-DropdownList__type-title';
+               cfg.pickerClassName += ' controls-dropdownlist__showHead controls-DropdownList__type-title';
             }
             else if (cfg.type == 'fastDataFilter'){
                cfg.pickerClassName += ' controls-DropdownList__type-fastDataFilter controls-DropdownList__hideSelectedInList';
