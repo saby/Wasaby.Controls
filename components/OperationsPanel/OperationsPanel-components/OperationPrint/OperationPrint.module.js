@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       },
 
       _onOperationActivated: function() {
-         this._prepareOperation('Что напечатать');
+         this._prepareOperation(rk('Что напечатать'));
       },
 
       /**
