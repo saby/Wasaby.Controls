@@ -2,8 +2,8 @@
    .controls-Menu__header {
       position: relative;
       cursor: pointer;
-      font-size: @popup-font-size;
-      font-weight: bold;
+      font-size: @font-popup-size;
+      font-weight: @popup-header-font-weight;
       background-color: #F4F4F4;
       overflow: hidden;
       .flexbox();
@@ -14,7 +14,7 @@
          .align-items(center);
       }
       .controls-Menu__header-caption {
-         color: @blue-dark-color;
+         color: @popup-header-caption-color;
          .flex-shrink(0);
       }
       .controls-Menu__header-icon + .controls-Menu__header-caption{
