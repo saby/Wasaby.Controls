@@ -34,7 +34,7 @@
 @float-area-border-color:                 #bdbdbd;
 @float-area-border:                       @default-border-width @default-border-style @float-area-border-color;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
-
+@font-popup-size:                         14px;
 @bg:                                      transparent;
 @default-text-color:                      @black-color;
 
@@ -630,7 +630,7 @@
 @menu-border-color:                       @gray-ccc-color;
 @menu-border-radius:                      0;
 @menu-shadow:                             0px 0px 12px 0px rgba(0,0,0,0.25);
-
+@menu-header-bg-color:                    #f4f4f4;
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
@@ -646,7 +646,7 @@
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
 @menu-expand-hover-bg:                    none;
-
+@menu-header-caption-color:               @blue-dark-color;
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     0 12px;
@@ -763,7 +763,7 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-focus-text-color:         #e4e4e4;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
@@ -940,7 +940,7 @@
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-buttons-wrapper-width:                        20px + 20px;
-@search-form-field-wrapper-margin-right:              @search-buttons-wrapper-width + 5px;
+@search-form-field-wrapper-margin-right:              45px;
 @search-button-wrapper-padding:                       0 5px 0 0;
 @search-form-icon-padding:                            3px  2px;
 @search-form-icon-disabled-display:                   block;
@@ -951,7 +951,7 @@
 // --------- //
 
 @combo-box-arrow-spritesheet:                   'img/ComboBox.png';
-
+@combobox-picker-border-width:                    1px;
 @combo-box-cursor:                              pointer;
 @combo-box-right-padding:                       4px;
 @combo-box-disabled-cursor:                     default;
@@ -1297,7 +1297,7 @@
 @date-range-dash-color:                         @black-color;
 @date-range-dash-margin:                        0 3px 4px 3px;
 
-
+@date-range-choose-border-hover-width:          2px;
 // ----------------- //
 // Data Range Slider //
 // ----------------- //
@@ -2215,6 +2215,9 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
+@back-button-arrow-paddingleft:                   4px;
+@bread-crumb-title-hover-color:                   @primary-color;
+@bread-crumb-title-color:                          #0055BB;
 @bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
