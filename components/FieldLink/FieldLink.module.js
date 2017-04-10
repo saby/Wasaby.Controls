@@ -757,7 +757,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
-             cfg.className += ' ' + classesToAdd.join(' ');
+             cfg.cssClassName += ' ' + classesToAdd.join(' ');
              return cfg;
           },
 
@@ -1083,7 +1083,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 parent: this,
                 closeByExternalClick: true,
                 targetPart: true,
-                className: 'controls-FieldLink__picker',
+                cssClassName: 'controls-FieldLink__picker',
                 verticalAlign: {
                    side: 'top'
                 },

@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Link', [
       _modifyOptions: function (opts) {
          var
              options = Link.superclass._modifyOptions.apply(this, arguments);
-         options.className += ' controls-Link';
+         options.cssClassName += ' controls-Link';
 
          // в случае когда задана ссылка передаем отдельный шаблон
          if(options.href) {

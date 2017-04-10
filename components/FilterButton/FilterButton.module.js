@@ -423,7 +423,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeButton: true,
                 closeByExternalClick: true,
                 context: context,
-                className: 'controls__filterButton__picker',
+                cssClassName: 'controls__filterButton__picker',
                 template: this._getAreaTemplate(),
                 activateAfterShow: true,
                 handlers: {

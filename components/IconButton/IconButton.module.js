@@ -63,15 +63,15 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONT
              options = IconButton.superclass._modifyOptions.apply(this, arguments),
              iconClass = options._iconClass;
 
-         options.className += ' controls-IconButton';
+         options.cssClassName += ' controls-IconButton';
 
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
-                  options.className += ' controls-IconButton__errorBorder';
+                  options.cssClassName += ' controls-IconButton__errorBorder';
                }
                else {
-                  options.className += ' controls-IconButton__doneBorder';
+                  options.cssClassName += ' controls-IconButton__doneBorder';
                }
             }
          }
