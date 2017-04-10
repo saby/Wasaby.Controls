@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
              *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
-             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *           address: 'myNewService/service/' // Устанавливаем точку входа в другой сервис
              *        },
              *        binding: {
              *           query: 'Список' // Устанавливаем списочный метод
@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
-             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
+             *             <option name="address" value="myNewService/service/"></option>
              *          </options>
              *          <options name="binding">
              *             <option name="query" value="Список"></option>
