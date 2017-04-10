@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * TODO: (+) Сделать примеры с прокруткой таблиц
        * TODO: (+) Добавить экономную реализацию приватоности для страых браузеров
        * TODO: (+) Исправить недоработку при конкуренции индикаторов
-       * TODO: ### Добавить поддержку прокруточного индикатор для "фона блочной вёрстки" - #EAEAEA rgb(234, 234, 234)
+       * TODO: (+) Добавить поддержку прокруточного индикатор для "фона блочной вёрстки" - #EAEAEA rgb(234, 234, 234)
        * TODO: (+) Перевести в less
        */
 
@@ -217,6 +217,8 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @param {boolean} look.small Использовать уменьшеный размер
        * @param {string} look.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
        *                            Если не задан - индикатор центрируется
+       * @param {string[]} look.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
+       *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
       function WaitIndicator (target, message, look, delay, useDeferred) {
@@ -227,7 +229,8 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
             scroll: null,
             overlay: null,
             small: false,
-            align: null
+            align: null,
+            mods: []
          };
          if (look && typeof look === 'object') {
             Object.keys(oLook).forEach(function (name) {
@@ -296,6 +299,8 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @param {boolean} options.small Использовать уменьшеный размер
        * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
        *                               Если не задан - индикатор центрируется
+       * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
+       *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
        * @return {function}
        */
       WaitIndicator.make = function (options) {
@@ -1038,6 +1043,16 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                else {
                   overlay = look.overlay && typeof look.overlay === 'string' ? this._checkValue(look.overlay.toLowerCase(), ['none', 'dark']) : null;
                }
+               var mods = [];
+               if (look.mods && Array.isArray(look.mods) && look.mods.length) {
+                  mods = look.mods.reduce(function (acc, v) {
+                     var mod = v && typeof v == 'string' ? v.replace(/[^a-z0-9_\-]+/i, '') : null;
+                     if (mod) {
+                        acc.push(mod);
+                     }
+                     return acc;
+                  }, []);
+               }
                // Применить параметры
                var cls = spinner.classList;
                var scrolls = {
@@ -1059,13 +1074,17 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                for (var p in smalls) {
                   cls[p === small ? 'add' : 'remove'](smalls[p]);
                }
-
                var overlays = {
                   none: 'ws-wait-indicator_overlay-none',
                   dark: 'ws-wait-indicator_overlay-dark'
                };
                for (var p in overlays) {
                   cls[p === overlay ? 'add' : 'remove'](overlays[p]);
+               }
+               if (mods.length) {
+                  mods.forEach(function (mod) {
+                     cls.add('ws-wait-indicator_mod-' + mod);
+                  });
                }
             }
          },
