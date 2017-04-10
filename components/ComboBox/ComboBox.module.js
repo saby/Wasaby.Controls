@@ -336,6 +336,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   } else if (e.which === constants.key.down) {
                      this.setSelectedKey(nextRec.getId());
                   }
+                  else if (e.which === constants.key.esc) {
+                     return true;//Если пикера не было и нажали esc - combobox делать ничего не нужно, пробрасывает событие выше
+                  }
                }
             }
          }
