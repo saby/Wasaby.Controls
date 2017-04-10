@@ -114,6 +114,7 @@
 @button-text-margin:                      0 8px;
 @button-text-margin-left:                 8px;
 @button-text-margin-right:                8px;
+@button-text-icon-margin:                 0 @button-text-margin-right - @button-border-width 0 @button-icon-gap;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
@@ -224,6 +225,7 @@
 @button-big-text-margin:                  0 20px;
 @button-big-text-margin-left:             20px;
 @button-big-text-margin-right:            @button-big-text-margin-left;
+@button-big-text-icon-margin:             0 @button-big-text-margin-left - @button-border-width 0 @button-icon-gap;
 @button-big-text-padding:                 11px 0 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
@@ -1353,7 +1355,7 @@
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
-@date-range-icon-button-margin:                 0 0 3px 8px;
+@date-range-icon-button-margin:                 0 0 4px 8px;
 @date-range-icon-button-hover-color:            @blue-dark-color !important;
 @date-range-dash-width:                         2px;
 @date-range-dash-color:                         @black-color;
@@ -1402,7 +1404,7 @@
 @date-range-big-choose-years-panel-wrapper-font-size:          18px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 30px;
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
@@ -1542,6 +1544,7 @@
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
+@list-view-items-toolbar-icon-size:                  24px;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1840,8 +1843,8 @@
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-vertical-icon-top: 0;
-@controls-OperationsPanelButton-icon-left:         6px;
+@controls-OperationsPanelButton-vertical-icon-top: -1px;
+@controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
 // ----------------------- //
@@ -2106,7 +2109,7 @@
 
 @controls-FieldLink-fieldWrapper-margin:           0 !important;
 @controls-FieldLink-showAllLinks-top:              2px;
-@controls-FieldLink-showAllLinks-padding:          0 4px;
+@controls-FieldLink-showAllLinks-padding:          0 0 0 1px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkItem-line-height:          18px;

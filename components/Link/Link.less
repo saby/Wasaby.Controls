@@ -12,12 +12,14 @@
   padding: @link-padding;
   background-color: @link-background;
   height: @link-height;
+  .button-baseline-fix();
 
   &.controls-Click__active {
     cursor: @link-cursor;
     color: @link-active-text-color;
-    text-decoration: @link-active-text-decoration;
-
+    .controls-Button__text {
+      text-decoration: @link-active-text-decoration;
+    }
     .controls-Button__icon {
       &.icon-primary {
         color: @link-active-text-color !important;
@@ -27,15 +29,9 @@
 
   // Button's icon
   .controls-Button__icon {
-    position: absolute;
     left: 0;
-    .link-mixin(16px;);
-
-    &.icon-24 {
-      .link-mixin(24px;);
-    }
-    &.icon-32 {
-      .link-mixin(32px;);
+    & + .controls-Button__text {
+      margin-left: @button-icon-gap;
     }
   }
   &.controls-Link__underline {
