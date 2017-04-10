@@ -56,6 +56,30 @@
   background-image: -o-linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0) 48px);
   background-image: linear-gradient(0deg, #ffffff, rgba(255, 255, 255, 0) 48px);
 }
+.ws-wait-indicator_scroll-left.ws-wait-indicator_mod-gray {
+  background-image: -webkit-linear-gradient(90deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -moz-linear-gradient(90deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -o-linear-gradient(90deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: linear-gradient(90deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+}
+.ws-wait-indicator_scroll-right.ws-wait-indicator_mod-gray {
+  background-image: -webkit-linear-gradient(270deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -moz-linear-gradient(270deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -o-linear-gradient(270deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: linear-gradient(270deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+}
+.ws-wait-indicator_scroll-top.ws-wait-indicator_mod-gray {
+  background-image: -webkit-linear-gradient(180deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -moz-linear-gradient(180deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -o-linear-gradient(180deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: linear-gradient(180deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+}
+.ws-wait-indicator_scroll-bottom.ws-wait-indicator_mod-gray {
+  background-image: -webkit-linear-gradient(0deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -moz-linear-gradient(0deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: -o-linear-gradient(0deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+  background-image: linear-gradient(0deg, #EAEAEA, rgba(234, 234, 234, 0) 48px);
+}
 .ws-wait-indicator_global .ws-wait-indicator-in {
   position: fixed;
   left: 0;

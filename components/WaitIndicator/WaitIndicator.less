@@ -15,7 +15,8 @@ x{}
 //@wait-indicator-font-color: rgb(0, 0, 0);
 //@wait-indicator-overlay-default: rgba(255, 255, 255, 0.05);
 //@wait-indicator-overlay-dark: rgba(0, 0, 0, 0.1);
-//@wait-indicator-gradient-opaque: rgb(255, 255, 255);
+//@wait-indicator-gradient-white: rgb(255, 255, 255);
+//@wait-indicator-gradient-gray: #EAEAEA;
 
 
 
@@ -70,32 +71,43 @@ x{}
     background-color: @wait-indicator-overlay-dark;
 }
 
+.ws-wait-indicator_scroll(@direction, @color) {
+    @r: red(@color);
+    @g: green(@color);
+    @b: blue(@color);
+    .linear-gradient-only(@direction, @color, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+}
+
 .ws-wait-indicator_scroll-left {
-    @r: red(@wait-indicator-gradient-opaque);
-    @g: green(@wait-indicator-gradient-opaque);
-    @b: blue(@wait-indicator-gradient-opaque);
-    .linear-gradient-only(90deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+    .ws-wait-indicator_scroll(90deg, @wait-indicator-gradient-white);
 }
 
 .ws-wait-indicator_scroll-right {
-    @r: red(@wait-indicator-gradient-opaque);
-    @g: green(@wait-indicator-gradient-opaque);
-    @b: blue(@wait-indicator-gradient-opaque);
-    .linear-gradient-only(270deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+    .ws-wait-indicator_scroll(270deg, @wait-indicator-gradient-white);
 }
 
 .ws-wait-indicator_scroll-top {
-    @r: red(@wait-indicator-gradient-opaque);
-    @g: green(@wait-indicator-gradient-opaque);
-    @b: blue(@wait-indicator-gradient-opaque);
-    .linear-gradient-only(180deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+    .ws-wait-indicator_scroll(180deg, @wait-indicator-gradient-white);
 }
 
 .ws-wait-indicator_scroll-bottom {
-    @r: red(@wait-indicator-gradient-opaque);
-    @g: green(@wait-indicator-gradient-opaque);
-    @b: blue(@wait-indicator-gradient-opaque);
-    .linear-gradient-only(0deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
+    .ws-wait-indicator_scroll(0deg, @wait-indicator-gradient-white);
+}
+
+.ws-wait-indicator_scroll-left.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll(90deg, @wait-indicator-gradient-gray);
+}
+
+.ws-wait-indicator_scroll-right.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll(270deg, @wait-indicator-gradient-gray);
+}
+
+.ws-wait-indicator_scroll-top.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll(180deg, @wait-indicator-gradient-gray);
+}
+
+.ws-wait-indicator_scroll-bottom.ws-wait-indicator_mod-gray {
+    .ws-wait-indicator_scroll(0deg, @wait-indicator-gradient-gray);
 }
 
 .ws-wait-indicator_small {
