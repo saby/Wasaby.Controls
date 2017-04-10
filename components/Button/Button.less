@@ -19,6 +19,7 @@
    .controls-Button__text {
       display: block;
       margin: @button-text-margin;
+      border: none;
    }
 
    // Button's icon
@@ -137,6 +138,16 @@
       .controls-Button__icon {
          &.icon-24 {
             top: -2px !important;
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-Button {
+      .controls-Button__icon {
+         &.icon-24 {
+            padding-bottom: 2px;
          }
       }
    }
