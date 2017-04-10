@@ -17,7 +17,7 @@
 
 .range-button-bar-mixin () {
    //.controls-DateRangeBigChoose__months-range-btn-wrapper {
-      span {
+      .controls-Button {
          .border-radius(0);
          &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
             .buttonbar-selected-button();
@@ -29,13 +29,13 @@
       }
 
       .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-         span {
+         .controls-Button {
             .buttonbar-selected-button();
          }
 
          &.controls-RangeSelectable__item-selectedStart,
          &.controls-RangeSelectable__item-selectedEnd {
-            span {
+            .controls-Button {
                .buttonbar-selected-boundary-button();
             }
          }
@@ -525,7 +525,7 @@ body:not(.ws-is-mobile-platform) {
             }
          }
          .controls-DateRangeBigChoose__months-quarterRange, .controls-DateRangeBigChoose__months-halfyearRange {
-            span:hover {
+            .controls-Button:hover {
                border-bottom: none;
             }
          }
