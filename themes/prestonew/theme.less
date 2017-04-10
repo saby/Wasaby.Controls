@@ -1,3 +1,14 @@
+html {
+  font-size: 28px !important;
+  color: #e4e4e4;
+  background-color: #1d2834;
+}
+body {
+  font-size: 28px !important;
+}
+.controls-ListView {
+  background-color: #1d2834;
+}
 .controls-SearchForm {
   .icon-size {
     font-size: 2rem !important;
@@ -106,4 +117,53 @@ body {
 .controls-Button.controls-Button--prestogray {
     color: #2C3E50;
   background: #e4e4e4;
+}
+.controls-ListView__scrollPager {
+  height: 3rem !important;
+}
+.control-Paging__btn  {
+  border: 2px solid #26b8ff;
+}
+.ws-moneyDecorator {
+  &__integer{
+    font-size: @money-decorator-integer-font-size;
+    color: @money-decorator-integer-font-color;
+    &__AccentResults{
+      font-size: @money-decorator-integer-accent-results-font-size;
+      color: @money-decorator-integer-accent-results-font-color;
+      font-weight: @money-decorator-integer-accent-results-font-weight;
+    }
+    &__NoAccentResults{
+      font-size: @money-decorator-integer-no-accent-results-font-size;
+      color: @money-decorator-integer-no-accent-results-font-color;
+      font-weight: @money-decorator-integer-no-accent-results-font-weight;
+    }
+    &__Group{
+      font-size: @money-decorator-integer-group-font-size;
+      color: @money-decorator-integer-group-font-color;
+    }
+    &__BasicRegistry{
+
+    }
+    &__NoBasicRegistry{
+      font-size: @money-decorator-integer-no-basic-registry-font-size;
+      color: @money-decorator-integer-no-basic-registry-font-color;
+    }
+    &__AccentRegistry{
+      font-size: @money-decorator-integer-accent-registry-font-size;
+      color: @money-decorator-integer-accent-registry-font-color;
+      font-weight: @money-decorator-integer-accent-registry-font-weight;
+    }
+    &__NoAccentRegistry{
+      font-size: @money-decorator-integer-no-accent-registry-font-size;
+      color: @money-decorator-integer-no-accent-registry-font-color;
+      font-weight: @money-decorator-integer-no-accent-registry-font-weight;
+    }
+  }
+  &__fraction{
+    font-size: .857rem;
+    color: #8991A9;
+    line-height: normal;
+    font-weight: normal !important;
+  }
 }
