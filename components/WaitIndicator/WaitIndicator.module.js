@@ -222,9 +222,6 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
       function WaitIndicator (target, message, look, delay, useDeferred) {
-         //////////////////////////////////////////////////
-         console.log('DBG: WaitIndicator: arguments.length=', arguments.length, '; arguments=', arguments, ';');
-         //////////////////////////////////////////////////
          var oLook = {
             scroll: null,
             overlay: null,
@@ -253,9 +250,6 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
          if (typeof delay === 'number' && 0 <= delay) {
             this.start(delay);
          }
-         //////////////////////////////////////////////////
-         console.log('DBG: WaitIndicator: this=', this, ';');
-         //////////////////////////////////////////////////
       };
 
       /**
@@ -525,9 +519,6 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
           */
          _callDelayed: function (method, storing, delay) {
             var pSelf = WaitIndicatorProtected(this);
-            //////////////////////////////////////////////////
-            //console.log('DBG: _callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
-            //////////////////////////////////////////////////
             for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
                var key = storings[i];
                var inf = pSelf[key];
@@ -542,17 +533,11 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                   pSelf[key] = null;
                }
             }
-            //////////////////////////////////////////////////
-            //console.log('DBG: callDelayed/_clearDelays: starting=', pSelf.starting, '; suspending=', pSelf.suspending, '; removing=', pSelf.removing, ';');
-            //////////////////////////////////////////////////
             var promInf = emptyPromise(pSelf.useDeferred);
             if (typeof delay === 'number' && 0 < delay) {
                promInf.id = setTimeout(function () {
                   var pSelf = WaitIndicatorProtected(this),
                      prev = pSelf[storing];
-                  //////////////////////////////////////////////////
-                  //console.log('DBG: ' + method + ': TIMEOUT ' + storing + '=', prev, ';');
-                  //////////////////////////////////////////////////
                   pSelf[storing] = null;
                   WaitIndicatorInner[method](this);
                   prev.success.call(null, this);
@@ -1081,9 +1066,18 @@ define('js!SBIS3.CONTROLS.WaitIndicator',
                for (var p in overlays) {
                   cls[p === overlay ? 'add' : 'remove'](overlays[p]);
                }
+               var modPrefix = 'ws-wait-indicator_mod-';
+               for (var i = 0; i < cls.length; i++) {
+                  var c = cls.item(i);
+                  if (c.indexOf(modPrefix) === 0) {
+                     if (!mods.length || mods.indexOf(c.substring(modPrefix.length)) === -1) {
+                        cls.remove(c);
+                     }
+                  }
+               }
                if (mods.length) {
                   mods.forEach(function (mod) {
-                     cls.add('ws-wait-indicator_mod-' + mod);
+                     cls.add(modPrefix + mod);
                   });
                }
             }
