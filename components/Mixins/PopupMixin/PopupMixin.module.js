@@ -527,24 +527,40 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _calculateBodyOverflow: function (offset) {
          if (offset.top < 0) {
             offset.top = 0;
-            this._container.css('overflow-y', 'auto');
-            this._container.height(this._windowSizes.height);
+            this._setOverflowY(this._windowSizes.height);
          } else {
-            this._container.css({
-               'overflow-y': 'visible',
-               'height': ''
-            });
+            this._resetOverflowY();
          }
          if (offset.left < 0) {
             offset.left = 0;
-            this._container.css('overflow-x', 'auto');
-            this._container.width(this._windowSizes.width);
+            this._setOverflowX(this._windowSizes.width);
          } else {
-            this._container.css({
-               'overflow-x': 'visible',
-               'width': ''
-            });
+            this._resetOverflowX();
          }
+      },
+
+      _setOverflowY: function(value) {
+         this.getContainer().css('overflow-y', 'auto');
+         this.getContainer().height(value);
+      },
+
+      _resetOverflowY: function() {
+         this.getContainer().css({
+            'overflow-y': 'visible',
+            'height': ''
+         });
+      },
+
+      _setOverflowX: function(value) {
+         this.getContainer().css('overflow-x', 'auto');
+         this.getContainer().width(value);
+      },
+
+      _resetOverflowX: function() {
+         this.getContainer().css({
+            'overflow-x': 'visible',
+            'width': ''
+         });
       },
 
       _clickHandler: function (eventObject, event) {
@@ -914,7 +930,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             spaces, oppositeOffset;
          spaces = this._getSpaces(this._options.corner);
          if (orientation == 'vertical') {
-            if (offset.top < 0 && this._options.verticalAlign.side !== 'top') {
+            if (offset.top <= 0) {
                this._overflowedV = true;
                this._container.css('overflow-y', 'auto');
                //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
@@ -923,23 +939,32 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                }
                // При рассчете свободного места снизу учитываем виртуальную клавиатуру
                spaces.bottom -= TouchKeyboardHelper.getKeyboardHeight();
-               if (spaces.top < spaces.bottom) {
-                  if (this._options.targetOverlay){
+
+               switch (this._options.locationStrategy) {
+                  case 'bodyBounds':
                      this._container.css('height', height);
-                     offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
-                  } else {
-                     this._isMovedV = !this._isMovedV;
-                     oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
-                     spaces = this._getSpaces(this._options.corner);
-                     height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
-                     offset.top = this._targetSizes.offset.top + oppositeOffset.top;
-                  }
-               } else {
-                  offset.top = 0;
-                  //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
-                  if (!this._options.targetOverlay){
-                     height = spaces.top;
-                  }
+                     break;
+                  default:
+                     if (this._options.verticalAlign.side !== 'top') {
+                        if (spaces.top < spaces.bottom) {
+                           if (this._options.targetOverlay){
+                              this._container.css('height', height);
+                              offset.top = this._windowSizes.height - this._container.get(0).scrollHeight - this._containerSizes.border * 2;
+                           } else {
+                              this._isMovedV = !this._isMovedV;
+                              oppositeOffset = this._getOppositeOffset(this._options.corner, orientation);
+                              spaces = this._getSpaces(this._options.corner);
+                              height = spaces.bottom - vOffset - this._margins.top + this._margins.bottom;
+                              offset.top = this._targetSizes.offset.top + oppositeOffset.top;
+                           }
+                        } else {
+                           offset.top = 0;
+                           //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
+                           if (!this._options.targetOverlay){
+                              height = spaces.top;
+                           }
+                        }
+                     }
                }
             }
             this._container.css('height', height);
