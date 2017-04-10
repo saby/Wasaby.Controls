@@ -18,16 +18,13 @@ module.exports = function(grunt) {
    ]);
 
    grunt.registerTask('js', [
-      'jshint:gruntfile',
-      // TODO: fix warnings in components
-      /*'jshint:components',*/
+
       'build-dependencies'
    ]);
 
    grunt.registerTask('build', [
       'js',
-      'css',
-      'copy'
+      'css'
    ]);
 
    grunt.registerTask('rebuild', [

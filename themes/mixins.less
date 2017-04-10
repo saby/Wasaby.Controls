@@ -36,6 +36,22 @@
   height: 32px;
   font-family: 'cbuc-icons' !important;
 }
+.icon-size(@size: 16px){
+  font-size: @size !important;
+  line-height: @size !important;
+  width: @size;
+  height: @size;
+  font-family: 'cbuc-icons24' !important;
+  & when (@size > 24px) {
+  font-family: 'cbuc-icons' !important;
+  }
+  & when (@size < 24px) {
+    font-family: 'cbuc-icons' !important;
+  }
+  & when (@size = 24px) {
+    font-family: 'cbuc-icons24' !important;
+  }
+}
 
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
@@ -114,6 +130,31 @@
     }
   }
   box-sizing: border-box;
+}
+
+.button-default-style() {
+  cursor: pointer;
+  display: inline-flex;
+  .align-items(center);
+  outline: none;
+  .box-sizing(border-box);
+  font-family: @font-basic-name;
+  font-size: @link-font-size;
+  text-align: @button-text-alignment;
+  position: relative;
+  background: @button-bg;
+  .box-shadow(@button-shadow);
+  border: none;
+  padding: 0;
+}
+
+.button-baseline-fix(@height: auto) {
+  &:before {
+    content: '.';
+    width: 0;
+    height: @height;
+    visibility: hidden;
+  }
 }
 
 .opacity(@opacity: 0.5) {

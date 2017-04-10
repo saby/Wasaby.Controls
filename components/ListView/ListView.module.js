@@ -1437,6 +1437,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 // при клике по ссылке необходимо показывать стандартное меню,
                 // т.к. иначе ломаем привычное для пользователя поведение
                 && event.target.nodeName.toLowerCase() !== 'a'
+                && event.target.className.indexOf('LinkDecorator__image') === -1
          },
 
          /*
@@ -1974,9 +1975,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // скрываем тулбар на время перерисовки т.к. если изменится количество элементов -> изменится размер таблицы,
             // то операции повиснут в воздухе до проверки в drawItemsCallback
             // синхронно пересчитывать позицию тулбара нельзя т.к это существенно увеличит время отрисовки
-            if(this._itemsToolbar && this._itemsToolbar.isVisible()) {
-               this._itemsToolbar.hide();
-            }
+            this._hideItemsToolbar();
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
@@ -2823,6 +2822,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
             }
+             // скрываем тулбар на время перерисовки т.к. если изменится количество элементов -> изменится размер таблицы,
+             // то операции повиснут в воздухе до проверки в drawItemsCallback
+             // ситуация аналогична с redraw
+            this._hideItemsToolbar();
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             var items;
             if (this._infiniteScrollState.mode == 'down') {
