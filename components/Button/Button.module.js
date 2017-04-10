@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Button', [
          var
              options = Button.superclass._modifyOptions.apply(this, arguments);
 
-         options.className += ' controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
+         options.cssClassName += ' controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
          return options;
       }
    });

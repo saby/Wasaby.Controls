@@ -83,7 +83,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          var value,
              dotPos;
          options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
-         options.className = ' controls-MoneyTextBox';
+         options.cssClassName = ' controls-MoneyTextBox';
 
          value = options.text || options.moneyValue;
          if (value){

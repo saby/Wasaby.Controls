@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       around: {
          _modifyOptions: function(parentFnc, opts) {
             var options = parentFnc.call(this, opts);
-            options.className += ' controls-Suggest';
+            options.cssClassName += ' controls-Suggest';
             options.pickerClassName += ' controls-Suggest__picker';
             return options;
          }
