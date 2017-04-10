@@ -114,9 +114,9 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
           _modifyOptions: function() {
              var opts = SelectorController.superclass._modifyOptions.apply(this, arguments);
-             opts.className += ' controls-SelectorController';
+             opts.cssClassName += ' controls-SelectorController';
              if(opts.multiselect) {
-                opts.className += ' ' + MULTISELECT_CLASS;
+                opts.cssClassName += ' ' + MULTISELECT_CLASS;
              }
              return opts;
           },

@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.FilterLink', ['js!SBIS3.CONTROLS.Link'], function(Link
           },
           _modifyOptions: function() {
              var opts = FilterLink.superclass._modifyOptions.apply(this, arguments);
-             opts.className += ' blue-dark-color';
+             opts.cssClassName += ' blue-dark-color';
              /* Если invertedVisible выставлена, то компонент должен быть скрыт */
              if(opts.invertedVisible) {
                 opts.visible = false;

@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!WS.Controls.MenuButton', 'css!SBIS3.CO
       _modifyOptions : function() {
          var opts = MenuLink.superclass._modifyOptions.apply(this, arguments);
          opts.pickerClassName += ' controls-MenuLink__Menu';
-         opts.className += ' controls-MenuLink controls-Link';
+         opts.cssClassName += ' controls-MenuLink controls-Link';
          opts._textClass = ' controls-Link__field';
 
          return opts;
