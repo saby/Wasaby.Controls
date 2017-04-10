@@ -172,7 +172,7 @@ define('js!WS.Controls.Button', [
          if (!icon) {
              content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          } else {
-             content = $('<i class="controls-Button__icon js-controls-Button__icon' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text>"' + caption + '</span>');
+             content = $('<i class="controls-Button__icon js-controls-Button__icon' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          }
          $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
          this._container.html(content);

@@ -17,7 +17,7 @@
 
 .range-button-bar-mixin () {
    //.controls-DateRangeBigChoose__months-range-btn-wrapper {
-      button {
+      .controls-Button {
          .border-radius(0);
          &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
             .buttonbar-selected-button();
@@ -29,13 +29,13 @@
       }
 
       .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-         button {
+         .controls-Button {
             .buttonbar-selected-button();
          }
 
          &.controls-RangeSelectable__item-selectedStart,
          &.controls-RangeSelectable__item-selectedEnd {
-            button {
+            .controls-Button {
                .buttonbar-selected-boundary-button();
             }
          }
@@ -46,7 +46,7 @@
 
 .range-vertical-button-bar-mixin() {
    .range-button-bar-mixin();
-   button {
+   .controls-Button {
       border: 1px solid @date-range-big-choose-border-color;
       border-bottom: none;
       .controls-Button__text {
@@ -54,12 +54,12 @@
       }
    }
    :first-child {
-      button {
+      .controls-Button {
          border-top: none;
       }
    }
    .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      button {
+      .controls-Button {
          border-bottom: none;
       }
    }
@@ -199,9 +199,8 @@
       .controls-DateRangeBigChoose__yearsRange {
          .range-button-bar-mixin();
 
-         button.controls-Button {
+         span.controls-Button {
             border: none;
-            display: block;
             float: left;
             width: 16.6666%;
             font-size: 15px;
@@ -234,7 +233,7 @@
       }
 
       .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
-         margin: 0 18px 0 25px;
+         margin: 0 18px 0 10px;
          font-size: @date-range-big-choose-years-panel-current-year-button-font-size !important;
          line-height: @date-range-big-choose-years-panel-current-year-button-line-height !important;
 
@@ -262,8 +261,10 @@
       }
 
       .controls-DateRangeBigChoose__years-back {
+         display: inline-flex;
          border: 1px dotted transparent;
          margin: 0 20px 0 19px;
+         padding: 2px 0 0 2px;
          width: @date-range-big-choose-years-panel-back-button-line-height + 2;
          height: @date-range-big-choose-years-panel-back-button-line-height + 2;
          .box-sizing(border-box);
@@ -307,7 +308,7 @@
 
       .controls-DateRangeBigChoose__months-range-btn-wrapper {
          .box-sizing(border-box);
-         > button {
+         > span {
             width: @date-range-big-choose-left-right-width;
             height: 100%;
             background-color: transparent;
@@ -318,7 +319,7 @@
             border-top: none;
             + .controls-DateRangeBigChoose__months-range-btn-wrapper:not(.controls-RangeSelectable__item-selected) {
                border-top: 1px solid @date-range-big-choose-border-color;
-               > button {
+               > span {
                   border-top: none;
                }
             }
@@ -333,7 +334,7 @@
          left: 0;
 
          .controls-DateRangeBigChoose__months-range-btn-wrapper {
-            > button {
+            > span {
                border-left-color: transparent;
             }
             &.controls-DateRangeBigChoose__months-range-btn-wrapper0 {
@@ -358,7 +359,7 @@
             &.controls-DateRangeBigChoose__months-range-btn-wrapper0 {
                height: @date-range-big-choose-months-range-btn-height*2 + @date-range-big-choose-months-margin - 1;
             }
-            > button {
+            > span {
                float: right;
                border-right-color: transparent;
                &:after {
@@ -405,7 +406,7 @@
          width: @date-range-big-choose-months-range-width;
          .range-vertical-button-bar-mixin();
 
-         button.controls-Button {
+         span.controls-Button {
             width: 100%;
             height: @date-range-big-choose-months-button-height;
             border-top: none;
@@ -502,16 +503,16 @@ body:not(.ws-is-mobile-platform) {
       .controls-DateRangeBigChoose__months {
 
          .controls-DateRangeBigChoose__months-range-btn-wrapper {
-            > button:hover {
+            > span:hover {
                font-weight: bold;
             }
             &:not(.controls-RangeSelectable__item-selected) {
                &:hover {
                   background-color: @date-range-big-choose-bg-hovered-color;
-                  > button {
+                  > span {
                      border-top: none;
                   }
-                  + .controls-DateRangeBigChoose__months-range-btn-wrapper > button {
+                  + .controls-DateRangeBigChoose__months-range-btn-wrapper > span {
                      border-top: none;
                   }
                   + .controls-DateRangeBigChoose__months-range-btn-wrapper {
@@ -524,14 +525,14 @@ body:not(.ws-is-mobile-platform) {
             }
          }
          .controls-DateRangeBigChoose__months-quarterRange, .controls-DateRangeBigChoose__months-halfyearRange {
-            button:hover {
+            .controls-Button:hover {
                border-bottom: none;
             }
          }
 
          .controls-DateRangeBigChoose__months-quarterRange {
             .controls-DateRangeBigChoose__months-range-btn-wrapper:not(.controls-RangeSelectable__item-selected) {
-               > button:hover {
+               > span:hover {
                   border-left-color: @date-range-big-choose-bg-hovered-color;
                   border-right-color: @date-range-big-choose-bg-hovered-color;
                }
@@ -540,7 +541,7 @@ body:not(.ws-is-mobile-platform) {
 
          .controls-DateRangeBigChoose__months-halfyearRange {
             .controls-DateRangeBigChoose__months-range-btn-wrapper:not(.controls-RangeSelectable__item-selected) {
-               > button:hover {
+               > span:hover {
                   border-right-color:  @date-range-big-choose-bg-hovered-color;
                   border-left-color:  @date-range-big-choose-bg-hovered-color;
                }
@@ -550,7 +551,7 @@ body:not(.ws-is-mobile-platform) {
 
       .controls-DateRangeBigChoose__dates {
          .controls-DateRangeBigChoose__dates-months {
-            button.controls-Button:not(.controls-RangeSelectable__item-selected) {
+            span.controls-Button:not(.controls-RangeSelectable__item-selected) {
                &:hover {
                   border-left-color: @date-range-big-choose-bg-hovered-color;
                   background: @date-range-big-choose-bg-hovered-color;
