@@ -18,11 +18,16 @@ define('js!SBIS3.CONTROLS.Button',
             _controlName: 'SBIS3.CONTROLS.Button',
             _template: template,
 
+            _useNativeAsMain: true,
+
             __conatiner: null,
             get _container() {
                return this.__conatiner;
             },
             set _container(val) {
+               if (!val)
+                  return;
+
                if (this.__conatiner && !this.__conatiner.startTag && typeof(this.__conatiner.unbind) === 'function')
                   this.__conatiner.unbind();
 
@@ -32,14 +37,14 @@ define('js!SBIS3.CONTROLS.Button',
                   this.__conatiner[0].wsControl = this;
                }catch (e){}
 
-               this._initInnerAction();
+               this._initInnerAction(val);
             },
 
             constructor: function(cfg) {
 
                this._options = cfg;
 
-               this.deprecatedContr.call(this, cfg);
+               this.deprecatedContr(cfg);
 
                this._thisIsInstance = true;
 

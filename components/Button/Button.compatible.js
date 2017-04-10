@@ -1,5 +1,5 @@
 /**
- * Created by aa.petrunkov on 13.03.2017.
+ * Created by dv.zuev on 13.03.2017.
  */
 define('js!SBIS3.CONTROLS.Button/Button.compatible', [
    'Core/EventBus',
@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
    "Core/ControlBatchUpdater",
    "Core/CommandDispatcher",
    'Core/tmpl/js/helpers2/entityHelpers',
-   "Core/helpers/dom&controls-helpers"
+   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/generate-helpers'
 ], function (EventBus,
              colhelper,
              cFunctions,
@@ -21,7 +22,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
              ControlBatchUpdater,
              CommandDispatcher,
              entityHelpers,
-             dcHelpers) {
+             dcHelpers,
+             generate) {
    'use strict';
 
    function ucFirst(str) {
@@ -37,7 +39,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             primary: false,
             caption: '',
             tooltip: '',
-            icon: ''
+            icon: '',
+            text: ''
          }
       },
 
@@ -78,6 +81,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          this._options['config'] = decOptions['config'];
 
          var markup = this._template(this, decOptions);
+
+         //for example DSMixin
+         if (window && this._container[0].tagName === "COMPONENT")
+            redraw = true;
+
          if (redraw) {
             try {
                var temp = $(markup);
@@ -92,12 +100,12 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
 
-      _initInnerAction: function()
+      _initInnerAction: function(container)
       {
          var self = this;
 
-         if (window && this.__conatiner && !this.__conatiner.startTag) {
-            this.__conatiner.click(function (e) {
+         if (window && container && !container.startTag) {
+            container.click(function (e) {
                self._onClickHandler(e);
             });
          }
@@ -120,17 +128,31 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
       },
 
+      setUserData: function(name, value) {
+         if (!this._userData) {
+            this._userData = {};
+         }
+         this._userData[name] = value;
+      },
+
+      getUserData: function(name) {
+         return this._userData && this._userData[name];
+      },
+
       deprecatedContr: function (cfg) {
          var ctor = this.constructor,
             defaultInstanceData = dcHelpers.getDefaultInstanceData(ctor);
          this._options = dcHelpers.mergeOptionsToDefaultOptions(ctor, this._options, {_options:defaultInstanceData});
 
 
-         this._container = cfg.container;
+         if (!cfg.name && cfg.container && cfg.container.getAttribute) {
+            var iddata = cfg.container.getAttribute('data-id');
+            cfg.name = iddata;
+            cfg.id = cfg.id||iddata;
+         }
 
-         if (!this._container)
-         {
-            this._container = cfg.element;
+         if (!this._options.id){
+            this._options.id = generate.randomId("cnt-");
          }
 
 
@@ -143,8 +165,12 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
 
          if (window) {
-            this._container = $(this._container);
-            //this._container[0].wsControl = this;
+            this._container = $(cfg.container || cfg.element);
+            try {
+               this._container[0].wsControl = this;
+            }catch(e){}
+         } else {
+            this._container = cfg.container || cfg.element;
          }
 
          this.fixIcon();
@@ -227,17 +253,25 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
       },
 
+      _setEnabled: function(value) {
+         this.setEnabled(value);
+      },
+
+      _drawIcon: function(icon){
+         this.setIcon(icon);
+      },
+
       isEnabled: function () {
          return this._options.enabled;
       },
       //debug/resources/Obmen_soobscheniyami_-_bazovyj/components/SendMessageInternal/SendMessageInternal.module.js
       isVisible: function () {
-         return !this._options.hidden;
+         return this._options.visible;
       },
       //https://test-online.sbis.ru/debug/resources/Obmen_soobscheniyami_-_bazovyj/components/SendMessageInternal/SendMessageInternal.module.js
       setVisible: function (value) {
-         if (this._options.hidden !== !value) {
-            this._options.hidden = !value;
+         if (this._options.visible !== value) {
+            this._options.visible = value;
             this._setDirty();
          }
       },
@@ -548,6 +582,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
 
       /*EVENTS BLOCK*/
+      getEventHandlers: function(name) {
+         return this._getChannel().getEventHandlers(name);
+      },
+
       _getChannel: function () {
          if (!this._eventBusChannel) {
             if (!this._options.eventBusId)
@@ -783,8 +821,37 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             }
          }
          return result;
-      }
+      },
 
+      setTooltip: function(tt)
+      {
+         this._options.tooltip = tt;
+         this._setDirty();
+      },
+
+      getTooltip: function()
+      {
+         return this._options.tooltip;
+      },
+
+      getCaption: function()
+      {
+         return this._options.text;
+      },
+
+      getIcon: function()
+      {
+         return this._options.icon;
+      },
+
+      toggle: function(show)
+      {
+         if(arguments.length > 0){
+            this.setVisible(!!show);
+         }else{
+            this.setVisible(!this.options.visible);
+         }
+      }
    };
 
 });
