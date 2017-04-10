@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WS.Controls.MenuButton', 'css!SBIS3.CO
                opts.pickerClassName += ' ' + cssModificators[i];
             }
          }
-         if (opts._iconClass.indexOf('icon-24') !== -1 && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){
+         if (opts.icon && opts.icon.indexOf('icon-24') !== -1 && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){
             opts.pickerClassName += ' controls-Menu__big-header';
          }
          return opts;
