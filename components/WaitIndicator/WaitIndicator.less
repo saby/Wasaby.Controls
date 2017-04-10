@@ -1,7 +1,38 @@
-﻿
+﻿/*---| WaitIndicator Rules: |---------*/
+
+x{}
+
+// Required these variables from theme:
+
+//@wait-indicator-size: 32px;
+//@wait-indicator-small-size: 16px;
+//@wait-indicator-gap: 8px;
+//@wait-indicator-small-gap: 2px;
+//@wait-indicator-labeled-width: 214px;
+//@wait-indicator-small-margin: 6px;
+//@wait-indicator-font-size: 14px;
+//@wait-indicator-line-height: 18px;
+//@wait-indicator-font-color: rgb(0, 0, 0);
+//@wait-indicator-overlay-default: rgba(255, 255, 255, 0.05);
+//@wait-indicator-overlay-dark: rgba(0, 0, 0, 0.1);
+//@wait-indicator-gradient-opaque: rgb(255, 255, 255);
+
+
+
+.linear-gradient-only(@direction: 180deg, @from-color-point: #FFFFFF 0, @to-color-point: #000000 100%) {
+    //background: -webkit-gradient(linear, left top, left bottom, from(@from-color-point), to(@to-color-point));
+    background-image: -webkit-linear-gradient(@direction, @from-color-point, @to-color-point);
+    background-image: -moz-linear-gradient(@direction, @from-color-point, @to-color-point);
+    //background-image: -ms-linear-gradient(@direction, @from-color-point, @to-color-point);
+    background-image: -o-linear-gradient(@direction, @from-color-point, @to-color-point);
+    background-image: linear-gradient(@direction, @from-color-point, @to-color-point);
+}
+
+
+
 .ws-wait-indicator {
     z-index: 1000000;/*16777271 2147483647*/
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: @wait-indicator-overlay-default;
     cursor: default !important;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -36,35 +67,35 @@
 }
 
 .ws-wait-indicator_overlay-dark {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: @wait-indicator-overlay-dark;
 }
 
 .ws-wait-indicator_scroll-left {
-    background-image: -webkit-linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -moz-linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -o-linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    @r: red(@wait-indicator-gradient-opaque);
+    @g: green(@wait-indicator-gradient-opaque);
+    @b: blue(@wait-indicator-gradient-opaque);
+    .linear-gradient-only(90deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
 }
 
 .ws-wait-indicator_scroll-right {
-    background-image: -webkit-linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -moz-linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -o-linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: linear-gradient(270deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    @r: red(@wait-indicator-gradient-opaque);
+    @g: green(@wait-indicator-gradient-opaque);
+    @b: blue(@wait-indicator-gradient-opaque);
+    .linear-gradient-only(270deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
 }
 
 .ws-wait-indicator_scroll-top {
-    background-image: -webkit-linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -moz-linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -o-linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    @r: red(@wait-indicator-gradient-opaque);
+    @g: green(@wait-indicator-gradient-opaque);
+    @b: blue(@wait-indicator-gradient-opaque);
+    .linear-gradient-only(180deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
 }
 
 .ws-wait-indicator_scroll-bottom {
-    background-image: -webkit-linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -moz-linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: -o-linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
-    background-image: linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0) 48px);
+    @r: red(@wait-indicator-gradient-opaque);
+    @g: green(@wait-indicator-gradient-opaque);
+    @b: blue(@wait-indicator-gradient-opaque);
+    .linear-gradient-only(0deg, @wait-indicator-gradient-opaque, rgba(@r, @g, @b, 0) (@wait-indicator-size + 2*@wait-indicator-gap));
 }
 
 .ws-wait-indicator_small {
@@ -93,23 +124,23 @@
 .ws-wait-indicator-in {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-    width: 48px;
-    height: 48px;
+    width: @wait-indicator-size + 2*@wait-indicator-gap;
+    height: @wait-indicator-size + 2*@wait-indicator-gap;
     overflow: hidden;
-    border-radius: 8px;
-    background: rgb(255, 255, 255) url('/resources/SBIS3.CONTROLS/themes/online/img/ajax-loader-indicator.gif') 50% 50% no-repeat;/*###'/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-indicator.gif'*/
+    border-radius: @wait-indicator-gap;
+    background: @white-color url('/resources/SBIS3.CONTROLS/themes/@{themeName}/img/ajax-loader-indicator.gif') 50% 50% no-repeat;
     cursor: default !important;
     pointer-events: auto;
     font-family: 'TensorFont Обычный', 'TensorFont Regular', 'TensorFont', sans-serif;
-    font-size: 14px;
-    line-height: 18px;
-    color: rgb(0, 0, 0);
+    font-size: @wait-indicator-font-size;
+    line-height: @wait-indicator-line-height;
+    color: @wait-indicator-font-color;
 }
 
 .ws-wait-indicator_text .ws-wait-indicator-in {
-    width: 214px;
-    padding: 15px 8px 0 48px;
-    background-position: 8px 50%;
+    width: @wait-indicator-labeled-width;
+    padding: (@wait-indicator-size + 2*@wait-indicator-gap - @wait-indicator-line-height)/2 @wait-indicator-gap 0 (@wait-indicator-size + 2*@wait-indicator-gap);
+    background-position: @wait-indicator-gap 50%;
     white-space: nowrap;
 }
 
@@ -134,25 +165,25 @@
 .ws-wait-indicator_small-right .ws-wait-indicator-in,
 .ws-wait-indicator_small-top .ws-wait-indicator-in,
 .ws-wait-indicator_small-bottom .ws-wait-indicator-in {
-    width: 20px;
-    height: 20px;
-    border-radius: 5px;
+    width: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
+    height: @wait-indicator-small-size + 2*@wait-indicator-small-gap;
+    border-radius: (@wait-indicator-small-size + 2*@wait-indicator-small-gap)/4;
     background-color: transparent;
-    background-image: url('/resources/SBIS3.CONTROLS/themes/online/img/ajax-loader-16x16-wheel.gif');/*###'/sbis3-ws/ws/img/themes/wi_scheme/ajax-loader-16x16-wheel.gif'*/
+    background-image: url('/resources/SBIS3.CONTROLS/themes/@{themeName}/img/ajax-loader-16x16-wheel.gif');
 }
 
 .ws-wait-indicator_small-left .ws-wait-indicator-in {
-    margin-left: 6px;
+    margin-left: @wait-indicator-small-margin;
 }
 
 .ws-wait-indicator_small-right .ws-wait-indicator-in {
-    margin-right: 6px;
+    margin-right: @wait-indicator-small-margin;
 }
 
 .ws-wait-indicator_small-top .ws-wait-indicator-in {
-    margin-top: 6px;
+    margin-top: @wait-indicator-small-margin;
 }
 
 .ws-wait-indicator_small-bottom .ws-wait-indicator-in {
-    margin-bottom: 6px;
+    margin-bottom: @wait-indicator-small-margin;
 }
