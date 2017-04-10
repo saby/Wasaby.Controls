@@ -59,12 +59,12 @@
    float: left !important;
 
    &.controls-Button.controls-ListView__item {
-      display: inline-block;
       overflow: hidden;
       .controls-Button__icon, &.controls-Checked__checked:not(.ws-disabled) .controls-Button__icon {
          position: relative;
-         left: 0px;
-         top: 1px;
+         left: 0;
+         top: 0;
+         margin-left: 0;
       }
       padding: 0;
       border:none;
@@ -147,15 +147,12 @@
       width:24px;
       margin: 0 !important;
       text-align: left;
-      .controls-Button__icon {
-         padding-left:4px;
-      }
       &.controls-Checked__checked {
          .controls-Button__icon {
             padding-left:2px;
             //перебить стили темы online ( в ie8 ломается отображение при ховере)
             left: 0px;
-            top:1px;
+            top: 1px;
          }
       }
    }

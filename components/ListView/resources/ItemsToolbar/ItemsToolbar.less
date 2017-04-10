@@ -1,4 +1,3 @@
-@import "../../../../themes/@{themeName}/theme.less";
 @bottomStyle-items-toolbar-height:        30px;
 @bottomStyle-items-toolbar-border-color:  #F3F3F3;
 
@@ -12,7 +11,7 @@
       right: @list-view-items-toolbar-right;
 
       .icon-size {
-         .icon-24();
+         .icon-size(@list-view-items-toolbar-icon-size);
       }
       .controls-IconButton__round-border-24 {
          .controls-Button__icon {
@@ -41,7 +40,7 @@
       }
       &.controls-ItemsToolbar__small {
          .icon-size {
-            .icon-16();
+            .icon-size(16px);
          }
       }
 
