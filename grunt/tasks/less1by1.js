@@ -41,7 +41,6 @@ module.exports = function less1by1Task(grunt) {
       themesPath = path.join(rootPath, './themes/');
 
   function processLessFile(data, filePath, error, theme, itIsControl) {
-      //console.log('keklol' + );
 
       let lessData = data.toString(),
         imports = theme ?
@@ -62,12 +61,15 @@ module.exports = function less1by1Task(grunt) {
         if (compileLessError) {
             grunt.log.error(`${compileLessError.message} in file: ${compileLessError.filename} on line: ${compileLessError.line}`);
         }
+
         let suffix = '';
 
         if (itIsControl) {
           suffix = ( theme === DEFAULT_THEME ) ? '' : `__${theme}`;
         }
+
         let newName = `${path.dirname(filePath)}/${path.basename(filePath, '.less')}${suffix}.css`;
+
         if (output) {
             fs.writeFile(newName, output.css, function writeFileCb(writeFileError) {
                 if (writeFileError) {
@@ -82,9 +84,7 @@ module.exports = function less1by1Task(grunt) {
     grunt.registerMultiTask('less1by1', 'Компилит каждую лесску, ложит cssку рядом. Умеет в темы', function() {
 
         grunt.log.ok(`${humanize.date('H:i:s')} : Запускается задача less1by1.`);
-
-
-            let taskDone = this.async();
+        let taskDone = this.async();
 
         helpers.recurse(rootPath, function(filepath, cb) {
 
@@ -99,7 +99,6 @@ module.exports = function less1by1Task(grunt) {
                     else {
                       processLessFile(data, filepath, readFileError, theme, false);
                     }
-
                 });
             }
             cb();
@@ -107,8 +106,5 @@ module.exports = function less1by1Task(grunt) {
             grunt.log.ok(`${humanize.date('H:i:s')} : Задача less1by1 выполнена.`);
             taskDone();
         });
-
     });
-
-
 };
