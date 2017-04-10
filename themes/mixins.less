@@ -116,6 +116,22 @@
   box-sizing: border-box;
 }
 
+.button-default-style() {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  outline: none;
+  .box-sizing(border-box);
+  font-family: @font-basic-name;
+  font-size: @link-font-size;
+  text-align: @button-text-alignment;
+  position: relative;
+  background: @button-bg;
+  .box-shadow(@button-shadow);
+  border: none;
+  padding: 0;
+}
+
 .opacity(@opacity: 0.5) {
   -webkit-opacity: @opacity;
   -moz-opacity: @opacity;
