@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
    "Deprecated/helpers/collection-helpers",
    "Core/ControlBatchUpdater",
    "Core/CommandDispatcher",
+   'Core/tmpl/js/helpers2/entityHelpers',
    "Core/helpers/dom&controls-helpers"
 ], function (EventBus,
              colhelper,
@@ -19,6 +20,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
              dColHelpers,
              ControlBatchUpdater,
              CommandDispatcher,
+             entityHelpers,
              dcHelpers) {
    'use strict';
 
@@ -42,6 +44,65 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _isControlActive: false,
       _needRegistWhenParent: false,
 
+
+      render: function (redraw) {
+
+         var decOptions = this._container ? entityHelpers.createRootDecoratorObject(this._options.id, true, this.getAttr('data-component'), {}) : {},
+            attributes = {};
+
+         try {
+            var attrs = this._container.attributes || this._container[0].attributes;
+            for (var atr in attrs) {
+               if (attrs.hasOwnProperty(atr)) {
+                  var name = attrs[atr].name ? attrs[atr].name : atr,
+                     value = attrs[atr].value || attrs[atr];
+                  decOptions[name] = attributes[name] = value;
+
+               }
+            }
+
+         } catch (e) {
+
+         }
+
+         //decOptions = entityHelpers.resolveDecOptionsClassMerge(decOptions, this._options, this._options);
+         if (!this._options['class']) {
+            var className = (this._options['class'] ? this._options['class'] + ' ' : '') +
+               (this._options['className'] ? this._options['className'] + ' ' : '') +
+               (this._options['cssClassName'] ? this._options['cssClassName'] + ' ' : '') +
+               (attributes['class'] ? attributes['class'] + ' ' : '');
+            this._options['class'] = className;
+         }
+
+         decOptions['class'] = this._options['class'];
+         this._options['config'] = decOptions['config'];
+
+         var markup = this._template(this, decOptions);
+         if (redraw) {
+            try {
+               var temp = $(markup);
+
+               $(this._container).before(temp);
+               $(this._container).remove();
+               this._container = temp;
+            } catch (e) {
+            }
+         }
+         return markup;
+      },
+
+
+      _initInnerAction: function()
+      {
+         var self = this;
+
+         if (window && this.__conatiner && !this.__conatiner.startTag) {
+            this.__conatiner.click(function (e) {
+               self._onClickHandler(e);
+            });
+         }
+      },
+
       getAttr: function (attrName) {
          if (!window) {
             return this._container.attributes[attrName].value;
@@ -60,6 +121,19 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       deprecatedContr: function (cfg) {
+         var ctor = this.constructor,
+            defaultInstanceData = dcHelpers.getDefaultInstanceData(ctor);
+         this._options = dcHelpers.mergeOptionsToDefaultOptions(ctor, this._options, {_options:defaultInstanceData});
+
+
+         this._container = cfg.container;
+
+         if (!this._container)
+         {
+            this._container = cfg.element;
+         }
+
+
          this._handlers = this._handlers || (cfg && cfg.handlers && typeof cfg.handlers == 'object' ? cFunctions.shallowClone(cfg.handlers) : {});
          this._subscriptions = this._subscriptions || [];
          this._subDestroyControls = this._subDestroyControls || [];
