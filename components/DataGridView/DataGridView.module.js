@@ -721,7 +721,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _getItemsContainer: function(){
-         return $('.controls-DataGridView__tbody', this._container);
+         return $('.controls-DataGridView__tbody', this._container).first();
       },
 
       _buildTplArgs : function(cfg) {
