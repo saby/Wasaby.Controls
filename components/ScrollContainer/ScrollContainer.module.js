@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          init: function() {
             ScrollContainer.superclass.init.call(this);
-            this._content = $('.controls-ScrollContainer__content', this.getContainer());
+            this._content = $('> .controls-ScrollContainer__content', this.getContainer());
             this._showScrollbar = !cDetection.isMobileSafari && !cDetection.isMobileAndroid;
             //Под android оставляем нативный скролл
             if (this._showScrollbar){
