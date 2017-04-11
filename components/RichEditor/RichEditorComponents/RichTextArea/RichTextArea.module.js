@@ -69,6 +69,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          $protected : {
             _options : {
                /**
+                * @cfg {Boolean} Поддержка смены шаблонов для изображений
+                *     <option name="templates">true</option>
+                * </pre>
+                */
+               templates: true,
+               /**
                 * @cfg {Boolean} Включение режима автовысоты
                 * <wiTag group="Управление">
                 * Режим автовысоты текстового редактора.
@@ -934,7 +940,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this._insertImg(URL, 'image-template-left', meta, '<p class="without-margin">', '</p><p>{$caret}</p>');
                   break;
                case "2":
-                  this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable" style="text-align: center;">', '</p><p></p>');
+                  this._insertImg(URL, '', meta, '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>');
                   break;
                case "3":
                   //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
@@ -1369,12 +1375,44 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                imageOptionsPanel = this._getImageOptionsPanel(target);
             imageOptionsPanel.show();
          },
+         _changeImageTemplate: function(target, template) {
+            var
+               parent = target.parent();
+            parent.removeClass();
+            parent.removeAttr ('contenteditable');
+            target.removeClass();
 
+            switch (template) {
+               case "1":
+                  target.addClass('image-template-left');
+                  parent.addClass('without-margin');
+                  break;
+               case "2":
+                  target.select();
+                  this._insertImg(
+                     target.attr('src'),
+                     '',
+                     target.attr('alt'),
+                     '<p class="controls-RichEditor__noneditable image-template-center">',
+                     '</p>',
+                     target[0].style.width || (target.width() + 'px')
+                  ).addCallback(function(){
+                     target.remove();
+                  });
+                  break;
+               case "3":
+                  target.addClass('image-template-right');
+                  parent.addClass('without-margin');
+                  break;
+            };
+            this._setTrimmedText(this._getTinyEditorValue());
+         },
          _getImageOptionsPanel: function(target){
             var
                self = this;
             if (!this._imageOptionsPanel) {
                this._imageOptionsPanel = new ImageOptionsPanel({
+                  templates: self._options.templates,
                   parent: self,
                   target: target,
                   targetPart: true,
@@ -1415,6 +1453,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._tinyEditor.selection.collapse();
                   self._tinyEditor.undoManager.add();
                   self._setTrimmedText(self._getTinyEditorValue());
+               });
+               this._imageOptionsPanel.subscribe('onTemplateChange', function(event, template){
+                  self._changeImageTemplate(this.getTarget(), template);
+               });
+               this._imageOptionsPanel.subscribe('onImageSizeChange', function(){
+                  self._showImagePropertiesDialog(this.getTarget());
                });
             } else {
                this._imageOptionsPanel.setTarget(target);
@@ -1628,8 +1672,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function(path, className, meta,  before, after) {
+         _insertImg: function(path, className, meta,  before, after, size) {
             var
+               def =new Deferred(),
                self = this,
                img =  $('<img src="' + path + '"></img>').css({
                   visibility: 'hidden',
@@ -1642,14 +1687,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             after = after ? after: '';
             img.on('load', function() {
                var
-                  isIEMore8 = cConstants.browser.isIE,
-               // naturalWidth и naturalHeight - html5, работают IE9+
-                  imgWidth =  isIEMore8 ? this.naturalWidth : this.width,
-                  imgHeight =  isIEMore8 ? this.naturalHeight : this.height,
-                  maxSide = imgWidth > imgHeight ? ['width', imgWidth] : ['height' , imgHeight],
-                  style = ' style="width: 25%"';
+                  style = size ? ' style="width: ' + size + '"':' style="width: 25%"';
                self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + meta + '"></img>'+ after);
+               def.callback();
             });
+            return def;
          },
 
          _onChangeAreaValue: function() {
