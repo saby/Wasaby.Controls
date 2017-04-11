@@ -21,13 +21,37 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
+   'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'Core/EventBus',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
    'css!SBIS3.CONTROLS.RichTextArea'
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, Di, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
+], function (
+      UserConfig,
+      cPathResolver,
+      cContext,
+      cIndicator,
+      cFunctions,
+      CommandDispatcher,
+      cConstants,
+      Deferred,
+      TextBoxBase,
+      dotTplFn,
+      RichUtil,
+      smiles,
+      Di,
+      ImageUtil,
+      Sanitize,
+      colHelpers,
+      fcHelpers,
+      strHelpers,
+      LinkWrap,
+      dcHelpers,
+      ImageOptionsPanel,
+      EventBus
+   ) {
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
@@ -1780,7 +1804,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
             });
-            return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
+            return (this._options || it).highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
          //установка значения в редактор
