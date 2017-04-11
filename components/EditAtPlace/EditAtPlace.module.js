@@ -257,6 +257,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (inPlace) {
                this._notify('onShowEditor');
             }
+            this._notifyOnSizeChanged(this, this, true);
          },
 
          _cancelEdit: function () {
