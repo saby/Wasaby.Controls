@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             );
          }
 
-	      options.className += ' controls-NumberTextBox';
+	      options.cssClassName += ' controls-NumberTextBox';
 
          return options;
       },

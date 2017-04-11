@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
              *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
-             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *           address: 'myNewService/service/' // Устанавливаем точку входа в другой сервис
              *        },
              *        binding: {
              *           query: 'Список' // Устанавливаем списочный метод
@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
-             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
+             *             <option name="address" value="myNewService/service/"></option>
              *          </options>
              *          <options name="binding">
              *             <option name="query" value="Список"></option>
@@ -647,18 +647,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
-         this._onCollectionItemChange = onCollectionItemChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
       /**
        * Устанавливает источник данных.
@@ -1617,7 +1614,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
                case IBindCollection.ACTION_CHANGE:
                   newItems.forEach(function(item, i) {
-                     this._onCollectionItemChange(event, item, newItemsIndex + i, newItems.properties);
+                     onCollectionItemChange.call(this, event, item, newItemsIndex + i, newItems.properties);
                   }, this);
                   break;
 

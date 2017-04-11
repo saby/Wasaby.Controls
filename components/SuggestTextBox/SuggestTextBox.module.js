@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       _modifyOptions: function() {
          var opts = SuggestTextBox.superclass._modifyOptions.apply(this, arguments);
-         opts.className += ' controls-SuggestTextBox';
+         opts.cssClassName += ' controls-SuggestTextBox';
          return opts;
       },
 

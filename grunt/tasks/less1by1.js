@@ -37,12 +37,10 @@ function itIsControl(path) {
 module.exports = function less1by1Task(grunt) {
   let root = grunt.option('root') || '',
       app = grunt.option('application') || '',
-      changedComponent = grunt.config.get('changed') || '',
       rootPath = path.join(root, app),
       themesPath = path.join(rootPath, './themes/');
 
   function processLessFile(data, filePath, error, theme, itIsControl) {
-      //console.log('keklol' + );
 
       let lessData = data.toString(),
         imports = theme ?
@@ -61,17 +59,22 @@ module.exports = function less1by1Task(grunt) {
     }, function writeCSS(compileLessError, output) {
 
         if (compileLessError) {
-            console.error(compileLessError);
+            grunt.log.error(`${compileLessError.message} in file: ${compileLessError.filename} on line: ${compileLessError.line}`);
         }
+
         let suffix = '';
 
         if (itIsControl) {
-          suffix = ( theme === DEFAULT_THEME ) ? '' : `__${theme}`
+          suffix = ( theme === DEFAULT_THEME ) ? '' : `__${theme}`;
         }
+
         let newName = `${path.dirname(filePath)}/${path.basename(filePath, '.less')}${suffix}.css`;
+
         if (output) {
             fs.writeFile(newName, output.css, function writeFileCb(writeFileError) {
-                if (writeFileError) grunt.log.error(`Не могу записать файл. Ошибка: ${writeFileError.message}.`);
+                if (writeFileError) {
+                  grunt.log.error(`Не могу записать файл. Ошибка: ${writeFileError.message}.`);
+                }
                // grunt.log.ok(`file ${filePath} successfuly compiled. Theme: ${theme}`);
             });
         }
@@ -81,24 +84,21 @@ module.exports = function less1by1Task(grunt) {
     grunt.registerMultiTask('less1by1', 'Компилит каждую лесску, ложит cssку рядом. Умеет в темы', function() {
 
         grunt.log.ok(`${humanize.date('H:i:s')} : Запускается задача less1by1.`);
-
-
-            let taskDone = this.async();
+        let taskDone = this.async();
 
         helpers.recurse(rootPath, function(filepath, cb) {
 
           if (helpers.validateFile(filepath, [grunt.config.get('changed') || `components/**/*.less`]) || helpers.validateFile(filepath, [grunt.config.get('changed') || 'themes/**/*.less'])) {
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
-                  let theme = resolveThemeName(filepath)
+                  let theme = resolveThemeName(filepath);
                     if (itIsControl(filepath)) {
                       for (let themeName of themes) {
-                        processLessFile(data, filepath, readFileError, themeName, true)
+                        processLessFile(data, filepath, readFileError, themeName, true);
                       }
                     }
                     else {
-                      processLessFile(data, filepath, readFileError, theme, false)
+                      processLessFile(data, filepath, readFileError, theme, false);
                     }
-
                 });
             }
             cb();
@@ -106,8 +106,5 @@ module.exports = function less1by1Task(grunt) {
             grunt.log.ok(`${humanize.date('H:i:s')} : Задача less1by1 выполнена.`);
             taskDone();
         });
-
     });
-
-
 };

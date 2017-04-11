@@ -1579,7 +1579,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
-            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000){
+            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000 && this.getItems().getMetaData().more){
                this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,

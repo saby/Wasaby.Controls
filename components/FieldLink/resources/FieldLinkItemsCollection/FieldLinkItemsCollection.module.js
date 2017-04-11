@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                opener: this._parentFieldLink,
                closeByExternalClick: true,
                targetPart: true,
-               className: 'controls-FieldLink__picker',
+               cssClassName: 'controls-FieldLink__picker',
                activableByClick: false,
                verticalAlign: {
                   side: 'top'
