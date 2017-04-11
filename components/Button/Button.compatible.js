@@ -99,15 +99,30 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          return markup;
       },
 
+      _conatiner: null,
+
+      setContainer: function(val) {
+         if (!val)
+            return;
+
+         if (this._conatiner && !this._conatiner.startTag && typeof(this._conatiner.unbind) === 'function')
+            this._conatiner.unbind();
+
+         this._conatiner = val;
+
+         try{
+            this._conatiner[0].wsControl = this;
+         }catch (e){}
+
+         this._initInnerAction(val);
+      },
 
       _initInnerAction: function(container)
       {
          var self = this;
 
          if (window && container && !container.startTag) {
-            container.click(function (e) {
-               self._onClickHandler(e);
-            });
+            container.on('click', self._onClickHandler.bind(this));
          }
       },
 
@@ -172,6 +187,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          } else {
             this._container = cfg.container || cfg.element;
          }
+
+         this.setContainer(this._container);
 
          this.fixIcon();
 
@@ -438,6 +455,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this._needRegistWhenParent = false;
             this._registerDefaultButton();
          }
+
+         this.setContainer(this._container);
       },
 
       _getElementToFocus: function() {
@@ -638,7 +657,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             var args = [this._options.command].concat(this._options.commandArgs);
             this.sendCommand.apply(this, args);
          }
-         this._notify("onActivated");
+         this._onClick();
       },
 
       sendCommand : function( commandName) {

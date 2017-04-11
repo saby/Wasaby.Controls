@@ -13,32 +13,12 @@ define('js!SBIS3.CONTROLS.Button',
 
       'use strict';
 
-      var Button = extend.extend(
+      var Button = extend.extend([Compatible],
          {
             _controlName: 'SBIS3.CONTROLS.Button',
             _template: template,
 
             _useNativeAsMain: true,
-
-            __conatiner: null,
-            get _container() {
-               return this.__conatiner;
-            },
-            set _container(val) {
-               if (!val)
-                  return;
-
-               if (this.__conatiner && !this.__conatiner.startTag && typeof(this.__conatiner.unbind) === 'function')
-                  this.__conatiner.unbind();
-
-               this.__conatiner = val;
-
-               try{
-                  this.__conatiner[0].wsControl = this;
-               }catch (e){}
-
-               this._initInnerAction(val);
-            },
 
             constructor: function(cfg) {
 
@@ -49,10 +29,13 @@ define('js!SBIS3.CONTROLS.Button',
                this._thisIsInstance = true;
 
                this._publish('onActivated');
+            },
+
+            _onClick: function(){
+               this._notify("onActivated");
             }
 
          });
 
-      Object.assign(Button.prototype, Compatible);
       return Button;
    });
