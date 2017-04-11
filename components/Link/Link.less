@@ -5,17 +5,21 @@
 }
 
 .controls-Link {
+  .button-default-style();
   color: @link-text-color;
   text-decoration: @link-text-decoration;
   line-height: @link-line-height;
   padding: @link-padding;
-  height: 24px;
+  background-color: @link-background;
+  height: @link-height;
+  .button-baseline-fix();
 
   &.controls-Click__active {
     cursor: @link-cursor;
     color: @link-active-text-color;
-    text-decoration: @link-active-text-decoration;
-
+    .controls-Button__text {
+      text-decoration: @link-active-text-decoration;
+    }
     .controls-Button__icon {
       &.icon-primary {
         color: @link-active-text-color !important;
@@ -25,17 +29,9 @@
 
   // Button's icon
   .controls-Button__icon {
-    position: absolute;
-    top: 7px;
     left: 0;
-    .link-mixin(16px;);
-
-    &.icon-24 {
-      top: 3px;
-      .link-mixin(24px;);
-    }
-    &.icon-32 {
-      .link-mixin(32px;);
+    & + .controls-Button__text {
+      margin-left: @button-icon-gap;
     }
   }
   &.controls-Link__underline {
@@ -63,11 +59,7 @@
     margin: @link-field-margin;
   }
 
-  .controls-Link__icon + .controls-Link__field {
-    margin: @link-icon-field-margin;
-  }
-
-  .controls-Link__icon + .controls-Link__field:empty {
+  .controls-Button__icon + .controls-Link__field:empty {
     margin: @link-field-margin;
   }
 
@@ -113,7 +105,7 @@
   .controls-Link {
    .controls-Button__icon {
      &.icon-24 {
-       margin: -4px 0 0;
+       margin: -1px 0 0;
      }
    }
   }

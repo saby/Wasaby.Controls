@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView', [
          _options: {
             rangeselect: false,
             activableByClick: false,
-            className: 'controls-DateRangeBigChoose-MonthView'
+            cssClassName: 'controls-DateRangeBigChoose-MonthView'
          }
       },
       $constructor: function () {

@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      */
    var CommandsButton = MenuIcon.extend({
       _modifyOptions: function(opts) {
-         opts.className += ' controls-Menu__hide-menu-header';
+         opts.cssClassName += ' controls-Menu__hide-menu-header';
          opts.icon = 'sprite:icon-24 icon-ExpandDown icon-primary';
          opts.pickerClassName += ' controls-CommandsButton__picker controls-MenuIcon__Menu';
          if (opts.pickerConfig) {

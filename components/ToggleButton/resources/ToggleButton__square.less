@@ -1,27 +1,27 @@
-.controls-ButtonBase {
-  &.controls-ToggleButton__square {
-    border-color: transparent;
-    border-radius: 2px;
-    border-style: solid;
-    border-width: 1px;
-    width: 24px;
-    height: 24px;
-    user-select: none;
+.controls-ToggleButton__square {
+  .button-default-style();
+  border-color: transparent;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  width: 24px;
+  height: 24px;
+  user-select: none;
+  .button-baseline-fix();
 
-    .controls-Button__text {
-      visibility: hidden;
-    }
+  .controls-Button__text {
+    visibility: hidden;
+  }
 
-    .controls-Button__icon {
-      position: absolute;
-      left: 3px;
-      top: 3px;
-      margin-left: 0;
-    }
-    &.controls-Checked__checked {
-      background-color: #F3F3F3;
-      border-color: #587AB0;
-    }
+  .controls-Button__icon {
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    margin-left: 0;
+  }
+  &.controls-Checked__checked {
+    background-color: #F3F3F3;
+    border-color: #587AB0;
   }
 
   &.controls-ToggleButton-square__big {
@@ -31,7 +31,7 @@
     border-radius: 2px;
     .controls-Button__icon {
       left: 1px;
-      top: 2px;
+      top: 1px;
       margin-left: 0;
     }
   }

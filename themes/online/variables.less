@@ -34,7 +34,7 @@
 @float-area-border-color:                 #bdbdbd;
 @float-area-border:                       @default-border-width @default-border-style @float-area-border-color;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
-
+@font-popup-size:                         14px;
 @bg:                                      transparent;
 @default-text-color:                      @black-color;
 
@@ -62,6 +62,8 @@
 @link-font:                               @font-basic-size @font-basic-name;
 @link-cursor:                             pointer;
 @link-text-color:                         #05b;
+@link-background:                         transparent;
+@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
@@ -76,7 +78,7 @@
 @link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        -3px 0 0;
+@link-icon-margin:                        0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
@@ -109,6 +111,7 @@
 @button-text-margin:                      0 12px 0 12px;
 @button-text-margin-left:                 12px;
 @button-text-margin-right:                12px;
+@button-text-icon-margin:                 0 @button-text-margin-right - @button-border-width 0 @button-icon-gap;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 
@@ -219,6 +222,7 @@
 @button-big-text-margin:                  0 24px 0 24px;
 @button-big-text-margin-left:             24px;
 @button-big-text-margin-right:            @button-big-text-margin-left;
+@button-big-text-icon-margin:             0 @button-big-text-margin-left - @button-border-width 0 @button-icon-gap;
 @button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
@@ -256,6 +260,7 @@
 @button-checked-bg:                       @button-hover-bg;
 @button-checked-text-margin-left:         @button-text-margin-left - 1px;
 @button-checked-text-margin-right:        @button-text-margin-right - 1px;
+@button-checked-text-icon-margin:         0 @button-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
 @button-checked-icon-top-offset:          3px;
 @button-checked-icon-left-offset:         @button-icon-left-offset - 1px;
 @button-checked-icon-big-top-offset:      @button-icon-big-top-offset - 1px;
@@ -270,6 +275,7 @@
 // Big default button
 @button-big-checked-text-margin-left:     @button-big-text-margin-left - 1px;
 @button-big-checked-text-margin-right:    @button-big-text-margin-right - 1px;
+@button-big-checked-text-icon-margin:    0 @button-big-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
 @button-big-checked-icon-top-offset:      @button-big-icon-top-offset - 1px;
 @button-big-checked-icon-left-offset:     @button-big-icon-left-offset - 1px;
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset - 1px;
@@ -310,7 +316,11 @@
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
 @tab-button-font:                               14px 'TensorFont', sans-serif;
+@tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-margin-top:                         0;
+@tab-control-smple-bottomline-height:           3px;
+@tab-button-simple-inner-color:                  #313E78;
+@tab-button-simple-inner-checked-color:         #0055BB;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
 @tab-button-border-bottom:                      none;
@@ -613,7 +623,8 @@
 // ---- //
 // Menu //
 // ---- //
-
+@popup-header-font-weight:                  bold;
+@popup-header-caption-color:                @blue-dark-color;
 @menu-margin:                             -1px 0 0;
 @menu-subpopup-margin:                    -5px 0 0 0;
 @menu-subpopup-padding:                   4px 0;
@@ -623,7 +634,7 @@
 @menu-border-color:                       @gray-ccc-color;
 @menu-border-radius:                      0;
 @menu-shadow:                             0px 0px 12px 0px rgba(0,0,0,0.25);
-
+@menu-header-bg-color:                    #f4f4f4;
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
@@ -639,7 +650,7 @@
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
 @menu-expand-hover-bg:                    none;
-
+@menu-header-caption-color:               @blue-dark-color;
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     0 12px;
@@ -756,7 +767,7 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         @text-box-field-text-color;
+@text-box-field-focus-text-color:         #e4e4e4;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
@@ -933,7 +944,7 @@
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-buttons-wrapper-width:                        20px + 20px;
-@search-form-field-wrapper-margin-right:              @search-buttons-wrapper-width + 5px;
+@search-form-field-wrapper-margin-right:              45px;
 @search-button-wrapper-padding:                       0 5px 0 0;
 @search-form-icon-padding:                            3px  2px;
 @search-form-icon-disabled-display:                   block;
@@ -944,7 +955,7 @@
 // --------- //
 
 @combo-box-arrow-spritesheet:                   'img/ComboBox.png';
-
+@combobox-picker-border-width:                    1px;
 @combo-box-cursor:                              pointer;
 @combo-box-right-padding:                       4px;
 @combo-box-disabled-cursor:                     default;
@@ -1278,7 +1289,8 @@
 // ---------- //
 // Data Range //
 // ---------- //
-
+@controls-date-range-year-marginleft:             0;
+@date-range-choose-year-line-height:            @date-range-choose-year-height + 1;
 @date-range-font-size:                          14px;
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
@@ -1289,10 +1301,12 @@
 @date-range-dash-color:                         @black-color;
 @date-range-dash-margin:                        0 3px 4px 3px;
 
-
+@date-range-choose-border-hover-width:          2px;
 // ----------------- //
 // Data Range Slider //
 // ----------------- //
+@date-range-slider-margin-top:                  -5px;
+
 @date-range-slider-font-family:                 @font-basic-name;
 @date-range-slider-color:                       @darkcyan-color;
 @date-range-slider-disabled-text-color:         @link-disabled-text-color;
@@ -1327,7 +1341,7 @@
 @date-range-choose-color:                       @black-color;
 @date-range-choose-hover-color:                 @blue-dark-color;
 @date-range-choose-width:                       178px;
-@date-range-choose-short-width:                 146px;
+@date-range-choose-short-width:                 148px;
 @date-range-choose-year-state-width:            80px;
 @date-range-choose-padding:                     0;
 
@@ -1372,7 +1386,7 @@
 @date-range-choose-halfyear-caption-text-align:       @date-range-choose-caption-text-align;
 
 @date-range-choose-quarter-caption-line-height:             @date-range-choose-standart-line-height;
-@date-range-choose-quarter-caption-with-month-line-height:  3*@date-range-choose-standart-line-height;
+@date-range-choose-quarter-caption-with-month-line-height:  3*@date-range-choose-standart-line-height - 2px;
 @date-range-choose-quarter-caption-height:                  @date-range-choose-standart-line-height;
 @date-range-choose-quarter-caption-with-month-height:       auto;
 @date-range-choose-quarter-with-halfyears-margin:           0 0 @date-range-choose-indents 34px; //(@date-range-choose-halfyear-caption-width + @date-range-choose-indents)
@@ -1448,7 +1462,7 @@
 @date-range-big-choose-years-panel-wrapper-font-size:          18px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 40px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 30px;
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
@@ -1587,6 +1601,7 @@
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
+@list-view-items-toolbar-icon-size:                  24px;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1924,8 +1939,8 @@
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-vertical-icon-top: 0;
-@controls-OperationsPanelButton-icon-left:         6px;
+@controls-OperationsPanelButton-vertical-icon-top: -1px;
+@controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
 // ----------------------- //
@@ -2155,7 +2170,7 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
+@controls-FieldLink-showAllLinks-padding:          0 0 0 1px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkContainer-padding:         4px;
 
@@ -2207,6 +2222,9 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
+@back-button-arrow-paddingleft:                   4px;
+@bread-crumb-title-hover-color:                   @primary-color;
+@bread-crumb-title-color:                          #0055BB;
 @bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
@@ -2426,3 +2444,8 @@
 
 //Browser
 @controls-Browser-ListView-minHeight:                      90px;
+@back-button-caption-hover-color: @blue-dark-color;
+@back-button-caption-active-color: @primary-color;
+
+@paging-font-size:                                      18px;
+@scrollpager-bg:                                         white;

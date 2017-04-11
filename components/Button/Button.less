@@ -1,23 +1,16 @@
 .controls-Button {
+   .button-default-style();
    background-size: contain;
    white-space: nowrap;
-   justify-content: center;
+   .justify-content(center);
    .user-select();
    color: @button-text-color;
    min-width: @button-min-width;
    height: @button-height;
    line-height: @button-line-height;
-   padding: 0;         //FF ignore padding in button, therefore we use SPAN with margin
-   overflow: hidden;   //В FF у кнопки с фиксированной высотой и шириной текст выходит за пределы
    .border-radius(@button-border-radius);
    .box-shadow(@button-shadow);
-
-   .controls-Button__text {
-      &.controls-Button__emptyCaption {
-         margin: @button-empty-text-margin;
-      }
-   }
-
+   .button-baseline-fix();
 
    &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
       background-color: #ffffff;
@@ -26,18 +19,14 @@
    .controls-Button__text {
       display: block;
       margin: @button-text-margin;
+      border: none;
    }
 
    // Button's icon
    .controls-Button__icon {
-      position: absolute;
-      .button-mixin(@button-border-width; @button-text-margin-left; @button-text-margin-right; 16px);
-
-      &.icon-24 {
-         .button-mixin(@button-border-width; @button-text-margin-left; @button-text-margin-right; 24px);
-      }
-      &.icon-32 {
-         .button-mixin(@button-border-width; @button-text-margin-left; @button-text-margin-right; 32px);
+      margin-left: @button-text-margin-left - @button-border-width;
+      & + .controls-Button__text {
+         margin: @button-text-icon-margin;
       }
    }
    /* Start Button themes */
@@ -55,6 +44,8 @@
    // Normal primary button
    &.controls-Button__primary {
       border: @button-primary-border;
+      background: @button-primary-bg;
+      color: @button-primary-text-color;
 
       &.controls-Click__active {
          color: @button-primary-active-text-color;
@@ -72,19 +63,11 @@
 
       .controls-Button__text {
          margin: @button-big-text-margin;
-         &.controls-Button__emptyCaption {
-            margin: @button-big-empty-text-margin;
-         }
       }
-      // Button's icon
       .controls-Button__icon {
-         .button-mixin(@button-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 16px);
-
-         &.icon-24 {
-            .button-mixin(@button-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 24px);
-         }
-         &.icon-32 {
-            .button-mixin(@button-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 32px);
+         margin-left: @button-big-text-margin-left - @button-border-width;
+         & + .controls-Button__text {
+            margin: @button-big-text-icon-margin;
          }
       }
    }
@@ -97,12 +80,6 @@
       background: @button-disabled-bg;
       .controls-Button__icon {
          color: @default-disabled-color !important;
-      }
-   }
-
-   .controls-Button__text {
-      &.controls-Button__emptyCaption {
-         margin: @button-empty-text-margin;
       }
    }
 
@@ -142,13 +119,6 @@
 // Normal offsets' override for Firefox
 @-moz-document url-prefix() {
    .controls-Button {
-      padding-bottom: 2px;
-      .controls-Button__icon {
-         &.icon-24 {
-            margin-top: -2px;
-         }
-      }
-
       &.controls-Button__big {
          .controls-Button__icon {
             top: @button-big-icon-top-offset - @button-border-width;
@@ -168,6 +138,16 @@
       .controls-Button__icon {
          &.icon-24 {
             top: -2px !important;
+         }
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-Button {
+      .controls-Button__icon {
+         &.icon-24 {
+            padding-bottom: 2px;
          }
       }
    }

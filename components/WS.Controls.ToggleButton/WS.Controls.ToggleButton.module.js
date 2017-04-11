@@ -51,7 +51,7 @@ define('js!WS.Controls.ToggleButton', ['js!WS.Controls.Button', 'js!SBIS3.CONTRO
          var
              options = WSButton.superclass._modifyOptions.apply(this, arguments);
 
-         options.className +=  (options.checked ? ' controls-Checked__checked' : '');
+         options.cssClassName +=  (options.checked ? ' controls-Checked__checked' : '');
          return options;
       }
    });
