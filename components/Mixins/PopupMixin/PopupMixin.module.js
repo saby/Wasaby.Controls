@@ -938,7 +938,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   offset.top = 0;
                   //Если места снизу меньше чем сверху покажемся во весь размер (возможно поверх таргета), или в высоту окна если в него не влезаем
                   if (!this._options.targetOverlay){
-                     height = spaces.top - vOffset - this._margins.top + this._margins.bottom;
+                     height = spaces.top;
                   }
                }
             }
