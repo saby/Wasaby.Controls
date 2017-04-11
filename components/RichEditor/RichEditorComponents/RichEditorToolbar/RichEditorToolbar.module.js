@@ -279,8 +279,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                this._imagePanel = new ImagePanel({
                   parent: button,
                   target: button.getContainer(),
-                  corner: 'tr',
-                  closeByExternalClick: true,
                   verticalAlign: {
                      side: 'top',
                      offset: -10
