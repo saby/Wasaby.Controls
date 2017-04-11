@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.CONTROLS.ContextMenu', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'css!SBIS3.CONTROLS.MenuIcon',    'css!SBIS3.CONTROLS.MenuButton', 'css!SBIS3.CONTROLS.MenuButtonMixin'], function(IconButton, ContextMenu, PickerMixin, DSMixin, MenuButtonMixin) {
+define('js!SBIS3.CONTROLS.MenuIcon', ['js!WS.Controls.MenuButton', 'css!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.MenuIcon'], function(WSMenuButton) {
 
    'use strict';
 
@@ -12,7 +12,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     *
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MyMenuIcon
     *
@@ -52,32 +51,42 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!SBIS3.CONTROLS.IconButton', 'js!SBIS3.
     *
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
     * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
-   var MenuIcon = IconButton.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
+   var MenuIcon = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
       _hasHeader: false,
+      $protected: {
+         _zIndex: '',
+         _options: {
+            buttonTypeClass: ' controls-IconButton'
+         }
+      },
 
-      init: function(){
-         this._container.addClass('controls-MenuIcon');
-         this._options.pickerClassName += ' controls-MenuIcon__Menu';
-         !this.getCaption() && this._container.addClass('controls-Button__withoutCaption');
+      _modifyOptions : function() {
+         var opts = MenuIcon.superclass._modifyOptions.apply(this, arguments);
+         opts.pickerClassName += ' controls-MenuIcon__Menu';
+         opts.cssClassName += ' controls-MenuIcon controls-IconButton';
+
+         opts.cssClassName += opts.caption ? '' : ' controls-Button__withoutCaption';
 
          var cssModificators = [
-             'controls-IconButton__round-border',
-             'controls-IconButton__round-border-24',
-             'controls-Button__withoutCaption'
+            'controls-IconButton__round-border',
+            'controls-IconButton__round-border-24'
          ];
          for (var i = 0, l = cssModificators.length; i < l; i++){
-            if (this.getContainer().hasClass(cssModificators[i])){
-               this._options.pickerClassName += ' ' + cssModificators[i];
+            if (opts.className.indexOf(cssModificators[i]) !== -1){
+               opts.pickerClassName += ' ' + cssModificators[i];
             }
          }
-         if (this._container.hasClass('icon-24') && !this._container.hasClass('controls-Menu__hide-menu-header')){
-            this._options.pickerClassName += ' controls-Menu__big-header';
+         if (opts.icon && opts.icon.indexOf('icon-24') !== -1 && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){
+            opts.pickerClassName += ' controls-Menu__big-header';
          }
+         return opts;
+      },
+
+      init: function(){
          this.reload();
          MenuIcon.superclass.init.call(this);
       }

@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
    "js!WS.Data/Entity/Model",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.ToSourceModel",
-   "js!SBIS3.CONTROLS.Utils.SourceUtil"
-], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil) {
+   "js!SBIS3.CONTROLS.Utils.SourceUtil",
+   "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
+], function(Deferred, Model, cInstance, ToSourceModel, SourceUtil, ArraySimpleValuesUtil) {
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента
     * @mixin SBIS3.CONTROLS.ActiveSelectable
@@ -26,7 +27,8 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
              * @see getSelectedItem
              */
             selectedItem : null
-         }
+         },
+         _loadItemDeferred: null
       },
 
       after: {
@@ -113,18 +115,21 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
        * @see setSelectedItem
        */
       getSelectedItem: function(loadItem) {
-         var
-            dResult = new Deferred(),
-            selItem, selKey, self = this;
-
          this._syncSelectedItem();
+         
+         if(!loadItem) {
+            return this._options.selectedItem;
+         } else if (this._loadItemDeferred && !this._loadItemDeferred.isReady()) {
+            return this._loadItemDeferred;
+         }
+
+         var dResult = new Deferred(),
+             selItem, selKey, self = this;
+         
+         this._loadItemDeferred = dResult;
 
          selItem = this._options.selectedItem;
          selKey = this._options.selectedKey;
-
-         if(!loadItem) {
-            return selItem;
-         }
 
          if(selKey !== null) {
             if (!selItem) {
@@ -162,7 +167,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
          /* При синхронизации запись без ключа считаем невыбранной, т.к. с помощью метода set такую запись установить нельзя,
             т.е. она может только проинициализироваться из контекста */
          /* Ключ может быть строкой или числом, учитываем при проверке */
-         if( key && (selKey === null || (selKey !== key) && selKey !== String(key)) ) {
+         if( key && (selKey === null || !ArraySimpleValuesUtil.hasInArray([key], selKey)) ) {
             this._options.selectedItem = null;
             this._notifyOnPropertyChanged('selectedItem');
          }

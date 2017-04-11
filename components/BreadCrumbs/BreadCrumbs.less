@@ -8,10 +8,10 @@
       margin-left: -4px;
 		&:hover{
 			.controls-BreadCrumbs__title{
-				color: #FF7033!important;
+				color: @bread-crumb-title-hover-color !important;
 			}
 			.controls-BreadCrumbs__arrow, .controls-BreadCrumbs__home {
-				color: #FF7033!important;
+				color: @bread-crumb-title-hover-color !important;
 			}
 		}
       &:first-child{
@@ -27,7 +27,7 @@
 
 	.controls-BreadCrumbs__title{
 		text-decoration: none;
-		color: #0055BB;
+		color: @bread-crumb-title-color;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		overflow: hidden;
@@ -120,9 +120,6 @@
    .controls-BreadCrumbs{
       padding-top: 1px;
       .controls-BreadCrumbs__title{
-         top: 0;
-      }
-      .controls-BreadCrumbs__arrow {
          top: 0;
       }
    }

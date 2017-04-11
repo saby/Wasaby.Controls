@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    function recordConverter(rec) {
       var idProp;
 
-      /** !ВНИМАНИЕ! rec - $ws.proto.Record **/
+      /** !ВНИМАНИЕ! rec - Deprecated/Record **/
 
       if(rec.hasColumn(this._options.idProperty)) {
          idProp = this._options.idProperty;
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
            *    <li>Если вернуть false - диалог выбора открыт не будет.</li>
            *    <li>Любой другой результат - диалог выбора будет открыт стандартным образом.</li>
            * </ol>
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            */
       $protected: {
          _options: {
@@ -163,8 +163,15 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
 
          requirejs([this._chooserConfig.type[version][this._options.chooserMode]], function(ctrl) {
-            new ctrl(cMerge(cFunctions.clone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
+            self._chooserDialog = new ctrl(cMerge(cFunctions.clone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
+            self._chooserDialog.subscribe('onAfterClose', function() {
+               self._chooserDialog = undefined;
+            });
          });
+      },
+      
+      showSelector: function(cfg) {
+         this._showChooser(cfg.template, cfg.componentOptions);
       },
 
       _getAdditionalChooserConfig: function () {
@@ -173,6 +180,15 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
       _chooseCallback : function() {
          /*Method must be implemented*/
+      },
+
+      after : {
+         destroy: function () {
+            if (this._chooserDialog) {
+               this._chooserDialog.destroy();
+               this._chooserDialog = undefined;
+            }
+         }
       }
    };
 

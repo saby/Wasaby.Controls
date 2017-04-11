@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Expandable', ['Core/CommandDispatcher'], function(Comm
    var Expandable = /**@lends SBIS3.CONTROLS.Expandable.prototype  */{
        /**
         * @event onExpandedChange При изменении состояния развернутости
-        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Core/EventObject} Дескриптор события.
         * @param {Boolean} expanded Признак состояния:
         * <ul>
         *    <li>true - развернуто;</li>

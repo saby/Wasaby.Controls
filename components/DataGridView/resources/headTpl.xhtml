@@ -9,13 +9,13 @@
     {{?it.multiselect}}
     {{isColumnScrolling = it.startScrollColumn === 0;}}
     <th class="controls-DataGridView__th controls-DataGridView__td__checkBox {{? hasScroll}}{{? isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}"
-        {{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
+        {{?isColumnScrolling}}style="transform:translateX({{=it.columnsScrollPosition}}px);"{{?}}>
     </th>{{?}} {{~it.content[i] :column:index}}
     {{isColumnScrolling = it.startScrollColumn !== undefined && it.startScrollColumn <= index;}}
     {{?!column.ignore || it.countRows == 1}}
     <th class="{{?index === 0}}controls-DataGridView__firstContentCell{{?}} controls-DataGridView__th{{? hasScroll}}{{? isColumnScrolling}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}
-        {{?i == 1}}controls-DataGridView__th__topRow{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}" {{?column.colspan}}colspan="{{=column.colspan}}"{{?}}
-        {{?column.rowspan && it.countRows == 2}}rowspan="{{=column.rowspan}}"{{?}}{{?isColumnScrolling}}style="left:{{=it.columnsScrollPosition}}px;"{{?}}>
+        {{?(i == 1 && !column.rowspan && column.colspan)}}controls-DataGridView__th__topRow{{?}} {{?column.className}}{{=column.className}}{{?}}" title="{{?column.headTooltip}}{{=column.headTooltip}}{{??}}{{=column.title}}{{?}}" {{?column.colspan}}colspan="{{=column.colspan}}"{{?}}
+        {{?column.rowspan && it.countRows == 2}}rowspan="{{=column.rowspan}}"{{?}}{{?isColumnScrolling}}style="transform:translateX({{=it.columnsScrollPosition}}px);"{{?}}>
     {{=column.value}}
     {{?}}
     </th>

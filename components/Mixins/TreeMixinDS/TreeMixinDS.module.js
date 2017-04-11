@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {number} id ключ узла, по которму кликнули
        * @return Если вернуть false - загрузка узла не произойдет
        * @example
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
        */
       /**
        * @event onNodeExpand После разворачивания ветки
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} key ключ разворачиваемой ветки
        * @example
        * <pre>
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
        * </pre>
        *
        * @event onNodeCollapse После сворачивания ветки
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} key ключ разворачиваемой ветки
        * @example
        * <pre>
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
       /**
        * @event onSearchPathClick При клике по хлебным крошкам в режиме поиска.
        * Событие, происходящее после клика по хлебным крошкам, отображающим результаты поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {number} id ключ узла, по которму кликнули
        * @return Если вернуть false - загрузка узла не произойдет
        * @example
@@ -425,9 +425,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
-               var records = dataSet.toArray();
                self._items.merge(dataSet, {remove: false});
-               self._drawItemsFolderLoad(records, id);
+               self._drawItemsFolderLoad(this._normalizeItems(dataSet), id);
                self._dataLoadedCallback();
             }
 

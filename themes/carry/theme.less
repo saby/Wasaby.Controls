@@ -397,23 +397,30 @@
   }
 }
 // стилизуем хлебные крошки и кнопку назад для Розницы, т.к. Engine не поддерживает тематизации
-.engine-Browser__path-wrapper.engine-Browser__path-wrapper-in-head {
+.engine-Browser__path-wrapper {
    .engine-Browser__path {
-      height: @browser-path-height;
       max-height: @browser-path-height;
-      .controls-Browser__backButton {
-         max-height: @browser-path-height;
-      }
    }
    .controls-Browser__breadCrumbs {
       max-height: @browser-path-height;
       top: -7px;
    }
+   .controls-Browser__backButton {
+      max-height: @browser-path-height;
+   }
+   &.engine-Browser__path-wrapper-in-head {
+      .engine-Browser__path {
+         height: @browser-path-height;
+      }
+   }
 }
 .ws-is-webkit {
-   .engine-Browser__path-wrapper.engine-Browser__path-wrapper-in-head {
+   .engine-Browser__path-wrapper {
       .controls-Browser__breadCrumbs {
          top: 0;
+         .controls-BreadCrumbs__arrow {
+            top: 0;
+         }
       }
    }
 }

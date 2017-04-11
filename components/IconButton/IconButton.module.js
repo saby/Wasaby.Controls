@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS3.CONTROLS.IconMixin', 'html!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.IconButton'], function(ButtonBase, IconMixin, dotTplFn) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
 
    'use strict';
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * Класс контрола, который предназначен для отображения кнопки в виде иконки.
     *
     * @class SBIS3.CONTROLS.IconButton
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends SBIS3.CONTROLS.WSButtonBase
     * @mixes SBIS3.CONTROLS.IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов Петр Сергеевич
@@ -52,11 +52,30 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
     * </component>
     */
 
-   var IconButton = ButtonBase.extend([IconMixin], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
-      _dotTplFn : dotTplFn,
+   var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       $protected: {
          _options: {
          }
+      },
+
+      _modifyOptions: function () {
+         var
+             options = IconButton.superclass._modifyOptions.apply(this, arguments),
+             iconClass = options._iconClass;
+
+         options.cssClassName += ' controls-IconButton';
+
+         if (iconClass) {
+            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
+               if (iconClass.indexOf('icon-error') >= 0) {
+                  options.cssClassName += ' controls-IconButton__errorBorder';
+               }
+               else {
+                  options.cssClassName += ' controls-IconButton__doneBorder';
+               }
+            }
+         }
+         return options;
       },
 
       $constructor: function () {
@@ -67,31 +86,6 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.ButtonBase', 'js!SBIS
          if (className && className.indexOf('controls-IconButton__round-border') >= 0) {
             this._container.removeClass('action-hover');
          }
-      },
-
-      _modifyOptions: function (opts) {
-         var
-            options = IconButton.superclass._modifyOptions.apply(this, arguments),
-            iconClass = options._iconClass;
-         if (iconClass) {
-            options._moreClass = '';
-            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
-               if (iconClass.indexOf('icon-error') >= 0) {
-                  options._moreClass += ' controls-IconButton__errorBorder';
-               }
-               else {
-                  options._moreClass += ' controls-IconButton__doneBorder';
-               }
-            }
-         }
-         return options;
-      },
-
-      _drawIcon: function(icon){
-      	if (this._oldIcon){
-      		this._container.removeClass(this._oldIcon);
-      	}
-         this._container.addClass('controls-IconButton ' + this._options._iconClass);
       }
    });
 

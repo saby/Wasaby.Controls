@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/functional-helpers",
+   'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil"
 ], function (
    cFunctions,
@@ -51,6 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    cInstance,
    fcHelpers,
    fHelpers,
+   strHelpers,
    SourceUtil) {
 
    function propertyUpdateWrapper(func) {
@@ -159,6 +161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    buildTplArgs = function(cfg) {
       var tplOptions = {}, itemTpl, itemContentTpl;
 
+      tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
@@ -219,7 +222,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    var ItemsControlMixin = /**@lends SBIS3.CONTROLS.ItemsControlMixin.prototype  */{
        /**
         * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function() {
@@ -235,7 +238,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @event onBeforeDataLoad Происходит перед загрузкой данных.
         * @remark
         * Событие сработает перед запросом к источнику данных
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
         *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
@@ -247,7 +250,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
        /**
         * @event onDataLoad Происходит при загрузке данных.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
         * <pre>
@@ -263,7 +266,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @event onDataLoadError Происходит при ошибке загрузки данных.
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {HTTPError} error Произошедшая ошибка.
        * @return {Boolean} Если вернуть:
        * <ol>
@@ -282,7 +285,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @event onItemsReady Происходит при готовности экземпляра коллекции {@link WS.Data/Collection/IList}.
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    myView.subscribe('onItemsReady', function(event) {
@@ -994,6 +997,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             needToRevive = false,
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
+            inlineStyles = targetElement.attr('style') || '',
             data;
 
          //TODO в 3.7.5 избавиться от проверки на _path
@@ -1024,7 +1028,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             /*TODO посмотреть не вызывает ли это тормоза*/
             var comps = this._destroyInnerComponents(targetElement, true);
 
-            targetElement.get(0).outerHTML = markup;
+            if (inlineStyles) {
+               targetElement.replaceWith($(markup).attr('style', inlineStyles));
+            } else {
+               targetElement.get(0).outerHTML = markup;
+            }
 
             for (var i = 0; i < comps.length; i++) {
                if (comps[i]) {
@@ -1376,20 +1384,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
-         this._onCollectionItemChange = onCollectionItemChange.bind(this);
          this._onAfterCollectionChange = onAfterCollectionChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.subscribeTo(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.unsubscribeFrom(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
        /**
@@ -2289,6 +2294,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
+      _normalizeItems: function (items) {
+         if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            return items;
+         }
+         var result = [];
+         items.each(function(item) {
+            result.push(item);
+         });
+         return result;
+      },
+
       /*TODO второй параметр нужен для поддержи старой группировки*/
       _buildTplItem: function(item, altTpl){
          var itemTpl, dotTemplate;
@@ -2489,7 +2505,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
       /**
        * Обрабатывает событие об изменении коллекции
-       * @param {$ws.proto.EventObject} event Дескриптор события.
+       * @param {Core/EventObject} event Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
        * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
@@ -2513,6 +2529,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      this._onCollectionAddMoveRemove.apply(this, arguments);
                   }
 	               break;
+
+               case IBindCollection.ACTION_CHANGE:
+                  newItems.forEach(function(item, i) {
+                     onCollectionItemChange.call(this, event, item, newItemsIndex + i, newItems.properties);
+                  }, this);
+                  break;
 
 	            case IBindCollection.ACTION_REPLACE:
 	               this._onCollectionReplace(newItems);

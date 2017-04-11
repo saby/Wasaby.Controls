@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
    /**
     * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
-    * Подробнее об использовании класса вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component-control/">Управление диалогом редактирования списка.</a>.
+    * Подробнее об использовании класса вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/">этом разделе</a>.
     * @class SBIS3.CONTROLS.Action.OpenEditDialog
     * @extends SBIS3.CONTROLS.Action.OpenDialog
     * @author Красильников Андрей Сергеевич
@@ -52,23 +52,23 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    var OpenEditDialog = OpenDialog.extend(/** @lends SBIS3.CONTROLS.Action.OpenEditDialog.prototype */{
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        * @param {String} key Первичный ключ сохраняемой записи.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
       $protected: {

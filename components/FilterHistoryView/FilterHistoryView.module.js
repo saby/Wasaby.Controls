@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
              var opts = FilterHistoryView.superclass._modifyOptions.apply(this, arguments);
              opts.footerTpl = footerTpl;
              opts.idProperty = 'id';
-             opts.className += ' controls-HistoryView';
+             opts.cssClassName += ' controls-HistoryView';
              return opts;
           },
 

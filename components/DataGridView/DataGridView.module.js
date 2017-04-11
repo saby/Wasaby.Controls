@@ -120,7 +120,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                decorators : tplOptions.decorators,
                highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
-               displayProperty: tplOptions.displayProperty
+               displayProperty: tplOptions.displayProperty,
+               escapeHtml: tplOptions.escapeHtml
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
             buildTplArgsLadder(tplOptions.cellData, cfg);
@@ -367,7 +368,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dotTplFn : dotTplFn,
       /**
        * @event onDrawHead Возникает после отрисовки шапки
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected: {
          _rowTpl : rowTpl,
@@ -720,7 +721,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _getItemsContainer: function(){
-         return $('.controls-DataGridView__tbody', this._container);
+         return $('.controls-DataGridView__tbody', this._container).first();
       },
 
       _buildTplArgs : function(cfg) {
@@ -752,7 +753,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             decorators : args.decorators,
             displayField : args.displayProperty,
             displayProperty : args.displayProperty,
-            isSearch : args.isSearch
+            isSearch : args.isSearch,
+            escapeHtml: args.escapeHtml
          };
          args.startScrollColumn = cfg.startScrollColumn;
          args.currentScrollPosition = this._getColumnsScrollPosition();
@@ -1170,6 +1172,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _dragMove: function(event, cords) {
          if(this._isHeaderScrolling) {
             var pos;
+            
+            if(!this._isPartScrollVisible) {
+               return;
+            }
 
             /* Выставим начальную координату, чтобы потом правильно передвигать колонки */
             if(this._lastLeftPos === null) {
@@ -1188,11 +1194,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
-         var movePosition = this._getColumnsScrollPosition();
+         /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
+            если таблица лежит в контейнере с display: flex */
+         var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
 
          this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
-            this._movableElems[i].style.left = movePosition + 'px';
+            this._movableElems[i].style.transform = movePosition;
          }
       },
 

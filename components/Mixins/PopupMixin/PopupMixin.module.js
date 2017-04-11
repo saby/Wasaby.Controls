@@ -53,15 +53,15 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    var PopupMixin = /** @lends SBIS3.CONTROLS.PopupMixin.prototype */ {
        /**
         * @event onShow Происходит при открытии окна.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         */
        /**
         * @event onClose Происходит при закрытии окна.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         */
        /**
         * @event onAlignmentChange Происходит при изменении вертикального {@link verticalAlign} или горизонтального {@link horizontalAlign} выравнивания.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Object} newAlignment Объект с конфигурацией выравнивания.
         * @param {Object} [newAlignment.verticalAlign] Вертикальное выравнивание.
         * @param {Object} [newAlignment.horizontalAlign] Горизонтальное выравнивание.
@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
         */
        /**
         * @event onChangeFixed Происходит при изменении способа позиционирования окна браузера или других объектов на веб-странице.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Boolean} fixed В значении true - CSS-свойство position=fixed, иначе position=absolute.
         */
        $protected: {
@@ -254,11 +254,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
-         this._targetChanges = dcHelpers.trackElement(this._options.target, true);
-         //перемещаем вслед за таргетом
-         this._targetChanges.subscribe('onMove', this._onTargetMove, this);
-         //скрываем если таргет скрылся
-         this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+         if (this._options.target) {
+            this._targetChanges = dcHelpers.trackElement(this._options.target, true);
+            //перемещаем вслед за таргетом
+            this._targetChanges.subscribe('onMove', this._onTargetMove, this);
+            //скрываем если таргет скрылся
+            this._targetChanges.subscribe('onVisible', this._onTargetChangeVisibility, this);
+         }
       },
 
       _unsubscribeTargetMove: function(){
@@ -574,10 +576,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
          if (floatArea.length){
             target = floatArea.wsControl().getOpener();
-            while (target && target !== this) {
-               target = target.getParent() || (target.getOpener && target.getOpener());
-            }
-            return target === this;
+            return ControlHierarchyManager.checkInclusion(this, target && target.getContainer());
          }
          //Если кликнули по инфобоксу - popup закрывать не нужно
          var infoBox = $(target).closest('.ws-info-box');

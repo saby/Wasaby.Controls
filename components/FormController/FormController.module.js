@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} error Объект с описанием ошибки. В свойстве message хранится текст ошибки, например для вывода в пользовательский интерфейс.
        * @see submit
        * @see update
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
        * @see read
        * @see dataSource
@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -77,8 +77,14 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
+       * @returns {Boolean|Error|Deferred}
+       * <ul>
+       *    <li><b>Boolean</b> - сохранение записи прервется, если вернули false</li>
+       *    <li><b>Error</b> - сохранение записи прервется, текст для сообщения об ошибке берется из error.message</li>
+       *    <li><b>Deferred</b> - сохранение приостановится до тех пор, пока deferred не завершит свою работу. В колбэк deferred'a отдается так же False|Error для того, чтобы прервать сохранение.</li>
+       * </ul>
        * @see submit
        * @see update
        * @see onCreateModel
@@ -88,7 +94,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
        * @param {String} key Первичный ключ сохраняемой записи.
        * @see submit
@@ -100,7 +106,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
        * @see destroy
        * @see dataSource
@@ -111,7 +117,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была создана в источнике данных.
        * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
        * @see create
@@ -286,7 +292,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             e.returnValue = message;
             return message;
          }
-         return null;
+         //Нужно вернуть undefined, любой другой результат ie воспримет как текст для окна с вопросом
+         return undefined;
       },
 
       _onAfterShow: function() {
@@ -295,6 +302,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._toggleOverlay(false);
          }
          this._updateIndicatorZIndex();
+         this.activateFirstControl();
          this._notifyOnAfterFormLoadEvent();
       },
 
@@ -322,16 +330,15 @@ define('js!SBIS3.CONTROLS.FormController', [
          var self = this,
              record = self.getRecord(),
              closeAfterConfirmDialogHandler = self._isConfirmDialogShowed();
-         //Если нет записи или она была удалена, то закрываем панель
-         if (!record || (record.getState() === Record.RecordState.DELETED)){
-            return;
+
+         if (!record || (record.getState() === Record.RecordState.DELETED)) {
+            //Если нет записи или она была удалена, то закрываем панель
          }
          //Если запись еще сохраняется, то отменяем закрытие (защита от множественного вызова закрытия панели)
-         if (self._isRecordSaving()){
+         else if (self._isRecordSaving()) {
             event.setResult(false);
-            return;
          }
-         if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length){
+         else if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length) {
             //Дестроим запись, когда выполнены три условия
             //1. если это было создание
             //2. если есть ключ (метод создать его вернул)
@@ -342,12 +349,12 @@ define('js!SBIS3.CONTROLS.FormController', [
                });
                event.setResult(false);
             }
-            self._resetTitle();
-            return;
          }
-         event.setResult(false);
-         if (!closeAfterConfirmDialogHandler) {
-            self._showConfirmDialog();
+         else {
+            event.setResult(false);
+            if (!closeAfterConfirmDialogHandler) {
+               self._showConfirmDialog();
+            }
          }
       },
 
@@ -963,6 +970,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._unsubscribeFromRecordChange();
+         this._resetTitle();
          FormController.superclass.destroy.apply(this, arguments);
       }
    });

@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'Core/helpers/date-helpers',
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.Link',
+   'css!SBIS3.CONTROLS.DateRangeSlider'
 ], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
@@ -59,6 +60,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       _modifyOptions: function (opts) {
          var start, end;
          opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
+         opts.pickerClassName = [opts.pickerClassName, 'controls-DateRangeSlider__picker'].join(' ');
          // Поскольку контрол работает только с фиксированными диапазонами, позволим разработчикам
          // не конфигурировать одну из дат. Сделаем это за них если они этого не сделали.
          start = opts.startValue;
@@ -84,7 +86,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue, {shortYear: true, contractToHalfYear: true, contractToQuarter: true});
+         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
+            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
          return opts;
       },
 
@@ -136,7 +139,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                if (!silent) {
                   this._notifyOnStartValueChanged();
                }
-               if (this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
+               if (value && this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
                   if (!silent) {
                      this._notifyOnEndValueChanged();
                   }
@@ -160,7 +163,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                if (!silent) {
                   this._notifyOnEndValueChanged();
                }
-               if (this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
+               if (value && this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
                   if (!silent) {
                      this._notifyOnStartValueChanged();
                   }
@@ -179,6 +182,31 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          if (this.isEnabled()) {
             DateRangeSlider.superclass.showPicker.apply(this, arguments);
          }
+      },
+
+      _setPickerConfig: function() {
+         var pickerWidth = 0,
+            baseWidth = this.getContainer().outerWidth();
+         // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
+         if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
+            pickerWidth = 80;
+         } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
+            pickerWidth = 178;
+         } else {
+            pickerWidth = 148;
+         }
+         return {
+            corner: 'tl',
+            bodyBounds: true,
+            locationStrategy: 'bodyBounds',
+            horizontalAlign: {
+               side: 'left',
+               offset: (baseWidth - pickerWidth)/2
+            },
+            verticalAlign: {
+               side: 'top'
+            }
+         };
       }
    });
 

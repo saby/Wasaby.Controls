@@ -123,6 +123,18 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
             }
             this._recalcDropdownWidth();
+            this._setItemPositionForIE10();
+         },
+         _setItemPositionForIE10: function(){
+            //Дичайший баг в ie - если установлено несколько выпадающий списков - 1 из них визуально пропадает
+            //Не отдебагать, т.к. при любом взаимодействии с dom'ом идет перерисовка узлов и выпадающий список появляется
+            //Добавил костыль: вызываю перерисовку узла, взаимодействуя со свойтсвом top
+            if (constants.browser.isIE10){
+               this.getContainer().find('.controls-DropdownList').css({top: ''}); //Убираю top, чтобы когда выставится top: 0 браузер понял что значение изменилось и перерисовал узел
+               setTimeout(function(){
+                  this.getContainer().find('.controls-DropdownList').css({position: 'relative', top: '0'});
+               }.bind(this), 100);
+            }
          },
          _getCurrentContext : function(){
             return this.getLinkedContext();
@@ -130,11 +142,12 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _subscribeItemToHandlers : function(item){
             var self = this;
 
-            this._subscribeToMouseEvents(item);
-
             this.subscribeTo(item, 'onClickMore', function(){
                self._notify('onClickMore', item);
             });
+
+            //Выпилить и событие и метод после перехода на новый стандарт
+            this.subscribeTo(item, 'onPickerInitializing', this._subscribeToMouseEvents.bind(this, item));
 
             this.subscribeTo(item, 'onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
@@ -161,7 +174,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      return list;
                   }.bind(this));
                }
+               self._setItemPositionForIE10();
             });
+         },
+         _initializeDDLPicker: function() {
+
          },
          _subscribeToMouseEvents: function (item) {
             item._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, true));
@@ -214,7 +231,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          },
          _recalcDropdownWidth: function(){
             this._resetMaxWidth();
-            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
                    ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
                    containerWidth = this.getContainer().width() + ieWidth;
@@ -234,7 +251,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _resetMaxWidth: function(){
             var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
                dropdownLimitProperty = 'flex-shrink';
-            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
                dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
                dropdownLimitProperty = 'max-width';
             }

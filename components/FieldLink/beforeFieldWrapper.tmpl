@@ -1,0 +1,33 @@
+<ws:SBIS3.CONTROLS.Link
+    if="{{ multiselect }}"
+    name="showAllButton"
+    cssClassName="controls-FieldLink__showAllLinks ws-hidden"
+    caption="&#133;"
+    tabindex="0"
+    activableByClick="{{ false }}"
+    visible="{{ false }}"
+/>
+
+<div class="controls-FieldLink__linksWrapper">
+    <ws:SBIS3.CONTROLS.FieldLinkItemsCollection
+        cssClassName="controls-FieldLink__linksContainer"
+        name="FieldLinkItemsCollection"
+        tabindex="0"
+        displayProperty="{{ displayProperty }}"
+        idProperty="{{ idProperty }}"
+        itemTpl="{{ itemTpl }}"
+        itemContentTpl="{{ itemContentTpl }}"
+        includedTemplates="{{ includedTemplates }}"
+        items="{{ preRenderItems }}"
+        itemsSortMethod="{{ itemsSortMethod }}">
+    </ws:SBIS3.CONTROLS.FieldLinkItemsCollection>
+</div>
+
+<ws:SBIS3.CONTROLS.Link
+    if="{{ multiselect }}"
+    cssClassName="controls-FieldLink__copyShowAll"
+    caption="&#133;"
+    tabindex="0"
+    allowChangeEnable="{{ false }}"
+    command="{{ showAllItems }}"
+/>

@@ -56,7 +56,7 @@ define(
         * 1. через выбор в календаре;
         * 2. через установку нового значения в поле ввода с клавиатуры;
         * 3. методами {@link setText} или {@link setDate}.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Date} date Дата, которую установили.
         * @example
         * <pre>
@@ -73,7 +73,7 @@ define(
        * @event onDateSelect Происходит при окончании выбора даты.
        * @remark
        * Окончанием выбора даты является уход фокуса из поля ввода, на не дочерние контролы.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Date} date Дата, которую установили.
        */
       $protected: {
@@ -109,7 +109,9 @@ define(
                verticalAlign: {
                   side: 'top',
                   offset: -9
-               }
+               },
+               bodyBounds: true,
+               locationStrategy: 'bodyBounds'
             }
          },
          _onFocusInHandler: undefined

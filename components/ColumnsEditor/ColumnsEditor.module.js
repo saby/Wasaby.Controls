@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor', [
                   closeButton: true,
                   parent: this,
                   target: this.getContainer(),
-                  className: 'controls-ColumnsEditorArea-picker',
+                  cssClassName: 'controls-ColumnsEditorArea-picker',
                   componentOptions: {
                      columns: this._columnsEditorConfig.columns,
                      selectedColumns: this._columnsEditorConfig.selectedColumns,

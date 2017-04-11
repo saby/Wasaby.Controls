@@ -18,6 +18,17 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
 
       $protected: {
          _options: {
+            /**
+             * @typedef {Object} OperationPrintItem
+             * @property {String} icon
+             * @property {String} title
+             * @property {String} linkText
+             * @property {String} caption
+             * @translatable caption title
+             */
+            /**
+             * @cfg {Array.<OperationPrintItem>}
+             */
             items: [
                {
                   icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
@@ -26,10 +37,25 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
                   caption: rk('Распечатать')
                }
             ],
+             /**
+              * @cfg {String}
+              */
             icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
+            /**
+             * @cfg {String}
+             */
             title: rk('Распечатать'),
+            /**
+             * @cfg {String}
+             */
             linkText:  rk('Распечатать'),
+            /**
+             * @cfg {String}
+             */
             caption: rk('Распечатать'),
+            /**
+             * @cfg {String}
+             */
             xsl : undefined,
             /**
              * @cfg (number) Минимальная ширина предварительного окна печати
@@ -42,7 +68,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
       },
 
       _onOperationActivated: function() {
-         this._prepareOperation('Что напечатать');
+         this._prepareOperation(rk('Что напечатать'));
       },
 
       /**
