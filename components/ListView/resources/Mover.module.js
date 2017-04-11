@@ -268,7 +268,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          var items = this.getItems();
          if (items) {
             movedItems.forEach(function (movedItem) {
-               items.setEventRaising(false, true);
                var itemsIndex = items.getIndex(movedItem);
                if (itemsIndex == -1) {
                   items.add(movedItem);
@@ -289,7 +288,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                } else if(this._options.parentProperty) {
                   movedItem.set(this._options.parentProperty, target ? target.getId() : null);
                }
-               items.setEventRaising(true, true);
             }.bind(this));
          }
       },
