@@ -3609,9 +3609,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
                   this.getContainer().addClass('controls-ListView__verticalDragNDrop');
                }
+               this._toggleDragItems(dragObject, false);
                return true;
             }
             return false;
+         },
+         _toggleDragItems: function (dragObject, show) {
+            dragObject.getSource().each(function (item) {
+               item.getDomItem().toggleClass('ws-hidden', show);
+            });
          },
          /**
           * Определяет направление элементов в списке    
@@ -3630,6 +3636,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return false;
          },
          _onDragHandler: function(dragObject, e) {
+            this._options.itemsDragNDrop = true;
             this._clearDragHighlight(dragObject);
             if (this._canDragMove(dragObject)) {
                var
@@ -3642,12 +3649,22 @@ define('js!SBIS3.CONTROLS.ListView',
                      sourceModels.push(item.getModel());
                   });
                   if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
-                     this._drawDragHighlight(target);
+                     //this._drawDragHighlight(target);
+                     if (target.getPosition() !== 'on') {
+                        this._moveItemTo(sourceModels[0].getId(), targetsModel.getId(), target.getPosition() == 'before');
+                     } else {
+                        // source.each(function (item) {
+                        //    item.getDomElement().hide()
+                        // });
+                     }
                   }
                }
             }
          },
-
+         _getPlaceHolder: function(dragObject) {
+            var placeholder = dragObject.getSource().at(0);
+            this._placeHolder = ;
+         },
          _canDragMove: function(dragObject) {
             var source = dragObject.getSource();
             return dragObject.getTarget() &&
@@ -3724,6 +3741,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
+            this._toggleDragItems(dragObject, true);
             if (droppable) {
                var
                   target = dragObject.getTarget(),
