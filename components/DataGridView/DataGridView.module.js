@@ -962,7 +962,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().addCallback(function(editInPlace) {
+            return editInPlace.showEip(model, options, withoutActivateFirstControl);
+         }) : Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
