@@ -55,8 +55,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _template: template,
 
-      _initInnerAction: function (container) {
-         IconButton.superclass._initInnerAction.call(this, container);
+      _containerReady: function (container) {
+         IconButton.superclass._containerReady.call(this, container);
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
           * в котором прописаны поведение и цвета для иконок по ховеру*/

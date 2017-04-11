@@ -3,13 +3,15 @@ define('js!SBIS3.CONTROLS.Button',
       'Core/core-extend',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
+      'Core/core-functions',
       'css!SBIS3.CONTROLS.Button',
       'css!WS.Controls.Button/resources/ButtonCommonStyles'
    ],
 
    function (extend,
              Compatible,
-             template) {
+             template,
+             functions) {
 
       'use strict';
 
@@ -22,9 +24,10 @@ define('js!SBIS3.CONTROLS.Button',
 
             constructor: function(cfg) {
 
-               this._options = cfg;
 
-               this.deprecatedContr(cfg);
+               this._options = functions.shallowClone(cfg);
+
+               this.deprecatedContr(this._options);
 
                this._thisIsInstance = true;
 

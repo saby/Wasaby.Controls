@@ -41,7 +41,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             tooltip: '',
             icon: '',
             text: ''
-         }
+         },
+         _container: null
       },
 
       _isControlActive: false,
@@ -99,31 +100,34 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          return markup;
       },
 
-      _conatiner: null,
-
       setContainer: function(val) {
          if (!val)
             return;
 
-         if (this._conatiner && !this._conatiner.startTag && typeof(this._conatiner.unbind) === 'function')
-            this._conatiner.unbind();
+         try {
+            this._container.unbind();
+         }catch(e){}
 
-         this._conatiner = val;
+         this._container = val;
 
          try{
-            this._conatiner[0].wsControl = this;
+            if (!this._container[0].startTag)
+               this._container[0].wsControl = this;
          }catch (e){}
 
-         this._initInnerAction(val);
+         this._initInnerAction(this._container);
       },
 
       _initInnerAction: function(container)
       {
-         var self = this;
-
-         if (window && container && !container.startTag) {
-            container.on('click', self._onClickHandler.bind(this));
+         if (window && container && !container[0].startTag) {
+            container.on('click', this._onClickHandler.bind(this));
          }
+         this._containerReady(container);
+      },
+
+      _containerReady:function(container){
+
       },
 
       getAttr: function (attrName) {
@@ -138,7 +142,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       fixIcon: function() {
-         if (this._options.icon && this._options.icon.indexOf(":")){
+         if (this._options.icon && this._options.icon.indexOf(":")>-1){
             this._options.icon = this._options.icon.split(":")[1];
          }
       },
@@ -181,9 +185,6 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
          if (window) {
             this._container = $(cfg.container || cfg.element);
-            try {
-               this._container[0].wsControl = this;
-            }catch(e){}
          } else {
             this._container = cfg.container || cfg.element;
          }
@@ -261,6 +262,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       ///resources/Obmen_soobscheniyami_-_bazovyj/components/SendMessageInternal/Buttons/ButtonMixin/ButtonMixin.module.js
       getParent: function () {
          return this._options.parent;
+      },
+
+      getTopParent: function(){
+         return this._options.parent.getTopParent();
       },
       ///resources/Obmen_soobscheniyami_-_bazovyj/components/SendMessageInternal/SendMessageInternal.module.js : 2438
       setEnabled: function (value) {
@@ -444,7 +449,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       //for working getChildControlByName
       setParent: function (parent) {
          this._options.parent = parent;
-         if (!parent._childsMapId[this._options.id]) {
+
+         if (parent._childsMapId[this._options.id]!==0 && !parent._childsMapId[this._options.id]) {
             parent._childControls.push(this);
             parent._childsMapId[this._options.id] = parent._childControls.length - 1;
             parent._childsMapName[this._options.name] = parent._childControls.length - 1;
