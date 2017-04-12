@@ -8,10 +8,16 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
    function () {
    'use strict';
 
+   /**
+    *
+    * @class SBIS3.CONTROLS.Utils.LinkWrap
+    * @public
+    * @author Борисов Пётр Сергеевич
+    */
    var
       urlRegExpString = '(https?|ftp|file):\/\/[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/([-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()\'\[\\\]](?!nbsp;|amp;nbsp;))*)*',
       excludeLinkString = '<[\\s]*a[\\s\\S]*?>[\\s\\S]*?<\/a>|',
-      WrapUtil = {
+      WrapUtil = /** SBIS3.CONTROLS.Utils.LinkWrap.prototype */{
          urlRegExpString: urlRegExpString,
          excludeLinkString: excludeLinkString,
          /**
