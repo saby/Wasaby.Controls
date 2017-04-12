@@ -11,11 +11,11 @@
 @bg:                                      @secondary-color;
 @default-text-color:                      @white-color;
 
-@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
-@font-basic-size:                         14px;
+@default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
+@default-font-size:                       14px;
 @popup-font-size:                         14px;
 @font-folder-size:                        14px;
-@font-basic-line-height:                  20px;
+@default-font-line-height:                20px;
 
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
 @closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -40px;
@@ -47,7 +47,7 @@
 
 // Normal button
 @button-font-size:                        24px;
-@button-font:                             @button-font-size @font-basic-name;
+@button-font:                             @button-font-size @default-font-name;
 @button-text-color:                       @black-color;
 @button-hover-text-color:                 @button-text-color;
 @button-text-alignment:                   center;
@@ -144,8 +144,8 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font-size:                    (@font-basic-size * 1.285714285714286);
-@button-big-font:                         @button-big-font-size @font-basic-name;
+@button-big-font-size:                    (@default-font-size * 1.285714285714286);
+@button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-height:                       58px;
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
@@ -660,7 +660,7 @@
 
 @month-view-day-border-spacing:                   1px;
 
-@month-view-day-header-font:                      11px @font-basic-name;
+@month-view-day-header-font:                      11px @default-font-name;
 @month-view-day-header-text-alignment:            center;
 
 @month-view-day-body-font:                        @month-view-font;
