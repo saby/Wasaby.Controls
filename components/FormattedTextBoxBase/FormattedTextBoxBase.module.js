@@ -1038,9 +1038,9 @@ define(
 
       /**
        * Обработка события фокусировки на элементе
-       * TODO пока работает только в IE8+ и FireFox
        * @private
        */
+      //TODO пока работает только в IE8+ и FireFox
       _focusHandler: function() {
          var
             child = !this._getFormatModel().model[0].isGroup ? 1 : 0,

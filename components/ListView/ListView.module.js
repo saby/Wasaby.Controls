@@ -2446,10 +2446,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnPropertyChanged('itemsActions');
          },
          /**
-          * todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
           * @returns {boolean}
           * @private
           */
+         // todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          _isSearchMode: function() {
             return this._options.hierarchyViewMode;
          },
