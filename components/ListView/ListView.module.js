@@ -3609,6 +3609,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
                   this.getContainer().addClass('controls-ListView__verticalDragNDrop');
                }
+               var p = this._getPlaceHolder(dragObject);
+               p.insertAfter(source[0].getDomElement());
                this._toggleDragItems(dragObject, false);
                return true;
             }
@@ -3616,7 +3618,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _toggleDragItems: function (dragObject, show) {
             dragObject.getSource().each(function (item) {
-               item.getDomItem().toggleClass('ws-hidden', show);
+               item.getDomElement().toggleClass('ws-hidden', !show);
             });
          },
          /**
@@ -3662,8 +3664,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _getPlaceHolder: function(dragObject) {
-            var placeholder = dragObject.getSource().at(0);
-            this._placeHolder = ;
+            if (!this._placeHolder) {
+               var item = dragObject.getSource().at(0);
+               this._placeHolder = item.getDomElement().clone();
+            }
+            return this._placeHolder;
          },
          _canDragMove: function(dragObject) {
             var source = dragObject.getSource();
@@ -3742,6 +3747,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _endDragHandler: function(dragObject, droppable, e) {
             this._toggleDragItems(dragObject, true);
+            this._placeHolder.remove();
+            this._placeHolder = null;
             if (droppable) {
                var
                   target = dragObject.getTarget(),
