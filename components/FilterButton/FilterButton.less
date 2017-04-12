@@ -21,7 +21,6 @@
    width: @controls-filterButton-button-width;
    height: @controls-filterButton-button-height;
    margin: @controls-filterButton-button-margin;
-   display: inline-block;
    cursor: pointer;
    float: right;
    font-size: @filter-button-font-size;
@@ -32,11 +31,25 @@
 }
 
 .controls__filterButton__filterLine {
+   .inline-flexbox();
+   .align-items(center);
+   max-width: ~'calc(100% - '@controls-filterButton-button-width + 8px ~')';
    height: @controls-filterButton-button-height;
    overflow: hidden;
    margin: 8px 0 8px 0;
-   vertical-align: @controls-filterLine-align;
-   text-align: @controls-filterLine-text-align;
+   cursor: pointer;
+   color: @controls-filterLine-link-color;
+   
+   &:not(.ws-disabled) {
+      .controls__filterButton__filterLine-items:hover {
+         .controls__filterButton__filterLine-text, .controls__filterButton__filterLine-arrow {
+            color: @hover-color;
+         }
+         .controls__filterButton__filterLine-text {
+            text-decoration: underline;
+         }
+      }
+   }
 
    &.ws-disabled {
       .controls__filterButton__filterLine-items {
@@ -47,76 +60,18 @@
             color: @default-disabled-color !important;
             cursor: default;
          }
-
-         &:hover {
-            color: @default-disabled-color;
-            .controls__filterButton__filterLine-text {
-               text-decoration: none;
-            }
-         }
       }
    }
 }
 
-.controls__filterButton__filterLine-table {
-   display: @controls-filterLine-wrapper-display;
-   height: @controls-filterLine-wrapper-height;
-   float: left;
-}
-
-.controls__filterButton__filterLine-table-row {
-   display: @controls-filterLine-line-display;
-}
-
-.controls__filterButton__filterLine-copyCross {
-   position: relative;
-   display: inline-block;
-   float: right;
-   top: @controls-filterLine-copyCross-top;
-   margin-left: @control`s-filterLine-copyCross-margin;
-   background-color: @white-color;
-   .box-shadow(@controls-filterLine-copyCross-shadow);
-
-   span {
-      color: @controls-filterLine-link-color
-   }
-}
-
 .controls__filterButton__filterLine-items {
+   .inline-flexbox();
+   .align-items(center);
    .text-overflow();
-   display: @controls-filterLine-items-display;
-   text-align: right;
-   vertical-align: middle;
-
-   cursor: pointer;
-   color: @controls-filterLine-link-color;
-   text-decoration: none;
-   line-height: @controls-filterLine-items-line-height;
-   padding: @controls-filterLine-items-padding;
-   box-sizing: border-box;
 }
 
-.controls__filterButton__filterLine-arrow {
-   height: @controls-filterLine-arrow-height;
-   vertical-align: middle;
-   margin-right: @controls-filterButton-button-arrow-margin;
-}
-
-.controls__filterButton__filterLine-items:hover {
-   color: @hover-color;
-   .controls__filterButton__filterLine-arrow {
-      color: @hover-color !important;
-   }
-   .controls__filterButton__filterLine-text {
-      text-decoration: underline;
-   }
-}
-
-.controls__filterButton__filterLine-cross {
-   display: @controls-filterLine-items-display;
-   cursor: pointer;
-   vertical-align: middle;
-   position: relative;
+.controls__filterButton__filterLine-text {
+   .text-overflow();
 }
 
 .ws-is-desktop-platform {
@@ -126,38 +81,6 @@
             &:hover {
                color: @icon-color-disabled !important;
             }
-         }
-      }
-   }
-}
-
-// ФИКС ДЛЯ ФФ
-.ws-is-firefox {
-   .controls__filterButton {
-      .controls__filterButton__filterLine {
-         margin: @controls-filterButton-button-margin-ff;
-         white-space: normal;
-
-         .controls__filterButton__filterLine-table {
-            display: inline-block;
-            float: none;
-
-            .controls__filterButton__filterLine-table-row {
-               height: 22px;
-
-               .controls__filterButton__filterLine-arrow {
-                  vertical-align: baseline;
-                  position: relative;
-                  top: 2px;
-               }
-            }
-
-         }
-         .controls__filterButton__filterLine-copyCross {
-            top: @controls-filterLine-copyCross-ff-top;
-         }
-         .controls__filterButton__filterLine-cross {
-            top: 1px;
          }
       }
    }

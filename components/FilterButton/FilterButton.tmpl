@@ -1,9 +1,9 @@
 <div class="controls__filterButton {{ 'controls__filterButton-' + filterAlign }}">
-    <div class="controls__filterButton-button icon-24 icon-size icon-FilterNew icon-primary action-hover"></div>
     <ws:if data="{{ filterLineComponent }}">
         <ws:partial template="{{ filterLineComponent }}" name="filterLine" activableByClick="{{ false }}"/>
     </ws:if>
     <ws:else>
         <ws:partial template="{{ filterLineTemplate }}"/>
     </ws:else>
+    <div class="controls__filterButton-button icon-24 icon-size  icon-Delete icon-FilterNew icon-primary action-hover"></div>
 </div>

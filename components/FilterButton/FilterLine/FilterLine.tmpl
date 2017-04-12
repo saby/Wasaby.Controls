@@ -1,14 +1,16 @@
 <div class="controls__filterButton__filterLine">
-    <div class="controls__filterButton__filterLine-table">
-        <div class="controls__filterButton__filterLine-table-row">
-        <span class="controls__filterButton__filterLine-items ws-hover-target" data-bind="attr : {title : 'titleText'}">
-            <i class="controls__filterButton__filterLine-arrow icon-size icon-16 icon-DayForward icon-primary ws-hidden" data-bind="{visible: 'filterChanged'}"></i>
-            <span class="controls__filterButton__filterLine-text" data-bind="{html: 'linkText'}"></span>
-        </span>
-            <i class="controls__filterButton__filterLine-cross icon-size icon-16 icon-Close icon-disabled action-hover ws-hidden" title="Очистить фильтр" data-bind="{visible: 'filterChanged'}"></i>
-        </div>
+    <div class="controls__filterButton__filterLine-items">
+        <i class="controls__filterButton__filterLine-arrow icon-size icon-16 icon-DayForward icon-primary ws-hidden" data-bind="{visible: 'filterChanged'}"></i>
+        <span class="controls__filterButton__filterLine-text" data-bind="{html: 'linkText'}"></span>
     </div>
-    <div class="controls__filterButton__filterLine-copyCross">
-        <i class="controls__filterButton__filterLine-cross icon-size icon-16 icon-Close icon-disabled action-hover ws-hidden" title="Очистить фильтр" data-bind="{visible: 'filterChanged'}"></i>
-    </div>
+    <ws:SBIS3.CONTROLS.IconButton
+        visible="{{ 'filterChanged'|bind:false }}"
+        icon="icon-size icon-16 icon-Close icon-disabled icon-primary"
+        command="reset-filter">
+        <ws:commandArgs>
+            <ws:Array>
+                <ws:Boolean>true</ws:Boolean>
+            </ws:Array>
+        </ws:commandArgs>
+    </ws:SBIS3.CONTROLS.IconButton>
 </div>

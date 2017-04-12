@@ -48,11 +48,6 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
             updateContext();
             context.subscribe('onFieldsChanged', updateContext);
-            this._container.on('click', '.controls__filterButton__filterLine-cross', function() {
-               if(self.isEnabled()) {
-                  self.sendCommand('reset-filter', true);
-               }
-            });
          }
       });
 
