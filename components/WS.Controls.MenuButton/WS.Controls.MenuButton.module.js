@@ -94,7 +94,6 @@ define('js!WS.Controls.MenuButton', [
              *    <option name="parentProperty">Раздел@</option>
              * </pre>
              */
-             //buttonTypeClass: ' controls-Button',
          }
       },
 
