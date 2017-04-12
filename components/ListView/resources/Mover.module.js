@@ -272,6 +272,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                if (itemsIndex == -1) {
                   items.add(movedItem);
                   itemsIndex = items.getCount()-1;
+                  movedItem = items.at(itemsIndex);
                }
                if (position !== 'on') {
                   if (this._options.parentProperty) {
