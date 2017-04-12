@@ -1,6 +1,10 @@
 /**
  * Created by am.gerasimov on 12.04.2017.
  */
+
+/**
+ * Утилита для работы компонентов с интерфейсами selectable / multiselectable и асинхронной загрузкой записей.
+ */
 define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], function(cInstance) {
    
    var delayedEvents = {
@@ -39,6 +43,13 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], functio
       return hasRequiredFields || newItem === null || (!hasRequiredFields && !isEmptySelection && isModel);
    }
    
+   /**
+    * Задержка для событий onSelectedItemsChange, onSelectedItemChange - они стреляют по загрузке треубемых записей
+    * @param notify
+    * @param notifyArgs
+    * @param instance
+    * @returns {*}
+    */
    function delayedNotify(notify, notifyArgs, instance) {
       var event = notifyArgs[0],
           args = Array.prototype.slice.call(notifyArgs, 1);
