@@ -9,7 +9,7 @@
    .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @blue-dark-color;
-      padding-left: 4px;
+      padding-left: @back-button-arrow-paddingleft;
       white-space: nowrap;
       text-align: left;
       max-width: calc(~"100% - 8px");
@@ -93,12 +93,12 @@
    .controls-BackButton{
       &:hover {
          .controls-BackButton__caption {
-            color: @blue-dark-color;
+            color: @back-button-caption-hover-color;
          }
       }
       &:active{
          .controls-BackButton__caption {
-            color: @primary-color;
+            color: @back-button-caption-active-color;
          }
       }
    }
@@ -107,7 +107,7 @@
 .ws-is-desktop-platform {
    .controls-BackButton__caption.controls-Link {
       &:hover:not(.ws-disabled):not(.controls-Click__active):hover {
-         color: @primary-color;
+         color: @back-button-caption-active-color;
          .controls-Link-link {
             text-decoration: none;
          }

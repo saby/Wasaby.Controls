@@ -95,12 +95,6 @@ define('js!WS.Controls.Button', [
          }
       },
 
-      _modifyOptions : function() {
-         var options = Button.superclass._modifyOptions.apply(this, arguments);
-         options.className += ' controls-ButtonBase';
-         return options;
-      },
-
       $constructor: function() {
          if (this._options.primary === true) {
             this._registerDefaultButton();
@@ -108,11 +102,13 @@ define('js!WS.Controls.Button', [
       },
 
       init : function() {
-          Button.superclass.init.call(this);
+         Button.superclass.init.call(this);
          /*Хак чтобы в IE не прыгал тег button при зажатии мышки*/
-         this._container.click(function(e){
-            e.preventDefault();
-         });
+         if (constants.browser.isIE) {
+            this._container.mousedown(function(e){
+               e.preventDefault();
+            });
+         }
       },
 
       setCaption: function(caption){
@@ -176,7 +172,7 @@ define('js!WS.Controls.Button', [
          if (!icon) {
              content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          } else {
-             content = $('<i class="controls-Button__icon js-controls-Button__icon' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text>"' + caption + '</span>');
+             content = $('<i class="controls-Button__icon js-controls-Button__icon' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
          }
          $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
          this._container.html(content);

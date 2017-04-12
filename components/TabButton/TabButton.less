@@ -143,7 +143,7 @@
          }
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @font-basic-size;
+            font-size: @default-font-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -161,7 +161,7 @@
          font-weight: @tab-button-large-secondAddText-font-weight;
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @font-basic-size;
+            font-size: @default-font-size;
          }
          .controls-TextBox .controls-TextBox__fieldWrapper{
            padding-top: 1px;
@@ -175,14 +175,14 @@
       height: @tab-button-inner-height;
       max-width: @tab-button-large-inner-max-width;
       &:before {
-         content: @tab-button-inner-after-content;
-         display: @tab-button-inner-after-display;
-         width: @tab-button-inner-after-width;
-         height: @tab-button-inner-after-height;
-         background-color: @tab-button-inner-after-bg-color;
-         position: @tab-button-inner-after-position;
-         bottom: @tab-button-inner-after-bottom;
-         z-index: @tab-button-inner-after-z-index;
+        content: @tab-button-inner-after-content;
+        display: @tab-button-inner-after-display;
+        width: @tab-button-inner-after-width;
+        height: @tab-button-inner-after-height;
+        background-color: @tab-button-inner-after-bg-color;
+        position: @tab-button-inner-after-position;
+        bottom: @tab-button-inner-after-bottom;
+        z-index: @tab-button-inner-after-z-index;
       }
       .controls-TabButton__icon {
          position: @tab-button-icon-position;
@@ -265,14 +265,14 @@
     border-color: transparent;
     .controls-TabButton__inner{
       border-color: transparent;
-      color: #313E78;
+      color: @tab-button-simple-inner-color;
       &:before{
         display: block;
         z-index: 1000;
       }
     }
     .controls-TabButton__bottomLine{
-      height: 3px;
+      height: @tab-control-smple-bottomline-height;
       left: 0;
       right: 0;
       bottom: -1px;
@@ -281,12 +281,12 @@
     }
     &.controls-Checked__checked {
       .controls-TabButton__inner{
-        color: #0055BB;
+        color: @tab-button-simple-inner-checked-color;
         background: transparent;
         padding: 0 6px;
       }
       .controls-TabButton__bottomLine{
-        background: #0055BB!important;
+        background: @tab-button-simple-checked-bottomline-color !important;
       }
     }
     &:hover {
@@ -297,7 +297,6 @@
     }
   }
 }
-
 .controls-TabButtons__simple-view-mini{
   .controls-TabButton {
     height: 25px;

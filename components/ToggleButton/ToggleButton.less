@@ -16,11 +16,10 @@
       }
 
       .controls-Button__icon {
-        .button-mixin(@button-checked-border-width; @button-text-margin-left; @button-text-margin-right; 16px);
-      }
-
-      .controls-Button__icon.icon-24 {
-        .button-mixin(@button-checked-border-width; @button-text-margin-left; @button-text-margin-right; 24px);
+        margin-left:  @button-text-margin-left - @button-checked-border-width;
+        & + .controls-Button__text {
+          margin: @button-checked-text-icon-margin;
+        }
       }
     }
   }
@@ -31,14 +30,12 @@
       margin-left: @button-big-checked-text-margin-left;
       margin-right: @button-big-checked-text-margin-right;
     }
+
     .controls-Button__icon {
-      .button-mixin(@button-checked-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 16px);
-    }
-    .controls-Button__icon.icon-24 {
-      .button-mixin(@button-checked-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 24px);
-    }
-    .controls-Button__icon.icon-32 {
-      .button-mixin(@button-checked-border-width; @button-big-text-margin-left; @button-big-text-margin-right; 32px);
+      margin-left:  @button-big-text-margin-left - @button-checked-border-width;
+      & + .controls-Button__text {
+        margin: @button-big-checked-text-icon-margin;
+      }
     }
 }
 

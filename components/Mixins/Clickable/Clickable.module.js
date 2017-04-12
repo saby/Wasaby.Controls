@@ -61,10 +61,6 @@ define('js!SBIS3.CONTROLS.Clickable', [
             if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
             }
-            //В IE предотвратим нативное смещение текста в правый нижний угол внутри кнопки
-            if (constants.browser.isIE) {
-               e.preventDefault();
-            }
             //return false;
          });
       },

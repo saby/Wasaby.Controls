@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       around: {
          _modifyOptions: function(parentFnc, opts) {
             var options = parentFnc.call(this, opts);
-            options.className += ' controls-Suggest';
+            options.cssClassName += ' controls-Suggest';
             options.pickerClassName += ' controls-Suggest__picker';
             return options;
          }
@@ -776,6 +776,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
 
             this._listReversed = !this._listReversed;
+            /* Сбрасываем выбранную запись в списке, чтобы после перерисовки курсор установился на первую запись
+             и после переворота был на последней.
+             Если запись не сбрасывать курсор будет вверху после переворота. */
+            this.getList().setSelectedKey(null);
             items.assign(itemsArray.reverse());
          }
       }

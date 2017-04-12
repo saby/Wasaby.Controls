@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.MenuButton', [
       _modifyOptions : function() {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
          opts.pickerClassName += ' controls-MenuButton__Menu';
-         opts.className += ' controls-Button' + (opts.primary ? ' controls-Button__primary' : ' controls-Button__default');
+         opts.cssClassName += ' controls-Button' + (opts.primary ? ' controls-Button__primary' : ' controls-Button__default');
          return opts;
       }
    });

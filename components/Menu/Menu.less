@@ -1,5 +1,5 @@
 .controls-Menu__Popup {
-   font:  @popup-font-size @font-basic-name;
+   font:  @popup-font-size @default-font-name;
    padding: @menu-padding;
    margin: @menu-margin;
    .flexbox();
@@ -110,7 +110,7 @@
       cursor: pointer;
       font-size: @popup-font-size;
       font-weight: bold;
-      background-color: #F4F4F4;
+      background-color: @menu-header-bg-color;
       overflow: hidden;
       .flexbox();
       .align-items(center);
@@ -120,7 +120,7 @@
          .align-items(center);
       }
       .controls-Menu__header-caption {
-         color: @blue-dark-color;
+         color: @menu-header-caption-color;
          .flex-shrink(0);
       }
       .controls-Menu__header-icon + .controls-Menu__header-caption{
@@ -148,30 +148,6 @@
                   left: -6px;
                }
             }
-         }
-      }
-   }
-}
-
-.ws-is-firefox {
-   .controls-Menu {
-      .controls-Menu__header {
-         .icon-24 {
-            top: -1px;
-            position: relative;
-         }
-      }
-   }
-}
-
-// удалить в .230
-.ws-is-ie8, .ws-is-ie9 {
-   .controls-Menu {
-      .controls-Menu__header {
-         .controls-Menu__header-caption {
-            vertical-align: top;
-            position: relative;
-            top: -1px;
          }
       }
    }

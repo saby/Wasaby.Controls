@@ -1384,20 +1384,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
-         this._onCollectionItemChange = onCollectionItemChange.bind(this);
          this._onAfterCollectionChange = onAfterCollectionChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.subscribeTo(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
          this.unsubscribeFrom(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
        /**
@@ -2535,7 +2532,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                case IBindCollection.ACTION_CHANGE:
                   newItems.forEach(function(item, i) {
-                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                     onCollectionItemChange.call(this, event, item, newItemsIndex + i, newItems.properties);
                   }, this);
                   break;
 

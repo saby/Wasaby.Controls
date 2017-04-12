@@ -28,8 +28,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CommonHandlers',
    'js!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.MassSelectionController',
-   'js!SBIS3.CONTROLS.EditInPlaceHoverController',
-   'js!SBIS3.CONTROLS.EditInPlaceClickController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
@@ -65,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
+    TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover) {
 
@@ -868,6 +866,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
+            // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
+            if (cDetection.isMobilePlatform && window) {
+               requirejs(['js!SBIS3.CONTROLS.EditInPlaceHoverController', 'js!SBIS3.CONTROLS.EditInPlaceClickController']);
+            }
+
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
@@ -1437,6 +1440,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 // при клике по ссылке необходимо показывать стандартное меню,
                 // т.к. иначе ломаем привычное для пользователя поведение
                 && event.target.nodeName.toLowerCase() !== 'a'
+                && event.target.className.indexOf('LinkDecorator__image') === -1
          },
 
          /*
@@ -1578,7 +1582,7 @@ define('js!SBIS3.CONTROLS.ListView',
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
-            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000){
+            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000 && this.getItems().getMetaData().more){
                this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
@@ -1824,6 +1828,18 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         setActive: function() {
+            var
+               params = arguments;
+            if (this.isEdit()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.setActive.apply(editInPlace, params);
+               });
+            } else {
+               ListView.superclass.setActive.apply(this, params);
+            }
+         },
+
          _toggleEipHoveredHandlers: function(toggle) {
             var methodName = toggle ? 'subscribe' : 'unsubscribe';
             this[methodName]('onChangeHoveredItem', this._onChangeHoveredItemHandler);
@@ -1839,8 +1855,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _itemsReadyCallback: function() {
             ListView.superclass._itemsReadyCallback.apply(this, arguments);
             if (this._hasEditInPlace()) {
-               this._getEditInPlace().setItems(this.getItems());
-               this._getEditInPlace().setItemsProjection(this._getItemsProjection());
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.setItems(this.getItems());
+                  editInPlace.setItemsProjection(this._getItemsProjection());
+               }.bind(this));
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -1848,7 +1866,9 @@ define('js!SBIS3.CONTROLS.ListView',
             return function() {
                var args = arguments;
                if (this._hasEditInPlace()) {
-                  return this._getEditInPlace().endEdit(true).addCallback(function() {
+                  return this._getEditInPlace().addCallback(function(editInPlace) {
+                     return editInPlace.endEdit(true);
+                  }).addCallback(function() {
                      return handler.apply(this, args)
                   }.bind(this));
                } else {
@@ -1896,7 +1916,9 @@ define('js!SBIS3.CONTROLS.ListView',
          setEditingTemplate: function(template) {
             this._options.editingTemplate = template;
             if (this._hasEditInPlace()) {
-               this._getEditInPlace().setEditingTemplate(template);
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.setEditingTemplate(template);
+               });
             }
          },
 
@@ -1911,7 +1933,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(model, options, withoutActivateFirstControl) {
-            return this._canShowEip() ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
+            return this._canShowEip() ? this._getEditInPlace().addCallback(function(editInPlace) {
+               return editInPlace.showEip(model, options, withoutActivateFirstControl);
+            }) : Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1962,7 +1986,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this.showEip(this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
                // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
             } else if (this._hasEditInPlace()) {
-               this._getEditInPlace().hide();
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.hide()
+               });
             }
          },
 
@@ -1974,9 +2000,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // скрываем тулбар на время перерисовки т.к. если изменится количество элементов -> изменится размер таблицы,
             // то операции повиснут в воздухе до проверки в drawItemsCallback
             // синхронно пересчитывать позицию тулбара нельзя т.к это существенно увеличит время отрисовки
-            if(this._itemsToolbar && this._itemsToolbar.isVisible()) {
-               this._itemsToolbar.hide();
-            }
+            this._hideItemsToolbar();
             //TODO: При перерисовке разрушаем редактор, иначе ItemsControlMixin задестроит все контролы внутри,
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
@@ -1988,14 +2012,8 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         /**
-          * @private
-          */
          _getEditInPlace: function() {
-            if (!this._hasEditInPlace()) {
-               this._createEditInPlace();
-            }
-            return this._editInPlace;
+            return this._hasEditInPlace() ? Deferred.success(this._editInPlace) : this._createEditInPlace();
          },
 
          _hasEditInPlace: function() {
@@ -2004,8 +2022,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createEditInPlace: function() {
             var
-               controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
-            this._editInPlace = new controller(this._getEditInPlaceConfig());
+               self = this,
+               result = new Deferred();
+            requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function(controller) {
+               result.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+            });
+            return result;
          },
 
          _editInPlaceMouseDownHandler: function(event) {
@@ -2024,7 +2046,13 @@ define('js!SBIS3.CONTROLS.ListView',
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
          validate: function() {
-            var editingIsValid = !this.isEdit() || this._getEditInPlace().isValidChanges();
+            var
+               editingIsValid = true;
+            if (this.isEdit()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editingIsValid = editInPlace.isValidChanges();
+               });
+            }
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
@@ -2037,8 +2065,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
-               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-               this._getEditInPlace()._destroyEip();
+               this._getEditInPlace().addCallback(function(editInPlace) {  // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
+                  editInPlace.endEdit();
+                  editInPlace._destroyEip();
+               });
             }
          },
 
@@ -2180,13 +2210,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Boolean} Значение true нужно интерпретировать как "Редактирование по месту активно".
           */
          isEdit: function() {
-            return this._hasEditInPlace() && this._getEditInPlace().isEdit();
+            var
+               result = false;
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  result = editInPlace.isEdit();
+               });
+            }
+            return result;
          },
-
-         _getEditingRecord: function() {
-            return this.isEdit() ? this._getEditInPlace()._getEditingRecord() : undefined;
-         },
-
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
@@ -2284,14 +2316,19 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _showItemsToolbar: function(target) {
             var
-                toolbar = this._getItemsToolbar(),
-                editingRecord = this._getEditingRecord();
+                toolbar = this._getItemsToolbar();
             toolbar.show(target, this._touchSupport);
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
             if (this._options.editMode.indexOf('toolbar') === -1) {
-               toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
+               if (this.isEdit()) {
+                  this._getEditInPlace().addCallback(function(editInPlace) {
+                     toolbar._toggleEditClass(editInPlace.getEditingRecord().getId() == target.key);
+                  });
+               } else {
+                  toolbar._toggleEditClass(false);
+               }
             }
          },
 
@@ -2513,7 +2550,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
-               this._getEditInPlace()._onResizeHandler();
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace._onResizeHandler();
+               });
             }
          },
          _removeItems: function(items, groupId){
@@ -2823,6 +2862,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
             }
+             // скрываем тулбар на время перерисовки т.к. если изменится количество элементов -> изменится размер таблицы,
+             // то операции повиснут в воздухе до проверки в drawItemsCallback
+             // ситуация аналогична с redraw
+            this._hideItemsToolbar();
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             var items;
             if (this._infiniteScrollState.mode == 'down') {
@@ -3406,7 +3449,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _cancelEdit: function() {
-            return this._getEditInPlace().endEdit();
+            return this._getEditInPlace().addCallback(function(editInPlace) {
+               return editInPlace.endEdit();
+            });
          },
          /**
           * Завершает редактирование по месту с сохранением изменений.
@@ -3425,7 +3470,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _commitEdit: function() {
-            return this._getEditInPlace().endEdit(true);
+            return this._getEditInPlace().addCallback(function(editInPlace) {
+               return editInPlace.endEdit(true);
+            });
          },
          destroy: function () {
             this._destroyEditInPlaceController();

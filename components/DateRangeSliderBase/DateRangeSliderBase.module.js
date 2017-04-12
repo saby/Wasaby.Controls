@@ -80,8 +80,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
 
       _modifyOptions: function() {
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         opts._caption = this._getCaption(opts);
          return opts;
       },
 
@@ -100,14 +99,29 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       },
 
       _updateValueView: function () {
-         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(),
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         var caption = this._getCaption();
          if (this._options.type === 'normal') {
             this.getContainer().find(['.', this._cssRangeSlider.value].join('')).text(caption);
          } else {
             this.getChildControlByName('Link').setCaption(caption);
          }
 
+      },
+
+      _getCaption: function (opts) {
+         opts = opts || this._options;
+         // В качестве пустого значения используем неразрывный пробел @nbsp;('\xA0') что бы не ехала верстка
+         return dateHelpers.getFormattedDateRange(
+            opts.startValue,
+            opts.endValue,
+            {
+               contractToMonth: true,
+               fullNameOfMonth: true,
+               contractToQuarter: true,
+               contractToHalfYear: true,
+               emptyPeriodTitle: opts.showUndefined ? rk('Период не указан') : '\xA0'
+            }
+         );
       },
 
       _onClickHandler: function(event) {

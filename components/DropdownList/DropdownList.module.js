@@ -353,14 +353,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (cfg.type == 'duplicateHeader'){
-               cfg.pickerClassName += 'controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
+               cfg.pickerClassName += ' controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
             }
             else if (cfg.type == 'titleHeader'){
-               cfg.pickerClassName += 'controls-dropdownlist__showHead controls-DropdownList__type-title';
+               cfg.pickerClassName += ' controls-dropdownlist__showHead controls-DropdownList__type-title';
             }
             else if (cfg.type == 'fastDataFilter'){
                cfg.pickerClassName += ' controls-DropdownList__type-fastDataFilter controls-DropdownList__hideSelectedInList';
-               cfg.className += ' controls-DropdownList__type-fastDataFilter';
+               cfg.cssClassName += ' controls-DropdownList__type-fastDataFilter';
             }
             return cfg;
          },
@@ -374,7 +374,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             //Заполняем опцию className навешенными css-модификаторами
             for (var i = 0, l = cssModificators.length; i < l; i++){
                if (this.getContainer().hasClass(cssModificators[i]) && this._options.className.indexOf(cssModificators[i]) < 0){
-                  this._options.className += ' ' + cssModificators[i];
+                  this._options.cssClassName += ' ' + cssModificators[i];
                }
             }
             // Собираем header через шаблон, чтобы не тащить стили прикладников
