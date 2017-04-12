@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "html!SBIS3.CONTROLS.HighCharts",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
-   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
