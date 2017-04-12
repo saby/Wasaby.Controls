@@ -81,10 +81,10 @@ define('js!SBIS3.CONTROLS.CheckBox', [
       },
 
       _modifyOptions: function() {
-         var
-             cfg = CheckBox.superclass._modifyOptions.apply(this, arguments);
-         cfg._contentTemplate = cfg.contentTemplate || defaultContentTemplate;
-         return cfg;
+         var options = CheckBox.superclass._modifyOptions.apply(this, arguments);
+         options.contentTemplate = options.contentTemplate || defaultContentTemplate;
+
+         return options;
       },
 
       $constructor: function() {
