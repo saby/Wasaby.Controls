@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                return this._eip.getTarget();
             },
 
-            _getEditingRecord: function() {
+            getEditingRecord: function() {
                return this.isEdit() ? this._getEditingEip().getEditingRecord() : undefined;
             },
 
