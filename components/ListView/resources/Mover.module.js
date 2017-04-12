@@ -268,33 +268,26 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          var items = this.getItems();
          if (items) {
             movedItems.forEach(function (movedItem) {
+               var itemsIndex = items.getIndex(movedItem);
+               if (itemsIndex == -1) {
+                  items.add(movedItem);
+                  itemsIndex = items.getCount()-1;
+                  movedItem = items.at(itemsIndex);
+               }
                if (position !== 'on') {
                   if (this._options.parentProperty) {
                      //если перемещение было по порядку и иерархии одновременно, то надо обновить parentProperty
                      movedItem.set(this._options.parentProperty, target.get(this._options.parentProperty));
                   }
-                  var itemsIndex = items.getIndex(movedItem),
-                     targetIndex = items.getIndex(target);
-                  if (position == ISource.MOVE_POSITION.after) {
-                     targetIndex = (targetIndex + 1) < items.getCount() ? ++targetIndex : items.getCount();
-                  } else {
-                     targetIndex = (targetIndex - 1) > -1 ? targetIndex : 0;
+                  var targetIndex = items.getIndex(target);
+                  if (position == ISource.MOVE_POSITION.after && targetIndex < itemsIndex) {
+                     targetIndex = (targetIndex+1) < items.getCount() ? ++targetIndex : items.getCount();
+                  } else if (position == ISource.MOVE_POSITION.before && targetIndex > itemsIndex) {
+                     targetIndex = targetIndex !==0  ? --targetIndex : 0;
                   }
-                  if (itemsIndex !== -1 && itemsIndex < targetIndex && targetIndex > 0) {
-                     targetIndex--; //если запись по списку сдвигается вниз то после ее удаления индексы сдвинутся
-                  }
-                  items.setEventRaising(false, true);
-                  items.remove(movedItem);
-                  items.add(
-                     movedItem,
-                     targetIndex < items.getCount() ? targetIndex : undefined
-                  );
-                  items.setEventRaising(true, true);
+                  items.move(itemsIndex, targetIndex);
                } else if(this._options.parentProperty) {
                   movedItem.set(this._options.parentProperty, target ? target.getId() : null);
-                  if (items.getIndex(movedItem) == -1) {
-                     items.add(movedItem);
-                  }
                }
             }.bind(this));
          }
