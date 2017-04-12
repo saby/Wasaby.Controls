@@ -233,7 +233,8 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
                   link = '',
                   startLinkLength = 0,
                   linkLength = 0,
-                  length = str.length;
+                  length = str.length,
+                  translate = typeof rk === 'undefined' ? function(text) {return text;} : rk;
                str.replace(startChars, function (str, pos) {
                   idx = pos;
                   startLinkLength = str.length;
@@ -249,7 +250,7 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
                      link += str.substr(idx);
                      idx = length;
                   }
-                  result.push(beforeStr + '<a class="asLink" title="' + rk('Открыть файл (папку)') + '" data-open-file="' + link.replace(/\\/g, '\\\\') + '">' + link + '</a>');
+                  result.push(beforeStr + '<a class="asLink" title="' + translate('Открыть файл (папку)') + '" data-open-file="' + link.replace(/\\/g, '\\\\') + '">' + link + '</a>');
                   if (idx < length) {
                      result.push(str.substr(idx, length));
                   }
