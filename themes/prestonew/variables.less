@@ -76,6 +76,7 @@
 // ------------------ //
 // FilterPanelChooser //
 // ------------------ //
+ @controls-filterLine-items-line-height:							1rem;
 @filter-panel-chooser-default-color:                              #F9F9F9;
 @filter-panel-chooser-hovered-color:                              #EAECEE;
 @filter-panel-chooser-selected-color:                             #F3F3F3;
@@ -124,7 +125,7 @@
 @button-active-border:                    @button-border;
 @button-active-bg:                        #1b2a3b;
 @button-hover-bg: #212e3d;
-@button-bg: transparent;
+@button-bg: 								#324a62;
 // Normal primary button
 @button-primary-text-color:               #e4e4e4;
 @button-primary-border:                  0.07rem solid #d94700;
@@ -267,10 +268,9 @@
 @check-box-icon-height:                         1.714rem;
 @check-box-icon-line-height:                    1.714rem;
 
-@check-box-icon-spritesheet:                    'img/checkbox.png';
 
 @check-box-icon-border:                         1px solid @default-color;
-@check-box-icon-bg:                             transparent;
+@check-box-icon-bg:                          	url(@check-box-icon-spritesheet) 0 1px;
 
 @check-box-icon-hover-bg:                       transparent;
 
@@ -867,8 +867,8 @@
 @list-view-actions-menu-close-width:            1.75rem;
 @list-view-actions-menu-padding:                @menu-padding;
 
-@listView-empty-data-color:                     @black-color;
-@listView-empty-data-font-size:                 15px;
+@listView-empty-data-color:                     #8991A9;
+@listView-empty-data-font-size:                1rem;
 @listView-empty-data-padding-top:               46px;
 
 // --------- //
@@ -1002,6 +1002,10 @@
 @controls-Pager-amount-text :                     #999999;
 
 //FilterButton
+@controls-filterButton-button-width:			2rem;
+@filter-button-font-size:							2rem !important; //перебиваем .icon-24
+
+ @controls-filterButton-button-height:			2rem;	
 @controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       0;
@@ -1147,6 +1151,7 @@
 @tab-button-simple-inner-color:                 #8991A9;
 @tab-control-smple-bottomline-height:          .214rem;
 @tab-button-color:                               #8991A9;
+@tab-control-background-color:					transparent;
 
 @tab-button-font:                               1.43rem 'TensorFont', sans-serif;
 @tab-button-checked-font-size:                  1.43rem;
