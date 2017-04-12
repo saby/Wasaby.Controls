@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _pasteCommand: 'insertText',
          _compatPlaceholder: null,
          _options: {
-            wrapUrls: LinkWrap.wrapUrls,
+            wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: strHelpers.escapeHtml,
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
