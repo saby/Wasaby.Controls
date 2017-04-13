@@ -86,8 +86,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         opts._caption = this._getCaption(opts);
          return opts;
       },
 
