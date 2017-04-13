@@ -1,4 +1,3 @@
-
 define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
@@ -46,7 +45,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             },
 
             getFileLoader: function() {
-               return Di.resolve('ImageUploader').getFileLoader();
+               return Di.resolve('ImageUploader').getFileLoader(this.getParent());
             },
             _blockFocusEvents: function(event) {
                var eventsChannel = EventBus.channel('WindowChangeChannel');
