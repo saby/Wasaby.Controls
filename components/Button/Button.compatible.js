@@ -249,6 +249,15 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       destroy: function () {
          this._destroyed = true;
+         try {
+            this._container.remove();
+         }catch(e){}
+
+         if (this._options.parent._childsMapId[this._options.id]===0 || this._options.parent._childsMapId[this._options.id]) {
+            this._options.parent._childControls[this._options.parent._childsMapId[this._options.id]] = undefined;
+            delete this._options.parent._childsMapId[this._options.id];
+            delete this._options.parent._childsMapName[this._options.name];
+         }
       },
 
       /*For AreaAbstract*/
