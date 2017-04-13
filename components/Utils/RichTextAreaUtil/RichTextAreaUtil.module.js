@@ -82,7 +82,12 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                      var
                         className = getAttribute(content.childNodes[i], 'class');
                      //3 if-блока для поддержки разных версий декорированных ссылок
-                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink') {
+                     //LinkDecorator - версия января 2017
+                     //LinkDecorator__simpleLink - тег <a> с ссылкой
+                     //LinkDecorator__linkWrap - если выделили только одну декорированную ссылку и пытаются её вставить данный класс висит на <a>
+                     //LinkDecorator__decoratedLink - версия февраля 2017
+                     //LinkDecorator__wrap - актуальная версия
+                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink'|| className == 'LinkDecorator__linkWrap') {
                         replaceToHref(content, i);
                      } else if (className == 'LinkDecorator__decoratedLink'){
                         content.childNodes.splice(i, 1);

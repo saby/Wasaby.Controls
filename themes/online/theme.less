@@ -1,7 +1,7 @@
 @themeName: 'online';
 .body {
-  font-family: @font-basic-name;
-  font-size: @font-basic-size;
+  font-family: @default-font-name;
+  font-size: @default-font-size;
 }
 
 .icon-size {
@@ -14,12 +14,17 @@
    display: inline-block;
 }
 .controls-Button.controls-Button__withoutCaption {
-   width: 48px;
+   min-width: @button-without-caption-min-width;
    .controls-Button__icon {
       margin-left: 0;
    }
    .controls-Button__text {
       display: none;
+   }
+   &.controls-Button__big {
+      .controls-Button__icon {
+         margin-left: 0;
+      }
    }
 }
 .ws-is-firefox {
