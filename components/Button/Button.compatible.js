@@ -866,7 +866,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       getIcon: function()
       {
-         return this._options.icon;
+         return "sprite:"+this._options.icon;
       },
 
       toggle: function(show)
