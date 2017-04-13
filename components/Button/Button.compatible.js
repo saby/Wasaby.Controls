@@ -178,6 +178,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          if (!cfg.name && cfg.container && cfg.container.getAttribute) {
             var iddata = cfg.container.getAttribute('data-id');
             cfg.name = iddata;
+            cfg.sbisname = iddata;
             cfg.id = cfg.id||iddata;
          }
 
