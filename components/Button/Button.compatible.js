@@ -94,6 +94,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
                $(this._container).before(temp);
                $(this._container).remove();
                this._container = temp;
+               this.setContainer(this._container);
             } catch (e) {
             }
          }
@@ -861,7 +862,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       getCaption: function()
       {
-         return this._options.text;
+         return this._options.caption;
       },
 
       getIcon: function()
