@@ -6,7 +6,7 @@ define([
 ], function (
    LinkWrap
 ) {
-   describe('Core/helpers/string-helpers', function () {
+   describe('SBIS3.CONTROLS.Utils.LinkWrap', function () {
 
       describe('.wrapURLs()', function () {
          var
@@ -180,6 +180,16 @@ define([
                   name: 'top level domailn mail',
                   question: 'email@topleveldomain',
                   answer: 'email@topleveldomain'
+               },
+               {
+                  name: 'www',
+                  question: 'www.yandex.ru text after',
+                  answer: '<a rel="noreferrer" class="asLink" target="_blank" href="www.yandex.ru">www.yandex.ru</a> text after'
+               },
+               {
+                  name: 'space after protocol before www',
+                  question: 'https:// www.youtube.com/watch?v=_avffmEHKf8',
+                  answer: 'https:// <a rel="noreferrer" class="asLink" target="_blank" href="www.youtube.com/watch?v=_avffmEHKf8">www.youtube.com/watch?v=_avffmEHKf8</a>'
                }
             ];
 
@@ -189,9 +199,9 @@ define([
                   test = tests[index];
                it(test.name, function () {
                   var
-                     result = LinkWrap.wrapURLs(test.question);
-                  assert.strictEqual(result, test.answer);
-               });
+                     result = LinkWrap.wrapURLs(this.question);
+                  assert.strictEqual(result, this.answer);
+               }.bind(test));
             }
          }
 

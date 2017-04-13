@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _pasteCommand: 'insertText',
          _compatPlaceholder: null,
          _options: {
-            wrapUrls: LinkWrap.wrapUrls,
+            wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: strHelpers.escapeHtml,
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
@@ -382,6 +382,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
          if (this._options.autoResize.state) {
             this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
          }
+         dcHelpers.trackElement(this._container, false);
+         this._inputField = undefined;
          TextArea.superclass.destroy.apply(this, arguments);
       }
    });

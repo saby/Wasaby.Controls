@@ -114,6 +114,7 @@
 @button-text-icon-margin:                 0 @button-text-margin-right - @button-border-width 0 @button-icon-gap;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+@button-without-caption-min-width:        48px;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -2044,6 +2045,7 @@
 @controls-Pager-minHeight:                        35px;
 
 //FilterButton
+@filter-button-font-size:							inherit;
 @controls-filterButton-picker-bg:                 #F9F9F9;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       1px;
