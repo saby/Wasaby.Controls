@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
    "Core/CommandDispatcher",
    'Core/tmpl/js/helpers2/entityHelpers',
    "Core/helpers/dom&controls-helpers",
+   "Core/constants",
    'Core/helpers/generate-helpers'
 ], function (EventBus,
              colhelper,
@@ -23,6 +24,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
              CommandDispatcher,
              entityHelpers,
              dcHelpers,
+             cConstants,
              generate) {
    'use strict';
 
@@ -123,6 +125,14 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       {
          if (window && container && !container[0].startTag) {
             container.on('click', this._onClickHandler.bind(this));
+            var self = this;
+
+            container.keydown(function(e) {
+               var result = self._notify('onKeyPressed', e);
+               if (e.which == cConstants.key.enter && result !== false ) {
+                  self._onClickHandler(e);
+               }
+            });
          }
          this._containerReady(container);
       },
