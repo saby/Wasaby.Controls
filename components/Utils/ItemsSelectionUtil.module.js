@@ -52,15 +52,15 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], functio
     */
    function delayedNotify(notify, notifyArgs, instance) {
       var event = notifyArgs[0],
-          args = Array.prototype.slice.call(notifyArgs, 1);
+          args = [event].concat(Array.prototype.slice.call(notifyArgs, 1));
       
       if(delayedEvents.hasOwnProperty(event)) {
          instance[delayedEvents[event]](true).addCallback(function(result) {
-            notify.apply(instance, [event].concat(args));
+            notify.apply(instance, args);
             return result;
-         })
+         });
       } else {
-         return notify.apply(instance, [event].concat(args));
+         return notify.apply(instance, args);
       }
    }
    
