@@ -133,6 +133,13 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
                   self._onClickHandler(e);
                }
             });
+
+            container.on("touchstart  mousedown", function (e) {
+               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
+                  self._container.addClass('controls-Click__active');
+               }
+               //return false;
+            });
          }
          this._containerReady(container);
       },
