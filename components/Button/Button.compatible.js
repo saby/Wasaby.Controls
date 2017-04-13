@@ -197,6 +197,12 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          if (this._options.primary === true) {
             this._registerDefaultButton();
          }
+
+         /*ДИКИЙ ПРИДРОТ!!!*/
+         if (this._container && this._options.parent) {
+            this.render(true);
+         }
+
       },
 
       _onResizeHandler: function () {
