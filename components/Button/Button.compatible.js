@@ -908,7 +908,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          if(arguments.length > 0){
             this.setVisible(!!show);
          }else{
-            this.setVisible(!this.options.visible);
+            this.setVisible(!this._options.visible);
          }
       }
    };
