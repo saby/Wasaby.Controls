@@ -1,0 +1,168 @@
+@circles: outer, inner;
+@viewNames: hours, minutes;
+@countTickInCircle: 12;
+@angularOffset: -2 * pi() / @countTickInCircle;
+@offset: pi() / 2;
+@radiusCircle: @clock-picker-body-outer-circle-radius, @clock-picker-body-inner-circle-radius;
+@radiusTick: @clock-picker-body-outer-tick-radius, @clock-picker-body-inner-tick-radius;
+
+.controls-ClockPickerBody-position-ticks-generator(@index: 1) when (@index <= length(@circles)) {
+  @circle: extract(@circles, @index);
+  .controls-ClockPickerBody-position-tick-generator(@indexCircle: @index, @circle: @circle);
+  .controls-ClockPickerBody-position-ticks-generator(@index: @index + 1);
+}
+
+.controls-ClockPickerBody-position-tick-generator(@index: 0, @indexCircle, @circle, @offset: @offset) when (@index < @countTickInCircle) {
+  .controls-ClockPickerBody__tick_@{circle}-@{index} {
+    @x: extract(@radiusCircle, @indexCircle) * (1 + cos(@offset)) - extract(@radiusTick, @indexCircle);
+    @y: extract(@radiusCircle, @indexCircle) * (1 - sin(@offset)) - extract(@radiusTick, @indexCircle);
+    transform: translate(round(@x, 1), round(@y, 1));
+  }
+  .controls-ClockPickerBody-position-tick-generator(@index: @index + 1, @indexCircle: @indexCircle, @circle: @circle, @offset: @offset + @angularOffset);
+}
+
+.controls-ClockPickerBody-view-modificator-generator(@index: 1) when (@index <= length(@viewNames)) {
+  @viewName: extract(@viewNames, @index);
+  .controls-ClockPickerBody_@{viewName} {
+    .controls-ClockPickerBody-circle-midificator(@viewName, visible, 1, @clock-picker-body-animation-active-scale);
+    & when (@index = 1) {
+      @viewNamePassive: extract(@viewNames, @index + 1);
+      .controls-ClockPickerBody-circle-midificator(@viewNamePassive, hidden, 0, @clock-picker-body-animation-passive-scale);
+    }
+    & when (@index = 2) {
+      @viewNamePassive: extract(@viewNames, @index - 1);
+      .controls-ClockPickerBody-circle-midificator(@viewNamePassive, hidden, 0, @clock-picker-body-animation-passive-scale);
+    }
+  }
+  .controls-ClockPickerBody-view-modificator-generator(@index: @index + 1);
+}
+
+.controls-ClockPickerBody-circle-modificator-passive-generator(@index: 1) when (@index <= length(@viewNames)) {
+  @viewName: extract(@viewNames, @index);
+  .controls-ClockPickerBody-circle-midificator(@viewName, hidden, 0, 1);
+  .controls-ClockPickerBody-circle-modificator-passive-generator(@index: @index + 1);
+}
+
+.controls-ClockPickerBody-circle-midificator(@viewName, @visibility, @opacity, @factor) {
+  .controls-ClockPickerBody_@{viewName}Circle {
+    visibility: @visibility;
+    .opacity(@opacity);
+    .scale(@factor);
+  }
+}
+
+.controls-ClockPickerBody-flex-center() {
+  .flexbox();
+  .justify-content(center);
+  .align-items(center);
+}
+
+.controls-ClockPickerBody {
+  position: relative;
+  height: @clock-picker-body-height;
+  width: @clock-picker-body-width;
+  .controls-ClockPickerBody-flex-center();
+  .user-select();
+}
+
+.controls-ClockPickerBody__circle {
+  position: absolute;
+}
+
+.controls-ClockPickerBody__circle_outer {
+  height: 2 * (@clock-picker-body-outer-circle-radius - @default-border-width);
+  width: 2 * (@clock-picker-body-outer-circle-radius - @default-border-width);
+  top: @clock-picker-body-height / 2 - @clock-picker-body-outer-circle-radius;
+  left: @clock-picker-body-width / 2 - @clock-picker-body-outer-circle-radius;
+  border-color: @gray-f4f4f4-color;
+  border-style: @default-border-style;
+  border-width: @default-border-width;
+  .border-radius(100%);
+  .controls-ClockPickerBody__tick {
+    top: -@default-border-width;
+    left: -@default-border-width;
+  }
+}
+
+.controls-ClockPickerBody__circle_inner {
+  height: 2 * @clock-picker-body-inner-circle-radius;
+  width: 2 * @clock-picker-body-inner-circle-radius;
+  top: @clock-picker-body-height / 2 - @clock-picker-body-inner-circle-radius;
+  left: @clock-picker-body-width /2 - @clock-picker-body-inner-circle-radius;
+}
+
+.controls-ClockPickerBody__tick {
+  display: inline-block;
+  position: absolute;
+  cursor: pointer;
+  .border-radius(100%);
+  &:hover {
+    background-color: @default-itemHover-color;
+  }
+}
+
+.controls-ClockPickerBody__tick_outer {
+  height: 2 * @clock-picker-body-outer-tick-radius;
+  width: 2 * @clock-picker-body-outer-tick-radius;
+  font-size: @font-popup-size;
+  .controls-ClockPickerBody-flex-center();
+}
+
+.controls-ClockPickerBody__tick_inner {
+  height: 2 * @clock-picker-body-inner-tick-radius;
+  width: 2 * @clock-picker-body-inner-tick-radius;
+  font-size: @font-popup-size;
+  background-color: @clock-picker-body-inner-tick-background-color;
+  .controls-ClockPickerBody-flex-center();
+}
+
+.controls-ClockPickerBody__arrow {
+  position: absolute;
+  width: @clock-picker-body-arrow-width;
+  background-color: @blue-dark-color;
+  top: @clock-picker-body-height / 2;
+  left: (@clock-picker-body-width - @clock-picker-body-arrow-width) / 2;
+  .transform-origin(@y:0);
+}
+
+.controls-ClockPickerBody__arrowTip {
+  position: absolute;
+  cursor: pointer;
+  color: @blue-dark-color;
+  font-weight: @bold-font-weight;
+  border-color: @blue-dark-color;
+  border-style: @default-border-style;
+  border-width: @clock-picker-body-arrow-tip-border-width;
+  .border-radius(100%);
+}
+
+.controls-ClockPickerBody__arrow_outer {
+  height: @clock-picker-body-outer-circle-radius - @clock-picker-body-outer-tick-radius - @clock-picker-body-arrow-tip-border-width;
+  .controls-ClockPickerBody__arrowTip {
+    bottom: -(2 * (@clock-picker-body-outer-tick-radius + @clock-picker-body-arrow-tip-border-width));
+    left: -(@clock-picker-body-outer-tick-radius + @clock-picker-body-arrow-tip-border-width);
+    background-color: @white-color;
+  }
+}
+
+.controls-ClockPickerBody__arrow_inner {
+  height: @clock-picker-body-inner-circle-radius - @clock-picker-body-inner-tick-radius - @clock-picker-body-arrow-tip-border-width;
+  z-index: @clock-picker-body-inner-arrow-z-index;
+  .controls-ClockPickerBody__arrowTip {
+    bottom: -(2 * (@clock-picker-body-inner-tick-radius + @clock-picker-body-arrow-tip-border-width));
+    left: -(@clock-picker-body-inner-tick-radius + @clock-picker-body-arrow-tip-border-width);
+  }
+}
+
+.controls-ClockPickerBody__unitTime {
+  cursor: default;
+  z-index: @clock-picker-body-unit-time-z-index;
+  font-size: @clock-picker-body-unit-time-font-size;
+  line-height: @clock-picker-body-unit-time-font-size;
+  font-weight: @bold-font-weight;
+  color: @gray-ccc-color;
+  background-color: @white-color;
+}
+
+.controls-ClockPickerBody-position-ticks-generator();
+.controls-ClockPickerBody-view-modificator-generator();
