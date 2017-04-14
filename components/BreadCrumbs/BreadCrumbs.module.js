@@ -268,6 +268,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             };
             item[this._options.displayProperty] = '...';
             dots = $(pointTpl({
+                  escapeHtml: strHelpers.escapeHtml,
                   item: item,
                   decorators: this._options._decorators,
                   displayField: this._options.displayProperty,
