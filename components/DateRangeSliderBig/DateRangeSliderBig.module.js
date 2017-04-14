@@ -18,6 +18,11 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeSliderBig
     */
    var DateRangeSliderBig = DateRangeSliderBase.extend([DateRangeBigChoosePickerMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBig.prototype */{
+      _modifyOptions: function (opts) {
+         opts = DateRangeSliderBig.superclass._modifyOptions.apply(this, arguments);
+         opts._caption = this._getCaption(opts);
+         return opts;
+      }
    });
    return DateRangeSliderBig;
 });
