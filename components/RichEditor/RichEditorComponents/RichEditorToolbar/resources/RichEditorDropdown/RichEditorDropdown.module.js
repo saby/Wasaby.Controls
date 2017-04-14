@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown',
             _options : {
                multiselect: false,
                headTemplate: headerTemplate,
+               headPickerTemplate: headerTemplate,
                itemTpl: itemTemplate
             }
          },
