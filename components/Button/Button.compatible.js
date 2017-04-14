@@ -401,6 +401,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          this._setDirty();
       },
 
+      isInitialized: function(){
+         return true;
+      },
+
       setIcon: function(value)
       {
          this._options.icon = value;
