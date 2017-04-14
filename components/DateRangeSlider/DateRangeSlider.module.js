@@ -203,7 +203,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             verticalAlign: {
                side: 'top',
                offset: -4
-            }
+            },
+            closeByExternalClick: true
          };
       }
    });
