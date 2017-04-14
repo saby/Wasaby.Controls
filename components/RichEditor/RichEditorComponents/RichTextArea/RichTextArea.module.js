@@ -1388,17 +1388,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   parent.addClass('without-margin');
                   break;
                case "2":
-                  target.select();
-                  this._insertImg(
-                     target.attr('src'),
-                     '',
-                     target.attr('alt'),
-                     '<p class="controls-RichEditor__noneditable image-template-center">',
-                     '</p>',
-                     target[0].style.width || (target.width() + 'px')
-                  ).addCallback(function(){
-                     target.remove();
-                  });
+                  var
+                     //todo: go to tmpl
+                     width =  target[0].style.width || (target.width() + 'px'),
+                     style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
+                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center">' +
+                        '<img src="' +  target.attr('src') + '"' + style + ' alt="' +  target.attr('alt') + '"></img></p>';
+
+                  this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
                   break;
                case "3":
                   target.addClass('image-template-right');
