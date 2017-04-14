@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          this._$isRelativeTemplate = false;
          this._$children = [];
          this._$_doGridCalculation = false;
-         this._moduleName = 'SBIS3.CORE.AreaAbstract';
+         this._moduleName = 'SBIS3.CONTROLS.NewControl';
          this._horizontalAlignment = 'Left';
          this._pending = [];
          this._pendingTrace = [];
