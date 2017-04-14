@@ -129,12 +129,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @author Герасимов Александр Максимович
         *
-        * @mixes SBIS3.CONTROLS.Selectable
         * @mixes SBIS3.CONTROLS.MultiSelectable
-        * @mixes SBIS3.CONTROLS.ActiveSelectable
         * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
+        * @mixes SBIS3.CONTROLS.Selectable
+        * @mixes SBIS3.CONTROLS.ActiveSelectable
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @mixes SBIS3.CONTROLS.ItemsControlMixin
+        * @mixes SBIS3.CONTROLS.ITextValue
         *
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
         * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
@@ -145,19 +146,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @demo SBIS3.DOCS.SelectorButtonSingle Пример 5. Поле связи в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
         * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
         *
-        * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
-        * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
-        * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
-        * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
-        * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
-        * @cssModifier controls-FieldLink__big-fontSize Выбранные записи в поле связи отображаются с увеличенным (15px) и жирным шрифтом.
+        * @cssModifier controls-FieldLink__itemsEdited Устанавливает для текста выбранных значений форматирование: при наведении курсора применяется подчеркивание текста.
+        * @cssModifier controls-FieldLink__itemsBold Устанавливает для текста выбранных значений форматирование: полужирное начертание.
+        * @cssModifier controls-FieldLink__big-fontSize Устанавливает для текста выбранных значений форматирование: полужирное начертание и размер шрифта 15px.
+        * @cssModifier controls-FieldLink__hideSelector Скрывает отображение (устанавливает CSS-свойство "display:none") кнопки, с помощью которой производят открытие справочников.
+        * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает отображение (устанавливает CSS-свойство "display:none") контрола "Поле связи", если выполнены два условия: опция {@link enabled}=false и отсутствуют выбранные записи.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
-        * @ignoreEvents onListItemSelect
-        *
-        * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        * @ignoreEvents onListItemSelect onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
         * @control
         * @public
