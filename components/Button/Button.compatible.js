@@ -45,6 +45,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             enabled: true,
             visible: true,
             primary: false,
+            allowChangeEnable: true,
             caption: '',
             tooltip: '',
             icon: '',
@@ -318,6 +319,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
       ///resources/Obmen_soobscheniyami_-_bazovyj/components/SendMessageInternal/SendMessageInternal.module.js : 2438
       setEnabled: function (value) {
+         if (!this._options.allowChangeEnable)
+            return;
+
          if (this._options.enabled !== value) {
             this._options.enabled = value;
             this._setDirty();
