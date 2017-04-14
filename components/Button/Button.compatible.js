@@ -699,8 +699,14 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       _onClickHandler: function(e)
       {
+         try{
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+         }catch(e){}
+
          if (!this._options.enabled)
             return;
+
 
          if (!!this._options.command) {
             var args = [this._options.command].concat(this._options.commandArgs);
