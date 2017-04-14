@@ -106,6 +106,9 @@
     *
     * @class SBIS3.CONTROLS.WaitIndicator
     * @public
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyWaitIndicator
+    * @demo SBIS3.CONTROLS.Demo.MyWaitIndicatorTable
     */
 
    function (CoreExtend, Deferred, CoreControl) {
@@ -172,7 +175,7 @@
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: (+) Привести к ES5
        * TODO: (+) Изменить API с более очевидным простейшим способом использования. (~WaitIndicatorManager.register(message, deferred, cfg))
-       * TODO: ### Описать API
+       * TODO: (+-) Описать API
        * TODO: (+) Повсеместно учесть дуализм Promise/Deferred
        * TODO: (+) Сделать примеры с прокруткой таблиц
        * TODO: (+) Добавить экономную реализацию приватоности для страых браузеров
@@ -317,7 +320,7 @@
        *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
-      var WaitIndicator = CoreExtend.extend({
+      var WaitIndicator = CoreExtend.extend(/** @lends SBIS3.CONTROLS.WaitIndicator.prototype */{
          _moduleName: 'SBIS3.CONTROLS.WaitIndicator',
 
          constructor: function  (target, message, look, delay, useDeferred) {

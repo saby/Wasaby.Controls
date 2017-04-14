@@ -103,6 +103,9 @@
     *
     * @class SBIS3.CONTROLS.WaitIndicator
     * @public
+    *
+    * @demo SBIS3.CONTROLS.Demo.MyWaitIndicator
+    * @demo SBIS3.CONTROLS.Demo.MyWaitIndicatorTable
     */
 
    function () {
@@ -169,7 +172,7 @@
        * TODO: ### Почистить код, откоментировать неоткоментированное
        * TODO: (+) Привести к ES5
        * TODO: (+) Изменить API с более очевидным простейшим способом использования. (~WaitIndicatorManager.register(message, deferred, cfg))
-       * TODO: ### Описать API
+       * TODO: (+-) Описать API
        * TODO: (+) Повсеместно учесть дуализм Promise/Deferred
        * TODO: (+) Сделать примеры с прокруткой таблиц
        * TODO: (+) Добавить экономную реализацию приватоности для страых браузеров
@@ -346,6 +349,14 @@
       };
 
       /**
+       * Константа - имя модуля
+       * @protected
+       * @static
+       * @type {string}
+       */
+      Object.defineProperty(WaitIndicator, '_moduleName', {value:'SBIS3.CONTROLS.WaitIndicator', writable:false, enumerable:true});
+
+      /**
        * Константа - время задержки по умолчанию перед показом индикатора
        * @public
        * @static
@@ -484,7 +495,7 @@
          return WaitIndicatorParams[name];
       };
 
-      WaitIndicator.prototype = {
+      WaitIndicator.prototype = /** @lends SBIS3.CONTROLS.WaitIndicator.prototype */{
          /**
           * Геттер свойства, возвращает идентификатор
           * @public
