@@ -13,6 +13,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
    'Core/tmpl/js/helpers2/entityHelpers',
    "Core/helpers/dom&controls-helpers",
    "Core/constants",
+   "Core/WindowManager",
+   "Core/core-instance",
+   "Core/helpers/functional-helpers",
    'Core/helpers/generate-helpers'
 ], function (EventBus,
              colhelper,
@@ -25,6 +28,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
              entityHelpers,
              dcHelpers,
              cConstants,
+             WindowManager,
+             cInstance,
+             funcHelpers,
              generate) {
    'use strict';
 
@@ -148,6 +154,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
                if (e.which == cConstants.key.enter && result !== false ) {
                   self._onClickHandler(e);
                }
+               if(e.which == cConstants.key.tab){
+                  self.moveFocus(e);
+               }
             });
 
             container.on("touchstart  mousedown", function (e) {
@@ -193,6 +202,52 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       deprecatedContr: function (cfg) {
+
+         this._$context = null;
+         this._$independentContext = false;
+         this._$contextRestriction = '';
+         this._$record = false;
+         this._$modal = false;
+         this._$validateIfHidden = false;
+         this._$handleFocusCatch = false;
+         this._$ignoreTabCycles = true;
+         this._$groups = {};
+         this._$currentTemplate = '';
+         this._$isRelativeTemplate = false;
+         this._$children = [];
+         this._$_doGridCalculation = false;
+         this._moduleName = 'SBIS3.CORE.AreaAbstract';
+         this._horizontalAlignment = 'Left';
+         this._pending = [];
+         this._pendingTrace = [];
+         this._waiting = [];
+         this._groupInstances = {};
+         this._activeChildControl = -1;
+         this._activatedWithTabindex = true;
+         this._childControls = [];
+         this._childNonControls = [];
+         this._childsMapName = {};
+         this._childsMapId = {};
+         this._childContainers = [];
+         this._childsTabindex = false;
+         this._childsSizes = {};
+         this._maxTabindex = 0;
+         this._dChildReady = null;
+         this._keysWeHandle = [cConstants.key.tab,
+                               cConstants.key.enter];
+
+         this._resizer = null;
+         this._toolbarCount =  {top: 0, right: 0, bottom: 0, left: 0};;
+         this._defaultButton = null;
+         this._activationIndex = 0;
+         this._opener = undefined;
+         this._isModal = false;
+         this._isReady = false;
+         this._waitersByName = {};
+         this._waitersById = {};
+         this._onDestroyOpener = null;
+         this._isInitComplete = false;
+
          var ctor = this.constructor,
             defaultInstanceData = dcHelpers.getDefaultInstanceData(ctor);
          this._options = dcHelpers.mergeOptionsToDefaultOptions(ctor, this._options, {_options:defaultInstanceData});
@@ -209,6 +264,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this._options.id = generate.randomId("cnt-");
          }
 
+         if (!this._options.tabindex)
+            this._options.tabindex = -1;
 
          this._handlers = this._handlers || (cfg && cfg.handlers && typeof cfg.handlers == 'object' ? cFunctions.shallowClone(cfg.handlers) : {});
          this._subscriptions = this._subscriptions || [];
@@ -297,6 +354,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             delete this._options.parent._childControls[this._options.parent._childsMapId[this._options.id]];
             delete this._options.parent._childsMapId[this._options.id];
             delete this._options.parent._childsMapName[this._options.name];
+            delete this._options.parent._childsTabindex[this._options.tabindex];
          }
       },
 
@@ -485,7 +543,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          if (('_$' + name) in this) {
             return this['_$' + name];
          }
-         IoC.resolve('ILogger').info(this._moduleName || 'Abstract', 'Метод _getOption вызвали для несуществующей опции "' + name + '"');
+         return this._options[name];
       },
 
       _setOption: function (name, value, silent) {
@@ -498,20 +556,152 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this['_$' + name] = value;
             return;
          }
-         if (!silent) {
-            IoC.resolve('ILogger').info(this._moduleName || 'Abstract', 'Метод _setOption вызвали для несуществующей опции "' + name + '"');
+         this._options[name] = value;
+      },
+
+
+      _registerToParent: function(parent){
+
+         var cur = parent._childControls.length,
+            tabindex = this.getTabindex();
+         if(tabindex){
+            var tabindexVal = parseInt(tabindex, 10);
+
+            // Если индекс занят или -1 (авто) назначим последний незанятый
+            if(tabindexVal == -1 || parent._childsTabindex[tabindexVal] !== undefined){
+               tabindexVal = parent._maxTabindex + 1;
+               this.setTabindex(tabindexVal, true);
+            }
+
+            if(tabindexVal > 0){
+               parent._maxTabindex = Math.max(parent._maxTabindex, tabindexVal);
+               if(!parent._childsTabindex) {
+                  parent._childsTabindex = {};
+               }
+               parent._childsTabindex[tabindexVal] = cur;
+            }
          }
+         parent._childsMapId[this.getId()] = cur;
+         parent._childsMapName[this.getName()] = cur;
+         parent._childControls.push(this);
+
+
+
+
+
+
+         /*if (parent._template) {
+            var _id = this._id||this._options.id,
+               _name = this._$name||this._options.name;
+
+            if (parent._childsMapId[_id] !== 0 && !parent._childsMapId[_id]) {
+               parent._childControls.push(this);
+               parent._childContainers.push(this);
+               parent._childsMapId[_id] = parent._childControls.length - 1;
+               parent._childsMapName[_name] = parent._childControls.length - 1;
+            }
+            return;
+         }*/
+      },
+
+      registerChildControl: function(control){
+         if(control instanceof  baseControl.Control){
+            var oldParent = control.getParent();
+            if(oldParent){
+               if (oldParent !== this || this._childsMapId[control.getId()]) {
+                  IoC.resolve('ILogger').error('AreaAbstract::registerChildControl',
+                     rk('Нельзя зарегистрировать этот контрол:') + ' (' + control.getId() + ') ' + rk("в контроле:") + ' ' +
+                     this.getId() + ', ' + rk("у него уже есть родитель:") + ' ' + oldParent.getId());
+               }
+            }
+            var cur = this._childControls.length,
+               tabindex = control.getTabindex();
+            if(tabindex){
+               var tabindexVal = parseInt(tabindex, 10);
+
+               // Если индекс занят или -1 (авто) назначим последний незанятый
+               if(tabindexVal == -1 || this._childsTabindex[tabindexVal] !== undefined){
+                  tabindexVal = this._maxTabindex + 1;
+                  control.setTabindex(tabindexVal, true);
+               }
+               if(tabindexVal > 0){
+                  this._maxTabindex = Math.max(this._maxTabindex, tabindexVal);
+                  if(!this._childsTabindex) {
+                     this._childsTabindex = {};
+                  }
+                  this._childsTabindex[tabindexVal] = cur;
+               }
+            }
+            this._childsMapId[control.getId()] = cur;
+            this._childsMapName[control.getName()] = cur;
+            this._childControls.push(control);
+            if(control instanceof AreaAbstract) {
+               this._childContainers.push(control);
+            }
+
+            control.once('onInit', this._notifyOnChildAdded.bind(this, control));
+         }
+      },
+
+      getParentByName : function(name){
+         return this.findParent(function(parent){
+            return parent.getName() == name;
+         });
+      },
+
+      getOwner: function() {
+
+         var owner = null,
+            names, ctrlName, parentName, parent;
+
+         // Если есть закэшированный владелец - отдадим его
+         if (this._owner) {
+            owner = this._owner;
+         } else if (this._getOption('owner')) {
+            if (this._getOption('owner').indexOf('/') !== -1) {
+               names = this._getOption('owner').split('/');
+               ctrlName = names[1];
+               parentName = names[0];
+            } else {
+               ctrlName = this._getOption('owner');
+            }
+            // Если нет, но задан в опция - попробуем получить его
+            try {
+               parent = parentName ?  this.getParentByName(parentName) : this.getTopParent();
+               // и закэшировать, если получилось
+               this._owner = owner = parent.getChildControlByName(ctrlName);
+            } catch(e){
+               IoC.resolve('ILogger').error('Control', 'Некорректно задано св-во owner или отсутствует owner c именем "' + ctrlName + '"');
+            }
+         }
+
+         return owner;
       },
 
       //for working getChildControlByName
       setParent: function (parent) {
          this._options.parent = parent;
+         this._parent = parent;
 
-         if (parent._childsMapId[this._options.id]!==0 && !parent._childsMapId[this._options.id]) {
+         if (this._parent){
+            this._registerToParent(this._parent);
+            var topParent = this.getTopParent();
+            if (topParent) {
+               if (topParent.isReady()) {
+                  // находим и кэшируем владельца
+                  this.getOwner();
+               } else {
+                  // если родитель еще не готов, дождемся готовности и закэшируем овнера
+                  topParent.subscribe('onReady', funcHelpers.forAliveOnly(this.getOwner, this));
+               }
+            }
+         }
+
+         /*if (parent._childsMapId[this._options.id]!==0 && !parent._childsMapId[this._options.id]) {
             parent._childControls.push(this);
             parent._childsMapId[this._options.id] = parent._childControls.length - 1;
             parent._childsMapName[this._options.name] = parent._childControls.length - 1;
-         }
+         }*/
 
          if (this._needRegistWhenParent)
          {
@@ -567,6 +757,88 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this._options['tabindex'] = 0;
 
          return +this._options['tabindex'];
+      },
+
+      setTabindex : function(tabindex, notCalculate){
+         var parent = this.getParent();
+         if (!notCalculate && parent) {
+            parent.changeControlTabIndex(this, tabindex);
+         } else {
+            this._setOption('tabindex', tabindex);
+         }
+      },
+
+
+      changeControlTabIndex : function(control, tabindex){
+         var curTabIndex = control.getTabindex(),
+            controlPos =  colHelpers.findIdx(this._childControls, function (child) {
+               return child === control;
+            }),
+            calcMaxTabIndex = dColHelpers.reduce.bind(this, this._childsTabindex, function(max, _, idx) {
+               return Math.max(max, idx);
+            }, 0),
+            enumerateChildByTabIdx = function(func, reverse) {
+               var i, child, childId, maxIdx = calcMaxTabIndex();
+
+               function handleTabIdx(i) {
+                  if (this._childsTabindex[i] !== undefined) {
+                     childId = this._childsTabindex[i];
+                     child = this._childControls[childId];
+                     if (child) {
+                        func.call(this, child, childId);
+                     }
+                  }
+               }
+
+               if (reverse) {
+                  for (i = maxIdx; i > 0; i--) {
+                     handleTabIdx.call(this, i);
+                  }
+               } else {
+                  for (i = 1; i <= maxIdx; i++) {
+                     handleTabIdx.call(this, i);
+                  }
+               }
+            }.bind(this);
+
+         //Если контрол был в обходе
+         if (curTabIndex !== 0) {
+            delete this._childsTabindex[curTabIndex];
+
+            //Сдвигаем старые индексы
+            enumerateChildByTabIdx(function (child, idx) {
+               var childTabIndex = child.getTabindex();
+               if (childTabIndex > curTabIndex) {
+                  delete this._childsTabindex[childTabIndex];
+                  this._childsTabindex[childTabIndex - 1] = idx;
+                  this._childControls[idx].setTabindex(childTabIndex - 1, true);
+               }
+            }, false);
+         }
+
+         //Если контрол не удаляется вообще из обхода (tabindex !== 0)
+         if (tabindex === -1) {
+            this._maxTabindex = calcMaxTabIndex() + 1;
+
+            control.setTabindex(this._maxTabindex, true);
+            this._childsTabindex[this._maxTabindex] = controlPos;
+         } else {
+            if (tabindex !== 0) {
+               enumerateChildByTabIdx(function (child, idx) {
+                  var childTabIndex = child.getTabindex();
+                  if (childTabIndex >= tabindex) {
+                     delete this._childsTabindex[childTabIndex];
+                     this._childsTabindex[childTabIndex + 1] = idx;
+                     this._childControls[idx].setTabindex(childTabIndex + 1, true);
+                  }
+               }, true);
+
+               this._childsTabindex[tabindex] = controlPos;
+            }
+
+            control.setTabindex(tabindex, true);
+            this._maxTabindex = calcMaxTabIndex();
+         }
       },
 
       isVisibleWithParents: function () {
@@ -942,7 +1214,133 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }else{
             this.setVisible(!this._options.visible);
          }
-      }
+      },
+
+      /**********************************************************************************************************************************************************************/
+
+      moveFocus: function(event){
+         event.stopPropagation();
+         if(!this.detectNextActiveChildControl(event.shiftKey)){//Не смогли найти следующий
+            // Мы должны либо отпустить фокус в браузер либо выйти из вложенного ареа
+            if(this.focusCatch(event)){
+               return true;
+            }
+         }
+         return false;
+      },
+
+      focusCatch: function(event){
+         var parent = this.getParent();
+         if(!parent){ //Если нет парента то это либо окно, либо самая верхняя ареа => отпускаем в браузер
+            WindowManager.disableLastActiveControl();
+            if(event.shiftKey){
+               WindowManager.focusToFirstElement();
+            }
+            else{
+               WindowManager.focusToLastElement();
+            }
+            return true;
+         }
+         else{
+            //Пытаемся найти следующий, пробегаюсь по своим парентам.
+            return parent.moveFocus(event);
+         }
+      },
+
+      detectNextActiveChildControl: function(isShiftKey, searchFrom) {
+         var
+            nextInfo = this.detectNextActiveChildControlIndex(isShiftKey, searchFrom),
+            next = nextInfo.index,
+            res = nextInfo.isValid, active;
+
+         if (res) {
+            //Установка фокуса на найденный контрол
+            active = nextInfo.isTabIndex ? this._childsTabindex[next] : next;
+            res = !!this._childControls[active];
+            if (res) {
+               this._childControls[active].setActive(true, isShiftKey);
+            }
+         }
+         return res;
+      },
+
+      _getNextIndexInfo: function(isShiftKey, searchFrom) {
+         var
+            curIndex = searchFrom !== undefined ? searchFrom : this._activeChildControl,
+            curIndexIsTabIndex = (searchFrom !== undefined || this._activatedWithTabindex) && !!this._childsTabindex,
+            childLength = this._childControls.length,
+            nextIndex = isShiftKey ? curIndex - 1 : curIndex + 1,
+            isOk = curIndexIsTabIndex ? //Проверка следующего табиндекса на доступное значение
+               (isShiftKey ? nextIndex > 0 : nextIndex <= this._maxTabindex) :
+               (isShiftKey ? nextIndex >= 0 : nextIndex < childLength),
+            last, first;
+
+         if (!isOk) {
+            last = curIndexIsTabIndex ? this._maxTabindex : childLength - 1;
+            first = curIndexIsTabIndex ? 1 : 0;
+
+            nextIndex = isShiftKey ? last : first;
+         }
+
+         return {
+            nextIndex: nextIndex,
+            nextIndexIsTabIndex: curIndexIsTabIndex,
+            isNextCycle: !isOk
+         };
+      },
+
+      detectNextActiveChildControlIndex: function(isShiftKey, searchFrom) {
+         // проверка контрола, в который планируется переход по табу
+         function controlOk(idx, idxIsTabIdx) {
+            var
+               contrIdx = idxIsTabIdx ? self._childsTabindex[idx] : idx,
+               contr = contrIdx !== undefined && self._childControls[contrIdx];
+
+            return contr && contr.canAcceptFocus();
+         }
+
+         var
+            self = this,
+            nextIndexInfo = this._getNextIndexInfo(isShiftKey, searchFrom),
+            idxIsTabIdx = nextIndexInfo.nextIndexIsTabIndex,
+            cur = nextIndexInfo.nextIndex,
+            first = idxIsTabIdx ? 1 : 0,
+            last = idxIsTabIdx ? this._maxTabindex : this._childControls.length - 1,
+            ignoreTabCycles = this._getOption('ignoreTabCycles');
+
+         if (nextIndexInfo.isNextCycle && ignoreTabCycles) {
+            //если обход по табу в этом контроле не должен зацикливаться, то заменяем cur на индекс за границами
+            //массива дочерних контролов - тогда клиент метода detectNextActiveChildControlIndex обработает это как выход
+            //из этого контрола в родительский
+            cur = isShiftKey ? first - 1 : last + 1;
+         }
+         else {
+            //ищем индекс подходящего контрола
+            while (isShiftKey ? cur >= first : cur <= last) {
+               if (controlOk(cur, idxIsTabIdx)) {
+                  break;
+               }
+               cur = isShiftKey ? cur - 1 : cur + 1;
+            }
+
+            //если не нашли, и обход по табу должен зацикливаться, то становимся в начало обхода, и ищем подходящий контрол
+            if ((cur < first || cur > last) && !ignoreTabCycles) {
+               cur = isShiftKey ? last : first;
+
+               while (cur >= first && cur <= last) {
+                  if (controlOk(cur, idxIsTabIdx)) {
+                     break;
+                  }
+                  cur = isShiftKey ? cur - 1 : cur + 1;
+               }
+            }
+         }
+         return {
+            index: cur,
+            isTabIndex: nextIndexInfo.nextIndexIsTabIndex,
+            isValid: cur >= first && cur <= last
+         };
+      },
    };
 
 });
