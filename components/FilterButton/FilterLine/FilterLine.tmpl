@@ -1,9 +1,10 @@
-<div class="controls__filterButton__filterLine">
+<div class="controls__filterButton__filterLine controls__filterButton__filterLine-table">
     <div class="controls__filterButton__filterLine-items" data-bind="attr : {title : 'titleText'}">
         <i class="controls__filterButton__filterLine-arrow icon-size icon-16 icon-DayForward icon-primary ws-hidden" data-bind="{visible: 'filterChanged'}"></i>
         <span class="controls__filterButton__filterLine-text" data-bind="{html: 'linkText'}"></span>
     </div>
     <ws:SBIS3.CONTROLS.IconButton
+        cssClassName="controls__filterButton__filterLine-cross"
         visible="{{ 'filterChanged'|bind:false }}"
         icon="icon-size icon-16 icon-Close icon-disabled icon-primary"
         command="reset-filter"
