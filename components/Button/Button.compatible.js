@@ -397,7 +397,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       setCaption: function(value)
       {
-         this._options.caption = value;
+         this._options.caption = value||'';
          this._setDirty();
       },
 
