@@ -698,6 +698,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
             }
          },
+         _checkEmptySelection: function() {
+            //Запись "не выбрано" отсутствует в рекордсете, поэтому стандартный метод не поможет
+            if (this._isEmptyValueSelected()){
+               return false;
+            }
+            return DropdownList.superclass._checkEmptySelection.apply(this, arguments);
+         },
          _setSelectedItems: function(){
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
             if (!this._isEnumTypeData()) {
