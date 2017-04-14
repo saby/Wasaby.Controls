@@ -1,17 +1,14 @@
 define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CONTROLS.ItemsControlMixin',
+   'js!SBIS3.CONTROLS.DSMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/crumb',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/dotsTpl',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
-   'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',
+   'html!SBIS3.CONTROLS.BreadCrumbs/resources/pointTpl',
    'Core/helpers/string-helpers',
    "Core/IoC",
    'css!SBIS3.CONTROLS.BreadCrumbs'
-], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC) {
+], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers, IoC) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
@@ -32,12 +29,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     */
    'use strict';
    var BREAD_CRUMB_MIN_WIDTH = 36;
-   var BreadCrumbs = CompoundControl.extend([ItemsControlMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
+   //TODO: Переписать все к чертям
+   var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
        /**
         * @event onItemClick Происходит при клике по хлебным крошкам (элементу коллекции).
         * @param {Number|String} idProperty Идентификатор элемента коллекции.
         */
-      _dotTplFn: dotTplFn,
+      _dotTplFn: dotTpl,
       $protected: {
          _resizeTimeout: null,
          _dropdownWidth: null,
@@ -91,8 +89,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              *
              *
              */
-            itemTpl: itemTpl,
-            itemContentTpl: itemContentTpl,
+            itemTemplate: pointTpl,
             pickerClassName: 'controls-Menu__Popup controls-BreadCrumbs '
          }
       },
@@ -102,6 +99,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          if (!cfg.items || cfg.length !== 0) {
             newCfg.visible = false;
          }
+
+         //TODO перевести хлебные крошки на ITEMSControl!
+         if (cfg.itemTpl) {
+            cfg.itemTemplate = cfg.itemTpl;
+         }
+
 
          if (cfg.keyField) {
             IoC.resolve('ILogger').log('BreadCrumbs', 'Опция keyField является устаревшей, используйте idProperty');
@@ -117,8 +120,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       $constructor: function() {
          this._publish('onItemClick');
          this._homeIcon = $('.controls-BreadCrumbs__crumb-home', this._container);
-         this.toggle(this.getItems() && this.getItems().getCount() === 0);
+         this.toggle(this._options.items && this._options.items.length == 0);
+         this._homeIcon.data('id', null); //клик по домику ведет в корень TODO: придрочено под null
          this.getContainer().on('mousedown', this._onMousedownHandler);
+         //инициализируем dataSet
+         this.reload();
       },
 
       _onMousedownHandler: function(event) {
@@ -131,7 +137,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             var target = $(e.target),
                crumb = target.closest('.js-controls-BreadCrumbs__crumb');
             if (crumb.hasClass('controls-BreadCrumbs__dots')) {
-               this._dotsClickHandler();
+               this._dotsClickHandler(crumb);
                e.stopPropagation();
             } else {
                if (crumb.length) {
@@ -149,13 +155,23 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
        * Обработчик клика на многоточие
        * вынесен отдельно для того, что бы можно было переопределить
        */
-      _dotsClickHandler: function(){
+      _dotsClickHandler: function(crumb){
          if (this._picker) {
-            this._picker.setTarget(this._dots);
+            this._picker.setTarget(crumb);
          }
          this.togglePicker();
          if (this._picker && this._picker.isVisible()) {
             this._redrawDropdown();
+         }
+      },
+
+      //Очередной придрот для ховера у disabled иконок, убрать когда избавимся от каскадов в font.css
+      setEnabled: function(enabled){
+         BreadCrumbs.superclass.setEnabled.call(this, enabled);
+         if (enabled) {
+            this._homeIcon.addClass('action-hover');
+         } else {
+            this._homeIcon.removeClass('action-hover');
          }
       },
 
@@ -165,6 +181,11 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
+      setItems: function(items){
+         BreadCrumbs.superclass.setItems.call(this, items);
+         this._dataSet._keyField = this._options.idProperty;
+      },
+
       //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
       _getElementToFocus: function() {
          return this._container;
@@ -172,7 +193,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
       _setPickerConfig: function() {
          return {
-            target: this._dots,
+            target: $('.controls-BreadCrumbs__dots', this._container),
             corner: 'bl',
             verticalAlign: {
                side: 'top'
@@ -197,27 +218,28 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _redrawDropdown: function() {
          var self = this;
          if (this._picker) {
-            var width = this._picker._container.width(),
-               previousWrappersCount = 0,
-               hier = [];
-            this._picker.getContainer().empty();
-            this.getItems().each(function(record) {
+            var width = this._picker._container.width();
+            this._picker._container.empty();
+            this._dataSet.each(function(record) {
                if (record.get(self._options.idProperty)){
-                  var tmplData = {
-                     decorators: self._options._decorators,
-                     colorField: self._options.colorField ? record.get(self._options.colorField) : '',
-                     strHelpers: strHelpers,
-                     record: record,
-                     idProperty: self._options.idProperty,
-                     displayProperty: self._options.displayProperty,
-                     wrappersCount: previousWrappersCount
-                  };
-                  hier.push(menuItem(tmplData));
-                  previousWrappersCount++;
+                  var point = $('<div class="controls-MenuItem js-controls-BreadCrumbs__crumb"></div>');
+                     point.html(self._options._decorators.apply(
+                           strHelpers.escapeHtml(record.get(self._options.displayProperty))
+                     ))
+                     .attr('style', self._options._decorators.apply(
+                        self._options.colorField ? record.get(self._options.colorField) : '', 'color'
+                     ));
+                     point.data(self._options.idProperty, record.get(self._options.idProperty));
+                  self._picker._container.append(point);
+                  var previousContainer = point.prev('.js-controls-BreadCrumbs__crumb', self._picker._container),
+                     previousWrappersCount = $('.controls-BreadCrumbs__hierWrapper', previousContainer).length;
+                  if (previousContainer.length) {
+                     for (var i = 0; i <= previousWrappersCount; i++) {
+                        point.prepend('<div class="controls-BreadCrumbs__hierWrapper"></div>');
+                     }
+                  }
                }
             });
-            this.getPicker().getContainer().append(hier.join(''));
-
             if (width !== this._dropdownWidth) {
                this._picker.recalcPosition(true);
                this._dropdownWidth = width;
@@ -226,7 +248,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onResizeHandler: function(){
-         this.redraw();
+         this._redraw();
       },
 
       _calculateSizes: function() {
@@ -236,10 +258,21 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
          // Уберем троеточие, что бы оно не мешало при расчете размеров
          // или создадим его, если его нет
-         if (this._dots){
-            this._dots.detach();
+         var dots = $('.controls-BreadCrumbs__dots', this._container);
+         if (dots.length){
+            dots.detach();
          } else {
-            this._dots = $(dotsTpl());
+            var item = {
+               dots: true,
+               get: function(field) {return this[field];}
+            };
+            item[this._options.displayProperty] = '...';
+            dots = $(pointTpl({
+                  item: item,
+                  decorators: this._options._decorators,
+                  displayField: this._options.displayProperty,
+                  displayProperty: this._options.displayProperty
+               }));
          }
 
          var targetContainer = this._getTargetContainer(),
@@ -254,7 +287,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
          //Добавляем троеточие если пункты не убираются в контейнер
          if ((targetContainer.width() + this._homeIconWidth >= containerWidth) && crumbs.length > 2) {
-            $(crumbs[i - 1]).before(this._dots);
+            $(crumbs[i - 1]).before(dots);
             //скрываем пункты левее троеточия пока не уберемся в контейнер
             for (i; i > 1; i--) {
                if (targetContainer.width() + this._homeIconWidth < containerWidth || i == 1) {
@@ -301,9 +334,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             $('.controls-BreadCrumbs__title', firstHidden).css('max-width', emptyWidth);
             firstHidden.removeClass('ws-hidden');
             if (hiddenCrumbs.length > 1){
-               this._dots.insertAfter(firstHidden);
+               dots.insertAfter(firstHidden);
             } else {
-               this._dots.detach();
+               dots.detach();
             }
          }
       },
@@ -312,12 +345,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          return crumb.width() - $('.controls-BreadCrumbs__title', crumb).width(); 
       },
 
-      redraw: function(){
+      _redraw: function(){
          //Если датасета нет или он есть, но пустой, то скрываем home
-         var isEmpty = (!this.getItems() || (this.getItems() && (this.getItems().getCount() === 0)));
+         var isEmpty = (!this._dataSet || (this._dataSet && (this._dataSet.getCount() == 0)));
          this._toggleHomeIcon(isEmpty);
          this.toggle(!isEmpty);
-         BreadCrumbs.superclass.redraw.call(this);
+         BreadCrumbs.superclass._redraw.call(this);
          if (this.getItems() && this.getItems().getCount() && this.isVisible()){
             this._calculateSizes();
          }
@@ -330,14 +363,30 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          }
       },
 
-      _buildTplArgs: function(item) {
-         var args = BreadCrumbs.superclass._buildTplArgs.apply(this, arguments);
-         args.decorators = this._options._decorators;
-         return args;
+      _getItemTemplate: function() {
+         return this._options.itemTemplate;
       },
 
-      _getItemsContainer: function() {
+      _buildTplArgs: function(item) {
+         return {
+            item: item,
+            displayField: this._options.displayProperty,
+            displayProperty: this._options.displayProperty,
+            decorators: this._options._decorators
+         };
+      },
+
+      _getTargetContainer: function() {
          return $('.controls-BreadCrumbs__itemsContainer', this._container);
+      },
+
+      _addItemAttributes: function(container, item) {
+         container.data(this._options.idProperty, item.get(this._options.idProperty));
+         BreadCrumbs.superclass._addItemAttributes.apply(this, arguments);
+      },
+
+      _appendItemTemplate: function(item, targetContainer, itemBuildedTpl) {
+         targetContainer.append(itemBuildedTpl);
       },
 
       destroy: function() {
