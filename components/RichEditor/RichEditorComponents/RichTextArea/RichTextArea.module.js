@@ -631,8 +631,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if( typeof arrBL  === 'string') {
                   arrBL = [arrBL];
                }
+               arrBL.forEach(function(text,index) {
+                  arrBL[index] = this._replaceCodesTosmile(text);
+               }, this);
                return arrBL;
-            })
+            }.bind(this))
          },
 
          /**
@@ -1691,9 +1694,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curValue = value || this.getText();
             this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
          },
-
-         _addToHistory: function(valParam) {
-            return UserConfig.setParamValue(this._getNameForHistory(), valParam);
+         _replaceSmilesToCode: function(text) {
+            smiles.forEach(function(smile){
+               text = text.replace(new RegExp(String.fromCodePoint(smile.code), 'gi'), smile.title);
+            });
+            return text;
+         },
+         _replaceCodesTosmile: function(text) {
+            smiles.forEach(function(smile) {
+               text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
+            });
+            return text;
+         },
+         _addToHistory: function(text) {
+            return UserConfig.setParamValue(this._getNameForHistory(), this._replaceSmilesToCode(text));
          },
 
          _getNameForHistory: function() {
