@@ -1395,7 +1395,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * </pre>
         */
       getItemsInstances: function () {
-         if (this.addedOnlyExtraNew || Object.isEmpty(this._itemsInstances)) {
+         if ( this.addedOnlyExtraNew || Object.isEmpty(this._itemsInstances)) {
             this._fillItemInstances();
          }
          return this._itemsInstances;
