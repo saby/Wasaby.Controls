@@ -28,6 +28,12 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
              generate) {
    'use strict';
 
+   if (typeof window !== 'undefined') {
+      $(document).on("touchend  mouseup", function () {
+         $('.controls-Click__active').removeClass('controls-Click__active');
+      });
+   }
+
    function ucFirst(str) {
       return str.substr(0, 1).toUpperCase() + str.substr(1);
    }
