@@ -373,7 +373,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       getTopParent: function(){
-         return this._options.parent.getTopParent();
+         return this._options && this._options.parent?this._options.parent.getTopParent():this;
       },
       ///resources/Obmen_soobscheniyami_-_bazovyj/components/SendMessageInternal/SendMessageInternal.module.js : 2438
       setEnabled: function (value) {
@@ -563,45 +563,34 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _registerToParent: function(parent){
 
          var cur = parent._childControls.length,
+            _id = this.getId(),
             tabindex = this.getTabindex();
-         if(tabindex){
-            var tabindexVal = parseInt(tabindex, 10);
 
-            // Если индекс занят или -1 (авто) назначим последний незанятый
-            if(tabindexVal == -1 || parent._childsTabindex[tabindexVal] !== undefined){
-               tabindexVal = parent._maxTabindex + 1;
-               this.setTabindex(tabindexVal, true);
-            }
+         if (parent._childsMapId[_id] !== 0 && !parent._childsMapId[_id]) {
 
-            if(tabindexVal > 0){
-               parent._maxTabindex = Math.max(parent._maxTabindex, tabindexVal);
-               if(!parent._childsTabindex) {
-                  parent._childsTabindex = {};
+            if (tabindex) {
+               var tabindexVal = parseInt(tabindex, 10);
+               // Если индекс занят или -1 (авто) назначим последний незанятый
+               if (tabindexVal == -1 || parent._childsTabindex[tabindexVal] !== undefined) {
+                  tabindexVal = parent._maxTabindex + 1;
+                  this.setTabindex(tabindexVal, true);
                }
-               parent._childsTabindex[tabindexVal] = cur;
+
+
+               if (tabindexVal > 0) {
+                  parent._maxTabindex = Math.max(parent._maxTabindex, tabindexVal);
+                  if (!parent._childsTabindex) {
+                     parent._childsTabindex = {};
+                  }
+                  parent._childsTabindex[tabindexVal] = cur;
+               }
             }
+            parent._childsMapId[this.getId()] = cur;
+            parent._childsMapName[this.getName()] = cur;
+            parent._childControls.push(this);
+            parent._childContainers.push(this);
          }
-         parent._childsMapId[this.getId()] = cur;
-         parent._childsMapName[this.getName()] = cur;
-         parent._childControls.push(this);
 
-
-
-
-
-
-         /*if (parent._template) {
-            var _id = this._id||this._options.id,
-               _name = this._$name||this._options.name;
-
-            if (parent._childsMapId[_id] !== 0 && !parent._childsMapId[_id]) {
-               parent._childControls.push(this);
-               parent._childContainers.push(this);
-               parent._childsMapId[_id] = parent._childControls.length - 1;
-               parent._childsMapName[_name] = parent._childControls.length - 1;
-            }
-            return;
-         }*/
       },
 
       registerChildControl: function(control){
@@ -635,6 +624,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this._childsMapId[control.getId()] = cur;
             this._childsMapName[control.getName()] = cur;
             this._childControls.push(control);
+            this._childContainers.push(control);
             if(control instanceof AreaAbstract) {
                this._childContainers.push(control);
             }
