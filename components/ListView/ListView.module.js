@@ -3586,12 +3586,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
                items.forEach(function (item) {
-                  var projItem = this._getItemsProjection().getItemBySourceItem(item);
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item),
+                     domElement = this._getHtmlItemByProjectionItem(projItem);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,
-                     domElement: this._getHtmlItemByProjectionItem(projItem)
+                     domElement: domElement
                   }));
+                  domElement.addClass('ws-hidden');
                }.bind(this));
 
                dragObject.setSource(
@@ -3599,11 +3601,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      items: source
                   })
                );
+               this._getDragPlaceHolder(dragObject);
                this._hideItemsToolbar();
-
-               var p = this._getDragPlaceHolder(dragObject);
-               p.insertAfter(source[0].getDomElement());
-               this._toggleDragItems(dragObject, false);
+               if (this._checkHorisontalDragndrop(target)) {
+                  this._horisontalDragNDrop = true;
+               } else {
+                  this._horisontalDragNDrop = false;
+               }
                return true;
             }
             return false;
@@ -3637,36 +3641,34 @@ define('js!SBIS3.CONTROLS.ListView',
                   targetsModel = target.getModel(),
                   source = dragObject.getSource(),
                   sourceModels = [];
-               this._hideDragHilight();
+               this._hideDragHilight(dragObject);
                if (targetsModel) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
                   });
-                  if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
-                     //this._drawDragHighlight(target);
-                     if (target.getPosition() !== 'on') {
-                        this._getDragPlaceHolder().show();
-                        if (target.getPosition() == 'before') {
-                           this._getDragPlaceHolder().insertBefore(target.getDomElement());
-                        } else {
-                           this._getDragPlaceHolder().insertAfter(target.getDomElement());
-                        }
+                  //this._drawDragHighlight(target);
+                  if (target.getPosition() !== 'on') {
+                     this._getDragPlaceHolder(dragObject).show();
+                     if (target.getPosition() == 'before') {
+                        this._getDragPlaceHolder(dragObject).insertBefore(target.getDomElement());
                      } else {
-                        this._getDragPlaceHolder().hide();
-                        target.getDomElement().addClass('controls-DragNDrop__hierarchy_move');
+                        this._getDragPlaceHolder(dragObject).insertAfter(target.getDomElement());
                      }
+                  } else {
+                     this._getDragPlaceHolder(dragObject).hide();
+                     target.getDomElement().addClass('controls-DragNDrop__hierarchy_move');
                   }
                }
             }
          },
-         _hideDragHilight: function () {
-            this._getDragPlaceHolder().hide();
+         _hideDragHilight: function (dragObject) {
+            this._getDragPlaceHolder(dragObject).hide();
             $('.controls-DragNDrop__hierarchy_move').removeClass('controls-DragNDrop__hierarchy_move');
          },
          _getDragPlaceHolder: function(dragObject) {
             if (!this._dragPlaceHolder) {
                var item = dragObject.getSource().at(0);
-               this._dragPlaceHolder = item.getDomElement().clone().addClass('controls-DragNDrop__placeholder');
+               this._dragPlaceHolder = item.getDomElement().clone().addClass('controls-DragNDrop__placeholder').removeClass('ws-hidden');
             }
             return this._dragPlaceHolder;
          },
@@ -3703,25 +3705,34 @@ define('js!SBIS3.CONTROLS.ListView',
                      movedItems = [];
                   dragObject.getSource().each(function (item) {
                      sourceIds.push(item.getModel().getId());
-                     movedItems.push(item);
+                     movedItems.push(item.getModel());
                   });
-                  if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                     var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId());
-                     if (neighborItem && sourceIds.indexOf(neighborItem.data('id')) > -1) {
-                        position = DRAG_META_INSERT.on;
-                     }
-                  }
-                  if (this._getMover()._checkRecordsForMove(movedItems, model, position)) {
+                  if (this._getMover()._checkRecordsForMove(movedItems, model, position != 'on')) {
                      target = this._makeDragEntity({
                         owner: this,
                         domElement: domElement,
                         model: model,
                         position: position
                      });
+                     dragObject.setTarget(target);
+                  } else if (position == 'on') {
+                     if (this._horisontalDragNDrop) {
+                        position = (e.offsetY > domElement.height()/2) ? 'before' : 'after';
+                     } else {
+                        position = (e.offsetx > domElement.width()/2) ? 'before' : 'after';
+                     }
+                     target = this._makeDragEntity({
+                        owner: this,
+                        domElement: domElement,
+                        model: model,
+                        position: position
+                     });
+                     dragObject.setTarget(target);
                   }
                }
+            } else {
+               dragObject.setTarget(undefined);
             }
-            dragObject.setTarget(target);
          },
 
          _getDirectionOrderChange: function(e, target) {
@@ -3732,7 +3743,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _getOrderPosition: function(offset, metric, orderOffset) {
-            return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+            return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
          },
 
          _createAvatar: function(dragObject) {
