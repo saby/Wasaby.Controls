@@ -68,6 +68,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
                if (attrs.hasOwnProperty(atr)) {
                   var name = attrs[atr].name ? attrs[atr].name : atr,
                      value = attrs[atr].value || attrs[atr];
+                  if (name === 'disabled' || name === 'title')
+                     continue;
                   decOptions[name] = attributes[name] = value;
 
                }
@@ -76,6 +78,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          } catch (e) {
 
          }
+
+         /*КОСТЫЛЬ ЧИСТКА КЛАССОВ*/
+         attributes['class'] = attributes['class'].replace('ws-enabled', '').replace('ws-disabled','').replace('ws-hidden','')
+            .replace('controls-Button__primary','').replace('controls-Button__default','');
+         /**/
 
          //decOptions = entityHelpers.resolveDecOptionsClassMerge(decOptions, this._options, this._options);
          if (!this._options['class']) {
