@@ -413,7 +413,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       setIcon: function(value)
       {
-         this._options.icon = value;
+         this._options.icon = value||'';
          this.fixIcon();
          this._setDirty();
       },
