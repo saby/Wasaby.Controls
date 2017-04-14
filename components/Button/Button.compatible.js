@@ -80,8 +80,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
 
          /*КОСТЫЛЬ ЧИСТКА КЛАССОВ*/
-         attributes['class'] = attributes['class'].replace('ws-enabled', '').replace('ws-disabled','').replace('ws-hidden','')
-            .replace('controls-Button__primary','').replace('controls-Button__default','');
+         if (attributes['class']) {
+            attributes['class'] = attributes['class'].replace('ws-enabled', '').replace('ws-disabled', '').replace('ws-hidden', '')
+               .replace('controls-Button__primary', '').replace('controls-Button__default', '');
+         }
          /**/
 
          //decOptions = entityHelpers.resolveDecOptionsClassMerge(decOptions, this._options, this._options);
