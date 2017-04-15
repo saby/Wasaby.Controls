@@ -1,7 +1,7 @@
 @import "../carry/variables";
 
 @black-color:                             #333;
-
+@default-color:								transparent;
 @gray-color:                              #aaa;
 @gray-light-color:                        #eee;
 @default-text-color:                      #e4e4e4;
@@ -12,14 +12,16 @@
 @bg:                                      @secondary-color;
 @text-color:                              @white-color;
 @blue-dark-color: #FFCC99;
+
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
+
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        .5rem;
 @default-font-line-height:                20px;
 
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
-@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -1.43rem;
+@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -3rem;
 @closeBigButtonWidth:                     60px;
 @closeBigButtonHeight:                    1.43rem;
 
@@ -76,6 +78,7 @@
 // ------------------ //
 // FilterPanelChooser //
 // ------------------ //
+@controls-filterButton-area-header-height:							3.57rem;
  @controls-filterLine-items-line-height:							1rem;
 @filter-panel-chooser-default-color:                              #F9F9F9;
 @filter-panel-chooser-hovered-color:                              #EAECEE;
@@ -117,7 +120,7 @@
 @button-border-width:.07rem;
 // Normal default button
 @button-border:                           @button-border-width solid #26b8ff;
-@button-shadow: 0 0 8px rgba(0,0,0,.35);
+@button-shadow: 							none;
 @button-line-height: 1.43rem;
 @button-hover-border:                     @button-border;
 @button-text-color:                       #E4E4E4;
@@ -342,10 +345,12 @@
 @menu-item-bg:                            #f0f5fb;
 
 @menu-item-hover-text-color:              #273B4D;
+ @menu-item-icon-16-margin:					6px 0 6px 64px;
+
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
 
-@menu-item-icon-top-offset:               0px;
+@menu-item-icon-top-offset:               1rem;
 
 @menu-item-icon-left-offset:              -2px;
 
@@ -559,6 +564,7 @@
 // Search form //
 // ----------- //
 @search-form-field-wrapper-margin-right:              140px;
+@search-button-wrapper-padding:							0 .5rem 0 0;
 @search-buttons-wrapper-width:                        auto;
 @search-loop-size: 2rem;
 @search-background:                                   #2e3a45;
@@ -1016,14 +1022,15 @@
 @controls-filterButton-button-height:             0.86rem;
 @controls-filterButton-button-margin:             8px 8px 8px 0;
 @controls-filterButton-button-margin-ff:          8px 32px 8px 0;
+@controls-filterButton-area-text-weight:		   normal;
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
 
-@controls-filterButton-area-header-padding:       1.75rem 76px 1.75rem 12px;
+@controls-filterButton-area-header-padding:       8px 3rem 8px 12px;
 
-@controls-filterButton-area-text-size:            0.86rem;
-@controls-filterButton-area-text-color:           @primary-color;
-@controls-filterButton-clear-margin-right:        1.75rem;
+@controls-filterButton-area-text-size:            1.43rem;
+@controls-filterButton-area-text-color:           #e4e4e4;
+@controls-filterButton-clear-margin-right:        16px;
 
 @controls-filterButton-area-content-margin:       0 1.75rem 12px 1.75rem;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
@@ -1175,3 +1182,4 @@
 @scrollpager-bg:                              transparent;
 @data-grid-cell-separator-color:              #1a242e;
 @closeBigButtonWidth:                         3rem;
+@menu-header-bg-color:                    #23b8ff;
