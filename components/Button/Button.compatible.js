@@ -154,7 +154,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
                if (e.which == cConstants.key.enter && result !== false ) {
                   self._onClickHandler(e);
                }
-               if(e.which == cConstants.key.tab){
+
+               if(this._icanrulefocus && e.which == cConstants.key.tab){
                   self.moveFocus(e);
                }
             });
@@ -202,7 +203,8 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       deprecatedContr: function (cfg) {
-
+         this._icanrulefocus = false;
+         
          this._$context = null;
          this._$independentContext = false;
          this._$contextRestriction = '';
@@ -344,6 +346,13 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          return this._destroyed;
       },
 
+      clearInformationOnParent: function() {
+         delete this._parent._childControls[this._parent._childsMapId[this._options.id]];
+         delete this._parent._childsMapId[this._options.id];
+         delete this._parent._childsMapName[this._options.name];
+         delete this._parent._childsTabindex[this._options.tabindex]
+      },
+
       destroy: function () {
          this._destroyed = true;
          try {
@@ -351,10 +360,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }catch(e){}
 
          if (this._options.parent._childsMapId[this._options.id]===0 || this._options.parent._childsMapId[this._options.id]) {
-            delete this._options.parent._childControls[this._options.parent._childsMapId[this._options.id]];
-            delete this._options.parent._childsMapId[this._options.id];
-            delete this._options.parent._childsMapName[this._options.name];
-            delete this._options.parent._childsTabindex[this._options.tabindex];
+            this.clearInformationOnParent();
          }
       },
 
@@ -570,6 +576,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
             if (tabindex) {
                var tabindexVal = parseInt(tabindex, 10);
+               this._baseTabIndex = tabindexVal;
                // Если индекс занят или -1 (авто) назначим последний незанятый
                if (tabindexVal == -1 || parent._childsTabindex[tabindexVal] !== undefined) {
                   tabindexVal = parent._maxTabindex + 1;
@@ -591,6 +598,14 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             parent._childContainers.push(this);
          }
 
+      },
+
+      recalcSelfTabindex: function() {
+         if (this._parent && this._baseTabIndex===-1){
+            this.clearInformationOnParent();
+            this._options.tabindex = this._baseTabIndex;
+            this._registerToParent(this._parent);
+         }
       },
 
       registerChildControl: function(control){
@@ -668,23 +683,31 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          return owner;
       },
 
+      isReady: function(){
+         return true;
+      },
+
+      finalRegToParent: function(){
+         this._registerToParent(this._parent);
+         var topParent = this.getTopParent();
+         if (topParent) {
+            if (topParent.isReady()) {
+               // находим и кэшируем владельца
+               this.getOwner();
+            } else {
+               // если родитель еще не готов, дождемся готовности и закэшируем овнера
+               topParent.subscribe('onReady', funcHelpers.forAliveOnly(this.getOwner, this));
+            }
+         }
+      },
+
       //for working getChildControlByName
       setParent: function (parent) {
          this._options.parent = parent;
          this._parent = parent;
 
          if (this._parent){
-            this._registerToParent(this._parent);
-            var topParent = this.getTopParent();
-            if (topParent) {
-               if (topParent.isReady()) {
-                  // находим и кэшируем владельца
-                  this.getOwner();
-               } else {
-                  // если родитель еще не готов, дождемся готовности и закэшируем овнера
-                  topParent.subscribe('onReady', funcHelpers.forAliveOnly(this.getOwner, this));
-               }
-            }
+            this.finalRegToParent();
          }
 
          /*if (parent._childsMapId[this._options.id]!==0 && !parent._childsMapId[this._options.id]) {
