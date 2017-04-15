@@ -12,10 +12,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
    "Core/helpers/collection-helpers",
-   "Core/helpers/generate-helpers"
+   "Core/helpers/generate-helpers",
+   "Core/helpers/Function/debounce"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce) {
 
        'use strict';
 
@@ -52,18 +53,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                  * Параметры фильтрации, которые не надо сохранять в историю
                  */
                 noSaveFilters: []
-             },
-
-             _changeHistoryFnc: undefined,
-             _applyHandlerDebounced: undefined,
-             _listHistory: undefined
+             }
           },
 
           $constructor: function() {
              this._listHistory = new List({items: this.getHistory() || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
-             this._applyHandlerDebounced = this._onApplyFilterHandler.debounce(0).bind(this);
+             this._applyHandlerDebounced = debounce.call(this._onApplyFilterHandler).bind(this);
 
              if(this._options.filterButton) {
                 this._initFilterButton();

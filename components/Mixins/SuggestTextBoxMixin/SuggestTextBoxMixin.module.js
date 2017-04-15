@@ -116,8 +116,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._options.searchParam = paramName;
          if(this._searchController) {
             this._searchController.setSearchParamName(paramName);
-         } else {
-            this._initializeSearchController();
          }
       },
 
