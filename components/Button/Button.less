@@ -74,6 +74,21 @@
    }
    /* End Button sizes */
 
+   &.controls-Button__withoutCaption {
+      min-width: @button-without-caption-min-width;
+      .controls-Button__icon {
+         margin-left: 0;
+      }
+      .controls-Button__text {
+         display: none;
+      }
+      &.controls-Button__big {
+         .controls-Button__icon {
+            margin-left: 0;
+         }
+      }
+   }
+
    &.ws-disabled {
       cursor: default;
       color: @default-disabled-color;
@@ -149,6 +164,13 @@
       .controls-Button__icon {
          &.icon-24 {
             padding-bottom: 2px;
+         }
+      }
+      &.controls-Button__withoutCaption {
+         .controls-Button__icon {
+            &.icon-24 {
+               padding-bottom: 0;
+            }
          }
       }
    }
