@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
          OperationDelete.superclass.constructor.call(this, cfg);
       },
 
-      _clickHandler: function() {
+      _onClick: function() {
          var view = this._options.linkedView,
             selectedKeys = view.getSelectedKeys(),
             keys = selectedKeys.length ? selectedKeys : this._getAllKeys();
