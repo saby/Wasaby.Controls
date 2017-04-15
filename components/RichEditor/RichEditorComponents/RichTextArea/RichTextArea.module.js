@@ -632,7 +632,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   arrBL = [arrBL];
                }
                arrBL.forEach(function(text,index) {
-                  arrBL[index] = this._replaceCodesTosmile(text);
+                  arrBL[index] = this._replaceCodesToSmile(text);
                }, this);
                return arrBL;
             }.bind(this))
@@ -1700,7 +1700,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
             return text;
          },
-         _replaceCodesTosmile: function(text) {
+         _replaceCodesToSmile: function(text) {
             smiles.forEach(function(smile) {
                text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
             });
