@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.FontStyle', [
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.FontStyle',
    'js!SBIS3.CONTROLS.IconButton',
-   'js!SBIS3.CONTROLS.ToggleButton',
-   'js!SBIS3.CONTROLS.ComboBox'
+   'js!WS.Controls.ToggleButton',
+   'js!SBIS3.CONTROLS.ComboBox',
+   'css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square'
 ], function(CompoundControl, dotTplFn) {
 
    'use strict';
