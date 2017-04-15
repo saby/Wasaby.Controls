@@ -934,10 +934,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var self = this,
                 originalEvent = e.originalEvent,
-                mobFix = 'controls-ListView__mobileSelected-fix';
+                mobFix = 'controls-ListView__mobileSelected-fix',
+                isTouchEvent = ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents));
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
-               Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 ||
+               Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
                /* IOS - однозначно включаем touch режим */
                constants.browser.isMobileIOS ||
                /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
@@ -945,13 +946,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   - mousemove срабатывает через случайный промежуток времени после touchEnd
                   - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
                   написана специальная проверка */
-               (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
+               (e.type === 'mousemove' && isTouchEvent)
             );
 
 
             switch (e.type) {
                case 'mousemove':
-                  self._allowMouseMoveEvent && this._mouseMoveHandler(e);
+                  self._allowMouseMoveEvent && !isTouchEvent && this._mouseMoveHandler(e);
                   break;
                case 'touchstart':
                   this._touchstartHandler(e);
