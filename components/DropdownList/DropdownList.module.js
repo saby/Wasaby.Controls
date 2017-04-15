@@ -948,7 +948,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
           * @param text
           */
          setText: function(text) {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DropdownList', 'Метод setText в скором времени будет удален. Значения должны отрисовываться на наборе данных');
             this._setText(text);
          },
          _setText: function(text){
