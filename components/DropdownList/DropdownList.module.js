@@ -579,6 +579,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
                }
                this._calcPickerSize();
+
+               //Если выбрали дефолтную запись - скрываем крестик сброса
+               //Нужно перед показом пикера, чтобы перед позиционированием контейнер имел правильные размеры, т.к.
+               //Наличие крестика влияет на отступы у записей согласно стандарту.
+               var isDefaultIdSelected = this._isDefaultIdSelected();
+               this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+               this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+
                DropdownList.superclass.showPicker.apply(this, arguments);
 
                if (this._buttonChoose) {
@@ -942,6 +950,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
           */
          getDefaultId: function() {
             return this._defaultId;
+         },
+         _isDefaultIdSelected: function() {
+           return this.getSelectedKeys()[0] == this.getDefaultId();
          },
          /**
           * Установить текст в заголовок
