@@ -186,7 +186,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Имя каталога, в который будут загружаться изображения
                 * @cfg {String} имя декоратора
                 */
-               imageFolder: 'images'
+               imageFolder: 'images',
+               /**
+                * позволяет сохранять историю ввода
+                * @cfg {boolean} Сохранять ли историю ввода
+                */
+               saveHistory: true
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -590,7 +595,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                self = this,
                isDublicate = false;
-            if (valParam && typeof valParam === 'string' && self._textChanged) {
+            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
                   if( typeof arrBL  === 'object') {
                      colHelpers.forEach(arrBL, function (valBL, keyBL) {
