@@ -144,14 +144,28 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _setPickerConfig: function () {
-            var self = this;
+            var self = this,
+                fieldLinkContainer = this._parentFieldLink.getContainer(),
+                pickerClasses = ['controls-FieldLink__picker'],
+                cssModifiers = [
+                   'controls-FieldLink__itemsEdited',
+                   'controls-FieldLink__itemsBold',
+                   'controls-FieldLink__big-fontSize'
+                ];
+
+            cssModifiers.each(function(value) {
+               if(fieldLinkContainer.hasClass(value)) {
+                  pickerClasses.push(value);
+               }
+            });
+
             return {
                corner: 'bl',
-               target: this._parentFieldLink.getContainer(),
+               target: fieldLinkContainer,
                opener: this._parentFieldLink,
                closeByExternalClick: true,
                targetPart: true,
-               cssClassName: 'controls-FieldLink__picker',
+               cssClassName: pickerClasses.join(' '),
                activableByClick: false,
                verticalAlign: {
                   side: 'top'
