@@ -24,6 +24,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
+   'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
@@ -50,6 +51,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       LinkWrap,
       dcHelpers,
       ImageOptionsPanel,
+      CodeSampleDialog,
       EventBus
    ) {
       'use strict';
@@ -66,7 +68,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             styles: {
                title: {inline: 'span', classes: 'titleText'},
                subTitle: {inline: 'span', classes: 'subTitleText'},
-               selectedMainText: {inline: 'span', classes: 'selectedMainText'},
                additionalText: {inline: 'span', classes: 'additionalText'}
             },
             ipadCoefficient: {
@@ -137,7 +138,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 *
                 */
                editorConfig: {
-                  plugins: 'media,paste,lists,noneditable',
+                  plugins: 'media,paste,lists,noneditable,codesample',
                   inline: true,
                   fixed_toolbar_container: '.controls-RichEditor__fakeArea',
                   relative_urls: false,
@@ -208,7 +209,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
             _imageOptionsPanel: undefined,
             _lastReview: undefined,
-            _fromTouch: false
+            _fromTouch: false,
+            _codeSampleDialog: undefined
          },
 
          _modifyOptions: function(options) {
@@ -479,8 +481,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @param onAfterCloseHandler Функция, вызываемая после закрытия диалога
           * @param target объект рядом с которым будет позиционироваться  диалог если нотификатор отсутствует
           */
-         pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
+         pasteFromBufferWithStyles: function(onAfterCloseHandler, target, saveStyles) {
             var
+               save = typeof saveStyles === 'undefined' ? true : saveStyles,
                self = this,
                dialog,
                eventResult,
@@ -495,8 +498,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                },
                onPaste = function(event) {
                   var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                  if (!content) {
+                  if (!content || save) {
                      content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
+                     content.replace('orphans: 31415;','');
                   }
                   prepareAndInsertContent(content);
                   dialog.close();
@@ -564,7 +568,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
                service.isReady().addCallback(function() {
                   service.call("getContentType", {}).addCallback(function (ContentType) {
-                     service.call(ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf' ? 'getHtml' : 'getText', {}).addCallback(function (content) {
+                     service.call((ContentType === 'Text/Html' || ContentType === 'Text/Rtf' || ContentType === 'Html' || ContentType === 'Rtf') && save ? 'getHtml' : 'getText', {}).addCallback(function (content) {
                         cIndicator.hide();
                         prepareAndInsertContent(content);
                         if (typeof onAfterCloseHandler === 'function') {
@@ -988,6 +992,36 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   break;
             }
          },
+         codeSample: function(text, language) {
+            var
+               wasClear = !this._tinyEditor.plugins.codesample.getCurrentCode(this._tinyEditor);
+            this._tinyEditor.plugins.codesample.insertCodeSample( this._tinyEditor, language, text);
+            if (wasClear) {
+               this._tinyEditor.selection.collapse();
+               this.insertHtml('<p>{$caret}</p>')
+            }
+         },
+         getCodeSampleDialog: function(){
+            var
+               self = this;
+            if (!this._codeSampleDialog) {
+               this._codeSampleDialog = new CodeSampleDialog({
+                  parent: this,
+                  element: $('<div></div>')
+               });
+               this._codeSampleDialog.subscribe('onApply', function(event, text, language) {
+                  self.codeSample(text, language);
+               })
+            }
+            return this._codeSampleDialog;
+         },
+         showCodeSample: function() {
+            var
+               editor = this._tinyEditor,
+               codeDialog = this.getCodeSampleDialog();
+            codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '')
+            codeDialog.show();
+         },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
          /*БЛОК ПРИВАТНЫХ МЕТОДОВ*/
@@ -1147,7 +1181,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
-               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,selectedMainText,additionalText', function(state, obj) {
+               editor.formatter.formatChanged('bold,italic,underline,strikethrough,alignleft,aligncenter,alignright,alignjustify,title,subTitle,additionalText,blockquote', function(state, obj) {
                   self._notify('onFormatChange', obj, state)
                });
                self._notify('onInitEditor');
@@ -1697,7 +1731,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _togglePlaceholder:function(value){
             var
                curValue = value || this.getText();
-            this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
+            this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) &&
+               this._inputControl.html().indexOf('</li>') < 0 &&
+               this._inputControl.html().indexOf('<p>&nbsp;') < 0 &&
+               this._inputControl.html().indexOf('<blockquote>') < 0
+            );
          },
          _replaceSmilesToCode: function(text) {
             smiles.forEach(function(smile){

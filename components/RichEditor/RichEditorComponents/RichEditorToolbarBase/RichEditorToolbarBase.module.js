@@ -2,8 +2,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    "Core/core-functions",
    "Core/core-merge",
    "Core/EventBus",
-   "js!SBIS3.CONTROLS.ButtonGroupBase"
-], function( cFunctions, cMerge, EventBus,ButtonGroupBase) {
+   "js!SBIS3.CONTROLS.ButtonGroupBase",
+   'Core/helpers/string-helpers'
+], function( cFunctions, cMerge, EventBus,ButtonGroupBase, strHelpers, CodeSampleDialog) {
 
    'use strict';
 
@@ -101,6 +102,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                editor = this._options.linkedEditor;
             this._handlersInstances.format = this._formatChangeHandler.bind(this);
             this.subscribeTo(editor, 'onFormatChange', this._handlersInstances.format);
+            this._fillHistory();
          },
 
          _formatChangeHandler : function() {},
@@ -166,6 +168,62 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             return this._itemsContainer;
          },
 
+         _fillHistory: function(){
+            var
+               prepareHistory = function(value){
+                  var
+                     stripText, title,
+                     $tmpDiv = $('<div/>').append(value);
+                  $tmpDiv.find('.ws-fre__smile').each(function(){
+                     var smileName = $(this).attr('title');
+                     $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
+                  });
+                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
+                  stripText = stripText.replace('/\n/gi', '');
+                  if (!stripText && value) {
+                     stripText = rk('Контент содержит только html-разметку, без текста.');
+                  } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
+                     stripText = stripText.substr(0, 140) + ' ...';
+                  }
+                  return stripText;
+               };
+            if (this.getItems().getRecordById('history')) {
+               this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
+                  //Проблема:
+                  //          После прихода данных тулбар уже может быть уничтожен
+                  //Решение 1:
+                  //          Хранить deferred вызова и убивать его в destroy
+                  //Решение 2:
+                  //          Проверять на isDestroyed
+                  if (!this.isDestroyed()) {
+                     var
+                        items = [],
+                        history = this.getItemInstance('history');
+                     for (var i in arrBL) {
+                        if (arrBL.hasOwnProperty(i)) {
+                           items.push({
+                              key: items.length,
+                              title: prepareHistory(arrBL[i]),
+                              value: arrBL[i]
+                           })
+                        }
+                     }
+                     if (!arrBL.length) {
+                        history.setEnabled(false);
+                     }
+                     history.setItems(items);
+                  }
+               }.bind(this));
+            }
+         },
+         _setText: function(text) {
+            if (this._options.linkedEditor) {
+               this._options.linkedEditor.setText(text);
+            }
+         },
+         _codeSample: function(button) {
+            this.getLinkedEditor().showCodeSample();
+         },
          destroy: function() {
             this._unbindEditor();
             this._handlersInstances = null;
