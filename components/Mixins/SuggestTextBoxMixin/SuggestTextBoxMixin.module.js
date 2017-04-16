@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Di',
    "Core/core-instance",
    "Core/CommandDispatcher",
-   "Core/core-functions"
+   "Core/core-functions",
+   "Core/helpers/Function/once"
 ], function (
    constants,
    SearchController,
@@ -56,6 +57,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
 
          this._options.observableControls.unshift(this);
+         this._initializeSearchController = once.call(this._initializeSearchController);
 
          this.once('onListReady', function(e, list) {
             self.subscribeTo(list, 'onKeyPressed', function (event, jqEvent) {
@@ -116,6 +118,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._options.searchParam = paramName;
          if(this._searchController) {
             this._searchController.setSearchParamName(paramName);
+         } else {
+            this._initializeSearchController();
          }
       },
 
