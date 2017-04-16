@@ -376,6 +376,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          return {
             item: item,
+            escapeHtml: strHelpers.escapeHtml,
             displayField: this._options.displayProperty,
             displayProperty: this._options.displayProperty,
             decorators: this._options._decorators
