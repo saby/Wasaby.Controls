@@ -301,9 +301,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @typedef {String} MovePosition
-          * @variant on Вставить перемещаемые элементы внутрь текущей записи.
           * @variant after Вставить перемещаемые элементы после текущей записи.
           * @variant before Вставить перемещаемые элементы перед текущей записью.
+          * @variant on Перемещение по иерархии, изменить родителя у перемещаемых элементов без изменения порядково номера.
           */
          /**
           * @typedef {Object} DragEntityOptions
@@ -3938,29 +3938,22 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _getMover: function() {
             if (!this._mover) {
-               this._mover = new Mover({
+               this._mover = Mover.make(this, {
                   moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   items: this.getItems(),
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
-                  invertOrder: this._options.invertOrder,
-                  dataSource: this.getDataSource()
+                  dataSource: this.getDataSource(),
                });
-               ['onBeginMove', 'onEndMove'].forEach(function (eventName) {
-                  this._mover.subscribe(eventName, function (e) {
-                     e.setResult(this._notify(eventName));
-                     return e;
-                  }.bind(this))
-               }, this);
             }
             return this._mover
          },
          /**
           * Перемещает переданные записи
           * @param {Array} movedItems  Массив перемещаемых записей.
-          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
-          * @param {MovePosition} position Как перемещать записи
+          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить.
+          * @param {MovePosition} position Позиционирование перемещения.
           * @return {Core/Deferred}
           * @example
           * <pre>
