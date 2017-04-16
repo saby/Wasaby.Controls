@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                if (listView) {
                   this._mover = listView;
                } else {
-                  this._mover = new Mover({
+                  this._mover = Mover.make(this, {
                      moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
                      items: this._getItems(),
                      parentProperty: this._options.parentProperty,
@@ -92,12 +92,6 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
                      dataSource: this.getDataSource()
                   });
                }
-               ['onBeginMove', 'onEndMove'].forEach(function (eventName) {
-                  this._mover.subscribe(eventName, function (e) {
-                     e.setResult(this._notify(eventName));
-                     return e;
-                  }.bind(this))
-               }, this);
             }
             return this._mover;
          },

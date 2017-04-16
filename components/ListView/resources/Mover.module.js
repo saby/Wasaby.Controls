@@ -370,6 +370,17 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       CUSTOM: 'Custom', //Своя логика перемещения записей
       MOVE_IN_ITEMS: 'MoveInItems'//Переместить в списке без вызова перемещения на источнике
    };
-
+   Mover.make = function (control, cfg) {
+      var cfg = cfg || {};
+      cfg['handlers'] = {
+         onBeginMove: function (event, movedItems, target, position) {
+            event.setResult(this._notify.call(this, 'onBeginMove', movedItems, target, position));
+         }.bind(control),
+         onEndMove: function (event, result, movedItems, target, position ) {
+            event.setResult(this._notify.call(this, 'onEndMove', result, movedItems, target, position));
+         }.bind(control)
+      };
+      return new Mover(cfg);
+   };
    return Mover;
 });
