@@ -1148,7 +1148,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Если скролл происходит перетаскиванием заголовков
             то выставим соответствующие флаги */
-         this._isHeaderScrolling = this._thead && this._thead.find(e.currentTarget).length;
+         this._isHeaderScrolling =
+            e.currentTarget !== this._thumb[0] && //Проверка, что перетаскиваем не ползунок, т.к. он тоже лежит в шапке
+            this._thead && this._thead.find(e.currentTarget).length;
+
          if(this._isHeaderScrolling) {
             this.getContainer().addClass('controls-DataGridView__scrollingNow');
          }
