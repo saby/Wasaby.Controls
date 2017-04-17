@@ -142,6 +142,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             closeByExternalOver: false,
             /**
+             * @cfg {Boolean} закрывать или нет при изменении положения элемента, к которому крепится popup
+             */
+            closeOnTargetMove: false,
+            /**
              * @cfg {Boolean} отображать кнопку закрытия
              */
             closeButton: false,
@@ -270,13 +274,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
-      _onTargetMove: function () {
+      _onTargetMove: function (event, state, isInitial) {
          if (this.isVisible()) {
-            if (this.isFixed()) {
-               this._initSizes();
+            if(this._options.closeOnTargetMove && !isInitial) {
+               this.hide();
+            } else {
+               if (this.isFixed()) {
+                  this._initSizes();
+               }
+               this.recalcPosition();
+               this._checkTargetPosition();
             }
-            this.recalcPosition();
-            this._checkTargetPosition();
          } else {
             this._initSizes();
          }
