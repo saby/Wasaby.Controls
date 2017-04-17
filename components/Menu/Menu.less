@@ -22,33 +22,7 @@
    .border-radius(@menu-border-radius);
    .box-shadow(@menu-shadow);
    .box-sizing(border-box);
-   .controls-Menu__hasChild {
-      &:after {
-         position: absolute;
-         font-family: 'cbuc-icons' !important;
-         font-size: 16px;
-         top: @menu-expand-top-offset;
-         right: @menu-expand-right-offset;
-         width: @menu-expand-width;
-         height: @menu-expand-height;
-         content: @menu-expand-content;
-         color: @default-color;
-         border-width: @menu-expand-border-width;
-         border-style: @menu-expand-border-style;
-         border-color: @menu-expand-border-color;
-         background: @menu-expand-bg;
-         .box-sizing(border-box);
-      }
-      &:hover:after {
-         border-width: @menu-expand-hover-border-width;
-         border-style: @menu-expand-hover-border-style;
-         border-color: @menu-expand-hover-border-color;
-         background: @menu-expand-hover-bg;
-      }
-      &.controls-MenuItem{
-         padding-right: @menu-item-expand-padding-right;
-      }
-   }
+
    .controls-Menu__submenu {
       display: block;
    }
@@ -88,6 +62,34 @@
       .controls-Menu__header {
          .flex-direction(row-reverse);
       }
+   }
+}
+
+.controls-Menu__hasChild {
+   &:after {
+      position: absolute;
+      font-family: 'cbuc-icons' !important;
+      font-size: 16px;
+      top: @menu-expand-top-offset;
+      right: @menu-expand-right-offset;
+      width: @menu-expand-width;
+      height: @menu-expand-height;
+      content: @menu-expand-content;
+      color: @default-color;
+      border-width: @menu-expand-border-width;
+      border-style: @menu-expand-border-style;
+      border-color: @menu-expand-border-color;
+      background: @menu-expand-bg;
+      .box-sizing(border-box);
+   }
+   &:hover:after {
+      border-width: @menu-expand-hover-border-width;
+      border-style: @menu-expand-hover-border-style;
+      border-color: @menu-expand-hover-border-color;
+      background: @menu-expand-hover-bg;
+   }
+   &.controls-MenuItem{
+      padding-right: @menu-item-expand-padding-right;
    }
 }
 
