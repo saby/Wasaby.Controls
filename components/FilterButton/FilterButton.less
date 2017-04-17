@@ -19,8 +19,6 @@
 }
 
 .controls__filterButton__filterLine {
-   .inline-flexbox();
-   .align-items(center);
    max-width: ~'calc(100% - '@controls-filterButton-button-width + 8px ~')';
    height: @controls-filterButton-button-height;
    margin: 8px 0 8px 0;
@@ -50,15 +48,13 @@
       }
    }
 }
-
-.controls__filterButton__filterLine-items {
-   .inline-flexbox();
-   .align-items(center);
+.controls__filterButton__filterLine-items, .controls__filterButton__filterLine-text {
    .text-overflow();
 }
 
-.controls__filterButton__filterLine-text {
-   .text-overflow();
+.controls__filterButton__filterLine-items, .controls__filterButton__filterLine {
+   .inline-flexbox();
+   .align-items(center);
 }
 
 .ws-is-desktop-platform {
