@@ -5,8 +5,7 @@ define('js!WS.Controls.MenuButton', [
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/collection-helpers',
-   'Core/IoC',
-   'css!WS.Controls.MenuButton'
+   'Core/IoC'
 ], function(Button, ContextMenu, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC) {
 
    'use strict';
