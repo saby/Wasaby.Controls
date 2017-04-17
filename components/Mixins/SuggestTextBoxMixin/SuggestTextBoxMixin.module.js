@@ -57,6 +57,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
 
          this._options.observableControls.unshift(this);
+         
+         /* Инициализация searchController'a происходит лениво,
+            только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
+            на onSearch (и лишних созданий контроллера), метод инициализации позволяем вызывать только один раз. */
          this._initializeSearchController = once.call(this._initializeSearchController);
 
          this.once('onListReady', function(e, list) {
