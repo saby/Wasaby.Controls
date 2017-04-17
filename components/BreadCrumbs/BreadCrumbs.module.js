@@ -93,6 +93,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              */
             itemTpl: itemTpl,
             itemContentTpl: itemContentTpl,
+            _defaultItemContentTemplate: itemContentTpl,
+            _defaultItemTemplate: itemTpl,
             pickerClassName: 'controls-Menu__Popup controls-BreadCrumbs '
          }
       },
