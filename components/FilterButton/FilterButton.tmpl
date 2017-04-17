@@ -5,5 +5,9 @@
     <ws:else>
         <ws:partial template="{{ filterLineTemplate }}"/>
     </ws:else>
-    <div class="controls__filterButton-button icon-24 icon-size icon-FilterNew icon-primary action-hover"></div>
+    <ws:SBIS3.CONTROLS.IconButton
+        cssClassName="controls__filterButton-button"
+        icon="icon-24 icon-size icon-FilterNew icon-primary"
+        command="show-filter"
+    />
 </div>

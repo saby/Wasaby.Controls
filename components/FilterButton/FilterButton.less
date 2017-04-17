@@ -3,27 +3,15 @@
    display: inline-block;
 
    &.ws-disabled {
-      .controls__filterButton-button {
-         cursor: default;
-         color: @default-disabled-color !important;
-      }
       .controls__filterButton__filterLine-arrow {
-         color: @default-disabled-color !important;
-      }
-      .controls__filterButton__filterLine-cross {
-         cursor: default;
          color: @default-disabled-color !important;
       }
    }
 }
 
 .controls__filterButton-button {
-   width: @controls-filterButton-button-width;
-   height: @controls-filterButton-button-height;
    margin: @controls-filterButton-button-margin;
-   cursor: pointer;
    float: right;
-   font-size: @filter-button-font-size;
 
    &:active {
       color: @blue-dark-color !important;

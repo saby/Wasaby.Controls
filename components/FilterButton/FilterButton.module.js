@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/helpers/collection-helpers",
    "Core/IoC",
    "Core/helpers/Function/once",
+   "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
    "i18n!SBIS3.CONTROLS.FilterButton",
    'css!SBIS3.CONTROLS.FilterButton'
@@ -186,18 +187,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           showPicker: function() {
-             var showPicker = FilterButton.superclass.showPicker.bind(this);
-
+             var self = this;
+   
              /* Не показываем кнопку фильтров, если она выключена */
              if(!this.isEnabled()) return;
-
-             if(!this._picker) {
-                this._initTemplates().addCallback(function() {
-                   showPicker();
-                });
-             } else {
-                showPicker();
-             }
+   
+             this._initTemplates().addCallback(function() {
+                FilterButton.superclass.showPicker.call(self);
+             });
           },
 
           _initTemplates: function() {
