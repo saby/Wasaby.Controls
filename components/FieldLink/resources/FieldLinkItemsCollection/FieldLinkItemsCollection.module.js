@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                    'controls-FieldLink__big-fontSize'
                 ];
 
-            cssModifiers.each(function(value) {
+            cssModifiers.forEach(function(value) {
                if(fieldLinkContainer.hasClass(value)) {
                   pickerClasses.push(value);
                }
