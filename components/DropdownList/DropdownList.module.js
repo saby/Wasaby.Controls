@@ -463,7 +463,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _initializePicker: function() {
             DropdownList.superclass._initializePicker.apply(this, arguments);
             this.redraw();// Отрисовываем записи в пикере
-            this._setPickerVariables();
             this._setHasMoreButtonVisibility();
             this._notify('onPickerInitializing');//Костыльное событие в 30 версию для быстрых фильтров. после перевода на новый стандарт оно будет не нужно
             // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
