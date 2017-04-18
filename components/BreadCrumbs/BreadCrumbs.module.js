@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
    'html!SBIS3.CONTROLS.BreadCrumbs/resources/itemContentTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/dotsTpl',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
+   'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',
    'Core/helpers/string-helpers',
    "Core/IoC",
