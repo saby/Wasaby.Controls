@@ -9,23 +9,27 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       $protected: {
          _options: {
             view: null,
-            mode: 'up'
+            mode: 'down'
          },
          _currentVirtualPage: 0,
          _virtualPages: [{offset: 0}],
          _bottomIndex: null,
-         _beginWrapper: null,
-         _endWrapper: null,
+         _beginWrapper: 0,
+         _endWrapper: 0,
+         _beginWrapperHeight: 0,
+         _endWrapperHeight: 0,
          _newItemsCount: 0,
          _additionalHeight: 0,
          _lastPageHeight: 0,
-         _DEBUG: true
+         _notAddedAmount: 0,
+         _DEBUG: false,
       },
 
-      init: function(){
+      init: function() {
          var view = this._options.view;
          VirtualScrollController.superclass.init.call(this);
          
+         // После первой загрузки инициализируем текущие страницы
          view.subscribe('onDataLoad', function(){
             this._virtualPages = [{offset: 0}];
             this.updateVirtualPages();
@@ -40,19 +44,20 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             this._endWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
             this._beginWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
          }
-         //this._onVirtualPageChangeDebounce = this._onVirtualPageChange.debounce(10);
          this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
-         this._scrollHandler = this._scrollHandler.debounce(0);
          view._scrollWatcher.getScrollContainer()[0].addEventListener('scroll', this._scrollHandler.bind(this), { passive: true });
       },
 
       _scrollHandler: function(e, scrollTop){
-         var page = this._getPage();
-         if (page >= 0 && this._currentVirtualPage!= page) {
-            this._scrollingDown = this._currentVirtualPage < page;
-            this._onVirtualPageChange(page);
-            this._currentVirtualPage = page;
-         }
+         clearTimeout(this._scrollTimeout);
+         this._scrollTimeout = setTimeout(function(){
+            var page = this._getPage();
+            if (page >= 0 && this._currentVirtualPage!= page) {
+               this._scrollingDown = this._currentVirtualPage < page;
+               this._onVirtualPageChange(page);
+               this._currentVirtualPage = page;
+            }
+         }.bind(this), 0);
       },
 
       _getPage: function() {
@@ -79,26 +84,32 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       _onVirtualPageChange: function(pageNumber) {
          var pages = this._virtualPages,
             at = 0,
-            removeOffset = 0, addOffset = 0,
-            segments = [],
+            removeOffset = 0, 
+            addOffset = 0,
+            segments = [],            
+            pagesToRemove = [],
+            pagesToAdd = [],
             haveToAdd = false, 
             haveToRemove = false,
-            newWindow = this._getRangeToShow(pageNumber, BATCH_SIZE, PAGES_COUNT);
+            newWindow = this._getRangeToShow(pageNumber, BATCH_SIZE, PAGES_COUNT),
+            projCount =  this._options.view._getItemsProjection().getCount(),
+            i;
 
          // Может добавиться меньше BATCH_SIZE новых элементов, учтем это
          if (newWindow[0] >= BATCH_SIZE && this._newItemsCount) {
             newWindow[0] -= (BATCH_SIZE - this._newItemsCount);
          }
-         var projCount =  this._options.view._getItemsProjection().getCount();
+         // Не можем отображать больше чем есть
          if (newWindow[1] > projCount) {
             newWindow[1] = projCount;
          }
 
-         var diff = this._getDiff(this._currentWindow, newWindow),
-            pagesToRemove = [],
-            pagesToAdd = [],
-            i;
+         // разница между промежутками
+         // если начало списка вверху то, top - элменты которые нужно убрать, bottom - элементы которые нужно добавить
+         // если список снизу вверх - то наоборот 
+         var diff = this._getDiff(this._currentWindow, newWindow);
 
+         // нет разницы - нечего делать
          if (!diff) {
             this._currentWindow = newWindow;
             return;
@@ -111,6 +122,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             console.log('diff.bottom', diff.bottom);
          }
 
+         // Прокрутка к концу списка
          if (this._currentWindow[0] < newWindow[0]) {
             segments[0] = diff.top;
             segments[1] = diff.bottom;
@@ -121,6 +133,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             }
             addOffset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
          } else {
+            // Прокрутка к началу списка
             segments[0] = diff.bottom;
             segments[1] = diff.top;
             if (diff.bottom[1] - diff.bottom[0] >= BATCH_SIZE - 1) {
@@ -169,6 +182,10 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
       },
 
+      /**
+       * Устанавливает высоту распорок по номеру страницы
+       * @param {Number} номер страницы
+       */
       _setWrappersHeight: function(page) {
          var pages = this._virtualPages,
             bottomPage = page + 3 < 5 ? 5 : page + 3,
@@ -210,7 +227,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          return pages;
       },
-
+      /**
+       * Удаляет промежуток range записей из списка с отсупом в offset
+       * @param  {Array} Промежуток записей
+       * @param  {Number} отступ
+       */
       _remove: function(range, offset){
          var toRemove = [],
             from = range[0],
@@ -231,16 +252,24 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          }
          this._options.view._removeItems(toRemove);
          if (this._DEBUG) {
-            //console.log('remove from', from, 'to', to);
+            console.log('remove from', from, 'to', to);
          }
       },
-
+      
+      /**
+       * Добавляет промежуток range записей в позицию at списка с отсупом в offset
+       * @param  {Array} Промежуток записей
+       * @param  {Number} отступ
+       */
       _add: function(range, at, offset) {
          var toAdd = [],
             from = range[0],
             to = range[1], 
             projection = this._options.view._getItemsProjection(),
             prjItem, index;
+
+         offset = offset || this._notAddedAmount;
+
          for (var i = from; i <= to; i++) {
             if (this._options.mode == 'down'){
                index = i;
@@ -256,12 +285,20 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          if (this._options.mode == 'up'){
             toAdd.reverse();
          }
+         this._processingReturn = true;
          this._options.view._addItems(toAdd, at);
+         this._processingReturn = false;
          if (this._DEBUG) {
-            //console.log('add from', from, 'to', to, 'at', at);
+            console.log('add from', from, 'to', to, 'at', at);
          }
       },
 
+      /**
+       * @param  {Number} номер страницы
+       * @param  {Number} размер страницы
+       * @param  {Number} Количество страниц
+       * @return {Array} номера записей в начале и конце этого промежутка страниц
+       */
       _getRangeToShow: function(pageNumber, pageSize, pagesCount) {
          var sidePagesCount = Math.floor(pagesCount / 2),
             toShow;
@@ -271,6 +308,13 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          return [(pageNumber - sidePagesCount) * pageSize, (pageNumber + sidePagesCount + 1) * pageSize - 1];
       },
 
+
+      /**
+       *                                                                             a      b            c      d
+       * @param  {Array} Текущий отображаемый промежуток элементов    [a,c]          |-------------------|       
+       * @param  {Array} Новый промежуток элементов                   [b,d]                 |-------------------|
+       * @return {Array} Разница между промежутками - два промежутка  [[a,b],[c,d]]  |------|            |------|
+       */
       _getDiff: function(currentRange, newRange) {
          var top, bottom;
 
@@ -278,6 +322,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             return false;
          }
 
+         // Если промежутки не пересекаются
          if (currentRange[1] < newRange[0]) {
             if (this._options.mode == 'down') {
                top = newRange;
@@ -292,6 +337,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             };
          }
 
+         // Если промежутки не пересекаются
          if (currentRange[0] > newRange[1]) {
             if (this._options.mode == 'down') {
                top = currentRange;
@@ -306,6 +352,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
             };
          } 
 
+         //Если промежутки пересекаются
          if (currentRange[0] - newRange[0] < 0) {
             top = [currentRange[0], newRange[0] - 1];
             bottom = [currentRange[1] + 1, newRange[1]];
@@ -320,14 +367,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          };
       },
 
-      _getOffsets: function(){
-         var offsets = [];
-         for (var i = 0; i < this._virtualPages.length; i++){
-            offsets.push(this._virtualPages[i].offset);
-         }
-         return offsets;
-      },
-
       _getElementOffset: function(element) {
          element = $(element);
          var view = this._options.view;
@@ -340,6 +379,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
       },
       /*
        * Пересчет страниц для VirtualScroll
+       * Для каждой страницы хранится отступ ее первого элемента от начала списка и состояние dettached удалена из DOM или нет
+       * Вызывается на каждый onResizeHandler у родительского списка
        */
       updateVirtualPages: function(){
          var view = this._options.view,
@@ -382,6 +423,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
          });
       },
 
+      // Добавление новых элементов, когда они добавляются не через подгрузку по скроллу
+      // TODO: пока не работает для элементов которые в данный момент не нужно вставлять в DOM
       addItems: function(items, at) {
          var additionalHeight = 0,
             hash;
@@ -407,6 +450,18 @@ define('js!SBIS3.CONTROLS.VirtualScrollController',
 
       getCurrentRange: function(){
          return this._currentWindow;
+      },
+
+      isInShownRange: function(index) {
+         var allow;
+         this._notAddedAmount += 1;
+         if (index < BATCH_SIZE || this._processingReturn) {
+            allow = true;
+         } else {
+            index = this._options.view._getItemsProjection().getCount() - index;
+            allow = index > this._currentWindow[0];
+         }
+         return allow;
       }
 
    });

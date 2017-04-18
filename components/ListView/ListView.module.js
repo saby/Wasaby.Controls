@@ -2527,17 +2527,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _getItemsForRedrawOnAdd: function(items, groupId){
+         _getItemsForRedrawOnAdd: function(items, groupId, newItemsIndex){
             var itemsToAdd = ListView.superclass._getItemsForRedrawOnAdd.apply(this, arguments),
                index, range;
             if (this._options.virtualScrolling) {
-               range = this._virtualScrollController.getCurrentRange();
-               for (var i = 0; i < itemsToAdd.length; i++) {
-                  index = this._getItemsProjection().getIndexByHash(itemsToAdd[i].getHash());
-                  // if (index < range[0] || index > range[1]) {
-                  //    itemsToAdd.splice(i, 1);
-                  // }
-               }
+               // for (var i = 0; i < itemsToAdd.length; i++) {
+               //    if (!this._virtualScrollController.isInShownRange(newItemsIndex)) {
+               //       itemsToAdd.splice(i, 1);
+               //    }
+               // }
             } 
             return itemsToAdd;
          },
