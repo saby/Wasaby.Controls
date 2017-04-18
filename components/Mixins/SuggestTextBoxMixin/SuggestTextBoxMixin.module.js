@@ -333,6 +333,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
+            parentConfig.closeOnTargetMove = true;
             return parentConfig;
          },
 
