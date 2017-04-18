@@ -99,8 +99,9 @@ define('js!SBIS3.CONTROLS.Link', [
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
-         caption = this._options.caption;
-         this._container.get(0).innerHTML = hrefTemplate(this._options);
+         if(this._options.href) {
+            this._container.get(0).innerHTML = hrefTemplate(this._options);
+         }
          this.setTooltip(caption);
       },
 
