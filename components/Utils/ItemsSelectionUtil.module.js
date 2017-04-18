@@ -8,8 +8,7 @@
 define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], function(cInstance) {
    
    var delayedEvents = {
-      onSelectedItemsChange: 'getSelectedItems',
-      onSelectedItemChange: 'getSelectedItem'
+      onSelectedItemsChange: 'getSelectedItems'
    };
    
    
