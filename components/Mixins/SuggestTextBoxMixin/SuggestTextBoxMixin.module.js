@@ -21,7 +21,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Di,
    cInstance,
    CommandDispatcher,
-   cFunctions ) {
+   cFunctions,
+   once) {
 
    'use strict';
 
