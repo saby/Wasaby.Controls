@@ -936,7 +936,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this,
                 originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix',
-                isTouchEvent = ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents));
+                isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
                Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
