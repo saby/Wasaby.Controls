@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
+      if (cfg.itemsFilterMethod) {
+         projCfg.filter = cfg.itemsFilterMethod;
+      }
       proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
    },
@@ -670,6 +673,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
+            itemsFilterMethod: undefined,
             easyGroup: false,
             task1173537554: false
          },
@@ -2469,6 +2473,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.itemsSortMethod = sort;
          if(this._options._itemsProjection) {
             this._options._itemsProjection.setSort(sort);
+         }
+      },
+      /**
+       * Устанавливает метод фильтрации элементов на клиенте.
+       * @param {Function} filter функция фильтрации элементов, если передать undefined фильтрация сбросится
+       * @see WS.Data/Display/Collection:setFilter
+       */
+      setItemsFilterMethod: function(filter) {
+         this._options.itemsFilterMethod = filter;
+         if(this._options._itemsProjection) {
+            this._options._itemsProjection.setFilter(filter);
          }
       },
       /**
