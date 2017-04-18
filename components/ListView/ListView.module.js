@@ -3944,7 +3944,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
-                  dataSource: this.getDataSource(),
+                  dataSource: this.getDataSource()
                });
             }
             return this._mover
