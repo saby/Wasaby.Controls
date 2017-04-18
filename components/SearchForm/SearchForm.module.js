@@ -6,11 +6,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    "js!SBIS3.CONTROLS.SuggestTextBoxMixin",
    "js!SBIS3.CONTROLS.ChooserMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
-   "html!SBIS3.CONTROLS.SearchForm",
-   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
+   "tmpl!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
    'css!SBIS3.CONTROLS.SearchForm',
    'css!SBIS3.CONTROLS.Suggest'
-], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, dotTplFn, buttonsTpl) {
+], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, buttonsTpl) {
 
    'use strict';
 
@@ -31,14 +30,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearch При нажатии кнопки поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
        */
       /**
        * @event onReset При нажатии кнопки отмена (крестик)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
-      _dotTplFn : dotTplFn,
       $protected: {
          _options: {
             afterFieldWrapper: buttonsTpl,
@@ -73,6 +71,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
                self.applySearch(true);
             }
          });
+      },
+      
+      _modifyOptions: function () {
+         var opts = SearchForm.superclass._modifyOptions.apply(this, arguments);
+         opts.className += ' controls-SearchForm';
+         return opts;
       },
 
       /**

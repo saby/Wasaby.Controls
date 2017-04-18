@@ -36,6 +36,22 @@
   height: 32px;
   font-family: 'cbuc-icons' !important;
 }
+.icon-size(@size: 16px){
+  font-size: @size !important;
+  line-height: @size !important;
+  width: @size;
+  height: @size;
+  font-family: 'cbuc-icons24' !important;
+  & when (@size > 24px) {
+  font-family: 'cbuc-icons' !important;
+  }
+  & when (@size < 24px) {
+    font-family: 'cbuc-icons' !important;
+  }
+  & when (@size = 24px) {
+    font-family: 'cbuc-icons24' !important;
+  }
+}
 
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
@@ -100,6 +116,44 @@
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
   background-clip: padding-box;
+}
+
+.round-button-mixin(@border-color) {
+  border: 1px solid @border-color;
+  border-radius: 14px;
+  text-align: center;
+
+  &.ws-disabled {
+    border-color: @gray-ccc-color;
+    .controls-Button__icon {
+      color: @gray-ccc-color;
+    }
+  }
+  box-sizing: border-box;
+}
+
+.button-default-style() {
+  cursor: pointer;
+  .inline-flexbox();
+  .align-items(center);
+  outline: none;
+  .box-sizing(border-box);
+  font-family: @default-font-name;
+  font-size: @link-font-size;
+  text-align: @button-text-alignment;
+  position: relative;
+  .box-shadow(@button-shadow);
+  border: none;
+  padding: 0;
+}
+
+.button-baseline-fix(@height: auto) {
+  &:before {
+    content: '.';
+    width: 0;
+    height: @height;
+    visibility: hidden;
+  }
 }
 
 .opacity(@opacity: 0.5) {
@@ -240,9 +294,21 @@
 // - applies to: flex items
 // auto | flex-start | flex-end | center | baseline | stretch
 .align-self(@align: auto) {
+  .ms-flex-align-self(@align); // IE10
   -webkit-align-self: @align;
       -ms-align-self: @align;
           align-self: @align;
+}
+.ms-flex-align-self(@align) when (@align = flex-start) {
+  -ms-flex-item-align: start;
+}
+
+.ms-flex-align-self(@align) when (@align = flex-end) {
+  -ms-flex-item-align: end;
+}
+
+.ms-flex-align-self(@align) when (@align = auto), (@align = center), (@align = baseline), (@align = stretch) {
+  -ms-flex-item-align: @align;
 }
 // Flex Direction and Wrap
 // - applies to: flex containers
@@ -337,7 +403,7 @@
   &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
     &:hover {
       color: @textColor;
-      .controls-Link__icon {
+      .controls-Button__icon {
         &.icon-primary {
           color: @iconColor !important;
         }
@@ -349,5 +415,47 @@
       cursor: pointer;
       text-decoration: underline;
     }
+  }
+}
+
+.round-button-hover-mixin() {
+  &:hover {
+    border-color: @default-color;
+    .controls-Button__icon {
+      color: @default-color;
+    }
+    &.controls-IconButton__errorBorder {
+      border-color: @icon-button-error-color;
+      .controls-Button__icon {
+        color: @icon-button-error-color;
+      }
+      &.ws-disabled {
+        border-color: @gray-ccc-color;
+        .controls-Button__icon {
+          color: @gray-ccc-color;
+        }
+      }
+    }
+    &.controls-IconButton__doneBorder {
+      border-color: @icon-button-done-color;
+      .controls-Button__icon {
+        color: @icon-button-done-color;
+      }
+      &.ws-disabled {
+        border-color: @gray-ccc-color;
+        .controls-Button__icon {
+          color: @gray-ccc-color;
+        }
+      }
+    }
+  }
+}
+
+.button-mixin(@border-width; @margin-left; @margin-right; @icon-width) {
+  left:  @margin-left - @border-width;
+
+  & + .controls-Button__text {
+    margin-right: @margin-right - @border-width;
+    margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
   }
 }

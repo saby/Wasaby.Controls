@@ -34,6 +34,7 @@
 
    .controls-DateRangeChoose__border {
       border: @date-range-choose-border-hover;
+      border-width: @date-range-choose-border-hover-width;
       background-color: @date-range-choose-bg-hover-color;
       position: absolute;
       top: 0;
@@ -101,6 +102,8 @@
 
    .controls-DateRangeChoose__home {
       width: 24px;
+      height: @date-range-choose-year-height;
+      line-height: @date-range-choose-year-height !important;
       text-align: left;
    }
    .controls-DateRangeChoose__year {
@@ -109,7 +112,7 @@
       font-size: @date-range-choose-year-font-size;
       font-weight: @date-range-choose-year-font-weight;
       height: @date-range-choose-year-height;
-      line-height: @date-range-choose-year-height + 1;
+      line-height: @date-range-choose-year-line-height;
       vertical-align: middle;
       padding-left: @date-range-choose-year-padding-left; //2px;
       .flex-grow(1);
@@ -119,6 +122,10 @@
             background-color: @date-range-choose-year-bg-hover-color;
          }
       }
+   }
+   .controls-DateRangeChoose__year {
+      padding-left: 2px;
+      margin-left: @controls-date-range-year-marginleft;
    }
    // В зависимости от режима немного меняется позиционирование элементов в шапке
    &.controls-DateRangeChoose__showMonths {
@@ -159,7 +166,7 @@
       // Убираем фон у всех внутренних блоков
       .controls-DateRangeChoose__halfYear-caption,
       .controls-DateRangeChoose__quarter-caption,
-      .controls-DateRangeChoose__month {
+      .controls-DateRangeChoose__month-wrapper {
          background-color: transparent !important;
       }
    }
@@ -216,8 +223,10 @@
             .box-sizing(border-box);
             height: @date-range-choose-month-height;
             line-height: @date-range-choose-month-height;
-            background-color: @date-range-choose-item-bg-color;
             text-align: @date-range-choose-month-month-only-text-align;
+            ~ .controls-DateRangeChoose__month {
+               margin-top: -1px;
+            }
             .controls-DateRangeChoose__month-caption {
                position: relative;
                padding: 0;
@@ -285,10 +294,39 @@
             }
          }
       }
+
+      &.controls-DateRangeChoose__showMonths {
+         .controls-DateRangeChoose__month-wrapper {
+            background-color: @date-range-choose-item-bg-color;
+         }
+      }
    }
 
    &.controls-DateRangeChoose__showHalfYears.controls-DateRangeChoose__showQuarters.controls-DateRangeChoose__showMonths {
       min-width: @date-range-choose-width;
+      margin-top: 0;
+   }
+
+   &.controls-DateRangeChoose__showMonths:not(.controls-DateRangeChoose__showHalfYears):not(.controls-DateRangeChoose__showQuarters),
+   &.controls-DateRangeChoose__showQuarters:not(.controls-DateRangeChoose__showHalfYears):not(.controls-DateRangeChoose__showMonths) {
+      .controls-DateRangeChoose__main-wrapper {
+         background-color: @date-range-choose-item-bg-color;
+      }
+   }
+
+   &:not(.controls-DateRangeChoose__showHalfYears) {
+      .controls-DateRangeChoose__halfYear ~ .controls-DateRangeChoose__halfYear,
+      .controls-DateRangeChoose__quarter ~ .controls-DateRangeChoose__quarter {
+            margin-top: -1px;
+      }
+   }
+   &:not(.controls-DateRangeChoose__showHalfYears):not(.controls-DateRangeChoose__showMonths) {
+      .controls-DateRangeChoose__quarter ~ .controls-DateRangeChoose__quarter {
+         margin-top: -1px;
+      }
+      .controls-DateRangeChoose__quarter-caption {
+         background-color: transparent;
+      }
    }
 
    &.controls-DateRangeChoose__showHalfYears {
@@ -306,7 +344,7 @@
                display: block;
             }
 
-            .controls-DateRangeChoose__month {
+            .controls-DateRangeChoose__month-wrapper {
                margin: @date-range-choose-month-margin;
             }
          }
@@ -358,7 +396,7 @@
       &.controls-DateRangeChoose__showQuarters {
          .controls-DateRangeChoose__halfYear {
             .controls-DateRangeChoose__quarter {
-               .controls-DateRangeChoose__month {
+               .controls-DateRangeChoose__month-wrapper {
                   margin: @date-range-choose-month-margin;
                }
             }

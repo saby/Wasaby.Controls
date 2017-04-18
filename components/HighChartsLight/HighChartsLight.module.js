@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    "js!SBIS3.CORE.Control",
    "html!SBIS3.CONTROLS.HighChartsLight",
    "Core/helpers/dom&controls-helpers",
-   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighChartsLight"
 ],
 function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
@@ -14,7 +14,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
    /**
     * Диаграмма HighChartsLight
     * @class SBIS3.CONTROLS.HighChartsLight
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     *
     * @cssModifier controls-HighChartsLight__overflow-visible Отменяет обрезание для контенеров в которых лежит график. Все элементы которые рисуются с опцией useHTML не будут обрезаться границами контенера
     * @cssModifier controls-HighChartsLight__svg-overflow-visible Отменяет обрезание для контенеров в которых лежит график, в том числе и для самого svg контенера графика. Все элементы в том числе и те, которые рисуются внутри svg, не будут обрезаться.

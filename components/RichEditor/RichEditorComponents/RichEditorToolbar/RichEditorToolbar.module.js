@@ -9,12 +9,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
    'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.ToggleButton",
+   "js!WS.Controls.ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
    'css!SBIS3.CONTROLS.RichEditorToolbar',
    'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
-   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton'
+   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton',
+   "css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square"
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
@@ -278,8 +279,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                this._imagePanel = new ImagePanel({
                   parent: button,
                   target: button.getContainer(),
-                  corner: 'tr',
-                  closeByExternalClick: true,
                   verticalAlign: {
                      side: 'top',
                      offset: -10

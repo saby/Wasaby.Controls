@@ -52,7 +52,7 @@ define(
       _dotTplFn: dotTplFn,
        /**
         * @event onDateChange Срабатывает при изменении даты.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {String} date Дата.
         * @example
         * <pre>

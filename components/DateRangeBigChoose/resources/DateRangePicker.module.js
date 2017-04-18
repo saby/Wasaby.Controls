@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
             // itemTemplate: '<div>{{=it.item.get("date")}}</div>',
             // infiniteScroll: 'both',
             pageSize: 3,
-            className: 'controls-DateRangeBigChoose-DateRangePicker'
+            cssClassName: 'controls-DateRangeBigChoose-DateRangePicker'
          },
          _lastOverControl: null,
          _offset: MonthSource.defaultOffset,

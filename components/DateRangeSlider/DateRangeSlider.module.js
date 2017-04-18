@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'Core/helpers/date-helpers',
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.Link',
+   'css!SBIS3.CONTROLS.DateRangeSlider'
 ], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
@@ -84,8 +85,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         opts._caption = this._getCaption(opts);
          return opts;
       },
 
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
             pickerWidth = 178;
          } else {
-            pickerWidth = 146;
+            pickerWidth = 148;
          }
          return {
             corner: 'tl',
@@ -202,9 +202,9 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                offset: (baseWidth - pickerWidth)/2
             },
             verticalAlign: {
-               side: 'top',
-               offset: -4
-            }
+               side: 'top'
+            },
+            closeByExternalClick: true
          };
       }
    });

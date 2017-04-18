@@ -27,12 +27,17 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
     */
    var PrintUnloadBase = MenuLink.extend(/** @lends SBIS3.CONTROLS.PrintUnloadBase.prototype */{
       /**
-       * @event onApplyOperation Перед обработкой операции
+       * @event onPrepareData Происходит при подготовке данных.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Array.<Object>} originData Исходные данные.
+       */
+      /**
+       * @event onApplyOperation Перед обработкой операции.
+       * @remark
        * Событие происходит при непосредственном выборе выгрузки или печати. Данные уже выбраны, но можно поменять колонки для выборки
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} type Имя операции. print или unload (Печать или выгрузка)
-       * @return Результат обработчика события.
-       * Если вернуть новый набор колонок, то напечатаны будут они
+       * @return Результат обработчика события. Если вернуть новый набор колонок, то напечатаны будут они
        * @example
        * Структура массива с описанием строк:
        * <pre>
@@ -54,6 +59,9 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
 
       $protected: {
          _options: {
+            /**
+             * @cfg {String} Имя файла
+             */
             fileName : '',
             allowChangeEnable: false
          },

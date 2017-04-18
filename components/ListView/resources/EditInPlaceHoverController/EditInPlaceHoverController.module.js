@@ -97,8 +97,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
             },
             edit: function (model) {
                return this.endEdit(true).addCallback(function() {
-                  var hoveredEip = this._hoveredEip;
-                  if (hoveredEip && (hoveredEip.getOriginalRecord().getId() === model.getId())) {
+                  var
+                     hoveredEip = this._hoveredEip,
+                     idProperty = this._options.idProperty;
+                  if (hoveredEip && (hoveredEip.getOriginalRecord().get(idProperty).toString() === model.get(idProperty).toString())) {
                      if (this._notify('onBeginEdit', model) !== false) {
                         this._hoveredEip = null;
                         hoveredEip.edit(model);

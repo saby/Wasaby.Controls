@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.HighCharts', [
-   "Transport/BLObject",
+   "js!WS.Data/Source/SbisService",
+   "js!WS.Data/Query/Query",
    "Core/helpers/helpers",
    "Core/core-functions",
    "Core/constants",
@@ -8,11 +9,11 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "html!SBIS3.CONTROLS.HighCharts",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
-   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers){
+function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -41,7 +42,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
    /**
     * Диаграмма HighCharts. Демо-примеры диаграмм вы можете найти на сайте <a href='http://www.highcharts.com/demo'>www.highcharts.com</a>.
     * @class SBIS3.CONTROLS.HighCharts
-    * @extends $ws.proto.Control
+    * @extends SBIS3.CORE.Control
     * @control
     * @public
     *
@@ -58,7 +59,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
        * @event onBeforeReload перед перерисовкой диаграммы
        * может использоваться для задания специфических опций при отрисовке диаграммы, например, когда надо сделать подпись в зависимости от условий
        * <wiTag group='Управление">
-       * @param {Object} eventObject описание в классе $ws.proto.Abstract
+       * @param {Object} eventObject описание в классе SBIS3.CORE.Abstract
        * @param {Object} highChartOptions Объект опций который будет передан в HighChart
        * @param {Object} объект HighChart
        * @param {Array} данные по которым отрисуется диаграмма
@@ -73,6 +74,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
        */
       _dotTplFn : dotTpl,
       $protected : {
+         _dataSource: null,
          _ctxBind : {},
          _filters : {},
          _loadedFilters : {},
@@ -796,7 +798,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
 
 
                   /*если стоит автообновление из контекста*/
-                  if (filter.refresh) {
+                  if (!this._isRefresh && filter.refresh) {
                      this._isRefresh = true;
                      /* Первое на смену поля в контексте. Второе на смену рекорда во всплывающей панели
                      *  из-за WS приходится делать два разных события*/
@@ -848,9 +850,8 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
             rs = this._sourceData.data,
             arr = [];
 
-         rs.rewind();
-         var rec = rs.next();
-         while(rec) {
+
+         rs.each(function(rec){
 
             for (var i = 0; i < seriesOpts.length; i++) {
                if (!arr[i]) {
@@ -899,10 +900,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
                }
 
             }
-
-
-            rec = rs.next();
-         }
+         });
          return arr.length ? arr : null;
       },
 
@@ -997,9 +995,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
             yAxis = this._yAxis,
             rs = this._sourceData.data;
 
-         rs.rewind();
-         var rec = rs.next();
-         var iterate = function(axis) {
+         var iterate = function(axis, rec) {
 			if (axis) {
 				for (var i = 0; i < axis.length; i++) {
 				   if (axis[i].sourceField) {
@@ -1011,11 +1007,10 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
 				}
 			}
          };
-         while(rec) {
-            iterate(xAxis);
-            iterate(yAxis);
-            rec = rs.next();
-         }
+         rs.each(function(rec){
+            iterate(xAxis, rec);
+            iterate(yAxis, rec);
+         });
 
          return {
             xAxis : xAxis,
@@ -1023,6 +1018,17 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
          }
       },
 
+      _getDataSource: function(endpoint, query) {
+         if (!this._dataSource) {
+            this._dataSource = new SbisService({
+               endpoint: endpoint,
+               binding: {
+                  query: query
+               }
+            })
+         }
+         return this._dataSource;
+      },
 
       _getData : function() {
          var
@@ -1039,7 +1045,11 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
             var BL = this._options.sourceData.methodBL.split(".");
             if (BL.length > 1) {
                // запускаем запрос на получение данных
-               BLObject(BL[0]).query(BL[1], this._filters).addCallback(fHelpers.forAliveOnly(function (rs) {
+               var source = this._getDataSource(BL[0], BL[1]);
+               var query = new Query();
+               query.where(this._filters);
+               source.query(query).addCallback(fHelpers.forAliveOnly(function (ds) {
+                  var rs = ds.getAll();
                   /*результат метода пишем в data*/
                   self._sourceData.data = rs;
                   resultDef.callback();
@@ -1187,6 +1197,7 @@ function( BLObject, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTp
          if (this._chartObj) {
             this._chartObj.destroy();
          }
+         this._dataSource = null;
          dcHelpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }

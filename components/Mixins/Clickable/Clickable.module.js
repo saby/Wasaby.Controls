@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.Clickable', [
    var Clickable = /**@lends SBIS3.CONTROLS.Clickable.prototype  */{
       /**
        * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    onActivated: function(event){
@@ -35,7 +35,17 @@ define('js!SBIS3.CONTROLS.Clickable', [
             /**
              * @cfg {Array} Аргументы, которые будут переданы при вызове команды
              */
-            commandArgs: []
+            commandArgs: [],
+            /**
+             * @cfg {Boolean} После клика включает задержку (определяется браузерам) перед следующим кликом.
+             * Если опция отключена, то все клики будут вызывать событие
+             * Если опция включена, то появляется задержка между кликами (определяется браузером)
+             * @example
+             * <pre class="brush:xml">
+             *     <option name="clickThrottle">false</option>
+             * </pre>
+             */
+            clickThrottle: false
          },
          _keysWeHandle: [
             constants.key.enter,
@@ -50,10 +60,6 @@ define('js!SBIS3.CONTROLS.Clickable', [
          this._container.on("touchstart  mousedown", function (e) {
             if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
                self._container.addClass('controls-Click__active');
-            }
-            //В IE предотвратим нативное смещение текста в правый нижний угол внутри кнопки
-            if (constants.browser.isIE) {
-               e.preventDefault();
             }
             //return false;
          });
@@ -108,8 +114,10 @@ define('js!SBIS3.CONTROLS.Clickable', [
                if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
-               this._clickHandler(e);
-               this._notifyOnActivated(e);
+               if(!this._options.clickThrottle || (this._options.clickThrottle && e.originalEvent.detail === 1)) {
+                  this._clickHandler(e);
+                  this._notifyOnActivated(e);
+               }
             }
             e.stopImmediatePropagation();
          }

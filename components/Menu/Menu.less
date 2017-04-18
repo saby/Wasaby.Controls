@@ -1,11 +1,11 @@
 .controls-Menu__Popup {
-   font:  @font-popup-size @font-basic-name;
+   font:  @popup-font-size @default-font-name;
    padding: @menu-padding;
    margin: @menu-margin;
    .flexbox();
    .flex-direction(column);
-   border-width: @menu-border-width;
-   border-style: @menu-border-style;
+   border-width: @default-border-width;
+   border-style: @default-border-style;
    border-color: @menu-border-color;
    background-color: @white-color;
    -webkit-touch-callout: none;
@@ -93,7 +93,7 @@
 
 .controls-Menu__Popup:not(.controls-MenuPicker__resetIconColor) {
    .controls-Menu__header-icon {
-      color: @blue-dark-color !important;
+      color: @icon-active-color !important;
    }
 }
 .controls-Menu__submenu {
@@ -102,4 +102,53 @@
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
    padding: @menu-subpopup-padding;
+}
+
+.controls-Menu {
+   .controls-Menu__header {
+      position: relative;
+      cursor: pointer;
+      font-size: @popup-font-size;
+      font-weight: bold;
+      background-color: @menu-header-bg-color;
+      overflow: hidden;
+      .flexbox();
+      .align-items(center);
+
+      .controls-Menu-headWrapper {
+         .flexbox();
+         .align-items(center);
+      }
+      .controls-Menu__header-caption {
+         color: @menu-header-caption-color;
+         .flex-shrink(0);
+      }
+      .controls-Menu__header-icon + .controls-Menu__header-caption{
+         padding-left: 0;
+      }
+   }
+   .controls-Menu__header {
+      height: @menu-header-height;
+   }
+   &.controls-MenuButton__Menu {
+      &.controls-Menu__hide-menu-header {
+         //   margin: -8px 0 0 -13px;
+         .controls-Menu__header {
+            display: none;
+         }
+         &.controls-IconButton__round-border-24 {
+            margin: -7px 0 0 -7px;
+            .controls-ListView__item:first-child {
+               .controls-MenuItem__icon {
+                  .round-button-mixin(@gray-ccc-color);
+                  height: 24px !important;
+                  width: 24px !important;
+                  line-height: 22px !important;
+                  top: 2px;
+                  left: -6px;
+               }
+            }
+         }
+      }
+   }
 }

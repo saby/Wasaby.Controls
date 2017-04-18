@@ -1,11 +1,10 @@
-@import "../../IconButton/IconButton";
 .controls-Menu {
    .controls-Menu__header {
       position: relative;
       cursor: pointer;
       font-size: @font-popup-size;
-      font-weight: bold;
-      background-color: #F4F4F4;
+      font-weight: @popup-header-font-weight;
+      background-color: @menu-header-bg-color;
       overflow: hidden;
       .flexbox();
       .align-items(center);
@@ -15,7 +14,7 @@
          .align-items(center);
       }
       .controls-Menu__header-caption {
-         color: @blue-dark-color;
+         color: @popup-header-caption-color;
          .flex-shrink(0);
       }
       .controls-Menu__header-icon + .controls-Menu__header-caption{
@@ -41,17 +40,6 @@
                top: 2px;
                left: -6px;
             }
-         }
-      }
-   }
-}
-
-.ws-is-firefox {
-   .controls-Menu {
-      .controls-Menu__header {
-         .icon-24 {
-            top: -1px;
-            position: relative;
          }
       }
    }

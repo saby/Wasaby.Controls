@@ -116,8 +116,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._options.searchParam = paramName;
          if(this._searchController) {
             this._searchController.setSearchParamName(paramName);
-         } else {
-            this._initializeSearchController();
          }
       },
 
@@ -169,7 +167,35 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
                //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
                var idProp = this.getList().getItems().getIdProperty(),
-                   index = this._historyController.getIndexByValue(idProp, item.get(idProp));
+                   itemId = item.get(idProp),
+                   index = -1;
+
+               this._historyController.each(function(model, i) {
+                  var historyModelObject = model.get('data').toObject();
+                  var historyModelId;
+                  //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
+                  //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
+                  //свойства модели не инициализируются, соответственно dataRecord.get('anyField') не вернет ничего.
+                  //Пока не доработали механизм истории на запоминание только id, приходится искать добавляемую запись в рекордсете истории вручную по сырым данным.
+                  if (historyModelObject.d instanceof Array && historyModelObject.s instanceof Array) {
+                     var fieldIndex = -1;
+                     for (var j = 0; j < historyModelObject.s.length; j++) {
+                        if (historyModelObject.s[j].n === idProp) {
+                           fieldIndex = j;
+                           break;
+                        }
+                     }
+                     if (fieldIndex > -1) {
+                        historyModelId = historyModelObject.d[fieldIndex];
+                     }
+                  }
+                  else {
+                     historyModelId = historyModelObject[idProp];
+                  }
+                  if (itemId === historyModelId) {
+                     index = i;
+                  }
+               });
                if(index !== -1) {
                   this._historyController.removeAt(index);
                }

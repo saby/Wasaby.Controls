@@ -7,7 +7,6 @@
   height: @search-height;
   font-size: @text-box-field-font-size;
 
-  &.controls-TextBox {
     &:hover {
       border-color: @search-hover-border-color;
       background: @search-background;
@@ -34,7 +33,6 @@
         display: none;
       }
     }
-  }
 
   &.controls-TextBox .controls-TextBox__fieldWrapper {
     margin: 0 @search-form-field-wrapper-margin-right 0 @search-left-margin;
@@ -45,6 +43,9 @@
     width: @search-buttons-wrapper-width;
     padding: @search-button-wrapper-padding;
   }
+}
+
+.controls-SearchForm {
   .controls-SearchForm__search, .controls-SearchForm__reset {
     display: block;
     float: right;
@@ -54,7 +55,6 @@
     height: @search-loop-size;
   }
 }
-
 // хак для edge win10 выравнивает input и placeholder
 @supports (-ms-ime-align:auto) {
   .controls-SearchForm {

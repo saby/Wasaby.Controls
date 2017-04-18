@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     [
    "Core/constants",
    "html!SBIS3.CONTROLS.SelectorButton",
-   "js!SBIS3.CONTROLS.ButtonBase",
+   "js!WS.Controls.ButtonBase",
    "js!SBIS3.CONTROLS.DSMixin",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.ActiveMultiSelectable",
@@ -26,7 +26,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     function(
        constants,
        dotTplFn,
-       ButtonBase,
+       WSButtonBase,
        DSMixin,
        MultiSelectable,
        ActiveMultiSelectable,
@@ -47,19 +47,19 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
     /* Функция рендера текста в шаблоне компонента */
     function itemTemplateRender(opts) {
-       var items = [],
-           res = [];
+       var res = [],
+          items;
 
        if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
           items = [opts.selectedItem];
        } else if (opts.selectedItems) {
-          items = opts.selectedItems.toArray();
+          items = opts.selectedItems;
        }
 
-       if(items.length) {
-          colHelpers.forEach(items, function(item) {
+       if (items) {
+          items.forEach(function(item) {
              res.push(item.get(opts.displayProperty));
-          })
+          });
        }
 
        return res.join('');
@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
     *
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends SBIS3.CONTROLS.WSButtonBase
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -98,10 +98,11 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @public
     */
 
-   var SelectorButton = ButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
+   var SelectorButton = WSButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            clickThrottle: true,
             _preRender: itemTemplateRender,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
@@ -174,7 +175,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             });
          }
       },
-      _drawSelectedItems: function(keysArr) {
+      _drawSelectedItems: function() {
          var self = this,
              isSelected = !this._isEmptySelection();
 
@@ -221,62 +222,21 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          text.html(resultText);
          /* Скрываем, если текст пустой */
          text.toggleClass('ws-hidden', !resultText);
-         this._checkWidth();
          this._notifyOnSizeChanged();
       },
 
-      _checkWidth: function() {
-         // Хак для старых ие
-         if (constants.browser.isIE10) {
-            if(!this.isVisibleWithParents()) {
-               return;
-            }
-
-            var additionalWidth = this._container.find('.controls-SelectorButton__icon:visible').width() + this._container.find('.controls-SelectorButton__cross:visible').width(),
-                text = this._container.find('.controls-SelectorButton__text'),
-                containerWidth = this._container.width(),
-                resultWidth;
-
-            if (containerWidth < (additionalWidth + text.width())) {
-               resultWidth = containerWidth - additionalWidth;
-               if(resultWidth > 0) {
-                  text.width(containerWidth - additionalWidth);
-               }
-            } else {
-               text.width('auto');
-            }
-         }
-      },
-
-      _onResizeHandler: function() {
-         SelectorButton.superclass._onResizeHandler.apply(this, arguments);
-         this._checkWidth();
-      },
-
       _clickHandler: function(e) {
-         var selectedItems = this.getSelectedItems();
+         var cfg = this.getDictionaries()[0];
 
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
-            //люди биндятся на опцию selectedItem. И при сбросе значения на крестик, selectedItem тоже должен сбрасываться.
-            this.setSelectedKey(null);
          } else {
-            //TODO Пока делаю выбор из одного справочника, в дальнейшем доработать выбор из нескольких
-            var dic = this._options.dictionaries[0];
-
-            if(this._options.useSelectorAction && dic.template) {
-               this._getSelectorAction().execute({
-                  template: dic.template,
-                  componentOptions: dic.componentOptions || {},
-                  multiselect: this.getMultiselect(),
-                  selectionType: dic.selectionType || 'all',
-                  selectedItems: selectedItems ? selectedItems.clone() : selectedItems
-               })
+            if(this.getProperty('useSelectorAction')) {
+               cfg.multiselect = this.getMultiselect();
+               cfg.selectedItems = this.getSelectedItems();
+               this._getSelectorAction().execute(cfg);
             } else {
-               this._showChooser(
-                  dic && dic.template,
-                  dic && dic.componentOptions
-               )
+               this._showChooser(cfg.template, cfg.componentOptions);
             }
          }
       },

@@ -15,6 +15,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/ParallelDeferred",
    "Core/helpers/collection-helpers",
    "Core/IoC",
+   "Core/helpers/Function/once",
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
@@ -39,7 +40,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
         TemplateUtil,
         ParallelDeferred,
         colHelpers,
-        IoC
+        IoC,
+        once
     ) {
 
        'use strict';
@@ -185,7 +187,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('show-filter', showPicker);
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
-             this._checkPickerContent = this._checkPickerContent.once();
+             this._checkPickerContent = once.call(this._checkPickerContent);
              this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
@@ -423,7 +425,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeButton: true,
                 closeByExternalClick: true,
                 context: context,
-                className: 'controls__filterButton__picker',
+                cssClassName: 'controls__filterButton__picker',
                 template: this._getAreaTemplate(),
                 activateAfterShow: true,
                 handlers: {

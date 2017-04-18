@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
    var DateRangeController = cAbstract.extend(/**@lends SBIS3.CONTROLS.DateRangeRelationController.prototype*/{
       /**
        * @event onDatesChange Происходит при изменении значения хотя бы одного из синхронизируемых контролов.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected: {
          _options: {

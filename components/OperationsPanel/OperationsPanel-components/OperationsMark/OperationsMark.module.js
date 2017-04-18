@@ -68,7 +68,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             allowChangeEnable: false
          },
          _useSelectAll: false,
-         _markCheckBox: undefined
+         _markCheckBox: undefined,
+         _isInternalCheckedChange: false
       },
       $constructor: function() {
          this._createMarkCheckBox();
@@ -123,19 +124,36 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             this[id].apply(this);
          }
       },
-      _onCheckBoxActivated: function() {
-         if (this._markCheckBox.isChecked()){
+      _onCheckedChange: function(e, checked) {
+         if (!this._isInternalCheckedChange) {
+            this._setSelectionOnCheckedChange(checked);
+         }
+      },
+
+      _setSelectionOnCheckedChange: function(checked) {
+         if (checked) {
             this.getItems().getRecordById('selectAll') ? this.selectAll() : this.selectCurrentPage();
          } else {
             this.removeSelection();
-         }   
+         }
       },
+
+      //Необходимо разграничивать изменение состояния CheckBox из кода и при клике по нему, т.к. изменение состояния CheckBox
+      //приводит к изменению набора выделенных записей, а изменение набора выделенных записей приводит к изменению состояния CheckBox.
+      //Чтобы не получить зацикливание, при изменении состояния CheckBox из кода, поставим флаг, что это изменение не дожно привести
+      //к изменению набора выделенных записей.
+      _setCheckedInternal: function(checked) {
+         this._isInternalCheckedChange = true;
+         this._markCheckBox.setChecked(checked);
+         this._isInternalCheckedChange = false;
+      },
+
       _updateMarkCheckBox: function() {
          var view = this._options.linkedView,
             //TODO Подумать что делать если нет _dataSet
             recordsCount = view.getItems() ? view.getItems().getCount() : 0,
             selectedCount = view.getSelectedKeys().length;
-         this._markCheckBox.setChecked(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
+         this._setCheckedInternal(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
          if (!this._dataSet) {
@@ -209,7 +227,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                element: $('<span>').insertBefore(this._container),
                className: 'controls-OperationsMark-checkBox',
                handlers: {
-                  onActivated: this._onCheckBoxActivated.bind(this)
+                  onCheckedChange: this._onCheckedChange.bind(this)
                }
             });
          }

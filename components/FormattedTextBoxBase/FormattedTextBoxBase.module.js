@@ -609,7 +609,7 @@ define(
    var FormattedTextBoxBase = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.FormattedTextBoxBase.prototype */ {
        /**
         * @event onInputFinished По окончании ввода
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @example
         * По завершению ввода добавим в конец маски группу из 3 цифр
         * <pre>
@@ -1038,9 +1038,9 @@ define(
 
       /**
        * Обработка события фокусировки на элементе
-       * TODO пока работает только в IE8+ и FireFox
        * @private
        */
+      //TODO пока работает только в IE8+ и FireFox
       _focusHandler: function() {
          var
             child = !this._getFormatModel().model[0].isGroup ? 1 : 0,

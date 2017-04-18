@@ -1,4 +1,4 @@
-.controls-ComboBox {
+.controls-ComboBox.controls-TextBox {
    line-height: normal;
    cursor: @combo-box-cursor;
    padding-right: @combo-box-right-padding;
@@ -13,7 +13,6 @@
        color: #587AB0!important;
      }
    }
-
    .controls-TextBox__fieldWrapper {
       position: relative;
       white-space: nowrap;
@@ -107,7 +106,8 @@
    &.controls-Picker__show {
       background-color: @combo-box-picker-show-background-color;
       color: @compo-box-picker-show-color;
-      border: 1px solid @combo-box-picker-show-border-color;
+      border: @combobox-picker-border-width solid @combo-box-picker-show-border-color;
+
 
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
@@ -140,10 +140,14 @@
 
 .controls-ComboBox__picker {
    overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
-   .controls-ComboBox__body{
+   .controls-ComboBox__body {
      border: @combo-box-picker-border;
      height: calc(~"100% - 10px"); /* отступ от края экрана*/
      .border-radius(@combo-box-picker-border-radius);
+     .controls-ComboBox__list {
+        .flexbox();
+        .flex-direction(column);
+     }
    }
    .controls-ComboBox__scrollContainer{
      max-height: 400px;
@@ -163,6 +167,13 @@
       &:hover {
          color: @combo-box-picker-item-hover-text-color;
          background: @combo-box-picker-item-hover-bg;
+      }
+   }
+   &.controls-popup-revert-vertical {
+      .controls-ComboBox__body{
+         .controls-ComboBox__list {
+            .flex-direction(column-reverse);
+         }
       }
    }
 }

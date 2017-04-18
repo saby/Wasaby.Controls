@@ -20,5 +20,12 @@
     .controls-MoneyTextBox__input {
       display: inline;
     }
+    .controls-TextBox__fieldWrapper {
+      &:before {
+        content: '.';
+        visibility: hidden;
+        width: 0;
+      }
+    }
   }
 }

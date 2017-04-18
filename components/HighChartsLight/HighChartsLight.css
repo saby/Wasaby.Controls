@@ -1,4 +1,4 @@
-.ws-is-mobile-platform .ws-HighChartsLight *{
+.ws-is-ie .ws-HighChartsLight, .ws-is-mobile-safari .ws-HighChartsLight, .ws-is-mobile-chrome-ios .ws-HighChartsLight{
    -webkit-transform: none !important;
 }
 
