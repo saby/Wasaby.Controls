@@ -164,12 +164,6 @@
       max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
    }
-   .controls-TextBox__afterFieldWrapper {
-      .inline-flexbox();
-      .align-items(center);
-      height: @controls-FieldLink-afterField-height;
-      width: auto;
-   }
 
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
@@ -207,6 +201,13 @@
       display: inline;
       line-height: 20px;
    }
+}
+
+.controls-FieldLink.controls-TextBox .controls-TextBox__afterFieldWrapper {
+   .inline-flexbox();
+   .align-items(center);
+   height: @controls-FieldLink-afterField-height;
+   width: auto;
 }
 
 .controls-TextBox__afterFieldWrapper {
