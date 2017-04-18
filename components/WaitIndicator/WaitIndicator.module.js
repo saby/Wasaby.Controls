@@ -656,6 +656,9 @@
             if (!target || typeof target !== 'object' || target === window || target === document) {
                return null;
             }
+            if (target instanceof CoreControl.Control) {
+               target = target.getContainer();
+            }
             var container;
             if (target instanceof Element) {
                container = target;
@@ -666,10 +669,6 @@
                   return null;
                }
                container = target[0];
-            }
-            else
-            if (target instanceof CoreControl.Control) {
-               container = target.getContainer()[0];
             }
             return container !== window && container !== document && container !== document.body ? container : null;
          },

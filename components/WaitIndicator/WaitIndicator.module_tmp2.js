@@ -657,6 +657,10 @@
             if (!target || typeof target !== 'object' || target === window || target === document) {
                return null;
             }
+            // Будем определять instanceOf SBIS3.CORE.Control не прямо, чтобы не создавать зависимости и не подгружать класс (утиная типизация)
+            if (typeof target.getContainer === 'function' && ['superclass', 'extend', 'beforeExtend'].every(function (method) { return typeof target.constructor[method] !== 'undefined'; })) {
+               target = target.getContainer();
+            }
             var container;
             if (target instanceof Element) {
                container = target;
@@ -667,11 +671,6 @@
                   return null;
                }
                container = target[0];
-            }
-            else
-            // Будем определять instanceOf SBIS3.CORE.Control не прямо, чтобы не создавать зависимости и не подгружать класс (утиная типизация)
-            if (typeof target.getContainer === 'function' && ['superclass', 'extend', 'beforeExtend'].every(function (method) { return typeof target.constructor[method] !== 'undefined'; })) {
-               container = target.getContainer()[0];
             }
             return container !== window && container !== document && container !== document.body ? container : null;
          },
