@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    var DSMixin = /**@lends SBIS3.CONTROLS.DSMixin.prototype  */{
        /**
         * @event onDrawItems Происходит после отрисовки всех элементов коллекции.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @example
         * <pre>
         *     Menu.subscribe('onDrawItems', function(){
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         */
        /**
         * @event onDataLoad Происходит после загрузки данных.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
         * @example
         * <pre>
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @event onDataLoadError Происходит после загрузки данных, завершенной с ошибкой.
        * @remark
        * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {HTTPError} error Произошедшая ошибка.
        * @return {Boolean} Если вернуть:
        * <ol>
@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @event onBeforeDataLoad Происходит перед загрузкой данных.
        * @remark
        * Событие сработает перед запросом к источнику данных.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    myView.subscribe('onBeforeDataLoad', function(event, error){
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        * @event onItemsReady Происходит при готовности экземпляра коллекции iList.
        * @remark
        * Например когда представлению задается Source и нужно подписаться на события List, который вернется в результате запроса
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    myView.subscribe('onItemsReady', function(event){
@@ -222,7 +222,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *    var myDataSource = new SbisService({ // Инициализация источника данных
              *        endpoint: {
              *           contract: 'Отчеты', // Устанавливаем объект БЛ, в котором есть методы для работы с данными таблицы
-             *           address: 'myNewService/service/sbis-rpc-service300.dll' // Устанавливаем точку входа в другой сервис
+             *           address: 'myNewService/service/' // Устанавливаем точку входа в другой сервис
              *        },
              *        binding: {
              *           query: 'Список' // Устанавливаем списочный метод
@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
-             *             <option name="address" value="myNewService/service/sbis-rpc-service300.dll"></option>
+             *             <option name="address" value="myNewService/service/"></option>
              *          </options>
              *          <options name="binding">
              *             <option name="query" value="Список"></option>
@@ -647,18 +647,15 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
-         this._onCollectionItemChange = onCollectionItemChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.subscribeTo(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._itemsProjection, 'onCollectionChange', this._onCollectionChange);
-         this.unsubscribeFrom(this._itemsProjection, 'onCollectionItemChange', this._onCollectionItemChange);
       },
       /**
        * Устанавливает источник данных.
@@ -1585,7 +1582,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       },
       /**
        * Обрабатывает событие об изменении коллекции.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} action Действие, приведшее к изменению.
        * @param {WS.Data/Display/CollectionItem[]} newItems Новые элементы коллеции.
        * @param {Integer} newItemsIndex Индекс, в котором появились новые элементы.
@@ -1617,7 +1614,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
 
                case IBindCollection.ACTION_CHANGE:
                   newItems.forEach(function(item, i) {
-                     this._onCollectionItemChange(event, item, newItemsIndex + i);
+                     onCollectionItemChange.call(this, event, item, newItemsIndex + i, newItems.properties);
                   }, this);
                   break;
 

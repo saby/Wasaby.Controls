@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Checkable', [], function() {
        /**
         * @event onCheckedChange При изменении состояния кнопки
         * Событие срабатывает при нажатии на кнопку, выставления/снятия флажка, выборе радиокнопки.
-        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Core/EventObject} Дескриптор события.
         * @param {Boolean} checked Признак состояния:
         * <ul>
         *    <li>true - кнопка нажата/ чекбокс с галочкой/ радиокнопка выбрана;</li>

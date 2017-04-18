@@ -1,5 +1,6 @@
-<span
-    class="controls-CheckBox{{ checked===true ? ' controls-Checked__checked'}}{{ checked===null && threeState ? ' controls-ToggleButton__null'}}" title="{{ tooltip }}">
-    <i class="controls-CheckBox__icon">&nbsp;</i>
-    <ws:partial template="{{_contentTemplate}}" scope="{{...}}" />
-</span>
+<div class="controls-CheckBox{{checked ? ' controls-Checked__checked'}}{{checked === null && threeState ? ' controls-ToggleButton__null'}}" title="{{tooltip}}">
+    <div class="controls-CheckBox__icon controls-CheckBox__icon_size">
+       <div class="controls-CheckBox__iconBox controls-CheckBox__iconBox_size controls-CheckBox__iconBox_color"></div>
+    </div>
+    <ws:partial template="{{contentTemplate}}" scope="{{...}}"/>
+</div>

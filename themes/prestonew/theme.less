@@ -1,3 +1,14 @@
+html {
+  font-size: 28px !important;
+  color: #e4e4e4;
+  background-color: #1d2834;
+}
+body {
+  font-size: 28px !important;
+}
+.controls-ListView {
+  background-color: #1d2834;
+}
 .controls-SearchForm {
   .icon-size {
     font-size: 2rem !important;
@@ -37,10 +48,10 @@
 
 .controls-PopupMixin__closeButton {
   position: absolute;
-  top: @controls-Popup-closeButton-top;
+  top: 10px;
   right: @controls-Popup-closeButton-right;
-  width: @closeBigButtonWidth;
-  height: @closeBigButtonHeight;
+  width: 3rem;
+  height: 3rem;
   cursor: pointer;
   background: @closeBigButtonImage;
   &:hover {
@@ -59,13 +70,18 @@
 .controls-Button__text {
   line-height: 20px;//for 1 or 2 lines
 }
-
+.icon-24() {
+  font-size: 1.785rem !important;
+  line-height: 1.785rem !important;
+  width: 1.785rem;
+  height: 1.785rem;
+  font-family: 'cbuc-icons24' !important;
+}
 @text-box-height-prestoBig:   50px;
 @text-box-height-prestoFont:  36px;
 .controls-TextBox {
    &.controls-TextBox__big {
-      height: @text-box-height-prestoBig;
-      font-size: @text-box-height-prestoFont;
+
    }
 }
 
@@ -89,3 +105,119 @@ body .ws-enabled .icon-primary{
 .controls-listView td {
   font-size: 1rem;
 }
+body {
+  .icon-16 {
+    font-size: 1.43rem !important;
+    line-height: 1.43rem !important;
+    width: 1.43rem;
+    height: 1.43rem;
+  }
+}
+.controls-Button.controls-Button--prestogray {
+    color: #2C3E50;
+  background: #e4e4e4;
+}
+.controls-ListView__scrollPager {
+  height: 3rem !important;
+}
+.control-Paging__btn  {
+  border: 2px solid #26b8ff;
+}
+.ws-moneyDecorator {
+  &__integer{
+    font-size: @money-decorator-integer-font-size;
+    color: @money-decorator-integer-font-color;
+    &__AccentResults{
+      font-size: @money-decorator-integer-accent-results-font-size;
+      color: @money-decorator-integer-accent-results-font-color;
+      font-weight: @money-decorator-integer-accent-results-font-weight;
+    }
+    &__NoAccentResults{
+      font-size: @money-decorator-integer-no-accent-results-font-size;
+      color: @money-decorator-integer-no-accent-results-font-color;
+      font-weight: @money-decorator-integer-no-accent-results-font-weight;
+    }
+    &__Group{
+      font-size: @money-decorator-integer-group-font-size;
+      color: @money-decorator-integer-group-font-color;
+    }
+    &__BasicRegistry{
+
+    }
+    &__NoBasicRegistry{
+      font-size: @money-decorator-integer-no-basic-registry-font-size;
+      color: @money-decorator-integer-no-basic-registry-font-color;
+    }
+    &__AccentRegistry{
+      font-size: @money-decorator-integer-accent-registry-font-size;
+      color: @money-decorator-integer-accent-registry-font-color;
+      font-weight: @money-decorator-integer-accent-registry-font-weight;
+    }
+    &__NoAccentRegistry{
+      font-size: @money-decorator-integer-no-accent-registry-font-size;
+      color: @money-decorator-integer-no-accent-registry-font-color;
+      font-weight: @money-decorator-integer-no-accent-registry-font-weight;
+    }
+  }
+  &__fraction{
+    font-size: .857rem;
+    color: #8991A9;
+    line-height: normal;
+    font-weight: normal !important;
+  }
+}
+.controls-Link.controls__filter-button__clear-filter.ws-disabled {
+  color: rgba(102, 170, 221, .2);
+  font-size: 1.14rem;
+
+
+}
+.controls__filterButton__area {
+  border: 2px solid #26b8ff;
+}
+
+body {
+  .ws-window-titlebar {
+    color: #e4e4e4;
+    line-height: 2rem;
+    background: transparent;
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 1.14rem;
+    white-space: nowrap;
+    -moz-box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+  }
+  &.ws-window-titlebar-custom {
+    position: relative;
+    height: 2rem !important;
+    .ws-float-area-title {
+      line-height: 1rem !important;
+    }
+  }
+  .ws-float-area-title {
+      font-size: 1rem!important;
+  }
+}
+.controls-FloatArea {
+  border: 2px solid #2196F3;
+  background: #2c3e50;
+}
+body {
+  .controls__filter-button__clear-filter {
+    font-size: 1.14rem;
+
+  }
+  &:hover {
+    color: #26b8ff !important;
+  }
+}
+.controls-ComboBox.controls-TextBox.controls-Picker__show {
+  border-bottom: none;
+}
+.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable
+ {
+  color: #e4e4e4 !important;
+ }

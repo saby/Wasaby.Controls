@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
        /**
         * @event onTextChange Происходит при изменении текста в поле ввода.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {String} text Текст в поле ввода.
         * @example
         * <pre>

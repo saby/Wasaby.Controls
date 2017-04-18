@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'Core/helpers/date-helpers',
-   'js!SBIS3.CONTROLS.Link'
+   'js!SBIS3.CONTROLS.Link',
+   'css!SBIS3.CONTROLS.DateRangeSlider'
 ], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers) {
    'use strict';
 
@@ -84,8 +85,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                opts.startValue = DateUtil.getStartOfYear(end);
             }
          }
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         opts._caption = this._getCaption(opts);
          return opts;
       },
 
@@ -180,6 +180,32 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          if (this.isEnabled()) {
             DateRangeSlider.superclass.showPicker.apply(this, arguments);
          }
+      },
+
+      _setPickerConfig: function() {
+         var pickerWidth = 0,
+            baseWidth = this.getContainer().outerWidth();
+         // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
+         if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
+            pickerWidth = 80;
+         } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
+            pickerWidth = 178;
+         } else {
+            pickerWidth = 148;
+         }
+         return {
+            corner: 'tl',
+            bodyBounds: true,
+            locationStrategy: 'bodyBounds',
+            horizontalAlign: {
+               side: 'left',
+               offset: (baseWidth - pickerWidth)/2
+            },
+            verticalAlign: {
+               side: 'top'
+            },
+            closeByExternalClick: true
+         };
       }
    });
 

@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
       _dotTplFn: dotTpl,
       /**
        * @event onActivated При активации кнопки (клик мышкой, кнопки клавиатуры)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @example
        * <pre>
        *    onActivated: function(event){

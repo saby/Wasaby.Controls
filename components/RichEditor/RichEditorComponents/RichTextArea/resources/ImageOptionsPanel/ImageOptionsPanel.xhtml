@@ -4,26 +4,33 @@
       <option name="caption">Заменить</option>
       <option name="icon">sprite:icon-16 icon-Picture icon-primary</option>
    </component>
-   {{? it.richMode }}
-      <component data-component="SBIS3.CONTROLS.CommandsButton" name="commandsButton" class="controls-ImageOptionsPanel__commandsButton">
-         <options name="items" type="array">
+   <component data-component="SBIS3.CONTROLS.CommandsButton" name="commandsButton" class="controls-ImageOptionsPanel__commandsButton">
+      <options name="items" type="array">
+         {{? it.templates }}
+            <options>
+               <option name="id" type="string">template</option>
+               <option name="icon">sprite:icon-16 icon-TemplateNews8 icon-primary</option>
+               <option name="title">Сменить шаблон</option>
+            </options>
+         {{?}}
+         <options>
+            <option name="id" type="string">size</option>
+            <option name="icon">sprite:icon-16 icon-FullScrin icon-primary</option>
+            <option name="title">Изменить размер</option>
+         </options>
+         {{? it.richMode }}
             <options>
                <option name="id" type="string">edit</option>
-               <option name="icon">sprite:icon-24 icon-Edit icon-primary</option>
+               <option name="icon">sprite:icon-16 icon-Edit icon-primary</option>
                <option name="title">Редактировать</option>
             </options>
-            <options>
-               <option name="id" type="string">delete</option>
-               <option name="icon">sprite:icon-24 icon-TFDelete icon-error</option>
-               <option name="title">Удалить</option>
-            </options>
+         {{?}}
+         <options>
+            <option name="id" type="string">delete</option>
+            <option name="icon">sprite:icon-16 icon-TFDelete icon-error</option>
+            <option name="title">Удалить</option>
          </options>
-         <option name="pickerClassName">controls-ImageOptionsPanel__commandsButton__picker</option>
-      </component>
-   {{??}}
-   <component data-component="SBIS3.CONTROLS.Link" name="deleteButton" class="controls-ImageOptionsPanel__deleteButton">
-      <option name="tooltip">Удалить</option>
-      <option name="icon">sprite:icon-24 icon-TFDelete icon-error</option>
+      </options>
+      <option name="pickerClassName">controls-ImageOptionsPanel__commandsButton__picker</option>
    </component>
-   {{?}}
 </div>

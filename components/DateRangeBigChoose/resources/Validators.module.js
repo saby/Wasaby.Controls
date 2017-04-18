@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.Validators', [
             return true;
          }
          try {
-            compareValue = this.getTopParent().getChildControlByName(controlName)[getterName]();
+            compareValue = this.getParent().getChildControlByName(controlName)[getterName]();
          } catch(e) {
             return false;
          }

@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
             pageSize: 12,
 
             // scrollWatcher: ScrollWatcher,
-            className: 'controls-DateRangeBigChoose-MonthRangePicker'
+            cssClassName: 'controls-DateRangeBigChoose-MonthRangePicker'
          },
          _lastOverControl: null,
          _offset: YearSource.defaultOffset,

@@ -1,60 +1,36 @@
-.round-button-mixin(@border-color) {
-   border: 1px solid @border-color;
-   border-radius: 14px;
-   text-align: center;
-
-   &.ws-disabled {
-      border-color: @gray-ccc-color;
-      color: @gray-ccc-color;
-   }
-   box-sizing: border-box;
-}
-
-.round-button-hover-mixin() {
-  &:hover {
-    border-color: @default-color;
-    color: @default-color;
-    &.controls-IconButton__errorBorder {
-      border-color: @button-icon-error-color;
-      color: @button-icon-error-color;
-      &.ws-disabled {
-        border-color: @gray-ccc-color;
-        color: @gray-ccc-color;
-      }
-    }
-    &.controls-IconButton__doneBorder {
-      border-color: @button-icon-done-color;
-      color: @button-icon-done-color;
-      &.ws-disabled {
-        border-color: @gray-ccc-color;
-        color: @gray-ccc-color;
-      }
-    }
-  }
-}
-
 .controls-IconButton {
-  cursor: pointer;
   vertical-align: middle;
+  .justify-content(center);
+  .button-default-style();
+  background: inherit;
+  .controls-Button__icon {
+    position: relative;
+  }
+  .controls-Button__text {
+    display: none;
+  }
 
   &.controls-Click__active {
-    &.icon-primary {
-      color: @blue-dark-color;
-
-      &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{
+    .controls-Button__icon.icon-primary {
+      color: @icon-active-color;
+    }
+    &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32 {
         border-color: @default-color;
-        color: @default-color;
-
-
-      }
+        .controls-Button__icon {
+          color: @default-color;
+        }
     }
      &.controls-IconButton__errorBorder {
-        border-color: @button-icon-error-color;
-        color: @button-icon-error-color;
+        border-color: @icon-button-error-color;
+        .controls-Button__icon {
+          color: @icon-button-error-color;
+        }
      }
      &.controls-IconButton__doneBorder {
-        border-color: @button-icon-done-color;
-        color: @button-icon-done-color;
+        border-color: @icon-button-done-color;
+        .controls-Button__icon {
+          color: @icon-button-done-color;
+        }
      }
   }
 
@@ -64,10 +40,14 @@
    }
 
    &.controls-IconButton__doneBorder {
-     color: @button-icon-done-color;
+     .controls-Button__icon {
+       color: @icon-button-done-color;
+     }
    }
    &.controls-IconButton__errorBorder {
-     color: @button-icon-error-color;
+     .controls-Button__icon {
+       color: @icon-button-error-color;
+     }
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color);
@@ -75,12 +55,13 @@
       width: 28px;
       line-height: 26px!important;
    }
+
    &.controls-IconButton__round-border-24{
       .round-button-mixin(@gray-ccc-color);
       height: 24px !important;
       width: 24px !important;
       line-height: 24px !important;
-      &.icon-16 {
+      .controls-Button__icon.icon-16 {
          box-sizing: content-box;
          height: 22px !important;
          width: 22px !important;
@@ -95,8 +76,10 @@
       line-height: 38px !important;
    }
    &.ws-disabled {
-      cursor: default;
-      color: @icon-color-disabled;
+     cursor: default;
+     .controls-Button__icon {
+       color: @default-disabled-color;
+     }
    }
 }
 .controls-IconButton__filter {
@@ -134,8 +117,10 @@
 .ws-is-desktop-platform {
   .controls-IconButton:not(.ws-disabled):not(.controls-Click__active) {
     &:hover {
-      &.icon-primary {
-        color: @blue-dark-color;
+      .controls-Button__icon {
+        &.icon-primary {
+          color: @icon-active-color;
+        }
       }
     }
     &.controls-IconButton__round-border, &.controls-IconButton__round-border-24, &.controls-IconButton__round-border-32{

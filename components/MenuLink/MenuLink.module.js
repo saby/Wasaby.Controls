@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTROLS.DSMixin', 'js!SBIS3.CONTROLS.PickerMixin', 'js!SBIS3.CONTROLS.MenuButtonMixin', 'js!SBIS3.CONTROLS.ContextMenu', 'css!SBIS3.CONTROLS.MenuLink', 'css!SBIS3.CONTROLS.MenuButtonMixin'], function(Link, DSMixin, PickerMixin, MenuButtonMixin, ContextMenu) {
+define('js!SBIS3.CONTROLS.MenuLink', ['js!WS.Controls.MenuButton', 'css!SBIS3.CONTROLS.Link', 'css!SBIS3.CONTROLS.MenuLink'], function(WSMenuButton) {
 
    'use strict';
 
@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
     *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.MenuButtonMixin
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -55,54 +54,20 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!SBIS3.CONTROLS.Link', 'js!SBIS3.CONTRO
     * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */
 
-   var MenuLink = Link.extend( [PickerMixin, DSMixin, MenuButtonMixin], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
+   var MenuLink = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuLink.prototype */ {
       $protected: {
-         _zIndex: '',
-         _options: {
-            pickerClassName: 'controls-MenuLink__Menu'
-         }
+         _zIndex: ''
       },
 
-      $constructor: function() {
-         
-      },
+      _modifyOptions : function() {
+         var opts = MenuLink.superclass._modifyOptions.apply(this, arguments);
+         opts.pickerClassName += ' controls-MenuLink__Menu';
+         opts.cssClassName += ' controls-MenuLink controls-Link';
+         opts._textClass = ' controls-Link__field';
 
-      init : function(){
-         this.reload();
-         this._options.pickerClassName += ' controls-MenuLink__Menu';
-         MenuLink.superclass.init.call(this);
-      },
-
-      _setWidth: function(){
-         var self = this;
-         this._picker.getContainer().css({
-            'min-width': self._container.outerWidth() + 10 // + ширина стрелки
-         });
-      },
-
-      _modifyOptions : function(options) {
-         //чтобы класс уже в верстке был, иначе сначала одни стили применяются, затем другие
-         options.className += ' controls-MenuLink';
-         return MenuLink.superclass._modifyOptions.apply(this, arguments);
-      },
-
-      _dataLoadedCallback: function () {
-         //TODO в 3.7.3.20 надо это убрать потому что стелки у всех кнопок пропадают
-         if (this._dataSet.getCount() > 1) {
-            $('.controls-MenuButton__arrowDown', this._container).show();
-            this._container.removeClass('controls-MenuLink__withoutMenu');
-         } else {
-            $('.controls-MenuButton__arrowDown', this._container).hide();
-            this._container.addClass('controls-MenuLink__withoutMenu');
-            this._container.removeClass('controls-Picker__show');
-            $('.controls-MenuButton__header', this._container).remove();
-         }
-         if (this._picker) {
-            this.hidePicker();
-         }
+         return opts;
       }
    });
 
    return MenuLink;
-
 });

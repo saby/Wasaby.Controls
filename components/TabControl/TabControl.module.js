@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.TabControl', [
    'use strict';
 
    /**
-    * Контрол, содержащий несколько областей содержащих контент.
-    * В каждый момент времени отображается только одна область. Отображаемая область может переключаться при клике на корешки вкладок.
+    * Класс контрола "Вкладки", содержащий несколько областей с контентом. <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>Стандарт контрола</a>.
+    * В каждый момент времени отображается только одна область.
+    * Отображаемая область может переключаться при клике на корешки вкладок.
     * @class SBIS3.CONTROLS.TabControl
     * @extends SBIS3.CORE.CompoundControl
     *
@@ -25,7 +26,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
       /**
        * @event onSelectedItemChange Происходит при измении выбранной вкладки.
        * @param {String|Number} id Идентификатор выбранной вкладки (см. {@link selectedKey}).
-       * @param {Number} index Порядковый номер из набора данных (см. {@link items}), который соответствует выбранной вкладке.
+       * @param {Number} index Порядковый номер выбранной вкладке из набора данных (см. {@link items}).
        */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -40,11 +41,11 @@ define('js!SBIS3.CONTROLS.TabControl', [
              *     <li>left - выравнивание вкладки слева;</li>
              * </ul>
              * @property {Content} content Устанавливает xhtml-вёрстку заголовка вкладки при редактировании по месту.
-             * @property {String} title Устанавливает текст вкладки.
+             * @property {String} title Устанавливает подпись вкладки.
              * @translatable title
              */
             /**
-             * @cfg {Item[]} Устанавливает набор элементов, который описывает закладки и связанные с ними области.
+             * @cfg {Item[]} Устанавливает набор элементов, который описывает вкладки и связанные с ними области.
              * @remark
              * Для настройки содержимого вкладок и областей нужно учитывать, что задано в опциях {@link tabsDisplayProperty} и {@link selectedKey}.
              * Например, если задали &lt;opt name=&quot;tabsDisplayProperty&quot;&gt;title&lt;/opt&gt;, то и для текста вкладки задаем опцию &lt;opt name=&quot;title&quot;&gt;Текст вкладки&lt;/opt&gt;
@@ -52,9 +53,9 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             items: null,
             /**
-             * @cfg {String} Устанавливает идентификатор выбранного элемента.
+             * @cfg {String} Устанавливает идентификатор вкладки, выбранной по умолчанию.
              * @remark
-             * Для задания выбранного элемента необходимо указать значение {@link SBIS3.CONTROLS.DSMixin#idProperty ключевого поля} элемента коллекции.
+             * Обязательная для установки опция.
              * @see SBIS3.CONTROLS.DSMixin#idProperty
              */
             selectedKey: null,
@@ -79,9 +80,9 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             keyField: null,
             /**
-             * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
+             * @cfg {String} Устанавливает поле элемента коллекции, в котором хранятся идентификаторы записей.
              * @remark
-             * Выбранный элемент в коллекции задаётся указанием ключа элемента {@link selectedKey}.
+             * Чтобы установить вкладку, выбранную по умолчанию, установите значение в опции {@link selectedKey}.
              * @example
              * <pre class="brush:xml">
              *     <option name="idProperty">id</option>
@@ -91,7 +92,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             idProperty: null,
             /**
-             * @cfg {Content} Устанавливает содержимое между вкладками.
+             * @cfg {Content} Устанавливает шаблон, отображаемый между вкладками.
              * @example
              * <pre>
              *     <option name="tabSpaceTemplate">
@@ -104,11 +105,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
             tabSpaceTemplate: undefined,
             /**
              * @cfg {String} Устанавливает режим загрузки дочерних контролов в области под вкладками.
-             * @example
-             * <pre>
-             *     <option name="loadType">all</option>
-             * </pre>
-             * @variant all Инстанцировать все области сразу;
+             * @variant all Инстанцировать все области сразу.
              * @variant cached Инстанцировать только 1 область, при смене предыдущую не уничтожать (кэширование областей).
              */
             loadType: 'cached',
@@ -123,7 +120,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
              */
             stickyHeader: false,
             /**
-             * @cfg {String} Устанавливает дополнительный класс, который будет установлен на корешки вкладок.
+             * @cfg {String} Устанавливает CSS-класс, который будет установлен на корешки вкладок.
              * @remark
              * Нужен, например, для того, чтобы однозначно определить корешки вкладок после их фиксации в заголовке страницы.
              */

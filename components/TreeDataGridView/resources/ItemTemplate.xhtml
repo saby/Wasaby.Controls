@@ -22,7 +22,7 @@ var
       {{=j}}="{{=it.attributes[j]}}"
    {{}}}>
    {{?it.multiselect}}
-   <td {{?isColumnScrolling}}style="left: {{=it.columnsScrollPosition}}px;"{{?}} class="controls-DataGridView__td controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
+   <td {{?isColumnScrolling}}style="transform:translateX({{=it.columnsScrollPosition}}px);"{{?}} class="controls-DataGridView__td controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
       <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
    </td>
    {{?}}

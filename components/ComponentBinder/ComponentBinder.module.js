@@ -67,7 +67,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    var ComponentBinder = cAbstract.extend(/**@lends SBIS3.CONTROLS.ComponentBinder.prototype*/{
       /**
        * @event onDatesChange Происходит при изменении значения хотя бы одного из синхронизируемых контролов.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected : {
          _options: {

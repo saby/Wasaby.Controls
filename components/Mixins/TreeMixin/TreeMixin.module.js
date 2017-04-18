@@ -347,7 +347,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
        * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
        * @param {Array.<Object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
        * Каждый объект содержит следующие свойства:
@@ -364,13 +364,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @event onBeforeSetRoot Происходит при установке текущего корня иерархии.
        * @remark
        * Событие может быть инициировано при использовании метода {@link setCurrentRoot}.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} key Идентификатор узла иерархии, который будет установлен. Null - это вершина иерархии.
        * @see onSetRoot
        */
       /**
        * @event onSearchPathClick Происходит при клике по хлебным крошкам, отображающим результаты поиска.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number} id Ключ узла, по которому произвели клик.
        * @return Если из обработчика события вернуть false, то загрузка узла не произойдет.
        * @example
@@ -382,14 +382,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       /**
        * @event onNodeExpand Происходит после разворачивания узла.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number} key Идентификатор узла.
        * @param {jQuery} object Контейнер узла.
        * @see onNodeCollapse
        */
       /**
        * @event onNodeCollapse Происходит после сворачивания узла.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number} key Идентификатор узла.
        * @param {jQuery} object Контейнер узла.
        * @see onNodeExpand
@@ -533,9 +533,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             openedPath : {},
             /**
-             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) или "Скрытый узел" не производит проваливание внутрь иерархии, а раскрывает её содержимое.
+             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) не производит проваливание внутрь иерархии, а раскрывает её содержимое.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * При клике по записи типа "Скрытый узел" проваливание внутрь иерархии запрещено по умолчанию и не подлежит изменению.
+             * Подробнее о типах иерархических записей читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="allowEnterToFolder">false</option>

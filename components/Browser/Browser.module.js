@@ -37,12 +37,18 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
       };
 
-   var Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
+   var
+      ChangeColumnsResult = { // Возможные результаты события "onChangeColumns"
+         REDRAW: 'Redraw',    // После смены колонок выполнить перерисовку табличного представления
+         RELOAD: 'Reload'     // После смены колонок выполнить перезагрузку табличного представления
+      },
+
+      Browser = CompoundControl.extend( /** @lends SBIS3.CONTROLS.Browser.prototype */{
       /**
        * @event onEdit Происходит при редактировании или создании новой записи реестра.
        * @remark
        * Для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a> событие происходит только для записей типа "Лист" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} meta Мета параметры события.
        * @param {String|Number} meta.id Идентификатор записи. В случае создания новой записи значение параметра - null.
        * @param {WS.Data/Entity/Record} meta.item Экземпляр класса записи. В случае создания новой записи значение параметра - null.
@@ -52,12 +58,23 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @remark
        * Подробнее о типах записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
        * Событие актуально только для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a>.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} id Идентификатор редактируемой папки. В случае добавления новой папки значение параметра - null.
        */
       /**
        * @event onFiltersReady Происходит после построения экземпляра классов окружения списка: "Быстрый фильтр" (см. {@link SBIS3.CONTROLS.FastDataFilter}) и "Кнопки с фильтром" (см. {@link SBIS3.CONTROLS.FilterButton}).
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       */
+      /**
+       * @typedef {String} onColumnsChangeResult
+       * @variant Redraw После смены колонок выполнить перерисовку табличного представления. Это поведение используется по умолчанию.
+       * @variant Reload После смены колонок выполнить перезагрузку табличного представления.
+       */
+      /**
+       * @event onColumnsChange Происходит при изменении колонок в табличном представлении.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Array} columns Массив измененных колонок.
+       * @returns {onColumnsChangeResult} Позволяет определить, что выполнять после установки колонок - перерисовку или перезагрузку.
        */
       /**
        * @typedef {Object} СolumnsConfigObject
@@ -230,7 +247,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          var
             self = this,
             columnsState;
-         this._publish('onEdit', 'onEditCurrentFolder', 'onFiltersReady');
+         this._publish('onEdit', 'onEditCurrentFolder', 'onFiltersReady', 'onColumnsChange');
          Browser.superclass.init.apply(this, arguments);
          this._view = this._getView();
          this._view.subscribe('onItemActivate', function(e, itemMeta) {
@@ -326,9 +343,15 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _onSelectedColumnsChange: function(event, columns) {
+         var
+            onColumnsChange = this._notify('onColumnsChange', columns);
          this._columnsController.setState(columns);
          this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
-         this._getView().redraw();
+         if (onColumnsChange === ChangeColumnsResult.RELOAD) {
+            this._getView().reload();
+         } else {
+            this._getView().redraw();
+         }
       },
       /**
        * Устанавливает параметры для Панели конфигурации колонок списка.
@@ -337,8 +360,8 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @see getColumnsConfig
        */
       setColumnsConfig: function(config) {
-         this._options.columnsEditorConfig = config;
-         this._notifyOnPropertyChanged('columnsEditorConfig');
+         this._options.columnsConfig = config;
+         this._notifyOnPropertyChanged('columnsConfig');
       },
       /**
        * Возвращает параметры, установленные для Панели конфигурации колонок списка.
@@ -465,6 +488,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          Browser.superclass.destroy.apply(this, arguments);
       }
    });
+
+   Browser.ChangeColumnsResult = ChangeColumnsResult;
 
    return Browser;
 });

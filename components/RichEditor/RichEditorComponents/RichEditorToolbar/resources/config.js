@@ -61,7 +61,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'bold',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('Полужирный'),
          icon: 'sprite:icon-16 icon-Bold icon-primary',
          handlers: {
@@ -72,7 +73,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'italic',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('Курсив'),
          icon: 'sprite:icon-16 icon-Italic icon-primary',
          handlers: {
@@ -83,7 +85,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'underline',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('Подчеркнутый'),
          icon: 'sprite:icon-16 icon-Underline icon-primary',
          handlers: {
@@ -94,7 +97,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'strikethrough',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('Зачеркнутый'),
          icon: 'sprite:icon-16 icon-Stroked icon-primary',
          handlers: {
@@ -169,7 +173,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'link',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('Вставить/редактировать ссылку'),
          icon: 'sprite:icon-16 icon-Link icon-primary',
          handlers:{
@@ -228,7 +233,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'paste',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('Вставить с учётом стилей'),
          icon: 'sprite:icon-16 icon-PasteStyle icon-primary',
          handlers: {
@@ -246,7 +252,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'source',
-         componentType: 'SBIS3.CONTROLS.ToggleButton',
+         componentType: 'WS.Controls.ToggleButton',
+         className: 'controls-Button controls-ToggleButton__square',
          tooltip: rk('html-разметка'),
          icon: 'sprite:icon-16 icon-Html icon-primary',
          handlers: {

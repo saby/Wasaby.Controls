@@ -11,15 +11,16 @@
       right: @list-view-items-toolbar-right;
 
       .icon-size {
-         .icon-24();
-
-         &.controls-IconButton__round-border-24 {
-            font-size: 16px !important;
-            box-sizing: content-box;
-            height: 22px !important;
-            width: 22px !important;
-            line-height: 22px !important;
-            font-family: 'cbuc-icons' !important;
+         .icon-size(@list-view-items-toolbar-icon-size);
+      }
+      .controls-IconButton__round-border-24 {
+         .controls-Button__icon {
+               font-size: 16px !important;
+               box-sizing: content-box;
+               height: 22px !important;
+               width: 22px !important;
+               line-height: 22px !important;
+               font-family: 'cbuc-icons' !important;
          }
       }
 
@@ -39,7 +40,7 @@
       }
       &.controls-ItemsToolbar__small {
          .icon-size {
-            .icon-16();
+            .icon-size(16px);
          }
       }
 
