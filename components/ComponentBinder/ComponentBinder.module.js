@@ -318,6 +318,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
       },
 
+      //TODO: избавиться - зовется из ListView
+      _getScrollPage: function(){
+         if (this._scrollPagingController){
+            return this._scrollPagingController.getScrollPage();
+         }
+      },
+
       bindScrollPaging: function(paging) {
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({

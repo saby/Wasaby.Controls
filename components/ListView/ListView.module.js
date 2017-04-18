@@ -836,7 +836,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @deprecated
                 */
                useSelectAll: false,
-               virtualScrolling: true
+               virtualScrolling: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -2594,19 +2594,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _getItemsForRedrawOnAdd: function(items, groupId, newItemsIndex){
-            var itemsToAdd = ListView.superclass._getItemsForRedrawOnAdd.apply(this, arguments),
-               index, range;
-            if (this._options.virtualScrolling) {
-               // for (var i = 0; i < itemsToAdd.length; i++) {
-               //    if (!this._virtualScrollController.isInShownRange(newItemsIndex)) {
-               //       itemsToAdd.splice(i, 1);
-               //    }
-               // }
-            } 
-            return itemsToAdd;
-         },
-
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
          // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
@@ -2788,9 +2775,11 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
+               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
+            this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
@@ -4164,6 +4153,23 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                this.subscribeTo(this._loadMoreButton, 'onActivated', this._onLoadMoreButtonActivated.bind(this));
             }
+         },
+
+         getTextValue: function() {
+            var
+                selectedItem,
+                textValues = [];
+            if (this._options.multiselect) {
+               this.getSelectedItems().each(function(item) {
+                  textValues.push(item.get(this._options.displayProperty));
+               }, this);
+            } else {
+               selectedItem = this.getItems().getRecordById(this.getSelectedKey());
+               if (selectedItem) {
+                  textValues.push(selectedItem.get(this._options.displayProperty));
+               }
+            }
+            return textValues.join(', ');
          }
       });
 
