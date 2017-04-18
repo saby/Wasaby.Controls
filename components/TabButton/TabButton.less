@@ -143,7 +143,7 @@
          }
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @font-basic-size;
+            font-size: @default-font-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -161,7 +161,7 @@
          font-weight: @tab-button-large-secondAddText-font-weight;
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @font-basic-size;
+            font-size: @default-font-size;
          }
          .controls-TextBox .controls-TextBox__fieldWrapper{
            padding-top: 1px;
@@ -263,9 +263,12 @@
   }
   .controls-TabButton {
     border-color: transparent;
+    border-left: none;
+    border-right: none;
     .controls-TabButton__inner{
       border-color: transparent;
       color: @tab-button-simple-inner-color;
+      padding: @tab-button-simple-inner-padding;
       &:before{
         display: block;
         z-index: 1000;
@@ -283,7 +286,6 @@
       .controls-TabButton__inner{
         color: @tab-button-simple-inner-checked-color;
         background: transparent;
-        padding: 0 6px;
       }
       .controls-TabButton__bottomLine{
         background: @tab-button-simple-checked-bottomline-color !important;

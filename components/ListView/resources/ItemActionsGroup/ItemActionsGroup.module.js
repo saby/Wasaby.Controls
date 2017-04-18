@@ -310,7 +310,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   actionHandler.call(this._options.linkedControl,
                       this._activeItem.container,
                       this._activeItem.key,
-                      this._activeItem.record);
+                      this._activeItem.record,
+                      item);
                }
                /* В обработчике могут вызвать destroy */
                if (!this.isDestroyed()) {

@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
        * @private
        */
       setNext: function () {
-         this._slidePeriod(this._getPeriodLengthInMonth(this.getStartValue(), this.getEndValue()));
+         this._slidePeriod(1);
       },
       /**
        * Если выбран период из нескольких целых месяцев, кварталов, полугодий или годов,
@@ -111,18 +111,38 @@ define('js!SBIS3.CONTROLS.DateRangeMixin', [
        * @private
        */
       setPrev: function () {
-         this._slidePeriod(-this._getPeriodLengthInMonth(this.getStartValue(), this.getEndValue()));
+         this._slidePeriod(-1);
+      },
+
+      _slidePeriod: function (direction) {
+         var start = this.getStartValue(),
+            end = this.getEndValue(),
+            delta = this._getPeriodLengthInMonth(start, end);
+         if (delta) {
+            this._slidePeriodByMonth(direction*delta);
+         } else {
+            this._slidePeriodByDays(direction*(dateHelpers.getPeriodLength(start, end)));
+         }
+
       },
       /**
        * Сдвигает период на несколько целых месяцев
        * @param monthDelta - количество целых месяцев на которое сдвигается период
        * @private
        */
-      _slidePeriod: function (monthDelta) {
+      _slidePeriodByMonth: function (monthDelta) {
          var start = this.getStartValue(),
             end = this.getEndValue();
          start = new Date(start.getFullYear(), start.getMonth() + monthDelta, 1);
          end = new Date(end.getFullYear(), end.getMonth() + monthDelta + 1, 0);
+         this.setRange(start, end);
+      },
+
+      _slidePeriodByDays: function (dateDelta) {
+         var start = this.getStartValue(),
+            end = this.getEndValue();
+         start = new Date(start.getFullYear(), start.getMonth(), start.getDate() + dateDelta);
+         end = new Date(end.getFullYear(), end.getMonth(), end.getDate() + dateDelta);
          this.setRange(start, end);
       },
 

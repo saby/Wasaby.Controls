@@ -35,11 +35,11 @@
 @bg:                                      transparent;
 @default-text-color:                      @black-color;
 
-@font-basic-name:                         'TensorFont', sans-serif;
-@font-basic-size:                         14px;
+@default-font-name:                       'TensorFont', sans-serif;
+@default-font-size:                       14px;
 @popup-font-size:                         13px;
 @font-folder-size:                        14px;
-@font-basic-line-height:                  20px;
+@default-font-line-height:                20px;
 
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
@@ -61,17 +61,15 @@
 // Link //
 // ---- //
 
-@link-font:                               @font-basic-size @font-basic-name;
+@link-font:                               @default-font-size @default-font-name;
 @link-cursor:                             pointer;
 @link-text-color:                         @primary-color;
-@link-background:                         transparent;
-@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
 @link-padding:                            0;
-@link-font-size:                          @font-basic-size;
+@link-font-size:                          @default-font-size;
 
 @link-hover-text-color:                   @primary-color;
 @link-hover-text-decoration:              underline;
@@ -93,7 +91,7 @@
 // ------ //
 
 // Normal button
-@button-font:                             @font-basic-size @font-basic-name;
+@button-font:                             @default-font-size @default-font-name;
 @button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
@@ -207,8 +205,8 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font-size:                    (@font-basic-size * 1.2);
-@button-big-font:                         @button-big-font-size @font-basic-name;
+@button-big-font-size:                    (@default-font-size * 1.2);
+@button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       54px;
@@ -1217,7 +1215,7 @@
 
 @calendar-day-border-spacing:                   1px;
 
-@calendar-day-header-font:                      11px @font-basic-name;
+@calendar-day-header-font:                      11px @default-font-name;
 @calendar-day-header-text-alignment:            center;
 
 @calendar-day-body-font:                        @calendar-font;
@@ -1289,7 +1287,7 @@
 @month-picker-field-cursor:                     pointer;
 @month-picker-field-height:                     16px;
 @month-picker-field-margin:                     0 16px;
-@month-picker-field-font:                       700 14px/16px @font-basic-name;
+@month-picker-field-font:                       700 14px/16px @default-font-name;
 
 @month-picker-field-text-color:                 @link-text-color;
 @month-picker-field-text-decoration:            none;
@@ -1367,7 +1365,7 @@
 
 @date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
 
-@date-range-big-choose-font-family:                @font-basic-name;
+@date-range-big-choose-font-family:                @default-font-name;
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
@@ -1485,7 +1483,7 @@
 @edit-at-place-editor-border-style:             solid;
 @edit-at-place-editor-border-color:             transparent;
 
-@edit-at-place-text-box-editor-font:            @font-basic-size/@font-basic-line-height @font-basic-name;
+@edit-at-place-text-box-editor-font:            @default-font-size/@default-font-line-height @default-font-name;
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 
 @edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
@@ -2022,7 +2020,7 @@
 
 @controls-filterButton-area-content-margin:       0 12px 12px 26px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
-@controls-filterButton-line-height:               @font-basic-line-height;
+@controls-filterButton-line-height:               @default-font-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
 //FilterButtonHistory
@@ -2142,6 +2140,7 @@
 @controls-FieldLink-link-color-hover:              #313E78;
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
+@controls-FieldLink-showAll-top-ff:                -24px;
 
 @controls-FieldLink-big-fontSize:                  15px;
 @controls-FieldLink-big-fontSize-color:            #313E78;

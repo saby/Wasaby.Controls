@@ -3,11 +3,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "js!SBIS3.CONTROLS.TextBoxBase",
    "html!SBIS3.CONTROLS.TextArea",
    "Core/helpers/string-helpers",
+   'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
    "Core/helpers/dom&controls-helpers",
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
-], function( constants,TextBoxBase, dotTplFn, strHelpers, IoC, dcHelpers) {
+], function( constants,TextBoxBase, dotTplFn, strHelpers, LinkWrap, IoC, dcHelpers) {
 
    'use strict';
 
@@ -67,6 +68,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _pasteCommand: 'insertText',
          _compatPlaceholder: null,
          _options: {
+            wrapUrls: LinkWrap.wrapURLs,
+            escapeHtml: strHelpers.escapeHtml,
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
               * @remark
@@ -256,18 +259,25 @@ define('js!SBIS3.CONTROLS.TextArea', [
          TextArea.superclass._setEnabled.call(this, state);
          this._inputField.toggleClass('ws-invisible', !state);
          this._disabledWrapper.toggleClass('ws-hidden', state);
+         this._updateDisabledWrapper();
          if (!state){
             this._inputField.attr('readonly', 'readonly')
          } else {
             this._inputField.removeAttr('readonly');
          }
       },
-
       setText: function(text){
          TextArea.superclass.setText.call(this, text);
-         var newText = strHelpers.escapeHtml(text);
-         this._disabledWrapper.html(strHelpers.wrapURLs(newText));
-         this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !text);
+         this._updateDisabledWrapper();
+      },
+
+      _updateDisabledWrapper: function() {
+         if (this._disabledWrapper && !this.isEnabled()) {
+            var
+               newText = strHelpers.escapeHtml(this.getText());
+            this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
+            this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !newText);
+         }
       },
 
       _processNewLine: function(event) {
@@ -379,6 +389,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
          if (this._options.autoResize.state) {
             this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
          }
+         dcHelpers.trackElement(this._container, false);
+         this._inputField = undefined;
          TextArea.superclass.destroy.apply(this, arguments);
       }
    });
