@@ -2326,6 +2326,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var args = this._prepareItemData(), buildedTpl;
             args['projItem'] = item;
             args['item'] = item.getContents();
+            args['escapeHtml'] = strHelpers.escapeHtml;
             buildedTpl = dotTemplate(args);
             //TODO нашлись умники, которые в качестве шаблона передают функцию, возвращающую jquery
             //в 200 пусть поживут, а в новой отрисовке, отпилим у них
