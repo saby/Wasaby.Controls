@@ -1,10 +1,7 @@
 .controls-SelectorButton {
-   .inline-flexbox();
-   .align-items(baseline);
-   cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
-   align-items: baseline;
+   .button-default-style();
 
    &.ws-validation-error {
       outline: @controls-SelectorButton-error-outline;
@@ -12,6 +9,7 @@
    }
    &.ws-disabled {
       cursor: default;
+      color: @link-disabled-text-color;
       .controls-SelectorButton__cross {
          display: none;
       }
@@ -19,29 +17,19 @@
 
 }
 
-.controls-SelectorButton__icon,
-.controls-SelectorButton__cross {
-   .align-self(center);
-   text-decoration: none;
-}
-
 .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
    padding-left: 4px;
 }
 
 .controls-SelectorButton__text {
-   display: inline-block;
-   max-width: 100%;
    .text-overflow();
 }
 
-.controls-SelectorButton__withoutCross {
-   .controls-SelectorButton__cross {
-      display: none;
-   }
+.controls-SelectorButton__withoutCross .controls-SelectorButton__cross {
+   display: none;
 }
 
-.controls-SelectorButton__asLink {
+.controls-SelectorButton__asLink .controls-SelectorButton__text{
    color: @link-text-color;
    text-decoration: @link-text-decoration;
 }

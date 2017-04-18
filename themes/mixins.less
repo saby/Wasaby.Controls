@@ -401,7 +401,7 @@
 }
 .link-hover-mixin(@textColor, @iconColor, @textSelector) {
   &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
-    &:hover {
+    &:hover .@{textSelector} {
       color: @textColor;
       .controls-Button__icon {
         &.icon-primary {
