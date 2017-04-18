@@ -15,12 +15,13 @@ define('js!SBIS3.CONTROLS.Accordion', [
    'use strict';
 
    /**
-    * Контрол, содержащий несколько областей содержащих контент.
-    * В каждый момент времени отображается только одна область.
-    * Отображаемая область может переключаться при клике на корневые пункты аккордеона.
-    * @author Авраменко Алексей Сергеевич
+    * Класс контрола "Аккордеон".
+    * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B0%D0%BA%D0%BA%D0%BE%D1%80%D0%B4%D0%B5%D0%BE%D0%BD__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_7_1_.html'>здесь</a>.
     * @class SBIS3.CONTROLS.Accordion
     * @extends SBIS3.CORE.CompoundControl
+    * @author Авраменко Алексей Сергеевич
+    * @public
+    * @mixin SBIS3.CONTROLS.ItemsControlMixin
     */
 
    var Accordion = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.Accordion.prototype */ {

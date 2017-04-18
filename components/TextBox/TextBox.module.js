@@ -175,15 +175,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
                   self._pasteProcessing--;
                   if (!self._pasteProcessing) {
                      var text = self._getInputValue(),
-                         newText = '';
-                     if (self._options.inputRegExp){
-                        var regExp = new RegExp(self._options.inputRegExp);
-                        for (var i = 0; i < text.length; i++){
-                           if (regExp.test(text[i])){
-                              newText = newText + text[i];
-                           }
-                        }
-                        text = newText;
+                         inputRegExp = self._options.inputRegExp;
+                     if (inputRegExp){
+                         text = self._checkRegExp(text, inputRegExp);
                      }
                      text = self._formatText(text);
                      self._drawText(text);
@@ -214,8 +208,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
          });
 
          this._inputField.change(function(){
-            var newText = $(this).val();
+            var newText = $(this).val(),
+                inputRegExp = self._options.inputRegExp;
+
             if (newText != self._options.text) {
+               if(inputRegExp) {
+                  newText = self._checkRegExp(newText, inputRegExp);
+               }
                self.setText(newText);
             }
          });
@@ -247,6 +246,18 @@ define('js!SBIS3.CONTROLS.TextBox', [
          cfg.beforeFieldWrapper = TemplateUtil.prepareTemplate(cfg.beforeFieldWrapper);
          cfg.afterFieldWrapper = TemplateUtil.prepareTemplate(cfg.afterFieldWrapper);
          return cfg;
+      },
+
+
+      _checkRegExp: function (text, regExp) {
+          var newText = '',
+              inputRegExp = new RegExp(regExp);
+          for (var i = 0; i < text.length; i++){
+              if (inputRegExp.test(text[i])){
+                  newText = newText + text[i];
+              }
+          }
+          return newText;
       },
 
       init: function() {

@@ -21,13 +21,37 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
+   'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'Core/EventBus',
    "css!SBIS3.CORE.RichContentStyles",
    "i18n!SBIS3.CONTROLS.RichEditor",
    'css!SBIS3.CONTROLS.RichTextArea'
-], function( UserConfig, cPathResolver, cContext, cIndicator, cFunctions, CommandDispatcher, cConstants, Deferred,TextBoxBase, dotTplFn, RichUtil, smiles, Di, ImageUtil, Sanitize, colHelpers, fcHelpers, strHelpers, dcHelpers, ImageOptionsPanel, EventBus) {
+], function (
+      UserConfig,
+      cPathResolver,
+      cContext,
+      cIndicator,
+      cFunctions,
+      CommandDispatcher,
+      cConstants,
+      Deferred,
+      TextBoxBase,
+      dotTplFn,
+      RichUtil,
+      smiles,
+      Di,
+      ImageUtil,
+      Sanitize,
+      colHelpers,
+      fcHelpers,
+      strHelpers,
+      LinkWrap,
+      dcHelpers,
+      ImageOptionsPanel,
+      EventBus
+   ) {
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
@@ -162,7 +186,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Имя каталога, в который будут загружаться изображения
                 * @cfg {String} имя декоратора
                 */
-               imageFolder: 'images'
+               imageFolder: 'images',
+               /**
+                * позволяет сохранять историю ввода
+                * @cfg {boolean} Сохранять ли историю ввода
+                */
+               saveHistory: true
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -566,7 +595,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                self = this,
                isDublicate = false;
-            if (valParam && typeof valParam === 'string' && self._textChanged) {
+            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
                   if( typeof arrBL  === 'object') {
                      colHelpers.forEach(arrBL, function (valBL, keyBL) {
@@ -607,8 +636,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if( typeof arrBL  === 'string') {
                   arrBL = [arrBL];
                }
+               arrBL.forEach(function(text,index) {
+                  arrBL[index] = this._replaceCodesToSmile(text);
+               }, this);
                return arrBL;
-            })
+            }.bind(this))
          },
 
          /**
@@ -1392,17 +1424,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   parent.addClass('without-margin');
                   break;
                case "2":
-                  target.select();
-                  this._insertImg(
-                     target.attr('src'),
-                     '',
-                     target.attr('alt'),
-                     '<p class="controls-RichEditor__noneditable image-template-center">',
-                     '</p>',
-                     target[0].style.width || (target.width() + 'px')
-                  ).addCallback(function(){
-                     target.remove();
-                  });
+                  var
+                     //todo: go to tmpl
+                     width =  target[0].style.width || (target.width() + 'px'),
+                     style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
+                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center">' +
+                        '<img src="' +  target.attr('src') + '"' + style + ' alt="' +  target.attr('alt') + '"></img></p>';
+
+                  this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
                   break;
                case "3":
                   target.addClass('image-template-right');
@@ -1667,9 +1696,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curValue = value || this.getText();
             this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
          },
-
-         _addToHistory: function(valParam) {
-            return UserConfig.setParamValue(this._getNameForHistory(), valParam);
+         _replaceSmilesToCode: function(text) {
+            smiles.forEach(function(smile){
+               text = text.replace(new RegExp(String.fromCodePoint(smile.code), 'gi'), smile.title);
+            });
+            return text;
+         },
+         _replaceCodesToSmile: function(text) {
+            smiles.forEach(function(smile) {
+               text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
+            });
+            return text;
+         },
+         _addToHistory: function(text) {
+            return UserConfig.setParamValue(this._getNameForHistory(), this._replaceSmilesToCode(text));
          },
 
          _getNameForHistory: function() {
@@ -1780,7 +1820,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
             });
-            return (this._options || it).highlightLinks ? strHelpers.wrapURLs(strHelpers.wrapFiles(text), true) : text;
+            return (this._options || it).highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
          //установка значения в редактор

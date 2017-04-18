@@ -1,7 +1,7 @@
 @themeName: 'online';
 .body {
-  font-family: @font-basic-name;
-  font-size: @font-basic-size;
+  font-family: @default-font-name;
+  font-size: @default-font-size;
 }
 
 .icon-size {
@@ -12,35 +12,6 @@
    text-transform: none;
    line-height: 1;
    display: inline-block;
-}
-.controls-Button.controls-Button__withoutCaption {
-   width: 48px;
-   .controls-Button__icon {
-      margin-left: 0;
-   }
-   .controls-Button__text {
-      display: none;
-   }
-}
-.ws-is-firefox {
-   .controls-Button.controls-Button__withoutCaption {
-      .controls-Button__icon {
-         &.icon-24 {
-            padding-bottom: 0;
-         }
-      }
-   }
-}
-.controls-Button.controls-Checked__checked.controls-Button__withoutCaption {
-   .controls-Button__icon{
-      left: 15px;
-   }
-   .controls-Button__icon{
-      &.icon-24 {
-         left: 11px;
-      }
-
-   }
 }
 
 .controls-PopupMixin__closeButton {

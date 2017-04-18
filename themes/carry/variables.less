@@ -1,8 +1,8 @@
 @import "../online/variables";
 
 @globalDefaultFontSize:                         24px;
-@font-basic-size:                               @globalDefaultFontSize;
-@font-basic-line-height:                        24px;
+@default-font-size:                             @globalDefaultFontSize;
+@default-font-line-height:                      24px;
 @data-grid-basic-height:                        44px;
 
 @default-itemHover-color:                       #E1ECF6;
@@ -216,6 +216,7 @@
 // ---- //
 
 @link-text-decoration:                          none;
+@link-height:                                   auto;
 
 // ------ //
 // Button //
@@ -230,11 +231,13 @@
 
 @button-icon-big-top-offset:                    7px;
 @button-icon-big-left-offset:                   10px;
+@button-without-caption-min-width:              60px;
 
 // Normal default button
 @button-bg:                                     #EAEAEA;
 @button-hover-bg:                               #E1ECF6;
 @button-active-bg:                              #C1D7F0;
+@button-big-font-size:                          @globalDefaultFontSize;
 
 @button-border:                                 @button-border-width solid transparent;
 @button-border-radius:                          0;
@@ -257,7 +260,7 @@
 // Big button
 
 @button-big-border-radius:                      0;
-@button-big-font:                               @globalDefaultFontSize @font-basic-name;
+@button-big-font:                               @globalDefaultFontSize @default-font-name;
 @button-big-min-width:                          60px;
 @button-big-height:                             60px;
 @icon-height:                                   24px;
@@ -385,7 +388,7 @@
 
 
 @DropdownList-height:                           40px;
-@DropdownList-picker-menu-font-size:            @font-basic-size;
+@DropdownList-picker-menu-font-size:            @default-font-size;
 @DropdownList-picker-offset:                    8px 0 0 2px;
 @DropdownList-picker-fastdatafilter-offset:     0 0 0 2px;
 @DropdownList-picker-margin-top:                0;
@@ -440,6 +443,7 @@
 @search-border-color:                           @text-box-border-color;
 @search-form-border-disabled-width:             0;
 @search-buttons-wrapper-width:                  32px + 40px;
+@search-form-field-wrapper-margin-right:        77px;
 @search-hover-border-color:                     @text-box-bottom-border-color;
 @search-bottom-border-color:                    @text-box-bottom-border-color;
 @search-form-disabled-border-bottom:            1px solid @text-box-disabled-border-bottom;
@@ -506,7 +510,7 @@
 
 
 // Popup
-@popup-font-size:                               @font-basic-size;
+@popup-font-size:                               @default-font-size;
 
 @menu-item-text-margin:                         0;
 @menu-item-icon-24-margin:                      0 0 0 34px;

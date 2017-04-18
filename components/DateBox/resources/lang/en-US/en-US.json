@@ -1,3 +1,4 @@
 {
-  "Дата заполнена некорректно": "Date filled incorrectly"
+  "Дата заполнена некорректно": "Date filled incorrectly",
+  "Год должен быть больше 1400": "Year must be more than 1400"
 }

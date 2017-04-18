@@ -5,8 +5,7 @@ define('js!WS.Controls.MenuButton', [
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/collection-helpers',
-   'Core/IoC',
-   'css!WS.Controls.MenuButton'
+   'Core/IoC'
 ], function(Button, ContextMenu, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC) {
 
    'use strict';
@@ -83,18 +82,17 @@ define('js!WS.Controls.MenuButton', [
              *    <option name="parentProperty">Раздел@</option>
              * </pre>
              */
-            nodeProperty: null
+            nodeProperty: null,
             /**
-             * @cfg {String} Устанавливает селектор, который определяет вид кнопки
-             * @remark
-             * null - лист, false - скрытый узел, true - узел
-             *
+             * @cfg {String} Устанавливает заголовок меню, если не задан, то будет отображаться опция caption
              * @example
              * <pre>
-             *    <option name="parentProperty">Раздел@</option>
+             *    <option name="menuCaption">Отметить</option>
              * </pre>
+             * @see setMenuCaption
+             * @see getMenuCaption
              */
-             //buttonTypeClass: ' controls-Button',
+             menuCaption: ''
          }
       },
 
@@ -258,11 +256,23 @@ define('js!WS.Controls.MenuButton', [
 
       setCaption: function(caption){
          MenuButton.superclass.setCaption.apply(this, arguments);
-         if (this._picker){
-            $('.controls-Menu__header-caption', this._picker._container).html(caption);
-         }
+         !this._options.menuCaption && this._drawMenuCaption(caption);
       },
 
+       setMenuCaption: function (menuCaption) {
+           this._options.menuCaption = menuCaption || '';
+           this._drawMenuCaption(menuCaption);
+       },
+
+       _drawMenuCaption: function(menuCaption) {
+           if (this._picker && menuCaption){
+              $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
+           }
+       },
+
+       getMenuCaption: function () {
+           return this._options.menuCaption;
+       },
 
       _drawIcon: function(icon){
          MenuButton.superclass._drawIcon.apply(this, arguments);
@@ -290,7 +300,7 @@ define('js!WS.Controls.MenuButton', [
          if (this._options.icon) {
             headerWrapper.append('<i class="controls-Menu__header-icon ' + this._iconTemplate(this._options) + '"></i>');
          }
-         headerWrapper.append('<span class="controls-Menu__header-caption">' + (this._options.caption || '')  + '</span>');
+         headerWrapper.append('<span class="controls-Menu__header-caption">' + (this._options.menuCaption || this._options.caption || '')  + '</span>');
          header.append(headerWrapper);
          return header;
       },

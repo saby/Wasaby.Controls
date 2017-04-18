@@ -28,6 +28,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
+   'js!SBIS3.StickyHeaderManager',
    'css!SBIS3.CONTROLS.DataGridView'
 ],
    function(
@@ -58,7 +59,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       SortingTemplate,
       colHelpers,
       strHelpers,
-      dcHelpers
+      dcHelpers,
+      StickyHeaderManager
    ) {
 
    'use strict';
@@ -810,6 +812,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this._bindHead();
          this._notify('onDrawHead');
+         // Итоги как и заголовки отрисовываются в thead. Помечаем заголовки для фиксации при необходимости.
+         if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
+            this._updateStickyHeader(headData.hasResults);
+         }
       },
 
       _redrawFoot: function(){
@@ -877,6 +883,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
                return;
             }
             this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
+         }
+      },
+
+      _updateStickyHeader: function(isSticky) {
+         if (!this._options.stickyHeader) {
+            return;
+         }
+         var table = this.getContainer().find('>.controls-DataGridView__table'),
+            isFixed = table.hasClass('ws-sticky-header__table');
+
+         if (isFixed === isSticky) {
+            return;
+         }
+
+         table.toggleClass('ws-sticky-header__table', isSticky);
+         if (isSticky) {
+            StickyHeaderManager.fixAllChildren(this.getContainer(), table);
+         } else {
+            StickyHeaderManager.unfixOne(table, true);
          }
       },
 
@@ -962,7 +987,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       showEip: function(model, options, withoutActivateFirstControl, targetColumnIndex) {
-         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
+         return this._canShowEip(targetColumnIndex) ? this._getEditInPlace().addCallback(function(editInPlace) {
+            return editInPlace.showEip(model, options, withoutActivateFirstControl);
+         }) : Deferred.fail();
       },
       _canShowEip: function(targetColumnIndex) {
          var
@@ -1121,7 +1148,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Если скролл происходит перетаскиванием заголовков
             то выставим соответствующие флаги */
-         this._isHeaderScrolling = $(e.currentTarget).hasClass('controls-DataGridView__th');
+         this._isHeaderScrolling =
+            e.currentTarget !== this._thumb[0] && //Проверка, что перетаскиваем не ползунок, т.к. он тоже лежит в шапке
+            this._thead && this._thead.find(e.currentTarget).length;
+
          if(this._isHeaderScrolling) {
             this.getContainer().addClass('controls-DataGridView__scrollingNow');
          }
