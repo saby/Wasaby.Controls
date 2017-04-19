@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'Core/detection',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
+      'Core/compatibility',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager, compatibility) {
 
       'use strict';
 
@@ -106,7 +107,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-            this._showScrollbar = !cDetection.isMobileSafari && !cDetection.isMobileAndroid;
+            this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
             //Под android оставляем нативный скролл
             if (this._showScrollbar){
                this._initScrollbar = this._initScrollbar.bind(this);
