@@ -185,7 +185,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       _drawSelectedItems: function() {
          var self = this;
          this.getSelectedItems(true).addCallback(function(list){
-            self.setItems(list);
+            self.setItems(list || []);
             return list;
          });
       },
@@ -316,7 +316,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      reload: fHelpers.nop
+      reload: fHelpers.nop,
+      _setSelectedItems: fHelpers.nop
    });
 
    return SelectorButton;
