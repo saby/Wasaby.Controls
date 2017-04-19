@@ -168,6 +168,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             menuClassName += parentContainer.hasClass('controls-ItemsToolbar__small') ? ' controls-ItemsToolbar__small' : '';
 
+            this.addedOnlyExtraNew = false;
+            
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: items,
