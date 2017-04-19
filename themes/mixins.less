@@ -140,6 +140,7 @@
   .box-sizing(border-box);
   font-family: @default-font-name;
   font-size: @link-font-size;
+  font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
   .box-shadow(@button-shadow);
@@ -294,9 +295,21 @@
 // - applies to: flex items
 // auto | flex-start | flex-end | center | baseline | stretch
 .align-self(@align: auto) {
+  .ms-flex-align-self(@align); // IE10
   -webkit-align-self: @align;
       -ms-align-self: @align;
           align-self: @align;
+}
+.ms-flex-align-self(@align) when (@align = flex-start) {
+  -ms-flex-item-align: start;
+}
+
+.ms-flex-align-self(@align) when (@align = flex-end) {
+  -ms-flex-item-align: end;
+}
+
+.ms-flex-align-self(@align) when (@align = auto), (@align = center), (@align = baseline), (@align = stretch) {
+  -ms-flex-item-align: @align;
 }
 // Flex Direction and Wrap
 // - applies to: flex containers

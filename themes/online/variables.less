@@ -1,3 +1,18 @@
+// Кошерные переменные "на выход"
+@default-text-size:                       14px;
+@small-text-size:                         12px;
+@large-text-size:                         15px;
+@default-text-color:                      #000;
+@default-color:                           #587AB0;
+@primary-color:                           #ff7033;
+@disabled-color:                          #CCC;
+@innacent-text-color:                     #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FEC63F;
+@success-color:                           #72BE44;
+@default-bg-color:                        #FFFFFF;
+@default-hover-color:                     #F0F5FB;
+//=============================
 @white-color:                             #fff;
 @black-color:                             #000;
 
@@ -74,8 +89,6 @@
 @link-font:                               @default-font-size @default-font-name;
 @link-cursor:                             pointer;
 @link-text-color:                         #05b;
-@link-background:                         transparent;
-@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
@@ -302,7 +315,7 @@
 // ---------- //
 // Tab button //
 // ---------- //
-@tab-buttons-height:                            29px;
+@tab-buttons-height:                            30px;
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
@@ -332,7 +345,8 @@
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-margin-top:                         0;
 @tab-control-smple-bottomline-height:           3px;
-@tab-button-simple-inner-color:                  #313E78;
+@tab-button-simple-inner-color:                 #313E78;
+@tab-button-simple-inner-padding:               0 8px 0 6px;
 @tab-button-simple-inner-checked-color:         #0055BB;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
@@ -515,9 +529,11 @@
 // ------------------------------------------------------------------------------------- //
 
 @check-box-icon-width:                          18px;
+@check-box-default-font-size:                   14px;
 @check-box-icon-height:                         @check-box-icon-width;
 @check-box-icon-font-size:                      @check-box-icon-width;
-@check-box-icon-margin:                         0 1px 6px 5px;
+@check-box-icon-bottom:                         6px;
+@check-box-icon-left:                           5px;
 
 @check-box-icon-null-width:                     6px;
 @check-box-icon-null-height:                    @check-box-icon-null-width;
@@ -665,7 +681,7 @@
 @menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      @default-itemHover-color;
 @menu-item-hover-icon-color:              @default-color !important;
-
+ @menu-item-icon-16-margin:					6px 0 6px 22px;
 @menu-item-icon-top-offset:               8px;
 @menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              0px;
@@ -1315,6 +1331,11 @@
 @date-range-slider-prev-next-buttons-width:        24px;
 @date-range-slider-prev-next-buttons-font-size:    16px;
 @date-range-slider-prev-next-buttons-font-weight:  normal;
+
+@date-range-slider-error-border-width:             1px;
+@date-range-slider-error-border-style:             solid;
+@date-range-slider-error-border-color:             @text-box-error-border-color;
+@date-range-slider-error-bg:                       @text-box-error-bg;
 
 // ----------------- //
 // Date Range Choose //
@@ -2088,7 +2109,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-bottom:    0;
+@controls-filterButton-history-actions-bottom:    -1px;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2258,6 +2279,8 @@
 @controls-InformationPopup-warning-status-border-color:       #FEC63F;
 @controls-InformationPopup-border-top:                        3px solid;
 @controls-InformationPopup-border-bottom:                     none;
+@controls-InformationPopup-border-left:                       none;
+@controls-InformationPopup-border-right:                      none;
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup

@@ -533,9 +533,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             openedPath : {},
             /**
-             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) или "Скрытый узел" не производит проваливание внутрь иерархии, а раскрывает её содержимое.
+             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) не производит проваливание внутрь иерархии, а раскрывает её содержимое.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * При клике по записи типа "Скрытый узел" проваливание внутрь иерархии запрещено по умолчанию и не подлежит изменению.
+             * Подробнее о типах иерархических записей читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="allowEnterToFolder">false</option>

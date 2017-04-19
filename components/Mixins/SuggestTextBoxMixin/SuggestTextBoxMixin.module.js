@@ -116,8 +116,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._options.searchParam = paramName;
          if(this._searchController) {
             this._searchController.setSearchParamName(paramName);
-         } else {
-            this._initializeSearchController();
          }
       },
 
@@ -335,6 +333,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
+            parentConfig.closeOnTargetMove = true;
             return parentConfig;
          },
 

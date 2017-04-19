@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!WS.Data/Source/SbisService',
    'Core/detection',
    'js!SBIS3.CONTROLS.ListView.Mover',
+   'Core/helpers/Function/throttle',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -65,7 +66,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle) {
 
      'use strict';
 
@@ -119,6 +120,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__disableHover Убирает выделение цветом для строк по "ховеру".
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -300,9 +302,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @typedef {String} MovePosition
-          * @variant on Вставить перемещаемые элементы внутрь текущей записи.
           * @variant after Вставить перемещаемые элементы после текущей записи.
           * @variant before Вставить перемещаемые элементы перед текущей записью.
+          * @variant on Перемещение по иерархии, изменить родителя у перемещаемых элементов без изменения порядково номера.
           */
          /**
           * @typedef {Object} DragEntityOptions
@@ -849,7 +851,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
-            this._setScrollPagerPositionThrottled = this._setScrollPagerPosition.throttle(100, true).bind(this);
+            this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._bindEventHandlers(this._container);
 
             this.initEditInPlace();
@@ -934,10 +936,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var self = this,
                 originalEvent = e.originalEvent,
-                mobFix = 'controls-ListView__mobileSelected-fix';
+                mobFix = 'controls-ListView__mobileSelected-fix',
+                isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
-               Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 ||
+               Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
                /* IOS - однозначно включаем touch режим */
                constants.browser.isMobileIOS ||
                /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
@@ -945,13 +948,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   - mousemove срабатывает через случайный промежуток времени после touchEnd
                   - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
                   написана специальная проверка */
-               (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
+               (e.type === 'mousemove' && isTouchEvent)
             );
 
 
             switch (e.type) {
                case 'mousemove':
-                  self._allowMouseMoveEvent && this._mouseMoveHandler(e);
+                  self._allowMouseMoveEvent && !isTouchEvent && this._mouseMoveHandler(e);
                   break;
                case 'touchstart':
                   this._touchstartHandler(e);
@@ -3936,29 +3939,22 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _getMover: function() {
             if (!this._mover) {
-               this._mover = new Mover({
+               this._mover = Mover.make(this, {
                   moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   items: this.getItems(),
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
-                  invertOrder: this._options.invertOrder,
                   dataSource: this.getDataSource()
                });
-               ['onBeginMove', 'onEndMove'].forEach(function (eventName) {
-                  this._mover.subscribe(eventName, function (e) {
-                     e.setResult(this._notify(eventName));
-                     return e;
-                  }.bind(this))
-               }, this);
             }
             return this._mover
          },
          /**
           * Перемещает переданные записи
           * @param {Array} movedItems  Массив перемещаемых записей.
-          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
-          * @param {MovePosition} position Как перемещать записи
+          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить.
+          * @param {MovePosition} position Позиционирование перемещения.
           * @return {Core/Deferred}
           * @example
           * <pre>

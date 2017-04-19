@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
                if (opts.startValue && !opts.endValue) {
                   opts.endValue = opts.startValue;
                } else if (opts.endValue && !opts.startValue) {
-                  opts.endValue = opts.startValue;
+                  opts.startValue = opts.endValue;
                }
             }
             return opts

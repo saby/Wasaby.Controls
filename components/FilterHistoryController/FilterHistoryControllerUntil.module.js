@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                if(elemFromHistory.visibilityValue !== undefined) {
                   elem.visibilityValue = elemFromHistory.visibilityValue;
                }
-            } else if(elem.value && elem.resetValue && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
+            } else if(elem.hasOwnProperty('value') && elem.hasOwnProperty('resetValue') && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
                resetField('value', elem);
             }
          });

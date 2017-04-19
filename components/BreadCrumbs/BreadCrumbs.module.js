@@ -10,7 +10,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'css!SBIS3.CONTROLS.BreadCrumbs'
 ], function(CompoundControl, DSMixin, PickerMixin, DecorableMixin, dotTpl, pointTpl, strHelpers, IoC) {
    /**
-    * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
+    * Класс контрола "Хлебные крошки".
+    * Стандарт контрола описан <a href='http://axure.tensor.ru/standarts/v7/%D1%85%D0%BB%D0%B5%D0%B1%D0%BD%D1%8B%D0%B5_%D0%BA%D1%80%D0%BE%D1%88%D0%BA%D0%B8__%D0%BD%D0%B0_%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B5_.html'>здесь</a>.
+    * Примеры использования доступны в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/navigations/breadcrumbs/'>Хлебные крошки</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
@@ -32,7 +34,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    //TODO: Переписать все к чертям
    var BreadCrumbs = CompoundControl.extend([DSMixin, PickerMixin, DecorableMixin], /** @lends SBIS3.CONTROLS.BreadCrumbs.prototype */{
        /**
-        * @event onItemClick Происходит при клике по хлебным крошкам (элементу коллекции).
+        * @event onItemClick Происходит при клике элементу коллекции из Хлебных крошек.
         * @param {Number|String} idProperty Идентификатор элемента коллекции.
         */
       _dotTplFn: dotTpl,
@@ -47,6 +49,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          _paddings: undefined,
          _BCmargins: undefined,
          _options: {
+            /**
+             * @cfg {String} Устанавливает название поля из элемента коллекции, значения которого будут использованы в качестве первичного ключа.
+             */
             idProperty: 'id',
             displayField: '',
             displayProperty: 'title',
@@ -268,6 +273,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
             };
             item[this._options.displayProperty] = '...';
             dots = $(pointTpl({
+                  escapeHtml: strHelpers.escapeHtml,
                   item: item,
                   decorators: this._options._decorators,
                   displayField: this._options.displayProperty,
@@ -370,6 +376,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          return {
             item: item,
+            escapeHtml: strHelpers.escapeHtml,
             displayField: this._options.displayProperty,
             displayProperty: this._options.displayProperty,
             decorators: this._options._decorators

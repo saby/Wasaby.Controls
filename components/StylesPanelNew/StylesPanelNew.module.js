@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
              *    <li>Составная. В рамках диалогового окна с возможностью отменить/применить изменения.</li>
              * </ol>
              */
-            palleteRenderStyle: false,
+            paletteRenderStyle: false,
             /**
              * @cfg {Boolean}
              * Оповещать об изменении сразу, не дожидаясь нажатия кнопки "Применить"
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             /**
              * @cfg {Number}
              * Устанавливает количество колонок в режиме палитры
-             * @see palleteRenderStyle
+             * @see paletteRenderStyle
              */
             columnsCount: null,
             /**
