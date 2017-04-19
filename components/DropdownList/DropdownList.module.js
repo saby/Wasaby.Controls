@@ -400,25 +400,20 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _removeOldKeys: function(){
             var keys = this.getSelectedKeys(),
                 items = this.getItems();
-            if (!this._isEnumTypeData()) {
-               for (var i = 0, l = keys.length; i < l; i++) {
-                  if (!items.getRecordById(keys[i])) {
-                     keys.splice(i, 1);
-                  }
-               }
-               if (!keys.length){
-                  this._setFirstItemAsSelected();
-               }
-            }
-         },
-
-         _onReviveItems: function(){
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
             //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
-            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
-               this._removeOldKeys();
+            if (!this._options.emptyValue || keys[0] !== null){
+               if (!this._isEnumTypeData()) {
+                  for (var i = 0, l = keys.length; i < l; i++) {
+                     if (!items.getRecordById(keys[i])) {
+                        keys.splice(i, 1);
+                     }
+                  }
+                  if (!keys.length){
+                     this._setFirstItemAsSelected();
+                  }
+               }
             }
-            DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
          setSelectedKeys: function(idArray){
@@ -603,6 +598,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _redrawSelectedItems: function() {
+            this._removeOldKeys();
             if (this._isEmptyValueSelected()) {
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
