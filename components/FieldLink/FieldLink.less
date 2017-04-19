@@ -84,7 +84,7 @@
 }
 
 .controls-FieldLink__itemsEdited {
-   .controls-FieldLink__item:hover {
+   .controls-FieldLink__item-caption:hover {
       text-decoration: @link-hover-text-decoration;
       cursor: @link-cursor;
    }
@@ -309,26 +309,14 @@
 
 .ws-is-firefox {
    .controls-FieldLink {
+      vertical-align: middle;
+      
       .controls-TextBox__beforeFieldWrapper, .controls-TextBox__fieldWrapper {
          margin-top: -1px;
       }
       .controls-FieldLink__item-cross {
          top: -1px;
       }
-   
-      /* FIXING FF FLEXBOX BASELINE https://bugzilla.mozilla.org/show_bug.cgi?id=969874 */
-      &:before {
-         content: '.';
-         visibility: hidden;
-         z-index: -1;
-      }
-      .controls-TextBox__beforeFieldWrapper,
-      .controls-TextBox__afterFieldWrapper,
-      .controls-TextBox__fieldWrapper {
-         position: relative;
-         top: -@text-box-field-min-height;
-      }
-
       &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
          display: none;
       }

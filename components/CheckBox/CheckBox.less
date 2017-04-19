@@ -11,6 +11,7 @@
 
 .controls-CheckBox__icon {
   display: inline-block;
+  position: relative;
   float: left;
   &:before {
     font-family: @icon-font;
@@ -18,8 +19,8 @@
 }
 
 .controls-CheckBox__caption_size {
-  font-size: @default-font-size;
-  width: calc(e("100% - 24px"));
+  font-size: @check-box-default-font-size;
+  width: calc(e("100% - @{default-height}"));
   padding: @check-box-caption-padding;
 }
 
@@ -48,7 +49,8 @@
     height: @check-box-icon-height;
     width: @check-box-icon-width;
     line-height: @check-box-icon-height;
-    margin: @check-box-icon-margin;
+    bottom: @check-box-icon-bottom;
+    left: @check-box-icon-left;
   }
 }
 

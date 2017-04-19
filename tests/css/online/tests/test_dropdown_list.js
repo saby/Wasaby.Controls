@@ -585,7 +585,7 @@ gemini.suite('SBIS3.CONTROLS.DropdownList Online', function () {
 	
 	gemini.suite('item_template', function (test) {
 
-        test.setUrl('/regression_dropdown_list_online_13.html').setCaptureElements('.capture')
+        test.setUrl('/regression_dropdown_list_online_13.html').setTolerance(55.0).setCaptureElements('.capture')
 
             .before(function (actions, find) {
                 actions.waitForElementToShow('[name="DropdownList 1"]', 40000);

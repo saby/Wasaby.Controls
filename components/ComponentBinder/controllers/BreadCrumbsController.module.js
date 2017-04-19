@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
          });
 
          breadCrumbs.subscribe('onItemClick', function(event, id){
-            self._currentRoot = this._dataSet.getRecordById(id);
+            self._currentRoot = this.getItems().getRecordById(id);
             self._currentRoot = self._currentRoot ? self._currentRoot.getRawData() : null;
             if (id === null){
                self._path = [];

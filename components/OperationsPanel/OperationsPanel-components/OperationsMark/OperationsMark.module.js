@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox',
    'Core/core-instance',
-   'i18n!SBIS3.CONTROLS.OperationsMark',
-   'css!SBIS3.CONTROLS.OperationsMark'
+   'i18n!SBIS3.CONTROLS.OperationsMark'
 ], function(MenuLink, CheckBox, cInstance) {
    /**
     * Операции выделения.

@@ -256,13 +256,17 @@ define('js!WS.Controls.MenuButton', [
 
       setCaption: function(caption){
          MenuButton.superclass.setCaption.apply(this, arguments);
-         !this._options.menuCaption && this.setMenuCaption(caption);
+         !this._options.menuCaption && this._drawMenuCaption(caption);
       },
 
        setMenuCaption: function (menuCaption) {
            this._options.menuCaption = menuCaption || '';
+           this._drawMenuCaption(menuCaption);
+       },
+
+       _drawMenuCaption: function(menuCaption) {
            if (this._picker && menuCaption){
-               $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
+              $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
            }
        },
 

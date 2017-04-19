@@ -213,6 +213,7 @@
             }
             .controls-Button__text {
                margin: 0;
+               padding: 0;
             }
             &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
                border-left: none;
@@ -225,7 +226,7 @@
       .controls-DateRangeBigChoose__years-panel-wrapper {
         .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
           &:hover {
-             .controls-Link-link {
+             .controls-Link__field {
                 text-decoration: none;
              }
           }
@@ -254,7 +255,7 @@
          &:hover {
             border: 1px dotted @gray-color;
             color: @date-range-big-choose-link-text-color;
-            .controls-Link-link {
+            .controls-Link__field {
                text-decoration: none !important;
             }
          }
