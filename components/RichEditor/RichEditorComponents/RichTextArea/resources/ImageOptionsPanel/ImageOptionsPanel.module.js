@@ -129,6 +129,12 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                      this._notify('onImageSizeChange');
                      this.hide();
                      break;
+                  case "change":
+                     this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
+                        this._notify('onImageChange', fileobj);
+                        this.hide();
+                     }.bind(this));
+                     break;
                   case "template":
                      this._openImagePanel(this);
                      var
