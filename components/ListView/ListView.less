@@ -23,25 +23,7 @@
        color: @gray-ccc-color;
      }
    }
-   
-   &.controls-ListView__multiselect {
-      .controls-ListView__itemCheckBox {
-         display: inline-block;
-      }
-      .controls-ListView__multiselect__off {
-         .controls-ListView__itemCheckBox {
-            display: none;
-         }
-      }
-      .controls-ListView__item__multiSelected{
-         .controls-ListView__itemCheckBox {
-            background: @listView-check-box-icon-checked-bg;
-            &:hover{
-      			background: @listView-check-box-icon-checked-bg;
-      		}
-         }
-      }
-   }
+
    &.controls-ListView__outside-scroll-loader{
       .controls-ListView-scrollIndicator{
          position: relative;
@@ -98,6 +80,25 @@
    left: 50%;
    width: 1px;
    height: 1px;
+}
+
+.controls-ListView__multiselect {
+   .controls-ListView__itemCheckBox {
+      display: inline-block;
+   }
+   .controls-ListView__multiselect__off {
+      .controls-ListView__itemCheckBox {
+         display: none;
+      }
+   }
+   .controls-ListView__item__multiSelected{
+      .controls-ListView__itemCheckBox {
+         background: @listView-check-box-icon-checked-bg;
+         &:hover{
+            background: @listView-check-box-icon-checked-bg;
+         }
+      }
+   }
 }
 
 .controls-ListView__EmptyData{
