@@ -14,7 +14,13 @@
          display: none;
       }
    }
-
+   .controls-ListView__item:after {
+      content: ',';
+   }
+   
+   .controls-ListView__item:last-child:after {
+      content: '';
+   }
 }
 
 .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
