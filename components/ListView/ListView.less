@@ -2,6 +2,10 @@
 .controls-ListView {
     position: relative;
 
+   &:not(.controls-ListView__dataLoaded) {
+      min-height: @list-vew-min-height;
+   }
+
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
