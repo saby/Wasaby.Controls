@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
        "js!WS.Data/Collection/List",
+       "js!SBIS3.CONTROLS.Utils.ItemsSelection",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -65,7 +66,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         ITextValue,
         TemplateUtil,
         ToSourceModel,
-        List
+        List,
+        ItemsSelectionUtil
     ) {
 
        'use strict';
@@ -181,8 +183,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
            */
           $protected: {
-             _linkCollection: null,   /* Контрол отображающий выбранные элементы */
-             _selectorAction: null,   /* Action выбора */
              _lastFieldLinkWidth: null,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
@@ -431,12 +431,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _getSelectorAction: function() {
-             if(!this._selectorAction) {
-                this._selectorAction = this.getChildControlByName('FieldLinkSelectorAction')
-             }
-             return this._selectorAction;
-          },
+          _getSelectorAction: fHelpers.memoize(function() {
+             return this.getChildControlByName('FieldLinkSelectorAction');
+          }, '_getSelectorAction'),
 
            _getShowAllConfig: function(){
                /* Если не передали конфигурацию диалога всех записей для автодополнения,
@@ -456,6 +453,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPlaceholder: function() {
              FieldLink.superclass._setPlaceholder.apply(this, arguments);
              this.reviveComponents();
+          },
+          
+          _notify: function() {
+             return ItemsSelectionUtil.delayedNotify(
+                FieldLink.superclass._notify,
+                arguments,
+                this);
           },
 
           /**
@@ -704,8 +708,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**********************************************************************************************/
 
           _getAdditionalChooserConfig: function () {
-             var
-                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys();
+             var selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys();
 
              return {
                 currentValue: selectedKeys,
@@ -758,13 +761,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              cfg.cssClassName += ' ' + classesToAdd.join(' ');
              return cfg;
           },
-
-          _getLinkCollection: function() {
-             if(!this._linkCollection) {
-                return (this._linkCollection = this.getChildControlByName('FieldLinkItemsCollection'));
-             }
-             return this._linkCollection;
-          },
+   
+          _getLinkCollection: fHelpers.memoize(function() {
+             return this.getChildControlByName('FieldLinkItemsCollection');
+          }, '_getLinkCollection'),
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
@@ -1016,8 +1016,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              this._toggleDropAll(keysArrLen > 1);
-             this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys);
-             this.getContainer().toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
+             this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys)
+                                .toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
 
              if(!this._options.alwaysShowTextBox) {
 

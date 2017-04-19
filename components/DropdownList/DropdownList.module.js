@@ -1010,7 +1010,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               activableByClick: false,
                targetPart: true,
                template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,
