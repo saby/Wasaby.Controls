@@ -90,7 +90,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                activableByClick: false
             },
-            _content: null
+            _content: null,
+            _headerHeight: 0
          },
 
          $constructor: function() {
@@ -179,12 +180,21 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
+            var headerHeight, scrollbarContainer;
             ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
                if (this._options.stickyContainer) {
-                  this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
+                  headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
+                  if (this._headerHeight !== headerHeight) {
+                     scrollbarContainer = this._scrollbar._container;
+                     this._headerHeight = headerHeight;
+                     scrollbarContainer.css('margin-top', headerHeight);
+                     //У scrollbar изначально стоит height(calc(100% - 8px)). Поэтому нужно учесть эти 8px.
+                     headerHeight += 8;
+                     scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                  }
                }
             }
          },
