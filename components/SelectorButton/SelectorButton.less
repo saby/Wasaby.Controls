@@ -2,7 +2,6 @@
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
    .button-default-style();
-   .align-items(baseline);
 
    &.ws-validation-error {
       outline: @controls-SelectorButton-error-outline;
@@ -20,13 +19,8 @@
    }
    
    .controls-ListView__item:last-child:after {
-      content: '';
+      content: none;
    }
-}
-
-.controls-SelectorButton__cross,
-.controls-SelectorButton__icon {
-   .align-self(center);
 }
 
 .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
@@ -35,6 +29,7 @@
 
 .controls-SelectorButton__text {
    .text-overflow();
+   .align-self(baseline);
 }
 
 .controls-SelectorButton__withoutCross .controls-SelectorButton__cross {
