@@ -54,6 +54,11 @@ define('js!SBIS3.CONTROLS.BaseCompatible', [
                if (attrs.hasOwnProperty(atr)) {
                   var name = attrs[atr].name ? attrs[atr].name : atr,
                      value = attrs[atr].value || attrs[atr];
+
+                  if (name === "parent") {
+                     continue;
+                  }
+
                   decOptions[name] = attributes[name] = value;
 
                }
@@ -90,11 +95,7 @@ define('js!SBIS3.CONTROLS.BaseCompatible', [
 
          if (redraw) {
             try {
-               var temp = $(markup);
-
-               $(this._container).before(temp);
-               $(this._container).remove();
-               this._container = temp;
+               dcHelpers.replaceContainer(this._container, markup);
                this.setContainer(this._container);
 
             } catch (e) {
@@ -179,6 +180,8 @@ define('js!SBIS3.CONTROLS.BaseCompatible', [
             this._options.icon = '';
          if (!this._options.text)
             this._options.text = '';
+         if (!this._options.name)
+            this._options.name = this.getId();
 
       },
 
@@ -300,9 +303,10 @@ define('js!SBIS3.CONTROLS.BaseCompatible', [
             this.setParent(this._options.parent);
          }
 
-         if (this._container && this._options.parent && (typeof this._container.attr === "function") && this._container.attr("hasMarkup")!=="true") {
+/*         if (this._container && this._options.parent && (typeof this._container.attr === "function") && this._container.attr("hasMarkup")!=="true") {
+            console.log("*-*-*-*-*-*-*-* RENDER AUTOMATIC!!! *-*-*-*-*-*-*-*-*-*-*-*");
             this.render(true);
-         }
+         }*/
       },
 
 
