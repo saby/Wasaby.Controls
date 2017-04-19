@@ -15,15 +15,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'css!SBIS3.CONTROLS.FilterPanelChooser.List'
 ], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
-        //TODO: выписана задача https://inside.tensor.ru/opendoc.html?guid=62947517-9859-4291-a899-42bacf350341 по которой
-        //будет предоставлен функционал фильтрации на уровне проекции с учётом сортировки, и перебитие приватной опции
-        //_getRecordsForRedraw у ListView можно будет удалить.
-        getRecordsForRedraw = function(projection, cfg) {
-            var records = cfg._getRecordsForRedrawSt.apply(this, arguments);
-            if (cfg._showFullList === false) {
-                records = records.slice(0, 3);
-            }
-            return records;
+        itemsFilterMethod = function(model, index, proj, projIndex) {
+            return this.showFullList || projIndex < 3;
         },
         itemsSortMethod = new ComputeFunctor(function(first, second) {
             return second.collectionItem.get('count') - first.collectionItem.get('count');
@@ -68,6 +61,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
         _dotTplFn: dotTplFn,
         $protected: {
             _options: {
+                _itemsFilterMethod: itemsFilterMethod,
+                _itemsSortMethod: itemsSortMethod,
                 _itemContentTpl: itemContentTpl,
                 chooserTemplate: chooserTpl,
                 _afterChooserWrapper: footerTpl,
@@ -78,7 +73,11 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
                 /**
                  * @cfg {String} Устанавливает поле, в котором лежит количественное значения наименования.
                  */
-                countField: 'count'
+                countField: 'count',
+                /**
+                 * @cfg {Boolean} Показывать весь набор элементов.
+                 */
+                showFullList: false
             },
             _allButton: undefined
         },
@@ -87,15 +86,17 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             CommandDispatcher.declareCommand(this, 'showFullList', this._toggleFullState.bind(this));
         },
 
-        _prepareProperties: function() {
-            var opts = FilterPanelChooserList.superclass._prepareProperties.apply(this, arguments);
-            return cFunctions.merge(opts, {
-                itemsSortMethod: itemsSortMethod,
+        _prepareProperties: function(options) {
+            var props = FilterPanelChooserList.superclass._prepareProperties.apply(this, arguments);
+            //необходимо забиндить фильтр на опции, чтобы в фильтре иметь доступ к опции showFullList, т.к. фильтрация
+            //зависит от значения этой опции.
+            options._itemsFilterMethod = options._itemsFilterMethod.bind(options);
+            return cFunctions.merge(props, {
+                itemsSortMethod: options._itemsSortMethod,
+                itemsFilterMethod: options._itemsFilterMethod,
                 /*Сейчас признак мультивыбранности записи не рисуется на сервере, из-за этого происходит лютое моргание.
                 * Как временное решение, пока ListView сам не начнёт рисовать мультивыбранность на сервере, нарисуем её сами.*/
-                itemTpl: itemTemplate,
-                _getRecordsForRedraw: getRecordsForRedraw,
-                _showFullList: false
+                itemTpl: itemTemplate
             });
         },
 
@@ -108,15 +109,16 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
          * @command showFullList
          */
         _toggleFullState: function(toggle) {
-            this._getListView()._options._showFullList = toggle;
-            this._getListView().redraw();
+            var filter = toggle ? null : this._options._itemsFilterMethod;
+            this._options.showFullList = toggle;
+            this._getListView().setItemsFilterMethod(filter);
             this._toggleAllButton();
         },
 
         _toggleAllButton: function() {
             var listView = this._getListView();
             //Скрываем кнопку если показываются все записи (showFullList = true) или показываем не все записи, но их меньше 4
-            this._getAllButton().toggle(!(listView._options._showFullList || listView.getItems().getCount() < 4));
+            this._getAllButton().toggle(!(this._options.showFullList || listView.getItems().getCount() < 4));
         },
 
         _getAllButton: function() {

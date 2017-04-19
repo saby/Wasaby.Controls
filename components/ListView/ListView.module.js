@@ -120,6 +120,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__disableHover Убирает выделение цветом для строк по "ховеру".
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -936,7 +937,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this,
                 originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix',
-                isTouchEvent = ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents));
+                isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
                Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
@@ -3944,7 +3945,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
-                  dataSource: this.getDataSource(),
+                  dataSource: this.getDataSource()
                });
             }
             return this._mover
