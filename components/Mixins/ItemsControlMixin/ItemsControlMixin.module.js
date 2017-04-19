@@ -168,6 +168,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
+      tplOptions.idProperty = cfg.idProperty;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
