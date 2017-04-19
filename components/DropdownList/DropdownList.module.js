@@ -610,8 +610,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
-               if (!this.getSelectedKeys().length && this.getItems().getCount()) {
-                  this._options.selectedKeys = [this.getItems().at(0).get(this._options.idProperty)];
+               if (!this.getSelectedKeys().length && this._getItemsProjection().getCount()) {
+                  var firstItem = this._getItemsProjection().at(0).getContents();
+                  if (cInstance.instanceOfModule(firstItem, 'WS.Data/Entity/Record')) {
+                     this._options.selectedKeys = [firstItem.get(this._options.idProperty)];
+                  }
                }
                this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение
             }

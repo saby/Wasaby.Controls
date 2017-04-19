@@ -1197,9 +1197,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
          if (this._chartObj) {
             this._chartObj.destroy();
          }
-         if (this._dataSource) {
-            this._dataSource.destroy();
-         }
+         this._dataSource = null;
          dcHelpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }
