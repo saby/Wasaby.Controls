@@ -136,6 +136,7 @@ define('js!WS.Controls.Button', [
       setPrimary: function(flag){
          this._options.primary = !!flag;
          this._container.toggleClass('controls-Button__primary', this.isPrimary());
+         this._container.toggleClass('controls-Button__default', !this.isPrimary());
       },
       /**
        * Является ли кнопкой по умолчанию.
