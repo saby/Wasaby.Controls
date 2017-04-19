@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       SortingTemplate,
       colHelpers,
       strHelpers,
+      dcHelpers,
       Sanitize,
       StickyHeaderManager) {
 
