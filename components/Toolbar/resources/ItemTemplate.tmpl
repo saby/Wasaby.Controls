@@ -1,0 +1,7 @@
+<ws:partial
+        template="{{item['componentType']}}"
+        data-hash="{{projItem.getHash()}}"
+        data-id="{{item[idProperty]}}"
+        class="controls-ListView__item js-controls-ListView__item controls-ToolBar__item"
+        scope="{{prepareOptionsForItem(item, items, idProperty, parentProperty, displayProperty, itemsToSubItems)}}"
+/>

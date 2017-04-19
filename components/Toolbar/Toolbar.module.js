@@ -1,14 +1,15 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    "Core/IoC",
+   "Core/core-functions",
    "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
-   "html!SBIS3.CONTROLS.Toolbar",
-   "html!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.Toolbar",
+   "tmpl!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.CommandsButton",
    'css!SBIS3.CONTROLS.Toolbar'
-], function( IoC, ConsoleLogger,ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
+], function( IoC, cFunctions, ConsoleLogger, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
     var
@@ -77,9 +78,42 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
             return rawData;
          },
+         prepareOptionsForItem = function(item, items, idProperty, parentProperty, displayProperty, itemsToSubItems) {
+            var
+               subItems,
+               result = {},
+               itemKey = item.get(idProperty),
+               options = item.get('options') || {},
+               isToolbarItem = item.get('showType') == showType.MENU_TOOLBAR || item.get('showType') == showType.TOOLBAR;
+            if (isToolbarItem) {
+               subItems = getSubItems(itemKey, items, idProperty, parentProperty, itemsToSubItems);
+               subItems = cFunctions.clone(subItems);
+               for (var i = 0; i < subItems.length; i++) {
+                  if (subItems[i].parent == itemKey ) {
+                     delete subItems[i].parent;
+                  }
+                  if (subItems.length) {
+                     options.items = subItems;
+                     options.parentProperty = parentProperty;
+                     options.displayProperty = displayProperty;
+                  }
+               }
+            }
+            options.commandArgs = item.get('commandArgs') || [];
+            result.options = options;
+            result['className'] = item.get('className') || '';
+            result['visible'] = isToolbarItem && item.get('visible');
+            result['idProperty'] = idProperty;
+            result['icon'] = item.get('icon') || '';
+            result['name'] = item.get('name') || '';
+            result['caption'] = item.get('caption') || '';
+            result['command'] = item.get('command');
+
+            return result;
+         },
          buildTplArgs = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
-            tplOptions.getSubItems = getSubItems;
+            tplOptions.prepareOptionsForItem = prepareOptionsForItem;
             tplOptions.itemsToSubItems = collectSubItems(cfg.items, cfg.parentProperty);
             tplOptions.showType = showType;
             tplOptions.hierField = cfg.parentProperty;
