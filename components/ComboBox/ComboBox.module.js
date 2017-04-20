@@ -656,6 +656,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
             this._picker.recalcPosition(true);
+            this._onResizeHandler();
          }
          else {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
