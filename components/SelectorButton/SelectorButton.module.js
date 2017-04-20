@@ -233,13 +233,17 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
          } else {
-            if(this.getProperty('useSelectorAction')) {
-               cfg.multiselect = this.getMultiselect();
-               cfg.selectedItems = this.getSelectedItems();
-               this._getSelectorAction().execute(cfg);
-            } else {
-               this._showChooser(cfg.template, cfg.componentOptions);
-            }
+            this.showSelector(cfg);
+         }
+      },
+
+      showSelector: function(cfg) {
+         if(this.getProperty('useSelectorAction')) {
+            cfg.multiselect = this.getMultiselect();
+            cfg.selectedItems = this.getSelectedItems();
+            this._getSelectorAction().execute(cfg);
+         } else {
+            this._showChooser(cfg.template, cfg.componentOptions);
          }
       },
 
