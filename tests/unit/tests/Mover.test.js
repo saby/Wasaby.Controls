@@ -263,6 +263,12 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             mover.move([items.at(0)], items.at(2), 'after');
             assert.equal(items.at(2).getId(), id);
          });
+         it('should notify onBeginMove when wrong move target', function (done) {
+            treeMover.subscribe('onBeginMove', function(e) {
+               done();
+            });
+            treeMover.move([treeItems.at(0)], treeItems.at(0), 'on');
+         });
       });
       describe('_checkRecordsForMove', function () {
          it('should return false if target undefined', function(){
