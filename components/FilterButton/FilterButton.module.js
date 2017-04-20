@@ -407,7 +407,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              return {
                 corner: isRightAlign ? 'tl' : 'tr',
-                parent: this,
+                opener: this,
+                /* Как и у всех панелей задаю parent: null, в противном случае становится невозможным найти owner'a,
+                   т.к. поиск происходит через getTopParent, который будет возвращать самого верхнего родителя,
+                   и с него невозможно найти контролы, которые лежат на панели фильтров */
+                parent: null,
                 horizontalAlign: {
                    side: isRightAlign ? 'left' : 'right'
                 },
