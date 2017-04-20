@@ -26,7 +26,7 @@
                 <ws:SBIS3.CONTROLS.AdditionalFilterParams
                         if="{{ additionalFilterParamsTemplate }}"
                         template="{{ additionalFilterParamsTemplate }}"
-                        visible="{{ 'additionalFilterVisible'|bind }}"
+                        visible="{{ 'additionalFilterVisible'|bind:true }}"
                 />
                 <ws:SBIS3.CONTROLS.FilterHistory if="{{ historyController }}" name="filterHistory" tabindex="0" />
             </div>
