@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             text = String.trim(text);
          }
          //Установим текст только если значения различны и оба не пустые
-         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !text.length)){
+         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !(text || '').length)){
             this.setText(text);
          }
       },
