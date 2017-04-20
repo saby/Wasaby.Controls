@@ -270,9 +270,7 @@
          //pSelf.starting = null;
          //pSelf.suspending = null;
          //pSelf.removing = null;
-         if (useDeferred) {
-            pSelf.useDeferred = typeof useDeferred === 'function' ? useDeferred : true;
-         }
+         pSelf.useDeferred = useDeferred;
          if (typeof delay === 'number' && 0 <= delay) {
             this.start(delay);
          }
@@ -626,7 +624,8 @@
             success,
             fail;
          if (useDeferred || typeof Promise === 'undefined') {
-            promise = new (typeof useDeferred === 'function' ? useDeferred : $ws.proto.Deferred)();
+            var Deferred = require('Core/Deferred') || (typeof useDeferred === 'function' ? useDeferred : null);
+            promise = new Deferred();
             success = promise.callback.bind(promise);
             fail = promise.errback.bind(promise);
          }
