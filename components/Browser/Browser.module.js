@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CONTROLS.ColumnsController',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'Core/core-instance',
-   'css!SBIS3.CONTROLS.Browser'
+   'Core/core-instance'
 ], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance){
    'use strict';
 
