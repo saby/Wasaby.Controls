@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          prepareOptionsForItem = function(item, items, idProperty, parentProperty, displayProperty, itemsToSubItems) {
             var
                subItems,
-               result = {},
+               optionValue,
                itemKey = item.get(idProperty),
                options = item.get('options') || {},
                isToolbarItem = item.get('showType') == showType.MENU_TOOLBAR || item.get('showType') == showType.TOOLBAR;
@@ -99,17 +99,16 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                   }
                }
             }
-            options.commandArgs = item.get('commandArgs') || [];
-            result.options = options;
-            result['className'] = item.get('className') || '';
-            result['visible'] = isToolbarItem && item.get('visible');
-            result['idProperty'] = idProperty;
-            result['icon'] = item.get('icon') || '';
-            result['name'] = item.get('name') || '';
-            result['caption'] = item.get('caption') || '';
-            result['command'] = item.get('command');
+            options['visible'] = isToolbarItem && (item.get('visible') !== false);
+            options['idProperty'] = idProperty;
+            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command'].forEach(function(optName) {
+               optionValue = item.get(optName);
+               if (optionValue !== undefined) {
+                  options[optName] = optionValue;
+               }
+            });
 
-            return result;
+            return options;
          },
          buildTplArgs = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
