@@ -1235,9 +1235,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             }.bind(this));
 
-            editor.on('drop', function() {
+            editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
+               if (!self._mouseIsPressed) {
+                  event.preventDefault();
+               }
             });
 
             editor.on('dragstart', function(event) {
