@@ -1,0 +1,8 @@
+<div
+	class="controls-ClockPicker__circle controls-ClockPicker_{{viewName}}Circle controls-ClockPicker__circle_{{circleName}}"
+	style="transition: visibility {{animationTime}}ms, opacity {{animationTime}}ms, transform {{animationTime}}ms;"
+>
+	<ws:for data="key, tick in ticks">
+		<div class="controls-ClockPicker__tick controls-ClockPicker__tick_{{circleName}} controls-ClockPicker__tick_{{circleName}}-{{key}}{{viewName === 'minutes' ? ' js-controls-ClockPicker__tick-' + tick}}">{{tick}}</div>
+	</ws:for>
+</div>

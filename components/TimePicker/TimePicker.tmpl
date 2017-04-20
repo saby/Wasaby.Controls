@@ -1,0 +1,12 @@
+<div class="controls-TimePicker">
+   <ws:SBIS3.CONTROLS.TimeHeader
+      name="header"
+      time="{{'time'|bind}}"
+      activeTime="{{'activeTime'|mutable:activeTime}}"
+   />
+   <ws:SBIS3.CONTROLS.ClockPicker
+      name="body"
+      time="{{'time'|mutable}}"
+      viewName="{{'activeTime'|mutable:activeTime}}"
+   />
+</div>

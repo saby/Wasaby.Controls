@@ -1,0 +1,54 @@
+.controls-TimeHeader {
+  height: @time-header-height;
+  background-color: @gray-f4f4f4-color;
+  .flexbox();
+  .justify-content(space-between);
+  .align-items(center);
+}
+
+.controls-TimeHeader__endBlock {
+  .flexbox();
+  .align-items(center);
+}
+
+.controls-TimeHeader__title {
+  display: inline-block;
+  font-size: @time-header-font-size;
+  font-weight: @bold-font-weight;
+  margin-left: @time-header-element-margin-left;
+}
+
+.controls-TimeHeader__toggleTime {
+  display: inline-block;
+  margin-left: @time-header-element-margin-left;
+}
+
+.controls-TimeHeader__homeButton {
+  margin-right: @time-header-element-margin-left + @closeButtonHeight;
+}
+
+.controls-TimeHeader__time {
+  display: inline-block;
+  cursor: @default-hover-cursor;
+}
+
+.controls-TimeHeader__separator {
+  display: inline-block;
+  font-size: @time-header-font-size;
+  font-weight: @bold-font-weight;
+}
+
+.controls-TimeHeader__time_active {
+  font-size: @time-header-font-size;
+  font-weight: @bold-font-weight;
+  color: @blue-dark-color;
+}
+
+.controls-TimeHeader__time_passive {
+  font-size: @time-header-font-size;
+  font-weight: @bold-font-weight;
+  color: @gray-color;
+  &:hover {
+    text-decoration: @toggle-time-passive-hover-text-decoration;
+  }
+}
