@@ -364,6 +364,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
+            _createEditInPlaceDeferred: null,
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _pagerContainer: undefined,
@@ -1223,7 +1224,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
-            if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
+            if (this._options.groupBy && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
                var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
                if (closestGroup.length) {
                   this._options.groupBy.clickHandler.call(this, $target);
@@ -2027,8 +2028,16 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                self = this,
                result = new Deferred();
-            requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function(controller) {
-               result.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+            if (!this._createEditInPlaceDeferred) {
+               this._createEditInPlaceDeferred = new Deferred();
+               requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function (controller) {
+                  self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+                  self._createEditInPlaceDeferred = undefined;
+               });
+            }
+            this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
+               result.callback(editInPlace);
+               return editInPlace;
             });
             return result;
          },
