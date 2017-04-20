@@ -2508,7 +2508,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._isNeedToRedraw()) {
             needToRevive = this._changeItemProperties(item, property);
             this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
-            this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
+            if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+               this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
+            }
          }
       }
    };
