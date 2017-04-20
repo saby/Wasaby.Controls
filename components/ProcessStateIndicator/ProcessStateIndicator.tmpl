@@ -1,5 +1,8 @@
 <span class="controls-ProcessStateIndicator">
     <ws:for data="i in numSectors">
-        <span class="controls-ProcessStateIndicator--box"></span>
+        <span 
+                class="{{ colorState[i] ? colorState[i].color : 'controls-ProcessStateIndicator__emptySector' }}" 
+                data-item="{{ colorValues[i] ? colorValues[i].item : -1 }}"
+        ></span>
     </ws:for>
 </span>

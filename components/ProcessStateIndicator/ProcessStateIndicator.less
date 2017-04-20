@@ -1,15 +1,30 @@
 .controls-ProcessStateIndicator {
-   margin: 0 6px;
+   margin: 0 @process-state-indicator-sector-side-padding;
+   
+   span {
+      display: inline-block;
+      width: @process-state-indicator-sector-width;
+      height: @process-state-indicator-sector-height;
+      margin-right: @process-state-indicator-sector-spacing;
+      
+      &:last-child {
+         margin-right: 0;
+      }   
+   }
 }
 
-.controls-ProcessStateIndicator--box {
-   display: inline-block;
-   width: 6px;
-   height: 8px;
-   margin-right: 2px;
-   background: #CCC; 
-   
-   &:last-child {
-      margin-right: 0;
-   }
+.controls-ProcessStateIndicator__emptySector {
+    background: @process-state-indicator-empty-sector;    
+}
+
+.controls-ProcessStateIndicator__sector1 {
+   background: @process-state-indicator-sector1;
+}
+
+.controls-ProcessStateIndicator__sector2 {
+   background: @process-state-indicator-sector2;
+}
+
+.controls-ProcessStateIndicator__sector3 {
+   background: @process-state-indicator-sector3;
 }

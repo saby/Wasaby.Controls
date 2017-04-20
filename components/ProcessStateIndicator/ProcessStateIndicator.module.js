@@ -31,6 +31,8 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
+    * 
+    * @ignoreOptions colorState
     *
     * @public
     * @control
@@ -41,9 +43,13 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
    
    var ProcessStateIndicator;
    
-   var defaultColors = ['#72BE44', '#FEC63F', '#EF463A'];
+   var defaultColors = [
+      'controls-ProcessStateIndicator__sector1', 
+      'controls-ProcessStateIndicator__sector2', 
+      'controls-ProcessStateIndicator__sector3'
+   ];
    
-   const DEFAULT_EMPTY_COLOR = '#CCC';
+   const DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector';
    
    
    ProcessStateIndicator = control.Control.extend(/** @lends SBIS3.CONTROLS.ProcessStateIndicator.prototype */ {
@@ -61,6 +67,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
        *       event.setResult(false);
        *    });
        * </pre>
+       * 
        */
       $protected: {
          _options: {
@@ -81,7 +88,8 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
              */
             numValues: 1,
             /**
-             * @cfg {Array.<String>} Цвета элементов индикатора
+             * @cfg {Array.<String>} Цвета элементов индикатора. 
+             * Указывается CSS-класс (название, без точки!), который будет установлен на элемент сектора.
              * Для количества элементов от 1 до 3 цвета можно не указывать, будут выбраны автоматически
              * в соответствии со спецификацией. Если требуется задать собственные цвета - перечислите их в данном 
              * массиве. Если требуется указать свой цвет для 4 и далее элемента, а первые три оставить по-умолчанию - 
@@ -91,9 +99,9 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
              * <pre>
              *     <options name="colors" type="array">
              *        <option></option> <!-- цвет по-умолчанию для первого элемента легенды = #72BE44 -->
-             *        <option>#FF0000</option> <!-- цвет для второго элемента - #FF0000 -->
+             *        <option>mySecondIndicator</option> <!-- цвет для второго элемента задается классом mySecondIndicator -->
              *        <option></option> <!-- цвет по-умолчанию для третьего элемента легенды = #EF463A -->
-             *        <option>cyan</option> <!-- цвет для четвертого элемента - cyan -->
+             *        <option>myLastIndicator</option> <!-- цвет для четвертого элемента задается классом myLastIndicator -->
              *     </options>
              * </pre>
              */
@@ -112,25 +120,12 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
              *    </options>   
              * </pre>
              */
-            state: []    
+            state: [],
+            colorState: []
          }
       },
       _dotTplFn: tplFn,
       $constructor: function() {
-         var colors = this._options.colors || [];
-         
-         colors = colors.concat(defaultColors.slice(colors.length));
-         
-         if (colors.length > 3) {
-            this._options.colors = colors.map(function(color, idx) {
-               return color || defaultColors[idx]; 
-            });                 
-         }       
-         
-         if (this._options.numValues > this._options.colors.length) {
-            throw new Error('Number of values is greater than number of colors');
-         }
-         
          this._publish('onItemOver');
       },
       init: function() {
@@ -138,11 +133,32 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          
          ProcessStateIndicator.superclass.init.apply(this, arguments);
          
-         this._draw();
          this.getContainer().delegate('.controls-ProcessStateIndicator--box', 'mouseover', function(e) {
             var itemIndex = self.getContainer().find('.controls-ProcessStateIndicator--box').index(e.target);
             self._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex)             
          });
+      },
+      _prepareColors: function(colors) {
+         
+         colors = colors || [];
+         
+         colors = colors.concat(defaultColors.slice(colors.length)).map(function(color, idx) {
+            return color || defaultColors[idx]; 
+         });                 
+         
+         if (this._options.numValues > this._options.colors.length) {
+            throw new Error('Number of values is greater than number of colors');
+         }
+         
+         return colors;
+      },
+      _modifyOptions: function() {
+         var opts = ProcessStateIndicator.superclass._modifyOptions.apply(this, arguments);
+         
+         opts.colors = this._prepareColors(opts.colors); 
+         opts.colorState = this._calculateColorState();
+         
+         return opts;
       },
       /**
        * Возвращает текущее состочение процесса в виде массива чисел
@@ -152,8 +168,11 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          return this._options.state;   
       },
       /**
-       * Устанавливает сотояние индикатора
-       * @param {Array.<Number>} state Массив чисел - процентов выполнение элементов процесса
+       * Устанавливает сотояние индикатора. Передача любого пустого значения полностью сбрасывает состояние
+       * Если передать значений больше, чем указано numValues, лишние значения будут проигнорированы
+       * @param {Array.<Number>} state Массив чисел - процентов выполнение элементов процесса. 
+       * Все не-числа будут преобразованы к числу. Отрицательные превращены в 0. 
+       * @see numValues
        */
       setState: function(state) {
          if (!state) {
@@ -161,19 +180,25 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          }
          if (state instanceof Array) {
             this._options.state = state;
-            this._draw();
+            this._applyState();
          }
       },
-      _draw: function() {
+      /**
+       * По state вычисялет распределение цветов по секторам
+       * @return {Array}
+       * @private
+       */
+      _calculateColorState: function(colors) {
          var 
             sectorSize = (100 / this._options.numSectors) >> 0,
             state = this._options.state || [],
-            colors = this._options.colors,
             colorValues = [],
             curSector = 0,
             i, j, color, itemValue, itemNumSectors;
          
-         for(i = 0; i < state.length; i++) {
+         colors = colors || this._options.colors;
+         
+         for(i = 0; i < Math.min(this._options.numValues, state.length); i++) {
             // Больше чем знаем цветов не рисуем
             if (i < colors.length) {
                // Приводим к числу, отрицательные игнорируем 
@@ -192,13 +217,24 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
                   };
                }
             }
-         }
+         }   
          
-         this.getContainer().find('.controls-ProcessStateIndicator--box').each(function(i) {
-            $(this).css({
-               'background': (colorValues[i] && colorValues[i].color) || DEFAULT_EMPTY_COLOR
-            }).attr({
-               'data-item': colorValues[i] ? colorValues[i].item : -1
+         return colorValues;
+      },
+      /**
+       * Выполняет частичную перерисовку компонента (раскатывает цвета на уже нарисованные сегменты)
+       * @private
+       */
+      _applyState: function() {
+         
+         var colorState;
+         
+         this._options.colorState = colorState = this._calculateColorState();this.getContainer().find('span').each(function(i) {
+            $(this)
+               .removeClass()
+               .addClass(colorState[i] && colorState[i].color || DEFAULT_EMPTY_COLOR_CLASS)
+            .attr({
+               'data-item': colorState[i] ? colorState[i].item : -1
             });  
          });
       }
