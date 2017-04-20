@@ -115,7 +115,7 @@ define('js!WS.Controls.Button', [
           Button.superclass.setCaption.call(this, caption);
          var btnText = $('.js-controls-Button__text', this._container.get(0));
          btnText.toggleClass('controls-Button__emptyCaption', !caption);
-         btnText.text(caption || '');
+         btnText.html(caption || '');
       },
        /**
         * Метод установки кнопки по умолчанию.
