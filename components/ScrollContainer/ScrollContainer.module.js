@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'Core/detection',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
+      'Core/compatibility',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager, compatibility) {
 
       'use strict';
 
@@ -89,7 +90,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                activableByClick: false
             },
-            _content: null
+            _content: null,
+            _headerHeight: 0
          },
 
          $constructor: function() {
@@ -106,13 +108,22 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-            this._showScrollbar = !cDetection.isMobileSafari && !cDetection.isMobileAndroid;
+            this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
             //Под android оставляем нативный скролл
             if (this._showScrollbar){
                this._initScrollbar = this._initScrollbar.bind(this);
                this._container[0].addEventListener('touchstart', this._initScrollbar, true);
                this._container.one('mousemove', this._initScrollbar);
                this._container.one('wheel', this._initScrollbar);
+               if (cDetection.IEVersion >= 10) {
+                  // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+                  // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
+                  this._content[0].onmousewheel = function(event) {
+                     if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
+                        event.preventDefault();
+                     }
+                  }.bind(this);
+               }
                this._hideScrollbar();
             }
             this._subscribeOnScroll();
@@ -129,8 +140,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content.on('scroll', this._onScroll.bind(this));
          },
 
-         _onScroll: function() {
+         _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
+
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
@@ -168,30 +180,23 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
+            var headerHeight, scrollbarContainer;
             ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
-               if (cDetection.IEVersion >= 10) {
-                  this._notHideScrollbar();
-               }
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
                if (this._options.stickyContainer) {
-                  this._scrollbar.setContentHeaderHeight(StickyHeaderManager.getStickyHeaderHeight(this._content));
+                  headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
+                  if (this._headerHeight !== headerHeight) {
+                     scrollbarContainer = this._scrollbar._container;
+                     this._headerHeight = headerHeight;
+                     scrollbarContainer.css('margin-top', headerHeight);
+                     //У scrollbar изначально стоит height(calc(100% - 8px)). Поэтому нужно учесть эти 8px.
+                     headerHeight += 8;
+                     scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                  }
                }
             }
-         },
-
-         _notHideScrollbar: function() {
-            /**
-             * По умолчанию на контенте висит стиль overflow-y: scroll.
-             * В ie при overflow-y: scroll добавляется 1px для скроллирования.
-             * Поэтому, что бы не появлялся лишний скролл, в ie используем overflow-y: auto.
-             * Скрывая скролл через отрицательный правый маржин, мы рассчитываем,
-             * что скролл всегда есть, из за overflow-y: scroll.
-             * Но в ie, из за overflow-y: auto, его может не быть - тогда из за отрицательного маржина
-             * контент уедет вправо. В связи с этим мы вешаем класс, который убирает отрицательный маржин когда нет скролла.
-             */
-            this._container.toggleClass('controls-ScrollContainer_no-scrollbar', this._getScrollHeight() <= this._content[0].offsetHeight);
          },
 
          _getScrollTop: function(){
@@ -210,10 +215,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   parent: this
                });
 
-               if (cDetection.IEVersion >= 10) {
-                  this._content.css('overflow-y', 'auto');
-                  this._notHideScrollbar();
-               }
                this._container[0].removeEventListener('touchstart', this._initScrollbar);
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }

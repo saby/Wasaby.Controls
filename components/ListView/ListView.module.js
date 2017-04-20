@@ -28,8 +28,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CommonHandlers',
    'js!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.MassSelectionController',
-   'js!SBIS3.CONTROLS.EditInPlaceHoverController',
-   'js!SBIS3.CONTROLS.EditInPlaceClickController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
@@ -54,6 +52,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!WS.Data/Source/SbisService',
    'Core/detection',
    'js!SBIS3.CONTROLS.ListView.Mover',
+   'Core/helpers/Function/throttle',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -65,9 +64,9 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
+    TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle) {
 
      'use strict';
 
@@ -121,6 +120,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__disableHover Убирает выделение цветом для строк по "ховеру".
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -302,9 +302,9 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @typedef {String} MovePosition
-          * @variant on Вставить перемещаемые элементы внутрь текущей записи.
           * @variant after Вставить перемещаемые элементы после текущей записи.
           * @variant before Вставить перемещаемые элементы перед текущей записью.
+          * @variant on Перемещение по иерархии, изменить родителя у перемещаемых элементов без изменения порядково номера.
           */
          /**
           * @typedef {Object} DragEntityOptions
@@ -364,6 +364,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
+            _createEditInPlaceDeferred: null,
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _pagerContainer: undefined,
@@ -851,7 +852,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
-            this._setScrollPagerPositionThrottled = this._setScrollPagerPosition.throttle(100, true).bind(this);
+            this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._bindEventHandlers(this._container);
 
             this.initEditInPlace();
@@ -868,6 +869,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
+            // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
+            if (cDetection.isMobilePlatform && window) {
+               requirejs(['js!SBIS3.CONTROLS.EditInPlaceHoverController', 'js!SBIS3.CONTROLS.EditInPlaceClickController']);
+            }
+
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
@@ -931,10 +937,11 @@ define('js!SBIS3.CONTROLS.ListView',
          _eventProxyHandler: function(e) {
             var self = this,
                 originalEvent = e.originalEvent,
-                mobFix = 'controls-ListView__mobileSelected-fix';
+                mobFix = 'controls-ListView__mobileSelected-fix',
+                isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
-               Array.indexOf(['swipe', 'tap', 'touchend', 'taphold'], e.type) !== -1 ||
+               Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
                /* IOS - однозначно включаем touch режим */
                constants.browser.isMobileIOS ||
                /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
@@ -942,13 +949,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   - mousemove срабатывает через случайный промежуток времени после touchEnd
                   - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
                   написана специальная проверка */
-               (e.type === 'mousemove' && !originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform))
+               (e.type === 'mousemove' && isTouchEvent)
             );
 
 
             switch (e.type) {
                case 'mousemove':
-                  self._allowMouseMoveEvent && this._mouseMoveHandler(e);
+                  self._allowMouseMoveEvent && !isTouchEvent && this._mouseMoveHandler(e);
                   break;
                case 'touchstart':
                   this._touchstartHandler(e);
@@ -1217,7 +1224,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
-            if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
+            if (this._options.groupBy && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
                var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
                if (closestGroup.length) {
                   this._options.groupBy.clickHandler.call(this, $target);
@@ -1825,6 +1832,18 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         setActive: function() {
+            var
+               params = arguments;
+            if (this.isEdit()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.setActive.apply(editInPlace, params);
+               });
+            } else {
+               ListView.superclass.setActive.apply(this, params);
+            }
+         },
+         
          _toggleEipHoveredHandlers: function(toggle) {
             var methodName = toggle ? 'subscribe' : 'unsubscribe';
             this[methodName]('onChangeHoveredItem', this._onChangeHoveredItemHandler);
@@ -1840,8 +1859,10 @@ define('js!SBIS3.CONTROLS.ListView',
          _itemsReadyCallback: function() {
             ListView.superclass._itemsReadyCallback.apply(this, arguments);
             if (this._hasEditInPlace()) {
-               this._getEditInPlace().setItems(this.getItems());
-               this._getEditInPlace().setItemsProjection(this._getItemsProjection());
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.setItems(this.getItems());
+                  editInPlace.setItemsProjection(this._getItemsProjection());
+               }.bind(this));
             }
          },
          beforeNotifyOnItemClick: function() {
@@ -1849,7 +1870,9 @@ define('js!SBIS3.CONTROLS.ListView',
             return function() {
                var args = arguments;
                if (this._hasEditInPlace()) {
-                  return this._getEditInPlace().endEdit(true).addCallback(function() {
+                  return this._getEditInPlace().addCallback(function(editInPlace) {
+                     return editInPlace.endEdit(true);
+                  }).addCallback(function() {
                      return handler.apply(this, args)
                   }.bind(this));
                } else {
@@ -1897,7 +1920,9 @@ define('js!SBIS3.CONTROLS.ListView',
          setEditingTemplate: function(template) {
             this._options.editingTemplate = template;
             if (this._hasEditInPlace()) {
-               this._getEditInPlace().setEditingTemplate(template);
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.setEditingTemplate(template);
+               });
             }
          },
 
@@ -1912,7 +1937,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          showEip: function(model, options, withoutActivateFirstControl) {
-            return this._canShowEip() ? this._getEditInPlace().showEip(model, options, withoutActivateFirstControl) : Deferred.fail();
+            return this._canShowEip() ? this._getEditInPlace().addCallback(function(editInPlace) {
+               return editInPlace.showEip(model, options, withoutActivateFirstControl);
+            }) : Deferred.fail();
          },
 
          _canShowEip: function() {
@@ -1963,7 +1990,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this.showEip(this.getItems().getRecordById(hoveredItem.key), { isEdit: false });
                // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
             } else if (this._hasEditInPlace()) {
-               this._getEditInPlace().hide();
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace.hide()
+               });
             }
          },
 
@@ -1987,14 +2016,8 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         /**
-          * @private
-          */
          _getEditInPlace: function() {
-            if (!this._hasEditInPlace()) {
-               this._createEditInPlace();
-            }
-            return this._editInPlace;
+            return this._hasEditInPlace() ? Deferred.success(this._editInPlace) : this._createEditInPlace();
          },
 
          _hasEditInPlace: function() {
@@ -2003,8 +2026,20 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createEditInPlace: function() {
             var
-               controller = this._isHoverEditMode() ? EditInPlaceHoverController : EditInPlaceClickController;
-            this._editInPlace = new controller(this._getEditInPlaceConfig());
+               self = this,
+               result = new Deferred();
+            if (!this._createEditInPlaceDeferred) {
+               this._createEditInPlaceDeferred = new Deferred();
+               requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function (controller) {
+                  self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+                  self._createEditInPlaceDeferred = undefined;
+               });
+            }
+            this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
+               result.callback(editInPlace);
+               return editInPlace;
+            });
+            return result;
          },
 
          _editInPlaceMouseDownHandler: function(event) {
@@ -2023,7 +2058,13 @@ define('js!SBIS3.CONTROLS.ListView',
          //располагается на карточке, и при попытке провалидировать карточку перед сохранением, результат
          //будет true, но редактирование может быть невалидно.
          validate: function() {
-            var editingIsValid = !this.isEdit() || this._getEditInPlace().isValidChanges();
+            var
+               editingIsValid = true;
+            if (this.isEdit()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editingIsValid = editInPlace.isValidChanges();
+               });
+            }
             return ListView.superclass.validate.apply(this, arguments) && editingIsValid;
          },
 
@@ -2036,8 +2077,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
-               this._getEditInPlace().endEdit(); // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-               this._getEditInPlace()._destroyEip();
+               this._getEditInPlace().addCallback(function(editInPlace) {  // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
+                  editInPlace.endEdit();
+                  editInPlace._destroyEip();
+               });
             }
          },
 
@@ -2179,13 +2222,15 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {Boolean} Значение true нужно интерпретировать как "Редактирование по месту активно".
           */
          isEdit: function() {
-            return this._hasEditInPlace() && this._getEditInPlace().isEdit();
+            var
+               result = false;
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  result = editInPlace.isEdit();
+               });
+            }
+            return result;
          },
-
-         _getEditingRecord: function() {
-            return this.isEdit() ? this._getEditInPlace()._getEditingRecord() : undefined;
-         },
-
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
@@ -2283,14 +2328,19 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _showItemsToolbar: function(target) {
             var
-                toolbar = this._getItemsToolbar(),
-                editingRecord = this._getEditingRecord();
+                toolbar = this._getItemsToolbar();
             toolbar.show(target, this._touchSupport);
             //При показе тулбара, возможно он будет показан у редактируемой строки.
             //Цвет редактируемой строки отличается от цвета строки по ховеру.
             //В таком случае переключим классы тулбара в режим редактирования.
             if (this._options.editMode.indexOf('toolbar') === -1) {
-               toolbar._toggleEditClass(!!editingRecord && editingRecord.getId() == target.key);
+               if (this.isEdit()) {
+                  this._getEditInPlace().addCallback(function(editInPlace) {
+                     toolbar._toggleEditClass(editInPlace.getEditingRecord().getId() == target.key);
+                  });
+               } else {
+                  toolbar._toggleEditClass(false);
+               }
             }
          },
 
@@ -2408,10 +2458,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnPropertyChanged('itemsActions');
          },
          /**
-          * todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
           * @returns {boolean}
           * @private
           */
+         // todo Проверка на "searchParamName" - костыль. Убрать, когда будет адекватная перерисовка записей (до 150 версии, апрель 2016)
          _isSearchMode: function() {
             return this._options.hierarchyViewMode;
          },
@@ -2512,7 +2562,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
-               this._getEditInPlace()._onResizeHandler();
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  editInPlace._onResizeHandler();
+               });
             }
          },
          _removeItems: function(items, groupId){
@@ -3409,7 +3461,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _cancelEdit: function() {
-            return this._getEditInPlace().endEdit();
+            return this._getEditInPlace().addCallback(function(editInPlace) {
+               return editInPlace.endEdit();
+            });
          },
          /**
           * Завершает редактирование по месту с сохранением изменений.
@@ -3428,7 +3482,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _commitEdit: function() {
-            return this._getEditInPlace().endEdit(true);
+            return this._getEditInPlace().addCallback(function(editInPlace) {
+               return editInPlace.endEdit(true);
+            });
          },
          destroy: function () {
             this._destroyEditInPlaceController();
@@ -3892,29 +3948,22 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _getMover: function() {
             if (!this._mover) {
-               this._mover = new Mover({
+               this._mover = Mover.make(this, {
                   moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   items: this.getItems(),
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
-                  invertOrder: this._options.invertOrder,
                   dataSource: this.getDataSource()
                });
-               ['onBeginMove', 'onEndMove'].forEach(function (eventName) {
-                  this._mover.subscribe(eventName, function (e) {
-                     e.setResult(this._notify(eventName));
-                     return e;
-                  }.bind(this))
-               }, this);
             }
             return this._mover
          },
          /**
           * Перемещает переданные записи
           * @param {Array} movedItems  Массив перемещаемых записей.
-          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить..
-          * @param {MovePosition} position Как перемещать записи
+          * @param {WS.Data/Entity/Model} target Запись к которой надо преместить.
+          * @param {MovePosition} position Позиционирование перемещения.
           * @return {Core/Deferred}
           * @example
           * <pre>
@@ -3930,11 +3979,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          move: function(movedItems, target, position) {
-            return this._getMover().move(movedItems, target, position).addCallback(function(){
-               //TODO Обновляем выделенные записи после перемещения потому что рекордсет создат новые инстансы
-               //и рассинхронизурутся записи в items и selectItems 💩
-               this.setSelectedKeys(this.getSelectedKeys());
-            }.bind(this));
+            return this._getMover().move(movedItems, target, position);
          },
          //endregion moveMethods
          /**

@@ -106,13 +106,19 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       _updateValue: function() {
          var
             value = [],
-            selectedItems = this._getListView().getSelectedItems();
+            selectedItems = this._getListView().getSelectedItems(),
+            items = this._getListView().getItems();
 
          selectedItems.each(function(item) {
             value.push({
                id: item.getId(),
                hierarchy: item.get('hierarchy')
             });
+         });
+         // MultiSelectableMixin отдает записи, неупорядоченные, а в DetailsList важен именно порядок выбранных записей,
+         // т.к. на его основе формируется иерархия в представлении данных
+         value.sort(function(item1, item2) {
+            return items.getIndex(items.getRecordById(item1.id)) > items.getIndex(items.getRecordById(item2.id));
          });
          this._setValue(value);
       },

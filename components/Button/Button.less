@@ -1,5 +1,6 @@
 .controls-Button {
    .button-default-style();
+   background: @button-bg;
    background-size: contain;
    white-space: nowrap;
    .justify-content(center);
@@ -72,6 +73,21 @@
       }
    }
    /* End Button sizes */
+
+   &.controls-Button__withoutCaption {
+      min-width: @button-without-caption-min-width;
+      .controls-Button__icon {
+         margin-left: 0;
+      }
+      .controls-Button__text {
+         display: none;
+      }
+      &.controls-Button__big {
+         .controls-Button__icon {
+            margin-left: 0;
+         }
+      }
+   }
 
    &.ws-disabled {
       cursor: default;
@@ -148,6 +164,16 @@
       .controls-Button__icon {
          &.icon-24 {
             padding-bottom: 2px;
+         }
+      }
+      .controls-Button__text {
+         padding-bottom: 1px;
+      }
+      &.controls-Button__withoutCaption {
+         .controls-Button__icon {
+            &.icon-24 {
+               padding-bottom: 0;
+            }
          }
       }
    }

@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Di',
    "Core/core-instance",
    "Core/CommandDispatcher",
-   "Core/core-functions"
+   "Core/core-functions",
+   "Core/helpers/Function/once"
 ], function (
    constants,
    SearchController,
@@ -20,7 +21,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Di,
    cInstance,
    CommandDispatcher,
-   cFunctions ) {
+   cFunctions,
+   once) {
 
    'use strict';
 
@@ -56,6 +58,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
 
          this._options.observableControls.unshift(this);
+         
+         /* Инициализация searchController'a происходит лениво,
+            только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
+            на onSearch (и лишних созданий контроллера), метод инициализации позволяем вызывать только один раз. */
+         this._initializeSearchController = once.call(this._initializeSearchController);
 
          this.once('onListReady', function(e, list) {
             self.subscribeTo(list, 'onKeyPressed', function (event, jqEvent) {
@@ -335,6 +342,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
+            parentConfig.closeOnTargetMove = true;
             return parentConfig;
          },
 

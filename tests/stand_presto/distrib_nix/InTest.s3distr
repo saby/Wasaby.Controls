@@ -3,6 +3,9 @@
 
   <jinnee_version algorithm="3.7.3.1"/>
 
+  <template name="Тестовый стенд" ws="{ws}"/>
+  <template name="Отладка" ws="{ws}"/>
+  
   <localization/>
 
 </distribution_schema>

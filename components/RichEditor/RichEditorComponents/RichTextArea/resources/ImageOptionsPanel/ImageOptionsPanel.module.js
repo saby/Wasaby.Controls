@@ -59,6 +59,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   panelOffset = this._container.offset().top,
                   inputHeight = linkedContainer.height();
                this._container.css('width',this.getTarget().width());
+               this._container.css('max-width', this.getParent().getInputContainer().width() - imagePanelhOffset);
                this._container.css('height','32px'); // dich3000
                this._container.css('overflow-y','hidden'); // dich3000
                if (this._container.hasClass('controls-popup-revert-vertical')) {
@@ -127,6 +128,12 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   case "size":
                      this._notify('onImageSizeChange');
                      this.hide();
+                     break;
+                  case "change":
+                     this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
+                        this._notify('onImageChange', fileobj);
+                        this.hide();
+                     }.bind(this));
                      break;
                   case "template":
                      this._openImagePanel(this);

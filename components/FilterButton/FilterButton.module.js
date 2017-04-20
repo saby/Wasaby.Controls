@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/CommandDispatcher",
    "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.FilterButton",
-   "html!SBIS3.CONTROLS.FilterButton/FilterAreaTemplate",
-   "html!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate",
+   "tmpl!SBIS3.CONTROLS.FilterButton",
+   "tmpl!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate",
    "js!SBIS3.CONTROLS.FilterMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
@@ -15,13 +14,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/ParallelDeferred",
    "Core/helpers/collection-helpers",
    "Core/IoC",
-   "js!SBIS3.CONTROLS.Link",
-   "js!SBIS3.CONTROLS.Button",
+   "Core/helpers/Function/once",
+   "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
-   "js!SBIS3.CONTROLS.FilterHistory",
-   "js!SBIS3.CONTROLS.AdditionalFilterParams",
    "i18n!SBIS3.CONTROLS.FilterButton",
-   "js!SBIS3.CONTROLS.ScrollContainer",
    'css!SBIS3.CONTROLS.FilterButton'
 ],
     function(
@@ -31,7 +27,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
         constants,
         CompoundControl,
         dotTplFn,
-        dotTplForPicker,
         dotTplForComp,
         FilterMixin,
         PickerMixin,
@@ -39,7 +34,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
         TemplateUtil,
         ParallelDeferred,
         colHelpers,
-        IoC
+        IoC,
+        once
     ) {
 
        'use strict';
@@ -68,6 +64,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
        }
 
        var TEMPLATES = {
+          _area: '_areaTemplate',
           main: 'template',
           header: 'topTemplate',
           additional: 'additionalFilterParamsTemplate'
@@ -75,9 +72,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
        var FilterButton = CompoundControl.extend([FilterMixin, PickerMixin],/** @lends SBIS3.CONTROLS.FilterButton.prototype */{
           _dotTplFn: dotTplFn,
-          _dotTplPicker: dotTplForPicker,
           $protected: {
              _options: {
+                _areaTemplate: 'js!SBIS3.CONTROLS.FilterButtonArea',
                 /**
                  * @cfg {String} Устанавливает направление, в котором будет открываться всплывающая панель кнопки фильтров.
                  * @variant left Панель открывается влево.
@@ -134,7 +131,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                   * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
                   * @see filterLineTemplate
                   */
-                filterLineComponent: 'SBIS3.CONTROLS.FilterButton.FilterLine',
+                filterLineComponent: 'js!SBIS3.CONTROLS.FilterButton.FilterLine',
                  /**
                   * @cfg {*} Устанавливает шаблон, который отображает строку применённых фильтров.
                   * @remark
@@ -185,23 +182,19 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('show-filter', showPicker);
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
-             this._checkPickerContent = this._checkPickerContent.once();
+             this._checkPickerContent = once.call(this._checkPickerContent);
              this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
           showPicker: function() {
-             var showPicker = FilterButton.superclass.showPicker.bind(this);
-
+             var self = this;
+   
              /* Не показываем кнопку фильтров, если она выключена */
              if(!this.isEnabled()) return;
-
-             if(!this._picker) {
-                this._initTemplates().addCallback(function() {
-                   showPicker();
-                });
-             } else {
-                showPicker();
-             }
+   
+             this._initTemplates().addCallback(function() {
+                FilterButton.superclass.showPicker.call(self);
+             });
           },
 
           _initTemplates: function() {
@@ -269,12 +262,13 @@ define('js!SBIS3.CONTROLS.FilterButton',
              }
           },
 
-          _getAreaTemplate: function() {
+          _getAreaOptions: function() {
              var prepTpl = TemplateUtil.prepareTemplate,
                  components = this._filterTemplates,
                  config = {
                     historyController: this._historyController,
-                    internalContextFilterName: this._options.internalContextFilterName
+                    internalContextFilterName: this._options.internalContextFilterName,
+                    componentOptions: this._options.componentOptions
                  },
                  self = this,
                  templateProperty;
@@ -294,7 +288,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 config[template] = components[template] ? getCompTpl(templateProperty) : getTpl(templateProperty);
              });
 
-             return prepTpl(dotTplForPicker)(config);
+             return config;
           },
 
           /* В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
@@ -424,7 +418,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 closeByExternalClick: true,
                 context: context,
                 cssClassName: 'controls__filterButton__picker',
-                template: this._getAreaTemplate(),
+                template: 'js!SBIS3.CONTROLS.FilterButtonArea',
+                componentOptions: this._getAreaOptions(),
                 activateAfterShow: true,
                 handlers: {
                    onClose: function() {

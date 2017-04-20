@@ -400,25 +400,20 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _removeOldKeys: function(){
             var keys = this.getSelectedKeys(),
                 items = this.getItems();
-            if (!this._isEnumTypeData()) {
-               for (var i = 0, l = keys.length; i < l; i++) {
-                  if (!items.getRecordById(keys[i])) {
-                     keys.splice(i, 1);
-                  }
-               }
-               if (!keys.length){
-                  this._setFirstItemAsSelected();
-               }
-            }
-         },
-
-         _onReviveItems: function(){
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
             //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
-            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
-               this._removeOldKeys();
+            if (!this._options.emptyValue || keys[0] !== null){
+               if (!this._isEnumTypeData()) {
+                  for (var i = 0, l = keys.length; i < l; i++) {
+                     if (!items.getRecordById(keys[i])) {
+                        keys.splice(i, 1);
+                     }
+                  }
+                  if (!keys.length){
+                     this._setFirstItemAsSelected();
+                  }
+               }
             }
-            DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
          setSelectedKeys: function(idArray){
@@ -463,7 +458,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _initializePicker: function() {
             DropdownList.superclass._initializePicker.apply(this, arguments);
             this.redraw();// Отрисовываем записи в пикере
-            this._setPickerVariables();
             this._setHasMoreButtonVisibility();
             this._notify('onPickerInitializing');//Костыльное событие в 30 версию для быстрых фильтров. после перевода на новый стандарт оно будет не нужно
             // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
@@ -579,6 +573,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
                }
                this._calcPickerSize();
+
+               //Если выбрали дефолтную запись - скрываем крестик сброса
+               //Нужно перед показом пикера, чтобы перед позиционированием контейнер имел правильные размеры, т.к.
+               //Наличие крестика влияет на отступы у записей согласно стандарту.
+               var isDefaultIdSelected = this._isDefaultIdSelected();
+               this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+               this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
+
                DropdownList.superclass.showPicker.apply(this, arguments);
 
                if (this._buttonChoose) {
@@ -596,6 +598,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _redrawSelectedItems: function() {
+            this._removeOldKeys();
             if (this._isEmptyValueSelected()) {
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
@@ -603,8 +606,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
-               if (!this.getSelectedKeys().length && this.getItems().getCount()) {
-                  this._options.selectedKeys = [this.getItems().at(0).get(this._options.idProperty)];
+               if (!this.getSelectedKeys().length && this._getItemsProjection().getCount()) {
+                  var firstItem = this._getItemsProjection().at(0).getContents();
+                  if (cInstance.instanceOfModule(firstItem, 'WS.Data/Entity/Record')) {
+                     this._options.selectedKeys = [firstItem.get(this._options.idProperty)];
+                  }
                }
                this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение
             }
@@ -697,6 +703,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   }
                }
             }
+         },
+         _checkEmptySelection: function() {
+            //Запись "не выбрано" отсутствует в рекордсете, поэтому стандартный метод не поможет
+            if (this._isEmptyValueSelected()){
+               return false;
+            }
+            return DropdownList.superclass._checkEmptySelection.apply(this, arguments);
          },
          _setSelectedItems: function(){
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
@@ -943,12 +956,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
          getDefaultId: function() {
             return this._defaultId;
          },
+         _isDefaultIdSelected: function() {
+           return this.getSelectedKeys()[0] == this.getDefaultId();
+         },
          /**
           * Установить текст в заголовок
           * @param text
           */
          setText: function(text) {
-            IoC.resolve('ILogger').error('SBIS3.CONTROLS.DropdownList', 'Метод setText в скором времени будет удален. Значения должны отрисовываться на наборе данных');
             this._setText(text);
          },
          _setText: function(text){
@@ -991,7 +1006,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               activableByClick: false,
                targetPart: true,
                template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,

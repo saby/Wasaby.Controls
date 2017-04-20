@@ -24,6 +24,15 @@
       </properties>
       <resources/>
     </template>
+    <template app_root="/debug/" id="f477602e-3b1a-4953-be6f-8b3b7c1675fc" name="Отладка" resources_root="/resources/" ws_root="/ws/">
+      <properties>
+        <property key="force_delete" value="1"/>
+        <property key="own_version" value="0"/>
+        <property key="pack_resources" value="0"/>
+        <property key="versionize_resources" value="0"/>
+      </properties>
+      <resources/>
+    </template>
   </templates>
 
 </application>

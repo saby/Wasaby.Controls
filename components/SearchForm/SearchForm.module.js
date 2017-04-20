@@ -6,11 +6,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    "js!SBIS3.CONTROLS.SuggestTextBoxMixin",
    "js!SBIS3.CONTROLS.ChooserMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
-   "html!SBIS3.CONTROLS.SearchForm",
-   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
+   "tmpl!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
    'css!SBIS3.CONTROLS.SearchForm',
    'css!SBIS3.CONTROLS.Suggest'
-], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, dotTplFn, buttonsTpl) {
+], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, buttonsTpl) {
 
    'use strict';
 
@@ -19,7 +18,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
+    *
     * @mixes SBIS3.CONTROLS.SearchMixin
+    * @mixes SBIS3.CONTROLS.SuggestMixin
+    * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
+    * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
     *
@@ -38,7 +43,6 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        * @event onReset При нажатии кнопки отмена (крестик)
        * @param {Core/EventObject} eventObject Дескриптор события.
        */
-      _dotTplFn : dotTplFn,
       $protected: {
          _options: {
             afterFieldWrapper: buttonsTpl,
@@ -73,6 +77,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
                self.applySearch(true);
             }
          });
+      },
+      
+      _modifyOptions: function () {
+         var opts = SearchForm.superclass._modifyOptions.apply(this, arguments);
+         opts.className += ' controls-SearchForm';
+         return opts;
       },
 
       /**
