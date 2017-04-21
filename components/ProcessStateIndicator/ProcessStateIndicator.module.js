@@ -133,8 +133,8 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          
          ProcessStateIndicator.superclass.init.apply(this, arguments);
          
-         this.getContainer().delegate('.controls-ProcessStateIndicator--box', 'mouseover', function(e) {
-            var itemIndex = self.getContainer().find('.controls-ProcessStateIndicator--box').index(e.target);
+         this.getContainer().delegate('span', 'mouseover', function(e) {
+            var itemIndex = self.getContainer().find('span').index(e.target);
             self._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex)             
          });
       },
