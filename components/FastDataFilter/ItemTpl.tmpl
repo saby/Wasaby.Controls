@@ -1,0 +1,24 @@
+<ws:SBIS3.CONTROLS.DropdownList
+   items="{{item.values}}"
+   idProperty="{{item.idProperty}}"
+   displayProperty="{{item.displayProperty}}"
+   multiselect="{{item.multiselect}}"
+   parentProperty="{{item.hierField}}"
+   className="controls-ListView__item{{item.className ? ' ' + item.className: ''}}"
+   pickerClassName="{{item.pickerClassName}}"
+   dataSource="{{item.dataSource}}"
+   filter="{{item.filter}}"
+   allowDblClick="{{item.allowDblClick}}"
+   name="{{item.name}}"
+   type="fastDataFilter"
+   headTemplate="{{item.headTemplate}}"
+   itemTpl="{{item.itemTpl}}"
+   itemContentTpl="{{item.itemContentTpl}}"
+   itemTemplate="{{item.itemTemplate}}"
+   includedTemplates="{{item.includedTemplates}}"
+   templateBinding="{{item.templateBinding}}"
+   attributes="{{ {
+      'data-hash': projItem.getHash(),
+      'data-id': getPropertyValue(item, idProperty)
+   } }}"
+/>
