@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _template: template,
 
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
+         _useNativeAsMain: true,
 
          constructor: function (cfg) {
 
@@ -74,34 +75,35 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _containerReady: function() {
             
-            if (window && this._container && typeof(this._container.one)==="function") {
-            this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-            this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
-            //Под android оставляем нативный скролл
-            if (this._showScrollbar){
-               this._initScrollbar = this._initScrollbar.bind(this);
-               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               this._container.one('mousemove', this._initScrollbar);
-               this._container.one('wheel', this._initScrollbar);
-               if (cDetection.IEVersion >= 10) {
-                  // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
-                  // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
-                  this._content[0].onmousewheel = function(event) {
-                     if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
-                        event.preventDefault();
-                     }
-                  }.bind(this);
+            if (window && this._container && (typeof this._container.one==="function")) {
+
+               this._content = $('> .controls-ScrollContainer__content', this.getContainer());
+               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
+               //Под android оставляем нативный скролл
+               if (this._showScrollbar){
+                  this._initScrollbar = this._initScrollbar.bind(this);
+                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+                  this._container.one('mousemove', this._initScrollbar);
+                  this._container.one('wheel', this._initScrollbar);
+                  if (cDetection.IEVersion >= 10) {
+                     // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+                     // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
+                     this._content[0].onmousewheel = function(event) {
+                        if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
+                           event.preventDefault();
+                        }
+                     }.bind(this);
+                  }
+                  this._hideScrollbar();
                }
-               this._hideScrollbar();
-            }
-            this._subscribeOnScroll();
+               this._subscribeOnScroll();
 
-            // Что бы до инициализации не было видно никаких скроллов
-            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+               // Что бы до инициализации не было видно никаких скроллов
+               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
-            // task: 1173330288
-            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+               // task: 1173330288
+               // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+               FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
             }
          },
 
