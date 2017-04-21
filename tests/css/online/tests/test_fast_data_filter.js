@@ -19,7 +19,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
             })
 
             .capture('opened', function (actions) {
-                actions.mouseMove(this.title);
+                actions.click(this.title);
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 1000);
             })
 
@@ -60,7 +60,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
             })
 
             .capture('opened', function (actions) {
-                actions.mouseMove(this.title);
+                actions.click(this.title);
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
             })
 
