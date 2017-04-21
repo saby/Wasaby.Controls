@@ -284,7 +284,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
                var
-                  protocol = /https?:/.test(link) ? link.replace(/(https?:).*/gi, '$1') : '';
+                  protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
                content = [
                   '<iframe',
                   ' width="' + constants.defaultYoutubeWidth + '"',
