@@ -1,16 +1,16 @@
 .controls-ProcessStateIndicator {
    margin: 0 @process-state-indicator-sector-side-padding;
+}
+
+.controls-ProcessStateIndicator__box {
+   display: inline-block;
+   width: @process-state-indicator-sector-width;
+   height: @process-state-indicator-sector-height;
+   margin-right: @process-state-indicator-sector-spacing;
    
-   span {
-      display: inline-block;
-      width: @process-state-indicator-sector-width;
-      height: @process-state-indicator-sector-height;
-      margin-right: @process-state-indicator-sector-spacing;
-      
-      &:last-child {
-         margin-right: 0;
-      }   
-   }
+   &:last-child {
+      margin-right: 0;
+   }   
 }
 
 .controls-ProcessStateIndicator__emptySector {

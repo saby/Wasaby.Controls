@@ -133,8 +133,8 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          
          ProcessStateIndicator.superclass.init.apply(this, arguments);
          
-         this.getContainer().delegate('span', 'mouseover', function(e) {
-            var itemIndex = self.getContainer().find('span').index(e.target);
+         this.getContainer().delegate('.controls-ProcessStateIndicator__box', 'mouseover', function(e) {
+            var itemIndex = self.getContainer().find('.controls-ProcessStateIndicator__box').index(e.target);
             self._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex)             
          });
       },
@@ -229,13 +229,15 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          
          var colorState;
          
-         this._options.colorState = colorState = this._calculateColorState();this.getContainer().find('span').each(function(i) {
+         this._options.colorState = colorState = this._calculateColorState();
+         
+         this.getContainer().find('.controls-ProcessStateIndicator__box').each(function(i) {
             $(this)
                .removeClass()
-               .addClass(colorState[i] && colorState[i].color || DEFAULT_EMPTY_COLOR_CLASS)
-            .attr({
-               'data-item': colorState[i] ? colorState[i].item : -1
-            });  
+               .addClass((colorState[i] && colorState[i].color || DEFAULT_EMPTY_COLOR_CLASS) + ' controls-ProcessStateIndicator__box')
+               .attr({
+                  'data-item': colorState[i] ? colorState[i].item : -1
+               });  
          });
       }
    });
