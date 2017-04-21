@@ -202,7 +202,8 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                offset: (baseWidth - pickerWidth)/2
             },
             verticalAlign: {
-               side: 'top'
+               side: 'top',
+               offset: -6
             },
             closeByExternalClick: true
          };
