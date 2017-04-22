@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!WS.Controls.ToggleButton', 'css!SB
 
       _modifyOptions: function () {
          var
-             options = WSToggleButton.superclass._modifyOptions.apply(this, arguments);
+             options = ToggleButton.superclass._modifyOptions.apply(this, arguments);
 
          options.cssClassName +=  ' controls-ToggleButton__normal controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
          return options;
