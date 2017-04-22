@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _defaultId: null,
             _buttonChoose : null,
             _buttonHasMore: null,
-            _currentSelection: {},
+            _currentSelection: [],
             _emptyText: 'Не выбрано',
             _hideAllowed : true,
             _changedSelectedKeys: [] //Массив ключей, которые были выбраны, но еще не сохранены в выпадающем списке
@@ -448,12 +448,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _updateCurrentSelection: function(){
-            var keys;
-            this._currentSelection = {};
-            keys = this.getSelectedKeys();
-            for (var i = 0, len = keys.length; i < len; i++ ) {
-               this._currentSelection[keys[i]] = true;
-            }
+            this._currentSelection = [];
+            this._currentSelection = this.getSelectedKeys().slice(0);
          },
          _initializePicker: function() {
             DropdownList.superclass._initializePicker.apply(this, arguments);
@@ -474,16 +470,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(event.type === 'mousedown') {
                eventsChannel.notify('onDocumentClick', event);
             }
-         },
-         _getCurrentSelection: function(){
-            var keys = [];
-            for (var i in this._currentSelection) {
-               if (this._currentSelection.hasOwnProperty(i) && this._currentSelection[i]) {
-                  //Если ключи были number, они станут здесь строкой
-                  keys.push(i);
-               }
-            }
-            return keys;
          },
          //Проверка на нестрогое равенство массивов
          //TODO это дублЬ! нужно вынести в хелпер!!!
@@ -521,7 +507,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
-                  this._currentSelection[itemId] = selected;
+
+                  var selectedItemIndex = this._currentSelection.indexOf(itemId);
+                  //Добавляем/Удаляем id из набора выбранных ключей
+                  if (selected && selectedItemIndex === -1) {
+                     this._currentSelection.push(itemId);
+                  }
+                  else if (!selected && selectedItemIndex > -1) {
+                     this._currentSelection.splice(selectedItemIndex, 1);
+                  }
+
                } else {
                   self.setSelectedKeys([itemId]);
                   self.hidePicker();
@@ -570,7 +565,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._changedSelectedKeys = [];
                //Восстановим выделение по элементам
                for (var i = 0 ; i < items.length; i++) {
-                  $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
+                  $(items[i]).toggleClass('controls-DropdownList__item__selected', this._currentSelection.indexOf(this._getIdByRow($(items[i]))) > -1);
                }
                this._calcPickerSize();
 
@@ -777,10 +772,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                if (this._options.multiselect) {
                   this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                   this._buttonChoose.subscribe('onActivated', function(){
-                     var currSelection = self._getCurrentSelection();
                      self._hideAllowed = true;
-                     if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
-                        self.setSelectedKeys(currSelection);
+                     if (!self._isSimilarArrays(self.getSelectedKeys(), self._currentSelection)) {
+                        var keys = self._currentSelection.length ? self._currentSelection : [self._defaultId];
+                        self.setSelectedKeys(keys);
                      }
                      self.hidePicker();
                   });
