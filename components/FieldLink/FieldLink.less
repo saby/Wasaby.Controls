@@ -144,6 +144,10 @@
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
    }
+   
+   &:not(.controls-FieldLink__multiselect).controls-FieldLink__selected-single .controls-TextBox__placeholder {
+      display: none;
+   }
 
    .controls-TextBox__fieldWrapper {
       .flexbox();
@@ -160,18 +164,6 @@
       max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
    }
-   &.controls-TextBox {
-      .controls-TextBox__afterFieldWrapper {
-         .inline-flexbox();
-         .align-items(center);
-         height: @controls-FieldLink-afterField-height;
-         width: auto;
-
-         > * {
-            padding: @controls-FieldLink-afterField-padding;
-         }
-      }
-   }
 
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
@@ -180,8 +172,8 @@
    }
 
    &.ws-disabled {
-
-      .controls-TextBox__afterFieldWrapper {
+      
+      .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
 
@@ -208,6 +200,19 @@
    .controls-FieldLink__Link {
       display: inline;
       line-height: 20px;
+   }
+}
+
+.controls-FieldLink.controls-TextBox .controls-TextBox__afterFieldWrapper {
+   .inline-flexbox();
+   .align-items(center);
+   height: @controls-FieldLink-afterField-height;
+   width: auto;
+}
+
+.controls-TextBox__afterFieldWrapper {
+   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+      padding: @controls-FieldLink-afterField-padding;
    }
 }
 
