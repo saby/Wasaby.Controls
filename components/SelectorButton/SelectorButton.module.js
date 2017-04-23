@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
-         } else {
+         } else if(cfg) {
             this.showSelector(cfg);
          }
       },
