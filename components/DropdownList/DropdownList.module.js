@@ -676,11 +676,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _drawItemsCallback: function() {
+         //drawItemsCallback обернут в debounce и выполнится позже, чем пикер спозиционируется
+         _drawItemsCallbackSync: function() {
             this._redrawSelectedItems();
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
-
          },
          _isEmptyValueSelected: function(){
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
