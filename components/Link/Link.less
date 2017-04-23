@@ -10,7 +10,8 @@
   text-decoration: @link-text-decoration;
   line-height: @link-line-height;
   padding: @link-padding;
-  .button-baseline-fix();
+  background: transparent;
+
 
   &.controls-Click__active {
     cursor: @link-cursor;
@@ -64,15 +65,17 @@
   &.controls-Button__ellipsis {
     white-space: nowrap;
     vertical-align: text-bottom;
-    .controls-Button__text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .controls-Link-link {
      color: inherit;
      text-decoration: inherit;
      cursor: inherit;
+  }
+
+  .controls-Button__text.controls-Button__emptyCaption {
+    display: none;
   }
 }
 .ws-is-ie10 {
@@ -102,9 +105,7 @@
 .ws-is-firefox {
   .controls-Link {
    .controls-Button__icon {
-     &.icon-24 {
-       margin: -1px 0 0;
-     }
+     margin: -4px 0 0;
    }
   }
 }

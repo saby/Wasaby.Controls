@@ -96,6 +96,12 @@
       }
    }
 
+   &.controls-ListView__disabledWithoutClick.ws-disabled {
+      .controls-DataGridView__td {
+         cursor: @list-view-disabled-cursor;
+      }
+   }
+
    .generate-side-class(@i: 1) when (@i =< length(@data-grid-side-cell-padding-variants)) {
       @nval: extract(@data-grid-side-cell-padding-variants, @i);
       @val: @nval * 1px;

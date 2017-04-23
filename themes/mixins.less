@@ -133,14 +133,13 @@
   box-sizing: border-box;
 }
 
-.button-default-style() {
+.button-default-style(@button-font-size: @link-font-size) {
   cursor: pointer;
-  .inline-flexbox();
-  .align-items(center);
+  display: inline-block;
   outline: none;
   .box-sizing(border-box);
   font-family: @default-font-name;
-  font-size: @link-font-size;
+  font-size: @button-font-size;
   font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
@@ -149,7 +148,7 @@
   padding: 0;
 }
 
-.button-baseline-fix(@height: auto) {
+.baseline-fix(@height: auto) {
   &:before {
     content: '.';
     width: 0;
@@ -453,8 +452,10 @@
   }
 }
 
-.button-mixin(@border-width; @margin-left; @margin-right; @icon-width) {
-  left:  @margin-left - @border-width;
+.button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+  left: @icon-left - @border-width;
+  top: 50%;
+  margin-top: -@icon-width/2;
 
   & + .controls-Button__text {
     margin-right: @margin-right - @border-width;

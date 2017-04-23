@@ -335,6 +335,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          var args = BreadCrumbs.superclass._buildTplArgs.apply(this, arguments);
          args.decorators = this._options._decorators;
+         args.escapeHtml = strHelpers.escapeHtml;  
          return args;
       },
 

@@ -105,7 +105,7 @@
 @link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        0;
+@link-icon-margin:                        -3px 0 0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
@@ -122,7 +122,7 @@
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           24px;
-@button-line-height:                      normal;
+@button-line-height:                      22px;
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
@@ -142,6 +142,8 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 @button-without-caption-min-width:        48px;
+
+@button-without-caption-icon-32-left:     7px;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -1306,6 +1308,8 @@
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
+@date-range-icon-button-line-height:            16px;
+@date-range-icon-button-top:                    4px;
 @date-range-icon-button-margin:                 0 0 3px 8px;
 @date-range-icon-button-hover-color:            @hover-color !important;
 @date-range-dash-width:                         2px;
@@ -1326,7 +1330,6 @@
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
-@date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
@@ -1456,6 +1459,7 @@
 @date-range-big-choose-header-home-button-margin:              2px 0 0 0;
 @date-range-big-choose-header-home-button-size:                24px;
 @date-range-big-choose-header-home-button-font-size:           14px;
+@date-range-big-choose-header-home-button-left:                3px;
 @date-range-big-choose-header-home-button-line-height:         22px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
@@ -1465,10 +1469,13 @@
 @date-range-big-choose-header-date-picker-height:              auto;
 @date-range-big-choose-header-apply-button-size:               28px;
 @date-range-big-choose-header-apply-button-font-size:          18px;
+@date-range-big-choose-header-apply-button-left:               4px;
 @date-range-big-choose-header-apply-button-line-height:        26px;
 @date-range-big-choose-header-apply-button-margin-left:        8px;
 @date-range-big-choose-header-range-dash-width:                2px;
 @date-range-big-choose-header-range-dash-margin:               14px 3px 0 3px;
+
+@date-range-big-choose-years-btn:                              24px;
 
 @date-range-big-choose-left-right-width:                       33px;
 @date-range-big-choose-years-height:                           40px;
@@ -1478,7 +1485,7 @@
 @date-range-big-choose-years-panel-wrapper-font-size:          18px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 30px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px;
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
@@ -1582,6 +1589,7 @@
 // --------- //
 // List view //
 // --------- //
+@list-view-min-height:                           90px;
 @listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
 @listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
 @listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
@@ -1955,7 +1963,7 @@
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-vertical-icon-top: -1px;
+@controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
@@ -2192,7 +2200,7 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-showAllLinks-padding:          0 0 0 1px;
+@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkContainer-padding:         4px;
 
@@ -2299,6 +2307,7 @@
 @controls-NotificationPopup-header-caption-font-size:                        15px;
 @controls-NotificationPopup-header-icon-right-margin:                        8px;
 @controls-NotificationPopup-max-width:                                       440px;
+@controls-NotificationPopup-min-width:                                       180px;
 
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:         351px;
@@ -2468,9 +2477,19 @@
 @money-decorator-fraction-font-color:                      @gray-ccc-color;
 
 //Browser
-@controls-Browser-ListView-minHeight:                      90px;
 @back-button-caption-hover-color: @blue-dark-color;
 @back-button-caption-active-color: @primary-color;
+
+@process-state-indicator-sector1:                          @icon-color-done;
+@process-state-indicator-sector2:                          @icon-color-attention;
+@process-state-indicator-sector3:                          @red-color;
+@process-state-indicator-empty-sector:                     @gray-ccc-color;
+@process-state-indicator-sector-width:                     6px; 
+@process-state-indicator-sector-height:                    8px;
+@process-state-indicator-sector-spacing:                   2px;
+@process-state-indicator-sector-side-padding:              6px;
+
+
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;

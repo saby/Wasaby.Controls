@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/IoC",
    "Core/core-merge",
    "Core/constants",
+   'Core/CommandDispatcher',
    'Core/helpers/dom&controls-helpers',
    "js!SBIS3.CONTROLS.DataGridView",
    "html!SBIS3.CONTROLS.TreeDataGridView",
@@ -10,14 +11,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "js!SBIS3.CONTROLS.IconButton",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    "Core/ConsoleLogger",
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( IoC, cMerge, constants, CommandDispatcher, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -47,6 +48,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
+      },
+      getFolderFooterOptions = function(cfg) {
+         var options = cfg._getFolderFooterOptionsTVM.apply(this, arguments);
+         options.colspan = cfg.columns.length;
+         return options;
+      },
+      hasFolderFooters = function() {
+         //Отключаем отрисовку футеров на сервере, потому что пока что нет возможности построить treePaging,
+         //т.к. в момент отрисовки нет информации, есть ли ещё записи в открытой папке.
+         return false;
       };
 
    'use strict';
@@ -113,7 +124,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
         * </ul>
         */
       $protected: {
-         _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
             _buildTplArgsTDG: buildTplArgsTDG,
@@ -121,7 +131,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             _defaultSearchRender: searchRender,
+            _footerWrapperTemplate: FooterWrapperTemplate,
+            _getFolderFooterOptions: getFolderFooterOptions,
             _getSearchCfg: getSearchCfg,
+            _hasFolderFooters: hasFolderFooters,
             /**
              * @cfg {Function}
              * @see editArrow
@@ -165,6 +178,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       $constructor: function() {
+         CommandDispatcher.declareCommand(this, 'loadNode', this._folderLoad);
       },
       init: function(){
          TreeDataGridView.superclass.init.call(this);
@@ -236,35 +250,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
-      },
-
-      _createFolderFooter: function(key) {
-         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
-         var
-            pagerContainer,
-            lastContainer = this._getLastChildByParent(this._getItemsContainer(), this._getItemProjectionByItemId(key));
-
-         //TODO: Сделать FolderPager отдельным контроллом и перенести создание в шаблон FolderFooterTemplate
-         pagerContainer = $('<div class="controls-TreePager-container">').appendTo(this._foldersFooters[key].find('.controls-TreeView__folderFooterContainer'));
-         this._createFolderPager(key, pagerContainer, this._folderHasMore[key]);
-
-         this._foldersFooters[key].insertAfter(lastContainer);
-         this.reviveComponents();
-      },
-      _getFolderFooterOptions: function(key) {
-         var level = this._getItemProjectionByItemId(key).getLevel();
-         return {
-            key: key,
-            item: this.getItems().getRecordById(key),
-            level: level,
-            footerTpl: this._options.folderFooterTpl,
-            multiselect: this._options.multiselect,
-            colspan: this._options.columns.length,
-            padding: this._options._paddingSize * level + this._options._originallPadding
-         }
-      },
-      _getFolderFooterWrapper: function() {
-         return this._footerWrapperTemplate;
       },
       _getEditorOffset: function(model) {
          var
