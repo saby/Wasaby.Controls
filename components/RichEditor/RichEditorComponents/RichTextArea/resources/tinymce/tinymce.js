@@ -50970,7 +50970,9 @@
       };
 
       var insertImage = function (editor, html, pasteHtml) {
-         return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
+         //Чтобы по ctrl+v не вставлялась картинка
+         return false;
+         //return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
       };
 
       var pasteHtml = function (editor, html) {
