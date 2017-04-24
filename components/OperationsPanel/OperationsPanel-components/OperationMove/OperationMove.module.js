@@ -52,19 +52,15 @@ define('js!SBIS3.CONTROLS.OperationMove', [
             action: undefined
          }
       },
-
-      _modifyOptions: function(cfg) {
-         cfg = cfg||{};
-         if (!cfg.action) {
-            cfg.action = new InteractiveMove({
-               linkedObject: cfg.linkedView
-            });
-         }
-      },
       init: function () {
          OperationMove.superclass.init.call(this);
          if (this._options.linkedView) {
             this.subscribeTo(this._options.linkedView, 'onKeyPressed', this._viewKeyPressed.bind(this));
+         }
+         if (!this._options.action) {
+            this._options.action = new InteractiveMove({
+               linkedObject: this._options.linkedView
+            });
          }
       },
       _clickHandler: function() {
@@ -76,6 +72,9 @@ define('js!SBIS3.CONTROLS.OperationMove', [
                e.ctrlKey && this.execute();
                break;
          }
+      },
+      setLinkedView: function (val) {
+         this._options.action.setLinkedObject(val)
       }
    });
 
