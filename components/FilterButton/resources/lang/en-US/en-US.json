@@ -1,7 +1,7 @@
 {
-  "Отбираются": "Sorted",
+  "Отбираются": "Selected",
   "Сбросить": "Reset",
-  "Отобрать": "Sort",
-  "Ранее отбирались": "Previously sorted",
+  "Отобрать": "Select",
+  "Ранее отбирались": "Previously selected",
   "По умолчанию": "By default"
 }
