@@ -1,0 +1,11 @@
+<div class="controls-Menu">
+   <div class="controls-Menu__itemsContainer"></div>
+   <ws:if data="{{additionalProperty}}">
+      <ws:SBIS3.CONTROLS.CommandsSeparator name="toggleAdditionalItems" command="toggleAdditionalItems"></ws:SBIS3.CONTROLS.CommandsSeparator>
+   </ws:if>
+   <ws:if data="{{footerTpl}}">
+      <div class="controls-Menu__footer">
+         <ws:partial template="footerTpl" scope="{{...}}"></ws:partial>
+      </div>
+   </ws:if>
+</div>
