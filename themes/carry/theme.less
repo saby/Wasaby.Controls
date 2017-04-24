@@ -39,13 +39,21 @@
       .controls-IconButton {
          &.icon-size {
             &.controls-IconButton__round {
-               font-size: 32px !important;
                border: 1px solid #cccccc;
                border-radius: 20px;
                text-align: center;
                height: 38px !important;
                width: 38px !important;
                line-height: 38px !important;
+               box-sizing: content-box;
+               .controls-Button__icon {
+                  font-size: 32px !important;
+                  line-height: 32px !important;
+                  width: 32px !important;
+                  height: 32px !important;
+                  top: 3px;
+                  left: 3px;
+               }
             }
          }
       }
