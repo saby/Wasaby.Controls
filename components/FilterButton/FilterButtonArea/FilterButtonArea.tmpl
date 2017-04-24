@@ -22,7 +22,7 @@
             <div class="controls__filterButton__area-content">
                 <ws:partial if="{{ template }}" template="{{ template }}"/>
             </div>
-            <div class="controls__filterButton__area-footer {{ (!historyController && !it.additionalFilterParamsTemplate) ? 'ws-hidden' }}">
+            <div class="controls__filterButton__area-footer {{ (!historyController && !additionalFilterParamsTemplate) ? 'ws-hidden' }}">
                 <ws:SBIS3.CONTROLS.AdditionalFilterParams
                         if="{{ additionalFilterParamsTemplate }}"
                         template="{{ additionalFilterParamsTemplate }}"
