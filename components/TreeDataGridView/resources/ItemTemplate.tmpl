@@ -4,5 +4,10 @@
          <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
       </td>
    </ws:if>
-   <ws:partial template="{{itemContent}}" scope="{{...}}" />
+   <ws:partial template="{{itemContent}}" scope="{{...}}"
+               padding="{{getItemContentTplData(...).padding}}"
+               hierField_d="{{getItemContentTplData(...).hierField$}}"
+               hasScroll="{{getItemContentTplData(...).hasScroll}}"
+               isNode="{{getItemContentTplData(...).isNode}}"
+               hasChilds="{{getItemContentTplData(...).hasChilds}}"/>
 </tr>
