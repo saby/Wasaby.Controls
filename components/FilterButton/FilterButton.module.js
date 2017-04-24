@@ -437,6 +437,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    },
    
                    onCommandCatch: function() {
+                      /* Проксирование комманд кнопке фильтров */
                       self.sendCommand.apply(self, Array.prototype.slice.call(arguments, 1));
                    },
 
