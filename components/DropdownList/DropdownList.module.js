@@ -1000,6 +1000,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   side: 'top',
                   offset: offset.top
                },
+               _canScroll: true,
                horizontalAlign: {
                   side: 'left',
                   offset: offset.left
