@@ -49210,3 +49210,4853 @@
 
    expose(["tinymce/geom/Rect","tinymce/util/Promise","tinymce/util/Delay","tinymce/Env","tinymce/dom/EventUtils","tinymce/dom/Sizzle","tinymce/util/Tools","tinymce/dom/DomQuery","tinymce/html/Styles","tinymce/dom/TreeWalker","tinymce/html/Entities","tinymce/dom/DOMUtils","tinymce/dom/ScriptLoader","tinymce/AddOnManager","tinymce/dom/RangeUtils","tinymce/html/Node","tinymce/html/Schema","tinymce/html/SaxParser","tinymce/html/DomParser","tinymce/html/Writer","tinymce/html/Serializer","tinymce/dom/Serializer","tinymce/util/VK","tinymce/dom/ControlSelection","tinymce/dom/BookmarkManager","tinymce/dom/Selection","tinymce/Formatter","tinymce/UndoManager","tinymce/EditorCommands","tinymce/util/URI","tinymce/util/Class","tinymce/util/EventDispatcher","tinymce/util/Observable","tinymce/ui/Selector","tinymce/ui/Collection","tinymce/ui/ReflowQueue","tinymce/ui/Control","tinymce/ui/Factory","tinymce/ui/KeyboardNavigation","tinymce/ui/Container","tinymce/ui/DragHelper","tinymce/ui/Scrollable","tinymce/ui/Panel","tinymce/ui/Movable","tinymce/ui/Resizable","tinymce/ui/FloatPanel","tinymce/ui/Window","tinymce/ui/MessageBox","tinymce/WindowManager","tinymce/ui/Tooltip","tinymce/ui/Widget","tinymce/ui/Progress","tinymce/ui/Notification","tinymce/NotificationManager","tinymce/EditorObservable","tinymce/Shortcuts","tinymce/Editor","tinymce/util/I18n","tinymce/FocusManager","tinymce/EditorManager","tinymce/util/XHR","tinymce/util/JSON","tinymce/util/JSONRequest","tinymce/util/JSONP","tinymce/util/LocalStorage","tinymce/Compat","tinymce/ui/Layout","tinymce/ui/AbsoluteLayout","tinymce/ui/Button","tinymce/ui/ButtonGroup","tinymce/ui/Checkbox","tinymce/ui/ComboBox","tinymce/ui/ColorBox","tinymce/ui/PanelButton","tinymce/ui/ColorButton","tinymce/util/Color","tinymce/ui/ColorPicker","tinymce/ui/Path","tinymce/ui/ElementPath","tinymce/ui/FormItem","tinymce/ui/Form","tinymce/ui/FieldSet","tinymce/ui/FilePicker","tinymce/ui/FitLayout","tinymce/ui/FlexLayout","tinymce/ui/FlowLayout","tinymce/ui/FormatControls","tinymce/ui/GridLayout","tinymce/ui/Iframe","tinymce/ui/InfoBox","tinymce/ui/Label","tinymce/ui/Toolbar","tinymce/ui/MenuBar","tinymce/ui/MenuButton","tinymce/ui/MenuItem","tinymce/ui/Throbber","tinymce/ui/Menu","tinymce/ui/ListBox","tinymce/ui/Radio","tinymce/ui/ResizeHandle","tinymce/ui/SelectBox","tinymce/ui/Slider","tinymce/ui/Spacer","tinymce/ui/SplitButton","tinymce/ui/StackLayout","tinymce/ui/TabPanel","tinymce/ui/TextBox"]);
 })(window);
+(function () {
+
+   var defs = {}; // id -> {dependencies, definition, instance (possibly undefined)}
+
+// Used when there is no 'main' module.
+// The name is probably (hopefully) unique so minification removes for releases.
+   var register_3795 = function (id) {
+      var module = dem(id);
+      var fragments = id.split('.');
+      var target = Function('return this;')();
+      for (var i = 0; i < fragments.length - 1; ++i) {
+         if (target[fragments[i]] === undefined)
+            target[fragments[i]] = {};
+         target = target[fragments[i]];
+      }
+      target[fragments[fragments.length - 1]] = module;
+   };
+
+   var instantiate = function (id) {
+      var actual = defs[id];
+      var dependencies = actual.deps;
+      var definition = actual.defn;
+      var len = dependencies.length;
+      var instances = new Array(len);
+      for (var i = 0; i < len; ++i)
+         instances[i] = dem(dependencies[i]);
+      var defResult = definition.apply(null, instances);
+      if (defResult === undefined)
+         throw 'module [' + id + '] returned undefined';
+      actual.instance = defResult;
+   };
+
+   var def = function (id, dependencies, definition) {
+      if (typeof id !== 'string')
+         throw 'module id must be a string';
+      else if (dependencies === undefined)
+         throw 'no dependencies for ' + id;
+      else if (definition === undefined)
+         throw 'no definition function for ' + id;
+      defs[id] = {
+         deps: dependencies,
+         defn: definition,
+         instance: undefined
+      };
+   };
+
+   var dem = function (id) {
+      var actual = defs[id];
+      if (actual === undefined)
+         throw 'module [' + id + '] was undefined';
+      else if (actual.instance === undefined)
+         instantiate(id);
+      return actual.instance;
+   };
+
+   var req = function (ids, callback) {
+      var len = ids.length;
+      var instances = new Array(len);
+      for (var i = 0; i < len; ++i)
+         instances.push(dem(ids[i]));
+      callback.apply(null, callback);
+   };
+
+   var ephox = {};
+
+   ephox.bolt = {
+      module: {
+         api: {
+            define: def,
+            require: req,
+            demand: dem
+         }
+      }
+   };
+
+   var define = def;
+   var require = req;
+   var demand = dem;
+// this helps with minificiation when using a lot of global references
+   var defineGlobal = function (id, ref) {
+      define(id, [], function () { return ref; });
+   };
+   /*jsc
+    ["tinymce.media.Plugin","global!tinymce.PluginManager","tinymce.media.ui.Dialog","tinymce.media.core.Sanitize","tinymce.media.core.UpdateHtml","tinymce.media.core.Nodes","global!tinymce.util.Delay","tinymce.media.core.HtmlToData","global!tinymce.html.Writer","global!tinymce.html.SaxParser","global!tinymce.html.Schema","global!tinymce.dom.DOMUtils.DOM","tinymce.media.core.Size","tinymce.media.core.Service","global!tinymce.util.Tools","global!tinymce.Env","tinymce.media.ui.SizeManager","tinymce.media.core.VideoScript","global!tinymce.html.Node","tinymce.media.core.DataToHtml","global!tinymce.util.Promise","tinymce.media.core.Mime","tinymce.media.core.UrlPatterns"]
+    jsc*/
+   defineGlobal("global!tinymce.PluginManager", tinymce.PluginManager);
+   defineGlobal("global!tinymce.util.Delay", tinymce.util.Delay);
+   defineGlobal("global!tinymce.util.Tools", tinymce.util.Tools);
+   defineGlobal("global!tinymce.html.SaxParser", tinymce.html.SaxParser);
+   defineGlobal("global!tinymce.html.Schema", tinymce.html.Schema);
+   defineGlobal("global!tinymce.dom.DOMUtils.DOM", tinymce.dom.DOMUtils.DOM);
+   define('tinymce.media.core.VideoScript', [
+   ], function () {
+      var getVideoScriptMatch = function (prefixes, src) {
+         // var prefixes = editor.settings.media_scripts;
+
+         if (prefixes) {
+            for (var i = 0; i < prefixes.length; i++) {
+               if (src.indexOf(prefixes[i].filter) !== -1) {
+                  return prefixes[i];
+               }
+            }
+         }
+      };
+
+      return {
+         getVideoScriptMatch: getVideoScriptMatch
+      };
+   });
+   define('tinymce.media.core.Size', [
+   ], function () {
+      var trimPx = function (value) {
+         return value.replace(/px$/, '');
+      };
+
+      var addPx = function (value) {
+         return /^[0-9.]+$/.test(value) ? (value + 'px') : value;
+      };
+
+      var getSize = function (name) {
+         return function (elm) {
+            return elm ? trimPx(elm.style[name]) : '';
+         };
+      };
+
+      var setSize = function (name) {
+         return function (elm, value) {
+            if (elm) {
+               elm.style[name] = addPx(value);
+            }
+         };
+      };
+
+      return {
+         getMaxWidth: getSize('maxWidth'),
+         getMaxHeight: getSize('maxHeight'),
+         setMaxWidth: setSize('maxWidth'),
+         setMaxHeight: setSize('maxHeight')
+      };
+   });
+   define('tinymce.media.core.HtmlToData', [
+      'global!tinymce.util.Tools',
+      'global!tinymce.html.SaxParser',
+      'global!tinymce.html.Schema',
+      'global!tinymce.dom.DOMUtils.DOM',
+      'tinymce.media.core.VideoScript',
+      'tinymce.media.core.Size'
+   ], function (Tools, SaxParser, Schema, DOM, VideoScript, Size) {
+      var getEphoxEmbedIri = function (elm) {
+         return DOM.getAttrib(elm, 'data-ephox-embed-iri');
+      };
+
+      var isEphoxEmbed = function (html) {
+         var fragment = DOM.createFragment(html);
+         return getEphoxEmbedIri(fragment.firstChild) !== '';
+      };
+
+      var htmlToDataSax = function (prefixes, html) {
+         var data = {};
+
+         new SaxParser({
+            validate: false,
+            allow_conditional_comments: true,
+            special: 'script,noscript',
+            start: function (name, attrs) {
+               if (!data.source1 && name === "param") {
+                  data.source1 = attrs.map.movie;
+               }
+
+               if (name === "iframe" || name === "object" || name === "embed" || name === "video" || name === "audio") {
+                  if (!data.type) {
+                     data.type = name;
+                  }
+
+                  data = Tools.extend(attrs.map, data);
+               }
+
+               if (name === "script") {
+                  var videoScript = VideoScript.getVideoScriptMatch(prefixes, attrs.map.src);
+                  if (!videoScript) {
+                     return;
+                  }
+
+                  data = {
+                     type: "script",
+                     source1: attrs.map.src,
+                     width: videoScript.width,
+                     height: videoScript.height
+                  };
+               }
+
+               if (name === "source") {
+                  if (!data.source1) {
+                     data.source1 = attrs.map.src;
+                  } else if (!data.source2) {
+                     data.source2 = attrs.map.src;
+                  }
+               }
+
+               if (name === "img" && !data.poster) {
+                  data.poster = attrs.map.src;
+               }
+            }
+         }).parse(html);
+
+         data.source1 = data.source1 || data.src || data.data;
+         data.source2 = data.source2 || '';
+         data.poster = data.poster || '';
+
+         return data;
+      };
+
+      var ephoxEmbedHtmlToData = function (html) {
+         var fragment = DOM.createFragment(html);
+         var div = fragment.firstChild;
+
+         return {
+            type: 'ephox-embed-iri',
+            source1: getEphoxEmbedIri(div),
+            source2: '',
+            poster: '',
+            width: Size.getMaxWidth(div),
+            height: Size.getMaxHeight(div)
+         };
+      };
+
+      var htmlToData = function (prefixes, html) {
+         return isEphoxEmbed(html) ? ephoxEmbedHtmlToData(html) : htmlToDataSax(prefixes, html);
+      };
+
+      return {
+         htmlToData: htmlToData
+      };
+   });
+   defineGlobal("global!tinymce.html.Writer", tinymce.html.Writer);
+   define('tinymce.media.core.UpdateHtml', [
+      'global!tinymce.html.Writer',
+      'global!tinymce.html.SaxParser',
+      'global!tinymce.html.Schema',
+      'global!tinymce.dom.DOMUtils.DOM',
+      'tinymce.media.core.Size'
+   ], function (Writer, SaxParser, Schema, DOM, Size) {
+      var setAttributes = function (attrs, updatedAttrs) {
+         var name;
+         var i;
+         var value;
+         var attr;
+
+         for (name in updatedAttrs) {
+            value = "" + updatedAttrs[name];
+
+            if (attrs.map[name]) {
+               i = attrs.length;
+               while (i--) {
+                  attr = attrs[i];
+
+                  if (attr.name === name) {
+                     if (value) {
+                        attrs.map[name] = value;
+                        attr.value = value;
+                     } else {
+                        delete attrs.map[name];
+                        attrs.splice(i, 1);
+                     }
+                  }
+               }
+            } else if (value) {
+               attrs.push({
+                  name: name,
+                  value: value
+               });
+
+               attrs.map[name] = value;
+            }
+         }
+      };
+
+      var normalizeHtml = function (html) {
+         var writer = new Writer();
+         var parser = new SaxParser(writer);
+         parser.parse(html);
+         return writer.getContent();
+      };
+
+      var updateHtmlSax = function (html, data, updateAll) {
+         var writer = new Writer();
+         var sourceCount = 0;
+         var hasImage;
+
+         new SaxParser({
+            validate: false,
+            allow_conditional_comments: true,
+            special: 'script,noscript',
+
+            comment: function (text) {
+               writer.comment(text);
+            },
+
+            cdata: function (text) {
+               writer.cdata(text);
+            },
+
+            text: function (text, raw) {
+               writer.text(text, raw);
+            },
+
+            start: function (name, attrs, empty) {
+               switch (name) {
+                  case "video":
+                  case "object":
+                  case "embed":
+                  case "img":
+                  case "iframe":
+                     setAttributes(attrs, {
+                        width: data.width,
+                        height: data.height
+                     });
+                     break;
+               }
+
+               if (updateAll) {
+                  switch (name) {
+                     case "video":
+                        setAttributes(attrs, {
+                           poster: data.poster,
+                           src: ""
+                        });
+
+                        if (data.source2) {
+                           setAttributes(attrs, {
+                              src: ""
+                           });
+                        }
+                        break;
+
+                     case "iframe":
+                        setAttributes(attrs, {
+                           src: data.source1
+                        });
+                        break;
+
+                     case "source":
+                        sourceCount++;
+
+                        if (sourceCount <= 2) {
+                           setAttributes(attrs, {
+                              src: data["source" + sourceCount],
+                              type: data["source" + sourceCount + "mime"]
+                           });
+
+                           if (!data["source" + sourceCount]) {
+                              return;
+                           }
+                        }
+                        break;
+
+                     case "img":
+                        if (!data.poster) {
+                           return;
+                        }
+
+                        hasImage = true;
+                        break;
+                  }
+               }
+
+               writer.start(name, attrs, empty);
+            },
+
+            end: function (name) {
+               if (name === "video" && updateAll) {
+                  for (var index = 1; index <= 2; index++) {
+                     if (data["source" + index]) {
+                        var attrs = [];
+                        attrs.map = {};
+
+                        if (sourceCount < index) {
+                           setAttributes(attrs, {
+                              src: data["source" + index],
+                              type: data["source" + index + "mime"]
+                           });
+
+                           writer.start("source", attrs, true);
+                        }
+                     }
+                  }
+               }
+
+               if (data.poster && name === "object" && updateAll && !hasImage) {
+                  var imgAttrs = [];
+                  imgAttrs.map = {};
+
+                  setAttributes(imgAttrs, {
+                     src: data.poster,
+                     width: data.width,
+                     height: data.height
+                  });
+
+                  writer.start("img", imgAttrs, true);
+               }
+
+               writer.end(name);
+            }
+         }, new Schema({})).parse(html);
+
+         return writer.getContent();
+      };
+
+      var isEphoxEmbed = function (html) {
+         var fragment = DOM.createFragment(html);
+         return DOM.getAttrib(fragment.firstChild, 'data-ephox-embed-iri') !== '';
+      };
+
+      var updateEphoxEmbed = function (html, data) {
+         var fragment = DOM.createFragment(html);
+         var div = fragment.firstChild;
+
+         Size.setMaxWidth(div, data.width);
+         Size.setMaxHeight(div, data.height);
+
+         return normalizeHtml(div.outerHTML);
+      };
+
+      var updateHtml = function (html, data, updateAll) {
+         return isEphoxEmbed(html) ? updateEphoxEmbed(html, data) : updateHtmlSax(html, data, updateAll);
+      };
+
+      return {
+         updateHtml: updateHtml
+      };
+   });
+   define('tinymce.media.core.Mime', [
+   ], function () {
+      var guess = function (url) {
+         var mimes = {
+            'mp3': 'audio/mpeg',
+            'wav': 'audio/wav',
+            'mp4': 'video/mp4',
+            'webm': 'video/webm',
+            'ogg': 'video/ogg',
+            'swf': 'application/x-shockwave-flash'
+         };
+         var fileEnd = url.toLowerCase().split('.').pop();
+         var mime = mimes[fileEnd];
+
+         return mime ? mime : '';
+      };
+
+      return {
+         guess: guess
+      };
+   });
+   define('tinymce.media.core.UrlPatterns', [
+   ], function () {
+      var urlPatterns = [
+         {
+            regex: /youtu\.be\/([\w\-.]+)/,
+            type: 'iframe', w: 560, h: 314,
+            url: '//www.youtube.com/embed/$1',
+            allowFullscreen: true
+         },
+         {
+            regex: /youtube\.com(.+)v=([^&]+)/,
+            type: 'iframe', w: 560, h: 314,
+            url: '//www.youtube.com/embed/$2',
+            allowFullscreen: true
+         },
+         {
+            regex: /youtube.com\/embed\/([a-z0-9\-_]+(?:\?.+)?)/i,
+            type: 'iframe', w: 560, h: 314,
+            url: '//www.youtube.com/embed/$1',
+            allowFullscreen: true
+         },
+         {
+            regex: /vimeo\.com\/([0-9]+)/,
+            type: 'iframe', w: 425, h: 350,
+            url: '//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc',
+            allowfullscreen: true
+         },
+         {
+            regex: /vimeo\.com\/(.*)\/([0-9]+)/,
+            type: "iframe", w: 425, h: 350,
+            url: "//player.vimeo.com/video/$2?title=0&amp;byline=0",
+            allowfullscreen: true
+         },
+         {
+            regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/,
+            type: 'iframe', w: 425, h: 350,
+            url: '//maps.google.com/maps/ms?msid=$2&output=embed"',
+            allowFullscreen: false
+         },
+         {
+            regex: /dailymotion\.com\/video\/([^_]+)/,
+            type: 'iframe', w: 480, h: 270,
+            url: '//www.dailymotion.com/embed/video/$1',
+            allowFullscreen: true
+         }
+      ];
+
+      return {
+         urlPatterns: urlPatterns
+      };
+   });
+   define('tinymce.media.core.DataToHtml', [
+      'tinymce.media.core.Mime',
+      'tinymce.media.core.HtmlToData',
+      'tinymce.media.core.UrlPatterns',
+      'tinymce.media.core.VideoScript',
+      'tinymce.media.core.UpdateHtml',
+      'global!tinymce.util.Tools'
+   ], function (Mime, HtmlToData, UrlPatterns, VideoScript, UpdateHtml, Tools) {
+      var dataToHtml = function (editor, dataIn) {
+         var html = '';
+         var data = Tools.extend({}, dataIn);
+
+         if (!data.source1) {
+            Tools.extend(data, HtmlToData.htmlToData(editor.settings.media_scripts, data.embed));
+            if (!data.source1) {
+               return '';
+            }
+         }
+
+         if (!data.source2) {
+            data.source2 = '';
+         }
+
+         if (!data.poster) {
+            data.poster = '';
+         }
+
+         data.source1 = editor.convertURL(data.source1, "source");
+         data.source2 = editor.convertURL(data.source2, "source");
+         data.source1mime = Mime.guess(data.source1);
+         data.source2mime = Mime.guess(data.source2);
+         data.poster = editor.convertURL(data.poster, "poster");
+
+         Tools.each(UrlPatterns.urlPatterns, function (pattern) {
+            var i;
+            var url;
+
+            var match = pattern.regex.exec(data.source1);
+
+            if (match) {
+               url = pattern.url;
+
+               for (i = 0; match[i]; i++) {
+                  /*jshint loopfunc:true*/
+                  /*eslint no-loop-func:0 */
+                  url = url.replace('$' + i, function () {
+                     return match[i];
+                  });
+               }
+
+               data.source1 = url;
+               data.type = pattern.type;
+               data.allowFullscreen = pattern.allowFullscreen;
+               data.width = data.width || pattern.w;
+               data.height = data.height || pattern.h;
+            }
+         });
+
+         if (data.embed) {
+            html = UpdateHtml.updateHtml(data.embed, data, true);
+         } else {
+            var videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, data.source1);
+            if (videoScript) {
+               data.type = 'script';
+               data.width = videoScript.width;
+               data.height = videoScript.height;
+            }
+
+            data.width = data.width || 300;
+            data.height = data.height || 150;
+
+            Tools.each(data, function (value, key) {
+               data[key] = editor.dom.encode(value);
+            });
+
+            if (data.type === "iframe") {
+               var allowFullscreen = data.allowFullscreen ? ' allowFullscreen="1"' : '';
+               html +=
+                  '<iframe src="' + data.source1 +
+                  '" width="' + data.width +
+                  '" height="' + data.height +
+                  '"' + allowFullscreen + '></iframe>';
+            } else if (data.source1mime === "application/x-shockwave-flash") {
+               html +=
+                  '<object data="' + data.source1 +
+                  '" width="' + data.width +
+                  '" height="' + data.height +
+                  '" type="application/x-shockwave-flash">';
+
+               if (data.poster) {
+                  html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
+               }
+
+               html += '</object>';
+            } else if (data.source1mime.indexOf('audio') !== -1) {
+               if (editor.settings.audio_template_callback) {
+                  html = editor.settings.audio_template_callback(data);
+               } else {
+                  html += (
+                     '<audio controls="controls" src="' + data.source1 + '">' +
+                     (
+                        data.source2 ?
+                           '\n<source src="' + data.source2 + '"' +
+                           (data.source2mime ? ' type="' + data.source2mime + '"' : '') +
+                           ' />\n' : '') +
+                     '</audio>'
+                  );
+               }
+            } else if (data.type === "script") {
+               html += '<script src="' + data.source1 + '"></script>';
+            } else {
+               if (editor.settings.video_template_callback) {
+                  html = editor.settings.video_template_callback(data);
+               } else {
+                  html = (
+                     '<video width="' + data.width +
+                     '" height="' + data.height + '"' +
+                     (data.poster ? ' poster="' + data.poster + '"' : '') + ' controls="controls">\n' +
+                     '<source src="' + data.source1 + '"' +
+                     (data.source1mime ? ' type="' + data.source1mime + '"' : '') + ' />\n' +
+                     (data.source2 ? '<source src="' + data.source2 + '"' +
+                        (data.source2mime ? ' type="' + data.source2mime + '"' : '') + ' />\n' : '') +
+                     '</video>'
+                  );
+               }
+            }
+         }
+
+         return html;
+      };
+
+      return {
+         dataToHtml: dataToHtml
+      };
+   });
+   defineGlobal("global!tinymce.util.Promise", tinymce.util.Promise);
+   define('tinymce.media.core.Service', [
+      'tinymce.media.core.DataToHtml',
+      'global!tinymce.util.Promise'
+   ], function (DataToHtml, Promise) {
+
+      var embedPromise = function (data, dataToHtml, handler) {
+         var cache = {};
+         return new Promise(function (res, rej) {
+            var wrappedResolve = function (response) {
+               if (response.html) {
+                  cache[data.source1] = response;
+               }
+               return res({
+                  url: data.source1,
+                  html: response.html ? response.html : dataToHtml(data)
+               });
+            };
+            if (cache[data.source1]) {
+               wrappedResolve(cache[data.source1]);
+            } else {
+               handler({url: data.source1}, wrappedResolve, rej);
+            }
+         });
+      };
+
+      var defaultPromise = function (data, dataToHtml) {
+         return new Promise(function (res) {
+            res({html: dataToHtml(data), url: data.source1});
+         });
+      };
+
+      var loadedData = function (editor) {
+         return function (data) {
+            return DataToHtml.dataToHtml(editor, data);
+         };
+      };
+
+      var getEmbedHtml = function (editor, data) {
+         var embedHandler = editor.settings.media_url_resolver;
+
+         return embedHandler ? embedPromise(data, loadedData(editor), embedHandler) : defaultPromise(data, loadedData(editor));
+      };
+
+      return {
+         getEmbedHtml: getEmbedHtml
+      };
+   });
+   defineGlobal("global!tinymce.Env", tinymce.Env);
+   define('tinymce.media.ui.SizeManager', [
+   ], function () {
+      var doSyncSize = function (widthCtrl, heightCtrl) {
+         widthCtrl.state.set('oldVal', widthCtrl.value());
+         heightCtrl.state.set('oldVal', heightCtrl.value());
+      };
+      var doSizeControls = function (win, f) {
+         var widthCtrl = win.find('#width')[0];
+         var heightCtrl = win.find('#height')[0];
+         var constrained = win.find('#constrain')[0];
+         if (widthCtrl && heightCtrl && constrained) {
+            f(widthCtrl, heightCtrl, constrained.checked());
+         }
+      };
+
+      var doUpdateSize = function (widthCtrl, heightCtrl, isContrained) {
+         var oldWidth = widthCtrl.state.get('oldVal');
+         var oldHeight = heightCtrl.state.get('oldVal');
+         var newWidth = widthCtrl.value();
+         var newHeight = heightCtrl.value();
+
+         if (isContrained && oldWidth && oldHeight && newWidth && newHeight) {
+            if (newWidth !== oldWidth) {
+               newHeight = Math.round((newWidth / oldWidth) * newHeight);
+
+               if (!isNaN(newHeight)) {
+                  heightCtrl.value(newHeight);
+               }
+            } else {
+               newWidth = Math.round((newHeight / oldHeight) * newWidth);
+
+               if (!isNaN(newWidth)) {
+                  widthCtrl.value(newWidth);
+               }
+            }
+         }
+
+         doSyncSize(widthCtrl, heightCtrl);
+      };
+
+      var syncSize = function (win) {
+         doSizeControls(win, doSyncSize);
+      };
+
+      var updateSize = function (win) {
+         doSizeControls(win, doUpdateSize);
+      };
+
+      var createUi = function (onChange) {
+         var recalcSize = function () {
+            onChange(function (win) {
+               updateSize(win);
+            });
+         };
+
+         return {
+            type: 'container',
+            label: 'Dimensions',
+            layout: 'flex',
+            align: 'center',
+            spacing: 5,
+            items: [
+               {
+                  name: 'width', type: 'textbox', maxLength: 5, size: 5,
+                  onchange: recalcSize, ariaLabel: 'Width'
+               },
+               {type: 'label', text: 'x'},
+               {
+                  name: 'height', type: 'textbox', maxLength: 5, size: 5,
+                  onchange: recalcSize, ariaLabel: 'Height'
+               },
+               {name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
+            ]
+         };
+      };
+
+      return {
+         createUi: createUi,
+         syncSize: syncSize,
+         updateSize: updateSize
+      };
+   });
+   define('tinymce.media.ui.Dialog', [
+      'global!tinymce.util.Delay',
+      'tinymce.media.core.HtmlToData',
+      'tinymce.media.core.UpdateHtml',
+      'tinymce.media.core.Service',
+      'tinymce.media.core.Size',
+      'global!tinymce.util.Tools',
+      'global!tinymce.Env',
+      'tinymce.media.ui.SizeManager'
+   ], function (Delay, HtmlToData, UpdateHtml, Service, Size, Tools, Env, SizeManager) {
+      var embedChange = (Env.ie && Env.ie <= 8) ? 'onChange' : 'onInput';
+
+      var handleError = function (editor) {
+         return function (error) {
+            var errorMessage = error && error.msg ?
+               'Media embed handler error: ' + error.msg :
+               'Media embed handler threw unknown error.';
+            editor.notificationManager.open({type: 'error', text: errorMessage});
+         };
+      };
+
+      var getData = function (editor) {
+         var element = editor.selection.getNode();
+         var dataEmbed = element.getAttribute('data-ephox-embed-iri');
+
+         if (dataEmbed) {
+            return {
+               source1: dataEmbed,
+               'data-ephox-embed-iri': dataEmbed,
+               width: Size.getMaxWidth(element),
+               height: Size.getMaxHeight(element)
+            };
+         }
+
+         return element.getAttribute('data-mce-object') ?
+            HtmlToData.htmlToData(editor.settings.media_scripts, editor.serializer.serialize(element, {selection: true})) :
+            {};
+      };
+
+      var getSource = function (editor) {
+         var elm = editor.selection.getNode();
+
+         if (elm.getAttribute('data-mce-object') || elm.getAttribute('data-ephox-embed-iri')) {
+            return editor.selection.getContent();
+         }
+      };
+
+      var addEmbedHtml = function (win, editor) {
+         return function (response) {
+            var html = response.html;
+            var embed = win.find('#embed')[0];
+            var data = Tools.extend(HtmlToData.htmlToData(editor.settings.media_scripts, html), {source1: response.url});
+            win.fromJSON(data);
+
+            if (embed) {
+               embed.value(html);
+               SizeManager.updateSize(win);
+            }
+         };
+      };
+
+      var selectPlaceholder = function (editor, beforeObjects) {
+         var i;
+         var y;
+         var afterObjects = editor.dom.select('img[data-mce-object]');
+
+         // Find new image placeholder so we can select it
+         for (i = 0; i < beforeObjects.length; i++) {
+            for (y = afterObjects.length - 1; y >= 0; y--) {
+               if (beforeObjects[i] === afterObjects[y]) {
+                  afterObjects.splice(y, 1);
+               }
+            }
+         }
+
+         editor.selection.select(afterObjects[0]);
+      };
+
+      var handleInsert = function (editor, html) {
+         var beforeObjects = editor.dom.select('img[data-mce-object]');
+
+         editor.insertContent(html);
+         selectPlaceholder(editor, beforeObjects);
+         editor.nodeChanged();
+      };
+
+      var submitForm = function (win, editor) {
+         var data = win.toJSON();
+
+         data.embed = UpdateHtml.updateHtml(data.embed, data);
+
+         if (data.embed) {
+            handleInsert(editor, data.embed);
+         } else {
+            Service.getEmbedHtml(editor, data)
+               .then(function (response) {
+                  handleInsert(editor, response.html);
+               })["catch"](handleError(editor));
+         }
+      };
+
+      var populateMeta = function (win, meta) {
+         Tools.each(meta, function (value, key) {
+            win.find('#' + key).value(value);
+         });
+      };
+
+      var showDialog = function (editor) {
+         var win;
+         var data;
+
+         var generalFormItems = [
+            {
+               name: 'source1',
+               type: 'filepicker',
+               filetype: 'media',
+               size: 40,
+               autofocus: true,
+               label: 'Source',
+               onpaste: function () {
+                  setTimeout(function () {
+                     Service.getEmbedHtml(editor, win.toJSON())
+                        .then(
+                           addEmbedHtml(win, editor)
+                        )["catch"](handleError(editor));
+                  }, 1);
+               },
+               onchange: function (e) {
+                  Service.getEmbedHtml(editor, win.toJSON())
+                     .then(
+                        addEmbedHtml(win, editor)
+                     )["catch"](handleError(editor));
+
+                  populateMeta(win, e.meta);
+               },
+               onbeforecall: function (e) {
+                  e.meta = win.toJSON();
+               }
+            }
+         ];
+
+         var advancedFormItems = [];
+
+         var reserialise = function (update) {
+            update(win);
+            data = win.toJSON();
+            win.find('#embed').value(UpdateHtml.updateHtml(data.embed, data));
+         };
+
+         if (editor.settings.media_alt_source !== false) {
+            advancedFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
+         }
+
+         if (editor.settings.media_poster !== false) {
+            advancedFormItems.push({name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'});
+         }
+
+         if (editor.settings.media_dimensions !== false) {
+            var control = SizeManager.createUi(reserialise);
+            generalFormItems.push(control);
+         }
+
+         data = getData(editor);
+
+         var embedTextBox = {
+            id: 'mcemediasource',
+            type: 'textbox',
+            flex: 1,
+            name: 'embed',
+            value: getSource(editor),
+            multiline: true,
+            rows: 5,
+            label: 'Source'
+         };
+
+         var updateValueOnChange = function () {
+            data = Tools.extend({}, HtmlToData.htmlToData(editor.settings.media_scripts, this.value()));
+            this.parent().parent().fromJSON(data);
+         };
+
+         embedTextBox[embedChange] = updateValueOnChange;
+
+         win = editor.windowManager.open({
+            title: 'Insert/edit media',
+            data: data,
+            bodyType: 'tabpanel',
+            body: [
+               {
+                  title: 'General',
+                  type: "form",
+                  items: generalFormItems
+               },
+
+               {
+                  title: 'Embed',
+                  type: "container",
+                  layout: 'flex',
+                  direction: 'column',
+                  align: 'stretch',
+                  padding: 10,
+                  spacing: 10,
+                  items: [
+                     {
+                        type: 'label',
+                        text: 'Paste your embed code below:',
+                        forId: 'mcemediasource'
+                     },
+                     embedTextBox
+                  ]
+               },
+
+               {
+                  title: 'Advanced',
+                  type: "form",
+                  items: advancedFormItems
+               }
+            ],
+            onSubmit: function () {
+               SizeManager.updateSize(win);
+               submitForm(win, editor);
+            }
+         });
+
+         SizeManager.syncSize(win);
+      };
+
+      return {
+         showDialog: showDialog
+      };
+   });
+   define('tinymce.media.core.Sanitize', [
+      'global!tinymce.util.Tools',
+      'global!tinymce.html.Writer',
+      'global!tinymce.html.SaxParser',
+      'global!tinymce.html.Schema'
+   ], function (Tools, Writer, SaxParser, Schema) {
+      var sanitize = function (editor, html) {
+         if (editor.settings.media_filter_html === false) {
+            return html;
+         }
+
+         var writer = new Writer();
+         var blocked;
+
+         new SaxParser({
+            validate: false,
+            allow_conditional_comments: false,
+            special: 'script,noscript',
+
+            comment: function (text) {
+               writer.comment(text);
+            },
+
+            cdata: function (text) {
+               writer.cdata(text);
+            },
+
+            text: function (text, raw) {
+               writer.text(text, raw);
+            },
+
+            start: function (name, attrs, empty) {
+               blocked = true;
+
+               if (name === 'script' || name === 'noscript') {
+                  return;
+               }
+
+               for (var i = 0; i < attrs.length; i++) {
+                  if (attrs[i].name.indexOf('on') === 0) {
+                     return;
+                  }
+
+                  if (attrs[i].name === 'style') {
+                     attrs[i].value = editor.dom.serializeStyle(editor.dom.parseStyle(attrs[i].value), name);
+                  }
+               }
+
+               writer.start(name, attrs, empty);
+               blocked = false;
+            },
+
+            end: function (name) {
+               if (blocked) {
+                  return;
+               }
+
+               writer.end(name);
+            }
+         }, new Schema({})).parse(html);
+
+         return writer.getContent();
+      };
+
+      return {
+         sanitize: sanitize
+      };
+   });
+   defineGlobal("global!tinymce.html.Node", tinymce.html.Node);
+   define('tinymce.media.core.Nodes', [
+      'tinymce.media.core.Sanitize',
+      'tinymce.media.core.VideoScript',
+      'global!tinymce.html.Node',
+      'global!tinymce.Env'
+   ], function (Sanitize, VideoScript, Node, Env) {
+      var createPlaceholderNode = function (editor, node) {
+         var placeHolder;
+         var name = node.name;
+
+         placeHolder = new Node('img', 1);
+         placeHolder.shortEnded = true;
+
+         retainAttributesAndInnerHtml(editor, node, placeHolder);
+
+         placeHolder.attr({
+            width: node.attr('width') || "300",
+            height: node.attr('height') || (name === "audio" ? "30" : "150"),
+            style: node.attr('style'),
+            src: Env.transparentSrc,
+            "data-mce-object": name,
+            "class": "mce-object mce-object-" + name
+         });
+
+         return placeHolder;
+      };
+
+      var createPreviewIframeNode = function (editor, node) {
+         var previewWrapper;
+         var previewNode;
+         var shimNode;
+         var name = node.name;
+
+         previewWrapper = new Node('span', 1);
+         previewWrapper.attr({
+            contentEditable: 'false',
+            style: node.attr('style'),
+            "data-mce-object": name,
+            "class": "mce-preview-object mce-object-" + name
+         });
+
+         retainAttributesAndInnerHtml(editor, node, previewWrapper);
+
+         previewNode = new Node(name, 1);
+         previewNode.attr({
+            src: node.attr('src'),
+            allowfullscreen: node.attr('allowfullscreen'),
+            width: node.attr('width') || "300",
+            height: node.attr('height') || (name === "audio" ? "30" : "150"),
+            frameborder: '0'
+         });
+
+         shimNode = new Node('span', 1);
+         shimNode.attr('class', 'mce-shim');
+
+         previewWrapper.append(previewNode);
+         previewWrapper.append(shimNode);
+
+         return previewWrapper;
+      };
+
+      var retainAttributesAndInnerHtml = function (editor, sourceNode, targetNode) {
+         var attrName;
+         var attrValue;
+         var attribs;
+         var ai;
+         var innerHtml;
+
+         // Prefix all attributes except width, height and style since we
+         // will add these to the placeholder
+         attribs = sourceNode.attributes;
+         ai = attribs.length;
+         while (ai--) {
+            attrName = attribs[ai].name;
+            attrValue = attribs[ai].value;
+
+            if (attrName !== "width" && attrName !== "height" && attrName !== "style") {
+               if (attrName === "data" || attrName === "src") {
+                  attrValue = editor.convertURL(attrValue, attrName);
+               }
+
+               targetNode.attr('data-mce-p-' + attrName, attrValue);
+            }
+         }
+
+         // Place the inner HTML contents inside an escaped attribute
+         // This enables us to copy/paste the fake object
+         innerHtml = sourceNode.firstChild && sourceNode.firstChild.value;
+         if (innerHtml) {
+            targetNode.attr("data-mce-html", escape(Sanitize.sanitize(editor, innerHtml)));
+            targetNode.firstChild = null;
+         }
+      };
+
+      var isWithinEphoxEmbed = function (node) {
+         while ((node = node.parent)) {
+            if (node.attr('data-ephox-embed-iri')) {
+               return true;
+            }
+         }
+
+         return false;
+      };
+
+      var placeHolderConverter = function (editor) {
+         return function (nodes) {
+            var i = nodes.length;
+            var node;
+            var videoScript;
+
+            while (i--) {
+               node = nodes[i];
+               if (!node.parent) {
+                  continue;
+               }
+
+               if (node.parent.attr('data-mce-object')) {
+                  continue;
+               }
+
+               if (node.name === 'script') {
+                  videoScript = VideoScript.getVideoScriptMatch(editor.settings.media_scripts, node.attr('src'));
+                  if (!videoScript) {
+                     continue;
+                  }
+               }
+
+               if (videoScript) {
+                  if (videoScript.width) {
+                     node.attr('width', videoScript.width.toString());
+                  }
+
+                  if (videoScript.height) {
+                     node.attr('height', videoScript.height.toString());
+                  }
+               }
+
+               if (node.name === 'iframe' && editor.settings.media_live_embeds !== false && Env.ceFalse) {
+                  if (!isWithinEphoxEmbed(node)) {
+                     node.replace(createPreviewIframeNode(editor, node));
+                  }
+               } else {
+                  if (!isWithinEphoxEmbed(node)) {
+                     node.replace(createPlaceholderNode(editor, node));
+                  }
+               }
+            }
+         };
+      };
+
+      return {
+         createPreviewIframeNode: createPreviewIframeNode,
+         createPlaceholderNode: createPlaceholderNode,
+         placeHolderConverter: placeHolderConverter
+      };
+   });
+   /**
+    * plugin.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /*jshint maxlen:255 */
+   /*eslint max-len:0 */
+   /*global tinymce:true */
+
+   define('tinymce.media.Plugin', [
+      'global!tinymce.PluginManager',
+      'tinymce.media.ui.Dialog',
+      'tinymce.media.core.Sanitize',
+      'tinymce.media.core.UpdateHtml',
+      'tinymce.media.core.Nodes'
+   ], function (PluginManager, Dialog, Sanitize, UpdateHtml, Nodes) {
+      var Plugin = function (editor) {
+         editor.on('ResolveName', function (e) {
+            var name;
+
+            if (e.target.nodeType === 1 && (name = e.target.getAttribute("data-mce-object"))) {
+               e.name = name;
+            }
+         });
+
+         editor.on('preInit', function () {
+            // Make sure that any messy HTML is retained inside these
+            var specialElements = editor.schema.getSpecialElements();
+            tinymce.each('video audio iframe object'.split(' '), function (name) {
+               specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
+            });
+
+            // Allow elements
+            //editor.schema.addValidElements('object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]');
+
+            // Set allowFullscreen attribs as boolean
+            var boolAttrs = editor.schema.getBoolAttrs();
+            tinymce.each('webkitallowfullscreen mozallowfullscreen allowfullscreen'.split(' '), function (name) {
+               boolAttrs[name] = {};
+            });
+
+            // Converts iframe, video etc into placeholder images
+            editor.parser.addNodeFilter('iframe,video,audio,object,embed,script',
+               Nodes.placeHolderConverter(editor));
+
+            // Replaces placeholder images with real elements for video, object, iframe etc
+            editor.serializer.addAttributeFilter('data-mce-object', function (nodes, name) {
+               var i = nodes.length;
+               var node;
+               var realElm;
+               var ai;
+               var attribs;
+               var innerHtml;
+               var innerNode;
+               var realElmName;
+               var className;
+
+               while (i--) {
+                  node = nodes[i];
+                  if (!node.parent) {
+                     continue;
+                  }
+
+                  realElmName = node.attr(name);
+                  realElm = new tinymce.html.Node(realElmName, 1);
+
+                  // Add width/height to everything but audio
+                  if (realElmName !== "audio" && realElmName !== "script") {
+                     className = node.attr('class');
+                     if (className && className.indexOf('mce-preview-object') !== -1) {
+                        realElm.attr({
+                           width: node.firstChild.attr('width'),
+                           height: node.firstChild.attr('height')
+                        });
+                     } else {
+                        realElm.attr({
+                           width: node.attr('width'),
+                           height: node.attr('height')
+                        });
+                     }
+                  }
+
+                  realElm.attr({
+                     style: node.attr('style')
+                  });
+
+                  // Unprefix all placeholder attributes
+                  attribs = node.attributes;
+                  ai = attribs.length;
+                  while (ai--) {
+                     var attrName = attribs[ai].name;
+
+                     if (attrName.indexOf('data-mce-p-') === 0) {
+                        realElm.attr(attrName.substr(11), attribs[ai].value);
+                     }
+                  }
+
+                  if (realElmName === "script") {
+                     realElm.attr('type', 'text/javascript');
+                  }
+
+                  // Inject innerhtml
+                  innerHtml = node.attr('data-mce-html');
+                  if (innerHtml) {
+                     innerNode = new tinymce.html.Node('#text', 3);
+                     innerNode.raw = true;
+                     innerNode.value = Sanitize.sanitize(editor, unescape(innerHtml));
+                     realElm.append(innerNode);
+                  }
+
+                  node.replace(realElm);
+               }
+            });
+         });
+
+         editor.on('click keyup', function () {
+            var selectedNode = editor.selection.getNode();
+
+            if (selectedNode && editor.dom.hasClass(selectedNode, 'mce-preview-object')) {
+               if (editor.dom.getAttrib(selectedNode, 'data-mce-selected')) {
+                  selectedNode.setAttribute('data-mce-selected', '2');
+               }
+            }
+         });
+
+         editor.on('ObjectSelected', function (e) {
+            var objectType = e.target.getAttribute('data-mce-object');
+
+            if (objectType === "audio" || objectType === "script") {
+               e.preventDefault();
+            }
+         });
+
+         editor.on('objectResized', function (e) {
+            var target = e.target;
+            var html;
+
+            if (target.getAttribute('data-mce-object')) {
+               html = target.getAttribute('data-mce-html');
+               if (html) {
+                  html = unescape(html);
+                  target.setAttribute('data-mce-html', escape(
+                     UpdateHtml.updateHtml(html, {
+                        width: e.width,
+                        height: e.height
+                     })
+                  ));
+               }
+            }
+         });
+
+         this.showDialog = function () {
+            Dialog.showDialog(editor);
+         };
+
+         editor.addButton('media', {
+            tooltip: 'Insert/edit media',
+            onclick: this.showDialog,
+            stateSelector: ['img[data-mce-object]', 'span[data-mce-object]', 'div[data-ephox-embed-iri]']
+         });
+
+         editor.addMenuItem('media', {
+            icon: 'media',
+            text: 'Media',
+            onclick: this.showDialog,
+            context: 'insert',
+            prependToContext: true
+         });
+
+         editor.on('setContent', function () {
+            // TODO: This shouldn't be needed there should be a way to mark bogus
+            // elements so they are never removed except external save
+            editor.$('span.mce-preview-object').each(function (index, elm) {
+               var $elm = editor.$(elm);
+
+               if ($elm.find('span.mce-shim', elm).length === 0) {
+                  $elm.append('<span class="mce-shim"></span>');
+               }
+            });
+         });
+
+         editor.addCommand('mceMedia', this.showDialog);
+      };
+
+      PluginManager.add('media', Plugin);
+
+      return function () {};
+   });
+
+
+   dem('tinymce.media.Plugin')();
+})();
+/**
+ * Compiled inline version. (Library mode)
+ */
+
+/*jshint smarttabs:true, undef:true, latedef:true, curly:true, bitwise:true, camelcase:true */
+/*globals $code */
+
+(function(exports, undefined) {
+   "use strict";
+
+   var modules = {};
+
+   function require(ids, callback) {
+      var module, defs = [];
+
+      for (var i = 0; i < ids.length; ++i) {
+         module = modules[ids[i]] || resolve(ids[i]);
+         if (!module) {
+            throw 'module definition dependecy not found: ' + ids[i];
+         }
+
+         defs.push(module);
+      }
+
+      callback.apply(null, defs);
+   }
+
+   function define(id, dependencies, definition) {
+      if (typeof id !== 'string') {
+         throw 'invalid module definition, module id must be defined and be a string';
+      }
+
+      if (dependencies === undefined) {
+         throw 'invalid module definition, dependencies must be specified';
+      }
+
+      if (definition === undefined) {
+         throw 'invalid module definition, definition function must be specified';
+      }
+
+      require(dependencies, function() {
+         modules[id] = definition.apply(null, arguments);
+      });
+   }
+
+   function defined(id) {
+      return !!modules[id];
+   }
+
+   function resolve(id) {
+      var target = exports;
+      var fragments = id.split(/[.\/]/);
+
+      for (var fi = 0; fi < fragments.length; ++fi) {
+         if (!target[fragments[fi]]) {
+            return;
+         }
+
+         target = target[fragments[fi]];
+      }
+
+      return target;
+   }
+
+   function expose(ids) {
+      var i, target, id, fragments, privateModules;
+
+      for (i = 0; i < ids.length; i++) {
+         target = exports;
+         id = ids[i];
+         fragments = id.split(/[.\/]/);
+
+         for (var fi = 0; fi < fragments.length - 1; ++fi) {
+            if (target[fragments[fi]] === undefined) {
+               target[fragments[fi]] = {};
+            }
+
+            target = target[fragments[fi]];
+         }
+
+         target[fragments[fragments.length - 1]] = modules[id];
+      }
+
+      // Expose private modules for unit tests
+      if (exports.AMDLC_TESTS) {
+         privateModules = exports.privateModules || {};
+
+         for (id in modules) {
+            privateModules[id] = modules[id];
+         }
+
+         for (i = 0; i < ids.length; i++) {
+            delete privateModules[ids[i]];
+         }
+
+         exports.privateModules = privateModules;
+      }
+   }
+
+// Included from: js/tinymce/plugins/paste/classes/Utils.js
+
+   /**
+    * Utils.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /**
+    * This class contails various utility functions for the paste plugin.
+    *
+    * @class tinymce.pasteplugin.Utils
+    */
+   define("tinymce/pasteplugin/Utils", [
+      "tinymce/util/Tools",
+      "tinymce/html/DomParser",
+      "tinymce/html/Schema"
+   ], function(Tools, DomParser, Schema) {
+      function filter(content, items) {
+         Tools.each(items, function(v) {
+            if (v.constructor == RegExp) {
+               content = content.replace(v, '');
+            } else {
+               content = content.replace(v[0], v[1]);
+            }
+         });
+
+         return content;
+      }
+
+      /**
+       * Gets the innerText of the specified element. It will handle edge cases
+       * and works better than textContent on Gecko.
+       *
+       * @param {String} html HTML string to get text from.
+       * @return {String} String of text with line feeds.
+       */
+      function innerText(html) {
+         var schema = new Schema(), domParser = new DomParser({}, schema), text = '';
+         var shortEndedElements = schema.getShortEndedElements();
+         var ignoreElements = Tools.makeMap('script noscript style textarea video audio iframe object', ' ');
+         var blockElements = schema.getBlockElements();
+
+         function walk(node) {
+            var name = node.name, currentNode = node;
+
+            if (name === 'br') {
+               text += '\n';
+               return;
+            }
+
+            // img/input/hr
+            if (shortEndedElements[name]) {
+               text += ' ';
+            }
+
+            // Ingore script, video contents
+            if (ignoreElements[name]) {
+               text += ' ';
+               return;
+            }
+
+            if (node.type == 3) {
+               text += node.value;
+            }
+
+            // Walk all children
+            if (!node.shortEnded) {
+               if ((node = node.firstChild)) {
+                  do {
+                     walk(node);
+                  } while ((node = node.next));
+               }
+            }
+
+            // Add \n or \n\n for blocks or P
+            if (blockElements[name] && currentNode.next) {
+               text += '\n';
+
+               if (name == 'p') {
+                  text += '\n';
+               }
+            }
+         }
+
+         html = filter(html, [
+            /<!\[[^\]]+\]>/g // Conditional comments
+         ]);
+
+         walk(domParser.parse(html));
+
+         return text;
+      }
+
+      /**
+       * Trims the specified HTML by removing all WebKit fragments, all elements wrapping the body trailing BR elements etc.
+       *
+       * @param {String} html Html string to trim contents on.
+       * @return {String} Html contents that got trimmed.
+       */
+      function trimHtml(html) {
+         function trimSpaces(all, s1, s2) {
+            // WebKit &nbsp; meant to preserve multiple spaces but instead inserted around all inline tags,
+            // including the spans with inline styles created on paste
+            if (!s1 && !s2) {
+               return ' ';
+            }
+
+            return '\u00a0';
+         }
+
+         html = filter(html, [
+            /^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
+            /<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
+            [/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
+            /<br class="Apple-interchange-newline">/g,
+            /<br>$/i // Trailing BR elements
+         ]);
+
+         return html;
+      }
+
+      // TODO: Should be in some global class
+      function createIdGenerator(prefix) {
+         var count = 0;
+
+         return function() {
+            return prefix + (count++);
+         };
+      }
+
+      return {
+         filter: filter,
+         innerText: innerText,
+         trimHtml: trimHtml,
+         createIdGenerator: createIdGenerator
+      };
+   });
+
+// Included from: js/tinymce/plugins/paste/classes/SmartPaste.js
+
+   /**
+    * SmartPaste.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2016 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /**
+    * Tries to be smart depending on what the user pastes if it looks like an url
+    * it will make a link out of the current selection. If it's an image url that looks
+    * like an image it will check if it's an image and insert it as an image.
+    *
+    * @class tinymce.pasteplugin.SmartPaste
+    * @private
+    */
+   define("tinymce/pasteplugin/SmartPaste", [
+      "tinymce/util/Tools"
+   ], function (Tools) {
+      var isAbsoluteUrl = function (url) {
+         return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+      };
+
+      var isImageUrl = function (url) {
+         return isAbsoluteUrl(url) && /.(gif|jpe?g|png)$/.test(url);
+      };
+
+      var createImage = function (editor, url, pasteHtml) {
+         editor.undoManager.extra(function () {
+            pasteHtml(editor, url);
+         }, function () {
+            editor.insertContent('<img src="' + url + '">');
+         });
+
+         return true;
+      };
+
+      var createLink = function (editor, url, pasteHtml) {
+         editor.undoManager.extra(function () {
+            pasteHtml(editor, url);
+         }, function () {
+            editor.execCommand('mceInsertLink', false, url);
+         });
+
+         return true;
+      };
+
+      var linkSelection = function (editor, html, pasteHtml) {
+         return editor.selection.isCollapsed() === false && isAbsoluteUrl(html) ? createLink(editor, html, pasteHtml) : false;
+      };
+
+      var insertImage = function (editor, html, pasteHtml) {
+         return isImageUrl(html) ? createImage(editor, html, pasteHtml) : false;
+      };
+
+      var pasteHtml = function (editor, html) {
+         editor.insertContent(html, {
+            merge: editor.settings.paste_merge_formats !== false,
+            paste: true
+         });
+
+         return true;
+      };
+
+      var smartInsertContent = function (editor, html) {
+         Tools.each([
+            linkSelection,
+            insertImage,
+            pasteHtml
+         ], function (action) {
+            return action(editor, html, pasteHtml) !== true;
+         });
+      };
+
+      var insertContent = function (editor, html) {
+         if (editor.settings.smart_paste === false) {
+            pasteHtml(editor, html);
+         } else {
+            smartInsertContent(editor, html);
+         }
+      };
+
+      return {
+         isImageUrl: isImageUrl,
+         isAbsoluteUrl: isAbsoluteUrl,
+         insertContent: insertContent
+      };
+   });
+
+// Included from: js/tinymce/plugins/paste/classes/Clipboard.js
+
+   /**
+    * Clipboard.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /**
+    * This class contains logic for getting HTML contents out of the clipboard.
+    *
+    * We need to make a lot of ugly hacks to get the contents out of the clipboard since
+    * the W3C Clipboard API is broken in all browsers that have it: Gecko/WebKit/Blink.
+    * We might rewrite this the way those API:s stabilize. Browsers doesn't handle pasting
+    * from applications like Word the same way as it does when pasting into a contentEditable area
+    * so we need to do lots of extra work to try to get to this clipboard data.
+    *
+    * Current implementation steps:
+    *  1. On keydown with paste keys Ctrl+V or Shift+Insert create
+    *     a paste bin element and move focus to that element.
+    *  2. Wait for the browser to fire a "paste" event and get the contents out of the paste bin.
+    *  3. Check if the paste was successful if true, process the HTML.
+    *  (4). If the paste was unsuccessful use IE execCommand, Clipboard API, document.dataTransfer old WebKit API etc.
+    *
+    * @class tinymce.pasteplugin.Clipboard
+    * @private
+    */
+   define("tinymce/pasteplugin/Clipboard", [
+      "tinymce/Env",
+      "tinymce/dom/RangeUtils",
+      "tinymce/util/VK",
+      "tinymce/pasteplugin/Utils",
+      "tinymce/pasteplugin/SmartPaste",
+      "tinymce/util/Delay"
+   ], function(Env, RangeUtils, VK, Utils, SmartPaste, Delay) {
+      return function(editor) {
+         var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
+         var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
+         var mceInternalUrlPrefix = 'data:text/mce-internal,';
+         var uniqueId = Utils.createIdGenerator("mceclip");
+
+         /**
+          * Pastes the specified HTML. This means that the HTML is filtered and then
+          * inserted at the current selection in the editor. It will also fire paste events
+          * for custom user filtering.
+          *
+          * @param {String} html HTML code to paste into the current selection.
+          */
+         function pasteHtml(html) {
+            var args, dom = editor.dom;
+
+            args = editor.fire('BeforePastePreProcess', {content: html}); // Internal event used by Quirks
+            args = editor.fire('PastePreProcess', args);
+            html = args.content;
+
+            if (!args.isDefaultPrevented()) {
+               // User has bound PastePostProcess events then we need to pass it through a DOM node
+               // This is not ideal but we don't want to let the browser mess up the HTML for example
+               // some browsers add &nbsp; to P tags etc
+               if (editor.hasEventListeners('PastePostProcess') && !args.isDefaultPrevented()) {
+                  // We need to attach the element to the DOM so Sizzle selectors work on the contents
+                  var tempBody = dom.add(editor.getBody(), 'div', {style: 'display:none'}, html);
+                  args = editor.fire('PastePostProcess', {node: tempBody});
+                  dom.remove(tempBody);
+                  html = args.node.innerHTML;
+               }
+
+               if (!args.isDefaultPrevented()) {
+                  SmartPaste.insertContent(editor, html);
+               }
+            }
+         }
+
+         /**
+          * Pastes the specified text. This means that the plain text is processed
+          * and converted into BR and P elements. It will fire paste events for custom filtering.
+          *
+          * @param {String} text Text to paste as the current selection location.
+          */
+         function pasteText(text) {
+            text = editor.dom.encode(text).replace(/\r\n/g, '\n');
+
+            var startBlock = editor.dom.getParent(editor.selection.getStart(), editor.dom.isBlock);
+
+            // Create start block html for example <p attr="value">
+            var forcedRootBlockName = editor.settings.forced_root_block;
+            var forcedRootBlockStartHtml;
+            if (forcedRootBlockName) {
+               forcedRootBlockStartHtml = editor.dom.createHTML(forcedRootBlockName, editor.settings.forced_root_block_attrs);
+               forcedRootBlockStartHtml = forcedRootBlockStartHtml.substr(0, forcedRootBlockStartHtml.length - 3) + '>';
+            }
+
+            if ((startBlock && /^(PRE|DIV)$/.test(startBlock.nodeName)) || !forcedRootBlockName) {
+               text = Utils.filter(text, [
+                  [/\n/g, "<br>"]
+               ]);
+            } else {
+               text = Utils.filter(text, [
+                  [/\n\n/g, "</p>" + forcedRootBlockStartHtml],
+                  [/^(.*<\/p>)(<p>)$/, forcedRootBlockStartHtml + '$1'],
+                  [/\n/g, "<br />"]
+               ]);
+
+               if (text.indexOf('<p>') != -1) {
+                  text = forcedRootBlockStartHtml + text;
+               }
+            }
+
+            pasteHtml(text);
+         }
+
+         /**
+          * Creates a paste bin element as close as possible to the current caret location and places the focus inside that element
+          * so that when the real paste event occurs the contents gets inserted into this element
+          * instead of the current editor selection element.
+          */
+         function createPasteBin() {
+            var dom = editor.dom, body = editor.getBody();
+            var viewport = editor.dom.getViewPort(editor.getWin()), scrollTop = viewport.y, top = 20;
+            var scrollContainer;
+
+            lastRng = editor.selection.getRng();
+
+            if (editor.inline) {
+               scrollContainer = editor.selection.getScrollContainer();
+
+               // Can't always rely on scrollTop returning a useful value.
+               // It returns 0 if the browser doesn't support scrollTop for the element or is non-scrollable
+               if (scrollContainer && scrollContainer.scrollTop > 0) {
+                  scrollTop = scrollContainer.scrollTop;
+               }
+            }
+
+            /**
+             * Returns the rect of the current caret if the caret is in an empty block before a
+             * BR we insert a temporary invisible character that we get the rect this way we always get a proper rect.
+             *
+             * TODO: This might be useful in core.
+             */
+            function getCaretRect(rng) {
+               var rects, textNode, node, container = rng.startContainer;
+
+               rects = rng.getClientRects();
+               if (rects.length) {
+                  return rects[0];
+               }
+
+               if (!rng.collapsed || container.nodeType != 1) {
+                  return;
+               }
+
+               node = container.childNodes[lastRng.startOffset];
+
+               // Skip empty whitespace nodes
+               while (node && node.nodeType == 3 && !node.data.length) {
+                  node = node.nextSibling;
+               }
+
+               if (!node) {
+                  return;
+               }
+
+               // Check if the location is |<br>
+               // TODO: Might need to expand this to say |<table>
+               if (node.tagName == 'BR') {
+                  textNode = dom.doc.createTextNode('\uFEFF');
+                  node.parentNode.insertBefore(textNode, node);
+
+                  rng = dom.createRng();
+                  rng.setStartBefore(textNode);
+                  rng.setEndAfter(textNode);
+
+                  rects = rng.getClientRects();
+                  dom.remove(textNode);
+               }
+
+               if (rects.length) {
+                  return rects[0];
+               }
+            }
+
+            // Calculate top cordinate this is needed to avoid scrolling to top of document
+            // We want the paste bin to be as close to the caret as possible to avoid scrolling
+            if (lastRng.getClientRects) {
+               var rect = getCaretRect(lastRng);
+
+               if (rect) {
+                  // Client rects gets us closes to the actual
+                  // caret location in for example a wrapped paragraph block
+                  top = scrollTop + (rect.top - dom.getPos(body).y);
+               } else {
+                  top = scrollTop;
+
+                  // Check if we can find a closer location by checking the range element
+                  var container = lastRng.startContainer;
+                  if (container) {
+                     if (container.nodeType == 3 && container.parentNode != body) {
+                        container = container.parentNode;
+                     }
+
+                     if (container.nodeType == 1) {
+                        top = dom.getPos(container, scrollContainer || body).y;
+                     }
+                  }
+               }
+            }
+
+            // Create a pastebin
+            pasteBinElm = dom.add(editor.getBody(), 'div', {
+               id: "mcepastebin",
+               contentEditable: true,
+               "data-mce-bogus": "all",
+               style: 'position: absolute; top: ' + top + 'px;' +
+               'width: 10px; height: 10px; overflow: hidden; opacity: 0'
+            }, pasteBinDefaultContent);
+
+            // Move paste bin out of sight since the controlSelection rect gets displayed otherwise on IE and Gecko
+            if (Env.ie || Env.gecko) {
+               dom.setStyle(pasteBinElm, 'left', dom.getStyle(body, 'direction', true) == 'rtl' ? 0xFFFF : -0xFFFF);
+            }
+
+            // Prevent focus events from bubbeling fixed FocusManager issues
+            dom.bind(pasteBinElm, 'beforedeactivate focusin focusout', function(e) {
+               e.stopPropagation();
+            });
+
+            pasteBinElm.focus();
+            editor.selection.select(pasteBinElm, true);
+         }
+
+         /**
+          * Removes the paste bin if it exists.
+          */
+         function removePasteBin() {
+            if (pasteBinElm) {
+               var pasteBinClone;
+
+               // WebKit/Blink might clone the div so
+               // lets make sure we remove all clones
+               // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+               while ((pasteBinClone = editor.dom.get('mcepastebin'))) {
+                  editor.dom.remove(pasteBinClone);
+                  editor.dom.unbind(pasteBinClone);
+               }
+
+               if (lastRng) {
+                  editor.selection.setRng(lastRng);
+               }
+            }
+
+            pasteBinElm = lastRng = null;
+         }
+
+         /**
+          * Returns the contents of the paste bin as a HTML string.
+          *
+          * @return {String} Get the contents of the paste bin.
+          */
+         function getPasteBinHtml() {
+            var html = '', pasteBinClones, i, clone, cloneHtml;
+
+            // Since WebKit/Chrome might clone the paste bin when pasting
+            // for example: <img style="float: right"> we need to check if any of them contains some useful html.
+            // TODO: Man o man is this ugly. WebKit is the new IE! Remove this if they ever fix it!
+            pasteBinClones = editor.dom.select('div[id=mcepastebin]');
+            for (i = 0; i < pasteBinClones.length; i++) {
+               clone = pasteBinClones[i];
+
+               // Pasting plain text produces pastebins in pastebinds makes sence right!?
+               if (clone.firstChild && clone.firstChild.id == 'mcepastebin') {
+                  clone = clone.firstChild;
+               }
+
+               cloneHtml = clone.innerHTML;
+               if (html != pasteBinDefaultContent) {
+                  html += cloneHtml;
+               }
+            }
+
+            return html;
+         }
+
+         /**
+          * Gets various content types out of a datatransfer object.
+          *
+          * @param {DataTransfer} dataTransfer Event fired on paste.
+          * @return {Object} Object with mime types and data for those mime types.
+          */
+         function getDataTransferItems(dataTransfer) {
+            var items = {};
+
+            if (dataTransfer) {
+               // Use old WebKit/IE API
+               if (dataTransfer.getData) {
+                  var legacyText = dataTransfer.getData('Text');
+                  if (legacyText && legacyText.length > 0) {
+                     if (legacyText.indexOf(mceInternalUrlPrefix) == -1) {
+                        items['text/plain'] = legacyText;
+                     }
+                  }
+               }
+
+               if (dataTransfer.types) {
+                  for (var i = 0; i < dataTransfer.types.length; i++) {
+                     var contentType = dataTransfer.types[i];
+                     items[contentType] = dataTransfer.getData(contentType);
+                  }
+               }
+            }
+
+            return items;
+         }
+
+         /**
+          * Gets various content types out of the Clipboard API. It will also get the
+          * plain text using older IE and WebKit API:s.
+          *
+          * @param {ClipboardEvent} clipboardEvent Event fired on paste.
+          * @return {Object} Object with mime types and data for those mime types.
+          */
+         function getClipboardContent(clipboardEvent) {
+            return getDataTransferItems(clipboardEvent.clipboardData || editor.getDoc().dataTransfer);
+         }
+
+         function hasHtmlOrText(content) {
+            return hasContentType(content, 'text/html') || hasContentType(content, 'text/plain');
+         }
+
+         function getBase64FromUri(uri) {
+            var idx;
+
+            idx = uri.indexOf(',');
+            if (idx !== -1) {
+               return uri.substr(idx + 1);
+            }
+
+            return null;
+         }
+
+         function isValidDataUriImage(settings, imgElm) {
+            return settings.images_dataimg_filter ? settings.images_dataimg_filter(imgElm) : true;
+         }
+
+         function pasteImage(rng, reader, blob) {
+            if (rng) {
+               editor.selection.setRng(rng);
+               rng = null;
+            }
+
+            var dataUri = reader.result;
+            var base64 = getBase64FromUri(dataUri);
+
+            var img = new Image();
+            img.src = dataUri;
+
+            // TODO: Move the bulk of the cache logic to EditorUpload
+            if (isValidDataUriImage(editor.settings, img)) {
+               var blobCache = editor.editorUpload.blobCache;
+               var blobInfo, existingBlobInfo;
+
+               existingBlobInfo = blobCache.findFirst(function(cachedBlobInfo) {
+                  return cachedBlobInfo.base64() === base64;
+               });
+
+               if (!existingBlobInfo) {
+                  blobInfo = blobCache.create(uniqueId(), blob, base64);
+                  blobCache.add(blobInfo);
+               } else {
+                  blobInfo = existingBlobInfo;
+               }
+
+               pasteHtml('<img src="' + blobInfo.blobUri() + '">');
+            } else {
+               pasteHtml('<img src="' + dataUri + '">');
+            }
+         }
+
+         /**
+          * Checks if the clipboard contains image data if it does it will take that data
+          * and convert it into a data url image and paste that image at the caret location.
+          *
+          * @param  {ClipboardEvent} e Paste/drop event object.
+          * @param  {DOMRange} rng Rng object to move selection to.
+          * @return {Boolean} true/false if the image data was found or not.
+          */
+         function pasteImageData(e, rng) {
+            var dataTransfer = e.clipboardData || e.dataTransfer;
+
+            function processItems(items) {
+               var i, item, reader, hadImage = false;
+
+               if (items) {
+                  for (i = 0; i < items.length; i++) {
+                     item = items[i];
+
+                     if (/^image\/(jpeg|png|gif|bmp)$/.test(item.type)) {
+                        var blob = item.getAsFile ? item.getAsFile() : item;
+
+                        reader = new FileReader();
+                        reader.onload = pasteImage.bind(null, rng, reader, blob);
+                        reader.readAsDataURL(blob);
+
+                        e.preventDefault();
+                        hadImage = true;
+                     }
+                  }
+               }
+
+               return hadImage;
+            }
+
+            if (editor.settings.paste_data_images && dataTransfer) {
+               return processItems(dataTransfer.items) || processItems(dataTransfer.files);
+            }
+         }
+
+         /**
+          * Chrome on Android doesn't support proper clipboard access so we have no choice but to allow the browser default behavior.
+          *
+          * @param {Event} e Paste event object to check if it contains any data.
+          * @return {Boolean} true/false if the clipboard is empty or not.
+          */
+         function isBrokenAndroidClipboardEvent(e) {
+            var clipboardData = e.clipboardData;
+
+            return navigator.userAgent.indexOf('Android') != -1 && clipboardData && clipboardData.items && clipboardData.items.length === 0;
+         }
+
+         function getCaretRangeFromEvent(e) {
+            return RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
+         }
+
+         function hasContentType(clipboardContent, mimeType) {
+            return mimeType in clipboardContent && clipboardContent[mimeType].length > 0;
+         }
+
+         function isKeyboardPasteEvent(e) {
+            return (VK.metaKeyPressed(e) && e.keyCode == 86) || (e.shiftKey && e.keyCode == 45);
+         }
+
+         function registerEventHandlers() {
+            editor.on('keydown', function(e) {
+               function removePasteBinOnKeyUp(e) {
+                  // Ctrl+V or Shift+Insert
+                  if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
+                     removePasteBin();
+                  }
+               }
+
+               // Ctrl+V or Shift+Insert
+               if (isKeyboardPasteEvent(e) && !e.isDefaultPrevented()) {
+                  keyboardPastePlainTextState = e.shiftKey && e.keyCode == 86;
+
+                  // Edge case on Safari on Mac where it doesn't handle Cmd+Shift+V correctly
+                  // it fires the keydown but no paste or keyup so we are left with a paste bin
+                  if (keyboardPastePlainTextState && Env.webkit && navigator.userAgent.indexOf('Version/') != -1) {
+                     return;
+                  }
+
+                  // Prevent undoManager keydown handler from making an undo level with the pastebin in it
+                  e.stopImmediatePropagation();
+
+                  keyboardPasteTimeStamp = new Date().getTime();
+
+                  // IE doesn't support Ctrl+Shift+V and it doesn't even produce a paste event
+                  // so lets fake a paste event and let IE use the execCommand/dataTransfer methods
+                  if (Env.ie && keyboardPastePlainTextState) {
+                     e.preventDefault();
+                     editor.fire('paste', {ieFake: true});
+                     return;
+                  }
+
+                  removePasteBin();
+                  createPasteBin();
+
+                  // Remove pastebin if we get a keyup and no paste event
+                  // For example pasting a file in IE 11 will not produce a paste event
+                  editor.once('keyup', removePasteBinOnKeyUp);
+                  editor.once('paste', function() {
+                     editor.off('keyup', removePasteBinOnKeyUp);
+                  });
+               }
+            });
+
+            function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode) {
+               var content;
+
+               // Grab HTML from Clipboard API or paste bin as a fallback
+               if (hasContentType(clipboardContent, 'text/html')) {
+                  content = clipboardContent['text/html'];
+               } else {
+                  content = getPasteBinHtml();
+
+                  // If paste bin is empty try using plain text mode
+                  // since that is better than nothing right
+                  if (content == pasteBinDefaultContent) {
+                     plainTextMode = true;
+                  }
+               }
+
+               content = Utils.trimHtml(content);
+
+               // WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
+               // so we need to force plain text mode in this case
+               if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
+                  plainTextMode = true;
+               }
+
+               removePasteBin();
+
+               // If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
+               if (!content.length) {
+                  plainTextMode = true;
+               }
+
+               // Grab plain text from Clipboard API or convert existing HTML to plain text
+               if (plainTextMode) {
+                  // Use plain text contents from Clipboard API unless the HTML contains paragraphs then
+                  // we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
+                  if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+                     content = clipboardContent['text/plain'];
+                  } else {
+                     content = Utils.innerText(content);
+                  }
+               }
+
+               // If the content is the paste bin default HTML then it was
+               // impossible to get the cliboard data out.
+               if (content == pasteBinDefaultContent) {
+                  if (!isKeyBoardPaste) {
+                     editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+                  }
+
+                  return;
+               }
+
+               if (plainTextMode) {
+                  pasteText(content);
+               } else {
+                  pasteHtml(content);
+               }
+            }
+
+            var getLastRng = function() {
+               return lastRng || editor.selection.getRng();
+            };
+
+            editor.on('paste', function(e) {
+               // Getting content from the Clipboard can take some time
+               var clipboardTimer = new Date().getTime();
+               var clipboardContent = getClipboardContent(e);
+               var clipboardDelay = new Date().getTime() - clipboardTimer;
+
+               var isKeyBoardPaste = (new Date().getTime() - keyboardPasteTimeStamp - clipboardDelay) < 1000;
+               var plainTextMode = self.pasteFormat == "text" || keyboardPastePlainTextState;
+
+               keyboardPastePlainTextState = false;
+
+               if (e.isDefaultPrevented() || isBrokenAndroidClipboardEvent(e)) {
+                  removePasteBin();
+                  return;
+               }
+
+               if (!hasHtmlOrText(clipboardContent) && pasteImageData(e, getLastRng())) {
+                  removePasteBin();
+                  return;
+               }
+
+               // Not a keyboard paste prevent default paste and try to grab the clipboard contents using different APIs
+               if (!isKeyBoardPaste) {
+                  e.preventDefault();
+               }
+
+               // Try IE only method if paste isn't a keyboard paste
+               if (Env.ie && (!isKeyBoardPaste || e.ieFake)) {
+                  createPasteBin();
+
+                  editor.dom.bind(pasteBinElm, 'paste', function(e) {
+                     e.stopPropagation();
+                  });
+
+                  editor.getDoc().execCommand('Paste', false, null);
+                  clipboardContent["text/html"] = getPasteBinHtml();
+               }
+
+               // If clipboard API has HTML then use that directly
+               if (hasContentType(clipboardContent, 'text/html')) {
+                  e.preventDefault();
+                  insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode);
+               } else {
+                  Delay.setEditorTimeout(editor, function() {
+                     insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode);
+                  }, 0);
+               }
+            });
+
+            editor.on('dragstart dragend', function(e) {
+               draggingInternally = e.type == 'dragstart';
+            });
+
+            function isPlainTextFileUrl(content) {
+               var plainTextContent = content['text/plain'];
+               return plainTextContent ? plainTextContent.indexOf('file://') === 0 : false;
+            }
+
+            editor.on('drop', function(e) {
+               var dropContent, rng;
+
+               rng = getCaretRangeFromEvent(e);
+
+               if (e.isDefaultPrevented() || draggingInternally) {
+                  return;
+               }
+
+               dropContent = getDataTransferItems(e.dataTransfer);
+
+               if ((!hasHtmlOrText(dropContent) || isPlainTextFileUrl(dropContent)) && pasteImageData(e, rng)) {
+                  return;
+               }
+
+               if (rng && editor.settings.paste_filter_drop !== false) {
+                  var content = dropContent['mce-internal'] || dropContent['text/html'] || dropContent['text/plain'];
+
+                  if (content) {
+                     e.preventDefault();
+
+                     // FF 45 doesn't paint a caret when dragging in text in due to focus call by execCommand
+                     Delay.setEditorTimeout(editor, function() {
+                        editor.undoManager.transact(function() {
+                           if (dropContent['mce-internal']) {
+                              editor.execCommand('Delete');
+                           }
+
+                           editor.selection.setRng(rng);
+
+                           content = Utils.trimHtml(content);
+
+                           if (!dropContent['text/html']) {
+                              pasteText(content);
+                           } else {
+                              pasteHtml(content);
+                           }
+                        });
+                     });
+                  }
+               }
+            });
+
+            editor.on('dragover dragend', function(e) {
+               if (editor.settings.paste_data_images) {
+                  e.preventDefault();
+               }
+            });
+         }
+
+         self.pasteHtml = pasteHtml;
+         self.pasteText = pasteText;
+         self.pasteImageData = pasteImageData;
+
+         editor.on('preInit', function() {
+            registerEventHandlers();
+
+            // Remove all data images from paste for example from Gecko
+            // except internal images like video elements
+            editor.parser.addNodeFilter('img', function(nodes, name, args) {
+               function isPasteInsert(args) {
+                  return args.data && args.data.paste === true;
+               }
+
+               function remove(node) {
+                  if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
+                     node.remove();
+                  }
+               }
+
+               function isWebKitFakeUrl(src) {
+                  return src.indexOf("webkit-fake-url") === 0;
+               }
+
+               function isDataUri(src) {
+                  return src.indexOf("data:") === 0;
+               }
+
+               if (!editor.settings.paste_data_images && isPasteInsert(args)) {
+                  var i = nodes.length;
+
+                  while (i--) {
+                     var src = nodes[i].attributes.map.src;
+
+                     if (!src) {
+                        continue;
+                     }
+
+                     // Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
+                     if (isWebKitFakeUrl(src)) {
+                        remove(nodes[i]);
+                     } else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
+                        remove(nodes[i]);
+                     }
+                  }
+               }
+            });
+         });
+      };
+   });
+
+// Included from: js/tinymce/plugins/paste/classes/WordFilter.js
+
+   /**
+    * WordFilter.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /**
+    * This class parses word HTML into proper TinyMCE markup.
+    *
+    * @class tinymce.pasteplugin.WordFilter
+    * @private
+    */
+   define("tinymce/pasteplugin/WordFilter", [
+      "tinymce/util/Tools",
+      "tinymce/html/DomParser",
+      "tinymce/html/Schema",
+      "tinymce/html/Serializer",
+      "tinymce/html/Node",
+      "tinymce/pasteplugin/Utils"
+   ], function(Tools, DomParser, Schema, Serializer, Node, Utils) {
+      /**
+       * Checks if the specified content is from any of the following sources: MS Word/Office 365/Google docs.
+       */
+      function isWordContent(content) {
+         return (
+            (/<font face="Times New Roman"|class="?Mso|style="[^"]*\bmso-|style='[^'']*\bmso-|w:WordDocument/i).test(content) ||
+            (/class="OutlineElement/).test(content) ||
+            (/id="?docs\-internal\-guid\-/.test(content))
+         );
+      }
+
+      /**
+       * Checks if the specified text starts with "1. " or "a. " etc.
+       */
+      function isNumericList(text) {
+         var found, patterns;
+
+         patterns = [
+            /^[IVXLMCD]{1,2}\.[ \u00a0]/,  // Roman upper case
+            /^[ivxlmcd]{1,2}\.[ \u00a0]/,  // Roman lower case
+            /^[a-z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical a-z
+            /^[A-Z]{1,2}[\.\)][ \u00a0]/,  // Alphabetical A-Z
+            /^[0-9]+\.[ \u00a0]/,          // Numeric lists
+            /^[\u3007\u4e00\u4e8c\u4e09\u56db\u4e94\u516d\u4e03\u516b\u4e5d]+\.[ \u00a0]/, // Japanese
+            /^[\u58f1\u5f10\u53c2\u56db\u4f0d\u516d\u4e03\u516b\u4e5d\u62fe]+\.[ \u00a0]/  // Chinese
+         ];
+
+         text = text.replace(/^[\u00a0 ]+/, '');
+
+         Tools.each(patterns, function(pattern) {
+            if (pattern.test(text)) {
+               found = true;
+               return false;
+            }
+         });
+
+         return found;
+      }
+
+      function isBulletList(text) {
+         return /^[\s\u00a0]*[\u2022\u00b7\u00a7\u25CF]\s*/.test(text);
+      }
+
+      function WordFilter(editor) {
+         var settings = editor.settings;
+
+         editor.on('BeforePastePreProcess', function(e) {
+            var content = e.content, retainStyleProperties, validStyles;
+
+            // Remove google docs internal guid markers
+            content = content.replace(/<b[^>]+id="?docs-internal-[^>]*>/gi, '');
+            content = content.replace(/<br class="?Apple-interchange-newline"?>/gi, '');
+
+            retainStyleProperties = settings.paste_retain_style_properties;
+            if (retainStyleProperties) {
+               validStyles = Tools.makeMap(retainStyleProperties.split(/[, ]/));
+            }
+
+            /**
+             * Converts fake bullet and numbered lists to real semantic OL/UL.
+             *
+             * @param {tinymce.html.Node} node Root node to convert children of.
+             */
+            function convertFakeListsToProperLists(node) {
+               var currentListNode, prevListNode, lastLevel = 1;
+
+               function getText(node) {
+                  var txt = '';
+
+                  if (node.type === 3) {
+                     return node.value;
+                  }
+
+                  if ((node = node.firstChild)) {
+                     do {
+                        txt += getText(node);
+                     } while ((node = node.next));
+                  }
+
+                  return txt;
+               }
+
+               function trimListStart(node, regExp) {
+                  if (node.type === 3) {
+                     if (regExp.test(node.value)) {
+                        node.value = node.value.replace(regExp, '');
+                        return false;
+                     }
+                  }
+
+                  if ((node = node.firstChild)) {
+                     do {
+                        if (!trimListStart(node, regExp)) {
+                           return false;
+                        }
+                     } while ((node = node.next));
+                  }
+
+                  return true;
+               }
+
+               function removeIgnoredNodes(node) {
+                  if (node._listIgnore) {
+                     node.remove();
+                     return;
+                  }
+
+                  if ((node = node.firstChild)) {
+                     do {
+                        removeIgnoredNodes(node);
+                     } while ((node = node.next));
+                  }
+               }
+
+               function convertParagraphToLi(paragraphNode, listName, start) {
+                  var level = paragraphNode._listLevel || lastLevel;
+
+                  // Handle list nesting
+                  if (level != lastLevel) {
+                     if (level < lastLevel) {
+                        // Move to parent list
+                        if (currentListNode) {
+                           currentListNode = currentListNode.parent.parent;
+                        }
+                     } else {
+                        // Create new list
+                        prevListNode = currentListNode;
+                        currentListNode = null;
+                     }
+                  }
+
+                  if (!currentListNode || currentListNode.name != listName) {
+                     prevListNode = prevListNode || currentListNode;
+                     currentListNode = new Node(listName, 1);
+
+                     if (start > 1) {
+                        currentListNode.attr('start', '' + start);
+                     }
+
+                     paragraphNode.wrap(currentListNode);
+                  } else {
+                     currentListNode.append(paragraphNode);
+                  }
+
+                  paragraphNode.name = 'li';
+
+                  // Append list to previous list if it exists
+                  if (level > lastLevel && prevListNode) {
+                     prevListNode.lastChild.append(currentListNode);
+                  }
+
+                  lastLevel = level;
+
+                  // Remove start of list item "1. " or "&middot; " etc
+                  removeIgnoredNodes(paragraphNode);
+                  trimListStart(paragraphNode, /^\u00a0+/);
+                  trimListStart(paragraphNode, /^\s*([\u2022\u00b7\u00a7\u25CF]|\w+\.)/);
+                  trimListStart(paragraphNode, /^\u00a0+/);
+               }
+
+               // Build a list of all root level elements before we start
+               // altering them in the loop below.
+               var elements = [], child = node.firstChild;
+               while (typeof child !== 'undefined' && child !== null) {
+                  elements.push(child);
+
+                  child = child.walk();
+                  if (child !== null) {
+                     while (typeof child !== 'undefined' && child.parent !== node) {
+                        child = child.walk();
+                     }
+                  }
+               }
+
+               for (var i = 0; i < elements.length; i++) {
+                  node = elements[i];
+
+                  if (node.name == 'p' && node.firstChild) {
+                     // Find first text node in paragraph
+                     var nodeText = getText(node);
+
+                     // Detect unordered lists look for bullets
+                     if (isBulletList(nodeText)) {
+                        convertParagraphToLi(node, 'ul');
+                        continue;
+                     }
+
+                     // Detect ordered lists 1., a. or ixv.
+                     if (isNumericList(nodeText)) {
+                        // Parse OL start number
+                        var matches = /([0-9]+)\./.exec(nodeText);
+                        var start = 1;
+                        if (matches) {
+                           start = parseInt(matches[1], 10);
+                        }
+
+                        convertParagraphToLi(node, 'ol', start);
+                        continue;
+                     }
+
+                     // Convert paragraphs marked as lists but doesn't look like anything
+                     if (node._listLevel) {
+                        convertParagraphToLi(node, 'ul', 1);
+                        continue;
+                     }
+
+                     currentListNode = null;
+                  } else {
+                     // If the root level element isn't a p tag which can be
+                     // processed by convertParagraphToLi, it interrupts the
+                     // lists, causing a new list to start instead of having
+                     // elements from the next list inserted above this tag.
+                     prevListNode = currentListNode;
+                     currentListNode = null;
+                  }
+               }
+            }
+
+            function filterStyles(node, styleValue) {
+               var outputStyles = {}, matches, styles = editor.dom.parseStyle(styleValue);
+
+               Tools.each(styles, function(value, name) {
+                  // Convert various MS styles to W3C styles
+                  switch (name) {
+                     case 'mso-list':
+                        // Parse out list indent level for lists
+                        matches = /\w+ \w+([0-9]+)/i.exec(styleValue);
+                        if (matches) {
+                           node._listLevel = parseInt(matches[1], 10);
+                        }
+
+                        // Remove these nodes <span style="mso-list:Ignore">o</span>
+                        // Since the span gets removed we mark the text node and the span
+                        if (/Ignore/i.test(value) && node.firstChild) {
+                           node._listIgnore = true;
+                           node.firstChild._listIgnore = true;
+                        }
+
+                        break;
+
+                     case "horiz-align":
+                        name = "text-align";
+                        break;
+
+                     case "vert-align":
+                        name = "vertical-align";
+                        break;
+
+                     case "font-color":
+                     case "mso-foreground":
+                        name = "color";
+                        break;
+
+                     case "mso-background":
+                     case "mso-highlight":
+                        name = "background";
+                        break;
+
+                     case "font-weight":
+                     case "font-style":
+                        if (value != "normal") {
+                           outputStyles[name] = value;
+                        }
+                        return;
+
+                     case "mso-element":
+                        // Remove track changes code
+                        if (/^(comment|comment-list)$/i.test(value)) {
+                           node.remove();
+                           return;
+                        }
+
+                        break;
+                  }
+
+                  if (name.indexOf('mso-comment') === 0) {
+                     node.remove();
+                     return;
+                  }
+
+                  // Never allow mso- prefixed names
+                  if (name.indexOf('mso-') === 0) {
+                     return;
+                  }
+
+                  // Output only valid styles
+                  if (retainStyleProperties == "all" || (validStyles && validStyles[name])) {
+                     outputStyles[name] = value;
+                  }
+               });
+
+               // Convert bold style to "b" element
+               if (/(bold)/i.test(outputStyles["font-weight"])) {
+                  delete outputStyles["font-weight"];
+                  node.wrap(new Node("b", 1));
+               }
+
+               // Convert italic style to "i" element
+               if (/(italic)/i.test(outputStyles["font-style"])) {
+                  delete outputStyles["font-style"];
+                  node.wrap(new Node("i", 1));
+               }
+
+               // Serialize the styles and see if there is something left to keep
+               outputStyles = editor.dom.serializeStyle(outputStyles, node.name);
+               if (outputStyles) {
+                  return outputStyles;
+               }
+
+               return null;
+            }
+
+            if (settings.paste_enable_default_filters === false) {
+               return;
+            }
+
+            // Detect is the contents is Word junk HTML
+            if (isWordContent(e.content)) {
+               e.wordContent = true; // Mark it for other processors
+
+               // Remove basic Word junk
+               content = Utils.filter(content, [
+                  // Word comments like conditional comments etc
+                  /<!--[\s\S]+?-->/gi,
+
+                  // Remove comments, scripts (e.g., msoShowComment), XML tag, VML content,
+                  // MS Office namespaced tags, and a few other tags
+                  /<(!|script[^>]*>.*?<\/script(?=[>\s])|\/?(\?xml(:\w+)?|img|meta|link|style|\w:\w+)(?=[\s\/>]))[^>]*>/gi,
+
+                  // Convert <s> into <strike> for line-though
+                  [/<(\/?)s>/gi, "<$1strike>"],
+
+                  // Replace nsbp entites to char since it's easier to handle
+                  [/&nbsp;/gi, "\u00a0"],
+
+                  // Convert <span style="mso-spacerun:yes">___</span> to string of alternating
+                  // breaking/non-breaking spaces of same length
+                  [/<span\s+style\s*=\s*"\s*mso-spacerun\s*:\s*yes\s*;?\s*"\s*>([\s\u00a0]*)<\/span>/gi,
+                     function(str, spaces) {
+                        return (spaces.length > 0) ?
+                           spaces.replace(/./, " ").slice(Math.floor(spaces.length / 2)).split("").join("\u00a0") : "";
+                     }
+                  ]
+               ]);
+
+               var validElements = settings.paste_word_valid_elements;
+               if (!validElements) {
+                  validElements = (
+                     '-strong/b,-em/i,-u,-span,-p,-ol,-ul,-li,-h1,-h2,-h3,-h4,-h5,-h6,' +
+                     '-p/div,-a[href|name],sub,sup,strike,br,del,table[width],tr,' +
+                     'td[colspan|rowspan|width],th[colspan|rowspan|width],thead,tfoot,tbody'
+                  );
+               }
+
+               // Setup strict schema
+               var schema = new Schema({
+                  valid_elements: validElements,
+                  valid_children: '-li[p]'
+               });
+
+               // Add style/class attribute to all element rules since the user might have removed them from
+               // paste_word_valid_elements config option and we need to check them for properties
+               Tools.each(schema.elements, function(rule) {
+                  /*eslint dot-notation:0*/
+                  if (!rule.attributes["class"]) {
+                     rule.attributes["class"] = {};
+                     rule.attributesOrder.push("class");
+                  }
+
+                  if (!rule.attributes.style) {
+                     rule.attributes.style = {};
+                     rule.attributesOrder.push("style");
+                  }
+               });
+
+               // Parse HTML into DOM structure
+               var domParser = new DomParser({}, schema);
+
+               // Filter styles to remove "mso" specific styles and convert some of them
+               domParser.addAttributeFilter('style', function(nodes) {
+                  var i = nodes.length, node;
+
+                  while (i--) {
+                     node = nodes[i];
+                     node.attr('style', filterStyles(node, node.attr('style')));
+
+                     // Remove pointess spans
+                     if (node.name == 'span' && node.parent && !node.attributes.length) {
+                        node.unwrap();
+                     }
+                  }
+               });
+
+               // Check the class attribute for comments or del items and remove those
+               domParser.addAttributeFilter('class', function(nodes) {
+                  var i = nodes.length, node, className;
+
+                  while (i--) {
+                     node = nodes[i];
+
+                     className = node.attr('class');
+                     if (/^(MsoCommentReference|MsoCommentText|msoDel)$/i.test(className)) {
+                        node.remove();
+                     }
+
+                     node.attr('class', null);
+                  }
+               });
+
+               // Remove all del elements since we don't want the track changes code in the editor
+               domParser.addNodeFilter('del', function(nodes) {
+                  var i = nodes.length;
+
+                  while (i--) {
+                     nodes[i].remove();
+                  }
+               });
+
+               // Keep some of the links and anchors
+               domParser.addNodeFilter('a', function(nodes) {
+                  var i = nodes.length, node, href, name;
+
+                  while (i--) {
+                     node = nodes[i];
+                     href = node.attr('href');
+                     name = node.attr('name');
+
+                     if (href && href.indexOf('#_msocom_') != -1) {
+                        node.remove();
+                        continue;
+                     }
+
+                     if (href && href.indexOf('file://') === 0) {
+                        href = href.split('#')[1];
+                        if (href) {
+                           href = '#' + href;
+                        }
+                     }
+
+                     if (!href && !name) {
+                        node.unwrap();
+                     } else {
+                        // Remove all named anchors that aren't specific to TOC, Footnotes or Endnotes
+                        if (name && !/^_?(?:toc|edn|ftn)/i.test(name)) {
+                           node.unwrap();
+                           continue;
+                        }
+
+                        node.attr({
+                           href: href,
+                           name: name
+                        });
+                     }
+                  }
+               });
+
+               // Parse into DOM structure
+               var rootNode = domParser.parse(content);
+
+               // Process DOM
+               if (settings.paste_convert_word_fake_lists !== false) {
+                  convertFakeListsToProperLists(rootNode);
+               }
+
+               // Serialize DOM back to HTML
+               e.content = new Serializer({
+                  validate: settings.validate
+               }, schema).serialize(rootNode);
+            }
+         });
+      }
+
+      WordFilter.isWordContent = isWordContent;
+
+      return WordFilter;
+   });
+
+// Included from: js/tinymce/plugins/paste/classes/Quirks.js
+
+   /**
+    * Quirks.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /**
+    * This class contains various fixes for browsers. These issues can not be feature
+    * detected since we have no direct control over the clipboard. However we might be able
+    * to remove some of these fixes once the browsers gets updated/fixed.
+    *
+    * @class tinymce.pasteplugin.Quirks
+    * @private
+    */
+   define("tinymce/pasteplugin/Quirks", [
+      "tinymce/Env",
+      "tinymce/util/Tools",
+      "tinymce/pasteplugin/WordFilter",
+      "tinymce/pasteplugin/Utils"
+   ], function(Env, Tools, WordFilter, Utils) {
+      "use strict";
+
+      return function(editor) {
+         function addPreProcessFilter(filterFunc) {
+            editor.on('BeforePastePreProcess', function(e) {
+               e.content = filterFunc(e.content);
+            });
+         }
+
+         function addPostProcessFilter(filterFunc) {
+            editor.on('PastePostProcess', function(e) {
+               filterFunc(e.node);
+            });
+         }
+
+         /**
+          * Removes BR elements after block elements. IE9 has a nasty bug where it puts a BR element after each
+          * block element when pasting from word. This removes those elements.
+          *
+          * This:
+          *  <p>a</p><br><p>b</p>
+          *
+          * Becomes:
+          *  <p>a</p><p>b</p>
+          */
+         function removeExplorerBrElementsAfterBlocks(html) {
+            // Only filter word specific content
+            if (!WordFilter.isWordContent(html)) {
+               return html;
+            }
+
+            // Produce block regexp based on the block elements in schema
+            var blockElements = [];
+
+            Tools.each(editor.schema.getBlockElements(), function(block, blockName) {
+               blockElements.push(blockName);
+            });
+
+            var explorerBlocksRegExp = new RegExp(
+               '(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*(<\\/?(' + blockElements.join('|') + ')[^>]*>)(?:<br>&nbsp;[\\s\\r\\n]+|<br>)*',
+               'g'
+            );
+
+            // Remove BR:s from: <BLOCK>X</BLOCK><BR>
+            html = Utils.filter(html, [
+               [explorerBlocksRegExp, '$1']
+            ]);
+
+            // IE9 also adds an extra BR element for each soft-linefeed and it also adds a BR for each word wrap break
+            html = Utils.filter(html, [
+               [/<br><br>/g, '<BR><BR>'], // Replace multiple BR elements with uppercase BR to keep them intact
+               [/<br>/g, ' '],            // Replace single br elements with space since they are word wrap BR:s
+               [/<BR><BR>/g, '<br>']      // Replace back the double brs but into a single BR
+            ]);
+
+            return html;
+         }
+
+         /**
+          * WebKit has a nasty bug where the all computed styles gets added to style attributes when copy/pasting contents.
+          * This fix solves that by simply removing the whole style attribute.
+          *
+          * The paste_webkit_styles option can be set to specify what to keep:
+          *  paste_webkit_styles: "none" // Keep no styles
+          *  paste_webkit_styles: "all", // Keep all of them
+          *  paste_webkit_styles: "font-weight color" // Keep specific ones
+          *
+          * @param {String} content Content that needs to be processed.
+          * @return {String} Processed contents.
+          */
+         function removeWebKitStyles(content) {
+            // Passthrough all styles from Word and let the WordFilter handle that junk
+            if (WordFilter.isWordContent(content)) {
+               return content;
+            }
+
+            // Filter away styles that isn't matching the target node
+            var webKitStyles = editor.settings.paste_webkit_styles;
+
+            if (editor.settings.paste_remove_styles_if_webkit === false || webKitStyles == "all") {
+               return content;
+            }
+
+            if (webKitStyles) {
+               webKitStyles = webKitStyles.split(/[, ]/);
+            }
+
+            // Keep specific styles that doesn't match the current node computed style
+            if (webKitStyles) {
+               var dom = editor.dom, node = editor.selection.getNode();
+
+               content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, function(all, before, value, after) {
+                  var inputStyles = dom.parseStyle(value, 'span'), outputStyles = {};
+
+                  if (webKitStyles === "none") {
+                     return before + after;
+                  }
+
+                  for (var i = 0; i < webKitStyles.length; i++) {
+                     var inputValue = inputStyles[webKitStyles[i]], currentValue = dom.getStyle(node, webKitStyles[i], true);
+
+                     if (/color/.test(webKitStyles[i])) {
+                        inputValue = dom.toHex(inputValue);
+                        currentValue = dom.toHex(currentValue);
+                     }
+
+                     if (currentValue != inputValue) {
+                        outputStyles[webKitStyles[i]] = inputValue;
+                     }
+                  }
+
+                  outputStyles = dom.serializeStyle(outputStyles, 'span');
+                  if (outputStyles) {
+                     return before + ' style="' + outputStyles + '"' + after;
+                  }
+
+                  return before + after;
+               });
+            } else {
+               // Remove all external styles
+               content = content.replace(/(<[^>]+) style="([^"]*)"([^>]*>)/gi, '$1$3');
+            }
+
+            // Keep internal styles
+            content = content.replace(/(<[^>]+) data-mce-style="([^"]+)"([^>]*>)/gi, function(all, before, value, after) {
+               return before + ' style="' + value + '"' + after;
+            });
+
+            return content;
+         }
+
+         function removeUnderlineAndFontInAnchor(root) {
+            editor.$('a', root).find('font,u').each(function(i, node) {
+               editor.dom.remove(node, true);
+            });
+         }
+
+         // Sniff browsers and apply fixes since we can't feature detect
+         if (Env.webkit) {
+            addPreProcessFilter(removeWebKitStyles);
+         }
+
+         if (Env.ie) {
+            addPreProcessFilter(removeExplorerBrElementsAfterBlocks);
+            addPostProcessFilter(removeUnderlineAndFontInAnchor);
+         }
+      };
+   });
+
+// Included from: js/tinymce/plugins/paste/classes/Plugin.js
+
+   /**
+    * Plugin.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   /**
+    * This class contains the tinymce plugin logic for the paste plugin.
+    *
+    * @class tinymce.pasteplugin.Plugin
+    * @private
+    */
+   define("tinymce/pasteplugin/Plugin", [
+      "tinymce/PluginManager",
+      "tinymce/pasteplugin/Clipboard",
+      "tinymce/pasteplugin/WordFilter",
+      "tinymce/pasteplugin/Quirks"
+   ], function(PluginManager, Clipboard, WordFilter, Quirks) {
+      var userIsInformed;
+
+      PluginManager.add('paste', function(editor) {
+         var self = this, clipboard, settings = editor.settings;
+
+         function isUserInformedAboutPlainText() {
+            return userIsInformed || editor.settings.paste_plaintext_inform === false;
+         }
+
+         function togglePlainTextPaste() {
+            if (clipboard.pasteFormat == "text") {
+               clipboard.pasteFormat = "html";
+               editor.fire('PastePlainTextToggle', {state: false});
+            } else {
+               clipboard.pasteFormat = "text";
+               editor.fire('PastePlainTextToggle', {state: true});
+
+               if (!isUserInformedAboutPlainText()) {
+                  var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
+                     'be pasted as plain text until you toggle this option off.');
+
+                  editor.notificationManager.open({
+                     text: message,
+                     type: 'info'
+                  });
+
+                  userIsInformed = true;
+               }
+            }
+
+            editor.focus();
+         }
+
+         function stateChange() {
+            var self = this;
+
+            self.active(clipboard.pasteFormat === 'text');
+
+            editor.on('PastePlainTextToggle', function (e) {
+               self.active(e.state);
+            });
+         }
+
+         // draw back if power version is requested and registered
+         if (/(^|[ ,])powerpaste([, ]|$)/.test(settings.plugins) && PluginManager.get('powerpaste')) {
+            /*eslint no-console:0 */
+            if (typeof console !== "undefined" && console.log) {
+               console.log("PowerPaste is incompatible with Paste plugin! Remove 'paste' from the 'plugins' option.");
+            }
+            return;
+         }
+
+         self.clipboard = clipboard = new Clipboard(editor);
+         self.quirks = new Quirks(editor);
+         self.wordFilter = new WordFilter(editor);
+
+         if (editor.settings.paste_as_text) {
+            self.clipboard.pasteFormat = "text";
+         }
+
+         if (settings.paste_preprocess) {
+            editor.on('PastePreProcess', function(e) {
+               settings.paste_preprocess.call(self, self, e);
+            });
+         }
+
+         if (settings.paste_postprocess) {
+            editor.on('PastePostProcess', function(e) {
+               settings.paste_postprocess.call(self, self, e);
+            });
+         }
+
+         editor.addCommand('mceInsertClipboardContent', function(ui, value) {
+            if (value.content) {
+               self.clipboard.pasteHtml(value.content);
+            }
+
+            if (value.text) {
+               self.clipboard.pasteText(value.text);
+            }
+         });
+
+         // Block all drag/drop events
+         if (editor.settings.paste_block_drop) {
+            editor.on('dragend dragover draggesture dragdrop drop drag', function(e) {
+               e.preventDefault();
+               e.stopPropagation();
+            });
+         }
+
+         // Prevent users from dropping data images on Gecko
+         if (!editor.settings.paste_data_images) {
+            editor.on('drop', function(e) {
+               var dataTransfer = e.dataTransfer;
+
+               if (dataTransfer && dataTransfer.files && dataTransfer.files.length > 0) {
+                  e.preventDefault();
+               }
+            });
+         }
+
+         editor.addCommand('mceTogglePlainTextPaste', togglePlainTextPaste);
+
+         editor.addButton('pastetext', {
+            icon: 'pastetext',
+            tooltip: 'Paste as text',
+            onclick: togglePlainTextPaste,
+            onPostRender: stateChange
+         });
+
+         editor.addMenuItem('pastetext', {
+            text: 'Paste as text',
+            selectable: true,
+            active: clipboard.pasteFormat,
+            onclick: togglePlainTextPaste,
+            onPostRender: stateChange
+         });
+      });
+   });
+
+   expose(["tinymce/pasteplugin/Utils"]);
+})(window);
+(function () {
+
+   var defs = {}; // id -> {dependencies, definition, instance (possibly undefined)}
+
+// Used when there is no 'main' module.
+// The name is probably (hopefully) unique so minification removes for releases.
+   var register_3795 = function (id) {
+      var module = dem(id);
+      var fragments = id.split('.');
+      var target = Function('return this;')();
+      for (var i = 0; i < fragments.length - 1; ++i) {
+         if (target[fragments[i]] === undefined)
+            target[fragments[i]] = {};
+         target = target[fragments[i]];
+      }
+      target[fragments[fragments.length - 1]] = module;
+   };
+
+   var instantiate = function (id) {
+      var actual = defs[id];
+      var dependencies = actual.deps;
+      var definition = actual.defn;
+      var len = dependencies.length;
+      var instances = new Array(len);
+      for (var i = 0; i < len; ++i)
+         instances[i] = dem(dependencies[i]);
+      var defResult = definition.apply(null, instances);
+      if (defResult === undefined)
+         throw 'module [' + id + '] returned undefined';
+      actual.instance = defResult;
+   };
+
+   var def = function (id, dependencies, definition) {
+      if (typeof id !== 'string')
+         throw 'module id must be a string';
+      else if (dependencies === undefined)
+         throw 'no dependencies for ' + id;
+      else if (definition === undefined)
+         throw 'no definition function for ' + id;
+      defs[id] = {
+         deps: dependencies,
+         defn: definition,
+         instance: undefined
+      };
+   };
+
+   var dem = function (id) {
+      var actual = defs[id];
+      if (actual === undefined)
+         throw 'module [' + id + '] was undefined';
+      else if (actual.instance === undefined)
+         instantiate(id);
+      return actual.instance;
+   };
+
+   var req = function (ids, callback) {
+      var len = ids.length;
+      var instances = new Array(len);
+      for (var i = 0; i < len; ++i)
+         instances.push(dem(ids[i]));
+      callback.apply(null, callback);
+   };
+
+   var ephox = {};
+
+   ephox.bolt = {
+      module: {
+         api: {
+            define: def,
+            require: req,
+            demand: dem
+         }
+      }
+   };
+
+   var define = def;
+   var require = req;
+   var demand = dem;
+// this helps with minificiation when using a lot of global references
+   var defineGlobal = function (id, ref) {
+      define(id, [], function () { return ref; });
+   };
+   /*jsc
+    ["tinymce.lists.Plugin","global!tinymce.PluginManager","global!tinymce.util.Tools","global!tinymce.util.VK","tinymce.lists.core.NodeType","tinymce.lists.core.Delete","tinymce.lists.actions.Indent","tinymce.lists.actions.Outdent","tinymce.lists.actions.ToggleList","global!tinymce.dom.TreeWalker","global!tinymce.dom.RangeUtils","tinymce.lists.core.Selection","tinymce.lists.core.Bookmark","tinymce.lists.core.Range","tinymce.lists.core.NormalizeLists","global!tinymce.dom.BookmarkManager","tinymce.lists.core.SplitList","global!tinymce.dom.DOMUtils.DOM","tinymce.lists.core.TextBlock","global!tinymce.Env"]
+    jsc*/
+   defineGlobal("global!tinymce.PluginManager", tinymce.PluginManager);
+   defineGlobal("global!tinymce.util.Tools", tinymce.util.Tools);
+   defineGlobal("global!tinymce.util.VK", tinymce.util.VK);
+   /**
+    * NodeType.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.NodeType", [
+   ], function () {
+      var isTextNode = function (node) {
+         return node && node.nodeType === 3;
+      };
+
+      var isListNode = function (node) {
+         return node && (/^(OL|UL|DL)$/).test(node.nodeName);
+      };
+
+      var isListItemNode = function (node) {
+         return node && /^(LI|DT|DD)$/.test(node.nodeName);
+      };
+
+      var isBr = function (node) {
+         return node && node.nodeName === 'BR';
+      };
+
+      var isFirstChild = function (node) {
+         return node.parentNode.firstChild === node;
+      };
+
+      var isLastChild = function (node) {
+         return node.parentNode.lastChild === node;
+      };
+
+      var isTextBlock = function (editor, node) {
+         return node && !!editor.schema.getTextBlockElements()[node.nodeName];
+      };
+
+      var isBogusBr = function (dom, node) {
+         if (!isBr(node)) {
+            return false;
+         }
+
+         if (dom.isBlock(node.nextSibling) && !isBr(node.previousSibling)) {
+            return true;
+         }
+
+         return false;
+      };
+
+      var isEmpty = function (dom, elm, keepBookmarks) {
+         var empty = dom.isEmpty(elm);
+
+         if (keepBookmarks && dom.select('span[data-mce-type=bookmark]', elm).length > 0) {
+            return false;
+         }
+
+         return empty;
+      };
+
+      var isChildOfBody = function (dom, elm) {
+         return dom.isChildOf(elm, dom.getRoot());
+      };
+
+      return {
+         isTextNode: isTextNode,
+         isListNode: isListNode,
+         isListItemNode: isListItemNode,
+         isBr: isBr,
+         isFirstChild: isFirstChild,
+         isLastChild: isLastChild,
+         isTextBlock: isTextBlock,
+         isBogusBr: isBogusBr,
+         isEmpty: isEmpty,
+         isChildOfBody: isChildOfBody
+      };
+   });
+
+
+   defineGlobal("global!tinymce.dom.TreeWalker", tinymce.dom.TreeWalker);
+   defineGlobal("global!tinymce.dom.RangeUtils", tinymce.dom.RangeUtils);
+   /**
+    * Selection.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.Selection", [
+      "global!tinymce.util.Tools",
+      "tinymce.lists.core.NodeType"
+   ], function (Tools, NodeType) {
+      var getSelectedListItems = function (editor) {
+         return Tools.grep(editor.selection.getSelectedBlocks(), function (block) {
+            return NodeType.isListItemNode(block);
+         });
+      };
+
+      return {
+         getSelectedListItems: getSelectedListItems
+      };
+   });
+
+
+   defineGlobal("global!tinymce.dom.DOMUtils.DOM", tinymce.dom.DOMUtils.DOM);
+   /**
+    * Range.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.Range", [
+      "global!tinymce.dom.RangeUtils",
+      "tinymce.lists.core.NodeType"
+   ], function (RangeUtils, NodeType) {
+      var getNormalizedEndPoint = function (container, offset) {
+         var node = RangeUtils.getNode(container, offset);
+
+         if (NodeType.isListItemNode(container) && NodeType.isTextNode(node)) {
+            var textNodeOffset = offset >= container.childNodes.length ? node.data.length : 0;
+            return {container: node, offset: textNodeOffset};
+         }
+
+         return {container: container, offset: offset};
+      };
+
+      var normalizeRange = function (rng) {
+         var outRng = rng.cloneRange();
+
+         var rangeStart = getNormalizedEndPoint(rng.startContainer, rng.startOffset);
+         outRng.setStart(rangeStart.container, rangeStart.offset);
+
+         var rangeEnd = getNormalizedEndPoint(rng.endContainer, rng.endOffset);
+         outRng.setEnd(rangeEnd.container, rangeEnd.offset);
+
+         return outRng;
+      };
+
+      return {
+         getNormalizedEndPoint: getNormalizedEndPoint,
+         normalizeRange: normalizeRange
+      };
+   });
+
+
+   /**
+    * Bookmark.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.Bookmark", [
+      "global!tinymce.dom.DOMUtils.DOM",
+      "tinymce.lists.core.NodeType",
+      "tinymce.lists.core.Range"
+   ], function (DOM, NodeType, Range) {
+      /**
+       * Returns a range bookmark. This will convert indexed bookmarks into temporary span elements with
+       * index 0 so that they can be restored properly after the DOM has been modified. Text bookmarks will not have spans
+       * added to them since they can be restored after a dom operation.
+       *
+       * So this: <p><b>|</b><b>|</b></p>
+       * becomes: <p><b><span data-mce-type="bookmark">|</span></b><b data-mce-type="bookmark">|</span></b></p>
+       *
+       * @param  {DOMRange} rng DOM Range to get bookmark on.
+       * @return {Object} Bookmark object.
+       */
+      var createBookmark = function (rng) {
+         var bookmark = {};
+
+         var setupEndPoint = function (start) {
+            var offsetNode, container, offset;
+
+            container = rng[start ? 'startContainer' : 'endContainer'];
+            offset = rng[start ? 'startOffset' : 'endOffset'];
+
+            if (container.nodeType === 1) {
+               offsetNode = DOM.create('span', {'data-mce-type': 'bookmark'});
+
+               if (container.hasChildNodes()) {
+                  offset = Math.min(offset, container.childNodes.length - 1);
+
+                  if (start) {
+                     container.insertBefore(offsetNode, container.childNodes[offset]);
+                  } else {
+                     DOM.insertAfter(offsetNode, container.childNodes[offset]);
+                  }
+               } else {
+                  container.appendChild(offsetNode);
+               }
+
+               container = offsetNode;
+               offset = 0;
+            }
+
+            bookmark[start ? 'startContainer' : 'endContainer'] = container;
+            bookmark[start ? 'startOffset' : 'endOffset'] = offset;
+         };
+
+         setupEndPoint(true);
+
+         if (!rng.collapsed) {
+            setupEndPoint();
+         }
+
+         return bookmark;
+      };
+
+      var resolveBookmark = function (bookmark) {
+         function restoreEndPoint (start) {
+            var container, offset, node;
+
+            var nodeIndex = function (container) {
+               var node = container.parentNode.firstChild, idx = 0;
+
+               while (node) {
+                  if (node === container) {
+                     return idx;
+                  }
+
+                  // Skip data-mce-type=bookmark nodes
+                  if (node.nodeType !== 1 || node.getAttribute('data-mce-type') !== 'bookmark') {
+                     idx++;
+                  }
+
+                  node = node.nextSibling;
+               }
+
+               return -1;
+            };
+
+            container = node = bookmark[start ? 'startContainer' : 'endContainer'];
+            offset = bookmark[start ? 'startOffset' : 'endOffset'];
+
+            if (!container) {
+               return;
+            }
+
+            if (container.nodeType === 1) {
+               offset = nodeIndex(container);
+               container = container.parentNode;
+               DOM.remove(node);
+            }
+
+            bookmark[start ? 'startContainer' : 'endContainer'] = container;
+            bookmark[start ? 'startOffset' : 'endOffset'] = offset;
+         }
+
+         restoreEndPoint(true);
+         restoreEndPoint();
+
+         var rng = DOM.createRng();
+
+         rng.setStart(bookmark.startContainer, bookmark.startOffset);
+
+         if (bookmark.endContainer) {
+            rng.setEnd(bookmark.endContainer, bookmark.endOffset);
+         }
+
+         return Range.normalizeRange(rng);
+      };
+
+      return {
+         createBookmark: createBookmark,
+         resolveBookmark: resolveBookmark
+      };
+   });
+
+
+   /**
+    * NormalizeLists.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.NormalizeLists", [
+      "global!tinymce.dom.DOMUtils.DOM",
+      "global!tinymce.util.Tools",
+      "tinymce.lists.core.NodeType"
+   ], function (DOM, Tools, NodeType) {
+      var normalizeList = function (dom, ul) {
+         var sibling, parentNode = ul.parentNode;
+
+         // Move UL/OL to previous LI if it's the only child of a LI
+         if (parentNode.nodeName === 'LI' && parentNode.firstChild === ul) {
+            sibling = parentNode.previousSibling;
+            if (sibling && sibling.nodeName === 'LI') {
+               sibling.appendChild(ul);
+
+               if (NodeType.isEmpty(dom, parentNode)) {
+                  DOM.remove(parentNode);
+               }
+            } else {
+               DOM.setStyle(parentNode, 'listStyleType', 'none');
+            }
+         }
+
+         // Append OL/UL to previous LI if it's in a parent OL/UL i.e. old HTML4
+         if (NodeType.isListNode(parentNode)) {
+            sibling = parentNode.previousSibling;
+            if (sibling && sibling.nodeName === 'LI') {
+               sibling.appendChild(ul);
+            }
+         }
+      };
+
+      var normalizeLists = function (dom, element) {
+         Tools.each(Tools.grep(dom.select('ol,ul', element)), function (ul) {
+            normalizeList(dom, ul);
+         });
+      };
+
+      return {
+         normalizeList: normalizeList,
+         normalizeLists: normalizeLists
+      };
+   });
+
+
+   defineGlobal("global!tinymce.dom.BookmarkManager", tinymce.dom.BookmarkManager);
+   defineGlobal("global!tinymce.Env", tinymce.Env);
+   /**
+    * TextBlock.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.TextBlock", [
+      "global!tinymce.dom.DOMUtils.DOM",
+      "global!tinymce.Env"
+   ], function (DOM, Env) {
+      var createNewTextBlock = function (editor, contentNode, blockName) {
+         var node, textBlock, fragment = DOM.createFragment(), hasContentNode;
+         var blockElements = editor.schema.getBlockElements();
+
+         if (editor.settings.forced_root_block) {
+            blockName = blockName || editor.settings.forced_root_block;
+         }
+
+         if (blockName) {
+            textBlock = DOM.create(blockName);
+
+            if (textBlock.tagName === editor.settings.forced_root_block) {
+               DOM.setAttribs(textBlock, editor.settings.forced_root_block_attrs);
+            }
+
+            fragment.appendChild(textBlock);
+         }
+
+         if (contentNode) {
+            while ((node = contentNode.firstChild)) {
+               var nodeName = node.nodeName;
+
+               if (!hasContentNode && (nodeName !== 'SPAN' || node.getAttribute('data-mce-type') !== 'bookmark')) {
+                  hasContentNode = true;
+               }
+
+               if (blockElements[nodeName]) {
+                  fragment.appendChild(node);
+                  textBlock = null;
+               } else {
+                  if (blockName) {
+                     if (!textBlock) {
+                        textBlock = DOM.create(blockName);
+                        fragment.appendChild(textBlock);
+                     }
+
+                     textBlock.appendChild(node);
+                  } else {
+                     fragment.appendChild(node);
+                  }
+               }
+            }
+         }
+
+         if (!editor.settings.forced_root_block) {
+            fragment.appendChild(DOM.create('br'));
+         } else {
+            // BR is needed in empty blocks on non IE browsers
+            if (!hasContentNode && (!Env.ie || Env.ie > 10)) {
+               textBlock.appendChild(DOM.create('br', {'data-mce-bogus': '1'}));
+            }
+         }
+
+         return fragment;
+      };
+
+      return {
+         createNewTextBlock: createNewTextBlock
+      };
+   });
+
+   /**
+    * SplitList.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.SplitList", [
+      "global!tinymce.dom.DOMUtils.DOM",
+      "global!tinymce.util.Tools",
+      "tinymce.lists.core.TextBlock",
+      "tinymce.lists.core.NodeType"
+   ], function (DOM, Tools, TextBlock, NodeType) {
+      var splitList = function (editor, ul, li, newBlock) {
+         var tmpRng, fragment, bookmarks, node;
+
+         var removeAndKeepBookmarks = function (targetNode) {
+            Tools.each(bookmarks, function (node) {
+               targetNode.parentNode.insertBefore(node, li.parentNode);
+            });
+
+            DOM.remove(targetNode);
+         };
+
+         bookmarks = DOM.select('span[data-mce-type="bookmark"]', ul);
+         newBlock = newBlock || TextBlock.createNewTextBlock(editor, li);
+         tmpRng = DOM.createRng();
+         tmpRng.setStartAfter(li);
+         tmpRng.setEndAfter(ul);
+         fragment = tmpRng.extractContents();
+
+         for (node = fragment.firstChild; node; node = node.firstChild) {
+            if (node.nodeName === 'LI' && editor.dom.isEmpty(node)) {
+               DOM.remove(node);
+               break;
+            }
+         }
+
+         if (!editor.dom.isEmpty(fragment)) {
+            DOM.insertAfter(fragment, ul);
+         }
+
+         DOM.insertAfter(newBlock, ul);
+
+         if (NodeType.isEmpty(editor.dom, li.parentNode)) {
+            removeAndKeepBookmarks(li.parentNode);
+         }
+
+         DOM.remove(li);
+
+         if (NodeType.isEmpty(editor.dom, ul)) {
+            DOM.remove(ul);
+         }
+      };
+
+      return {
+         splitList: splitList
+      };
+   });
+
+
+   /**
+    * Outdent.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.actions.Outdent", [
+      "global!tinymce.dom.DOMUtils.DOM",
+      "tinymce.lists.core.NodeType",
+      "tinymce.lists.core.Bookmark",
+      "tinymce.lists.core.Selection",
+      "tinymce.lists.core.SplitList",
+      "tinymce.lists.core.NormalizeLists",
+      "tinymce.lists.core.TextBlock"
+   ], function (DOM, NodeType, Bookmark, Selection, SplitList, NormalizeLists, TextBlock) {
+      var removeEmptyLi = function (dom, li) {
+         if (NodeType.isEmpty(dom, li)) {
+            DOM.remove(li);
+         }
+      };
+
+      var outdent = function (editor, li) {
+         var ul = li.parentNode, ulParent = ul.parentNode, newBlock;
+
+         if (ul === editor.getBody()) {
+            return true;
+         }
+
+         if (li.nodeName === 'DD') {
+            DOM.rename(li, 'DT');
+            return true;
+         }
+
+         if (NodeType.isFirstChild(li) && NodeType.isLastChild(li)) {
+            if (ulParent.nodeName === "LI") {
+               DOM.insertAfter(li, ulParent);
+               removeEmptyLi(editor.dom, ulParent);
+               DOM.remove(ul);
+            } else if (NodeType.isListNode(ulParent)) {
+               DOM.remove(ul, true);
+            } else {
+               ulParent.insertBefore(TextBlock.createNewTextBlock(editor, li), ul);
+               DOM.remove(ul);
+            }
+
+            return true;
+         } else if (NodeType.isFirstChild(li)) {
+            if (ulParent.nodeName === "LI") {
+               DOM.insertAfter(li, ulParent);
+               li.appendChild(ul);
+               removeEmptyLi(editor.dom, ulParent);
+            } else if (NodeType.isListNode(ulParent)) {
+               ulParent.insertBefore(li, ul);
+            } else {
+               ulParent.insertBefore(TextBlock.createNewTextBlock(editor, li), ul);
+               DOM.remove(li);
+            }
+
+            return true;
+         } else if (NodeType.isLastChild(li)) {
+            if (ulParent.nodeName === "LI") {
+               DOM.insertAfter(li, ulParent);
+            } else if (NodeType.isListNode(ulParent)) {
+               DOM.insertAfter(li, ul);
+            } else {
+               DOM.insertAfter(TextBlock.createNewTextBlock(editor, li), ul);
+               DOM.remove(li);
+            }
+
+            return true;
+         }
+
+         if (ulParent.nodeName === 'LI') {
+            ul = ulParent;
+            newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
+         } else if (NodeType.isListNode(ulParent)) {
+            newBlock = TextBlock.createNewTextBlock(editor, li, 'LI');
+         } else {
+            newBlock = TextBlock.createNewTextBlock(editor, li);
+         }
+
+         SplitList.splitList(editor, ul, li, newBlock);
+         NormalizeLists.normalizeLists(editor.dom, ul.parentNode);
+
+         return true;
+      };
+
+      var outdentSelection = function (editor) {
+         var listElements = Selection.getSelectedListItems(editor);
+
+         if (listElements.length) {
+            var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+            var i, y, root = editor.getBody();
+
+            i = listElements.length;
+            while (i--) {
+               var node = listElements[i].parentNode;
+
+               while (node && node !== root) {
+                  y = listElements.length;
+                  while (y--) {
+                     if (listElements[y] === node) {
+                        listElements.splice(i, 1);
+                        break;
+                     }
+                  }
+
+                  node = node.parentNode;
+               }
+            }
+
+            for (i = 0; i < listElements.length; i++) {
+               if (!outdent(editor, listElements[i]) && i === 0) {
+                  break;
+               }
+            }
+
+            editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+            editor.nodeChanged();
+
+            return true;
+         }
+      };
+
+      return {
+         outdent: outdent,
+         outdentSelection: outdentSelection
+      };
+   });
+
+
+   /**
+    * ToggleList.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.actions.ToggleList", [
+      "global!tinymce.util.Tools",
+      "global!tinymce.dom.BookmarkManager",
+      "tinymce.lists.core.Selection",
+      "tinymce.lists.core.NodeType",
+      "tinymce.lists.core.Bookmark",
+      "tinymce.lists.core.SplitList",
+      "tinymce.lists.core.NormalizeLists",
+      "tinymce.lists.actions.Outdent"
+   ], function (Tools, BookmarkManager, Selection, NodeType, Bookmark, SplitList, NormalizeLists, Outdent) {
+      var updateListStyle = function (dom, el, detail) {
+         var type = detail['list-style-type'] ? detail['list-style-type'] : null;
+         dom.setStyle(el, 'list-style-type', type);
+      };
+
+      var setAttribs = function (elm, attrs) {
+         Tools.each(attrs, function (value, key) {
+            elm.setAttribute(key, value);
+         });
+      };
+
+      var updateListAttrs = function (dom, el, detail) {
+         setAttribs(el, detail['list-attributes']);
+         Tools.each(dom.select('li', el), function (li) {
+            setAttribs(li, detail['list-item-attributes']);
+         });
+      };
+
+      var updateListWithDetails = function (dom, el, detail) {
+         updateListStyle(dom, el, detail);
+         updateListAttrs(dom, el, detail);
+      };
+
+      var getEndPointNode = function (editor, rng, start) {
+         var container, offset, root = editor.getBody();
+
+         container = rng[start ? 'startContainer' : 'endContainer'];
+         offset = rng[start ? 'startOffset' : 'endOffset'];
+
+         // Resolve node index
+         if (container.nodeType === 1) {
+            container = container.childNodes[Math.min(offset, container.childNodes.length - 1)] || container;
+         }
+
+         while (container.parentNode !== root) {
+            if (NodeType.isTextBlock(editor, container)) {
+               return container;
+            }
+
+            if (/^(TD|TH)$/.test(container.parentNode.nodeName)) {
+               return container;
+            }
+
+            container = container.parentNode;
+         }
+
+         return container;
+      };
+
+      var getSelectedTextBlocks = function (editor, rng) {
+         var textBlocks = [], root = editor.getBody(), dom = editor.dom;
+
+         var startNode = getEndPointNode(editor, rng, true);
+         var endNode = getEndPointNode(editor, rng, false);
+         var block, siblings = [];
+
+         for (var node = startNode; node; node = node.nextSibling) {
+            siblings.push(node);
+
+            if (node === endNode) {
+               break;
+            }
+         }
+
+         Tools.each(siblings, function (node) {
+            if (NodeType.isTextBlock(editor, node)) {
+               textBlocks.push(node);
+               block = null;
+               return;
+            }
+
+            if (dom.isBlock(node) || NodeType.isBr(node)) {
+               if (NodeType.isBr(node)) {
+                  dom.remove(node);
+               }
+
+               block = null;
+               return;
+            }
+
+            var nextSibling = node.nextSibling;
+            if (BookmarkManager.isBookmarkNode(node)) {
+               if (NodeType.isTextBlock(editor, nextSibling) || (!nextSibling && node.parentNode === root)) {
+                  block = null;
+                  return;
+               }
+            }
+
+            if (!block) {
+               block = dom.create('p');
+               node.parentNode.insertBefore(block, node);
+               textBlocks.push(block);
+            }
+
+            block.appendChild(node);
+         });
+
+         return textBlocks;
+      };
+
+      var applyList = function (editor, listName, detail) {
+         var rng = editor.selection.getRng(true), bookmark, listItemName = 'LI';
+         var dom = editor.dom;
+
+         detail = detail ? detail : {};
+
+         if (dom.getContentEditable(editor.selection.getNode()) === "false") {
+            return;
+         }
+
+         listName = listName.toUpperCase();
+
+         if (listName === 'DL') {
+            listItemName = 'DT';
+         }
+
+         bookmark = Bookmark.createBookmark(rng);
+
+         Tools.each(getSelectedTextBlocks(editor, rng), function (block) {
+            var listBlock, sibling;
+
+            var hasCompatibleStyle = function (sib) {
+               var sibStyle = dom.getStyle(sib, 'list-style-type');
+               var detailStyle = detail ? detail['list-style-type'] : '';
+
+               detailStyle = detailStyle === null ? '' : detailStyle;
+
+               return sibStyle === detailStyle;
+            };
+
+            sibling = block.previousSibling;
+            if (sibling && NodeType.isListNode(sibling) && sibling.nodeName === listName && hasCompatibleStyle(sibling)) {
+               listBlock = sibling;
+               block = dom.rename(block, listItemName);
+               sibling.appendChild(block);
+            } else {
+               listBlock = dom.create(listName);
+               block.parentNode.insertBefore(listBlock, block);
+               listBlock.appendChild(block);
+               block = dom.rename(block, listItemName);
+            }
+
+            updateListWithDetails(dom, listBlock, detail);
+            mergeWithAdjacentLists(editor.dom, listBlock);
+         });
+
+         editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      };
+
+      var removeList = function (editor) {
+         var bookmark = Bookmark.createBookmark(editor.selection.getRng(true)), root = editor.getBody();
+         var listItems = Selection.getSelectedListItems(editor);
+         var emptyListItems = Tools.grep(listItems, function (li) {
+            return editor.dom.isEmpty(li);
+         });
+
+         listItems = Tools.grep(listItems, function (li) {
+            return !editor.dom.isEmpty(li);
+         });
+
+         Tools.each(emptyListItems, function (li) {
+            if (NodeType.isEmpty(editor.dom, li)) {
+               Outdent.outdent(editor, li);
+               return;
+            }
+         });
+
+         Tools.each(listItems, function (li) {
+            var node, rootList;
+
+            if (li.parentNode === editor.getBody()) {
+               return;
+            }
+
+            for (node = li; node && node !== root; node = node.parentNode) {
+               if (NodeType.isListNode(node)) {
+                  rootList = node;
+               }
+            }
+
+            SplitList.splitList(editor, rootList, li);
+            NormalizeLists.normalizeLists(editor.dom, rootList.parentNode);
+         });
+
+         editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+      };
+
+      var isValidLists = function (list1, list2) {
+         return list1 && list2 && NodeType.isListNode(list1) && list1.nodeName === list2.nodeName;
+      };
+
+      var hasSameListStyle = function (dom, list1, list2) {
+         var targetStyle = dom.getStyle(list1, 'list-style-type', true);
+         var style = dom.getStyle(list2, 'list-style-type', true);
+         return targetStyle === style;
+      };
+
+      var hasSameClasses = function (elm1, elm2) {
+         return elm1.className === elm2.className;
+      };
+
+      var shouldMerge = function (dom, list1, list2) {
+         return isValidLists(list1, list2) && hasSameListStyle(dom, list1, list2) && hasSameClasses(list1, list2);
+      };
+
+      var mergeWithAdjacentLists = function (dom, listBlock) {
+         var sibling, node;
+
+         sibling = listBlock.nextSibling;
+         if (shouldMerge(dom, listBlock, sibling)) {
+            while ((node = sibling.firstChild)) {
+               listBlock.appendChild(node);
+            }
+
+            dom.remove(sibling);
+         }
+
+         sibling = listBlock.previousSibling;
+         if (shouldMerge(dom, listBlock, sibling)) {
+            while ((node = sibling.lastChild)) {
+               listBlock.insertBefore(node, listBlock.firstChild);
+            }
+
+            dom.remove(sibling);
+         }
+      };
+
+      var toggleList = function (editor, listName, detail) {
+         var parentList = editor.dom.getParent(editor.selection.getStart(), 'OL,UL,DL');
+
+         detail = detail ? detail : {};
+
+         if (parentList === editor.getBody()) {
+            return;
+         }
+
+         if (parentList) {
+            if (parentList.nodeName === listName) {
+               removeList(editor, listName);
+            } else {
+               var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+               updateListWithDetails(editor.dom, parentList, detail);
+               mergeWithAdjacentLists(editor.dom, editor.dom.rename(parentList, listName));
+               editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+            }
+         } else {
+            applyList(editor, listName, detail);
+         }
+      };
+
+      return {
+         toggleList: toggleList,
+         removeList: removeList,
+         mergeWithAdjacentLists: mergeWithAdjacentLists
+      };
+   });
+
+
+   /**
+    * Delete.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.core.Delete", [
+      "global!tinymce.dom.TreeWalker",
+      "global!tinymce.dom.RangeUtils",
+      "global!tinymce.util.VK",
+      "tinymce.lists.core.Selection",
+      "tinymce.lists.core.NodeType",
+      "tinymce.lists.core.Bookmark",
+      "tinymce.lists.core.Range",
+      "tinymce.lists.core.NormalizeLists",
+      "tinymce.lists.actions.ToggleList"
+   ], function (
+      TreeWalker, RangeUtils, VK, Selection, NodeType, Bookmark, Range, NormalizeLists, ToggleList
+   ) {
+      var findNextCaretContainer = function (editor, rng, isForward) {
+         var node = rng.startContainer, offset = rng.startOffset;
+         var nonEmptyBlocks, walker;
+
+         if (node.nodeType === 3 && (isForward ? offset < node.data.length : offset > 0)) {
+            return node;
+         }
+
+         nonEmptyBlocks = editor.schema.getNonEmptyElements();
+         if (node.nodeType === 1) {
+            node = RangeUtils.getNode(node, offset);
+         }
+
+         walker = new TreeWalker(node, editor.getBody());
+
+         // Delete at <li>|<br></li> then jump over the bogus br
+         if (isForward) {
+            if (NodeType.isBogusBr(editor.dom, node)) {
+               walker.next();
+            }
+         }
+
+         while ((node = walker[isForward ? 'next' : 'prev2']())) {
+            if (node.nodeName === 'LI' && !node.hasChildNodes()) {
+               return node;
+            }
+
+            if (nonEmptyBlocks[node.nodeName]) {
+               return node;
+            }
+
+            if (node.nodeType === 3 && node.data.length > 0) {
+               return node;
+            }
+         }
+      };
+
+      var mergeLiElements = function (dom, fromElm, toElm) {
+         var node, listNode, ul = fromElm.parentNode;
+
+         if (!NodeType.isChildOfBody(dom, fromElm) || !NodeType.isChildOfBody(dom, toElm)) {
+            return;
+         }
+
+         if (NodeType.isListNode(toElm.lastChild)) {
+            listNode = toElm.lastChild;
+         }
+
+         if (ul === toElm.lastChild) {
+            if (NodeType.isBr(ul.previousSibling)) {
+               dom.remove(ul.previousSibling);
+            }
+         }
+
+         node = toElm.lastChild;
+         if (node && NodeType.isBr(node) && fromElm.hasChildNodes()) {
+            dom.remove(node);
+         }
+
+         if (NodeType.isEmpty(dom, toElm, true)) {
+            dom.$(toElm).empty();
+         }
+
+         if (!NodeType.isEmpty(dom, fromElm, true)) {
+            while ((node = fromElm.firstChild)) {
+               toElm.appendChild(node);
+            }
+         }
+
+         if (listNode) {
+            toElm.appendChild(listNode);
+         }
+
+         dom.remove(fromElm);
+
+         if (NodeType.isEmpty(dom, ul) && ul !== dom.getRoot()) {
+            dom.remove(ul);
+         }
+      };
+
+      var backspaceDeleteFromListToListCaret = function (editor, isForward) {
+         var dom = editor.dom, selection = editor.selection;
+         var li = dom.getParent(selection.getStart(), 'LI'), ul, rng, otherLi;
+
+         if (li) {
+            ul = li.parentNode;
+            if (ul === editor.getBody() && NodeType.isEmpty(dom, ul)) {
+               return true;
+            }
+
+            rng = Range.normalizeRange(selection.getRng(true));
+            otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
+
+            if (otherLi && otherLi !== li) {
+               var bookmark = Bookmark.createBookmark(rng);
+
+               if (isForward) {
+                  mergeLiElements(dom, otherLi, li);
+               } else {
+                  mergeLiElements(dom, li, otherLi);
+               }
+
+               editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+
+               return true;
+            } else if (!otherLi) {
+               if (!isForward && ToggleList.removeList(editor, ul.nodeName)) {
+                  return true;
+               }
+            }
+         }
+
+         return false;
+      };
+
+      var backspaceDeleteIntoListCaret = function (editor, isForward) {
+         var dom = editor.dom;
+         var block = dom.getParent(editor.selection.getStart(), dom.isBlock);
+
+         if (block && dom.isEmpty(block)) {
+            var rng = Range.normalizeRange(editor.selection.getRng(true));
+            var otherLi = dom.getParent(findNextCaretContainer(editor, rng, isForward), 'LI');
+
+            if (otherLi) {
+               editor.undoManager.transact(function () {
+                  dom.remove(block);
+                  ToggleList.mergeWithAdjacentLists(dom, otherLi.parentNode);
+                  editor.selection.select(otherLi, true);
+                  editor.selection.collapse(isForward);
+               });
+
+               return true;
+            }
+         }
+
+         return false;
+      };
+
+      var backspaceDeleteCaret = function (editor, isForward) {
+         return backspaceDeleteFromListToListCaret(editor, isForward) || backspaceDeleteIntoListCaret(editor, isForward);
+      };
+
+      var backspaceDeleteRange = function (editor) {
+         var startListParent = editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD');
+
+         if (startListParent || Selection.getSelectedListItems(editor).length > 0) {
+            editor.undoManager.transact(function () {
+               editor.execCommand('Delete');
+               NormalizeLists.normalizeLists(editor.dom, editor.getBody());
+            });
+
+            return true;
+         }
+
+         return false;
+      };
+
+      var backspaceDelete = function (editor, isForward) {
+         return editor.selection.isCollapsed() ? backspaceDeleteCaret(editor, isForward) : backspaceDeleteRange(editor);
+      };
+
+      var setup = function (editor) {
+         editor.on('keydown', function (e) {
+            if (e.keyCode === VK.BACKSPACE) {
+               if (backspaceDelete(editor, false)) {
+                  e.preventDefault();
+               }
+            } else if (e.keyCode === VK.DELETE) {
+               if (backspaceDelete(editor, true)) {
+                  e.preventDefault();
+               }
+            }
+         });
+      };
+
+      return {
+         setup: setup,
+         backspaceDelete: backspaceDelete
+      };
+   });
+
+
+   /**
+    * Indent.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.actions.Indent", [
+      "global!tinymce.dom.DOMUtils.DOM",
+      "tinymce.lists.core.NodeType",
+      "tinymce.lists.core.Bookmark",
+      "tinymce.lists.core.Selection"
+   ], function (DOM, NodeType, Bookmark, Selection) {
+      var mergeLists = function (from, to) {
+         var node;
+
+         if (NodeType.isListNode(from)) {
+            while ((node = from.firstChild)) {
+               to.appendChild(node);
+            }
+
+            DOM.remove(from);
+         }
+      };
+
+      var indent = function (li) {
+         var sibling, newList, listStyle;
+
+         if (li.nodeName === 'DT') {
+            DOM.rename(li, 'DD');
+            return true;
+         }
+
+         sibling = li.previousSibling;
+
+         if (sibling && NodeType.isListNode(sibling)) {
+            sibling.appendChild(li);
+            return true;
+         }
+
+         if (sibling && sibling.nodeName === 'LI' && NodeType.isListNode(sibling.lastChild)) {
+            sibling.lastChild.appendChild(li);
+            mergeLists(li.lastChild, sibling.lastChild);
+            return true;
+         }
+
+         sibling = li.nextSibling;
+
+         if (sibling && NodeType.isListNode(sibling)) {
+            sibling.insertBefore(li, sibling.firstChild);
+            return true;
+         }
+
+         /*if (sibling && sibling.nodeName === 'LI' && isListNode(li.lastChild)) {
+          return false;
+          }*/
+
+         sibling = li.previousSibling;
+         if (sibling && sibling.nodeName === 'LI') {
+            newList = DOM.create(li.parentNode.nodeName);
+            listStyle = DOM.getStyle(li.parentNode, 'listStyleType');
+            if (listStyle) {
+               DOM.setStyle(newList, 'listStyleType', listStyle);
+            }
+            sibling.appendChild(newList);
+            newList.appendChild(li);
+            mergeLists(li.lastChild, newList);
+            return true;
+         }
+
+         return false;
+      };
+
+      var indentSelection = function (editor) {
+         var listElements = Selection.getSelectedListItems(editor);
+
+         if (listElements.length) {
+            var bookmark = Bookmark.createBookmark(editor.selection.getRng(true));
+
+            for (var i = 0; i < listElements.length; i++) {
+               if (!indent(listElements[i]) && i === 0) {
+                  break;
+               }
+            }
+
+            editor.selection.setRng(Bookmark.resolveBookmark(bookmark));
+            editor.nodeChanged();
+
+            return true;
+         }
+      };
+
+      return {
+         indentSelection: indentSelection
+      };
+   });
+
+
+   /**
+    * plugin.js
+    *
+    * Released under LGPL License.
+    * Copyright (c) 1999-2017 Ephox Corp. All rights reserved
+    *
+    * License: http://www.tinymce.com/license
+    * Contributing: http://www.tinymce.com/contributing
+    */
+
+   define("tinymce.lists.Plugin", [
+      "global!tinymce.PluginManager",
+      "global!tinymce.util.Tools",
+      "global!tinymce.util.VK",
+      "tinymce.lists.core.NodeType",
+      "tinymce.lists.core.Delete",
+      "tinymce.lists.actions.Indent",
+      "tinymce.lists.actions.Outdent",
+      "tinymce.lists.actions.ToggleList"
+   ], function (PluginManager, Tools, VK, NodeType, Delete, Indent, Outdent, ToggleList) {
+      var queryListCommandState = function (editor, listName) {
+         return function () {
+            var parentList = editor.dom.getParent(editor.selection.getStart(), 'UL,OL,DL');
+            return parentList && parentList.nodeName === listName;
+         };
+      };
+
+      var setupCommands = function (editor) {
+         editor.on('BeforeExecCommand', function (e) {
+            var cmd = e.command.toLowerCase(), isHandled;
+
+            if (cmd === "indent") {
+               if (Indent.indentSelection(editor)) {
+                  isHandled = true;
+               }
+            } else if (cmd === "outdent") {
+               if (Outdent.outdentSelection(editor)) {
+                  isHandled = true;
+               }
+            }
+
+            if (isHandled) {
+               editor.fire('ExecCommand', {command: e.command});
+               e.preventDefault();
+               return true;
+            }
+         });
+
+         editor.addCommand('InsertUnorderedList', function (ui, detail) {
+            ToggleList.toggleList(editor, 'UL', detail);
+         });
+
+         editor.addCommand('InsertOrderedList', function (ui, detail) {
+            ToggleList.toggleList(editor, 'OL', detail);
+         });
+
+         editor.addCommand('InsertDefinitionList', function (ui, detail) {
+            ToggleList.toggleList(editor, 'DL', detail);
+         });
+      };
+
+      var setupStateHandlers = function (editor) {
+         editor.addQueryStateHandler('InsertUnorderedList', queryListCommandState(editor, 'UL'));
+         editor.addQueryStateHandler('InsertOrderedList', queryListCommandState(editor, 'OL'));
+         editor.addQueryStateHandler('InsertDefinitionList', queryListCommandState(editor, 'DL'));
+      };
+
+      var setupTabKey = function (editor) {
+         editor.on('keydown', function (e) {
+            // Check for tab but not ctrl/cmd+tab since it switches browser tabs
+            if (e.keyCode !== 9 || VK.metaKeyPressed(e)) {
+               return;
+            }
+
+            if (editor.dom.getParent(editor.selection.getStart(), 'LI,DT,DD')) {
+               e.preventDefault();
+
+               if (e.shiftKey) {
+                  Outdent.outdentSelection(editor);
+               } else {
+                  Indent.indentSelection(editor);
+               }
+            }
+         });
+      };
+
+      var setupUi = function (editor) {
+         var listState = function (listName) {
+            return function () {
+               var self = this;
+
+               editor.on('NodeChange', function (e) {
+                  var lists = Tools.grep(e.parents, NodeType.isListNode);
+                  self.active(lists.length > 0 && lists[0].nodeName === listName);
+               });
+            };
+         };
+
+         var hasPlugin = function (editor, plugin) {
+            var plugins = editor.settings.plugins ? editor.settings.plugins : '';
+            return Tools.inArray(plugins.split(/[ ,]/), plugin) !== -1;
+         };
+
+         if (!hasPlugin(editor, 'advlist')) {
+            editor.addButton('numlist', {
+               title: 'Numbered list',
+               cmd: 'InsertOrderedList',
+               onPostRender: listState('OL')
+            });
+
+            editor.addButton('bullist', {
+               title: 'Bullet list',
+               cmd: 'InsertUnorderedList',
+               onPostRender: listState('UL')
+            });
+         }
+
+         editor.addButton('indent', {
+            icon: 'indent',
+            title: 'Increase indent',
+            cmd: 'Indent',
+            onPostRender: function (e) {
+               var ctrl = e.control;
+
+               editor.on('nodechange', function () {
+                  var blocks = editor.selection.getSelectedBlocks();
+                  var disable = false;
+
+                  for (var i = 0, l = blocks.length; !disable && i < l; i++) {
+                     var tag = blocks[i].nodeName;
+
+                     disable = (tag === 'LI' && NodeType.isFirstChild(blocks[i]) || tag === 'UL' || tag === 'OL' || tag === 'DD');
+                  }
+
+                  ctrl.disabled(disable);
+               });
+            }
+         });
+      };
+
+      PluginManager.add('lists', function (editor) {
+         setupUi(editor);
+         Delete.setup(editor);
+
+         editor.on('init', function () {
+            setupCommands(editor);
+            setupStateHandlers(editor);
+            setupTabKey(editor);
+         });
+
+         return {
+            backspaceDelete: function (isForward) {
+               Delete.backspaceDelete(editor, isForward);
+            }
+         };
+      });
+
+      return function () {};
+   });
+
+
+   dem('tinymce.lists.Plugin')();
+})();
+/**
+ * plugin.js
+ *
+ * Released under LGPL License.
+ * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
+ *
+ * License: http://www.tinymce.com/license
+ * Contributing: http://www.tinymce.com/contributing
+ */
+
+/*global tinymce:true */
+
+tinymce.PluginManager.add('noneditable', function(editor) {
+   var editClass, nonEditClass, nonEditableRegExps, contentEditableAttrName = 'contenteditable';
+
+   function hasClass(checkClassName) {
+      return function(node) {
+         return (" " + node.attr("class") + " ").indexOf(checkClassName) !== -1;
+      };
+   }
+
+   function convertRegExpsToNonEditable(e) {
+      var i = nonEditableRegExps.length, content = e.content, cls = tinymce.trim(nonEditClass);
+
+      function replaceMatchWithSpan(match) {
+         var args = arguments, index = args[args.length - 2];
+         var prevChar = index > 0 ? content.charAt(index - 1) : '';
+
+         // Is value inside an attribute then don't replace
+         if (prevChar === '"') {
+            return match;
+         }
+
+         // Is value inside a contentEditable="false" tag
+         if (prevChar === '>') {
+            var findStartTagIndex = content.lastIndexOf('<', index);
+            if (findStartTagIndex !== -1) {
+               var tagHtml = content.substring(findStartTagIndex, index);
+               if (tagHtml.indexOf('contenteditable="false"') !== -1) {
+                  return match;
+               }
+            }
+         }
+
+         return (
+            '<span class="' + cls + '" data-mce-content="' + editor.dom.encode(args[0]) + '">' +
+            editor.dom.encode(typeof args[1] === "string" ? args[1] : args[0]) + '</span>'
+         );
+      }
+
+      // Don't replace the variables when raw is used for example on undo/redo
+      if (e.format == "raw") {
+         return;
+      }
+
+      while (i--) {
+         content = content.replace(nonEditableRegExps[i], replaceMatchWithSpan);
+      }
+
+      e.content = content;
+   }
+
+   editClass = " " + tinymce.trim(editor.getParam("noneditable_editable_class", "mceEditable")) + " ";
+   nonEditClass = " " + tinymce.trim(editor.getParam("noneditable_noneditable_class", "mceNonEditable")) + " ";
+
+   var hasEditClass = hasClass(editClass);
+   var hasNonEditClass = hasClass(nonEditClass);
+
+   nonEditableRegExps = editor.getParam("noneditable_regexp");
+   if (nonEditableRegExps && !nonEditableRegExps.length) {
+      nonEditableRegExps = [nonEditableRegExps];
+   }
+
+   editor.on('PreInit', function() {
+      if (nonEditableRegExps) {
+         editor.on('BeforeSetContent', convertRegExpsToNonEditable);
+      }
+
+      editor.parser.addAttributeFilter('class', function(nodes) {
+         var i = nodes.length, node;
+
+         while (i--) {
+            node = nodes[i];
+
+            if (hasEditClass(node)) {
+               node.attr(contentEditableAttrName, "true");
+            } else if (hasNonEditClass(node)) {
+               node.attr(contentEditableAttrName, "false");
+            }
+         }
+      });
+
+      editor.serializer.addAttributeFilter(contentEditableAttrName, function(nodes) {
+         var i = nodes.length, node;
+
+         while (i--) {
+            node = nodes[i];
+            if (!hasEditClass(node) && !hasNonEditClass(node)) {
+               continue;
+            }
+
+            if (nonEditableRegExps && node.attr('data-mce-content')) {
+               node.name = "#text";
+               node.type = 3;
+               node.raw = true;
+               node.value = node.attr('data-mce-content');
+            } else {
+               node.attr(contentEditableAttrName, null);
+            }
+         }
+      });
+   });
+});
