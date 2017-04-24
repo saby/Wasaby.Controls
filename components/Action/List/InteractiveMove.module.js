@@ -112,13 +112,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                componentOptions: null
             }
          },
-         init: function () {
-            InteractiveMove.superclass.init.call(this);
-            var view = this._getListView();
-            if (view) {
-               this.subscribeTo(view, 'onKeyPressed', this._viewKeyPressed.bind(this));
-            }
-         },
+
          _modifyOptions: function (cfg) {
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('InteractiveMove', 'Опция hierField является устаревшей, используйте parentProperty');
@@ -227,13 +221,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                }.bind(this));
             } else {
                InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
-            }
-         },
-         _viewKeyPressed: function (e) {
-            switch (e.which) {
-               case constants.key.m:
-                  e.ctrlKey && this.execute();
-                  break;
             }
          }
       });

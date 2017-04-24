@@ -61,8 +61,21 @@ define('js!SBIS3.CONTROLS.OperationMove', [
             });
          }
       },
+      init: function () {
+         OperationMove.superclass.init.call(this);
+         if (this._options.linkedView) {
+            this.subscribeTo(this._options.linkedView, 'onKeyPressed', this._viewKeyPressed.bind(this));
+         }
+      },
       _clickHandler: function() {
          this._options.action.execute();
+      },
+      _viewKeyPressed: function (e) {
+         switch (e.which) {
+            case constants.key.m:
+               e.ctrlKey && this.execute();
+               break;
+         }
       }
    });
 
