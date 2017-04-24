@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!WS.Data/Source/SbisService',
    'Core/detection',
    'js!SBIS3.CONTROLS.ListView.Mover',
+   'js!SBIS3.CONTROLS.ListView.Drag',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, EditInPlaceHoverController, EditInPlaceClickController, ImitateEvents, 
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, ListViewDrag) {
 
      'use strict';
 
@@ -87,12 +88,8 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable',
-         DRAG_META_INSERT = {
-            on: 'on',
-            after: 'after',
-            before: 'before'
-         };
+         NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable';
+
 
       var INDICATOR_DELAY = 750;
 
@@ -3544,19 +3541,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _findDragDropContainer: function() {
             return this._getItemsContainer();
          },
-         _getDragItems: function(dragItem, selectedItems) {
-            if (selectedItems) {
-               var array = [];
-               if (selectedItems.getIndex(dragItem) < 0) {
-                  array.push(dragItem);
-               }
-               selectedItems.each(function(item) {
-                  array.push(item);
-               });
-               return array;
-            }
-            return [dragItem];
-         },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
@@ -3570,236 +3554,29 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _beginDragHandler: function(dragObject, e) {
-            var
-                target;
-            target = this._findItemByElement(dragObject.getTargetsDomElemet());
-            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
-            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
-            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
-            //_findItemByElement, без завязки на _items.
-            if (target.length) {
-               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
-                  return false;
-               }
-               var  selectedItems = this.getSelectedItems(),
-                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
-                  items = this._getDragItems(targetsItem, selectedItems),
-                  source = [];
-               items.forEach(function (item) {
-                  var projItem = this._getItemsProjection().getItemBySourceItem(item),
-                     domElement = this._getHtmlItemByProjectionItem(projItem);
-                  source.push(this._makeDragEntity({
-                     owner: this,
-                     model: item,
-                     domElement: domElement
-                  }));
-                  domElement.addClass('ws-hidden');
-               }.bind(this));
-
-               dragObject.setSource(
-                  this._makeDragEntityList({
-                     items: source
-                  })
-               );
-               this._getDragPlaceHolder(dragObject);
-               this._hideItemsToolbar();
-               if (this._checkHorisontalDragndrop(target)) {
-                  this._horisontalDragNDrop = true;
-               } else {
-                  this._horisontalDragNDrop = false;
-               }
-               return true;
-            }
-            return false;
-         },
-         _toggleDragItems: function (dragObject, show) {
-            dragObject.getSource().each(function (item) {
-               item.getDomElement().toggleClass('ws-hidden', !show);
-            });
-         },
-         /**
-          * Определяет направление элементов в списке    
-          * @param target
-          * @returns {boolean}
-          * @private
-          */
-         _checkHorisontalDragndrop: function (target) {
-            if (target.css('display') == 'inline-block' || target.css('float') != 'none') {
-               return true;
-            }
-            var parent = target.parent();
-            if (parent.css('display') == 'flex' && parent.css('flex-direction') == 'row') {
-               return true;
-            }
-            return false;
+            this._getListViewDrag().beginDrag(e, this._findItemByElement(dragObject.getTargetsDomElemet()));
+            this._hideItemsToolbar();
          },
          _onDragHandler: function(dragObject, e) {
-            this._options.itemsDragNDrop = true;
-            if (this._canDragMove(dragObject)) {
-               var
-                  target = dragObject.getTarget(),
-                  targetsModel = target.getModel(),
-                  source = dragObject.getSource(),
-                  sourceModels = [];
-               this._hideDragHilight(dragObject);
-               if (targetsModel) {
-                  source.each(function (item) {
-                     sourceModels.push(item.getModel());
-                  });
-                  //this._drawDragHighlight(target);
-                  if (target.getPosition() !== 'on') {
-                     this._getDragPlaceHolder(dragObject).show();
-                     if (target.getPosition() == 'before') {
-                        this._getDragPlaceHolder(dragObject).insertBefore(target.getDomElement());
-                     } else {
-                        this._getDragPlaceHolder(dragObject).insertAfter(target.getDomElement());
-                     }
-                  } else {
-                     this._getDragPlaceHolder(dragObject).hide();
-                     target.getDomElement().addClass('controls-DragNDrop__hierarchy_move');
-                  }
-               }
-            }
-         },
-         _hideDragHilight: function (dragObject) {
-            this._getDragPlaceHolder(dragObject).hide();
-            $('.controls-DragNDrop__hierarchy_move').removeClass('controls-DragNDrop__hierarchy_move');
-         },
-         _getDragPlaceHolder: function(dragObject) {
-            if (!this._dragPlaceHolder) {
-               var item = dragObject.getSource().at(0);
-               this._dragPlaceHolder = item.getDomElement().clone().addClass('controls-DragNDrop__placeholder').removeClass('ws-hidden');
-            }
-            return this._dragPlaceHolder;
-         },
-         _canDragMove: function(dragObject) {
-            var source = dragObject.getSource();
-            return dragObject.getTarget() &&
-               source &&
-               source.getCount() > 0 &&
-               dragObject.getTargetsControl() === this &&
-               cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
-         },
-
-         _getDragTarget: function(dragObject) {
-            var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
-               item,
-               projection = this._getItemsProjection();
-
-            if (target.length > 0 && !target.hasClass('controls-DragNDrop__placeholder')) {
-               item = projection.getByHash(target.data('hash'));
-            }
-
-            return item ? item.getContents() : undefined;
+            this._getListViewDrag().onDrag(e);
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(dragObject),
-               target;
+            var target = this._findItemByElement(dragObject.getTargetsDomElemet());
+            this._getListViewDrag().updateDragTarget(e, target);
 
-            if (model) {
-               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
-                  position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
-               if (!domElement.hasClass('controls-DragNDrop__placeholder')) {
-                  var   sourceIds = [],
-                     movedItems = [];
-                  dragObject.getSource().each(function (item) {
-                     sourceIds.push(item.getModel().getId());
-                     movedItems.push(item.getModel());
-                  });
-                  if (this._getMover()._checkRecordsForMove(movedItems, model, position != 'on')) {
-                     target = this._makeDragEntity({
-                        owner: this,
-                        domElement: domElement,
-                        model: model,
-                        position: position
-                     });
-                     dragObject.setTarget(target);
-                  } else if (position == 'on') {
-                     if (this._horisontalDragNDrop) {
-                        position = (e.offsetY > domElement.height()/2) ? 'before' : 'after';
-                     } else {
-                        position = (e.offsetx > domElement.width()/2) ? 'before' : 'after';
-                     }
-                     target = this._makeDragEntity({
-                        owner: this,
-                        domElement: domElement,
-                        model: model,
-                        position: position
-                     });
-                     dragObject.setTarget(target);
-                  }
-               }
-            } else {
-               dragObject.setTarget(undefined);
-            }
-         },
-
-         _getDirectionOrderChange: function(e, target) {
-            if (this._horisontalDragNDrop) {
-               return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
-            } else {
-               return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
-            }
-         },
-         _getOrderPosition: function(offset, metric, orderOffset) {
-            return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
-         },
-
-         _createAvatar: function(dragObject) {
-            var count = dragObject.getSource().getCount();
-            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
-            this._toggleDragItems(dragObject, true);
-            this._dragPlaceHolder.remove();
-            this._dragPlaceHolder = null;
-            if (droppable) {
-               var
-                  target = dragObject.getTarget(),
-                  models = [],
-                  dropBySelf = false,
-                  source = dragObject.getSource();
-
-               if (target && source) {
-                  var  targetsModel = target.getModel();
-                  source.each(function(item) {
-                     var model = item.getModel();
-                     models.push(model);
-                     if (targetsModel == model) {
-                        dropBySelf = true;
-                     }
-                  });
-                  if (dropBySelf) {//TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-                     var clickHandler = this._elemClickHandler;
-                     this._elemClickHandler = function () {
-                        this._elemClickHandler = clickHandler;
-                     };
-                  }
-                  if (dragObject.getOwner() === this) {
-                     var position = target.getPosition();
-                     this._getMover().move(models, target.getModel(), position).addCallback(function(result){
-                        if (result) {
-                           this.removeItemsSelectionAll();
-                        }
-                     }.bind(this));
-                  } else {
-                     var currentDataSource = this.getDataSource(),
-                        dragOwner = dragObject.getOwner(),
-                        ownersDataSource = dragOwner.getDataSource(),
-                        useDefaultMove = false;
-                     if (currentDataSource && dragOwner &&
-                        currentDataSource.getEndpoint().contract == ownersDataSource.getEndpoint().contract
-                     ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
-                        useDefaultMove = true;
-                     }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
-                  }
-               }
-            }
-
+            this._getListViewDrag().endDrag(dragObject, e);
             this._updateItemsToolbar();
+         },
+         _getListViewDrag: function () {
+            return this._listViewDrag || (this._listViewDrag = (new ListViewDrag({
+               listView:this,
+               mover: this._getMover(),
+               projection: this._getItemsProjection(),
+            })));
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
@@ -4151,4 +3928,6 @@ define('js!SBIS3.CONTROLS.ListView',
       });
 
       return ListView.mixin([BreakClickBySelectMixin]);
+
+
    });
