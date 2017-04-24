@@ -186,6 +186,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             bodyBounds: false,
             isHint: true,
             parentContainer: '',
+            /*
+            эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
+            */
             _canScroll: false
          }
       },
