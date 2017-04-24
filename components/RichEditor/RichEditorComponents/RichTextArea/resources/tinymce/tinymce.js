@@ -51112,7 +51112,7 @@
                   text = forcedRootBlockStartHtml + text;
                }
             }
-
+            return text;
          }
          /**
           * Pastes the specified text. This means that the plain text is processed
