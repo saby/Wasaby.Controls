@@ -101,21 +101,11 @@ define('js!WS.Controls.Button', [
          }
       },
 
-      init : function() {
-         Button.superclass.init.call(this);
-         /*Хак чтобы в IE не прыгал тег button при зажатии мышки*/
-         if (constants.browser.isIE) {
-            this._container.mousedown(function(e){
-               e.preventDefault();
-            });
-         }
-      },
-
       setCaption: function(caption){
           Button.superclass.setCaption.call(this, caption);
          var btnText = $('.js-controls-Button__text', this._container.get(0));
          btnText.toggleClass('controls-Button__emptyCaption', !caption);
-         btnText.text(caption || '');
+         btnText.html(caption || '');
       },
        /**
         * Метод установки кнопки по умолчанию.
@@ -136,6 +126,7 @@ define('js!WS.Controls.Button', [
       setPrimary: function(flag){
          this._options.primary = !!flag;
          this._container.toggleClass('controls-Button__primary', this.isPrimary());
+         this._container.toggleClass('controls-Button__default', !this.isPrimary());
       },
       /**
        * Является ли кнопкой по умолчанию.

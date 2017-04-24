@@ -656,6 +656,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
             this._picker.recalcPosition(true);
+            this._onResizeHandler();
          }
          else {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
@@ -739,10 +740,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setWidth: function(){
-         var self = this;
-         if (self._picker._options.target){
+         var self = this,
+             target = self._picker.getTarget();
+         if (target){
+            //Борьба с полупикселями, устанавливаю ровно ту ширину, которая отрисовалась в таргете
             this._picker.getContainer().css({
-               'min-width': self._picker._options.target.outerWidth()
+               'min-width': target[0].getBoundingClientRect().width
             });
          }
       },

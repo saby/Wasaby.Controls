@@ -1,0 +1,13 @@
+<div class="controls__filterButton {{ 'controls__filterButton-' + filterAlign }}">
+    <ws:if data="{{ filterLineComponent }}">
+        <ws:partial template="{{ filterLineComponent }}" name="filterLine" activableByClick="{{ false }}"/>
+    </ws:if>
+    <ws:else data="{{ filterLineTemplate }}">
+        <ws:partial template="{{ filterLineTemplate }}"/>
+    </ws:else>
+    <ws:SBIS3.CONTROLS.IconButton
+        cssClassName="controls__filterButton-button"
+        icon="icon-24 icon-size icon-FilterNew icon-primary"
+        command="show-filter"
+    />
+</div>

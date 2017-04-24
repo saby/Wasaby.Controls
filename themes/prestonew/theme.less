@@ -1,10 +1,9 @@
 html {
-  font-size: 28px !important;
   color: #e4e4e4;
   background-color: #1d2834;
 }
 body {
-  font-size: 28px !important;
+  font-size: 1rem !important;
 }
 .controls-ListView {
   background-color: #1d2834;
@@ -81,8 +80,7 @@ body {
 @text-box-height-prestoFont:  36px;
 .controls-TextBox {
    &.controls-TextBox__big {
-      height: @text-box-height-prestoBig;
-      font-size: @text-box-height-prestoFont;
+
    }
 }
 
@@ -170,12 +168,8 @@ body {
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
   font-size: 1.14rem;
-
-
 }
-.controls__filterButton__area {
-  border: 2px solid #26b8ff;
-}
+
 
 body {
   .ws-window-titlebar {
@@ -205,4 +199,40 @@ body {
 .controls-FloatArea {
   border: 2px solid #2196F3;
   background: #2c3e50;
+}
+body {
+  .controls__filter-button__clear-filter {
+    font-size: 1.14rem;
+    
+    &:hover {
+      color: #26b8ff !important;
+    }
+  }
+  .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+    width: 3rem !important;
+    height: 3rem !important;
+    background: @closeBigButtonImage;
+    &:hover {
+      background: @closeBigButtonImageHover;
+    }
+    &:active {
+      background: @closeBigButtonImageHover;
+    }
+}
+
+}
+.controls-ComboBox.controls-TextBox.controls-Picker__show {
+  border-bottom: none;
+}
+.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable
+ {
+  color: #e4e4e4 !important;
+ }
+
+ .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
+ 
+    background: #FF7033;
+}
+.controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
+  border-color: #26b8ff;
 }

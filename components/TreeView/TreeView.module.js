@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.TreeView', [
    'js!SBIS3.CONTROLS.TreeViewMixin',
    'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
+   "tmpl!SBIS3.CONTROLS.TreeView/resources/FooterWrapperTemplate",
    'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    'css!SBIS3.CONTROLS.TreeView'
-], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, MassSelectionHierarchyController) {
+], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, MassSelectionHierarchyController) {
    'use strict';
    var getItemTemplateData = function (cfg) {
       var config = {
@@ -54,6 +55,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
    var TreeView = ListView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeView.prototype*/ {
       $protected: {
          _options: {
+            _footerWrapperTemplate: FooterWrapperTemplate,
             _canServerRender: true,
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,

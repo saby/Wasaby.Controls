@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
+      if (cfg.itemsFilterMethod) {
+         projCfg.filter = cfg.itemsFilterMethod;
+      }
       proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
    },
@@ -165,6 +168,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
+      tplOptions.idProperty = cfg.idProperty;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
@@ -670,6 +674,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see WS.Data/Display/Collection#setSort
              */
             itemsSortMethod: undefined,
+            itemsFilterMethod: undefined,
             easyGroup: false,
             task1173537554: false
          },
@@ -2322,6 +2327,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var args = this._prepareItemData(), buildedTpl;
             args['projItem'] = item;
             args['item'] = item.getContents();
+            args['escapeHtml'] = strHelpers.escapeHtml;
             buildedTpl = dotTemplate(args);
             //TODO нашлись умники, которые в качестве шаблона передают функцию, возвращающую jquery
             //в 200 пусть поживут, а в новой отрисовке, отпилим у них
@@ -2472,6 +2478,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       /**
+       * Устанавливает метод фильтрации элементов на клиенте.
+       * @param {Function} filter функция фильтрации элементов, если передать undefined фильтрация сбросится
+       * @see WS.Data/Display/Collection:setFilter
+       */
+      setItemsFilterMethod: function(filter) {
+         this._options.itemsFilterMethod = filter;
+         if(this._options._itemsProjection) {
+            this._options._itemsProjection.setFilter(filter);
+         }
+      },
+      /**
        * Возвращает последний элемент по проекции
        * @return {WS.Data/Entity/Model}
        */
@@ -2491,7 +2508,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._isNeedToRedraw()) {
             needToRevive = this._changeItemProperties(item, property);
             this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
-            this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
+            if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+               this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
+            }
          }
       }
    };

@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/IoC",
    "Core/core-merge",
    "Core/constants",
+   'Core/CommandDispatcher',
    'Core/helpers/dom&controls-helpers',
    "js!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( IoC, cMerge, constants, CommandDispatcher, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var HIER_WRAPPER_WIDTH = 16,
@@ -51,10 +52,20 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             multiselect: cfg.multiselect
          }
       },
+      getFolderFooterOptions = function(cfg) {
+         var options = cfg._getFolderFooterOptionsTVM.apply(this, arguments);
+         options.colspan = cfg.columns.length;
+         return options;
+      },
+      hasFolderFooters = function() {
+         //Отключаем отрисовку футеров на сервере, потому что пока что нет возможности построить treePaging,
+         //т.к. в момент отрисовки нет информации, есть ли ещё записи в открытой папке.
+         return false;
+      },
       getItemTemplateData = function (cfg) {
          var config = {
             nodePropertyValue: cfg.item.get(cfg.nodeProperty),
-            projection: cfg.projItem.getOwner(),
+            projection: cfg.projItem.getOwner()
          };
          config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
          config.hasLoadedChild = config.children.length > 0;
@@ -64,7 +75,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
          config.classPresenceLoadedNodes = config.loadedWithoutChilds ? ' controls-ListView__item-without-child' : '';
          config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
-         config.isColumnScrolling = cfg.startScrollColumn === 0,
+         config.isColumnScrolling = cfg.startScrollColumn === 0;
          config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classPresenceLoadedNodes + config.classIsSelected;
          if (config.isColumnScrolling){
             config.computedPadding = 'left: ' + cfg.columnsScrollPosition + 'px;';
@@ -150,7 +161,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
         * </ul>
         */
       $protected: {
-         _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
             _buildTplArgsTDG: buildTplArgsTDG,
@@ -159,7 +169,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _defaultItemContentTemplate: ItemContentTemplate,
             _defaultSearchRender: searchRender,
             _getItemTemplateData: getItemTemplateData,
+            _footerWrapperTemplate: FooterWrapperTemplate,
+            _getFolderFooterOptions: getFolderFooterOptions,
             _getSearchCfg: getSearchCfg,
+            _hasFolderFooters: hasFolderFooters,
             /**
              * @cfg {Function}
              * @see editArrow
@@ -203,6 +216,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       $constructor: function() {
+         CommandDispatcher.declareCommand(this, 'loadNode', this._folderLoad);
       },
       init: function(){
          TreeDataGridView.superclass.init.call(this);
@@ -274,35 +288,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
-      },
-
-      _createFolderFooter: function(key) {
-         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
-         var
-            pagerContainer,
-            lastContainer = this._getLastChildByParent(this._getItemsContainer(), this._getItemProjectionByItemId(key));
-
-         //TODO: Сделать FolderPager отдельным контроллом и перенести создание в шаблон FolderFooterTemplate
-         pagerContainer = $('<div class="controls-TreePager-container">').appendTo(this._foldersFooters[key].find('.controls-TreeView__folderFooterContainer'));
-         this._createFolderPager(key, pagerContainer, this._folderHasMore[key]);
-
-         this._foldersFooters[key].insertAfter(lastContainer);
-         this.reviveComponents();
-      },
-      _getFolderFooterOptions: function(key) {
-         var level = this._getItemProjectionByItemId(key).getLevel();
-         return {
-            key: key,
-            item: this.getItems().getRecordById(key),
-            level: level,
-            footerTpl: this._options.folderFooterTpl,
-            multiselect: this._options.multiselect,
-            colspan: this._options.columns.length,
-            padding: this._options._paddingSize * level + this._options._originallPadding
-         }
-      },
-      _getFolderFooterWrapper: function() {
-         return this._footerWrapperTemplate;
       },
       _getEditorOffset: function(model) {
          var

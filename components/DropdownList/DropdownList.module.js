@@ -400,25 +400,20 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _removeOldKeys: function(){
             var keys = this.getSelectedKeys(),
                 items = this.getItems();
-            if (!this._isEnumTypeData()) {
-               for (var i = 0, l = keys.length; i < l; i++) {
-                  if (!items.getRecordById(keys[i])) {
-                     keys.splice(i, 1);
-                  }
-               }
-               if (!keys.length){
-                  this._setFirstItemAsSelected();
-               }
-            }
-         },
-
-         _onReviveItems: function(){
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
             //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
-            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
-               this._removeOldKeys();
+            if (!this._options.emptyValue || keys[0] !== null){
+               if (!this._isEnumTypeData()) {
+                  for (var i = 0, l = keys.length; i < l; i++) {
+                     if (!items.getRecordById(keys[i])) {
+                        keys.splice(i, 1);
+                     }
+                  }
+                  if (!keys.length){
+                     this._setFirstItemAsSelected();
+                  }
+               }
             }
-            DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
          setSelectedKeys: function(idArray){
@@ -603,6 +598,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _redrawSelectedItems: function() {
+            this._removeOldKeys();
             if (this._isEmptyValueSelected()) {
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
@@ -610,8 +606,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._drawSelectedValue(null, [this._emptyText]);
             }
             else{
-               if (!this.getSelectedKeys().length && this.getItems().getCount()) {
-                  this._options.selectedKeys = [this.getItems().at(0).get(this._options.idProperty)];
+               if (!this.getSelectedKeys().length && this._getItemsProjection().getCount()) {
+                  var firstItem = this._getItemsProjection().at(0).getContents();
+                  if (cInstance.instanceOfModule(firstItem, 'WS.Data/Entity/Record')) {
+                     this._options.selectedKeys = [firstItem.get(this._options.idProperty)];
+                  }
                }
                this._drawSelectedItems(this._options.selectedKeys); //Надо вызвать просто для того, чтобы отрисовалось выбранное значение
             }
@@ -677,11 +676,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _drawItemsCallback: function() {
+         //drawItemsCallback обернут в debounce и выполнится позже, чем пикер спозиционируется
+         _drawItemsCallbackSync: function() {
             this._redrawSelectedItems();
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
-
          },
          _isEmptyValueSelected: function(){
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
@@ -1007,7 +1006,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               activableByClick: false,
                targetPart: true,
                template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,

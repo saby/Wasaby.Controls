@@ -120,6 +120,7 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
+       * @cssModifier controls-ListView__disableHover Убирает выделение цветом для строк по "ховеру".
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -363,6 +364,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
+            _createEditInPlaceDeferred: null,
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _pagerContainer: undefined,
@@ -936,7 +938,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var self = this,
                 originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix',
-                isTouchEvent = ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents));
+                isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
             this._setTouchSupport(
                /* touch события - однозначно включаем touch режим */
                Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
@@ -1222,7 +1224,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
-            if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
+            if (this._options.groupBy && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
                var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
                if (closestGroup.length) {
                   this._options.groupBy.clickHandler.call(this, $target);
@@ -2026,8 +2028,16 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                self = this,
                result = new Deferred();
-            requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function(controller) {
-               result.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+            if (!this._createEditInPlaceDeferred) {
+               this._createEditInPlaceDeferred = new Deferred();
+               requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function (controller) {
+                  self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+                  self._createEditInPlaceDeferred = undefined;
+               });
+            }
+            this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
+               result.callback(editInPlace);
+               return editInPlace;
             });
             return result;
          },
@@ -3944,7 +3954,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   projection: this._getItemsProjection(),
                   parentProperty: this._options.parentProperty,
                   nodeProperty: this._options.nodeProperty,
-                  dataSource: this.getDataSource(),
+                  dataSource: this.getDataSource()
                });
             }
             return this._mover
