@@ -283,12 +283,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
 
             if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
+               var
+                  protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
                content = [
                   '<iframe',
                   ' width="' + constants.defaultYoutubeWidth + '"',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
-                  ' src="' + '//www.youtube.com/embed/' + id + '"',
+                  ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
                   ' frameborder="0" >',
                   '</iframe>'
                ].join('');
@@ -1153,8 +1155,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
             editor.on('onBeforePaste', function(e) {
-               var
-                  regexp =  new RegExp('(https?|ftp|file):\/\/[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/[-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()]*)*');
                if (self.addYouTubeVideo(e.content)) {
                   return false;
                }
@@ -1235,9 +1235,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             }.bind(this));
 
-            editor.on('drop', function() {
+            editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
+               if (!self._mouseIsPressed) {
+                  event.preventDefault();
+               }
             });
 
             editor.on('dragstart', function(event) {

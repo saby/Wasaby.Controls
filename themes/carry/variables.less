@@ -72,7 +72,6 @@
 // Data Range Slider //
 // ----------------- //
 @date-range-slider-font-size:                   @globalDefaultFontSize;
-@date-range-slider-value-min-width:             124px;
 @date-range-slider-value-padding:               0;
 @date-range-slider-year-state-width:            136px;
 @date-range-slider-height:                      40px;
@@ -133,6 +132,7 @@
 @date-range-big-choose-header-home-button-margin:              1px 0;
 @date-range-big-choose-header-home-button-size:                40px;
 @date-range-big-choose-header-home-button-font-size:           24px;
+@date-range-big-choose-header-home-button-left:                7px;
 @date-range-big-choose-header-home-button-line-height:         38px;
 @date-range-big-choose-header-date-box-font-size:              inherit;
 @date-range-big-choose-header-date-pickers-margin-right:       75px;
@@ -186,6 +186,7 @@
 // --------- //
 // List view //
 // --------- //
+@list-view-min-height:                           90px;
 @listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
 @listView-check-box-icon-bg:                    @check-box-icon-bg;
 @listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
@@ -263,6 +264,7 @@
 @button-big-font:                               @globalDefaultFontSize @default-font-name;
 @button-big-min-width:                          60px;
 @button-big-height:                             60px;
+@button-big-line-height:                        60px;
 @icon-height:                                   24px;
 
 @button-big-icon-top-offset:                    22px;
@@ -276,6 +278,8 @@
 
 @button-big-icon-32-top-offset:                 14px;
 @button-big-icon-32-left-offset:                14px;
+
+@button-without-caption-icon-32-left:           14px;
 
 // Big disabled button
 
@@ -650,6 +654,3 @@
 
 @controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
-
-//Browser
-@controls-Browser-ListView-minHeight:              90px;

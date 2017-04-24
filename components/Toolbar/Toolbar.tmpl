@@ -1,0 +1,15 @@
+<div class="controls-ToolBar"><div class="controls-ToolBar__itemsContainer">
+        <ws:if data="{{_serverRender}}">
+            <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
+        </ws:if>
+    </div>
+    <ws:SBIS3.CONTROLS.CommandsButton
+            name="controls-ToolBar__menuIcon"
+            class="controls-ToolBar__menuIcon"
+            idProperty="{{idProperty}}"
+            parentProperty="{{parentProperty}}"
+            displayProperty="{{displayProperty}}"
+            additionalProperty="{{additionalProperty}}"
+            icon="sprite:icon-24 icon-MoreButton icon-primary">
+    </ws:SBIS3.CONTROLS.CommandsButton>
+</div>

@@ -180,6 +180,9 @@
                <li>
                   <div id="SearchForm"></div>
                </li>
+               <li>
+                  <div id="FolderFooter"></div>
+               </li>
             </ul>
          </td>
          <td>
@@ -323,6 +326,14 @@
                element: "TextBoxes",
                caption: 'TextBoxes',
                href: '/pages/textBoxCommonStyles.html'
+            })
+         });
+
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FolderFooter",
+               caption: 'FolderFooter',
+               href: '/pages/FolderFooter.html'
             })
          });
 
