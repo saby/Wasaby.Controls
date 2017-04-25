@@ -2155,13 +2155,14 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
          _showToolbar: function(model) {
-            var itemsInstances, itemsToolbar, editedItem;
+            var itemsInstances, itemsToolbar, editedItem, editedContainer;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
                itemsToolbar = this._getItemsToolbar();
 
                itemsToolbar.unlockToolbar();
                /* Меняем выделенный элемент на редактируемую/добавляемую запись */
-               this._changeHoveredItem(this._getElementByModel(model));
+               editedContainer = this._getElementByModel(model);
+               this._changeHoveredItem(editedContainer);
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
                if (!this.getItems().getRecordById(model.getId())) {
@@ -2177,6 +2178,10 @@ define('js!SBIS3.CONTROLS.ListView',
                // т.к. тулбар в режиме редактикрования по месту должен работать с измененной запись
                editedItem = cFunctions.clone(this.getHoveredItem());
                editedItem.record = model;
+               // на событие onBeginEdit могут поменять модель, запись перерисуется и контейнер на который ссылается тулбар затрется
+               if(!dcHelpers.contains(this.getContainer(), editedItem.container)){
+                   editedItem.container = editedContainer;
+               }
 
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
                this._showItemsToolbar(editedItem);
