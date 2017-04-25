@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     * @remark
     * Длинный заголовок спойлера по умолчанию обрезается.
     * @class SBIS3.CONTROLS.Spoiler
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.Expandable
     *
 	 * @demo SBIS3.CONTROLS.Demo.MySpoiler

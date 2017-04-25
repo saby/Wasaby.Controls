@@ -14,15 +14,15 @@ define('js!WSControls/Buttons/Button', [
     * Можно настроить:
     * <ol>
     *    <li>{@link $ws.proto.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
-    *    <li>{@link SBIS3.CONTROLS.WSButtonBase#caption текст на кнопке};</li>
+    *    <li>{@link WSControls/Buttons/ButtonBase#caption текст на кнопке};</li>
     *    <li>{@link $ws.proto.Control#enabled возможность взаимодействия с кнопкой};</li>
     *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
     *    <li>{@link primary по умолчанию ли кнопка};</li>
     *    <li>{@link $ws.proto.Control#visible видимость кнопки};</li>
     * </ol>
-    * @class SBIS3.CONTROLS.Button
-    * @extends SBIS3.CONTROLS.WSButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+    * @class WSControls/Buttons/Button
+    * @extends WSControls/Buttons/ButtonBase
+	 * @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -64,7 +64,7 @@ define('js!WSControls/Buttons/Button', [
     * </component>
     */
 
-   var Button = ButtonBase.extend( /** @lends SBIS3.CONTROLS.WSButton.prototype */ {
+   var Button = ButtonBase.extend( /** @lends WSControls/Buttons/Button.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
          _keysWeHandle: [

@@ -19,7 +19,7 @@ define('js!WSControls/Buttons/ButtonBase', [
     * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса.
     * Отображение и вёрстка задаются именно в унаследованных классах.
-    * @class SBIS3.CONTROLS.WSButtonBase
+    * @class WSControls/Buttons/ButtonBase
     * @public
     * @extends $ws.proto.CompoundControl
     * @mixes SBIS3.CONTROLS.Clickable
@@ -47,7 +47,7 @@ define('js!WSControls/Buttons/ButtonBase', [
     * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     */
 
-   var WSButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends SBIS3.CONTROLS.WSButtonBase.prototype*/ {
+   var WSButtonBase = Control.extend([Clickable, FormWidgetMixin, DataBindMixin, IconMixin],/** @lends WSControls/Buttons/ButtonBase.prototype*/ {
 
       $protected: {
          _tooltipSettings: {

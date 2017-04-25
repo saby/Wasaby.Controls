@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!WSControls/Buttons/ButtonBase',
     * Работает только в составе группы радиокнопок.
     * При клике, если состояние не checked, то проставить true, иначе ничего не делать.
     * @class SBIS3.CONTROLS.RadioButtonBase
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @public
     * @author Крайнов Дмитрий Олегович
     */

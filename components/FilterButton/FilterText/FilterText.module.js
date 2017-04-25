@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.FilterText',
         * Компонент, отображающий текст с крестиком удаления, при клике на крест скрывается.
         * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
         * @class SBIS3.CONTROLS.FilterText
-        * @extends SBIS3.CONTROLS.WSButtonBase
+        * @extends WSControls/Buttons/ButtonBase
         * @author Герасимов Александр Максимович
         * @control
         * @public

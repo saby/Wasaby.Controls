@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WSControls/Buttons/Button', 'css!SBI
     * Класс контрола, который предназначен для отображения кнопки в виде иконки.
     *
     * @class SBIS3.CONTROLS.IconButton
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов Петр Сергеевич

@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!WSControls/Buttons/ButtonBase', 'html!
     * Контрол, отображающий элемент меню. Работает только в составе группы. В джине не вытаскивается
     * @class SBIS3.CONTROLS.MenuItem
     * @public
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     */
    var MenuItem = WSButtonBase.extend( /** @lends SBIS3.CONTROLS.MenuItem.prototype */ {
