@@ -65,6 +65,10 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONT
 
          options.cssClassName += ' controls-IconButton';
 
+         if(options.caption && !options.tooltip){
+             options.tooltip = options.caption;
+         }
+
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
                if (iconClass.indexOf('icon-error') >= 0) {
