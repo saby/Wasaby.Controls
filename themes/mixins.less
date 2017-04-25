@@ -353,12 +353,18 @@
 
 .justify-content(@justify: flex-start) {
    -webkit-justify-content: @justify;
-   -ms-flex-pack: @justify; //ie 10
    -ms-justify-content: @justify;
    justify-content: @justify;
-   //ie 10 fix space-between
+   //ie 10 fix
+   -ms-flex-pack: @justify; //ie 10
    & when (@justify = space-between) {
       -ms-flex-pack: justify;
+   }
+   & when (@justify = flex-end) {
+      -ms-flex-pack: end;
+   }
+   & when (@justify = flex-start) {
+      -ms-flex-pack: start;
    }
 }
 .align-items(@align: stretch) {
