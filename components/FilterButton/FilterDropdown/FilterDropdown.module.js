@@ -38,7 +38,11 @@ define('js!SBIS3.CONTROLS.FilterDropdown', ['js!SBIS3.CONTROLS.DropdownList'], f
          if (opts.invertedVisible) {
             opts.visible = false;
          }
+         if (opts.emptyValue) {
+            opts.pickerClassName += ' controls-DropdownList__has-empty-value'
+         }
          opts.cssClassName += ' controls-DropdownList__type-filter';
+         opts.pickerClassName += ' controls-DropdownList__type-filter';
          return opts;
       },
 
