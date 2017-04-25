@@ -407,7 +407,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              return {
                 corner: isRightAlign ? 'tl' : 'tr',
-                parent: this,
+                opener: this,
+                /* Как и у всех панелей задаю parent: null, в противном случае становится невозможным найти owner'a,
+                   т.к. поиск происходит через getTopParent, который будет возвращать самого верхнего родителя,
+                   и с него невозможно найти контролы, которые лежат на панели фильтров */
+                parent: null,
+                owner: this,
                 horizontalAlign: {
                    side: isRightAlign ? 'left' : 'right'
                 },
@@ -431,13 +436,10 @@ define('js!SBIS3.CONTROLS.FilterButton',
                          self._picker = null;
                       }
                    },
-
-                   onShow: function() {
-                      if (!firstTime) {
-                         updatePickerContext();
-                      }
-
-                      firstTime = false;
+   
+                   onCommandCatch: function() {
+                      /* Проксирование комманд кнопке фильтров */
+                      self.sendCommand.apply(self, Array.prototype.slice.call(arguments, 1));
                    },
 
                    onKeyPressed: function(event, e) {
