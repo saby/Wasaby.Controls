@@ -184,15 +184,18 @@
         bottom: @tab-button-inner-after-bottom;
         z-index: @tab-button-inner-after-z-index;
       }
+      .controls-TabButton__wrapper {
+         .flexbox();
+      }
       .controls-TabButton__icon {
          position: @tab-button-icon-position;
          top: @tab-button-icon-top;
-         span {
-            margin-right: @tab-button-inner-icon-margin-left;
-         }
+         margin-right: @tab-button-icon-margin-right;
       }
       .controls-TabButton__caption {
          display: inline-block;
+         overflow: hidden;
+         text-overflow: ellipsis;
          > div {
             vertical-align: top;
          }
