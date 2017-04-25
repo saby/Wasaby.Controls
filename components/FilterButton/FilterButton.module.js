@@ -420,6 +420,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 cssClassName: 'controls__filterButton__picker',
                 template: 'js!SBIS3.CONTROLS.FilterButtonArea',
                 componentOptions: this._getAreaOptions(),
+                _canScroll: true,
                 activateAfterShow: true,
                 handlers: {
                    onClose: function() {
