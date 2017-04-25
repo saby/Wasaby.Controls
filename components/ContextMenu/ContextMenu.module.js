@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', [
    'js!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.PopupMixin',
    'Core/helpers/functional-helpers'
-], function(Menu, PopupMixin, dotTplFn, fHelpers) {
+], function(Menu, PopupMixin, fHelpers) {
 
    'use strict';
 
