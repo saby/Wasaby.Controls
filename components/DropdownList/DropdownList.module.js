@@ -389,6 +389,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(!this._isHoverMode()) {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
+            else {
+               this._getPickerContainer().bind('mouseleave', this.hidePicker.bind(this));
+            }
          },
          _buildTplArgs: function(item) {
             var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
@@ -618,7 +621,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _isHoverMode: function(){
-            return false;
+            //Пока окончательно не избавились от открытия ddl по ховеру
+            return this._options.type === 'customHeader';
          },
          hide: function(){
             if (this._hideAllowed) {
