@@ -1,49 +1,31 @@
+@heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
+
 .controls-ProgressBar {
-   height: @controls-ProgressBar-height;
+  display: inline-block;
 }
-.controls-ProgressBar__line {
-   height: 100%;
-   background: @controls-ProgressBar-empty-bg;
-   position: relative;
-   border-radius: @controls-ProgressBar-border-radius;
+
+.controls-ProgressBar__progress {
+  text-align: center;
+  line-height: @heightProgressBar;
 }
-.controls-ProgressBar__backProgress {
-  height: 100%;
-  overflow: hidden;
+
+.controls-ProgressBar__progress_size {
+  width: calc(e("100% - 2 * @{default-border-width}"));
+  height: @heightProgressBar;
+  border: @default-border-width @default-border-style @gray-light-color;
   border-radius: @controls-ProgressBar-border-radius;
 }
-.controls-ProgressBar__progress {
-   height: 100%;
-   background: @controls-ProgressBar-progress-bg;
-   border-radius: @controls-ProgressBar-border-radius;
+
+.controls-ProgressBar__progress_color {
+  background-repeat: no-repeat;
+  background-color: @gray-f4f4f4-color;
+  background-image: @controls-ProgressBar-progress-bg-grad;
 }
-.controls-ProgressBar__progress {
-   background: @controls-ProgressBar-progress-bg-grad;
+
+.controls-ProgressBar__progress_sizeValue {
+  font-size: @small-text-size;
 }
-.controls-ProgressBar__value {
-   position: absolute;
-   width: 100%;
-   text-align: center;
-}
-.controls-ProgressBar_align-left .controls-ProgressBar__line {
-   margin-left: @controls-ProgressBar-side-space;
-}
-.controls-ProgressBar_align-left .controls-ProgressBar__value{
-   width: auto;
-   left: -@controls-ProgressBar-side-space;
-}
-.controls-ProgressBar_align-right .controls-ProgressBar__line {
-   margin-right: @controls-ProgressBar-side-space;
-}
-.controls-ProgressBar_align-right .controls-ProgressBar__value{
-   width: auto;
-   right: -@controls-ProgressBar-side-space;
-}
-.ws-disabled {
-  .controls-ProgressBar__progress {
-    background: @button-disabled-bg;
-  }
-  .controls-ProgressBar__value {
-    color: @button-disabled-text-color;
-  }
+
+.controls-ProgressBar__progress_colorValue {
+  color: @disabled-color;
 }
