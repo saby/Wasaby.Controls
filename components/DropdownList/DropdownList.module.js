@@ -389,6 +389,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(!this._isHoverMode()) {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
+            else {
+               this._getPickerContainer().bind('mouseleave', this.hidePicker.bind(this));
+            }
          },
          _buildTplArgs: function(item) {
             var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
