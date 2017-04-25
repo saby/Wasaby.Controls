@@ -502,6 +502,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                side: 'left'
             },
             closeByExternalClick: true,
+            _canScroll: true,
             targetPart: true,
             activableByClick: false,
             template : this._dotTplFnPicker({})
