@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CORE.Control/Control.compatible',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
-      'js!SBIS3.CONTROLS.ScrollContainer/ScrollContainer.compatible',
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
@@ -19,7 +18,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              ControlCompatible,
              AreaAbstractCompatible,
              BaseCompatible,
-             ScrollContainerCompatible,
              template,
              Scrollbar,
              cDetection,
@@ -28,7 +26,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              StickyHeaderManager,
              compatibility) {
 
-      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ScrollContainerCompatible], {
+      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible], {
          _template: template,
 
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',

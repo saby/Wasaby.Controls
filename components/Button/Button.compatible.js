@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
 
       _containerReady:function(container){
-         if (window && container && !container[0].startTag) {
+         if (window) {
             container.on('click', this._onClickHandler.bind(this));
             var self = this;
 
