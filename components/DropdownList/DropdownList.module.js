@@ -406,14 +406,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _removeOldKeys: function(){
             var keys = this.getSelectedKeys(),
-                items = this.getItems();
+                items = this.getItems(),
+                i = 0;
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
             //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
             if (!this._options.emptyValue || keys[0] !== null){
                if (!this._isEnumTypeData()) {
-                  for (var i = 0, l = keys.length; i < l; i++) {
+                  while (i < keys.length) {
                      if (!items.getRecordById(keys[i])) {
                         keys.splice(i, 1);
+                     }
+                     else {
+                        i++;
                      }
                   }
                   if (!keys.length){
