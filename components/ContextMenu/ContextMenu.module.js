@@ -5,9 +5,8 @@
 define('js!SBIS3.CONTROLS.ContextMenu', [
    'js!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.PopupMixin',
-   'html!SBIS3.CONTROLS.ContextMenu',
    'Core/helpers/functional-helpers'
-], function(Menu, PopupMixin, dotTplFn, fHelpers) {
+], function(Menu, PopupMixin, fHelpers) {
 
    'use strict';
 
@@ -24,7 +23,11 @@ define('js!SBIS3.CONTROLS.ContextMenu', [
     */
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {
-      _dotTplFn : dotTplFn,
+      _modifyOptions: function() {
+         var cfg = ContextMenu.superclass._modifyOptions.apply(this, arguments);
+         cfg.className += ' controls-Menu__Popup';
+         return cfg;
+      },
       _itemActivatedHandler : function(id, event) {
          var menuItem = this.getItemInstance(id);
          if (!(menuItem.getContainer().hasClass('controls-Menu__hasChild'))) {
