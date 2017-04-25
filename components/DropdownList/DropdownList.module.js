@@ -621,7 +621,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _isHoverMode: function(){
-            return false;
+            //Пока окончательно не избавились от открытия ddl по ховеру
+            return this._options.type === 'customHeader';
          },
          hide: function(){
             if (this._hideAllowed) {
