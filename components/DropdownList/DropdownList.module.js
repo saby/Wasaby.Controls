@@ -532,14 +532,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _getIdByRow: function(row){
-            var itemProjection;
             if (!row.length || !row.data('hash')) {
                return undefined;
             }
+            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             if (this._isEnumTypeData()) {
-               return this._getItemsProjection().getIndexByHash(row.data('hash'));
+               return this._getItemsProjection().getSourceIndexByItem(itemProjection);
             }
-            itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
             return itemProjection ? itemProjection.getContents().getId() : null;
          },
