@@ -1,7 +1,7 @@
 
 define('js!SBIS3.CONTROLS.Button', [
    'Core/constants',
-   'js!WS.Controls.Button',
+   'js!WSControls/Buttons/Button',
    'css!SBIS3.CONTROLS.Button'
 ], function(constants, WSButton) {
 

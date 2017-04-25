@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.MenuButton', [
-   'js!WS.Controls.MenuButton',
+   'js!WSControls/Buttons/MenuButton',
    'css!SBIS3.CONTROLS.Button',
    'css!SBIS3.CONTROLS.MenuButton'
 ], function(WSMenuButton) {

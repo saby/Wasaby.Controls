@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.FilterText',
     [
-       'js!WS.Controls.ButtonBase',
+       'js!WSControls/Buttons/ButtonBase',
        'html!SBIS3.CONTROLS.FilterText',
        'js!SBIS3.CONTROLS.ITextValue'
     ], function(WSButtonBase, dotTplFn, ITextValue) {

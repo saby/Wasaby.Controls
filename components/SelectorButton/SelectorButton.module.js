@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     [
    "Core/constants",
    "html!SBIS3.CONTROLS.SelectorButton",
-   "js!WS.Controls.ButtonBase",
+   "js!WSControls/Buttons/ButtonBase",
    "js!SBIS3.CONTROLS.DSMixin",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.ActiveMultiSelectable",

@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
 
    'use strict';
 

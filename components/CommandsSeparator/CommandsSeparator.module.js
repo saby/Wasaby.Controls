@@ -4,7 +4,7 @@
  * @description
  */
 define('js!SBIS3.CONTROLS.CommandsSeparator', [
-   'js!WS.Controls.ButtonBase',
+   'js!WSControls/Buttons/ButtonBase',
    'js!SBIS3.CONTROLS.Checkable',
    'tmpl!SBIS3.CONTROLS.CommandsSeparator',
    'css!SBIS3.CONTROLS.CommandsSeparator'

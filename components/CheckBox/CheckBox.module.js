@@ -1,7 +1,7 @@
 
 define('js!SBIS3.CONTROLS.CheckBox', [
    "Core/constants",
-   "js!WS.Controls.ButtonBase",
+   "js!WSControls/Buttons/ButtonBase",
    "js!SBIS3.CONTROLS.Checkable",
    "tmpl!SBIS3.CONTROLS.CheckBox",
    "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
