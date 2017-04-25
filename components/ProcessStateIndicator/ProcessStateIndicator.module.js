@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          return color || defaultColors[idx]; 
       });                 
       
-      if (options.numValues > options.colors.length) {
+      if (options.numValues > colors.length) {
          throw new Error('Number of values is greater than number of colors');
       }
       
