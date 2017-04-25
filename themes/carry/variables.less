@@ -1,8 +1,8 @@
 @import "../online/variables";
 
 @globalDefaultFontSize:                         24px;
-@font-basic-size:                               @globalDefaultFontSize;
-@font-basic-line-height:                        24px;
+@default-font-size:                             @globalDefaultFontSize;
+@default-font-line-height:                      24px;
 @data-grid-basic-height:                        44px;
 
 @default-itemHover-color:                       #E1ECF6;
@@ -72,7 +72,6 @@
 // Data Range Slider //
 // ----------------- //
 @date-range-slider-font-size:                   @globalDefaultFontSize;
-@date-range-slider-value-min-width:             124px;
 @date-range-slider-value-padding:               0;
 @date-range-slider-year-state-width:            136px;
 @date-range-slider-height:                      40px;
@@ -133,6 +132,7 @@
 @date-range-big-choose-header-home-button-margin:              1px 0;
 @date-range-big-choose-header-home-button-size:                40px;
 @date-range-big-choose-header-home-button-font-size:           24px;
+@date-range-big-choose-header-home-button-left:                7px;
 @date-range-big-choose-header-home-button-line-height:         38px;
 @date-range-big-choose-header-date-box-font-size:              inherit;
 @date-range-big-choose-header-date-pickers-margin-right:       75px;
@@ -186,6 +186,7 @@
 // --------- //
 // List view //
 // --------- //
+@list-view-min-height:                           90px;
 @listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
 @listView-check-box-icon-bg:                    @check-box-icon-bg;
 @listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
@@ -216,6 +217,7 @@
 // ---- //
 
 @link-text-decoration:                          none;
+@link-height:                                   auto;
 
 // ------ //
 // Button //
@@ -230,11 +232,13 @@
 
 @button-icon-big-top-offset:                    7px;
 @button-icon-big-left-offset:                   10px;
+@button-without-caption-min-width:              60px;
 
 // Normal default button
 @button-bg:                                     #EAEAEA;
 @button-hover-bg:                               #E1ECF6;
 @button-active-bg:                              #C1D7F0;
+@button-big-font-size:                          @globalDefaultFontSize;
 
 @button-border:                                 @button-border-width solid transparent;
 @button-border-radius:                          0;
@@ -257,9 +261,10 @@
 // Big button
 
 @button-big-border-radius:                      0;
-@button-big-font:                               @globalDefaultFontSize @font-basic-name;
+@button-big-font:                               @globalDefaultFontSize @default-font-name;
 @button-big-min-width:                          60px;
 @button-big-height:                             60px;
+@button-big-line-height:                        60px;
 @icon-height:                                   24px;
 
 @button-big-icon-top-offset:                    22px;
@@ -273,6 +278,8 @@
 
 @button-big-icon-32-top-offset:                 14px;
 @button-big-icon-32-left-offset:                14px;
+
+@button-without-caption-icon-32-left:           14px;
 
 // Big disabled button
 
@@ -385,7 +392,7 @@
 
 
 @DropdownList-height:                           40px;
-@DropdownList-picker-menu-font-size:            @font-basic-size;
+@DropdownList-picker-menu-font-size:            @default-font-size;
 @DropdownList-picker-offset:                    8px 0 0 2px;
 @DropdownList-picker-fastdatafilter-offset:     0 0 0 2px;
 @DropdownList-picker-margin-top:                0;
@@ -440,6 +447,7 @@
 @search-border-color:                           @text-box-border-color;
 @search-form-border-disabled-width:             0;
 @search-buttons-wrapper-width:                  32px + 40px;
+@search-form-field-wrapper-margin-right:        77px;
 @search-hover-border-color:                     @text-box-bottom-border-color;
 @search-bottom-border-color:                    @text-box-bottom-border-color;
 @search-form-disabled-border-bottom:            1px solid @text-box-disabled-border-bottom;
@@ -506,7 +514,7 @@
 
 
 // Popup
-@popup-font-size:                               @font-basic-size;
+@popup-font-size:                               @default-font-size;
 
 @menu-item-text-margin:                         0;
 @menu-item-icon-24-margin:                      0 0 0 34px;
@@ -646,6 +654,3 @@
 
 @controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
-
-//Browser
-@controls-Browser-ListView-minHeight:              90px;

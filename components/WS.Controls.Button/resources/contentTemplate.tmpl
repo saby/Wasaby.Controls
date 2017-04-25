@@ -1,4 +1,4 @@
 <ws:if data="{{!!icon}}">
    <i class="controls-Button__icon js-controls-Button__icon {{_iconClass}}"></i>
 </ws:if>
-<span class="controls-Button__text js-controls-Button__text{{!caption ? ' controls-Button__emptyCaption'}} {{_textClass}}">{{caption}}</span>
+<span class="controls-Button__text js-controls-Button__text{{!caption ? ' controls-Button__emptyCaption'}} {{_textClass}}"><ws:if data="{{!!caption}}">{{caption|sanitize}}</ws:if><ws:else>{{'&nbsp;'|sanitize}}</ws:else></span>

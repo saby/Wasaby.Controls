@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [
    "Core/core-functions",
-   "js!WS.Data/Relation/Hierarchy"
-], function ( cFunctions,Hierarchy) {
+   "js!WS.Data/Relation/Hierarchy", 'Core/IoC'
+], function ( cFunctions,Hierarchy, IoC) {
 
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.

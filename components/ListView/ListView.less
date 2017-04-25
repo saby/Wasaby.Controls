@@ -1,33 +1,24 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
 .controls-ListView {
     position: relative;
-   //Данные стили обеспечивают правильное поведение ListView при активации.
-   //Фокус должен переходить на элемент с position fixed.
-   .controls-ListView__fakeFocusElement {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 1px;
-      height: 1px;
+
+   &:not(.controls-ListView__dataLoaded) {
+      min-height: @list-view-min-height;
    }
 
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
-
-     &.controls-ListView__hoveredItem {
-        background-color: @default-itemHover-color;
-        .controls-ListView__itemCheckBox {
-           	background: @listView-check-box-icon-bg;
-           	&:hover{
-      			background: @listView-check-box-icon-hover-bg;
-      		}
-        }
-     }
   }
-
-   .controls-Pager-container {
-      overflow: hidden;
+   
+   &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem {
+      background-color: @default-itemHover-color;
+      .controls-ListView__itemCheckBox {
+         background: @listView-check-box-icon-bg;
+         &:hover{
+            background: @listView-check-box-icon-hover-bg;
+         }
+      }
    }
 
    &.controls-small-ListView {
@@ -36,29 +27,7 @@
        color: @gray-ccc-color;
      }
    }
-
-   .controls-ListView__EmptyData{
-      color: @listView-empty-data-color;
-      .box-sizing(border-box);
-      padding-top: @listView-empty-data-padding-top;
-      font-size: @listView-empty-data-font-size;
-      text-align: center;
-   }
-   .controls-ListView__itemCheckBox {
-      .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
-      width: @listView-check-box-width;
-      height: @listView-check-box-height;
-      background: none;
-      cursor: pointer;
-      display: none;
-      position: absolute;
-      left: @listView-check-box-left;
-      top: @listView-check-box-top;
-      border: @listView-check-box-border;
-      &:hover{
-      	background: @listView-check-box-icon-hover-bg;
-      }
-   }
+   
    &.controls-ListView__multiselect {
       .controls-ListView__itemCheckBox {
          display: inline-block;
@@ -75,21 +44,6 @@
       			background: @listView-check-box-icon-checked-bg;
       		}
          }
-      }
-   }
-   .controls-ListView-scrollIndicator{
-      display: block;
-      margin: 0 auto;
-      height: @list-view-scroll-height;
-      bottom: 0;
-      position: absolute;
-      z-index: 1;
-      right: 0;
-      width: 100%;
-      background: @list-view-loading-indicator-gradient-bg;
-      &.controls-ListView-scrollIndicator__up{
-         top: 0;
-         background: @list-view-loading-indicator-gradient-bg-up;
       }
    }
    &.controls-ListView__outside-scroll-loader{
@@ -126,30 +80,6 @@
      display: none;
    }
 
-   .controls-ListView__scrollPager{
-      position: fixed;
-      bottom: 0;
-      height: 32px;
-      background: @scrollpager-bg;
-      border-top: 1px solid @default-color;
-      z-index: 10;
-   }
-
-   .controls-ListView__serviceFooter {
-      height: @listView-servicefooter-height;
-      line-height: @listView-servicefooter-height;
-      padding: @listView-servicefooter-padding;
-   }
-
-   .controls-ListView__counter {
-      float: right;
-      color: @gray-color;
-      font-size: @listView-servicefooter-fontsize;
-      display: inline-block;
-      height: @listView-servicefooter-height;
-      line-height: @listView-servicefooter-height;
-   }
-
    &.controls-ListView__orangeMarker {
       .controls-ListView__itemsContainer > {
          .controls-ListView__item__selected {
@@ -163,6 +93,85 @@
       }
    }
 }
+
+//Данные стили обеспечивают правильное поведение ListView при активации.
+//Фокус должен переходить на элемент с position fixed.
+.controls-ListView__fakeFocusElement {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 1px;
+   height: 1px;
+}
+
+.controls-ListView__EmptyData{
+   color: @listView-empty-data-color;
+   .box-sizing(border-box);
+   padding-top: @listView-empty-data-padding-top;
+   font-size: @listView-empty-data-font-size;
+   text-align: center;
+}
+
+.controls-Pager-container {
+   overflow: hidden;
+}
+
+.controls-ListView__itemCheckBox {
+   .user-select(); // Запрещаем выделять itemCheckbox, т.к. иногда при сильном закликивании он попадает в выделение и начинает срабатывать BreakClickBySelectMixin
+   width: @listView-check-box-width;
+   height: @listView-check-box-height;
+   background: none;
+   cursor: pointer;
+   display: none;
+   position: absolute;
+   left: @listView-check-box-left;
+   top: @listView-check-box-top;
+   border: @listView-check-box-border;
+   &:hover{
+      background: @listView-check-box-icon-hover-bg;
+   }
+}
+
+.controls-ListView-scrollIndicator{
+   display: block;
+   margin: 0 auto;
+   height: @list-view-scroll-height;
+   bottom: 0;
+   position: absolute;
+   z-index: 1;
+   right: 0;
+   width: 100%;
+   background: @list-view-loading-indicator-gradient-bg;
+   &.controls-ListView-scrollIndicator__up{
+      top: 0;
+      background: @list-view-loading-indicator-gradient-bg-up;
+   }
+}
+
+.controls-ListView__scrollPager{
+   position: fixed;
+   bottom: 0;
+   height: 32px;
+   background: @scrollpager-bg;
+   border-top: 1px solid @default-color;
+   z-index: 10;
+}
+
+.controls-ListView__serviceFooter {
+   height: @listView-servicefooter-height;
+   line-height: @listView-servicefooter-height;
+   padding: @listView-servicefooter-padding;
+}
+
+.controls-ListView__counter {
+   float: right;
+   color: @gray-color;
+   font-size: @listView-servicefooter-fontsize;
+   display: inline-block;
+   height: @listView-servicefooter-height;
+   line-height: @listView-servicefooter-height;
+}
+
 .controls-AjaxLoader{
    background: @controls-AjaxLoader-background;
    position: absolute;
@@ -175,30 +184,34 @@
    z-index: @controls-AjaxLoader-zIndex;
    overflow: hidden;
    min-height: @controls-AjaxLoader-minHeight;
-   .controls-AjaxLoader__outer{
-      height: @controls-AjaxLoader-outer-height;
-      position: relative;
-      top: @controls-AjaxLoader-outer-top;
-      line-height: @controls-AjaxLoader-outer-lineHeight;
-      .controls-AjaxLoader__block{
-         width: @controls-AjaxLoader-block-width;
-         border: none;
-         box-shadow: none;
-         background: @controls-AjaxLoader-block-background;
-         margin-left: auto;
-         margin-right: auto;
-         position: relative;
-         top: @controls-AjaxLoader-block-top;
-         padding: @controls-AjaxLoader-block-padding;
-         .controls-AjaxLoader__LoadingIndicator{
-            position: absolute;
-            background:@list-view-scroll-bg;
-            padding-left: @controls-AjaxLoader-indicator-padding-left;
-            height: @controls-AjaxLoader-indicator-height;
-         }
-      }
-   }
 }
+
+.controls-AjaxLoader__outer{
+   height: @controls-AjaxLoader-outer-height;
+   position: relative;
+   top: @controls-AjaxLoader-outer-top;
+   line-height: @controls-AjaxLoader-outer-lineHeight;
+}
+
+.controls-AjaxLoader__block{
+   width: @controls-AjaxLoader-block-width;
+   border: none;
+   box-shadow: none;
+   background: @controls-AjaxLoader-block-background;
+   margin-left: auto;
+   margin-right: auto;
+   position: relative;
+   top: @controls-AjaxLoader-block-top;
+   padding: @controls-AjaxLoader-block-padding;
+}
+
+.controls-AjaxLoader__LoadingIndicator{
+   position: absolute;
+   background:@list-view-scroll-bg;
+   padding-left: @controls-AjaxLoader-indicator-padding-left;
+   height: @controls-AjaxLoader-indicator-height;
+}
+
 .controls-DragNDrop__draggedItem {
   position: absolute;
   width: @drag-and-drop-object-width;
@@ -214,7 +227,7 @@
   line-height: @drag-and-drop-count-height;
   margin: @drag-and-drop-count-margin;
   color: @white-color;
-  font-family: @font-basic-name;
+  font-family: @default-font-name;
   font-size: 10px;
 }
 

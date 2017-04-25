@@ -5,10 +5,11 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.FormWidgetMixin',
    'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.DateRangeSliderBase'
-], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, dateHelpers) {
+], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, dateHelpers) {
    'use strict';
 
    /**
@@ -20,13 +21,14 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.RangeMixin
     * @mixes SBIS3.CONTROLS.DateRangeMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @author Миронов Александр Юрьевич
     *
     * @control
     * @public
     * @category Date/Time
     */
-   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBase.prototype */{
+   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBase.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
@@ -80,8 +82,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
 
       _modifyOptions: function() {
          var opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
-         opts._caption = dateHelpers.getFormattedDateRange(opts.startValue, opts.endValue,
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         opts._caption = this._getCaption(opts);
          return opts;
       },
 
@@ -100,14 +101,29 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       },
 
       _updateValueView: function () {
-         var caption = dateHelpers.getFormattedDateRange(this.getStartValue(), this.getEndValue(),
-            {contractToMonth: true, fullNameOfMonth: true, contractToQuarter: true, contractToHalfYear: true, emptyPeriodTitle: rk('Период не указан')});
+         var caption = this._getCaption();
          if (this._options.type === 'normal') {
             this.getContainer().find(['.', this._cssRangeSlider.value].join('')).text(caption);
          } else {
             this.getChildControlByName('Link').setCaption(caption);
          }
 
+      },
+
+      _getCaption: function (opts) {
+         opts = opts || this._options;
+         // В качестве пустого значения используем неразрывный пробел @nbsp;('\xA0') что бы не ехала верстка
+         return dateHelpers.getFormattedDateRange(
+            opts.startValue,
+            opts.endValue,
+            {
+               contractToMonth: true,
+               fullNameOfMonth: true,
+               contractToQuarter: true,
+               contractToHalfYear: true,
+               emptyPeriodTitle: opts.showUndefined ? rk('Период не указан') : '\xA0'
+            }
+         );
       },
 
       _onClickHandler: function(event) {

@@ -20,7 +20,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/helpers/collection-helpers",
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
-   "js!SBIS3.CONTROLS.Action.SelectorAction",
+   'js!SBIS3.CONTROLS.Utils.ItemsSelection',
+   'js!SBIS3.CONTROLS.Action.SelectorAction',
    'css!SBIS3.CONTROLS.SelectorButton'
 ],
     function(
@@ -40,7 +41,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        fHelpers,
        colHelpers,
        strHelpers,
-       ToSourceModel
+       ToSourceModel,
+       ItemsSelectionUtil
     ) {
 
    'use strict';
@@ -230,23 +232,24 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
-         } else {
-            if(this.getProperty('useSelectorAction')) {
-               cfg.multiselect = this.getMultiselect();
-               cfg.selectedItems = this.getSelectedItems();
-               this._getSelectorAction().execute(cfg);
-            } else {
-               this._showChooser(cfg.template, cfg.componentOptions);
-            }
+         } else if(cfg) {
+            this.showSelector(cfg);
          }
       },
 
-      _getSelectorAction: function() {
-         if(!this._selectorAction) {
-            this._selectorAction = this.getChildControlByName('SelectorButtonSelectorAction')
+      showSelector: function(cfg) {
+         if(this.getProperty('useSelectorAction')) {
+            cfg.multiselect = this.getMultiselect();
+            cfg.selectedItems = this.getSelectedItems();
+            this._getSelectorAction().execute(cfg);
+         } else {
+            this._showChooser(cfg.template, cfg.componentOptions);
          }
-         return this._selectorAction;
       },
+
+      _getSelectorAction: fHelpers.memoize(function() {
+         return this.getChildControlByName('SelectorButtonSelectorAction');
+      },'_getSelectorAction'),
 
       /**
        * Установить набор диалогов выбора для поля связи
@@ -270,6 +273,14 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                 this.addSelectedItems(result) :
                 this.addItemsSelection(result);
          }
+      },
+   
+      _notify: function () {
+         return ItemsSelectionUtil.delayedNotify(
+            SelectorButton.superclass._notify,
+            arguments,
+            this
+         );
       },
 
       _prepareItems: function() {

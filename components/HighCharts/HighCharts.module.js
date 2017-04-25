@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "html!SBIS3.CONTROLS.HighCharts",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
-   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
+   "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
@@ -1197,9 +1197,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
          if (this._chartObj) {
             this._chartObj.destroy();
          }
-         if (this._dataSource) {
-            this._dataSource.destroy();
-         }
+         this._dataSource = null;
          dcHelpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }

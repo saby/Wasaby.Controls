@@ -1,0 +1,15 @@
+<tr class="controls-TreeDataGridView__folderFooter" data-parent="{{key}}">
+    <ws:if data="{{multiselect}}">
+        <td></td>
+    </ws:if>
+    <td colspan="{{colspan}}">
+        <div class="controls-TreeView__folderFooterContainer" style="padding-left: {{padding}}px">
+            <ws:if data="{{footerTpl}}">
+                <div class="controls-TreeDataGridView__folderFooterTmpl">
+                    <ws:partial template="{{footerTpl}}" scope="{{...}}"></ws:partial>
+                </div>
+            </ws:if>
+            <ws:SBIS3.CONTROLS.TreePaging scope="{{pagerOptions}}"></ws:SBIS3.CONTROLS.TreePaging>
+        </div>
+    </td>
+</tr>

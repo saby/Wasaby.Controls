@@ -132,23 +132,22 @@
   box-sizing: border-box;
 }
 
-.button-default-style() {
+.button-default-style(@button-font-size: @link-font-size) {
   cursor: pointer;
-  display: inline-flex;
-  .align-items(center);
+  display: inline-block;
   outline: none;
   .box-sizing(border-box);
-  font-family: @font-basic-name;
-  font-size: @link-font-size;
+  font-family: @default-font-name;
+  font-size: @button-font-size;
+  font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
-  background: @button-bg;
   .box-shadow(@button-shadow);
   border: none;
   padding: 0;
 }
 
-.button-baseline-fix(@height: auto) {
+.baseline-fix(@height: auto) {
   &:before {
     content: '.';
     width: 0;
@@ -295,9 +294,21 @@
 // - applies to: flex items
 // auto | flex-start | flex-end | center | baseline | stretch
 .align-self(@align: auto) {
+  .ms-flex-align-self(@align); // IE10
   -webkit-align-self: @align;
       -ms-align-self: @align;
           align-self: @align;
+}
+.ms-flex-align-self(@align) when (@align = flex-start) {
+  -ms-flex-item-align: start;
+}
+
+.ms-flex-align-self(@align) when (@align = flex-end) {
+  -ms-flex-item-align: end;
+}
+
+.ms-flex-align-self(@align) when (@align = auto), (@align = center), (@align = baseline), (@align = stretch) {
+  -ms-flex-item-align: @align;
 }
 // Flex Direction and Wrap
 // - applies to: flex containers
@@ -440,8 +451,10 @@
   }
 }
 
-.button-mixin(@border-width; @margin-left; @margin-right; @icon-width) {
-  left:  @margin-left - @border-width;
+.button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+  left: @icon-left - @border-width;
+  top: 50%;
+  margin-top: -@icon-width/2;
 
   & + .controls-Button__text {
     margin-right: @margin-right - @border-width;
