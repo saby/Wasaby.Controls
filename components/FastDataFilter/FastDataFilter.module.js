@@ -48,7 +48,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             _options: {
                itemTpl: ItemTpl,
                displayProperty: '',
-               hidingDelay: 0,
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
                 * @remark
@@ -146,9 +145,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                self._notify('onClickMore', item);
             });
 
-            //Выпилить и событие и метод после перехода на новый стандарт
-            this.subscribeTo(item, 'onPickerInitializing', this._subscribeToMouseEvents.bind(this, item));
-
             this.subscribeTo(item, 'onSelectedItemsChange', function(event, idArray){
                var idx = self._getFilterSctructureItemIndex(this.getContainer().data('id')),
                    text = [],
@@ -176,58 +172,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
                self._setItemPositionForIE10();
             });
-         },
-         _initializeDDLPicker: function() {
-
-         },
-         _subscribeToMouseEvents: function (item) {
-            item._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, true));
-            item._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, false));
-            item._getPickerContainer().bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, null));
-
-            item._pickerHeadContainer.bind('mouseenter', this._pickerMouseEnterHandler.bind(this, item));
-            item._pickerBodyContainer.bind('mouseenter', this._pickerMouseEnterHandler.bind(this, item));
-            item._getPickerContainer().bind('mouseenter', this._pickerMouseEnterHandler.bind(this, item));
-         },
-         _pickerMouseEnterHandler: function (item) {
-            if (this._hoveredItem && this._hoveredItem !== item) {
-               this._hoveredItem.hidePicker();
-            }
-            this._hoveredItem = item;
-            this._hoveredItem._isHideRunning = false;
-         },
-         _pickerMouseLeaveHandler: function (item, fromHeader, e) {
-            var pickerContainer = item._getPickerContainer(),
-               toElement = $(e.toElement || e.relatedTarget),
-               containerToCheck;
-
-            if (fromHeader) {
-               containerToCheck = item._pickerBodyContainer;
-            } else if (fromHeader === null) {
-               containerToCheck = pickerContainer;
-            } else {
-               containerToCheck = dcHelpers.hasScrollbar(pickerContainer) ? pickerContainer : item._pickerHeadContainer;
-            }
-
-            if (item._hideAllowed && !toElement.closest(containerToCheck, pickerContainer).length) {
-               this._hideItem(item);
-            }
-         },
-         _hideItem: function (item) {
-            if (!item._isHideRunning) {
-               if (this._options.hidingDelay) {
-                  item._isHideRunning = true;
-                  setTimeout(function () {
-                     if (item._isHideRunning){
-                        item._isHideRunning = false;
-                        item.hidePicker();
-                     }
-                  }.bind(this), this._options.hidingDelay);
-               }
-               else {
-                  item.hidePicker();
-               }
-            }
          },
          _recalcDropdownWidth: function(){
             this._resetMaxWidth();
