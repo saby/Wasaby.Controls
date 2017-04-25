@@ -102,6 +102,26 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
       
       return colorValues;
    }
+   
+   function checkState(state) {
+      var sum;
+      
+      if (!(state instanceof Array)) {
+         state = [ state ]
+      }
+      
+      sum = state.map(Number).reduce(function(sum, v) {
+         return sum + Math.max(v, 0);
+      }, 0);
+      
+      if (isNaN(sum)) {
+         throw new Error('State [' + state + '] is incorrect, it contains non-numeric values');
+      }
+      
+      if (sum > 100) {
+         throw new Error('State [' + state + '] is incorrect. Values total is greater than 100%');
+      }
+   }
 
    
    ProcessStateIndicator = control.Control.extend(/** @lends SBIS3.CONTROLS.ProcessStateIndicator.prototype */ {
@@ -214,6 +234,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
        * @see numValues
        */
       setState: function(state) {
+         checkState(state);
          this._options.state = state;
          this._applyState();
       },
