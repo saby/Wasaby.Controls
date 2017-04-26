@@ -48,21 +48,23 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 			})
 			
 			.capture('opened_align_menu', function (actions) {
+				actions.click(this.input2);
 				actions.click(this.textAlign);
 				actions.waitForElementToShow('.icon-AlignmentLeft', 2000);
 				actions.waitForElementToShow('.icon-AlignmentWidth', 2000);
 			})
 			
 			.capture('opened_list_menu', function (actions) {
+				actions.click(this.input2);
 				actions.click(this.textList);
 				actions.waitForElementToShow('.icon-ListMarked', 2000);
-				actions.waitForElementToShow('.icon-ListNumbered', 2000);
+				actions.waitForElementToShow('.icon-ListNumbered', 2000);				
 			})
 			
 			.capture('opened_style_menu', function (actions) {
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__title', 2000);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__additionalText', 2000);
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="title"]', 2000);
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="additionalText"]', 2000); 
 			})
 			
 			.capture('hovered_style_button', function (actions) {
@@ -227,8 +229,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__title', 2000);
-				actions.click('.controls-RichEditorDropdown__itemText__title');
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="title"]', 2000);
+				actions.click('.js-controls-ComboBox__itemRow[data-id="title"]');
 				actions.click(this.input2);
 			})
 			
@@ -237,11 +239,11 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__subTitle', 2000);
-				actions.click('.controls-RichEditorDropdown__itemText__subTitle');
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="subTitle"]', 2000);
+				actions.click('.js-controls-ComboBox__itemRow[data-id="subTitle"]');
 				actions.click(this.input2);
 			})
-
+			/*
 			.capture('selected_main_text', function (actions) {
 				actions.click(this.input);
 				actions.sendKeys(this.input, gemini.END);
@@ -251,14 +253,14 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.click('.controls-RichEditorDropdown__itemText__selectedMainText');
 				actions.click(this.input2);
 			})
-			
+			*/
 			.capture('additional_text', function (actions) {
 				actions.click(this.input);
 				actions.sendKeys(this.input, gemini.END);
 				actions.sendKeys(this.input, gemini.CONTROL+gemini.SHIFT+gemini.HOME);
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__additionalText', 2000);
-				actions.click('.controls-RichEditorDropdown__itemText__additionalText');
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="additionalText"]', 2000);
+				actions.click('.js-controls-ComboBox__itemRow[data-id="additionalText"]');
 				actions.click(this.input2);
 			})
 			
@@ -609,15 +611,15 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, 'Заголовок');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__title', 2000);
-				actions.click('.controls-RichEditorDropdown__itemText__title');
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="title"]', 2000);
+				actions.click('.js-controls-ComboBox__itemRow[data-id="title"]');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'Подзаголовок');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__subTitle', 2000);
-				actions.click('.controls-RichEditorDropdown__itemText__subTitle');
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="subTitle"]', 2000);
+				actions.click('.js-controls-ComboBox__itemRow[data-id="subTitle"]');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.sendKeys(this.input, 'Выделенный основной');
@@ -630,8 +632,8 @@ gemini.suite('SBIS3.CONTROLS.RichFieldEditor', function () {
 				actions.sendKeys(this.input, 'Дополнительный текст');
 				actions.sendKeys(this.input, gemini.SHIFT+gemini.HOME);
 				actions.click(this.textStyle);
-				actions.waitForElementToShow('.controls-RichEditorDropdown__itemText__additionalText', 2000);
-				actions.click('.controls-RichEditorDropdown__itemText__additionalText');
+				actions.waitForElementToShow('.js-controls-ComboBox__itemRow[data-id="additionalText"]', 2000);
+				actions.click('.js-controls-ComboBox__itemRow[data-id="additionalText"]');
 				actions.sendKeys(this.input, gemini.ARROW_RIGHT);
 				actions.sendKeys(this.input, gemini.ENTER);
 				actions.click(this.bold)
