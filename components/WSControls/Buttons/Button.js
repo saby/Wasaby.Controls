@@ -157,16 +157,8 @@ define('js!WSControls/Buttons/Button', [
         *    btn.setIcon('sprite:icon16 icon-Alert icon-done');
         * </pre>
         */
-      _drawIcon: function(icon) {
-         var content,
-             caption = $('.js-controls-Button__text', this._container.get(0)).html();
-         if (!icon) {
-             content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
-         } else {
-             content = $('<i class="controls-Button__icon js-controls-Button__icon' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
-         }
-         $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
-         this._container.html(content);
+      _drawIcon: function() {
+          this._container.get(0).innerHTML = contentTemplate(this._options);
       },
 
       setEnabled: function(enabled){
