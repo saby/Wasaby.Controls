@@ -1705,6 +1705,30 @@
 @list-view-separator-expander-size:                16px;
 @list-view-separator-content-hover-color:          @blue-dark-color;
 
+// -------------------- //
+//  View padding sizes
+// -------------------- //
+@controls-view-padding-variants:                   XS, S, M, L, XL;
+@controls-view-padding-DEFAULT:                    8px;
+@controls-view-padding-XS:                         0;
+@controls-view-padding-S:                          12px;
+@controls-view-padding-M:                          16px;
+@controls-view-padding-L:                          20px;
+@controls-view-padding-XL:                         24px;
+// Padding with photo
+@controls-view-photo-padding-variants:             S, M, L;
+@controls-view-photo-padding-S:                    0 6px 0 4px;
+@controls-view-photo-padding-M:                    0 10px 0 4px;
+@controls-view-photo-padding-L:                    0 14px 0 8px;
+@controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
+// Edit in place padding
+@controls-view-eip-padding-DEFAULT:                3px;
+@controls-view-eip-padding-XS:                     0px;
+@controls-view-eip-padding-S:                      7px;
+@controls-view-eip-padding-M:                      11px;
+@controls-view-eip-padding-L:                      15px;
+@controls-view-eip-padding-XL:                     19px;
+
 // --------- //
 //  ToolBar  //
 // --------- //
@@ -1726,11 +1750,15 @@
 
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
-@tree-view-expand-margin:                       0 4px 0 -2px;
+@tree-view-expand-margin:                       0 6px 0 4px;
+
+@tree-view-level-padding:                       26px;
+@tree-view-level-padding-photo:                 46px;
+@tree-view-level-padding-photo-S:               26px;
+@tree-view-level-padding-photo-M:               30px;
+@tree-view-level-padding-photo-L:               38px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
-
-@tree-view-first-td-padding-left:               6px;
 
 @tree-view-editArrow-position:                  relative;
 @tree-view-editArrow-top:                       2px;
@@ -1765,7 +1793,7 @@
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
 @tree-view-ellipsis-copyArrow-right:            -1px;
-@tree-view-firstCell-margin-searchMode:         6px;
+@tree-view-firstCell-margin-searchMode:         2px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1828,8 +1856,6 @@
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
-@data-grid-side-cell-padding:                   8px;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -1973,10 +1999,8 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    3px;
-@controls-editInPlace-editor-without-offset-margin: -6px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
-
+@controls-editInPlace-editor-without-offset-margin: -6px;
 
 // --------------- //
 //    MultiView    //

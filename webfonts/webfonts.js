@@ -49,14 +49,14 @@ var web_fonts = [
       'font-family': 'cbuc-icons',
       'font-weight': 'normal',
       'font-style': 'normal',
-      'version': '1.12.14',
+      'version': '1.12.18',
       'use': true
    },
    {
       'font-family': 'cbuc-icons24',
       'font-weight': 'normal',
       'font-style': 'normal',
-      'version': '1.12.14',
+      'version': '1.12.18',
       'use': true
    }
 ];
