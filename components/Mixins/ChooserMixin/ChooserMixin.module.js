@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             componentOptions: componentOptions || {},
             opener: this,
             parent: this._options.chooserMode === 'dialog' ? this : null,
-            context: new cContext().setPrevious(this.getLinkedContext()),
+            context: cContext.createContext(self, null, this.getLinkedContext()),
             target: this.getContainer()
          }, config || {});
 

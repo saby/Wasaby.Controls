@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Accordion', [
                // Контекст каждого элемента аккордеона должен быть изолирован, иначе бинды поплывут вверх до родительских
                // контекстов, возможно их пересечение между собой и просто с другими забинденными свойствами
                tplCfg.generateContext = function() {
-                  return new cContext({restriction: 'set'});
+                  return cContext.createContext(this, {restriction: 'set'});
                };
                return tplCfg;
             }

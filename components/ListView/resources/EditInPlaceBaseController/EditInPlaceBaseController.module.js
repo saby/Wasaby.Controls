@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getContextForEip: function () {
                var
-                  ctx = new cContext({restriction: 'set'});
+                  ctx = cContext.createContext(this, {restriction: 'set'});
                ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
                   var
                      record,

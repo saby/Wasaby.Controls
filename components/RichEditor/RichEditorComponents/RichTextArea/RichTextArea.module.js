@@ -786,7 +786,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                anchor = editor.dom.getParent(element, 'a[href]'),
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
                fre = this,
-               context = new cContext(),
+               context = cContext.createContext(this),
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
