@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/contentTemplate",
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemTemplate",
-   "js!WS.Controls.Button",
+   "js!WSControls/Buttons/Button",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.ActiveMultiSelectable",
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
     *
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/Button
     *
     * @author Крайнов Дмитрий Олегович
     *
