@@ -337,7 +337,7 @@
    }
 }
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
-.generate-padding-class(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+.generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
    .controls-ListView__padding-@{val} {
       .controls-DataGridView__td, .controls-DataGridView__th {
@@ -349,9 +349,9 @@
          }
       }
    }
-   .generate-padding-class(@i + 1);
+   .generate-padding-class-DGV(@i + 1);
 }
-.generate-padding-class();
+.generate-padding-class-DGV();
 /*Для строк идущих после группировки не должно быть верхних бордеров*/
 .controls-DataGridView {
    &.controls-DataGridView__hasSeparator {
