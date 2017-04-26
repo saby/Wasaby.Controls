@@ -351,7 +351,7 @@
           * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
           *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
           */
-         WaitIndicator.make: function (options) {
+         make: function (options) {
             var method = options && typeof options === 'object' ? (typeof Promise !== 'undefined' && options.stopper instanceof Promise ?
                'then' : (options.stopper instanceof Deferred ? 'addCallbacks' : null)) : null;
             if (!method) {
