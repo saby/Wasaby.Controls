@@ -79,122 +79,6 @@
 
 
       /**
-       * Класс для создания защищённых членов классов
-       * @protected
-       * @class Pr0tected
-       * @param {boolean} oldForced Для старых браузеров обеспечить сокрытие несмотря на больший расход памяти
-       */
-      function Pr0tected (oldForced) {
-         this.oldForced = oldForced;
-      }
-
-      /**
-       * Константа, показывающая достуность WeakMap
-       * @public
-       * @type {boolean}
-       */
-      Object.defineProperty(Pr0tected, 'hasWeakMap', {value:typeof WeakMap !== 'undefined', /*writable:false,*/ enumerable:true});
-
-      /**
-       * Константа, содержащая имя свойства-идентификатора
-       * @public
-       * @type {string}
-       */
-      if (!Pr0tected.hasWeakMap) {
-         Object.defineProperty(Pr0tected, 'oldProp', {value:'__pr0tected__', /*writable:false,*/ enumerable:true});
-      }
-
-      /**
-       * Возвращает хранилище защищённых свойств в виде функции
-       * @public
-       * @static
-       * @param {boolean} oldForced Для старых браузеров обеспечить сокрытие несмотря на больший расход памяти
-       * @return {function}
-       */
-      Pr0tected.create = function (oldForced) {
-         var p = new Pr0tected(oldForced);
-         var f = p.scope.bind(p);
-         f.clear = p.clear.bind(p)
-         return f;
-      };
-
-      Pr0tected.prototype = {
-         /**
-          * Возвращает объект - хранилище защищённых свойств для указанного объекта-владельцаа
-          * @public
-          * @param {object} owner Владелец защищённых свойств
-          * @return {object}
-          */
-         scope: Pr0tected.hasWeakMap ?
-            function (owner) {
-               var map = this.members;
-               if (!this.members) {
-                  map = this.members = new WeakMap();
-               }
-               if (!map.has(owner)) {
-                  map.set(owner, {});
-               }
-               return map.get(owner);
-            } :
-            function (owner) {
-               var prop = Pr0tected.oldProp;
-               if (this.oldForced) {
-                  var map = this.members;
-                  if (!map) {
-                     map = this.members = {};
-                  }
-                  if (!(prop in owner)) {
-                     var n = 'oldCounter' in this ? this.oldCounter + 1 : 1;
-                     Object.defineProperty(owner, prop, {value:n});
-                     this.oldCounter = n;
-                  }
-                  var id = owner[prop];
-                  if (!(id in map)) {
-                     map[id] = {};
-                  }
-                  return map[id];
-               }
-               else {
-                  if (!(prop in owner)) {
-                     owner[prop] = {};
-                  }
-                  return owner[prop];
-               }
-            },
-
-         /**
-          * Очищает хранилище защищённых свойств для указанного объекта-владельцаа
-          * @public
-          * @param {object} owner Владелец защищённых свойств
-          */
-         clear: Pr0tected.hasWeakMap ?
-            function (owner) {
-               if (this.members) {
-                  this.members.delete(owner);
-               }
-            } :
-            function (owner) {
-               var prop = Pr0tected.oldProp;
-               if (prop in owner) {
-                  if (this.oldForced) {
-                     if (this.members) {
-                        delete this.members[owner[prop]];
-                     }
-                  }
-                  else {
-                     delete owner[prop];
-                  }
-               }
-            }
-      };
-
-      Pr0tected.prototype.constructor = Pr0tected;
-
-
-
-
-
-      /**
        * Конструктор
        * @public
        * @constructor
@@ -228,15 +112,14 @@
                   }
                });
             }
-            var pSelf = WaitIndicatorProtected(this);
-            pSelf.id = ++WaitIndicatorCounter;
-            pSelf.container = WaitIndicatorInner.getContainer(target);
+            this._id = ++WaitIndicatorCounter;
+            this._container = WaitIndicatorInner.getContainer(target);
             this.message = message;
-            pSelf.look = oLook;
-            //pSelf.starting = null;
-            //pSelf.suspending = null;
-            //pSelf.removing = null;
-            pSelf.useDeferred = !!useDeferred;
+            this._look = oLook;
+            //this._starting = null;
+            //this._suspending = null;
+            //this._removing = null;
+            this._useDeferred = !!useDeferred;
             if (typeof delay === 'number' && 0 <= delay) {
                this.start(delay);
             }
@@ -248,7 +131,7 @@
           * @type {number}
           */
          get id () {
-            return WaitIndicatorProtected(this).id;
+            return this._id;
          },
 
          /**
@@ -257,7 +140,7 @@
           * @type {HTMLElement}
           */
          get container () {
-            return WaitIndicatorProtected(this).container;
+            return this._container;
          },
 
          /**
@@ -298,7 +181,7 @@
             var prevMsg = this.message,
                newMsg = msg && typeof msg === 'string' ? msg : null;
             if (newMsg !== prevMsg) {
-               WaitIndicatorProtected(this).message = newMsg;
+               this._message = newMsg;
                var poolItem = WaitIndicatorPool.search(this.container);
                if (poolItem) {
                   WaitIndicatorInner.checkMessage(poolItem, prevMsg);
@@ -312,7 +195,7 @@
           * @type {string}
           */
          get message () {
-            return WaitIndicatorProtected(this).message;
+            return this._message;
          },
 
          /**
@@ -321,7 +204,7 @@
           * @type {object}
           */
          get look () {
-            return WaitIndicatorProtected(this).look;
+            return this._look;
          },
 
          /**
@@ -332,7 +215,7 @@
           * @return {Promise|Deferred}
           */
          start: function (delay) {
-            return this._callDelayed('start', 'starting', delay);
+            return this._callDelayed('start', '_starting', delay);
          },
 
          /**
@@ -344,7 +227,7 @@
           * @return {Promise|Deferred}
           */
          suspend: function (delay) {
-            return this._callDelayed('suspend', 'suspending', delay);
+            return this._callDelayed('suspend', '_suspending', delay);
          },
 
          /**
@@ -355,7 +238,7 @@
           * @return {Promise|Deferred}
           */
          remove: function (delay) {
-            return this._callDelayed('remove', 'removing', delay);
+            return this._callDelayed('remove', '_removing', delay);
          },
 
          /**
@@ -367,10 +250,9 @@
           * @return {Promise|Deferred}
           */
          _callDelayed: function (method, storing, delay) {
-            var pSelf = WaitIndicatorProtected(this);
-            for (var storings = ['starting', 'suspending', 'removing'], i = 0; i < storings.length; i++) {
+            for (var storings = ['_starting', '_suspending', '_removing'], i = 0; i < storings.length; i++) {
                var key = storings[i];
-               var inf = pSelf[key];
+               var inf = this[key];
                if (inf) {
                   clearTimeout(inf.id);
                   if (inf.fail) {
@@ -379,19 +261,18 @@
                      }
                      inf.fail.call();
                   }
-                  pSelf[key] = null;
+                  this[key] = null;
                }
             }
-            var promInf = emptyPromise(pSelf.useDeferred);
+            var promInf = emptyPromise(this._useDeferred);
             if (typeof delay === 'number' && 0 < delay) {
                promInf.id = setTimeout(function () {
-                  var pSelf = WaitIndicatorProtected(this),
-                     prev = pSelf[storing];
-                  pSelf[storing] = null;
+                  var prev = this[storing];
+                  this[storing] = null;
                   WaitIndicatorInner[method](this);
                   prev.success.call(null, this);
                }.bind(this), delay);
-               pSelf[storing] = promInf;
+               this[storing] = promInf;
             }
             else {
                WaitIndicatorInner[method](this);
@@ -406,7 +287,7 @@
           * @type {Promise|Deferred}
           */
          get nextStart () {
-            var o = WaitIndicatorProtected(this).starting;
+            var o = this._starting;
             return o ? o.promise : null;
          },
 
@@ -416,7 +297,7 @@
           * @type {Promise|Deferred}
           */
          get nextSuspend () {
-            var o = WaitIndicatorProtected(this).suspending;
+            var o = this._suspending;
             return o ? o.promise : null;
          },
 
@@ -426,7 +307,7 @@
           * @type {Promise|Deferred}
           */
          get nextRemove () {
-            var o = WaitIndicatorProtected(this).removing;
+            var o = this._removing;
             return o ? o.promise : null;
          }
       });
@@ -485,13 +366,6 @@
          );
          options.stopper[method](function (delay) {indicator.remove(delay); }, function (err) { indicator.remove(); });
       };
-
-      /**
-       * Хранилище защищённых членов класа WaitIndicatorInstance
-       * @protected
-       * @type {function}
-       */
-      var WaitIndicatorProtected = Pr0tected.create(true);
 
       /**
        * Счётчик экземпляров класа WaitIndicatorInstance
