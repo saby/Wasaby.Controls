@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
     *
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends WSControls/Buttons/ButtonBase
+    * @extends WSControls/Buttons/Button
     *
     * @author Крайнов Дмитрий Олегович
     *
