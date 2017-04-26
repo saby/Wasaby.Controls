@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
        * @param movedItems
        * @param target
        * @param position
-       * @returns {*|$ws.proto.Deferred}
+       * @returns {*|Core/Deferred}
        * @private
        */
       _callMoveMethod: function(movedItems, target, position, result) {

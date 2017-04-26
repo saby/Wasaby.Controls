@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
          _loadItemDeferred: null
       },
 
-      after: {
+      before: {
          _modifyOptions: function(opts) {
             if(opts.selectedItem instanceof Model) {
                return opts;

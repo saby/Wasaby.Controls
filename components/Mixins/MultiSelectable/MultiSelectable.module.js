@@ -630,7 +630,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          var self = this,
              selKeys = this._options.selectedKeys,
              loadKeysArr = [],
-             dMultiResult, item, loadKeysAmount, itemsKeysArr, dependDef;
+             dMultiResult, item, items, loadKeysAmount, itemsKeysArr, dependDef;
 
          if(!loadItems) {
             return this._options.selectedItems;
@@ -678,8 +678,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
             /* Если сорс грузит данные, то дожидаемся его */
             cHelpers.callbackWrapper(dependDef, fHelpers.forAliveOnly(function(res) {
+               items = self.getItems();
                for (var j = 0; loadKeysAmount > j; j++) {
-                  item = self.getItems() && self.getItems().getRecordById(loadKeysArr[j]);
+                  item = items && items.at(items.getIndexByValue(self._options.idProperty, loadKeysArr[j]));
 
                   /* если запись есть в датасете, то ничего не будем вычитывать */
                   if (item) {
@@ -871,7 +872,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                есть ли эти записи там уже, и можно из просто добавлять, не боясь что там будут 2 одинаковые записи */
             isEmpty = !this._options.selectedItems.getCount();
             colHelpers.forEach(this.getSelectedKeys(), function (key) {
-               record = dataSet.getRecordById(key);
+               record = dataSet.at(dataSet.getIndexByValue(self._options.idProperty, key));
                if (record) {
                   if(isEmpty) {
                      toAdd.push(record);
