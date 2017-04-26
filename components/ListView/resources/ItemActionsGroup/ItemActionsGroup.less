@@ -41,10 +41,14 @@
                }
             }
 
-            &.controls-IconButton:before{
-               top: 50%;
-               margin-top: -@list-view-actions-item-height / 2;
-               position: absolute;
+            &.controls-IconButton .controls-Button__icon {
+               height: 100%;
+               &:before {
+                  left: 0;
+                  top: 50%;
+                  margin-top: -@list-view-actions-item-height / 2;
+                  position: absolute;
+               }
             }
          }
 
@@ -211,7 +215,7 @@
       margin: 0;
       .controls-ItemActions__itemsContainer {
          .controls-ItemActions__item {
-            &.controls-IconButton:before {
+            &.controls-IconButton .controls-Button__icon:before {
                margin-top: -@list-view-actions-item-height / 2;
             }
          }

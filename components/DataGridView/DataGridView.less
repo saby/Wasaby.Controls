@@ -183,7 +183,7 @@
    &.controls-DataGridView__th__topRow{
       text-align: center;
       &.controls-DataGridView__th__topRow-has_text{
-         border-bottom: 1px solid @data-grid-cell-separator-color;
+         border-bottom: 1px solid @data-grid-edge-cell-separator-color;
          padding-bottom: 3px;
       }
    }
@@ -235,19 +235,6 @@
 
 .controls-DataGridView__tr {
    background: @data-grid-row-bg;
-   
-   &.controls-ListView__hoveredItem {
-      background: @data-grid-row-hover-bg;
-      
-      .controls-DataGridView__th {
-         color: @data-grid-row-hover-header-cell-text-color;
-         background-color: @data-grid-row-hover-header-cell-bg;
-      }
-      .controls-DataGridView__td {
-         color: @data-grid-row-hover-cell-text-color;
-         background-color: @data-grid-row-hover-cell-bg;
-      }
-   }
 }
 
 

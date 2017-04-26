@@ -1079,9 +1079,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 target: this._container,
                 opener: this,
                 parent: this,
+                closeOnTargetMove: true,
                 closeByExternalClick: true,
                 targetPart: true,
                 cssClassName: 'controls-FieldLink__picker',
+                _canScroll: true,
                 verticalAlign: {
                    side: 'top'
                 },

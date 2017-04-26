@@ -2,13 +2,34 @@
  * Created by vs.romanov on 09.01.2017.
  */
 define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
-    function () {
+    /**
+     * @class SBIS3.CONTROLS.Utils.NumberTextBoxUtil
+     * @public
+     */
+    function () /** @lends SBIS3.CONTROLS.Utils.NumberTextBoxUtil.prototype */{
         return {
+            /**
+             *
+             * @param value
+             * @param maxLength
+             * @returns {boolean}
+             */
             checkMaxLength: function (value, maxLength) {
                 var length = value ? value.replace(/[\s.-]/g, '').length : 0;
                 return !(maxLength && length > maxLength) && (this._getIntegersCount(value || '') < 16);
             },
-
+            /**
+             *
+             * @param b
+             * @param e
+             * @param currentVal
+             * @param delimiters
+             * @param integers
+             * @param decimals
+             * @param keyCode
+             * @param maxLength
+             * @returns {*}
+             */
             numberPress: function(b, e, currentVal, delimiters, integers, decimals, keyCode, maxLength){
                 var dotPosition = currentVal.indexOf('.'),
                     oldValue = currentVal,
@@ -57,7 +78,15 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
 
                 return {value: currentVal, caretPosition: newCaretPosition};
             },
-
+            /**
+             *
+             * @param b
+             * @param e
+             * @param currentVal
+             * @param delimiters
+             * @param decimals
+             * @returns {{value: (*|XML|string|void|tinymce.html.Node), caretPosition: *, step: *}}
+             */
             deletPressed: function (b, e, currentVal, delimiters, decimals) {
                 var dotPosition = currentVal.indexOf('.'),
                     newCaretPosition = e, step;
@@ -101,7 +130,15 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                 }
                 return {value: currentVal, caretPosition: newCaretPosition, step: step};
             },
-
+            /**
+             *
+             * @param b
+             * @param e
+             * @param currentVal
+             * @param delimiters
+             * @param decimals
+             * @returns {{value: (*|XML|string|void|tinymce.html.Node), caretPosition: *, step: *}}
+             */
             backspacePressed: function (b, e, currentVal, delimiters, decimals) {
                 var dotPosition = currentVal.indexOf('.'),
                     newCaretPosition = b, step;

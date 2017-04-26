@@ -13,12 +13,12 @@ define('js!WS.Controls.Button', [
     * Контрол, отображающий обычную кнопку
     * Можно настроить:
     * <ol>
-    *    <li>{@link $ws.proto.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
+    *    <li>{@link SBIS3.CORE.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
     *    <li>{@link SBIS3.CONTROLS.WSButtonBase#caption текст на кнопке};</li>
-    *    <li>{@link $ws.proto.Control#enabled возможность взаимодействия с кнопкой};</li>
+    *    <li>{@link SBIS3.CORE.Control#enabled возможность взаимодействия с кнопкой};</li>
     *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
     *    <li>{@link primary по умолчанию ли кнопка};</li>
-    *    <li>{@link $ws.proto.Control#visible видимость кнопки};</li>
+    *    <li>{@link SBIS3.CORE.Control#visible видимость кнопки};</li>
     * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends SBIS3.CONTROLS.WSButtonBase
