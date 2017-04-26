@@ -1,5 +1,5 @@
 @heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
-@align-text: left, center, right;
+@align-text: center, left, right;
 
 .controls-ProgressBar-align-progress-generator(@index: 1) when (@index <= length(@align-text)) {
   @value: extract(@align-text, @index);
@@ -12,11 +12,12 @@
 }
 
 .controls-ProgressBar__progress_size {
-  width: calc(e("100% - 2 * @{default-border-width}"));
+  width: calc(e("100% - 2 * (@{default-border-width} + @{controls-ProgressBar-value-padding})"));
   height: @heightProgressBar;
   border: @default-border-width @default-border-style @gray-light-color;
   border-radius: @controls-ProgressBar-border-radius;
   line-height: @heightProgressBar;
+  padding: 0 @controls-ProgressBar-value-padding;
 }
 
 .controls-ProgressBar__progress_color {
