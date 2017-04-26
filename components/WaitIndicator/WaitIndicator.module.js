@@ -454,14 +454,6 @@
       Object.defineProperty(WaitIndicator, 'SUSPEND_LIFETIME', {value:15000, writable:false, enumerable:true});
 
       /**
-       * Константа - максимальное время до удаления приостановленных индикаторов из DOM-а
-       * @public
-       * @static
-       * @type {number}
-       */
-      Object.defineProperty(WaitIndicator, 'SUSPEND_MAX_LIFETIME', {value:600000, writable:false, enumerable:true});
-
-      /**
        * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. В опциях обязательно должен
        * присутствовать отложенный стоп - он будет использован для последующего удаления индикатора.
        * @public
@@ -489,7 +481,7 @@
             options ? options.target : null,
             options ? options.message : null,
             options,
-            options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
+            options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.DEFAULT_DELAY
          );
          options.stopper[method](function (delay) {indicator.remove(delay); }, function (err) { indicator.remove(); });
       };
@@ -507,61 +499,6 @@
        * @type {number}
        */
       var WaitIndicatorCounter = 0;
-
-      /**
-       * Статические параметры
-       * @protected
-       * @type {object}
-       */
-      var WaitIndicatorParams = {
-         defaultDelay: WaitIndicator.DEFAULT_DELAY,
-         suspendLifetime: WaitIndicator.SUSPEND_LIFETIME
-      };
-
-      /**
-       * Установить статические параметры.
-       * Принимаются только параметры с именами defaultDelay и suspendLifetime
-       * Все значения параметров должны быть неотрицательными числами
-       * @public
-       * @static
-       * @param {object} params Набор параметров
-       */
-      WaitIndicator.putParams = function (params) {
-         if (params && typeof params === 'object') {
-            for (var name in params) {
-               WaitIndicator.setParam(name, params[name]);
-            }
-         }
-      };
-
-      /**
-       * Установить значение статического параметра по имени. Возвращает предыдущее значение
-       * Принимаются только параметры с именами defaultDelay и suspendLifetime
-       * Все значения параметров должны быть неотрицательными числами
-       * @public
-       * @static
-       * @param {string} name Имя параметра
-       * @param {number} value Значение параметра
-       * @return {number}
-       */
-      WaitIndicator.setParam = function (name, value) {
-         if (name in WaitIndicatorParams && typeof value === 'number' && 0 <= value) {
-            var prev = WaitIndicatorParams[name];
-            WaitIndicatorParams[name] = value;
-            return prev;
-         }
-      };
-
-      /**
-       * Получить статический параметр по имени
-       * @public
-       * @static
-       * @param {string} name Имя параметра
-       * @return {number}
-       */
-      WaitIndicator.getParam = function (name) {
-         return WaitIndicatorParams[name];
-      };
 
 
 
@@ -713,7 +650,7 @@
                         // Начать отсчёт времени до принудительного удаления из DOM-а
                         poolItem.clearing = setTimeout(function () {
                            this._delete(poolItem);
-                        }.bind(this), Math.min(WaitIndicator.getParam('suspendLifetime'), WaitIndicator.SUSPEND_MAX_LIFETIME));
+                        }.bind(this), WaitIndicator.SUSPEND_LIFETIME);
                      }
                      else {
                         // Удалить из DOM-а и из пула
