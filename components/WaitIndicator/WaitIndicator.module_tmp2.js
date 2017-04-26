@@ -308,23 +308,23 @@
          },
 
          /**
-          * Геттер свойства, указывает, что индикатор показывается в данный момент
+          * Геттер свойства, указывает, что индикатор является видимым в данный момент
           * @public
           * @type {boolean}
           */
          get isVisible () {
             var poolItem = WaitIndicatorPool.search(this.container);
-            //return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
-            return poolItem ? !(poolItem.isLocked || !poolItem.indicators.length) : false;
+            return !!poolItem && !poolItem.isLocked && !!poolItem.indicators.length && poolItem.indicators[0] === this;
          },
 
          /**
-          * Геттер свойства, указывает, что элемент индикатора находиться в DOM-е
+          * Геттер свойства, указывает, что индикатор является текущим в данный момент
           * @public
           * @type {boolean}
           */
-         get isInTheDOM () {
-            return WaitIndicatorPool.searchIndex(this.container) !== -1;
+         get isCurrent () {
+            var poolItem = WaitIndicatorPool.search(this.container);
+            return !!poolItem && !!poolItem.indicators.length && poolItem.indicators[0] === this;
          },
 
          /**
@@ -338,8 +338,8 @@
             if (newMsg !== prevMsg) {
                WaitIndicatorProtected(this).message = newMsg;
                var poolItem = WaitIndicatorPool.search(this.container);
-               if (poolItem) {
-                  WaitIndicatorInner.checkMessage(poolItem, prevMsg);
+               if (poolItem && poolItem.indicators.length && poolItem.indicators[0] === this) {
+                  WaitIndicatorInner.update(poolItem, prevMsg, this._look);
                }
             }
          },
@@ -750,8 +750,7 @@
                if (i !== -1) {
                   if (1 < inds.length) {
                      inds.splice(i, 1);
-                     this.checkMessage(poolItem, indicator.message);
-                     this.updateLook(poolItem, indicator.look);
+                     this.update(poolItem, indicator.message, indicator.look);
                   }
                   else {
                      if (!force) {
@@ -794,31 +793,24 @@
          },
 
          /**
-          * Проверить, и обновить, если нужно, отображаемое сообщение
+          * Проверить, и обновить, если нужно, отображение индикатора
           * @public
           * @param {object} poolItem Элемент пула
           * @param {string} prevMessage Текущее (отображаемое) сообщение
+          * @param {object} prevLook Текущие (отображаемые) параметры внешнего вида
           */
-         checkMessage: function (poolItem, prevMessage) {
+         update: function (poolItem, prevMessage, prevLook) {
             var inds = poolItem.indicators;
             if (inds.length) {
                var msg = inds[0].message;
                if (prevMessage !== msg) {
                   WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
                }
-            }
-         },
-
-         /**
-          * Обновить внешний вид индикатор
-          * @public
-          * @param {object} poolItem Элемент пула
-          */
-         updateLook: function (poolItem, prevLook) {
-            var inds = poolItem.indicators;
-            if (inds.length) {
                var look = inds[0].look;
-               WaitIndicatorSpinner.changeLook(poolItem.spinner, look);
+               // Сейчас look неизменяемый, такого сравнения достаточно
+               if (look !== prevLook) {
+                  WaitIndicatorSpinner.changeLook(poolItem.spinner, look);
+               }
             }
          },
 
@@ -965,7 +957,7 @@
          _insert: function (container, spinner) {
             var p = container || document.body;
             if (p !== spinner.parentNode) {
-               var needPlace = !!container && getComputedStyle(p, null).position === 'static';
+               var needPlace = !!container && getComputedStyle(container, null).position === 'static';
                if (needPlace) {
                   this._place(spinner, p);
                }
