@@ -443,7 +443,7 @@
        * @static
        * @type {number}
        */
-      Object.defineProperty(WaitIndicator, 'DEFAULT_DELAY', {value:2000, writable:false, enumerable:true});
+      WaitIndicator.DEFAULT_DELAY = 2000;
 
       /**
        * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
@@ -451,7 +451,7 @@
        * @static
        * @type {number}
        */
-      Object.defineProperty(WaitIndicator, 'SUSPEND_LIFETIME', {value:15000, writable:false, enumerable:true});
+      WaitIndicator.SUSPEND_LIFETIME = 15000;
 
       /**
        * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. В опциях обязательно должен
