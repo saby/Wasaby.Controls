@@ -51,6 +51,78 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
    
    const DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector';
    
+   function prepareColors(options) {
+         
+      var colors = options.colors || [];
+      
+      colors = colors.concat(defaultColors.slice(colors.length)).map(function(color, idx) {
+         return color || defaultColors[idx]; 
+      });                 
+      
+      if (options.numValues > colors.length) {
+         throw new Error('Number of values is greater than number of colors');
+      }
+      
+      return colors;
+   }
+   
+   function calculateColorState(options) {
+      var
+         sectorSize = (100 / options.numSectors) >> 0,
+         state = options.state || [],
+         colorValues = [],
+         curSector = 0,
+         colors = options.colors, 
+         i, j, color, itemValue, itemNumSectors;
+      
+      if (!(state instanceof Array)) {
+         state = [ +state ];
+      }
+      
+      for(i = 0; i < Math.min(options.numValues, state.length); i++) {
+         // Больше чем знаем цветов не рисуем
+         if (i < colors.length) {
+            // Приводим к числу, отрицательные игнорируем 
+            itemValue = Math.max(0, +state[i] || 0);
+            color = colors[i];
+            itemNumSectors = (itemValue / sectorSize) >> 0;
+            if (itemValue > 0 && itemNumSectors === 0) {
+               // Если значение элемента не нулевое, 
+               // а количество секторов нулевое (из-за округления) то увеличим до 1 (см. спецификацию)
+               itemNumSectors = 1;
+            }
+            for(j = 0; j < itemNumSectors; j++) {
+               colorValues[curSector++] = {
+                  color: color,
+                  item: i
+               };
+            }
+         }
+      }   
+      
+      return colorValues;
+   }
+   
+   function checkState(state) {
+      var sum;
+      
+      if (!(state instanceof Array)) {
+         state = [ state ]
+      }
+      
+      sum = state.map(Number).reduce(function(sum, v) {
+         return sum + Math.max(v, 0);
+      }, 0);
+      
+      if (isNaN(sum)) {
+         throw new Error('State [' + state + '] is incorrect, it contains non-numeric values');
+      }
+      
+      if (sum > 100) {
+         throw new Error('State [' + state + '] is incorrect. Values total is greater than 100%');
+      }
+   }
+
    
    ProcessStateIndicator = control.Control.extend(/** @lends SBIS3.CONTROLS.ProcessStateIndicator.prototype */ {
       /**
@@ -138,25 +210,11 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
             self._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex)             
          });
       },
-      _prepareColors: function(colors) {
-         
-         colors = colors || [];
-         
-         colors = colors.concat(defaultColors.slice(colors.length)).map(function(color, idx) {
-            return color || defaultColors[idx]; 
-         });                 
-         
-         if (this._options.numValues > this._options.colors.length) {
-            throw new Error('Number of values is greater than number of colors');
-         }
-         
-         return colors;
-      },
       _modifyOptions: function() {
          var opts = ProcessStateIndicator.superclass._modifyOptions.apply(this, arguments);
          
-         opts.colors = this._prepareColors(opts.colors); 
-         opts.colorState = this._calculateColorState();
+         opts.colors = prepareColors(opts); 
+         opts.colorState = calculateColorState(opts);
          
          return opts;
       },
@@ -170,56 +228,15 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
       /**
        * Устанавливает сотояние индикатора. Передача любого пустого значения полностью сбрасывает состояние
        * Если передать значений больше, чем указано numValues, лишние значения будут проигнорированы
-       * @param {Array.<Number>} state Массив чисел - процентов выполнение элементов процесса. 
+       * @param {Array.<Number>} state Массив чисел - процентов выполнение элементов процесса.
+       * В случае, если индикатор отображает одно значение, допускается передача собственного самого значения вместо массива с одним элементом 
        * Все не-числа будут преобразованы к числу. Отрицательные превращены в 0. 
        * @see numValues
        */
       setState: function(state) {
-         if (!state) {
-            state = [];
-         }
-         if (state instanceof Array) {
-            this._options.state = state;
-            this._applyState();
-         }
-      },
-      /**
-       * По state вычисялет распределение цветов по секторам
-       * @return {Array}
-       * @private
-       */
-      _calculateColorState: function(colors) {
-         var 
-            sectorSize = (100 / this._options.numSectors) >> 0,
-            state = this._options.state || [],
-            colorValues = [],
-            curSector = 0,
-            i, j, color, itemValue, itemNumSectors;
-         
-         colors = colors || this._options.colors;
-         
-         for(i = 0; i < Math.min(this._options.numValues, state.length); i++) {
-            // Больше чем знаем цветов не рисуем
-            if (i < colors.length) {
-               // Приводим к числу, отрицательные игнорируем 
-               itemValue = Math.max(0, +state[i] || 0);
-               color = colors[i];
-               itemNumSectors = (itemValue / sectorSize) >> 0;
-               if (itemValue > 0 && itemNumSectors === 0) {
-                  // Если значение элемента не нулевое, 
-                  // а количество секторов нулевое (из-за округления) то увеличим до 1 (см. спецификацию)
-                  itemNumSectors = 1;
-               }
-               for(j = 0; j < itemNumSectors; j++) {
-                  colorValues[curSector++] = {
-                     color: color,
-                     item: i
-                  };
-               }
-            }
-         }   
-         
-         return colorValues;
+         checkState(state);
+         this._options.state = state;
+         this._applyState();
       },
       /**
        * Выполняет частичную перерисовку компонента (раскатывает цвета на уже нарисованные сегменты)
@@ -229,7 +246,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          
          var colorState;
          
-         this._options.colorState = colorState = this._calculateColorState();
+         this._options.colorState = colorState = calculateColorState(this._options);
          
          this.getContainer().find('.controls-ProcessStateIndicator__box').each(function(i) {
             $(this)
