@@ -6,9 +6,14 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
 ], function( constants) {
    'use strict';
    /**
-    *
+    * @class SBIS3.CONTROLS.Utils.DateUtil
+    * @public
     */
-   var DateUtil = {
+   var DateUtil = /** @lends SBIS3.CONTROLS.Utils.DateUtil.prototype */{
+       /**
+        * @param {Core/Date} isoDate
+        * @returns {Core/Date}
+        */
       dateFromIsoString: function (isoDate) {
          if (
             // не поддерживает даты с часовым пояслм вида '2016-07-31 22:10:01+03'
@@ -26,8 +31,8 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
       /**
        * Получение строки из даты в ISO-формате.
        * ужна для IE8, т.к. в нём нет метода toISOString.
-       * @param date
-       * @returns {string}
+       * @param {Core/Date} date
+       * @returns {String}
        */
       dateToIsoString: function (date) {
          if(!(date instanceof Date)) {
@@ -97,7 +102,7 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
 
       /**
        * Проверяем корректность даты
-       * @param Date
+       * @param {Core/Date} Date
        * @returns {Boolean}
        * Возможные значения:
        * <ul>
@@ -112,8 +117,8 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
 
       /**
        * Преобразует значение в объект Date
-       * @param {Date|String} value объект даты, либо дата строкой в формате ISO, например 2015-12-20
-       * @return {Date|null} вернет Date если успешно, либо null если дата некорректна
+       * @param {Core/Date|String} value объект даты, либо дата строкой в формате ISO, например 2015-12-20
+       * @return {Core/Date|null} вернет Date если успешно, либо null если дата некорректна
        */
       valueToDate: function(value) {
          var date = null;
@@ -130,16 +135,16 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
       },
       /**
        * Возвращает true если переданное число является началом месяца
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isStartOfMonth: function (date) {
          return date.getDate() === 1;
       },
       /**
        * Возвращает true если переданное число является концом месяца
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isEndOfMonth: function (date) {
          var d = new Date(date);
@@ -148,32 +153,32 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
       },
       /**
        * Возвращает дату соответсвующую началу месяца по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getStartOfMonth: function (date) {
          return new Date(date.getFullYear(), date.getMonth(), 1);
       },
       /**
        * Возвращает дату соответсвующую концу месяца по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getEndOfMonth: function (date) {
          return new Date(date.getFullYear(), date.getMonth() + 1, 0);
       },
       /**
        * Возвращает true если переданное число является началом квартала
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isStartOfQuarter: function (date) {
          return this.isStartOfMonth(date) && date.getMonth()%3 === 0;
       },
       /**
        * Возвращает true если переданное число является концом квартала
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isEndOfQuarter: function (date) {
          var d = new Date(date);
@@ -182,32 +187,32 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
       },
       /**
        * Возвращает дату соответсвующую началу квартала по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getStartOfQuarter: function (date) {
          return new Date(date.getFullYear(), (Math.floor(date.getMonth()/3))*3, 1);
       },
       /**
        * Возвращает дату соответсвующую концу квартала по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getEndOfQuarter: function (date) {
          return new Date(date.getFullYear(), (Math.floor(date.getMonth()/3) + 1)*3, 0);
       },
       /**
        * Возвращает true если переданное число является началом полугодия
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isStartOfHalfyear: function (date) {
          return this.getStartOfMonth(date) && date.getMonth()%6 === 0;
       },
       /**
        * Возвращает true если переданное число является концом полугодия
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isEndOfHalfyear: function (date) {
          var d = new Date(date);
@@ -216,32 +221,32 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
       },
       /**
        * Возвращает дату соответсвующую началу полугодия по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getStartOfHalfyear: function (date) {
          return new Date(date.getFullYear(), (Math.floor(date.getMonth()/6))*6, 1);
       },
       /**
        * Возвращает дату соответсвующую концу полугодия по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getEndOfHalfyear: function (date) {
          return new Date(date.getFullYear(), (Math.floor(date.getMonth()/6) + 1)*6, 0);
       },
       /**
        * Возвращает true если переданное число является началом года
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isStartOfYear: function (date) {
          return date.getDate() === 1 && date.getMonth() === 0;
       },
       /**
        * Возвращает true если переданное число является концом года
-       * @param date
-       * @return {boolean}
+       * @param {Core/Date} date
+       * @return {Boolean}
        */
       isEndOfYear: function (date) {
          var d = new Date(date);
@@ -250,16 +255,16 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
       },
       /**
        * Возвращает дату соответсвующую началу года по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getStartOfYear: function (date) {
          return new Date(date.getFullYear(), 0, 1);
       },
       /**
        * Возвращает дату соответсвующую началу года по переданной дате
-       * @param date
-       * @return {Date}
+       * @param {Core/Date} date
+       * @return {Core/Date}
        */
       getEndOfYear: function (date) {
          return new Date(date.getFullYear(), 12, 0);
