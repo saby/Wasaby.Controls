@@ -63,46 +63,6 @@
     * <br/>
     * Несколько примеров можно посмотреть в классе демо MyWaitIndicator, а также на локальном стенде на страницах /pages/WaitIndicator.html и /pages/WaitIndicatorTable.html
     * <br/>
-    * Альтернативный способ использования.
-    * В некоторых случаях может потребоваться больше возможностей по управлению индикаторами. В таких случаях можно создать экземпляр индикатора
-    * с помощью конструктора:
-    * <pre>
-    *    var indicator = new WaitIndicator(target, message, look, delay);
-    * </pre>
-    * Где объект look содержит описанные выше параметры внешнего вида индикатора.
-    * <br/>
-    * Созданный экземпляр индикатора содержит три ключевые метода
-    * <pre>
-    *    <Promise|Deferred> = <WaitIndicator>.start(delay)
-    *    <Promise|Deferred> = <WaitIndicator>.suspend(delay)
-    *    <Promise|Deferred> = <WaitIndicator>.remove(delay)
-    * </pre>
-    * Метод start запускает индикатор, метод remove - удаляет индикатор, метод suspend - скрывает индикатор без удаления его из DOM-а.
-    * <br/>
-    * Все три метода принимают в качестве аргумента время задержки исполнения. В случае, если она указана, все три метода возвращают объект с
-    * отложенным результатом. Эти же объекты доступны (пока существуют) как свойства:
-    * <pre>
-    *    <Promise|Deferred> = <WaitIndicator>.nextStart
-    *    <Promise|Deferred> = <WaitIndicator>.nextSuspend
-    *    <Promise|Deferred> = <WaitIndicator>.nextRemove
-    * </pre>
-    * <br/>
-    * Один экземпляр индикатора можно использовать для неограниченного количества запусков и остановов индикатора. Могут быть также использованы
-    * несколько конкуретных индикаторов одновременно. При этом обеспечивается присутствие в DOM-е не более одного элемента индикатора на каждый объект
-    * привязки. При конкуретном отображении нескольких индикаторов для одного объекта привязки приоритет отображения всегда имеет более ранний.
-    * <br/>
-    * Примеры использования конкуретных индикаторов можно посмотреть в классе демо MyWaitIndicator, а также на локальном стенде на страницах /pages/WaitIndicator.html и /pages/WaitIndicatorTable.html
-    * <br/>
-    * При использовании метода suspend не происходит удаления элемента индикатора из DOM. Это может использоваться в ситуациях, критичных к
-    * производительности и времени отклика. Однако при длительном скрытом состоянии индикатора он будет вычищен из DOM-а автоматически. Время жизни
-    * определяется константами WaitIndicator.SUSPEN_LIFETIME (15 секунд), WaitIndicator.SUSPEND_MAX_LIFETIME (600 сек) и настраиваемым параметром
-    * suspendLifetime.
-    * Для установки и получения настраиваемых параметров suspendLifetime и defaultDelay использубтся статические методы:
-    * <pre>
-    *    WaitIndicator.setParam(name, valuae)
-    *    var value = WaitIndicator.getParam(name)
-    * </pre>
-    * <br/>
     *
     * @class SBIS3.CONTROLS.WaitIndicator
     * @public
@@ -250,8 +210,8 @@
        *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
-      var WaitIndicator = CoreExtend.extend(/** @lends SBIS3.CONTROLS.WaitIndicator.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.WaitIndicator',
+      var WaitIndicatorInstance = CoreExtend.extend({
+         //_moduleName: 'SBIS3.CONTROLS.WaitIndicator',
 
          constructor: function  (target, message, look, delay, useDeferred) {
             var oLook = {
@@ -471,6 +431,12 @@
          }
       });
 
+
+
+
+
+      var WaitIndicator = function () {};//TODO: ### ^^^
+
       /**
        * Константа - время задержки по умолчанию перед показом индикатора
        * @public
@@ -519,7 +485,7 @@
          if (!method) {
             throw new Error('Valid stopper is not supplied');
          }
-         var indicator = new WaitIndicator(
+         var indicator = new WaitIndicatorInstance(
             options ? options.target : null,
             options ? options.message : null,
             options,
@@ -529,14 +495,14 @@
       };
 
       /**
-       * Хранилище защищённых членов класа WaitIndicator
+       * Хранилище защищённых членов класа WaitIndicatorInstance
        * @protected
        * @type {function}
        */
       var WaitIndicatorProtected = Pr0tected.create(true);
 
       /**
-       * Счётчик экземпляров класа WaitIndicator
+       * Счётчик экземпляров класа WaitIndicatorInstance
        * @protected
        * @type {number}
        */
@@ -664,7 +630,7 @@
          /**
           * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
           * @public
-          * @param {WaitIndicator} indicator Индикатор
+          * @param {WaitIndicatorInstance} indicator Индикатор
           */
          start: function (indicator) {
             var container = indicator.container,
@@ -697,7 +663,7 @@
          /**
           * Запросить скрытие DOM-элемент индикатора без удаления из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
-          * @param {WaitIndicator} indicator Индикатор
+          * @param {WaitIndicatorInstance} indicator Индикатор
           */
          suspend: function (indicator) {
          this._remove(indicator, false);
@@ -706,7 +672,7 @@
          /**
           * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
-          * @param {WaitIndicator} indicator Индикатор
+          * @param {WaitIndicatorInstance} indicator Индикатор
           */
          remove: function (indicator) {
          this._remove(indicator, true);
@@ -715,7 +681,7 @@
          /**
           * Общая реализация для методов suspend и remove
           * @protected
-          * @param {WaitIndicator} indicator Индикатор
+          * @param {WaitIndicatorInstance} indicator Индикатор
           * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
           */
          _remove: function (indicator, force) {
@@ -920,7 +886,7 @@
           * @return {HTMLElement}
           */
          create: function (container, message, look) {
-            //###var _dotTplFn = $ws.doT.template('<div class="WaitIndicator">{{message}}</div>');
+            //###var _dotTplFn = $ws.doT.template('<div class="ws-wait-indicator">{{message}}</div>');
             var hasMsg = !(look && look.small) && !!message;
             var html = '<div class="ws-wait-indicator"><div class="ws-wait-indicator-in" data-node="message">' + (hasMsg ? message : '') + '</div></div>';
 
