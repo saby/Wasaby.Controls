@@ -48,7 +48,7 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController'], function(VirtualScrollCont
       }, {
          "offset": 14000,
          "dettached": true
-      }]
+      }];
    describe('SBIS3.CONTROLS.VirtualScrollController', function() {
       var controller = new VirtualScrollController();
       describe('._getShownPages', function() {
@@ -127,7 +127,7 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController'], function(VirtualScrollCont
             assert.deepEqual(newState, [0]);
          });
          it('Biigger page size', function() {
-            newState = controller._getPagesByRange([0, 5], 6);
+            newState = controller._getPagesByRange([0, 5], 10);
             assert.deepEqual(newState, [0]);
          });
          it('Page size 5', function() {
