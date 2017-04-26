@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      *     Когда выпадающе меню отображено, иконка меняется на "Стрелка вверх" (ExpandUp) - класс "icon-24 icon-ExpandUp icon-primary".
      *     Список иконок вы можете найти <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
      *     </li>
-     *     <li><b>Заголовок в выпадающем меню.</b> (опция {@link SBIS3.CONTROLS.WSButtonBase#caption}). Скрыт. По умолчанию установлен css-модификатор "controls-Menu__hide-menu-header".</li>
+     *     <li><b>Заголовок в выпадающем меню.</b> (опция {@link WSControls/Buttons/ButtonBase#caption}). Скрыт. По умолчанию установлен css-модификатор "controls-Menu__hide-menu-header".</li>
      *     <li>Для выпадающего меню раскрытие производится в правую сторону от кнопки.</li>
      * </ul>
      *

@@ -1,5 +1,10 @@
 @import "../carry/variables";
 
+// Кошерные переменные "на выход"
+@default-text-color:                      #E4E4E4;
+@disabled-color:                          #37536C;
+//=============================
+
 @black-color:                             #333;
 
 @gray-color:                              #aaa;
@@ -290,7 +295,7 @@
 @check-box-caption-padding:                     9px 0;
 @check-box-icon-box:                            32px;
 
-
+@check-box-icon-box-color:                      rgba(102, 170, 221, .4);
 
 // -------- //
 // Switcher //
@@ -811,7 +816,7 @@
 @listView-check-box-icon-bg:                    @check-box-icon-bg;
 @listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
 @listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
-@list-view-actions-item-height:                 16px;
+@list-view-actions-item-height:                 24px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-active-bg:                   #F3F3F3;
@@ -821,6 +826,7 @@
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
+@list-view-items-toolbar-bottom:                     8px;
 
 @list-view-actions-menu-icon-width:             16px;
 
@@ -890,8 +896,6 @@
 
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -935,8 +939,6 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    1px;
-@controls-editInPlace-editor-without-offset-margin: 0;
 
 // --------------- //
 // OperationsMark //

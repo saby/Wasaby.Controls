@@ -73,7 +73,7 @@
     color: @default-text-color;
   }
   .controls-CheckBox__iconBox_color {
-    border-color: @gray-color;
+    border-color: @check-box-icon-box-color;
   }
   &.controls-Checked__checked {
     .controls-CheckBox__icon:before {
@@ -95,16 +95,16 @@
     color: @disabled-text-color;
   }
   .controls-CheckBox__iconBox_color {
-    border-color: @icon-color-disabled;
+    border-color: @disabled-color;
   }
   &.controls-Checked__checked {
     .controls-CheckBox__icon:before {
-      color: @icon-color-disabled;
+      color: @disabled-color;
     }
   }
   &.controls-ToggleButton__null {
     .controls-CheckBox__icon:before {
-      background-color: @icon-color-disabled;
+      background-color: @disabled-color;
     }
   }
 }

@@ -1,10 +1,41 @@
 define('js!SBIS3.CONTROLS.TreeViewMixin', [
    "Core/constants",
-   "js!SBIS3.CORE.Control",
+   'js!SBIS3.CONTROLS.TreePaging',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/collection-helpers",
    "Core/core-instance"
-], function ( constants,Control, TemplateUtil, colHelpers, cInstance) {
+], function ( constants, TreePaging, TemplateUtil, colHelpers, cInstance) {
+
+
+   var getFolderFooterOptions = function(cfg, item) {
+         var
+            model = item.getContents(),
+            key = model.get(cfg.idProperty);
+         return {
+            key: key,
+            item: model,
+            level: item.getLevel(),
+            footerTpl: cfg.folderFooterTpl,
+            multiselect: cfg.multiselect,
+            pagerOptions: cfg._getFolderPagerOptions(cfg, item, key)
+         }
+      },
+      getFolderPagerOptions = function(cfg, item, key) {
+         return {
+            pageSize: cfg.pageSize,
+            hasMore: cfg._hasNextPageInFolder(cfg, cfg._folderHasMore[key], key),
+            id: key,
+            handlers: {
+               'onClick': function () {
+                  this.sendCommand('loadNode', key);
+               }
+            }
+         }
+      },
+      hasFolderFooters = function(cfg) {
+         return cfg._footerWrapperTemplate && cfg.folderFooterTpl;
+      };
+
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeViewMixin
@@ -19,6 +50,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
    var TreeViewMixin = /** @lends SBIS3.CONTROLS.TreeViewMixin.prototype */{
       $protected: {
          _options: {
+            _getFolderFooterOptions: getFolderFooterOptions,
+            _getFolderFooterOptionsTVM: getFolderFooterOptions,
+            _getFolderPagerOptions: getFolderPagerOptions,
+            _hasFolderFooters: hasFolderFooters,
             /**
              * @cfg {String} Устанавливает шаблон футера, который отображается в конце каждого узла иерархии.
              * @remark
@@ -106,7 +141,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          collapsedItemContainer.find('.js-controls-TreeView__expand').removeClass('controls-TreeView__expand__open');
          delete this._options.openedPath[itemId];
          //Уничтожим все дочерние footer'ы и footer узла
-         this._destroyItemsFolderFooter([itemId]);
+         this._destroyItemsFolderFooter(itemId);
          this._notify('onNodeCollapse', itemId, collapsedItemContainer);
       },
       /**
@@ -133,49 +168,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             return closest.length ? closest : elem;
          }
       },
-      /**
-       * Создает постраничную навигацию в ветках
-       * @param key
-       * @param container
-       * @param more
-       * @private
-       */
-      _createFolderPager: function(key, container, more) {
-         var
-            self = this,
-            nextPage = this._hasNextPageInFolder(more, key);
-
-         if (this._options.pageSize) {
-            this._treePagers[key] = new TreePagingLoader({
-               pageSize: this._options.pageSize,
-               opener: this,
-               parent: this,
-               hasMore: nextPage,
-               element: container,
-               id: key,
-               handlers: {
-                  'onClick': function () {
-                     self._folderLoad(this._options.id);
-                  }
-               }
-            });
-         }
-      },
-      /**
-       * Проверяет наличие следующей страницы в ветке
-       * @param more
-       * @param id
-       * @returns {boolean}
-       * @private
-       */
-      _hasNextPageInFolder: function(more, id) {
-         if (!id) {
-            return typeof (more) !== 'boolean' ? more > (this._folderOffsets['null'] + this._options.pageSize) : !!more;
-         }
-         else {
-            return typeof (more) !== 'boolean' ? more > (this._folderOffsets[id] + this._options.pageSize) : !!more;
-         }
-      },
 
       _loadFullData: function(deepReload) {
          return this.reload(this.getFilter(), this.getSorting(), 0, 1000, deepReload);
@@ -189,48 +181,48 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _createFolderFooter: function(key) {
-         var template = this._getFolderFooterWrapper();
-         this._destroyItemsFolderFooter([key]);
-         if (typeof template === "function") {
-            this._foldersFooters[key] = $(template(this._getFolderFooterOptions(key)));
+         var
+            folderFooter,
+            cfg = this._options,
+            itemProj = this._getItemProjectionByItemId(key),
+            position = this._getLastChildByParent(this._getItemsContainer(), itemProj);
+
+         this._destroyItemsFolderFooter(key);
+         if (typeof cfg._footerWrapperTemplate === "function" && position) {
+            folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, itemProj)));
+            folderFooter.insertAfter(position);
+            this.reviveComponents();
          }
-      },
-      /**
-       * Получить опции футера для ветки
-       * @param key {String|int} идентификатор ветки для котрой будет построен футер
-       * @returns options {Object} опции которые будут переданы в folderFooterTpl
-       * @private
-       */
-      _getFolderFooterOptions: function(key) {
-         /*Must be implemented!*/
-      },
-      _getFolderFooterWrapper: function() {
-         /*Must be implemented!*/
       },
       /**
        * Удалить футер для веток
        * @param items
        * @private
        */
-      _destroyItemsFolderFooter: function(keys) {
+      _destroyItemsFolderFooter: function(key) {
          var
-            key,
-            controls;
-         for (var i = 0; i < keys.length; i++) {
-            key = keys[i];
-            if (this._foldersFooters[key]) {
-               controls = this._foldersFooters[key].find('.ws-component');
+            inst,
+            controls,
+            folderFooter = this._getFolderFooter(key);
+
+            if (folderFooter.length) {
+               controls = folderFooter.find('.ws-component');
                for (var j = 0; j < controls.length; j++) {
-                  var inst = controls[j].wsControl;
-                  if (inst) {
-                     inst.destroy();
-                  }
+                  inst = controls[j].wsControl;
+                  inst.destroy && inst.destroy();
                }
-               this._foldersFooters[key].remove();
-               delete this._foldersFooters[key];
+               folderFooter.remove();
             }
-         }
       },
+
+      _getFolderFooter: function(id) {
+         return $('.controls-TreeDataGridView__folderFooter' + (id ? '[data-parent="' + id + '"]' : ''), this._container);
+      },
+
+      _getTreePager: function(id) {
+         return $('.controls-TreePager[data-id="' + id + '"]', this._container).wsControl();
+      },
+
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
             if (this._needCreateFolderFooter(item)) {
@@ -243,7 +235,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          var
              model = item.getContents(),
              id = model && model.get(this._options.idProperty);
-         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._folderHasMore[id]);
+         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //
@@ -276,7 +268,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                if (!notCollapsed && item.isExpanded()) {
                   delete this._options.openedPath[itemId];
                   item.setExpanded(false);
-                  this._destroyItemsFolderFooter([itemId]);
+                  this._destroyItemsFolderFooter(itemId);
                }
             }
             return parentFunc.call(this, items, notCollapsed, groupId);
@@ -315,9 +307,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                this._lastDrawn = undefined;
                this._lastPath = [];
 
-               colHelpers.forEach(this._foldersFooters, function(val, key) {
-                  self._destroyItemsFolderFooter([key]);
-               });
+               self._destroyItemsFolderFooter();
             }
          }
       },
@@ -368,30 +358,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          this._notify('onItemActivate', meta);
       }
    };
-
-   var TreePagingLoader = Control.Control.extend({
-      $protected :{
-         _options : {
-            id: null,
-            pageSize : 20,
-            hasMore : false
-         }
-      },
-      $constructor : function(){
-         this._container.addClass('controls-TreePager');
-         this.setHasMore(this._options.hasMore);
-      },
-      setHasMore: function(more) {
-         this._options.hasMore = more;
-         if (this._options.hasMore) {
-            this._container.html('Еще');
-         }
-         else {
-            this._container.empty();
-         }
-         this._container.toggleClass('ws-hidden', !more);
-      }
-   });
 
    return TreeViewMixin;
 });

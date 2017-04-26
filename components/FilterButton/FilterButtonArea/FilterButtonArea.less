@@ -3,6 +3,10 @@
 	border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
 	.box-shadow(@menu-shadow);
 	margin-top: -1px;
+
+	.controls-PopupMixin__closeButton {
+		top: 12px;
+	}
 	
 	.blue-color {
 		&.controls-Link {
@@ -99,8 +103,10 @@
 	bottom: @controls-filterButton-history-actions-bottom;
 	
 	.icon-size {
+		top: 4px;
 		.icon-16();
 	}
+
 }
 
 .controls-filterButton__historyView-item {
