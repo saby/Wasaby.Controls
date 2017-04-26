@@ -316,55 +316,59 @@
 
 
 
-      var WaitIndicator = function () {};//TODO: ### ^^^
+      var WaitIndicator = {
+         /**
+          * Константа - время задержки по умолчанию перед показом индикатора
+          * @public
+          * @static
+          * @type {number}
+          */
+         DEFAULT_DELAY: 2000,
 
-      /**
-       * Константа - время задержки по умолчанию перед показом индикатора
-       * @public
-       * @static
-       * @type {number}
-       */
-      WaitIndicator.DEFAULT_DELAY = 2000;
+         /**
+          * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
+          * @public
+          * @static
+          * @type {number}
+          */
+         SUSPEND_LIFETIME: 15000,
 
-      /**
-       * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
-       * @public
-       * @static
-       * @type {number}
-       */
-      WaitIndicator.SUSPEND_LIFETIME = 15000;
-
-      /**
-       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. В опциях обязательно должен
-       * присутствовать отложенный стоп - он будет использован для последующего удаления индикатора.
-       * @public
-       * @static
-       * @param {object} options Опции конфигурации
-       * @param {HTMLElement|jQuery|SBIS3.CORE.Control} options.target Объект привязки индикатора
-       * @param {string} options.message Текст сообщения индикатора
-       * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
-       * @param {Promise|Deferred} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
-       * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
-       * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
-       * @param {boolean} options.small Использовать уменьшеный размер
-       * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
-       *                               Если не задан - индикатор центрируется
-       * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
-       *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
-       */
-      WaitIndicator.make = function (options) {
-         var method = options && typeof options === 'object' ? (typeof Promise !== 'undefined' && options.stopper instanceof Promise ?
-                     'then' : (options.stopper instanceof Deferred ? 'addCallbacks' : null)) : null;
-         if (!method) {
-            throw new Error('Valid stopper is not supplied');
+         /**
+          * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. В опциях обязательно должен
+          * присутствовать отложенный стоп - он будет использован для последующего удаления индикатора.
+          * @public
+          * @static
+          * @param {object} options Опции конфигурации
+          * @param {HTMLElement|jQuery|SBIS3.CORE.Control} options.target Объект привязки индикатора
+          * @param {string} options.message Текст сообщения индикатора
+          * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
+          * @param {Promise|Deferred} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
+          * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
+          * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
+          * @param {boolean} options.small Использовать уменьшеный размер
+          * @param {string} options.align Ориентация индикатора при уменьшенном размере, допустимые значения - left, right, top, bottom.
+          *                               Если не задан - индикатор центрируется
+          * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
+          *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
+          */
+         WaitIndicator.make: function (options) {
+            var method = options && typeof options === 'object' ? (typeof Promise !== 'undefined' && options.stopper instanceof Promise ?
+               'then' : (options.stopper instanceof Deferred ? 'addCallbacks' : null)) : null;
+            if (!method) {
+               throw new Error('Valid stopper is not supplied');
+            }
+            var indicator = new WaitIndicatorInstance(
+               options ? options.target : null,
+               options ? options.message : null,
+               options,
+               options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.DEFAULT_DELAY
+            );
+            options.stopper[method](function (delay) {
+               indicator.remove(delay);
+            }, function (err) {
+               indicator.remove();
+            });
          }
-         var indicator = new WaitIndicatorInstance(
-            options ? options.target : null,
-            options ? options.message : null,
-            options,
-            options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.DEFAULT_DELAY
-         );
-         options.stopper[method](function (delay) {indicator.remove(delay); }, function (err) { indicator.remove(); });
       };
 
       /**
