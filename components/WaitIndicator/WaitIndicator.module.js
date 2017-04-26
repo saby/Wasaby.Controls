@@ -3,6 +3,7 @@
       'Core/core-extend',
       'Core/Deferred',
       'js!SBIS3.CORE.Control',
+      'Core/js-template-doT',
       'css!SBIS3.CONTROLS.WaitIndicator'
    ],
 
@@ -71,7 +72,7 @@
     * @demo SBIS3.CONTROLS.Demo.MyWaitIndicatorTable
     */
 
-   function (CoreExtend, Deferred, CoreControl) {
+   function (CoreExtend, Deferred, CoreControl, doT) {
       'use strict';
 
 
@@ -97,7 +98,7 @@
       var WaitIndicatorInstance = CoreExtend.extend({
          //_moduleName: 'SBIS3.CONTROLS.WaitIndicator',
 
-         constructor: function  (target, message, look, delay, useDeferred) {
+         constructor: function (target, message, look, delay, useDeferred) {
             var oLook = {
                scroll: null,
                overlay: null,
@@ -153,23 +154,23 @@
          },
 
          /**
-          * Геттер свойства, указывает, что индикатор показывается в данный момент
+          * Геттер свойства, указывает, что индикатор является видимым в данный момент
           * @public
           * @type {boolean}
           */
          get isVisible () {
             var poolItem = WaitIndicatorPool.search(this.container);
-            //return poolItem ? WaitIndicatorSpinner.isVisible(poolItem.spinner) : false;
-            return poolItem ? !(poolItem.isLocked || !poolItem.indicators.length) : false;
+            return !!poolItem && !poolItem.isLocked && !!poolItem.indicators.length && poolItem.indicators[0] === this;
          },
 
          /**
-          * Геттер свойства, указывает, что элемент индикатора находиться в DOM-е
+          * Геттер свойства, указывает, что индикатор является текущим в данный момент
           * @public
           * @type {boolean}
           */
-         get isInTheDOM () {
-            return WaitIndicatorPool.searchIndex(this.container) !== -1;
+         get isCurrent () {
+            var poolItem = WaitIndicatorPool.search(this.container);
+            return !!poolItem && !!poolItem.indicators.length && poolItem.indicators[0] === this;
          },
 
          /**
@@ -183,8 +184,8 @@
             if (newMsg !== prevMsg) {
                this._message = newMsg;
                var poolItem = WaitIndicatorPool.search(this.container);
-               if (poolItem) {
-                  WaitIndicatorInner.checkMessage(poolItem, prevMsg);
+               if (poolItem && poolItem.indicators.length && poolItem.indicators[0] === this) {
+                  WaitIndicatorInner.update(poolItem, prevMsg, this._look);
                }
             }
          },
@@ -518,8 +519,7 @@
                if (i !== -1) {
                   if (1 < inds.length) {
                      inds.splice(i, 1);
-                     this.checkMessage(poolItem, indicator.message);
-                     this.updateLook(poolItem, indicator.look);
+                     this.update(poolItem, indicator.message, indicator.look);
                   }
                   else {
                      if (!force) {
@@ -562,31 +562,21 @@
          },
 
          /**
-          * Проверить, и обновить, если нужно, отображаемое сообщение
+          * Проверить, и обновить, если нужно, отображение индикатора
           * @public
           * @param {object} poolItem Элемент пула
           * @param {string} prevMessage Текущее (отображаемое) сообщение
+          * @param {object} prevLook Текущие (отображаемые) параметры внешнего вида
           */
-         checkMessage: function (poolItem, prevMessage) {
+         update: function (poolItem, prevMessage, prevLook) {
             var inds = poolItem.indicators;
             if (inds.length) {
                var msg = inds[0].message;
-               if (prevMessage !== msg) {
-                  WaitIndicatorSpinner.changeMessage(poolItem.spinner, msg);
-               }
-            }
-         },
-
-         /**
-          * Обновить внешний вид индикатор
-          * @public
-          * @param {object} poolItem Элемент пула
-          */
-         updateLook: function (poolItem, prevLook) {
-            var inds = poolItem.indicators;
-            if (inds.length) {
                var look = inds[0].look;
-               WaitIndicatorSpinner.changeLook(poolItem.spinner, look);
+               // Сейчас look неизменяемый, такого сравнения достаточно
+               if (prevMessage !== msg || look !== prevLook) {
+                  poolItem.spinner = WaitIndicatorSpinner.change(poolItem.spinner, poolItem.container, msg, look);
+               }
             }
          },
 
@@ -693,6 +683,13 @@
        */
       var WaitIndicatorSpinner = {
          /**
+          * Функция-шаблон
+          * @protected
+          * @type {function}
+          */
+         _dotTplFn: doT.template('<div class="ws-wait-indicator{{?it.isGlob}} ws-wait-indicator_global{{??}} ws-wait-indicator_local{{?}}{{?it.message}} ws-wait-indicator_text{{?}}{{?it.scroll}} ws-wait-indicator_scroll-{{=it.scroll}}{{?}}{{?it.small}} ws-wait-indicator_small{{=it.small !== \'yes\' ? \'-\' + it.small : \'\'}}{{?}}{{?it.overlay}} ws-wait-indicator_overlay-{{=it.overlay}}{{?}}{{~it.mods :mod:i}} ws-wait-indicator_mod-{{=mod}}{{~}}"{{?it.rect}} style="left: {{=it.rect.x}}px; top: {{=it.rect.y}}px; width: {{=it.rect.w}}px; height: {{=it.rect.h}}px;"{{?}}><div class="ws-wait-indicator-in">{{=it.message}}</div></div>'),
+
+         /**
           * Создать и добавить в DOM элемент индикатора
           * @public
           * @param {HTMLElement} container Контейнер индикатора
@@ -701,57 +698,42 @@
           * @return {HTMLElement}
           */
          create: function (container, message, look) {
-            //###var _dotTplFn = $ws.doT.template('<div class="ws-wait-indicator">{{message}}</div>');
-            var hasMsg = !(look && look.small) && !!message;
-            var html = '<div class="ws-wait-indicator"><div class="ws-wait-indicator-in" data-node="message">' + (hasMsg ? message : '') + '</div></div>';
-
-            var p = document.createElement('div');
-            p.innerHTML = html;
-            var spinner = p.firstElementChild;
-            p.removeChild(spinner);
-            /*if (hasMsg) {
-               this.changeMessage(spinner, message);
-            }*/
-            var cls = spinner.classList;
-            cls.add(container ? 'ws-wait-indicator_local' : 'ws-wait-indicator_global');
-            if (hasMsg) {
-               cls.add('ws-wait-indicator_text');
-            }
-            if (look) {
-               this.changeLook(spinner, look);
-            }
-            this._insert(container, spinner);
-            return spinner;
+            return this.change(null, container, message, look);
          },
 
          /**
-          * Добавить в DOM элемент индикатора
-          * @protected
-          * @param {HTMLElement} container Контейнер индикатора
+          * Изменить DOM-элемент индикатора
+          * @public
           * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {HTMLElement} container Контейнер индикатора
+          * @param {string} message Текст сообщения индикатора
+          * @param {object} look Параметры внешнего вида индикатора
+          * @return {HTMLElement}
           */
-         _insert: function (container, spinner) {
-            var p = container || document.body;
-            if (p !== spinner.parentNode) {
-               var needPlace = !!container && getComputedStyle(p, null).position === 'static';
-               if (needPlace) {
-                  this._place(spinner, p);
-               }
-               p.insertBefore(spinner, p.firstChild);
-               if (needPlace) {
-                  this._watchResize(spinner);
-               }
+         change: function (spinner, container, message, look) {
+            var options = this._prepareOptions(container, message, look);
+            var $next = $(this._dotTplFn(options));
+            if (spinner) {
+               $(spinner).replace($next);
             }
+            else {
+               $(container || document.body).append($next);
+            }
+            var next = $next[0];
+            if (container && getComputedStyle(container, null).position === 'static') {
+               this._place(next);
+               this._watchResize(next);
+            }
+            return next;
          },
 
          /**
           * Позиционировать элемент индикатора на странице
           * @protected
           * @param {HTMLElement} spinner DOM-элемент индикатора
-          * @param {HTMLElement} parent Родительский элемент DOM-а (опционально)
           */
-         _place: function (spinner, parent) {
-            var p = spinner.parentNode || parent;
+         _place: function (spinner) {
+            var p = spinner.parentNode;
             if (p) {
                var s = spinner.style;
                s.left = p.offsetLeft + 'px';
@@ -775,104 +757,46 @@
          },
 
          /**
-          * Изменить сообщение в DOM-элементе индикатора
+          * Приготовить параметры шаблона
           * @public
-          * @param {HTMLElement} spinner DOM-элемент индикатора
+          * @param {HTMLElement} container Контейнер индикатора
           * @param {string} message Текст сообщения индикатора
-          */
-         changeMessage: function (spinner, message) {
-            if (!('ws' in spinner)) {
-               spinner.ws = {};
-            }
-            if (!('message' in spinner.ws)) {
-               spinner.ws.message = [].slice.call(spinner.querySelectorAll('[data-node="message"]'));
-            }
-            spinner.ws.message.forEach(function (node) { node.innerHTML = message || ''; });
-            spinner.classList[message ? 'add' : 'remove']('ws-wait-indicator_text');
-         },
-
-         /**
-          * Изменить внешний вид DOM-элемента индикатора
-          * @public
-          * @param {HTMLElement} spinner DOM-элемент индикатора
           * @param {object} look Параметры внешнего вида индикатора
+          * @return {object}
           */
-         changeLook: function (spinner, look) {
-            if (look && typeof look == 'object') {
+         _prepareOptions: function (container, message, look) {
+            var options = {
+               isGlob: !container
+            };
+            if (!(look && look.small) && message) {
+               options.message = message;
+            }
+            if (look && typeof look === 'object') {
                // Раобрать параметры с учётом приоритетности
                var sides = ['left', 'right', 'top', 'bottom'];
-               var scroll = look.scroll && typeof look.scroll === 'string' ? this._checkValue(look.scroll.toLowerCase(), sides) : null;
-               var small;
-               if (!scroll) {
-                  small = look.small ? (typeof look.small === 'string' ? this._checkValue(look.small.toLowerCase(), sides, 'yes') : 'yes') : null;
+               if (look.scroll && typeof look.scroll === 'string') {
+                  options.scroll = this._checkValue(look.scroll.toLowerCase(), sides);
+               }
+               if (!options.scroll) {
+                  var small = look.small ? (typeof look.small === 'string' ? this._checkValue(look.small.toLowerCase(), sides, 'yes') : 'yes') : null;
                   if (small === 'yes' && look.align && typeof look.align === 'string') {
                      small = this._checkValue(look.align.toLowerCase(), sides, 'yes');
                   }
+                  options.small = small;
+                  options.overlay = small ? null : (look.overlay && typeof look.overlay === 'string' ? this._checkValue(look.overlay.toLowerCase(), ['none', 'dark']) : null);
                }
-               var overlay;
-               if (scroll) {
-                  overlay = null;
-               }
-               else
-               if (small) {
-                  overlay = 'no';
-               }
-               else {
-                  overlay = look.overlay && typeof look.overlay === 'string' ? this._checkValue(look.overlay.toLowerCase(), ['none', 'dark']) : null;
-               }
-               var mods = [];
                if (look.mods && Array.isArray(look.mods) && look.mods.length) {
-                  mods = look.mods.reduce(function (acc, v) {
-                     var mod = v && typeof v == 'string' ? v.replace(/[^a-z0-9_\-]+/i, '') : null;
+                  options.mods = look.mods.reduce(function (acc, v) {
+                     var mod = v && typeof v === 'string' ? v.replace(/[^a-z0-9_\-]+/i, '') : null;
                      if (mod) {
                         acc.push(mod);
                      }
                      return acc;
                   }, []);
                }
-               // Применить параметры
-               var cls = spinner.classList;
-               var scrolls = {
-                  left: 'ws-wait-indicator_scroll-left',
-                  right: 'ws-wait-indicator_scroll-right',
-                  top: 'ws-wait-indicator_scroll-top',
-                  bottom: 'ws-wait-indicator_scroll-bottom'
-               };
-               for (var p in scrolls) {
-                  cls[p === scroll ? 'add' : 'remove'](scrolls[p]);
-               }
-               var smalls = {
-                  yes: 'ws-wait-indicator_small',
-                  left: 'ws-wait-indicator_small-left',
-                  right: 'ws-wait-indicator_small-right',
-                  top: 'ws-wait-indicator_small-top',
-                  bottom: 'ws-wait-indicator_small-bottom'
-               };
-               for (var p in smalls) {
-                  cls[p === small ? 'add' : 'remove'](smalls[p]);
-               }
-               var overlays = {
-                  none: 'ws-wait-indicator_overlay-none',
-                  dark: 'ws-wait-indicator_overlay-dark'
-               };
-               for (var p in overlays) {
-                  cls[p === overlay ? 'add' : 'remove'](overlays[p]);
-               }
-               var modPrefix = 'ws-wait-indicator_mod-';
-               for (var i = 0; i < cls.length; i++) {
-                  var c = cls.item(i);
-                  if (c.indexOf(modPrefix) === 0) {
-                     if (!mods.length || mods.indexOf(c.substring(modPrefix.length)) === -1) {
-                        cls.remove(c);
-                     }
-                  }
-               }
-               if (mods.length) {
-                  mods.forEach(function (mod) {
-                     cls.add(modPrefix + mod);
-                  });
-               }
             }
+            return options;
+
          },
 
          /**
@@ -904,16 +828,6 @@
          hide: function (spinner) {
             this._unwatchResize(spinner);
             spinner.style.display = 'none';
-         },
-
-         /**
-          * Определить, является ли элемент индикатора видимым
-          * @public
-          * @param {HTMLElement} spinner DOM-элемент индикатора
-          * @return {boolean}
-          */
-         isVisible: function (spinner) {
-            return getComputedStyle(spinner, null).style.display !== 'none';
          },
 
          /**
