@@ -8,8 +8,7 @@ define('js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
-      'css!SBIS3.CONTROLS.Button',
-      'css!WS.Controls.Button/resources/ButtonCommonStyles'
+      'css!SBIS3.CONTROLS.Button'
    ],
 
    function (extend,
