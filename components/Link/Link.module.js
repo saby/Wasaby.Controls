@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.Link', [
-   'js!WS.Controls.Button',
+   'js!WSControls/Buttons/Button',
    'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
 ], function(WSButton, hrefTemplate) {
@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Link', [
     * Класс контрол "Кнопка в виде ссылки". Используется только в онлайн.
     *
     * @class SBIS3.CONTROLS.Link
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     *
     * @demo SBIS3.CONTROLS.Demo.MyLink
