@@ -30,27 +30,29 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             var view = this._options.view;
             VirtualScrollController.superclass.init.call(this);
 
-            // После первой загрузки инициализируем текущие страницы
-            view.subscribe('onDataLoad', function () {
-               this._virtualPages = [{
-                  offset: 0
-               }];
-               this.updateVirtualPages();
-               this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
-            }.bind(this));
+            if (view) {
+               // После первой загрузки инициализируем текущие страницы
+               view.subscribe('onDataLoad', function () {
+                  this._virtualPages = [{
+                     offset: 0
+                  }];
+                  this.updateVirtualPages();
+                  this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
+               }.bind(this));
 
-            if (this._options.mode == 'down') {
-               this._beginWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
-               this._endWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
-            } else {
-               // при загрузке вверх все в точности наборот, так проще выставлять размеры - так как алгоритм одинаковый
-               this._endWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
-               this._beginWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
+               if (this._options.mode == 'down') {
+                  this._beginWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
+                  this._endWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
+               } else {
+                  // при загрузке вверх все в точности наборот, так проще выставлять размеры - так как алгоритм одинаковый
+                  this._endWrapper = $('.controls-ListView__virtualScrollTop', view.getContainer());
+                  this._beginWrapper = $('.controls-ListView__virtualScrollBottom', view.getContainer());
+               }
+               this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
+               view._scrollWatcher.getScrollContainer()[0].addEventListener('scroll', this._scrollHandler.bind(this), {
+                  passive: true
+               });
             }
-            this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
-            view._scrollWatcher.getScrollContainer()[0].addEventListener('scroll', this._scrollHandler.bind(this), {
-               passive: true
-            });
          },
 
          _scrollHandler: function (e, scrollTop) {
@@ -175,7 +177,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
 
             if (haveToRemove || haveToAdd) {
-               this._setWrappersHeight(pageNumber);
+               var wrappersHeight = this._getWrappersHeight(
+                     this._virtualPages,
+                     this._getShownPages(pageNumber, PAGES_COUNT)
+                  );
+               this._beginWrapper.height(wrappersHeight[0]);
+               this._endWrapper.height(wrappersHeight[1]);
             }
 
             if (this._currentVirtualPage !== pageNumber || this._currentWindow[1] > newWindow[1]) {
@@ -188,13 +195,30 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          /**
-          * Устанавливает высоту распорок по номеру страницы
-          * @param {Number} номер страницы
+          * Получить верхнюю и нижниюю отображаемые страницы
+          * @param {Number} page номер страницы
+          * @param {Number} pagesCount количество отображаемых страниц
           */
-         _setWrappersHeight: function (page) {
-            var pages = this._virtualPages,
-               bottomPage = page + 3 < 5 ? 5 : page + 3,
-               topPage = page - 3 < 0 ? 0 : page - 3;
+         _getShownPages: function(page, pagesCount){
+            var 
+               //половина страниц
+               halfPage = Math.ceil(pagesCount / 2),
+               // Нижняя страница - текущая + половина страниц, но не меньше чем количество отображаемых страниц
+               bottomPage = page + halfPage < pagesCount ? pagesCount : page + halfPage,
+               // Верхняя страница - теущая - половина страниц, но не меньше 0
+               topPage = page - halfPage < 0 ? 0 : page - halfPage;
+            return [topPage, bottomPage];
+         },
+
+         /**
+          * Получить высоту распорок
+          * @param  {Array} shownPages Массив из номером первой и последней отображаемых страниц
+          * @return {Array} Высота верхней и нижней распорок
+          */
+         _getWrappersHeight: function (pages, shownPages) {
+            var topPage = shownPages[0],
+               bottomPage = shownPages[1];
+
             if (pages[bottomPage] && pages[bottomPage].dettached) {
                this._endWrapperHeight = pages[pages.length - 1].offset - pages[bottomPage].offset;
             } else {
@@ -209,8 +233,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                console.log('top height', this._endWrapperHeight);
                console.log('bottom height', this._beginWrapperHeight);
             }
-            this._beginWrapper.height(this._beginWrapperHeight);
-            this._endWrapper.height(this._endWrapperHeight);
+            return [this._beginWrapperHeight, this._endWrapperHeight];
          },
 
          /**
@@ -221,7 +244,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @private
           */
          _getPagesByRange: function (range, pageSize) {
-            var pages = [];
+            var pages = [], from, to;
             if (Math.abs(range[0] - range[1]) < pageSize - 1) {
                return [Math.floor(range[0] / pageSize)];
             }
