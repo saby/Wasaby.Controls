@@ -1,11 +1,12 @@
 
 define('js!WSControls/Buttons/Button', [
    'Core/constants',
+   'Core/Sanitize',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
    'tmpl!WSControls/Buttons/resources/contentTemplate',
    'css!WSControls/Buttons/resources/ButtonCommonStyles'
-], function(constants, ButtonBase, dotTplFn, contentTemplate) {
+], function(constants, Sanitize, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
 
@@ -102,7 +103,8 @@ define('js!WSControls/Buttons/Button', [
       },
 
       setCaption: function(caption){
-          Button.superclass.setCaption.call(this, caption);
+         caption = Sanitize(caption, {validNodes: {component: true}});
+         Button.superclass.setCaption.call(this, caption);
          var btnText = $('.js-controls-Button__text', this._container.get(0));
          btnText.toggleClass('controls-Button__emptyCaption', !caption);
          btnText.html(caption || '');
