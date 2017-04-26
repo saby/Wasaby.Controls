@@ -1,12 +1,23 @@
 @heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
+@align-text: left, center, right;
 
-.controls-ProgressBar {
-  display: inline-block;
+.controls-ProgressBar-align-progress-generator(@index: 1) when (@index <= length(@align-text)) {
+  @value: extract(@align-text, @index);
+  .controls-ProgressBar_align-@{value} {
+    .controls-ProgressBar__progress {
+      text-align: @value;
+    }
+  }
+  .controls-ProgressBar-align-progress-generator(@index: @index + 1);
 }
 
-.controls-ProgressBar__progress {
-  text-align: center;
-  line-height: @heightProgressBar;
+.controls-ClockPickerBody-position-tick-generator(@index: 0, @indexCircle, @circle, @offset: @offset) when (@index < @countTickInCircle) {
+  .controls-ClockPickerBody__tick_@{circle}-@{index} {
+    @x: extract(@radiusCircle, @indexCircle) * (1 + cos(@offset)) - extract(@radiusTick, @indexCircle);
+    @y: extract(@radiusCircle, @indexCircle) * (1 - sin(@offset)) - extract(@radiusTick, @indexCircle);
+    transform: translate(round(@x, 1), round(@y, 1));
+  }
+  .controls-ClockPickerBody-position-tick-generator(@index: @index + 1, @indexCircle: @indexCircle, @circle: @circle, @offset: @offset + @angularOffset);
 }
 
 .controls-ProgressBar__progress_size {
@@ -14,6 +25,7 @@
   height: @heightProgressBar;
   border: @default-border-width @default-border-style @gray-light-color;
   border-radius: @controls-ProgressBar-border-radius;
+  line-height: @heightProgressBar;
 }
 
 .controls-ProgressBar__progress_color {
@@ -29,3 +41,5 @@
 .controls-ProgressBar__progress_colorValue {
   color: @disabled-color;
 }
+
+.controls-ProgressBar-align-progress-generator();

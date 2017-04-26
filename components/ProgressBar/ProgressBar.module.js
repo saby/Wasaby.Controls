@@ -69,6 +69,15 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             this.setProgress(this.getProgress());
          },
 
+         _modifyOptions: function(options) {
+            ProgressBar.superclass._modifyOptions.call(this, options);
+            if (!/controls-ProgressBar_align-(left|right)/.test(options.className)) {
+               options.className += ' controls-ProgressBar_align-center';
+            }
+
+            return options;
+         },
+
          _checkRanges: function(options) {
             options.progress = parseFloat(options.progress);
             if (isNaN(options.progress)) {
