@@ -2,11 +2,12 @@
     <div class="controls-filterButton__secondary-title">Можно отобрать</div>
     <div class="controls-filterButton__footerAreas-wrapper controls-filterButton__footerAreas-maxHeight">
         <div class="controls-filterButton__additionalFilterParams-content">
-            {{=it.template()}}
+            <ws:partial template="{{ template }}"/>
         </div>
     </div>
-    <component data-component="SBIS3.CONTROLS.CommandsSeparator" name="toggleAdditionalFilterParams">
-        <option name="command">toggleAdditionalFilterParams</option>
-        <option name="visible">false</option>
-    </component>
+    <ws:SBIS3.CONTROLS.CommandsSeparator
+        name="toggleAdditionalFilterParams"
+        command="toggleAdditionalFilterParams"
+        visible="{{ false }}"
+    />
 </div>

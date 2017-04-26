@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
        * @see items
        */
       setItems: function(items) {
+         this._options.items = items;
          this._tabButtons.setItems(items);
          this._switchableArea.setItems(items);
       },

@@ -1,6 +1,10 @@
 define('js!SBIS3.CONTROLS.Utils.RecordSetUtil',[], function () {
    'use strict';
-   var RecordSetUtil = {
+    /**
+     * @class SBIS3.CONTROLS.Utils.RecordSetUtil
+     * @public
+     */
+   var RecordSetUtil = /** @lends SBIS3.CONTROLS.Utils.RecordSetUtil.prototype */{
       /**
        * Возвращает массив значений переданных записей по указанному полю
        * @param {Array} records массив записей

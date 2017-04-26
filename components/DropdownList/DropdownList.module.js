@@ -315,6 +315,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                emptyValue: null
             },
             _pickerListContainer: null,
+            _pickerCloseContainer: null,
             _pickerHeadContainer: null,
             _pickerFooterContainer: null,
             _pickerBodyContainer: null,
@@ -323,7 +324,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _defaultId: null,
             _buttonChoose : null,
             _buttonHasMore: null,
-            _currentSelection: {},
+            _currentSelection: [],
             _emptyText: 'Не выбрано',
             _hideAllowed : true,
             _changedSelectedKeys: [] //Массив ключей, которые были выбраны, но еще не сохранены в выпадающем списке
@@ -353,13 +354,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (cfg.type == 'duplicateHeader'){
-               cfg.pickerClassName += ' controls-dropdownlist__showHead controls-DropdownList__type-duplicateHeader';
+               cfg.pickerClassName += ' controls-DropdownList__type-duplicateHeader';
             }
             else if (cfg.type == 'titleHeader'){
-               cfg.pickerClassName += ' controls-dropdownlist__showHead controls-DropdownList__type-title';
+               cfg.pickerClassName += ' controls-DropdownList__type-title';
+            }
+            else if (cfg.type == 'customHeader'){
+               cfg.pickerClassName += ' controls-DropdownList__type-customHeader';
             }
             else if (cfg.type == 'fastDataFilter'){
-               cfg.pickerClassName += ' controls-DropdownList__type-fastDataFilter controls-DropdownList__hideSelectedInList';
+               cfg.pickerClassName += ' controls-DropdownList__type-fastDataFilter';
                cfg.cssClassName += ' controls-DropdownList__type-fastDataFilter';
             }
             return cfg;
@@ -385,6 +389,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(!this._isHoverMode()) {
                this._pickerHeadContainer.click(this.hidePicker.bind(this));
             }
+            else {
+               this._getPickerContainer().bind('mouseleave', this.hidePicker.bind(this));
+            }
          },
          _buildTplArgs: function(item) {
             var defaultArgs = DropdownList.superclass._buildTplArgs.apply(this, arguments);
@@ -399,26 +406,25 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _removeOldKeys: function(){
             var keys = this.getSelectedKeys(),
-                items = this.getItems();
-            if (!this._isEnumTypeData()) {
-               for (var i = 0, l = keys.length; i < l; i++) {
-                  if (!items.getRecordById(keys[i])) {
-                     keys.splice(i, 1);
-                  }
-               }
-               if (!keys.length){
-                  this._setFirstItemAsSelected();
-               }
-            }
-         },
-
-         _onReviveItems: function(){
+                items = this.getItems(),
+                i = 0;
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
             //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
-            if (!this._options.emptyValue || this.getSelectedKeys()[0] !== null){
-               this._removeOldKeys();
+            if (!this._options.emptyValue || keys[0] !== null){
+               if (!this._isEnumTypeData()) {
+                  while (i < keys.length) {
+                     if (!items.getRecordById(keys[i])) {
+                        keys.splice(i, 1);
+                     }
+                     else {
+                        i++;
+                     }
+                  }
+                  if (!keys.length){
+                     this._setFirstItemAsSelected();
+                  }
+               }
             }
-            DropdownList.superclass._onReviveItems.apply(this, arguments);
          },
 
          setSelectedKeys: function(idArray){
@@ -453,12 +459,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _updateCurrentSelection: function(){
-            var keys;
-            this._currentSelection = {};
-            keys = this.getSelectedKeys();
-            for (var i = 0, len = keys.length; i < len; i++ ) {
-               this._currentSelection[keys[i]] = true;
-            }
+            this._currentSelection = [];
+            this._currentSelection = this.getSelectedKeys().slice(0);
          },
          _initializePicker: function() {
             DropdownList.superclass._initializePicker.apply(this, arguments);
@@ -479,16 +481,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(event.type === 'mousedown') {
                eventsChannel.notify('onDocumentClick', event);
             }
-         },
-         _getCurrentSelection: function(){
-            var keys = [];
-            for (var i in this._currentSelection) {
-               if (this._currentSelection.hasOwnProperty(i) && this._currentSelection[i]) {
-                  //Если ключи были number, они станут здесь строкой
-                  keys.push(i);
-               }
-            }
-            return keys;
          },
          //Проверка на нестрогое равенство массивов
          //TODO это дублЬ! нужно вынести в хелпер!!!
@@ -526,7 +518,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
-                  this._currentSelection[itemId] = selected;
+
+                  var selectedItemIndex = this._currentSelection.indexOf(itemId);
+                  //Добавляем/Удаляем id из набора выбранных ключей
+                  if (selected && selectedItemIndex === -1) {
+                     this._currentSelection.push(itemId);
+                  }
+                  else if (!selected && selectedItemIndex > -1) {
+                     this._currentSelection.splice(selectedItemIndex, 1);
+                  }
+
                } else {
                   self.setSelectedKeys([itemId]);
                   self.hidePicker();
@@ -575,10 +576,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._changedSelectedKeys = [];
                //Восстановим выделение по элементам
                for (var i = 0 ; i < items.length; i++) {
-                  $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
+                  $(items[i]).toggleClass('controls-DropdownList__item__selected', this._currentSelection.indexOf(this._getIdByRow($(items[i]))) > -1);
                }
-               this._calcPickerSize();
-
                //Если выбрали дефолтную запись - скрываем крестик сброса
                //Нужно перед показом пикера, чтобы перед позиционированием контейнер имел правильные размеры, т.к.
                //Наличие крестика влияет на отступы у записей согласно стандарту.
@@ -603,6 +602,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _redrawSelectedItems: function() {
+            this._removeOldKeys();
             if (this._isEmptyValueSelected()) {
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
@@ -620,51 +620,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _isHoverMode: function(){
-            return this._options.type === 'fastDataFilter';
-         },
-         _calcPickerSize: function(){
-            var pickerBodyWidth,
-               pickerHeaderWidth,
-               containerWidth,
-               needResizeHead,
-               minResizeWidth = 400; //Минимальная ширина, с которой начнется ресайз шапки.
-
-            //Сбрасываем значения, выставленные при предыдущем вызове метода _calcPickerSize
-            this._pickerBodyContainer.css('max-width', '');
-            this._pickerHeadContainer.css('width', '');
-            this._togglePickerVisibility(true);
-
-            pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
-            pickerHeaderWidth = this._pickerHeadContainer[0].clientWidth;
-            containerWidth = this.getContainer()[0].clientWidth;
-            needResizeHead = pickerHeaderWidth > minResizeWidth && pickerHeaderWidth > containerWidth;
-
-            //Ширина шапки не больше, чем ширина контейнера
-            if (needResizeHead){
-               this._pickerHeadContainer.width(containerWidth);
-               //изменилась ширина контейрена, нужно взять актуальную
-               pickerBodyWidth = this._pickerBodyContainer[0].clientWidth;
-               pickerHeaderWidth = containerWidth;
-            }
-
-            //Контейнер с итемами ресайзится в 2-х случаях
-            //1: Ширина шапки < 400px, ширина контейнера с итемами > 400px => ширина контейнера = 400px, ограничение прописано в less
-            //2: Ширина шапки > 400px => ширина контейнера с итемами = ширине шапки
-            if (pickerHeaderWidth > pickerBodyWidth){
-               this._pickerBodyContainer.css('max-width', pickerHeaderWidth);
-               pickerBodyWidth = pickerHeaderWidth; //изменилась ширина контейрена, нужно взять актуальную
-            }
-            this._getPickerContainer().toggleClass('controls-DropdownList__type-fastDataFilter-shadow', needResizeHead);
-            this._getPickerContainer().toggleClass('controls-DropdownList__equalsWidth', pickerBodyWidth === pickerHeaderWidth);
-
-            this._togglePickerVisibility(false);
-         },
-         _togglePickerVisibility: function(toggle){
-            //Расчет ширины пикера должен производиться до показа контейнера, иначе пикер сам установит ширину, исходя из текущей верстки, и наш ресайз приведет к неправильому позиционированию
-            //Ставим пикеру visibility: hidden, чтобы перед показом контейнера иметь доступ к его размерам для ресайза.
-            var pickerContainer = this._picker.getContainer();
-            pickerContainer.toggleClass('ws-invisible', toggle);
-            pickerContainer.toggleClass('ws-hidden', !toggle);
+            //Пока окончательно не избавились от открытия ddl по ховеру
+            return this._options.type === 'customHeader';
          },
          hide: function(){
             if (this._hideAllowed) {
@@ -680,11 +637,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             return this._picker.getContainer();
          },
-         _drawItemsCallback: function() {
+         //drawItemsCallback обернут в debounce и выполнится позже, чем пикер спозиционируется
+         _drawItemsCallbackSync: function() {
             this._redrawSelectedItems();
             this._setSelectedItems(); //Обновим selectedItems, если пришел другой набор данных
             this._needToRedraw = true;
-
          },
          _isEmptyValueSelected: function(){
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
@@ -769,22 +726,25 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 self = this;
             if (this._picker) {
                pickerContainer = this._getPickerContainer();
-               this._pickerListContainer = pickerContainer.find('.controls-DropdownList__list');
-               this._pickerBodyContainer = pickerContainer.find('.controls-DropdownList__body');
-               this._pickerHeadContainer = pickerContainer.find('.controls-DropdownList__header');
-               this._pickerFooterContainer = pickerContainer.find('.controls-DropdownList__footer');
+               this._pickerListContainer = $('.controls-DropdownList__list', pickerContainer);
+               this._pickerCloseContainer = $('.controls-DropdownList__close-picker', pickerContainer);
+               this._pickerCloseContainer.click(this.hidePicker.bind(this));
+               this._pickerBodyContainer = $('.controls-DropdownList__body', pickerContainer);
+               this._pickerHeadContainer = $('.controls-DropdownList__header', pickerContainer);
+               this._pickerFooterContainer = $('.controls-DropdownList__footer', pickerContainer);
                this._buttonHasMore = this._picker.getChildControlByName('DropdownList_buttonHasMore');
                this._buttonHasMore.subscribe('onActivated', function(){
                   self._notify('onClickMore');
                   self.hidePicker();
                });
+
                if (this._options.multiselect) {
                   this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                   this._buttonChoose.subscribe('onActivated', function(){
-                     var currSelection = self._getCurrentSelection();
                      self._hideAllowed = true;
-                     if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
-                        self.setSelectedKeys(currSelection);
+                     if (!self._isSimilarArrays(self.getSelectedKeys(), self._currentSelection)) {
+                        var keys = self._currentSelection.length ? self._currentSelection : [self._defaultId];
+                        self.setSelectedKeys(keys);
                      }
                      self.hidePicker();
                   });
@@ -933,18 +893,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var pickerHeadContainer,
                 headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options))();
             if (this._picker) {
-               pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer())
-               if (this._options.type !== 'fastDataFilter'){
+               pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer());
+               if (pickerHeadContainer.length){
                   var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
                   pickerHeadTpl.click(function(e){
                      e.stopImmediatePropagation();
                   });
                   pickerHeadContainer.html(pickerHeadTpl);
+                  this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                }
-               else {
-                  pickerHeadContainer.html(headTpl);
-               }
-               this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
             }
             this._selectedItemContainer.html(headTpl);
             this.getContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
@@ -987,16 +944,22 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
-            var offset = {
+            var hasArrow = this.getContainer().hasClass('controls-DropdownList__withoutArrow'),
+                type = this._options.type,
+                offset = {
                    top: -10,
                    left: -10
                 };
-            if (this._options.type == 'titleHeader'){
+            if (type == 'titleHeader'){
                offset.top = -6;
             }
-            else if (this._options.type == 'fastDataFilter'){
-               offset.top = -2;
+            else if (type == 'customHeader') {
                offset.left = -2;
+               offset.top = -1;
+            }
+            else if (type == 'fastDataFilter') {
+               //Располагаем текст в пикере над текстом в ссылке. Позиция зависит от наличия треугольника
+               offset.left = hasArrow ? -14 : 2;
             }
             return {
                corner: 'tl',
@@ -1004,17 +967,20 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   side: 'top',
                   offset: offset.top
                },
+               _canScroll: true,
                horizontalAlign: {
                   side: 'left',
                   offset: offset.left
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               activableByClick: false,
+               locationStrategy: type == 'fastDataFilter' ? 'bodyBounds' : 'base',
                targetPart: true,
                template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,
-                  'footerTpl' : this._options.footerTpl
+                  'footerTpl' : this._options.footerTpl,
+                  'hasHead': type == 'duplicateHeader' || type == 'titleHeader' || type == 'customHeader',
+                  'hasCloseButton': type == 'fastDataFilter'
                })
             };
          },

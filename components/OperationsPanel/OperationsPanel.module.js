@@ -50,7 +50,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @extends SBIS3.CORE.CompoundControl
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
-    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
     *
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext

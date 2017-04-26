@@ -168,6 +168,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
+      tplOptions.idProperty = cfg.idProperty;
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
@@ -2507,7 +2508,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (this._isNeedToRedraw()) {
             needToRevive = this._changeItemProperties(item, property);
             this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
-            this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
+            if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
+               this._revivePackageParams.light = this._revivePackageParams.light && (item.getContents().getId() != this._options.selectedKey);
+            }
          }
       }
    };

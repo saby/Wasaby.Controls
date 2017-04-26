@@ -154,7 +154,7 @@ define(
                    currentItem = currentItems.getRecordById(id),
                    projItem = projection.getItemBySourceItem(currentItem),
                    hash = projItem && projItem.getHash();
-               if (currentItem && currentItem.get('visible') !== itemsRawData[i]['visible']) {
+               if (currentItem && typeof(itemsRawData[i]['visible']) == 'boolean' && currentItem.get('visible') !== itemsRawData[i]['visible']) {
                   this.getItemsInstances()[hash].setVisible(itemsRawData[i]['visible']);
                }
             }

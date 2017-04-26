@@ -4,9 +4,15 @@
 define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
    'use strict';
    /**
-    *
+    * @class SBIS3.CONTROLS.Utils.ImageUtil
+    * @public
     */
-   var ImageUtil = {
+   var ImageUtil = /** @lends SBIS3.CONTROLS.Utils.ImageUtil.prototype */ {
+       /**
+        *
+        * @param target
+        * @returns {{width, height}}
+        */
       getDimensions: function(target) {
          var
             doc = document.documentElement,
@@ -61,6 +67,11 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
             height: sideDimension(docHeight, targetHeight, perRatio)
          };
       },
+       /**
+        *
+        * @param DOMelement
+        * @returns {{width: (Number|number), height: (Number|number)}}
+        */
       getNaturalSizes: function(DOMelement) {
          var img = new Image();
          img.src = DOMelement.src;

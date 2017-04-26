@@ -185,7 +185,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             bodyBounds: false,
             isHint: true,
-            parentContainer: ''
+            parentContainer: '',
+            /*
+            эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
+            */
+            _canScroll: false
          }
       },
 
@@ -1143,7 +1147,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             this._subscribeTargetMove();
 
             /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
-            if(constants.browser.isMobilePlatform) {
+            if(this._options._canScroll && constants.browser.isMobilePlatform) {
                var topWindow = cWindowManager.getMaxZWindow();
 
                constants.$body.addClass('controls-ScrollContainer-overflow-scrolling-auto');
@@ -1234,7 +1238,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                    }.bind(this));
                    /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
-                   if(constants.browser.isMobilePlatform) {
+                   if(this._options._canScroll && constants.browser.isMobilePlatform) {
                       var topWindow = cWindowManager.getMaxZWindow(),
                           isPopUp = coreHelpers.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
 

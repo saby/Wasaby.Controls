@@ -1,19 +1,18 @@
 html {
-  font-size: 28px !important;
   color: #e4e4e4;
   background-color: #1d2834;
 }
 body {
-  font-size: 28px !important;
+  font-size: 1rem !important;
 }
 .controls-ListView {
   background-color: #1d2834;
 }
 .controls-SearchForm {
   .icon-size {
-    font-size: 2rem !important;
-    width: @icon-width;
-    height: @icon-height;
+    font-size: 3rem !important;
+    width: 2rem;
+    height: 3rem;
   }
 }
 
@@ -67,9 +66,7 @@ body {
   white-space: normal;
    padding-bottom: 0; // FF only
 }
-.controls-Button__text {
-  line-height: 20px;//for 1 or 2 lines
-}
+
 .icon-24() {
   font-size: 1.785rem !important;
   line-height: 1.785rem !important;
@@ -169,22 +166,19 @@ body {
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
   font-size: 1.14rem;
-
-
 }
-.controls__filterButton__area {
-  border: 2px solid #26b8ff;
-}
+
 
 body {
   .ws-window-titlebar {
     color: #e4e4e4;
-    line-height: 2rem;
+    line-height: 3.57rem;
+    height: 3.57rem;
     background: transparent;
     position: absolute;
     left: 0;
     right: 0;
-    font-size: 1.14rem;
+    font-size: 1.43rem;
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
@@ -198,7 +192,8 @@ body {
     }
   }
   .ws-float-area-title {
-      font-size: 1rem!important;
+      font-size: 1.43rem!important;
+      font-weight: normal !important;
   }
 }
 .controls-FloatArea {
@@ -208,11 +203,23 @@ body {
 body {
   .controls__filter-button__clear-filter {
     font-size: 1.14rem;
+    
+    &:hover {
+      color: #26b8ff !important;
+    }
+  }
+  .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+    width: 3rem !important;
+    height: 3rem !important;
+    background: @closeBigButtonImage;
+    &:hover {
+      background: @closeBigButtonImageHover;
+    }
+    &:active {
+      background: @closeBigButtonImageHover;
+    }
+}
 
-  }
-  &:hover {
-    color: #26b8ff !important;
-  }
 }
 .controls-ComboBox.controls-TextBox.controls-Picker__show {
   border-bottom: none;
@@ -221,3 +228,30 @@ body {
  {
   color: #e4e4e4 !important;
  }
+
+ .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
+ 
+    background: #FF7033;
+}
+.controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
+  border-color: #26b8ff;
+}
+.icon-small {
+  font-size: 1.857rem !important;
+  height: 1.857rem !important;
+  width: 1.857rem !important;
+}
+.icon-medium {
+  font-size: 2.21rem !important;
+  height: 2.21rem !important;
+  width: 2.21rem !important;
+}
+.icon-large {
+  font-size: 3rem !important;
+  height: 3rem !important;
+  width: 3rem !important;
+}
+
+body .ws-loadingimg {
+  top: 30%;
+}

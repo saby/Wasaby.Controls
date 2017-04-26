@@ -365,6 +365,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _loadingIndicator: undefined,
             _editInPlace: null,
+            _createEditInPlaceDeferred: null,
             _pageChangeDeferred : undefined,
             _pager : undefined,
             _pagerContainer: undefined,
@@ -1231,7 +1232,7 @@ define('js!SBIS3.CONTROLS.ListView',
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
-            if (!Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
+            if (this._options.groupBy && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
                var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
                if (closestGroup.length) {
                   this._options.groupBy.clickHandler.call(this, $target);
@@ -2035,8 +2036,16 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                self = this,
                result = new Deferred();
-            requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function(controller) {
-               result.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+            if (!this._createEditInPlaceDeferred) {
+               this._createEditInPlaceDeferred = new Deferred();
+               requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function (controller) {
+                  self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+                  self._createEditInPlaceDeferred = undefined;
+               });
+            }
+            this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
+               result.callback(editInPlace);
+               return editInPlace;
             });
             return result;
          },
@@ -2154,13 +2163,14 @@ define('js!SBIS3.CONTROLS.ListView',
             return config;
          },
          _showToolbar: function(model) {
-            var itemsInstances, itemsToolbar, editedItem;
+            var itemsInstances, itemsToolbar, editedItem, editedContainer;
             if (this._options.editMode.indexOf('toolbar') !== -1) {
                itemsToolbar = this._getItemsToolbar();
 
                itemsToolbar.unlockToolbar();
                /* Меняем выделенный элемент на редактируемую/добавляемую запись */
-               this._changeHoveredItem(this._getElementByModel(model));
+               editedContainer = this._getElementByModel(model);
+               this._changeHoveredItem(editedContainer);
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
                if (!this.getItems().getRecordById(model.getId())) {
@@ -2176,6 +2186,10 @@ define('js!SBIS3.CONTROLS.ListView',
                // т.к. тулбар в режиме редактикрования по месту должен работать с измененной запись
                editedItem = cFunctions.clone(this.getHoveredItem());
                editedItem.record = model;
+               // на событие onBeginEdit могут поменять модель, запись перерисуется и контейнер на который ссылается тулбар затрется
+               if(!dcHelpers.contains(this.getContainer(), editedItem.container)){
+                   editedItem.container = editedContainer;
+               }
 
                //Отображаем itemsToolbar для редактируемого элемента и фиксируем его
                this._showItemsToolbar(editedItem);

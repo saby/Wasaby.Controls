@@ -2,6 +2,10 @@
 .controls-ListView {
     position: relative;
 
+   &:not(.controls-ListView__dataLoaded) {
+      min-height: @list-view-min-height;
+   }
+
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
@@ -9,12 +13,6 @@
    
    &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem {
       background-color: @default-itemHover-color;
-      .controls-ListView__itemCheckBox {
-         background: @listView-check-box-icon-bg;
-         &:hover{
-            background: @listView-check-box-icon-hover-bg;
-         }
-      }
    }
 
    &.controls-small-ListView {
@@ -23,25 +21,7 @@
        color: @gray-ccc-color;
      }
    }
-   
-   &.controls-ListView__multiselect {
-      .controls-ListView__itemCheckBox {
-         display: inline-block;
-      }
-      .controls-ListView__multiselect__off {
-         .controls-ListView__itemCheckBox {
-            display: none;
-         }
-      }
-      .controls-ListView__item__multiSelected{
-         .controls-ListView__itemCheckBox {
-            background: @listView-check-box-icon-checked-bg;
-            &:hover{
-      			background: @listView-check-box-icon-checked-bg;
-      		}
-         }
-      }
-   }
+
    &.controls-ListView__outside-scroll-loader{
       .controls-ListView-scrollIndicator{
          position: relative;
@@ -100,6 +80,31 @@
    height: 1px;
 }
 
+.controls-ListView__multiselect__off {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+.controls-ListView__multiselect {
+   .controls-ListView__hoveredItem {
+      .controls-ListView__itemCheckBox {
+         background: @listView-check-box-icon-bg;
+         &:hover{
+            background: @listView-check-box-icon-hover-bg;
+         }
+      }
+   }
+   .controls-ListView__item__multiSelected{
+      .controls-ListView__itemCheckBox {
+         background: @listView-check-box-icon-checked-bg;
+         &:hover{
+            background: @listView-check-box-icon-checked-bg;
+         }
+      }
+   }
+}
+
 .controls-ListView__EmptyData{
    color: @listView-empty-data-color;
    .box-sizing(border-box);
@@ -118,7 +123,7 @@
    height: @listView-check-box-height;
    background: none;
    cursor: pointer;
-   display: none;
+   display: inline-block;
    position: absolute;
    left: @listView-check-box-left;
    top: @listView-check-box-top;

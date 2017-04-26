@@ -45,7 +45,7 @@ gemini.suite('SBIS3.ENGINE.Browser Online', function () {
             .capture('opened_fast_filter', function (actions, find) {
 				this.dots = find('.controls-BreadCrumbs__dots');
 				actions.click(this.dots);
-				actions.mouseMove(this.fast_filter);
+				actions.click(this.fast_filter);
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="34"]', 1000);
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="20"]', 1000);
             })
