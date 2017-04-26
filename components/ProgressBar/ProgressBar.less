@@ -1,12 +1,14 @@
 @heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
+@align-text: left, center, right;
 
-.controls-ProgressBar {
-  display: inline-block;
-}
-
-.controls-ProgressBar__progress {
-  text-align: center;
-  line-height: @heightProgressBar;
+.controls-ProgressBar-align-progress-generator(@index: 1) when (@index <= length(@align-text)) {
+  @value: extract(@align-text, @index);
+  .controls-ProgressBar_align-@{value} {
+    .controls-ProgressBar__progress {
+      text-align: @value;
+    }
+  }
+  .controls-ProgressBar-align-progress-generator(@index: @index + 1);
 }
 
 .controls-ProgressBar__progress_size {
@@ -14,6 +16,7 @@
   height: @heightProgressBar;
   border: @default-border-width @default-border-style @gray-light-color;
   border-radius: @controls-ProgressBar-border-radius;
+  line-height: @heightProgressBar;
 }
 
 .controls-ProgressBar__progress_color {
@@ -29,3 +32,5 @@
 .controls-ProgressBar__progress_colorValue {
   color: @disabled-color;
 }
+
+.controls-ProgressBar-align-progress-generator();
