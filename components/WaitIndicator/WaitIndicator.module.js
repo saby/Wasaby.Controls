@@ -496,9 +496,8 @@
       Object.defineProperty(WaitIndicator, 'SUSPEND_MAX_LIFETIME', {value:600000, writable:false, enumerable:true});
 
       /**
-       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. Если в опциях присутствует отложенный
-       * стоп - он будет использован для удаления индикатора. Возвращает колбэк, при вызове которого индикатор будет удалён. С задержкой, если она
-       * будет указана при вызове колбэка.
+       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. В опциях обязательно должен
+       * присутствовать отложенный стоп - он будет использован для последующего удаления индикатора.
        * @public
        * @static
        * @param {object} options Опции конфигурации
@@ -513,31 +512,20 @@
        *                               Если не задан - индикатор центрируется
        * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
        *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
-       * @return {function}
        */
       WaitIndicator.make = function (options) {
+         var method = options && typeof options === 'object' ? (typeof Promise !== 'undefined' && options.stopper instanceof Promise ?
+                     'then' : (options.stopper instanceof Deferred ? 'addCallbacks' : null)) : null;
+         if (!method) {
+            throw new Error('Valid stopper is not supplied');
+         }
          var indicator = new WaitIndicator(
             options ? options.target : null,
             options ? options.message : null,
             options,
             options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
          );
-         var cb = function (delay) {
-            indicator.remove(delay);
-         };
-         if (options && options.stopper) {
-            var erfun = function (err) {
-               indicator.remove();
-            };
-            if (typeof Promise !== 'undefined' && options.stopper instanceof Promise) {
-               options.stopper.then(cb, erfun);
-            }
-            else
-            if (options.stopper instanceof Deferred) {
-               options.stopper.addCallbacks(cb, erfun);
-            }
-         }
-         return cb;
+         options.stopper[method](function (delay) {indicator.remove(delay); }, function (err) { indicator.remove(); });
       };
 
       /**
