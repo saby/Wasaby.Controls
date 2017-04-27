@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
    return [
        {
          name: 'undo',
-         componentType: 'SBIS3.CONTROLS.Button',
+         componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Шаг назад'),
           className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
          icon: 'sprite:icon-24 icon-Undo2 icon-primary',
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'redo',
-         componentType: 'SBIS3.CONTROLS.Button',
+         componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Шаг вперед'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
          icon: 'sprite:icon-24 icon-Redo2 icon-primary',
@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'unlink',
-         componentType: 'SBIS3.CONTROLS.Button',
+         componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Убрать ссылку'),
          icon: 'sprite:icon-24 icon-Unlink icon-primary',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'image',
-         componentType: 'SBIS3.CONTROLS.Button',
+         componentType: 'WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-Picture icon-primary',
          tooltip: 'Вставить изображение',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
@@ -344,7 +344,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'codesample',
          tooltip: 'Вставка кода',
-         componentType: 'SBIS3.CONTROLS.Button',
+         componentType: 'WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-PasteCodeBtr icon-primary',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
