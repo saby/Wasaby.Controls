@@ -144,10 +144,6 @@
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
    }
-   
-   &:not(.controls-FieldLink__multiselect).controls-FieldLink__selected-single .controls-TextBox__placeholder {
-      display: none;
-   }
 
    .controls-TextBox__fieldWrapper {
       .flexbox();
@@ -214,6 +210,14 @@
    .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
       padding: @controls-FieldLink-afterField-padding;
    }
+}
+
+.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
+   display: none;
+}
+
+.controls-FieldLink__multiselect .controls-TextBox__fieldWrapper {
+   min-width: @controls-FieldLink-fieldWrapper-minWidth;
 }
 
 .controls-Link.controls-FieldLink__Link {

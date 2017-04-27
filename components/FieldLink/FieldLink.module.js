@@ -72,7 +72,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        'use strict';
 
-       var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
 
        var classes = {
@@ -765,6 +764,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _getLinkCollection: fHelpers.memoize(function() {
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
+          
+          _getInputMinWidth: fHelpers.memoize(function() {
+             return this.getContainer().find('.controls-TextBox__fieldWrapper').css('min-width');
+          }, '_getInputMinWidth'),
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
@@ -792,7 +795,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
                       if (this._options.multiselect || this._options.alwaysShowTextBox) {
                          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
-                         additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
+                         additionalWidth += parseInt(this.isEnabled() ? this._getInputMinWidth() : SHOW_ALL_LINK_WIDTH);
                       }
 
                       /* Высчитываем ширину, доступную для элементов */
