@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/functional-helpers",
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
-   "Core/helpers/Object/isEmpty"
+   "Core/helpers/Object/isEmpty",
+   "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
    constants,
@@ -741,7 +742,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             light: true
          };
 
-         var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
+         var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = fHelpers.forAliveOnly(function() {
             debouncedDrawItemsCallback();
