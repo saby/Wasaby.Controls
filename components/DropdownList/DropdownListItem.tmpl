@@ -1,0 +1,15 @@
+<div class="controls-DropdownList__item {{className}}
+            {{multiselect ? 'controls-DropdownList__multiselect'}}
+            {{(item.get && item.get('isEmptyValue')) ? 'controls-DropdownList__defaultItem'}}
+            {{(item.get && item.get(it.parentProperty)) ? 'controls-DropdownList__child'}}
+            {{((item.getId && item.getId()) === defaultId) ? 'controls-ListView__defaultItem'}}"
+    data-hash="{{projItem.getHash()}}"
+    data-id="{{item.getId ? item.getId()}}">
+    <div if="{{multiselect}}" class="controls-DropdownList__itemCheckBox js-controls-DropdownList__itemCheckBox"></div>
+    <div class="controls-DropdownList__itemTextWrapper controls-DropdownList__itemTextWrapper-height">
+        <div class="controls-DropdownList__item-text" title="{{getPropertyValue(item, displayProperty)}}">
+            <ws:partial template="{{itemContent}}" scope="{{...}}" />
+        </div>
+        <div class="controls-DropdownList__item-text-shadow"></div>
+    </div>
+</div>
