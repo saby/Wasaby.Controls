@@ -751,11 +751,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
              cfg._useNativePlaceholder = cfg.placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
-
-             if(!cfg._useNativePlaceholder) {
-                cfg.placeholder = ParserUtilities.buildInnerComponentsExtended(cfg.placeholder, cfg).markup;
-             }
-
+             
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
              cfg.cssClassName += ' ' + classesToAdd.join(' ');
