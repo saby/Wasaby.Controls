@@ -96,6 +96,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          this.setPrimary(isDefault);
       },
 
+      _clickHandler:function(){
+         this._onClickHandler();
+      },
+
       _onClickHandler: function(e)
       {
          try{
