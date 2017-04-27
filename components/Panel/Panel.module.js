@@ -1,5 +1,7 @@
 define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Panel', 'css!SBIS3.CONTROLS.Panel'], function(CompoundControl, dotTplFn) {
    /**
+    * Класс контрола "Панель", который предназначен для организации разметки визуального компонента.
+    * Аналог тега div.
     * SBIS3.CONTROLS.Panel
     * @class SBIS3.CONTROLS.Panel
     * @extends SBIS3.CORE.CompoundControl
@@ -17,8 +19,16 @@ define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.
       $protected: {
          _options: {
             /**
-             * @cfg {Content}
-            */
+             * @cfg {Content} Устанавливает разметку, которая будет добавлена внутрь панели.
+             * @example
+             * <pre>
+             *     <option name="content">
+             *        <component data-component="SBIS3.CONTROLS.Button" name="myButton">
+             *           <option name="caption">Кнопка между вкладками</option>
+             *        </component>
+             *     </option>
+             * </pre>
+             */
             content: ""
          }
       }, 
