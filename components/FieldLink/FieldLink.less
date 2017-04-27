@@ -196,6 +196,11 @@
          display: none;
       }
    }
+   
+   .controls-FieldLink__dropAllLinks {
+      color: @controls-FieldLink-link-color;
+      display: none;
+   }
 
    .controls-FieldLink__Link {
       display: inline;
@@ -293,8 +298,8 @@
    }
 }
 
-.controls-FieldLink__dropAllLinks {
-   color: @controls-FieldLink-link-color;
+.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
+   display: inline-block;
 }
 
 .controls-FieldLink__copyShowAll {
@@ -343,10 +348,6 @@
 }
 
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
-   display: none;
-}
-
-.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
    display: none;
 }
 
