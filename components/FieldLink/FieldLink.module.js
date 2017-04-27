@@ -776,7 +776,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  toAdd = [],
                  isEnabled = this.isEnabled(),
                  needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
-                 availableWidth, items, additionalWidth, itemWidth, itemsCount, $item;
+                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item;
 
              if(!linkCollection.isPickerVisible()) {
                 if (!this._isEmptySelection()) {
@@ -803,19 +803,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
                       /* Считаем, сколько элементов может отобразиться */
                       for (var i = itemsCount - 1; i >= 0; i--) {
-                         $item = items.eq(i);
-                         itemWidth = $item.outerWidth();
+                         item = items[i];
+                         itemWidth = Math.ceil(item.getBoundingClientRect().width);
 
                          if ((itemsWidth + itemWidth) > availableWidth) {
                             this._toggleShowAll(itemsCount > 1);
                             /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
                             if (!itemsWidth) {
-                               $item.outerWidth(availableWidth);
-                               toAdd.push($item[0]);
+                               $(item).outerWidth(availableWidth);
+                               toAdd.push(item[0]);
                             }
                             break;
                          }
-                         toAdd.unshift($item[0]);
+                         toAdd.unshift(item[0]);
                          itemsWidth += itemWidth;
                       }
 
