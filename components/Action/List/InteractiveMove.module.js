@@ -129,12 +129,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.displayField является устаревшей, используйте componentOptions.displayProperty');
                cfg.componentOptions.displayProperty = cfg.componentOptions.displayField;
             }
-            if (cInstance.instanceOfMixin(cfg.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
-               cMerge(cfg, {
-                  parentProperty: cfg.linkedObject.getParentProperty(),
-                  nodeProperty: cfg.linkedObject.getNodeProperty()
-               }, {preferSource: true});
-            }
             return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
@@ -170,6 +164,11 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                options.infiniteScroll = 'demand';
             }
             return options;
+         },
+
+         init: function () {
+            InteractiveMove.superclass.init.call(this);
+            this._syncOptions();
          },
 
          _move: function(movedItems, target) {
@@ -222,6 +221,18 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             } else {
                InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
             }
+         },
+         _syncOptions: function () {
+            if (cInstance.instanceOfMixin(this._options.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+               cMerge(this._options, {
+                  parentProperty: this._options.linkedObject.getParentProperty(),
+                  nodeProperty: this._options.linkedObject.getNodeProperty()
+               }, {preferSource: true});
+            }
+         },
+         setLinkedObject: function (value) {
+            InteractiveMove.superclass.setLinkedObject.call(this, value);
+            this._syncOptions();
          }
       });
       return InteractiveMove;
