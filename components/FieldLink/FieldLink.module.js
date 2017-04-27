@@ -811,11 +811,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                             /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
                             if (!itemsWidth) {
                                $(item).outerWidth(availableWidth);
-                               toAdd.push(item[0]);
+                               toAdd.push(item);
                             }
                             break;
                          }
-                         toAdd.unshift(item[0]);
+                         toAdd.unshift(item);
                          itemsWidth += itemWidth;
                       }
 
