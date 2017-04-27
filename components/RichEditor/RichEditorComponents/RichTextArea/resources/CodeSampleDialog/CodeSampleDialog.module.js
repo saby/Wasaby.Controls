@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'js!SBIS3.CONTROLS.TextArea',
    'js!SBIS3.CONTROLS.ComboBox',
    'js!SBIS3.CONTROLS.Button',
+   'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.RichEditor.CodeSampleDialog'
 ], function(dotTplFn, CompoundControl, PopupMixin, LikeWindowMixin) {
    'use strict';
