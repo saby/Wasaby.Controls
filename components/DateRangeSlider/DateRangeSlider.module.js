@@ -60,7 +60,6 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       _modifyOptions: function (opts) {
          var start, end;
          opts = DateRangeSlider.superclass._modifyOptions.apply(this, arguments);
-         opts.pickerClassName = [opts.pickerClassName, 'controls-DateRangeSlider__picker'].join(' ');
          // Поскольку контрол работает только с фиксированными диапазонами, позволим разработчикам
          // не конфигурировать одну из дат. Сделаем это за них если они этого не сделали.
          start = opts.startValue;
@@ -203,8 +202,10 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                offset: (baseWidth - pickerWidth)/2
             },
             verticalAlign: {
-               side: 'top'
-            }
+               side: 'top',
+               offset: -6
+            },
+            closeByExternalClick: true
          };
       }
    });

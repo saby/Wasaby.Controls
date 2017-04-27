@@ -13,40 +13,6 @@
    line-height: 1;
    display: inline-block;
 }
-.controls-Button.controls-Button__withoutCaption {
-   min-width: @button-without-caption-min-width;
-   .controls-Button__icon {
-      margin-left: 0;
-   }
-   .controls-Button__text {
-      display: none;
-   }
-   &.controls-Button__big {
-      .controls-Button__icon {
-         margin-left: 0;
-      }
-   }
-}
-.ws-is-firefox {
-   .controls-Button.controls-Button__withoutCaption {
-      .controls-Button__icon {
-         &.icon-24 {
-            padding-bottom: 0;
-         }
-      }
-   }
-}
-.controls-Button.controls-Checked__checked.controls-Button__withoutCaption {
-   .controls-Button__icon{
-      left: 15px;
-   }
-   .controls-Button__icon{
-      &.icon-24 {
-         left: 11px;
-      }
-
-   }
-}
 
 .controls-PopupMixin__closeButton {
    position: absolute;
@@ -122,8 +88,7 @@
 
 
 .controls-TreePager-container {
-   float: left;
-   padding-left: 18px;
+   padding: 6px 0 3px 16px;
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-TreePager-container, .controls-CompositeView.controls-CompositeView-list  .controls-TreePager-container{
    display: none;

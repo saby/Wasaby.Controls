@@ -1,3 +1,4 @@
+@import "typography";
 .text-overflow() {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,14 +133,14 @@
   box-sizing: border-box;
 }
 
-.button-default-style() {
+.button-default-style(@button-font-size: @link-font-size) {
   cursor: pointer;
-  .inline-flexbox();
-  .align-items(center);
+  display: inline-block;
   outline: none;
   .box-sizing(border-box);
   font-family: @default-font-name;
-  font-size: @link-font-size;
+  font-size: @button-font-size;
+  font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
   .box-shadow(@button-shadow);
@@ -147,7 +148,7 @@
   padding: 0;
 }
 
-.button-baseline-fix(@height: auto) {
+.baseline-fix(@height: auto) {
   &:before {
     content: '.';
     width: 0;
@@ -294,9 +295,21 @@
 // - applies to: flex items
 // auto | flex-start | flex-end | center | baseline | stretch
 .align-self(@align: auto) {
+  .ms-flex-align-self(@align); // IE10
   -webkit-align-self: @align;
       -ms-align-self: @align;
           align-self: @align;
+}
+.ms-flex-align-self(@align) when (@align = flex-start) {
+  -ms-flex-item-align: start;
+}
+
+.ms-flex-align-self(@align) when (@align = flex-end) {
+  -ms-flex-item-align: end;
+}
+
+.ms-flex-align-self(@align) when (@align = auto), (@align = center), (@align = baseline), (@align = stretch) {
+  -ms-flex-item-align: @align;
 }
 // Flex Direction and Wrap
 // - applies to: flex containers
@@ -340,12 +353,18 @@
 
 .justify-content(@justify: flex-start) {
    -webkit-justify-content: @justify;
-   -ms-flex-pack: @justify; //ie 10
    -ms-justify-content: @justify;
    justify-content: @justify;
-   //ie 10 fix space-between
+   //ie 10 fix
+   -ms-flex-pack: @justify; //ie 10
    & when (@justify = space-between) {
       -ms-flex-pack: justify;
+   }
+   & when (@justify = flex-end) {
+      -ms-flex-pack: end;
+   }
+   & when (@justify = flex-start) {
+      -ms-flex-pack: start;
    }
 }
 .align-items(@align: stretch) {
@@ -439,8 +458,10 @@
   }
 }
 
-.button-mixin(@border-width; @margin-left; @margin-right; @icon-width) {
-  left:  @margin-left - @border-width;
+.button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+  left: @icon-left - @border-width;
+  top: 50%;
+  margin-top: -@icon-width/2;
 
   & + .controls-Button__text {
     margin-right: @margin-right - @border-width;

@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
        "js!WS.Data/Collection/List",
+       "js!SBIS3.CONTROLS.Utils.ItemsSelection",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -65,7 +66,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         ITextValue,
         TemplateUtil,
         ToSourceModel,
-        List
+        List,
+        ItemsSelectionUtil
     ) {
 
        'use strict';
@@ -129,12 +131,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @author Герасимов Александр Максимович
         *
-        * @mixes SBIS3.CONTROLS.Selectable
         * @mixes SBIS3.CONTROLS.MultiSelectable
-        * @mixes SBIS3.CONTROLS.ActiveSelectable
         * @mixes SBIS3.CONTROLS.ActiveMultiSelectable
+        * @mixes SBIS3.CONTROLS.Selectable
+        * @mixes SBIS3.CONTROLS.ActiveSelectable
         * @mixes SBIS3.CONTROLS.SyncSelectionMixin
         * @mixes SBIS3.CONTROLS.ItemsControlMixin
+        * @mixes SBIS3.CONTROLS.ITextValue
         *
         * @demo SBIS3.CONTROLS.Demo.FieldLinkDemo Пример 1. Поле связи в режиме множественного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
         * @demo SBIS3.CONTROLS.Demo.FieldLinkSingleSelect Пример 2. Поле связи в режиме единичного выбора значений. Выбор можно производить как через справочник, так и через автодополнение.
@@ -145,19 +148,16 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @demo SBIS3.DOCS.SelectorButtonSingle Пример 5. Поле связи в виде кнопки-ссылки, поле ввода отсутствует. Вызов справочника производится кликом по ссылке. Все выбранные значения будут отображаться в качестве текста кнопки.
         * В режиме множественного выбора удаление выбранных значений производится массово кликом по серому крестику. Для корректного отображения кнопки-ссылки используется CSS-модификатор "controls-SelectorButton__asLink".
         *
-        * @cssModifier controls-FieldLink__itemsEdited В поле связи при наведении курсора на выбранные значения применяется подчеркивание текста.
-        * @cssModifier controls-FieldLink__itemsBold В поле связи для текста выбранных значений применяется полужирное начертание.
-        * @cssModifier controls-FieldLink__hideSelector Скрывает кнопку открытия диалога/панели выбора
-        * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает поле связи, если выполнены два условия: поле связи задизейблено (enabled: false), в поле связи нет выбранных значений.
-        * @cssModifier controls-FieldLink__dynamicInputWidth Устанавливает динамическу ширину инпута. ВНИМАНИЕ! Ломает базовую линию.
-        * @cssModifier controls-FieldLink__big-fontSize Выбранные записи в поле связи отображаются с увеличенным (15px) и жирным шрифтом.
+        * @cssModifier controls-FieldLink__itemsEdited Устанавливает для текста выбранных значений форматирование: при наведении курсора применяется подчеркивание текста.
+        * @cssModifier controls-FieldLink__itemsBold Устанавливает для текста выбранных значений форматирование: полужирное начертание.
+        * @cssModifier controls-FieldLink__big-fontSize Устанавливает для текста выбранных значений форматирование: полужирное начертание и размер шрифта 15px.
+        * @cssModifier controls-FieldLink__hideSelector Скрывает отображение (устанавливает CSS-свойство "display:none") кнопки, с помощью которой производят открытие справочников.
+        * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает отображение (устанавливает CSS-свойство "display:none") контрола "Поле связи", если выполнены два условия: опция {@link enabled}=false и отсутствуют выбранные записи.
         *
         * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
-        * @ignoreEvents onListItemSelect
-        *
-        * ignoreEvents onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        * @ignoreEvents onListItemSelect onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
         *
         * @control
         * @public
@@ -183,8 +183,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @param {SBIS3.CONTROLS.Record} meta.item Экземпляр класса выбранного значения.
            */
           $protected: {
-             _linkCollection: null,   /* Контрол отображающий выбранные элементы */
-             _selectorAction: null,   /* Action выбора */
              _lastFieldLinkWidth: null,
              _options: {
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
@@ -433,12 +431,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _getSelectorAction: function() {
-             if(!this._selectorAction) {
-                this._selectorAction = this.getChildControlByName('FieldLinkSelectorAction')
-             }
-             return this._selectorAction;
-          },
+          _getSelectorAction: fHelpers.memoize(function() {
+             return this.getChildControlByName('FieldLinkSelectorAction');
+          }, '_getSelectorAction'),
 
            _getShowAllConfig: function(){
                /* Если не передали конфигурацию диалога всех записей для автодополнения,
@@ -458,6 +453,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPlaceholder: function() {
              FieldLink.superclass._setPlaceholder.apply(this, arguments);
              this.reviveComponents();
+          },
+          
+          _notify: function() {
+             return ItemsSelectionUtil.delayedNotify(
+                FieldLink.superclass._notify,
+                arguments,
+                this);
           },
 
           /**
@@ -706,8 +708,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           /**********************************************************************************************/
 
           _getAdditionalChooserConfig: function () {
-             var
-                selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys();
+             var selectedKeys = this._isEmptySelection() ? [] : this.getSelectedKeys();
 
              return {
                 currentValue: selectedKeys,
@@ -760,13 +761,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              cfg.cssClassName += ' ' + classesToAdd.join(' ');
              return cfg;
           },
-
-          _getLinkCollection: function() {
-             if(!this._linkCollection) {
-                return (this._linkCollection = this.getChildControlByName('FieldLinkItemsCollection'));
-             }
-             return this._linkCollection;
-          },
+   
+          _getLinkCollection: fHelpers.memoize(function() {
+             return this.getChildControlByName('FieldLinkItemsCollection');
+          }, '_getLinkCollection'),
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
@@ -1018,8 +1016,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              this._toggleDropAll(keysArrLen > 1);
-             this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys);
-             this.getContainer().toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
+             this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys)
+                                .toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
 
              if(!this._options.alwaysShowTextBox) {
 
@@ -1081,9 +1079,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 target: this._container,
                 opener: this,
                 parent: this,
+                closeOnTargetMove: true,
                 closeByExternalClick: true,
                 targetPart: true,
                 cssClassName: 'controls-FieldLink__picker',
+                _canScroll: true,
                 verticalAlign: {
                    side: 'top'
                 },

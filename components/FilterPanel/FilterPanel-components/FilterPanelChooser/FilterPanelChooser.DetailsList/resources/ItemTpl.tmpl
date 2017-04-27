@@ -3,4 +3,4 @@
     {{item[displayProperty]}}
     <div class="controls-FilterPanelChooser__titleShadow"></div>
 </div>
-<div class="controls-FilterPanelChooser__DetailsList-hierarchyIcon {{item.hierarchy === true ? 'icon-24 icon-TreeView icon-primary' : 'ws-hidden'}}"></div>
+<div class="controls-FilterPanelChooser__DetailsList-hierarchyIcon {{item.hierarchy === true || selectedKeys.indexOf(item.getId()) !== -1 ? 'icon-24 icon-TreeView icon-primary' : 'ws-hidden'}}"></div>

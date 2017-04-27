@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
    'js!WS.Data/Entity/Model',
    'Core/core-instance',
-   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil'
-], function(Model, cInstace, ArraySimpleValuesUtil) {
+   'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
+   'js!SBIS3.CONTROLS.Utils.ItemsSelection'
+], function(Model, cInstace, ArraySimpleValuesUtil, ItemsSelectionUtil) {
 
    /**
     * Миксин, добавляющий синхронизацию выбранных элементов
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
                   case 'selectedItem':
                       /* При синхронизации selectedItem -> selectedItems, так же проверяем наличие ключевых поле у selectedItem */
                      if(cInstace.instanceOfModule(propValue, 'WS.Data/Entity/Model') &&
-                        !isEmptyItem(propValue, this._options.displayProperty, this._options.idProperty)) {
+                        !ItemsSelectionUtil.isEmptyItem(propValue, this._options.displayProperty, this._options.idProperty)) {
                         this.setSelectedItems([propValue]);
                      } else {
                         this.clearSelectedItems();
@@ -111,48 +112,22 @@ define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
 
       around: {
          setSelectedItem: function (parentFunc, item) {
-            var hasRequiredFields,
-                isModel = item && cInstace.instanceOfModule(item, 'WS.Data/Entity/Model'),
-                currentSelItem = this._options.selectedItem,
-               idProperty = this._options.idProperty,
-               displayProperty = this._options.displayProperty;
-
-            if (isModel) {
-               /* Проверяем запись на наличие ключевых полей */
-               hasRequiredFields = !isEmptyItem(item, displayProperty, idProperty);
-
-               if (hasRequiredFields) {
-                  /* Если запись собралась из контекста, в ней может не быть поля с первичным ключем */
-                  if (!item.getIdProperty()) {
-                     item.setIdProperty(this._options.idProperty);
-                  }
-                  /* Если передали пустую запись и текущая запись тоже пустая, то не устанавливаем её */
-               } else if(currentSelItem && isEmptyItem(currentSelItem, displayProperty, idProperty) && this._isEmptySelection()) {
-                  return false;
-               }
-            }
-
             /* Вызываем родительский метод, если:
              1) передали запись с обязательными полями
              2) передали null
              3) передали запись без ключевых полей, но у нас есть выделенные ключи,
              такое может произойти, когда запись сбрасывается через контекст */
-            if (hasRequiredFields ||
-                item === null ||
-                (!hasRequiredFields && !this._isEmptySelection() && isModel)) {
+            if(ItemsSelectionUtil.checkItemForSelect(
+                  item, this._options.selectedItem,
+                  this._options.idProperty,
+                  this._options.displayProperty,
+                  this._isEmptySelection())
+            ) {
                parentFunc.call(this, item);
             }
          }
       }
    };
-
-   function isEmptyItem(item, idProperty, displayProperty) {
-      var isEmpty = function(val) {
-         return val === null || val === undefined;
-      };
-
-      return isEmpty(item.get(displayProperty)) || isEmpty(item.get(idProperty));
-   }
 
    return SyncSelectionMixin;
 

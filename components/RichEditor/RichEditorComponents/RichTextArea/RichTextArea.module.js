@@ -186,7 +186,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * Имя каталога, в который будут загружаться изображения
                 * @cfg {String} имя декоратора
                 */
-               imageFolder: 'images'
+               imageFolder: 'images',
+               /**
+                * позволяет сохранять историю ввода
+                * @cfg {boolean} Сохранять ли историю ввода
+                */
+               saveHistory: true
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -278,12 +283,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
 
             if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
+               var
+                  protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
                content = [
                   '<iframe',
                   ' width="' + constants.defaultYoutubeWidth + '"',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
-                  ' src="' + '//www.youtube.com/embed/' + id + '"',
+                  ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
                   ' frameborder="0" >',
                   '</iframe>'
                ].join('');
@@ -590,7 +597,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                self = this,
                isDublicate = false;
-            if (valParam && typeof valParam === 'string' && self._textChanged) {
+            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
                   if( typeof arrBL  === 'object') {
                      colHelpers.forEach(arrBL, function (valBL, keyBL) {
@@ -631,8 +638,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if( typeof arrBL  === 'string') {
                   arrBL = [arrBL];
                }
+               arrBL.forEach(function(text,index) {
+                  arrBL[index] = this._replaceCodesToSmile(text);
+               }, this);
                return arrBL;
-            })
+            }.bind(this))
          },
 
          /**
@@ -1145,8 +1155,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //БИНДЫ НА ВСТАВКУ КОНТЕНТА И ДРОП
             editor.on('onBeforePaste', function(e) {
-               var
-                  regexp =  new RegExp('(https?|ftp|file):\/\/[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/[-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()]*)*');
                if (self.addYouTubeVideo(e.content)) {
                   return false;
                }
@@ -1227,9 +1235,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             }.bind(this));
 
-            editor.on('drop', function() {
+            editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
+               if (!self._mouseIsPressed) {
+                  event.preventDefault();
+               }
             });
 
             editor.on('dragstart', function(event) {
@@ -1416,17 +1427,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   parent.addClass('without-margin');
                   break;
                case "2":
-                  target.select();
-                  this._insertImg(
-                     target.attr('src'),
-                     '',
-                     target.attr('alt'),
-                     '<p class="controls-RichEditor__noneditable image-template-center">',
-                     '</p>',
-                     target[0].style.width || (target.width() + 'px')
-                  ).addCallback(function(){
-                     target.remove();
-                  });
+                  var
+                     //todo: go to tmpl
+                     width =  target[0].style.width || (target.width() + 'px'),
+                     style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
+                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center">' +
+                        '<img src="' +  target.attr('src') + '"' + style + ' alt="' +  target.attr('alt') + '"></img></p>';
+
+                  this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
                   break;
                case "3":
                   target.addClass('image-template-right');
@@ -1691,9 +1699,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                curValue = value || this.getText();
             this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) && this._inputControl.html().indexOf('</li>') < 0 && this._inputControl.html().indexOf('<p>&nbsp;') < 0);
          },
-
-         _addToHistory: function(valParam) {
-            return UserConfig.setParamValue(this._getNameForHistory(), valParam);
+         _replaceSmilesToCode: function(text) {
+            smiles.forEach(function(smile){
+               text = text.replace(new RegExp(String.fromCodePoint(smile.code), 'gi'), smile.title);
+            });
+            return text;
+         },
+         _replaceCodesToSmile: function(text) {
+            smiles.forEach(function(smile) {
+               text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
+            });
+            return text;
+         },
+         _addToHistory: function(text) {
+            return UserConfig.setParamValue(this._getNameForHistory(), this._replaceSmilesToCode(text));
          },
 
          _getNameForHistory: function() {

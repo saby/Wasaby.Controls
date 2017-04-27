@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
    'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    "js!SBIS3.CONTROLS.Button",
-   "js!WS.Controls.ToggleButton",
+   "js!WSControls/Buttons/ToggleButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
    "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
    'css!SBIS3.CONTROLS.RichEditorToolbar',

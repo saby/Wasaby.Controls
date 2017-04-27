@@ -15,8 +15,6 @@
    .controls-DateRangeSlider__value-wrapper {
       display: inline-block;
       text-align: center;
-
-      min-width: @date-range-slider-value-min-width;
    }
 
    .controls-DateRangeSlider__lock {
@@ -97,4 +95,10 @@
       }
    }
 
+   &.ws-validation-error {
+      border-width: @date-range-slider-error-border-width;
+      border-style: @date-range-slider-error-border-style;
+      border-color: @date-range-slider-error-border-color;
+      background: @date-range-slider-error-bg;
+   }
 }

@@ -4,9 +4,11 @@
 define('js!SBIS3.CONTROLS.SelectorButton',
     [
    "Core/constants",
-   "html!SBIS3.CONTROLS.SelectorButton",
-   "js!WS.Controls.ButtonBase",
-   "js!SBIS3.CONTROLS.DSMixin",
+   "tmpl!SBIS3.CONTROLS.SelectorButton/resources/contentTemplate",
+   "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemTemplate",
+   "js!WSControls/Buttons/Button",
+   "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.MultiSelectable",
    "js!SBIS3.CONTROLS.ActiveMultiSelectable",
    "js!SBIS3.CONTROLS.Selectable",
@@ -20,14 +22,18 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "Core/helpers/collection-helpers",
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
+   'js!SBIS3.CONTROLS.Utils.ItemsSelection',
+   'js!WS.Data/Collection/List',
    "js!SBIS3.CONTROLS.Action.SelectorAction",
    'css!SBIS3.CONTROLS.SelectorButton'
 ],
     function(
        constants,
-       dotTplFn,
-       WSButtonBase,
-       DSMixin,
+       contentTemplate,
+       defaultItemContentTemplate,
+       defaultItemTemplate,
+       WSButton,
+       ItemsControlMixin,
        MultiSelectable,
        ActiveMultiSelectable,
        Selectable,
@@ -40,31 +46,14 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        fHelpers,
        colHelpers,
        strHelpers,
-       ToSourceModel
+       ToSourceModel,
+       ItemsSelectionUtil,
+       List
+       
     ) {
 
    'use strict';
-
-    /* Функция рендера текста в шаблоне компонента */
-    function itemTemplateRender(opts) {
-       var res = [],
-          items;
-
-       if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
-          items = [opts.selectedItem];
-       } else if (opts.selectedItems) {
-          items = opts.selectedItems;
-       }
-
-       if (items) {
-          items.forEach(function(item) {
-             res.push(item.get(opts.displayProperty));
-          });
-       }
-
-       return res.join('');
-    }
-
+   
    /**
     * Класса контрола "Кнопка выбора", который отображает выбранные записи в виде текстовых значений через запятую.
     * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
@@ -72,7 +61,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
     *
     * @class SBIS3.CONTROLS.SelectorButton
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/Button
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -98,12 +87,14 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @public
     */
 
-   var SelectorButton = WSButtonBase.extend([DSMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
-      _dotTplFn: dotTplFn,
+   var SelectorButton = WSButton.extend([ItemsControlMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
       $protected: {
          _options: {
             clickThrottle: true,
-            _preRender: itemTemplateRender,
+            contentTemplate: contentTemplate,
+            _serverRender: true,
+            _defaultItemContentTemplate: defaultItemContentTemplate,
+            _defaultItemTemplate: defaultItemTemplate,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
              * @example
@@ -145,8 +136,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
              */
             useSelectorAction: false
-         },
-         _text: null
+         }
       },
       $constructor: function() {
          var self = this;
@@ -175,24 +165,50 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             });
          }
       },
-      _drawSelectedItems: function() {
-         var self = this,
-             isSelected = !this._isEmptySelection();
-
-         $('.controls-SelectorButton__cross', this._container[0]).toggleClass('ws-hidden', !isSelected);
-         if(isSelected) {
-            var linkTextArray = [];
-
-            this.getSelectedItems(true).addCallback(function(list){
-               list.each(function(item) {
-                  linkTextArray.push(item.get(self._options.displayProperty));
-               });
-               self._setCaption(strHelpers.escapeHtml(linkTextArray.join(', ')));
-               return list;
-            });
-         } else {
-            this._setCaption(this._options.defaultCaption);
+      
+      _modifyOptions: function() {
+         var opts = SelectorButton.superclass._modifyOptions.apply(this, arguments);
+         opts.cssClassName += ' controls-SelectorButton';
+   
+         if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
+            opts.items = new List({items: [opts.selectedItem]});
+         } else if (opts.selectedItems) {
+            opts.items = opts.selectedItems;
          }
+         if(opts.items) {
+            opts._records = opts._getRecordsForRedraw(opts._createDefaultProjection(opts.items, opts), opts);
+            opts._itemData = opts._buildTplArgs(opts);
+         }
+         return opts;
+         
+      },
+      _drawSelectedItems: function() {
+         var self = this;
+         this.getSelectedItems(true).addCallback(function(list){
+            self.setItems(list || []);
+            return list;
+         });
+      },
+   
+      _toggleEmptyData: function(empty) {
+         var itemsContainer = this._getItemsContainer();
+         this._container.find('.controls-SelectorButton__cross').toggleClass('ws-hidden', empty);
+         
+         if(empty) {
+            itemsContainer.text(this.getProperty('defaultCaption')).attr('title', '');
+         } else if(!this._options.itemContentTpl && !this._options.itemTpl) {
+            itemsContainer.attr('title', this.getCaption());
+         }
+      },
+   
+      _setSelectedIndex: function(selectedIndex) {
+         if(this.getSelectedIndex() !== selectedIndex) {
+            SelectorButton.superclass._setSelectedIndex.apply(this, arguments);
+         }
+      },
+      
+      _getItemsContainer: function() {
+         return this.getContainer().find('.controls-Button__text');
       },
 
       /**
@@ -212,17 +228,19 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       setCaption: function(caption) {
          throw new Error('SelectorButton::setCaption св-во caption работает только на чтение');
       },
-
-      _setCaption: function(caption) {
-         var btnCaption = caption || this._options.defaultCaption,
-             text = this._container.find('.controls-SelectorButton__text'),
-             resultText = Sanitize(caption);
-
-         SelectorButton.superclass.setCaption.call(this, btnCaption);
-         text.html(resultText);
-         /* Скрываем, если текст пустой */
-         text.toggleClass('ws-hidden', !resultText);
-         this._notifyOnSizeChanged();
+      
+      getCaption: function() {
+         var displayText = [],
+             selectedItems = this.getSelectedItems(),
+             self = this;
+   
+         if(selectedItems) {
+            selectedItems.each(function(rec) {
+               displayText.push(strHelpers.htmlToText(rec.get(self._options.displayProperty) || ''));
+            });
+         }
+   
+         return displayText.join(', ');
       },
 
       _clickHandler: function(e) {
@@ -230,23 +248,25 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
          if($(e.target).hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
-         } else {
-            if(this.getProperty('useSelectorAction')) {
-               cfg.multiselect = this.getMultiselect();
-               cfg.selectedItems = this.getSelectedItems();
-               this._getSelectorAction().execute(cfg);
-            } else {
-               this._showChooser(cfg.template, cfg.componentOptions);
-            }
+         } else if(cfg) {
+            this.showSelector(cfg);
          }
       },
 
-      _getSelectorAction: function() {
-         if(!this._selectorAction) {
-            this._selectorAction = this.getChildControlByName('SelectorButtonSelectorAction')
+      showSelector: function(cfg){
+            if(this.getProperty('useSelectorAction')) {
+               cfg.multiselect = this.getMultiselect();
+               cfg.selectedItems = this.getSelectedItems();
+               if(this._notify('onSelectorClick', cfg) !== false) {this._getSelectorAction().execute(cfg)}
+            } else {
+               this._showChooser(cfg.template, cfg.componentOptions);
+            
          }
-         return this._selectorAction;
       },
+
+      _getSelectorAction: fHelpers.memoize(function() {
+         return this.getChildControlByName('SelectorButtonSelectorAction');
+      },'_getSelectorAction'),
 
       /**
        * Установить набор диалогов выбора для поля связи
@@ -254,6 +274,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        */
       setDictionaries: function (dictionaries) {
          this._options.dictionaries = dictionaries;
+         this._notifyOnPropertyChanged('dictionaries');
       },
 
       /**
@@ -271,6 +292,14 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                 this.addItemsSelection(result);
          }
       },
+   
+      _notify: function () {
+         return ItemsSelectionUtil.delayedNotify(
+            SelectorButton.superclass._notify,
+            arguments,
+            this
+         );
+      },
 
       _prepareItems: function() {
          return ToSourceModel(
@@ -287,7 +316,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      _redraw: fHelpers.nop
+      reload: fHelpers.nop,
+      _setSelectedItems: fHelpers.nop
    });
 
    return SelectorButton;

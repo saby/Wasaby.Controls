@@ -5,10 +5,11 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.PickerMixin',
+   'js!SBIS3.CONTROLS.FormWidgetMixin',
    'Core/helpers/date-helpers',
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.DateRangeSliderBase'
-], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, dateHelpers) {
+], function (CompoundControl, dotTplFn, lockIconTemplate, RangeMixin, DateRangeMixin, PickerMixin, FormWidgetMixin, dateHelpers) {
    'use strict';
 
    /**
@@ -20,13 +21,14 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.RangeMixin
     * @mixes SBIS3.CONTROLS.DateRangeMixin
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @author Миронов Александр Юрьевич
     *
     * @control
     * @public
     * @category Date/Time
     */
-   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBase.prototype */{
+   var DateRangeSlider = CompoundControl.extend([PickerMixin, RangeMixin, DateRangeMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateRangeSliderBase.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {

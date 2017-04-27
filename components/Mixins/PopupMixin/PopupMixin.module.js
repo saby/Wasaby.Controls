@@ -142,6 +142,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             closeByExternalOver: false,
             /**
+             * @cfg {Boolean} закрывать или нет при изменении положения элемента, к которому крепится popup
+             */
+            closeOnTargetMove: false,
+            /**
              * @cfg {Boolean} отображать кнопку закрытия
              */
             closeButton: false,
@@ -181,7 +185,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
              */
             bodyBounds: false,
             isHint: true,
-            parentContainer: ''
+            parentContainer: '',
+            /*
+            эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
+            */
+            _canScroll: false
          }
       },
 
@@ -270,13 +278,17 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
 
-      _onTargetMove: function () {
+      _onTargetMove: function (event, state, isInitial) {
          if (this.isVisible()) {
-            if (this.isFixed()) {
-               this._initSizes();
+            if(this._options.closeOnTargetMove && !isInitial) {
+               this.hide();
+            } else {
+               if (this.isFixed()) {
+                  this._initSizes();
+               }
+               this.recalcPosition();
+               this._checkTargetPosition();
             }
-            this.recalcPosition();
-            this._checkTargetPosition();
          } else {
             this._initSizes();
          }
@@ -1135,7 +1147,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             this._subscribeTargetMove();
 
             /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
-            if(constants.browser.isMobilePlatform) {
+            if(this._options._canScroll && constants.browser.isMobilePlatform) {
                var topWindow = cWindowManager.getMaxZWindow();
 
                constants.$body.addClass('controls-ScrollContainer-overflow-scrolling-auto');
@@ -1226,7 +1238,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
                    }.bind(this));
                    /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
-                   if(constants.browser.isMobilePlatform) {
+                   if(this._options._canScroll && constants.browser.isMobilePlatform) {
                       var topWindow = cWindowManager.getMaxZWindow(),
                           isPopUp = coreHelpers.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
 

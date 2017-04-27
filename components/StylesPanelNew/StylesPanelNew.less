@@ -15,17 +15,7 @@
    &__buttons {
       padding: 12px 4px 6px 4px;
       border-bottom: 1px solid #E4E4E4;
-      .controls-Button {
-         &.controls-Checked__checked {
-            border: 1px solid #587AB0;
-         }
-      }
-      .controls-Button, .controls-Button.controls-Checked__checked {
-        .controls-Button__icon, &:not(.ws-disabled) .controls-Button__icon {
-          left:3px;
-          top:3px;
-        }
-      }
+
       .controls-TextBox {
          margin-right: 6px;
          border-width: 1px;
@@ -71,10 +61,14 @@
   .controls-StylesPanel__buttons {
     padding: 8px 0 6px 0;
     border-bottom: 1px solid @gray-light-color;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    .flexbox();
+    .flex-direction(row);
+    .align-items(center);
     width: 100%;
+
+    .controls-ToggleButton__square:last-child {
+      margin-right: 8px;
+    }
 
     .inline-block-bug-fix(@default-font-size);
 
@@ -82,16 +76,9 @@
       margin: 0 4px;
     }
 
-    .controls-Button {
+    .controls-ToggleButton__square {
       padding: 0 2px;
-      border-radius: 2px;
-      border: 1px solid transparent;
       margin: 0 0 0 8px;
-
-      &.controls-Checked__checked {
-        border: 1px solid #587AB0;
-        background: #F3F3F3;
-      }
     }
   }
 

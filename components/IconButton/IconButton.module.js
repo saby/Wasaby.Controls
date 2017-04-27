@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
 
    'use strict';
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONT
     * Класс контрола, который предназначен для отображения кнопки в виде иконки.
     *
     * @class SBIS3.CONTROLS.IconButton
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов Петр Сергеевич
@@ -64,6 +64,10 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WS.Controls.Button', 'css!SBIS3.CONT
              iconClass = options._iconClass;
 
          options.cssClassName += ' controls-IconButton';
+
+         if(options.caption && !options.tooltip){
+             options.tooltip = options.caption;
+         }
 
          if (iconClass) {
             if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){

@@ -2,18 +2,19 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.PopupMixin',
+      'js!SBIS3.CORE.LikeWindowMixin',
       'js!SBIS3.CORE.FileStorageLoader',
       'js!WS.Data/Di',
       'Core/helpers/fast-control-helpers',
       'html!SBIS3.CONTROLS.RichEditor.ImagePanel',
       "Core/EventBus",
       'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
+   ], function(CompoundControl, PopupMixin, LikeWindowMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
       'use strict';
 
       var
          COLLAGE_TEMPLATE = 4,
-         ImagePanel =  CompoundControl.extend([PopupMixin], {
+         ImagePanel =  CompoundControl.extend([PopupMixin, LikeWindowMixin], {
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {

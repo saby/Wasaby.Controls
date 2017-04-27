@@ -1,7 +1,7 @@
 
 define('js!SBIS3.CONTROLS.CheckBox', [
    "Core/constants",
-   "js!WS.Controls.ButtonBase",
+   "js!WSControls/Buttons/ButtonBase",
    "js!SBIS3.CONTROLS.Checkable",
    "tmpl!SBIS3.CONTROLS.CheckBox",
    "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     * </ol>
     * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
     * @class SBIS3.CONTROLS.CheckBox
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
     * @author Крайнов Дмитрий Олегович
@@ -81,10 +81,10 @@ define('js!SBIS3.CONTROLS.CheckBox', [
       },
 
       _modifyOptions: function() {
-         var
-             cfg = CheckBox.superclass._modifyOptions.apply(this, arguments);
-         cfg._contentTemplate = cfg.contentTemplate || defaultContentTemplate;
-         return cfg;
+         var options = CheckBox.superclass._modifyOptions.apply(this, arguments);
+         options.contentTemplate = options.contentTemplate || defaultContentTemplate;
+
+         return options;
       },
 
       $constructor: function() {

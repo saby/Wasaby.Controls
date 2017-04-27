@@ -84,7 +84,7 @@
 }
 
 .controls-FieldLink__itemsEdited {
-   .controls-FieldLink__item:hover {
+   .controls-FieldLink__item-caption:hover {
       text-decoration: @link-hover-text-decoration;
       cursor: @link-cursor;
    }
@@ -144,6 +144,10 @@
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
    }
+   
+   &:not(.controls-FieldLink__multiselect).controls-FieldLink__selected-single .controls-TextBox__placeholder {
+      display: none;
+   }
 
    .controls-TextBox__fieldWrapper {
       .flexbox();
@@ -160,18 +164,6 @@
       max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
    }
-   &.controls-TextBox {
-      .controls-TextBox__afterFieldWrapper {
-         .inline-flexbox();
-         .align-items(center);
-         height: @controls-FieldLink-afterField-height;
-         width: auto;
-
-         > * {
-            padding: @controls-FieldLink-afterField-padding;
-         }
-      }
-   }
 
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
@@ -180,8 +172,8 @@
    }
 
    &.ws-disabled {
-
-      .controls-TextBox__afterFieldWrapper {
+      
+      .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
 
@@ -208,6 +200,19 @@
    .controls-FieldLink__Link {
       display: inline;
       line-height: 20px;
+   }
+}
+
+.controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
+   .inline-flexbox();
+   .align-items(center);
+   height: @controls-FieldLink-afterField-height;
+   width: auto;
+}
+
+.controls-TextBox__afterFieldWrapper {
+   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+      padding: @controls-FieldLink-afterField-padding;
    }
 }
 
@@ -309,26 +314,14 @@
 
 .ws-is-firefox {
    .controls-FieldLink {
+      vertical-align: middle;
+      
       .controls-TextBox__beforeFieldWrapper, .controls-TextBox__fieldWrapper {
          margin-top: -1px;
       }
       .controls-FieldLink__item-cross {
          top: -1px;
       }
-   
-      /* FIXING FF FLEXBOX BASELINE https://bugzilla.mozilla.org/show_bug.cgi?id=969874 */
-      &:before {
-         content: '.';
-         visibility: hidden;
-         z-index: -1;
-      }
-      .controls-TextBox__beforeFieldWrapper,
-      .controls-TextBox__afterFieldWrapper,
-      .controls-TextBox__fieldWrapper {
-         position: relative;
-         top: -@text-box-field-min-height;
-      }
-
       &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
          display: none;
       }
