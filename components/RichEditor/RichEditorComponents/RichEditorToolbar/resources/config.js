@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'mceBlockQuote',
-         componentType: 'WS.Controls.ToggleButton',
+         componentType: 'WSControls/Buttons/ToggleButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
          tooltip: rk('Цитата'),
          icon: 'sprite:icon-24 icon-Quote icon-primary',
