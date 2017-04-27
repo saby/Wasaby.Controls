@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.MenuButton', [
-   'js!WS.Controls.MenuButton',
+   'js!WSControls/Buttons/MenuButton',
    'css!SBIS3.CONTROLS.Button',
-   'css!SBIS3.CONTROLS.MenuButton',
-   'css!WS.Controls.MenuButton'
+   'css!SBIS3.CONTROLS.MenuButton'
 ], function(WSMenuButton) {
 
    'use strict';
@@ -10,7 +9,7 @@ define('js!SBIS3.CONTROLS.MenuButton', [
    /**
     * Класс контрола "Кнопка с выпадающим меню".
     * @class SBIS3.CONTROLS.MenuButton
-    * @extends SBIS3.CONTROLS.Button
+    * @extends WSControls/Buttons/MenuButton
     * @remark
     * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.

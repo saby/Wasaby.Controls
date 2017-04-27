@@ -1,3 +1,22 @@
+// Кошерные переменные "на выход"
+@default-text-size:                       14px;
+@small-text-size:                         12px;
+@large-text-size:                         15px;
+@huge-text-size:						  17px;
+@default-text-color:                      #000;
+@default-color:                           #587AB0;
+@primary-color:                           #ff7033;
+@disabled-color:                          #CCC;
+@innacent-color:                     	  #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FEC63F;
+@success-color:                           #72BE44;
+@default-bg-color:                        #FFFFFF;
+@accent-color:							  #313E78;
+@default-hover-color:                     #F0F5FB;
+@innacent-color2:						  #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@basic-block-bg-color:					  #EAEAEA; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+//=============================
 @white-color:                             #fff;
 @black-color:                             #000;
 
@@ -37,12 +56,22 @@
 @font-popup-size:                         14px;
 @bg:                                      transparent;
 @default-text-color:                      @black-color;
+@disabled-text-color:                     @gray-ccc-color;
 
-@font-basic-name:                         'TensorFont', sans-serif;
-@font-basic-size:                         14px;
+@default-font-name:                       'TensorFont', sans-serif;
+@icon-font:                               'cbuc-icons';
+@default-font-size:                       14px;
 @popup-font-size:                         15px;
 @font-folder-size:                        15px;
-@font-basic-line-height:                  20px;
+@default-font-line-height:                20px;
+
+@default-height:                          24px;
+
+@default-border-width:                    1px;
+@default-border-style:                    solid;
+
+@default-hover-cursor:                    pointer;
+@disabled-hover-cursor:                   default;
 
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
@@ -59,17 +88,15 @@
 // Link //
 // ---- //
 
-@link-font:                               @font-basic-size @font-basic-name;
+@link-font:                               @default-font-size @default-font-name;
 @link-cursor:                             pointer;
 @link-text-color:                         #05b;
-@link-background:                         transparent;
-@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        24px;
 @link-padding:                            0;
-@link-font-size:                          @font-basic-size;
+@link-font-size:                          @default-font-size;
 
 @link-hover-text-color:                   @hover-color;
 @link-hover-text-decoration:              underline;
@@ -78,7 +105,7 @@
 @link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        0;
+@link-icon-margin:                        -3px 0 0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
@@ -90,12 +117,12 @@
 // ------ //
 
 // Normal button
-@button-font:                             @font-basic-size @font-basic-name;
+@button-font:                             @default-font-size @default-font-name;
 @button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           24px;
-@button-line-height:                      normal;
+@button-line-height:                      22px;
 @button-padding:                          0 12px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
@@ -114,6 +141,9 @@
 @button-text-icon-margin:                 0 @button-text-margin-right - @button-border-width 0 @button-icon-gap;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+@button-without-caption-min-width:        48px;
+
+@button-without-caption-icon-32-left:     7px;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -207,7 +237,7 @@
 
 // Big button
 @button-big-font-size:                    18px;
-@button-big-font:                         @button-big-font-size @font-basic-name;
+@button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       48px;
 @button-big-line-height:                  normal;
@@ -289,7 +319,7 @@
 // ---------- //
 // Tab button //
 // ---------- //
-@tab-buttons-height:                            29px;
+@tab-buttons-height:                            30px;
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
@@ -319,7 +349,8 @@
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-margin-top:                         0;
 @tab-control-smple-bottomline-height:           3px;
-@tab-button-simple-inner-color:                  #313E78;
+@tab-button-simple-inner-color:                 #313E78;
+@tab-button-simple-inner-padding:               0 8px 0 6px;
 @tab-button-simple-inner-checked-color:         #0055BB;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
@@ -387,9 +418,9 @@
 @tab-button-inner-after-bottom:                 7px;
 @tab-button-inner-after-z-index:                10;
 @tab-button-inner-after-left:                   0;
-@tab-button-inner-icon-margin-left:             2px;
 @tab-button-icon-position:                      relative;
 @tab-button-icon-top:                           1px;
+@tab-button-icon-margin-right:                  6px;
 
 @tab-button-counter-font-weight:                normal;
 @tab-button-counter-font-size:                  14px;
@@ -473,7 +504,7 @@
 @radio-button-dot-color-disabled:               @radio-button-icon-border-color-disabled;
 @radio-button-dot-margin:                       (@radio-button-icon-width - @radio-button-dot-size) / 2  - @radio-button-icon-border-width;
 
-   // ----------- //
+// ----------- //
 // Radio group //
 // ----------- //
 
@@ -486,24 +517,7 @@
 // Checkbox //
 // -------- //
 
-@check-box-text-margin:                         0 4px;
-
-@check-box-text-color:                          @black-color;
-@check-box-hover-text-color:                    @check-box-text-color;
-
-@check-box-checked-text-color:                  @check-box-text-color;
-@check-box-checked-hover-text-color:            @check-box-hover-text-color;
-
-@check-box-third-state-text-color:              @check-box-text-color;
-@check-box-third-state-hover-text-color:        @check-box-hover-text-color;
-
-@check-box-disabled-text-color:                 @gray-ccc-color;
-@check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
-
-@check-box-icon-width:                          16px;
-@check-box-icon-height:                         16px;
-@check-box-icon-line-height:                    19px;
-
+// -------------------------Используются в других темах.-------------------------------- //
 @check-box-icon-spritesheet:                    'img/CheckBox.png';
 
 @check-box-icon-border:                         none;
@@ -516,29 +530,29 @@
 @check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
 @check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
+// ------------------------------------------------------------------------------------- //
 
-@check-box-icon-checked-hover-border:           @check-box-icon-border;
-@check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
+@check-box-icon-width:                          18px;
+@check-box-default-font-size:                   14px;
+@check-box-icon-height:                         @check-box-icon-width;
+@check-box-icon-font-size:                      @check-box-icon-width;
+@check-box-icon-bottom:                         6px;
+@check-box-icon-left:                           5px;
 
-@check-box-icon-third-state-border:             @check-box-icon-border;
-@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) 0 33px;
+@check-box-icon-null-width:                     6px;
+@check-box-icon-null-height:                    @check-box-icon-null-width;
 
-@check-box-icon-third-state-hover-border:       @check-box-icon-border;
-@check-box-icon-third-state-hover-bg:           @check-box-icon-third-state-bg;
+@check-box-caption-padding:                     3px 0;
+@check-box-icon-box:                            12px;
 
-@check-box-icon-disabled-border:                @check-box-icon-border;
-@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 16px 1px;
-@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 16px 49px;
-@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 16px 33px;
-
-
+@check-box-icon-box-color:                      #999;
 
 // -------------- //
 // Checkbox group //
 // -------------- //
 
-@check-box-group-horizontal-item-margin:        @button-group-horizontal-item-margin;
-@check-box-group-vertical-item-margin:          @button-group-vertical-item-margin;
+@check-box-group-horizontal-item-margin:        0 12px 0 0;
+@check-box-group-vertical-item-margin:          0 0 8px 0;
 
 
 
@@ -551,6 +565,7 @@
 @switcher-width:                                46px;
 @switcher-height:                               24px;
 @switcher-line-height:                          @switcher-height;
+@switcher-line-color:							@gray-color;
 @switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
 @switcher-line-width:                           36px;
@@ -673,7 +688,7 @@
 @menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      @default-itemHover-color;
 @menu-item-hover-icon-color:              @default-color !important;
-
+ @menu-item-icon-16-margin:					6px 0 6px 22px;
 @menu-item-icon-top-offset:               8px;
 @menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              0px;
@@ -767,7 +782,7 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         #e4e4e4;
+@text-box-field-focus-text-color:         #000;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
@@ -1155,7 +1170,7 @@
 
 @calendar-day-border-spacing:                   1px;
 
-@calendar-day-header-font:                      11px @font-basic-name;
+@calendar-day-header-font:                      11px @default-font-name;
 @calendar-day-header-text-alignment:            center;
 
 @calendar-day-body-font:                        @calendar-font;
@@ -1228,7 +1243,7 @@
 @month-picker-field-cursor:                     pointer;
 @month-picker-field-height:                     16px;
 @month-picker-field-margin:                     0 16px;
-@month-picker-field-font:                       700 14px/16px @font-basic-name;
+@month-picker-field-font:                       700 14px/16px @default-font-name;
 
 @month-picker-field-text-color:                 @link-text-color;
 @month-picker-field-text-decoration:            none;
@@ -1295,6 +1310,8 @@
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
+@date-range-icon-button-line-height:            16px;
+@date-range-icon-button-top:                    4px;
 @date-range-icon-button-margin:                 0 0 3px 8px;
 @date-range-icon-button-hover-color:            @hover-color !important;
 @date-range-dash-width:                         2px;
@@ -1307,7 +1324,7 @@
 // ----------------- //
 @date-range-slider-margin-top:                  -5px;
 
-@date-range-slider-font-family:                 @font-basic-name;
+@date-range-slider-font-family:                 @default-font-name;
 @date-range-slider-color:                       @darkcyan-color;
 @date-range-slider-disabled-text-color:         @link-disabled-text-color;
 @date-range-slider-hover-color:                 @blue-dark-color;
@@ -1315,7 +1332,6 @@
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
-@date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
@@ -1323,6 +1339,11 @@
 @date-range-slider-prev-next-buttons-width:        24px;
 @date-range-slider-prev-next-buttons-font-size:    16px;
 @date-range-slider-prev-next-buttons-font-weight:  normal;
+
+@date-range-slider-error-border-width:             1px;
+@date-range-slider-error-border-style:             solid;
+@date-range-slider-error-border-color:             @text-box-error-border-color;
+@date-range-slider-error-bg:                       @text-box-error-bg;
 
 // ----------------- //
 // Date Range Choose //
@@ -1336,7 +1357,7 @@
 @date-range-choose-border-width:                1px;
 @date-range-choose-border-radius:               0;
 @date-range-choose-border-hover:                1px solid @gray-lamantin-color;
-@date-range-choose-font-family:                 @font-basic-name;
+@date-range-choose-font-family:                 @default-font-name;
 @date-range-choose-font-size:                   15px;
 @date-range-choose-color:                       @black-color;
 @date-range-choose-hover-color:                 @blue-dark-color;
@@ -1425,7 +1446,7 @@
 
 @date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
 
-@date-range-big-choose-font-family:                @font-basic-name;
+@date-range-big-choose-font-family:                @default-font-name;
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
@@ -1440,6 +1461,7 @@
 @date-range-big-choose-header-home-button-margin:              2px 0 0 0;
 @date-range-big-choose-header-home-button-size:                24px;
 @date-range-big-choose-header-home-button-font-size:           14px;
+@date-range-big-choose-header-home-button-left:                3px;
 @date-range-big-choose-header-home-button-line-height:         22px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
@@ -1449,10 +1471,13 @@
 @date-range-big-choose-header-date-picker-height:              auto;
 @date-range-big-choose-header-apply-button-size:               28px;
 @date-range-big-choose-header-apply-button-font-size:          18px;
+@date-range-big-choose-header-apply-button-left:               4px;
 @date-range-big-choose-header-apply-button-line-height:        26px;
 @date-range-big-choose-header-apply-button-margin-left:        8px;
 @date-range-big-choose-header-range-dash-width:                2px;
 @date-range-big-choose-header-range-dash-margin:               14px 3px 0 3px;
+
+@date-range-big-choose-years-btn:                              24px;
 
 @date-range-big-choose-left-right-width:                       33px;
 @date-range-big-choose-years-height:                           40px;
@@ -1462,7 +1487,7 @@
 @date-range-big-choose-years-panel-wrapper-font-size:          18px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 30px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px;
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
@@ -1543,7 +1568,7 @@
 @edit-at-place-editor-border-style:             solid;
 @edit-at-place-editor-border-color:             transparent;
 
-@edit-at-place-text-box-editor-font:            @font-basic-size/@font-basic-line-height @font-basic-name;
+@edit-at-place-text-box-editor-font:            @default-font-size/@default-font-line-height @default-font-name;
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 
 @edit-at-place-editor-overlay-margin:           -5px 0 0 -5px;
@@ -1566,6 +1591,7 @@
 // --------- //
 // List view //
 // --------- //
+@list-view-min-height:                           90px;
 @listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
 @listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
 @listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
@@ -1575,7 +1601,7 @@
 @list-view-actions-width:                       20px;
 @list-view-actions-item-height:                 24px;
 @list-view-actions-right-offset:                1px;
-@list-view-actions-margin:                      0 4px;
+@list-view-actions-margin:                      0 6px;
 @list-view-actions-margin-multiView:            8px 3px 0 0;
 @list-view-actions-margin-action-multiView:     0 2px 4px 2px;
 @list-view-actions-height-multiView:            auto;
@@ -1679,6 +1705,30 @@
 @list-view-separator-expander-size:                16px;
 @list-view-separator-content-hover-color:          @blue-dark-color;
 
+// -------------------- //
+//  View padding sizes
+// -------------------- //
+@controls-view-padding-variants:                   XS, S, M, L, XL;
+@controls-view-padding-DEFAULT:                    8px;
+@controls-view-padding-XS:                         0;
+@controls-view-padding-S:                          12px;
+@controls-view-padding-M:                          16px;
+@controls-view-padding-L:                          20px;
+@controls-view-padding-XL:                         24px;
+// Padding with photo
+@controls-view-photo-padding-variants:             S, M, L;
+@controls-view-photo-padding-S:                    0 6px 0 4px;
+@controls-view-photo-padding-M:                    0 10px 0 4px;
+@controls-view-photo-padding-L:                    0 14px 0 8px;
+@controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
+// Edit in place padding
+@controls-view-eip-padding-DEFAULT:                3px;
+@controls-view-eip-padding-XS:                     0px;
+@controls-view-eip-padding-S:                      7px;
+@controls-view-eip-padding-M:                      11px;
+@controls-view-eip-padding-L:                      15px;
+@controls-view-eip-padding-XL:                     19px;
+
 // --------- //
 //  ToolBar  //
 // --------- //
@@ -1700,11 +1750,15 @@
 
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
-@tree-view-expand-margin:                       0 4px 0 -2px;
+@tree-view-expand-margin:                       0 6px 0 4px;
+
+@tree-view-level-padding:                       26px;
+@tree-view-level-padding-photo:                 46px;
+@tree-view-level-padding-photo-S:               26px;
+@tree-view-level-padding-photo-M:               30px;
+@tree-view-level-padding-photo-L:               38px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
-
-@tree-view-first-td-padding-left:               6px;
 
 @tree-view-editArrow-position:                  relative;
 @tree-view-editArrow-top:                       2px;
@@ -1739,7 +1793,7 @@
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
 @tree-view-ellipsis-copyArrow-right:            -1px;
-@tree-view-firstCell-margin-searchMode:         6px;
+@tree-view-firstCell-margin-searchMode:         2px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1802,8 +1856,6 @@
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
-@data-grid-side-cell-padding:                   8px;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -1883,6 +1935,7 @@
 @controls-OperationsPanel-triangle-width:           8px;
 
 @controls-OperationsPanel-actions-margin:           0 4px;
+@controls-OperationsPanel-actions-mark-margin:      0 4px 0 0;
 
 @controls-OperationsPanel-separator-margin-left:    4px;
 @controls-OperationsPanel-separator-margin-right:   0;
@@ -1896,7 +1949,6 @@
 // --------------- //
 // OperationsMark  //
 // --------------- //
-@controls-OperationsMark-checkBox-margin:           4px;
 
 // --------------- //
 // OperationMerge  //
@@ -1939,7 +1991,7 @@
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-vertical-icon-top: -1px;
+@controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
@@ -1947,10 +1999,8 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    3px;
-@controls-editInPlace-editor-without-offset-margin: -6px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
-
+@controls-editInPlace-editor-without-offset-margin: -6px;
 
 // --------------- //
 //    MultiView    //
@@ -2029,8 +2079,13 @@
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
 @DropdownList-footer-hasMore-top:                     0;
-@DropdownList-footer-select-right:                    4px;
+@DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
+
+@DropdownList-icon-spritesheet:                          'img/CheckBox.png';
+@DropdownList-icon-bg-pathFilter:                        url(@DropdownList-icon-spritesheet) 0 2px;
+@DropdownList-icon-checked-bg-pathFilter:                url(@DropdownList-icon-spritesheet) 0 50px;
+
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
 @controls-ProgressBar-empty-bg:                   #F3F3F3;
@@ -2044,6 +2099,7 @@
 @controls-Pager-minHeight:                        35px;
 
 //FilterButton
+@filter-button-font-size:							inherit;
 @controls-filterButton-picker-bg:                 #F9F9F9;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       1px;
@@ -2051,7 +2107,7 @@
 @controls-filterButton-picker-border-color:       @gray-ccc-color;
 @controls-filterButton-picker-border-radius:      0;
 @controls-filterButton-picker-margin-top:         -1px;
-@controls-Popup-closeButton-top:                  12px;
+@controls-Popup-closeButton-top:                  10px;
 @controls-Popup-closeButton-right:                0;
 
 @controls-filterButton-button-image:              transparent url("img/sprite_filter.png") no-repeat;
@@ -2090,7 +2146,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-bottom:    3px;
+@controls-filterButton-history-actions-bottom:    -1px;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2170,7 +2226,7 @@
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-showAllLinks-padding:          0 0 0 1px;
+@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkContainer-padding:         4px;
 
@@ -2201,6 +2257,7 @@
 @controls-FieldLink-link-color-hover:              #313E78;
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
+@controls-FieldLink-showAll-top-ff:                -24px;
 
 @controls-FieldLink-big-fontSize:                  15px;
 @controls-FieldLink-big-fontSize-color:            #313E78;
@@ -2259,6 +2316,8 @@
 @controls-InformationPopup-warning-status-border-color:       #FEC63F;
 @controls-InformationPopup-border-top:                        3px solid;
 @controls-InformationPopup-border-bottom:                     none;
+@controls-InformationPopup-border-left:                       none;
+@controls-InformationPopup-border-right:                      none;
 @controls-InformationPopup-closeButton-top:                   8px;
 
 //NotificationPopup
@@ -2274,6 +2333,7 @@
 @controls-NotificationPopup-header-caption-font-size:                        15px;
 @controls-NotificationPopup-header-icon-right-margin:                        8px;
 @controls-NotificationPopup-max-width:                                       440px;
+@controls-NotificationPopup-min-width:                                       180px;
 
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:         351px;
@@ -2344,16 +2404,16 @@
 @header-padding-right:                             12px;
 @header-height:                                    32px;
 
-@header-font:                                      700 18px escape('/') @header-height @font-basic-name;
+@header-font:                                      700 18px escape('/') @header-height @default-font-name;
 @header-color:                                     #D94700;
 
-@bigHeader-font:                                   700 20px escape('/') @header-height @font-basic-name;
+@bigHeader-font:                                   700 20px escape('/') @header-height @default-font-name;
 @bigHeader-color:                                  @header-color;
 
-@subheader-font:                                   700 15px escape('/') @header-height @font-basic-name;
+@subheader-font:                                   700 15px escape('/') @header-height @default-font-name;
 @subheader-color:                                  @blue-dark-color;
 
-@bigSubheader-font:                                700 18px escape('/') @header-height @font-basic-name;
+@bigSubheader-font:                                700 18px escape('/') @header-height @default-font-name;
 @bigSubheader-color:                               @subheader-color;
 
 //--------------//
@@ -2364,12 +2424,12 @@
 @link-header-padding-right:                        @header-padding-right;
 @link-header-height:                               @header-height;
 
-@link-header-font:                                 700 18px escape('/') @header-height @font-basic-name;
+@link-header-font:                                 700 18px escape('/') @header-height @default-font-name;
 @link-header-color:                                #D94700;
 @link-header-text-decoration:                      none;
 
 @link-header-after-content:                        '\E002';
-@link-header-after-font:                           18px @font-basic-name;
+@link-header-after-font:                           18px @default-font-name;
 @link-header-after-color:                          @blue-dark-color;
 @link-header-after-margin-left:                    4px;
 
@@ -2386,7 +2446,7 @@
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
 
-@toggle-header-font:                               700 15px escape('/') @toggle-header-height @font-basic-name;
+@toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
 @toggle-header-color:                              @blue-dark-color;
 @toggle-header-border:                             none;
 @toggle-header-background:                         none;
@@ -2396,7 +2456,7 @@
 @toggle-header-before-color:                       #D94700;
 @toggle-header-before-width:                       24px;
 
-@toggle-header-count-font:                         15px escape('/') @toggle-header-height @font-basic-name;
+@toggle-header-count-font:                         15px escape('/') @toggle-header-height @default-font-name;
 @toggle-header-count-color:                        #D94700;
 @toggle-header-count-margin-right:                 4px;
 
@@ -2443,9 +2503,19 @@
 @money-decorator-fraction-font-color:                      @gray-ccc-color;
 
 //Browser
-@controls-Browser-ListView-minHeight:                      90px;
 @back-button-caption-hover-color: @blue-dark-color;
 @back-button-caption-active-color: @primary-color;
+
+@process-state-indicator-sector1:                          @icon-color-done;
+@process-state-indicator-sector2:                          @icon-color-attention;
+@process-state-indicator-sector3:                          @red-color;
+@process-state-indicator-empty-sector:                     @gray-ccc-color;
+@process-state-indicator-sector-width:                     6px; 
+@process-state-indicator-sector-height:                    8px;
+@process-state-indicator-sector-spacing:                   2px;
+@process-state-indicator-sector-side-padding:              6px;
+
+
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;

@@ -286,6 +286,11 @@ define(
                return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
             errorMessage: _validationErrors[this.getType()]
+         }, {
+            validator: function() {
+               return self._options.date instanceof Date ? self._options.date.getFullYear() > 1400 : true;
+            },
+            errorMessage: rk('Год должен быть больше 1400')
          });
       },
 

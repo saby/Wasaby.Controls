@@ -143,7 +143,7 @@
          }
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @font-basic-size;
+            font-size: @default-font-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -161,7 +161,7 @@
          font-weight: @tab-button-large-secondAddText-font-weight;
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @font-basic-size;
+            font-size: @default-font-size;
          }
          .controls-TextBox .controls-TextBox__fieldWrapper{
            padding-top: 1px;
@@ -184,15 +184,18 @@
         bottom: @tab-button-inner-after-bottom;
         z-index: @tab-button-inner-after-z-index;
       }
+      .controls-TabButton__wrapper {
+         .flexbox();
+      }
       .controls-TabButton__icon {
          position: @tab-button-icon-position;
          top: @tab-button-icon-top;
-         span {
-            margin-right: @tab-button-inner-icon-margin-left;
-         }
+         margin-right: @tab-button-icon-margin-right;
       }
       .controls-TabButton__caption {
          display: inline-block;
+         overflow: hidden;
+         text-overflow: ellipsis;
          > div {
             vertical-align: top;
          }
@@ -263,9 +266,12 @@
   }
   .controls-TabButton {
     border-color: transparent;
+    border-left: none;
+    border-right: none;
     .controls-TabButton__inner{
       border-color: transparent;
       color: @tab-button-simple-inner-color;
+      padding: @tab-button-simple-inner-padding;
       &:before{
         display: block;
         z-index: 1000;
@@ -283,7 +289,6 @@
       .controls-TabButton__inner{
         color: @tab-button-simple-inner-checked-color;
         background: transparent;
-        padding: 0 6px;
       }
       .controls-TabButton__bottomLine{
         background: @tab-button-simple-checked-bottomline-color !important;

@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!WS.Controls.ButtonBase', 'js!SBIS3.CONTROLS.Checkable'], function(WSButtonBase, Checkable) {
+define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!WSControls/Buttons/ButtonBase', 'js!SBIS3.CONTROLS.Checkable'], function(WSButtonBase, Checkable) {
 
    'use strict';
 
@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!WS.Controls.ButtonBase', 'js!SB
     * Работает только в составе группы радиокнопок.
     * При клике, если состояние не checked, то проставить true, иначе ничего не делать.
     * @class SBIS3.CONTROLS.RadioButtonBase
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @public
     * @author Крайнов Дмитрий Олегович
     */

@@ -2,54 +2,6 @@
 @bottomStyle-items-toolbar-border-color:  #F3F3F3;
 
 .controls-ListView {
-   .controls-ItemsToolbar {
-      position: absolute;
-      display: block;
-      z-index: @list-view-items-toolbar-zindex;
-      background-color: @list-view-items-toolbar-bg;
-      bottom: @list-view-items-toolbar-bottom;
-      right: @list-view-items-toolbar-right;
-
-      .icon-size {
-         .icon-size(@list-view-items-toolbar-icon-size);
-      }
-      .controls-IconButton__round-border-24 {
-         .controls-Button__icon {
-               font-size: 16px !important;
-               box-sizing: content-box;
-               height: 22px !important;
-               width: 22px !important;
-               line-height: 22px !important;
-               font-family: 'cbuc-icons' !important;
-         }
-      }
-
-      &.controls-ItemsToolbar__edit {
-         background-color: @list-view-items-toolbar-locked-bg;
-         right: 0;
-         .controls-ItemActions {
-            .controls-ItemActions__itemsContainer {
-               margin-right: 0;
-            }
-         }
-      }
-
-      .controls-Button__closeButton.controls-IconButton {
-         display: inline-block;
-         margin-right: 0;
-      }
-      &.controls-ItemsToolbar__small {
-         .icon-size {
-            .icon-size(16px);
-         }
-      }
-
-
-      &.controls-ItemsToolbar__hidden {
-         visibility: hidden;
-      }
-   }
-
    &.controls-CompositeView {
       .controls-ItemsToolbar {
          &.controls-ItemsToolbar__vertical {
@@ -191,6 +143,54 @@
 
    }
 
+}
+
+.controls-ItemsToolbar {
+   position: absolute;
+   display: block;
+   z-index: @list-view-items-toolbar-zindex;
+   background-color: @list-view-items-toolbar-bg;
+   bottom: @list-view-items-toolbar-bottom;
+   right: @list-view-items-toolbar-right;
+   
+   .icon-size {
+      .icon-size(@list-view-items-toolbar-icon-size);
+   }
+   .controls-IconButton__round-border-24 {
+      .controls-Button__icon {
+         font-size: 16px !important;
+         box-sizing: content-box;
+         height: 22px !important;
+         width: 22px !important;
+         line-height: 22px !important;
+         font-family: 'cbuc-icons' !important;
+      }
+   }
+   
+   &.controls-ItemsToolbar__edit {
+      background-color: @list-view-items-toolbar-locked-bg;
+      right: 0;
+      .controls-ItemActions {
+         .controls-ItemActions__itemsContainer {
+            margin-right: 0;
+         }
+      }
+   }
+   
+   .controls-Button__closeButton.controls-IconButton {
+      display: inline-block;
+      margin-right: 0;
+   }
+   &.controls-ItemsToolbar__small {
+      .icon-size {
+         .icon-size(16px);
+      }
+   }
+   
+   
+   &.controls-ItemsToolbar__hidden {
+      visibility: hidden;
+   }
 }
 
 .controls-ListView.controls-ListView__touchMode {

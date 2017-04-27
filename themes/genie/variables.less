@@ -35,11 +35,11 @@
 @bg:                                      transparent;
 @default-text-color:                      @black-color;
 
-@font-basic-name:                         'TensorFont', sans-serif;
-@font-basic-size:                         14px;
+@default-font-name:                       'TensorFont', sans-serif;
+@default-font-size:                       14px;
 @popup-font-size:                         13px;
 @font-folder-size:                        14px;
-@font-basic-line-height:                  20px;
+@default-font-line-height:                20px;
 
 @closeButtonImage:                        url('img/areaCloseButton.png') 0 -1px;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -25px;
@@ -61,17 +61,15 @@
 // Link //
 // ---- //
 
-@link-font:                               @font-basic-size @font-basic-name;
+@link-font:                               @default-font-size @default-font-name;
 @link-cursor:                             pointer;
 @link-text-color:                         @primary-color;
-@link-background:                         transparent;
-@link-height:                             24px;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        normal;
 @link-padding:                            0;
-@link-font-size:                          @font-basic-size;
+@link-font-size:                          @default-font-size;
 
 @link-hover-text-color:                   @primary-color;
 @link-hover-text-decoration:              underline;
@@ -81,7 +79,7 @@
 @link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
-@link-icon-margin:                        0;
+@link-icon-margin:                        -3px 0 0;
 
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 4px;
@@ -93,12 +91,12 @@
 // ------ //
 
 // Normal button
-@button-font:                             @font-basic-size @font-basic-name;
+@button-font:                             @default-font-size @default-font-name;
 @button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-height:                           30px;
-@button-line-height:                      normal;
+@button-line-height:                      22px;
 @button-padding:                          0 8px;
 @button-margin:                           auto;
 @button-border-radius:                    2px;
@@ -117,6 +115,8 @@
 @button-text-icon-margin:                 0 @button-text-margin-right - @button-border-width 0 @button-icon-gap;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+
+@button-without-caption-icon-32-left:     7px;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -207,8 +207,8 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font-size:                    (@font-basic-size * 1.2);
-@button-big-font:                         @button-big-font-size @font-basic-name;
+@button-big-font-size:                    (@default-font-size * 1.2);
+@button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       54px;
@@ -287,7 +287,7 @@
 // ---------- //
 // Tab button //
 // ---------- //
-@tab-buttons-height:                            29px;
+@tab-buttons-height:                            30px;
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
@@ -380,9 +380,9 @@
 @tab-button-inner-after-bottom:                 7px;
 @tab-button-inner-after-z-index:                10;
 @tab-button-inner-after-left:                   0;
-@tab-button-inner-icon-margin-left:             2px;
 @tab-button-icon-position:                      relative;
 @tab-button-icon-top:                           1px;
+@tab-button-icon-margin-right:                  6px;
 
 @tab-button-counter-font-weight:                normal;
 @tab-button-counter-font-size:                  14px;
@@ -1217,7 +1217,7 @@
 
 @calendar-day-border-spacing:                   1px;
 
-@calendar-day-header-font:                      11px @font-basic-name;
+@calendar-day-header-font:                      11px @default-font-name;
 @calendar-day-header-text-alignment:            center;
 
 @calendar-day-body-font:                        @calendar-font;
@@ -1289,7 +1289,7 @@
 @month-picker-field-cursor:                     pointer;
 @month-picker-field-height:                     16px;
 @month-picker-field-margin:                     0 16px;
-@month-picker-field-font:                       700 14px/16px @font-basic-name;
+@month-picker-field-font:                       700 14px/16px @default-font-name;
 
 @month-picker-field-text-color:                 @link-text-color;
 @month-picker-field-text-decoration:            none;
@@ -1355,6 +1355,8 @@
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
+@date-range-icon-button-line-height:            16px;
+@date-range-icon-button-top:                    4px;
 @date-range-icon-button-margin:                 0 0 4px 8px;
 @date-range-icon-button-hover-color:            @blue-dark-color !important;
 @date-range-dash-width:                         2px;
@@ -1367,7 +1369,7 @@
 
 @date-range-big-bg-spritesheet:                'img/DateRangeBig-images2.png';
 
-@date-range-big-choose-font-family:                @font-basic-name;
+@date-range-big-choose-font-family:                @default-font-name;
 @date-range-big-choose-width:                      350px;
 @date-range-big-choose-boundary-selected-color:    @white-color;
 @date-range-big-choose-link-text-color:            @darkcyan-color;
@@ -1382,6 +1384,7 @@
 @date-range-big-choose-header-home-button-margin:              2px 0 0 0;
 @date-range-big-choose-header-home-button-size:                24px;
 @date-range-big-choose-header-home-button-font-size:           14px;
+@date-range-big-choose-header-home-button-left:                3px;
 @date-range-big-choose-header-home-button-line-height:         22px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
@@ -1391,6 +1394,7 @@
 @date-range-big-choose-header-date-picker-height:              auto;
 @date-range-big-choose-header-apply-button-size:               28px;
 @date-range-big-choose-header-apply-button-font-size:          18px;
+@date-range-big-choose-header-apply-button-left:               4px;
 @date-range-big-choose-header-apply-button-line-height:        26px;
 @date-range-big-choose-header-apply-button-margin-left:        8px;
 @date-range-big-choose-header-range-dash-width:                2px;
@@ -1399,12 +1403,14 @@
 @date-range-big-choose-left-right-width:                       32px;
 @date-range-big-choose-years-height:                           40px;
 
+@date-range-big-choose-years-btn:                              24px;
+
 @date-range-big-choose-years-panel-top-padding:                8px;
 @date-range-big-choose-years-panel-bottom-padding:             8px;
 @date-range-big-choose-years-panel-wrapper-font-size:          18px;
 @date-range-big-choose-years-panel-toggle-choose-year-button-font-size:     @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   22px;
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px 0 30px;
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:        0 34px;
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
@@ -1485,7 +1491,7 @@
 @edit-at-place-editor-border-style:             solid;
 @edit-at-place-editor-border-color:             transparent;
 
-@edit-at-place-text-box-editor-font:            @font-basic-size/@font-basic-line-height @font-basic-name;
+@edit-at-place-text-box-editor-font:            @default-font-size/@default-font-line-height @default-font-name;
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 
 @edit-at-place-editor-overlay-margin:           -4px 0 0 -4px;
@@ -1508,7 +1514,7 @@
 
 // --------- //
 // List view //
-// --------- //
+// --------- //@controls-Browser-ListView-minHeight
 @listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
 @listView-check-box-icon-bg:                    @check-box-icon-bg;
 @listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
@@ -1645,8 +1651,6 @@
 
 @tree-view-value-left-margin:                   16px;
 
-@tree-view-first-td-padding-left:               6px;
-
 @tree-view-editArrow-position:                  relative;
 @tree-view-editArrow-top:                       2px;
 @tree-view-editArrow-align:                     top;
@@ -1680,7 +1684,7 @@
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
 @tree-view-ellipsis-copyArrow-width:            16px;
 @tree-view-ellipsis-copyArrow-right:            -1px;
-@tree-view-firstCell-margin-searchMode:         6px;
+@tree-view-firstCell-margin-searchMode:         2px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1742,8 +1746,6 @@
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-line-height:                    21px;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -1843,7 +1845,7 @@
 @controls-OperationsPanelButton-vert-border-radius: 7px;
 @controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
-@controls-OperationsPanelButton-vertical-icon-top: -1px;
+@controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
 
@@ -1851,8 +1853,6 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    1px;
-@controls-editInPlace-editor-without-offset-margin: 0;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
 
 
@@ -1970,7 +1970,7 @@
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    16px;
 @DropdownList-footer-hasMore-top:                     0;
-@DropdownList-footer-select-right:                    4px;
+@DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
@@ -1992,7 +1992,7 @@
 @controls-filterButton-picker-border-color:       @gray-ccc-color;
 @controls-filterButton-picker-border-radius:      0;
 @controls-filterButton-picker-margin-top:         -1px;
-@controls-Popup-closeButton-top:                  12px;
+@controls-Popup-closeButton-top:                  10px;
 @controls-Popup-closeButton-right:                0;
 
 @controls-filterButton-button-image:              transparent url("img/sprite_filter.png") no-repeat;
@@ -2022,7 +2022,7 @@
 
 @controls-filterButton-area-content-margin:       0 12px 12px 26px;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
-@controls-filterButton-line-height:               @font-basic-line-height;
+@controls-filterButton-line-height:               @default-font-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
 //FilterButtonHistory
@@ -2031,7 +2031,7 @@
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -4px !important;
-@controls-filterButton-history-actions-bottom:    0;
+@controls-filterButton-history-actions-bottom:    -1px;
 
 @controls-filterButton-history-item-min-height:   24px;
 
@@ -2109,7 +2109,7 @@
 
 @controls-FieldLink-fieldWrapper-margin:           0 !important;
 @controls-FieldLink-showAllLinks-top:              2px;
-@controls-FieldLink-showAllLinks-padding:          0 0 0 1px;
+@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkItem-line-height:          18px;
@@ -2142,6 +2142,7 @@
 @controls-FieldLink-link-color-hover:              #313E78;
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
+@controls-FieldLink-showAll-top-ff:                -24px;
 
 @controls-FieldLink-big-fontSize:                  15px;
 @controls-FieldLink-big-fontSize-color:            #313E78;
@@ -2298,6 +2299,3 @@
 @toggle-header-hover-count-color:                  @toggle-header-hover-color;
 
 @toggle-header-checked-before-content:             '\E000';
-
-//Browser
-@controls-Browser-ListView-minHeight:              90px;

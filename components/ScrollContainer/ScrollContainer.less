@@ -29,7 +29,7 @@
    .controls-Scrollbar.controls-Scrollbar__dragging {
       opacity: 1
    }
-   &:hover .controls-Scrollbar {
+   &:hover > .controls-Scrollbar {
       opacity: 1;
    }
 }
@@ -47,7 +47,7 @@
    }
    -webkit-overflow-scrolling: touch;
    isolation: isolate;
-   
+
    &.ws-sticky-header__scrollable-container {
       width: auto;
    }
@@ -100,6 +100,10 @@
    width: auto;
 }
 
+.controls-ScrollContainer > .ws-sticky-header__header-container {
+   z-index: initial;
+}
+
 .controls-ScrollContainer__hiddenScrollbar .controls-Scrollbar {
    display: none;
 }
@@ -112,10 +116,4 @@
 
 .controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
    height:100%;
-}
-
-.ws-is-ie {
-   .controls-ScrollContainer_no-scrollbar .controls-ScrollContainer__content {
-      margin-right: 0 !important;
-   }
 }

@@ -8,7 +8,7 @@
    padding: @month-view-padding;
    background: @month-view-bg;
 
-   font: @font-basic-size @font-basic-name;
+   font: @default-font-size @default-font-name;
 
    .controls-MonthView__monthPicker {
       width: @month-view-month-picker-width;
@@ -37,7 +37,10 @@
             display: block;
          }
 
-         .controls-MonthView__dayBorder,
+         .controls-MonthView__dayBorder {
+            height: 100%;
+         }
+
          .controls-MonthView__dayTitle {
             position: absolute;
             top: 0;

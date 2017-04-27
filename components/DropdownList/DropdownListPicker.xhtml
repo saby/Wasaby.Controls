@@ -1,8 +1,9 @@
-<div class="controls-DropdownList__header"></div>
+{{?it.hasHead}}<div class="controls-DropdownList__header"></div>{{?}}
 <div class="controls-DropdownList__body">
    <component data-component="SBIS3.CONTROLS.ScrollContainer" name="DropdownScroll">
        <option name="content">
            <div class="controls-DropdownList__list"></div>
+           {{?it.hasCloseButton}}<div class="controls-DropdownList__close-picker icon-Close icon-disabled icon-24"></div>{{?}}
        </option>
        <option name="activableByClick" value="false"></option>
        <option name="className" value="controls-DropdownList__scrollContainer"></option>

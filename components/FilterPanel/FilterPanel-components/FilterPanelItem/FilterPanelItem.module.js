@@ -30,13 +30,17 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
          }
       },
 
-      $constructor: function() {
-         this._prepareFilterContext();
+      // Правильно подписываться в контексте и устанавливать в него значение через modifyOptions, а не конструктор, т.к. контруктор срабатывает поздно, уже после шаблонизатора
+      _modifyOptions: function() {
+         var
+            cfg = FilterPanelItem.superclass._modifyOptions.apply(this, arguments);
+         this._prepareFilterContext(cfg);
+         return cfg;
       },
 
-      _prepareFilterContext: function() {
+      _prepareFilterContext: function(cfg) {
          var
-            ctx = this.getLinkedContext();
+            ctx = cfg.context;
          ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
             var
                item,
@@ -48,7 +52,7 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
                }
             }
          });
-         ctx.setValue(CONTEXT_ITEM_FIELD, this._options.item);
+         ctx.setValue(CONTEXT_ITEM_FIELD, cfg.item);
       }
    });
 

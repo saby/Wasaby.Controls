@@ -35,16 +35,20 @@
             &.controls-Link  {
                display: table;
 
-               .controls-Link-link {
+               .controls-Button__text {
                   display: table-cell;
                   vertical-align: middle;
                }
             }
 
-            &.controls-IconButton:before{
-               top: 50%;
-               margin-top: -@list-view-actions-item-height / 2;
-               position: absolute;
+            &.controls-IconButton .controls-Button__icon {
+               height: 100%;
+               &:before {
+                  left: 0;
+                  top: 50%;
+                  margin-top: -@list-view-actions-item-height / 2;
+                  position: absolute;
+               }
             }
          }
 
@@ -62,7 +66,7 @@
             background-size: @list-view-actions-menu-touch-size;
             background-position: center;
          }
-         .controls-ItemActions__menu-button:before {
+         .controls-ItemActions__menu-button .controls-Button__icon:before {
             content: none;
          }
       }
@@ -211,7 +215,7 @@
       margin: 0;
       .controls-ItemActions__itemsContainer {
          .controls-ItemActions__item {
-            &.controls-IconButton:before {
+            &.controls-IconButton .controls-Button__icon:before {
                margin-top: -@list-view-actions-item-height / 2;
             }
          }

@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.MenuIcon', ['js!WS.Controls.MenuButton', 'css!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.MenuIcon'], function(WSMenuButton) {
+define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.MenuIcon'], function(WSMenuButton) {
 
    'use strict';
 
@@ -58,10 +58,7 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WS.Controls.MenuButton', 'css!SBIS3.CO
    var MenuIcon = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuIcon.prototype */ {
       _hasHeader: false,
       $protected: {
-         _zIndex: '',
-         _options: {
-            buttonTypeClass: ' controls-IconButton'
-         }
+         _zIndex: ''
       },
 
       _modifyOptions : function() {

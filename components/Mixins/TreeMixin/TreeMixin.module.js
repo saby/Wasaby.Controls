@@ -45,7 +45,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
             parentProperty: cfg.parentProperty,
             nodeProperty: cfg.nodeProperty,
-            loadedProperty: cfg.parentProperty + '$',
+            // todo временное решение, т.к. с бизнес-логики прилетает инвертированное значение признака загруженности ветки
+            loadedProperty: '!' + cfg.parentProperty + '$',
             unique: true,
             root: root,
             rootEnumerable: rootAsNode,
@@ -170,6 +171,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    getRecordsForRedraw = function(projection, cfg) {
       var
+         prevItem,
+         itemsForFooter = [],
          records = [],
          projectionFilter,
          prevGroupId = undefined,
@@ -207,6 +210,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
                }
+            }
+            if (cfg._hasFolderFooters(cfg)) {
+               if (itemsForFooter.length) {
+                  if (item.getLevel() < prevItem.getLevel()) {
+                     records.push({
+                        tpl: cfg._footerWrapperTemplate,
+                        data: cfg._getFolderFooterOptions(cfg, itemsForFooter.pop())
+                     });
+                  }
+               }
+               if (item.isNode() && item.isExpanded()) {
+                  itemsForFooter.push(item);
+               }
+               prevItem = item;
             }
             records.push(item);
          });
@@ -293,8 +310,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.hierField = cfg.hierField;
       tplOptions.parentProperty = cfg.parentProperty;
       tplOptions.nodeProperty = cfg.nodeProperty;
-      tplOptions.paddingSize = !isNaN(cfg.paddingSize) && typeof cfg.paddingSize === 'number' ? cfg.paddingSize : cfg._paddingSize;
-      tplOptions.originallPadding = cfg.multiselect ? 0 : cfg._originallPadding;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hasNodes = cfg.hasNodes;
       tplOptions.hierarchy = new HierarchyRelation({
@@ -303,6 +318,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       });
 
       return tplOptions;
+   },
+   hasNextPageInFolder = function(cfg, more, id) {
+      return typeof (more) !== 'boolean' ? more > (cfg._folderOffsets[id || 'null'] + cfg.pageSize) : !!more;
    };
    /**
     * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
@@ -395,23 +413,20 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see onNodeExpand
        */
       $protected: {
-         _folderOffsets : {},
-         _folderHasMore : {},
-         _treePagers : {},
-         _treePager: null,
          _options: {
+            _folderOffsets : {},
+            _folderHasMore : {},
             _buildTplArgs: buildTplArgsTV,
             _buildTplArgsTV: buildTplArgsTV,
             _defaultSearchRender: searchRender,
             _getSearchCfgTv: getSearchCfg,
             _getSearchCfg: getSearchCfg,
             _searchFolders: {},
-            _paddingSize: 16,
-            _originallPadding: 6,
             _getRecordsForRedraw: getRecordsForRedraw,
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
+            _hasNextPageInFolder: hasNextPageInFolder,
             /**
              * @cfg {Number} Задает размер отступов для каждого уровня иерархии
              * @example
@@ -533,9 +548,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             openedPath : {},
             /**
-             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) или "Скрытый узел" не производит проваливание внутрь иерархии, а раскрывает её содержимое.
+             * @cfg {Boolean} Устанавливает признак, при котором клик по записи типа "Узел" (папка) не производит проваливание внутрь иерархии, а раскрывает её содержимое.
              * @remark
-             * Подробнее о типах иерархических записей вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
+             * При клике по записи типа "Скрытый узел" проваливание внутрь иерархии запрещено по умолчанию и не подлежит изменению.
+             * Подробнее о типах иерархических записей читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy">Иерархия</a>.
              * @example
              * <pre>
              *    <option name="allowEnterToFolder">false</option>
@@ -582,7 +598,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             loadItemsStrategy: 'merge'
          },
-         _foldersFooters: {},
          _lastParent : undefined,
          _lastDrawn : undefined,
          _lastPath : [],
@@ -718,7 +733,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   this._collapseNodes(this.getOpenedPath(), id);
                }
                this._options.openedPath[id] = true;
-               this._folderOffsets[id] = 0;
+               this._options._folderOffsets[id] = 0;
                return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
                   this._getItemProjectionByItemId(id).setExpanded(true);
                }).bind(this));
@@ -732,7 +747,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
-               this._folderHasMore[id] = list.getMetaData().more;
+               this._options._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                if (this._options.loadItemsStrategy == 'merge') {
@@ -994,26 +1009,23 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             self = this,
             filter;
          this._toggleIndicator(true);
-         this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
+         this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
+         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
-               self._folderOffsets[id] += self._limit;
+               self._options._folderOffsets[id] += self._limit;
             }
             else {
-               self._folderOffsets['null'] += self._limit;
+               self._options._folderOffsets['null'] += self._limit;
             }
-            self._folderHasMore[id] = dataSet.getMetaData().more;
-            if (!self._hasNextPageInFolder(dataSet.getMetaData().more, id)) {
+            self._options._folderHasMore[id] = dataSet.getMetaData().more;
+            if (!self._options._hasNextPageInFolder(self._options, dataSet.getMetaData().more, id)) {
                if (typeof id != 'undefined') {
-                  self._treePagers[id].setHasMore(false)
-               }
-               else {
-                  self._treePager.setHasMore(false)
+                  self._getTreePager(id).setHasMore(false);
                }
             }
             //Если данные пришли, нарисуем
@@ -1093,7 +1105,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
                this._hierPages[this._previousRoot] = this._getCurrentPage();
             }
-            this._folderOffsets['null'] = 0;
+            this._options._folderOffsets['null'] = 0;
             this._lastParent = undefined;
             this._lastDrawn = undefined;
             this._lastPath = [];
@@ -1145,11 +1157,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
                this._previousRoot = this._options._curRoot;
 
-            }
-         },
-         destroy : function() {
-            if (this._treePager) {
-               this._treePager.destroy();
             }
          }
       },

@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Menu', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
-   'html!SBIS3.CONTROLS.Menu',
+   'tmpl!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
@@ -131,10 +131,6 @@ define('js!SBIS3.CONTROLS.Menu', [
       },
       init: function() {
          Menu.superclass.init.apply(this, arguments);
-         if(this._options.additionalProperty){
-            this._toggleAdditionalButton = this.getChildControlByName('toggleAdditionalItems');
-            this._toggleAdditionalButton[this._needShowToggleButton ? 'show' : 'hide']();
-         }
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          this._container.on('mousedown focus', this._blockFocusEvents);
       },
@@ -213,7 +209,9 @@ define('js!SBIS3.CONTROLS.Menu', [
       _drawItems : function() {
          this.destroySubObjects();
          this._checkIcons();
+         this._needShowToggleButton = false;
          Menu.superclass._drawItems.apply(this, arguments);
+         this._checkAdditionalItems();
       },
       //TODO: Придрот для выпуска 3.7.3
       //Обходим все дерево для пунктов и проверяем наличие иконки у хотя бы одного в каждом меню
@@ -258,6 +256,14 @@ define('js!SBIS3.CONTROLS.Menu', [
             }
          }
       },
+
+      _checkAdditionalItems: function () {
+          if(this._options.additionalProperty){
+              this._toggleAdditionalButton = this.getChildControlByName('toggleAdditionalItems');
+              this._toggleAdditionalButton[this._needShowToggleButton ? 'show' : 'hide']();
+          }
+      },
+
       _drawItemsCallback : function() {
          var
             menuItems = this.getItemsInstances(),

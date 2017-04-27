@@ -20,13 +20,18 @@
       padding-left: 42px;
    }
 
+   &.controls-Click__active {
+      color: @menu-item-hover-text-color;
+      background: @menu-item-hover-bg;
+   }
+
    .controls-MenuItem__content {
       position: relative;
       width: 100%;
       min-height: @menu-item-height;
 
       .icon-16 ~ .controls-MenuItem__text{
-         margin: 6px 0 6px 22px;
+         margin: @menu-item-icon-16-margin;
       }
 
       .icon-24 ~ .controls-MenuItem__text{

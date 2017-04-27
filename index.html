@@ -25,7 +25,6 @@
    <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/require.js"></script>
    <script type="text/javascript" src="/sbis3-ws/ws/ext/requirejs/config.js"></script>
    <script type="text/javascript" src="/sbis3-ws/ws/lib/core.js"></script>
-   <script type="text/javascript" src="/sbis3-ws/ws/lib/Source.js"></script>
    <script type="text/javascript" data-pack-name="ws" src="/sbis3-ws/ws/res/js/bootup.js"></script>
    <style>
       .view-main {
@@ -107,9 +106,6 @@
                   <div id="ButtonGroups"></div>
                </li>
                <li>
-                  <div id="ButtonGroupsNew"></div>
-               </li>
-               <li>
                   <div id="FieldFormat"></div>
                </li>
                <li>
@@ -121,9 +117,9 @@
                <li>
                   <div id="ViewsNEWDS"></div>
                </li>
-                <li>
-                    <div id="ViewsNew"></div>
-                </li>
+               <li>
+                  <div id="TreeDataGridView"></div>
+               </li>
                <li>
                   <div id="Enum"></div>
                </li>
@@ -132,9 +128,6 @@
                </li>
                 <li>
                     <div id="ViewsScroll"></div>
-                </li>
-                <li>
-                    <div id="ViewsScrollNew"></div>
                 </li>
                 <li>
                     <div id="ViewsGroup"></div>
@@ -157,14 +150,8 @@
                <li>
                   <div id="MultiView"></div>
                </li>
-                <li>
-                    <div id="MultiViewNew"></div>
-                </li>
                <li>
                   <div id="Suggest"></div>
-               </li>
-               <li>
-                  <div id="TodoMVC"></div>
                </li>
                <li>
                   <div id="Browser"></div>
@@ -192,6 +179,9 @@
                </li>
                <li>
                   <div id="SearchForm"></div>
+               </li>
+               <li>
+                  <div id="FolderFooter"></div>
                </li>
             </ul>
          </td>
@@ -242,6 +232,14 @@
                </li>
 
             </ul>
+            <h3>Индикатор процесса</h3>
+            <ul>
+               <style>.my-own-class { background: deepskyblue }</style>
+               <li>Одно значение<span class="processStateIndicator" data-numvals="1" data-state="50"></span></li>
+               <li>Два значения<span class="processStateIndicator" data-numvals="2" data-state="20,30"></span></li>
+               <li>Три значения<span class="processStateIndicator" data-numvals="3" data-state="10,20,30"></span></li>
+               <li>Три значения (второй цвет свой)<span class="processStateIndicator" data-colors=",my-own-class" data-numvals="3" data-state="10,20,30"></span></li>
+            </ul>
          </td>
       </tr>
       <tr>
@@ -259,6 +257,7 @@
                </li>
             </ul>
          </td>
+         
       </tr>
    </table>
 
@@ -339,6 +338,14 @@
             })
          });
 
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "FolderFooter",
+               caption: 'FolderFooter',
+               href: '/pages/FolderFooter.html'
+            })
+         });
+
           require(["js!SBIS3.CONTROLS.Link"], function (r) {
               new r({
                   element: "TimeInterval",
@@ -389,15 +396,6 @@
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
-               element: "ButtonGroupsNew",
-               caption: 'Button groups new',
-               href: '/pages/ButtonGroupsNew.html'
-            })
-         });
-
-
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
-            new r({
                element: "FieldFormat",
                caption: 'FieldFormat',
                href: '/pages/FieldFormat.html'
@@ -425,13 +423,14 @@
             })
          });
 
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
-              new r({
-                  element: "ViewsNew",
-                  caption: 'ViewsNew',
-                  href: '/pages/ViewsNew.html'
-              })
-          });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: 'TreeDataGridView',
+               caption: 'TreeDataGridView',
+               href: '/pages/TreeDataGridView.html'
+            })
+         });
+
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "Enum",
@@ -451,13 +450,6 @@
                   element: "ViewsScroll",
                   caption: 'ViewsScroll',
                   href: '/pages/ViewsScroll.html'
-              })
-          });
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
-              new r({
-                  element: "ViewsScrollNew",
-                  caption: 'ViewsScrollNew',
-                  href: '/pages/ViewsScrollNew.html'
               })
           });
           require(["js!SBIS3.CONTROLS.Link"], function (r) {
@@ -515,27 +507,11 @@
             })
          });
 
-          require(["js!SBIS3.CONTROLS.Link"], function (r) {
-              new r({
-                  element: "MultiViewNew",
-                  caption: 'MultiViewNew',
-                  href: '/pages/MultiViewNew.html'
-              })
-          });
-
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "Suggest",
                caption: 'Suggest',
                href: '/pages/Suggest.html'
-            })
-         });
-
-         require(["js!SBIS3.CONTROLS.Link"], function (r) {
-            new r({
-               element: "TodoMVC",
-               caption: 'TodoMVC',
-               href: '/pages/TodoMvc.html'
             })
          });
 
@@ -558,7 +534,7 @@
                 href: '/pages/Engine.BrowserTabs.html'
              });
           });
-		 require(["js!SBIS3.CONTROLS.Link"], function (r) {
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
                element: "FieldLink",
                caption: 'FieldLink',
@@ -642,6 +618,17 @@
                href: '/theme-preview/preview.html'
             })
          });
+         require(['js!SBIS3.CONTROLS.ProcessStateIndicator'], function(r){
+            $('.processStateIndicator').each(function(){
+               var colors = this.getAttribute('data-colors');
+               new r({
+                  element: this,
+                  colors: colors && colors.split(',') || undefined,
+                  numValues: +this.getAttribute('data-numvals'),
+                  state: this.getAttribute('data-state').split(',')
+               })
+            })
+         })
       })
    });
 </script>

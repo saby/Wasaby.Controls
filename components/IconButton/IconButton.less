@@ -1,9 +1,14 @@
+.icon-mixin(@icon-left, @icon-width) {
+  left: @icon-left;
+  top: 50%;
+  margin-top: -@icon-width/2;
+}
+
 .controls-IconButton {
   vertical-align: middle;
-  .justify-content(center);
-  .button-default-style();
-  .button-baseline-fix(0);
-
+  line-height: initial;
+  .button-default-style(0);
+  background: inherit;
   .controls-Button__icon {
     position: relative;
   }
@@ -52,6 +57,15 @@
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color);
+      .controls-Button__icon {
+        position: absolute;
+        &.icon-16 {
+          .icon-mixin(5px, 16px);
+        }
+        &.icon-24 {
+          .icon-mixin(1px, 24px);
+        }
+      }
       height: 28px;
       width: 28px;
       line-height: 26px!important;
@@ -63,6 +77,9 @@
       width: 24px !important;
       line-height: 24px !important;
       .controls-Button__icon.icon-16 {
+         position: absolute;
+         top: 0;
+         left: 0;
          box-sizing: content-box;
          height: 22px !important;
          width: 22px !important;

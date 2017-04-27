@@ -212,10 +212,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
               dataSource = options.dataSource;
 
           return Query(dataSource, [
-             options.filter || {},
-             {},
+             options.hasOwnProperty('filter') ? options.filter : {},
+             options.hasOwnProperty('sorting') ? options.sorting : {},
              0,
-             25]);
+             options.hasOwnProperty('pageSize') ? options.pageSize : 25]);
        };
 
        return SelectorController;
