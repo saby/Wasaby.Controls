@@ -56,7 +56,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    fHelpers,
    strHelpers,
    SourceUtil,
-   isEmpty) {
+   isEmpty,
+   debounce) {
 
    function propertyUpdateWrapper(func) {
       return function() {
