@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _nodeChangeHandler : function(event, tinyEvent) {
-            this._buttonSetEnabled('unlink', tinyEvent.element.nodeName === 'A');
+            this._buttonSetEnabled('unlink', $(tinyEvent.element).closest('a').length);
          },
 
          _formatChangeHandler : function(event, obj, state) {
