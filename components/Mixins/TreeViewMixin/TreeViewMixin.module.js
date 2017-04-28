@@ -293,13 +293,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
 
       before: {
-         _keyboardHover: function (e) {
-            switch (e.which) {
-               case constants.key.m:
-                  e.ctrlKey && this.moveRecordsWithDialog();
-                  break;
-            }
-         },
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
                var self = this;
