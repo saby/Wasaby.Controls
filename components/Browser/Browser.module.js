@@ -325,12 +325,14 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._fastDataFilter = this._getFastDataFilter();
          
          if(this._filterButton || this._fastDataFilter) {
+            /* Синхронизация кнопки фильтров и быстрого фильтра */
             var syncFilters = function(from, to) {
                if(from && to) {
                   to.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(cFunctions.clone(from.getFilterStructure()), to.getFilterStructure()));
                }
             };
             
+            /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
             var filterChangeHandler = function() {
                if(this === self._filterButton && self._fastDataFilter) {
                   syncFilters(self._filterButton, self._fastDataFilter);
@@ -338,6 +340,15 @@ define('js!SBIS3.CONTROLS.Browser', [
                   syncFilters(self._fastDataFilter, self._filterButton);
                }
    
+               /* Почему сделано через контекст:
+                   1) Контекст даёт возможность удалять занчения по-умолчанию,
+                      например, кнопка фильтров выдала фильтр:
+                      поНдс  :  true
+                      Ответственные  : []   -  это значение по-умолчанию, его можно не отправлять на бл, и можно удалить через nonexistent
+                      Регламент  :  'Задача'
+                   2) фильтр переиспользуются (например фильтры ЭДО) и могут быть ненужные для фильтрации элементы структуры,
+                      через контекст можно четко указать, какие фильтр требуется для фильтрации.
+                */
                self.getContext().setValue('browser.filter', cMerge(
                   self._filterButton ? self._filterButton.getFilter() : {},
                   self._fastDataFilter ? self._fastDataFilter.getFilter() : {}

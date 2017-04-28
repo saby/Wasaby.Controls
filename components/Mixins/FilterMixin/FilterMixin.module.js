@@ -315,12 +315,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
       getFilter: function() {
          return colHelpers.reduce(this._filterStructure, function(result, element) {
-            var filterField = element.filterField || element.internalValueField;
-            
             if (element.hasOwnProperty('value')) {
-               result[filterField] = element.value;
-            } else if (element.hasOwnProperty('resetValue')) {
-               result[filterField] = element.resetValue;
+               result[element.filterField || element.internalValueField] = element.value;
             }
             return result;
          }, {});
