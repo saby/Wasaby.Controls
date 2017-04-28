@@ -194,6 +194,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                // TODO перевести на observableList, для этого необходимо отказать от получание записей по методу getRecordById
                items.clear();
                self.setItems(items);
+            } else {
+               self.setItems(new List());
             }
             return list;
          });
