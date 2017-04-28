@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                 itemContainer, id;
 
             itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
-            if(itemContainer.length) {
+            if (itemContainer.length) {
                deleteAction = $target.hasClass('controls-FieldLink__item-cross');
                id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().getId();
                this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._clearItems();
             FieldLinkItemsCollection.superclass._setEnabled.apply(this, arguments);
 
-            if(items && items.getCount()) {
+            if (items && items.getCount()) {
                this.redraw();
             }
          },
@@ -96,10 +96,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          setItems: function(list) {
-            if(list) {
+            if (list) {
                /* RecordSet клонировать нельзя, иначе записи склонируются с ключевым полем
                   рекордсета, хотя оно могло быть изменено */
-               if(!cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+               if (!cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
                   list = list.clone();
                } else {
                   list.setEventRaising(false, false);
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          /* Скрываем именно в синхронном drawItemsCallback'e,
             иначе пикер скрывается асинхронно и моргает */
          _drawItemsCallbackSync: function() {
-            if(this.isPickerVisible() && !this.getItems().getCount()) {
+            if (this.isPickerVisible() && !this.getItems().getCount()) {
                this.hidePicker();
             }
          },
@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          showPicker: function() {
             /* Чтобы не было перемаргивания в задизейбленом состоянии,
                просто вешаем класс ws-invisible */
-            if(this.isEnabled()) {
+            if (this.isEnabled()) {
                this._clearItems();
             } else {
                this.getContainer().addClass('ws-invisible');
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                 ];
 
             cssModifiers.forEach(function(value) {
-               if(fieldLinkContainer.hasClass(value)) {
+               if (fieldLinkContainer.hasClass(value)) {
                   pickerClasses.push(value);
                }
             });
@@ -176,7 +176,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                handlers: {
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
-                     if(!self.isEnabled()) {
+                     if (!self.isEnabled()) {
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
