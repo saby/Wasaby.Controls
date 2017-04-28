@@ -5,8 +5,10 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CONTROLS.ColumnsController',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'Core/core-instance'
-], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance){
+   'Core/core-instance',
+   'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
+   'Core/core-functions'
+], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance, FilterHistoryControllerUntil, cFunctions){
    'use strict';
 
    /**
@@ -321,7 +323,40 @@ define('js!SBIS3.CONTROLS.Browser', [
 
          this._filterButton = this._getFilterButton();
          this._fastDataFilter = this._getFastDataFilter();
-
+         
+         if(this._filterButton || this._fastDataFilter) {
+            var syncFilters = function(from, to) {
+               if(from && to) {
+                  to.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(cFunctions.clone(from.getFilterStructure()), to.getFilterStructure()));
+               }
+            };
+            
+            var filterChangeHandler = function() {
+               if(this === self._filterButton && self._fastDataFilter) {
+                  syncFilters(self._filterButton, self._fastDataFilter);
+               } else if(self._filterButton) {
+                  syncFilters(self._fastDataFilter, self._filterButton);
+               }
+   
+               self.getContext().setValue('browser.filter', cMerge(
+                  self._filterButton ? self._filterButton.getFilter() : {},
+                  self._fastDataFilter ? self._fastDataFilter.getFilter() : {}
+               ));
+            };
+            
+            if(this._filterButton) {
+               filterChangeHandler.call(this._filterButton);
+               this._filterButton.subscribe('onApplyFilter', filterChangeHandler)
+                                 .subscribe('onResetFilter', filterChangeHandler);
+            }
+   
+            if(self._fastDataFilter) {
+               self._fastDataFilter.subscribe('onApplyFilter', filterChangeHandler)
+                                    .subscribe('onResetFilter', filterChangeHandler);
+            }
+         }
+         
+         
          if (this._filterButton) {
             this.subscribeTo(this._filterButton, 'onApplyFilter', function() {
                self.getView().setActive(true);
@@ -329,6 +364,7 @@ define('js!SBIS3.CONTROLS.Browser', [
 
             if(this._options.historyId) {
                this._bindFilterHistory();
+               syncFilters(this._filterButton, this._fastDataFilter);
             } else {
                this._notifyOnFiltersReady();
             }
