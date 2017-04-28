@@ -504,16 +504,15 @@ define('js!SBIS3.CONTROLS.ListView',
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
                 * @remark
-                * Если для контрола в опции {@link SBIS3.CORE.Control#enabled enabled = false}, то операции не будут отображаться при наведении курсора мыши. Однако с помощью подопции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
+                * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 *
-                * @faq Почему при установленной для контрола опции {@link SBIS3.CORE.Control#enabled enabled = false}
-                *
-                * Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
-                * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
-                * В следующем примере место отображения чекбоксом обозначено тегом span:
+                * Для отображения чекбоксов необходимо обозначить их место в шаблоне отображения элемента коллекции.
+                * Сделать это можно используя CSS-классы "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
+                * В данном примере тег span обозначает место отображения чекбокса:
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
                 *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
@@ -561,8 +560,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 *        }
                 *     }]
                 * </pre>
-                * <b>Пример 3.</b> Конфигурация операций через logicless-шаблонизатор.
-                * Устанавливаем обработчик удаления записи списка через шаблонизатор:
+                * <b>Пример 3.</b> Установка обработчика удаления записи
                 * <pre>
                 * <div>
                 *    <ws:SBIS3.Engine.Browser name="goodsBrowser">
