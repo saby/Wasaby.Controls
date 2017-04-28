@@ -342,7 +342,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                   this._infobox.show({
                      control: target,
                      message: this._alterTooltipText(),
-                     autoHide: true,
                      delay: 0,
                      hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
