@@ -478,7 +478,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                self.hidePicker();
                // чтобы не было выделения текста, когда фокус вернули в выпадашку
                self._fromTab = false;
-               self.setActive(true);
                self.setSelectedIndex(index);
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
