@@ -890,16 +890,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          /**
-           * Возвращает выбранные элементы в виде текста.
-           * @deprecated Метод getCaption устарел, используйте getTextValue
-           * @returns {string}
-           */
-          getCaption: function() {
-             IoC.resolve('ILogger').error('FieldLink::getCaption', 'Метод getCaption устарел, используйте getTextValue');
-             return this.getTextValue();
-          },
-
            /**
             * Возвращает строку, сформированную из текстовых значений полей выбранных элементов коллекции.
             * @remark
@@ -917,11 +907,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
               if(selectedItems) {
                  selectedItems.each(function(rec) {
-                    displayFields.push(strHelpers.htmlToText(rec.get(self._options.displayProperty) || ''));
+                    displayFields.push(rec.get(self._options.displayProperty) || '');
                  });
               }
 
-              return displayFields.join(', ');
+              return strHelpers.htmlToText(displayFields.join(', '));
           },
 
           _onResizeHandler: function() {
@@ -1015,7 +1005,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 this._toggleShowAll(false);
              }
 
-             this._toggleDropAll(keysArrLen > 1);
              this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys)
                                 .toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
 
@@ -1181,13 +1170,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(this._options.multiselect) {
                 this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass(classes.HIDDEN, !show);
              }
-          },
-
-          /**
-           * Скрывает/показывает кнопку удаления всех записей
-           */
-          _toggleDropAll: function(show) {
-             this.getContainer().find('.controls-FieldLink__dropAllLinks').toggleClass(classes.HIDDEN, !show);
           },
 
           _toggleInput: function(show) {
