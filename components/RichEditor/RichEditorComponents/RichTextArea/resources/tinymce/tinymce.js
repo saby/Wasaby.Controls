@@ -40643,6 +40643,13 @@
       var selectionChangeHandler, documentFocusInHandler, documentMouseUpHandler, DOM = DOMUtils.DOM;
 
       var isUIElement = function (editor, elm) {
+         //Проблема:
+         //          isUIElement может случиться после destroy редактора
+         //Решение:
+         //          Проверять редактор на destroyed
+         if (editor.destroyed) {
+            return;
+         }
          var customSelector = editor ? editor.settings.custom_ui_selector : '';
          var parent = DOM.getParent(elm, function (elm) {
             return (
