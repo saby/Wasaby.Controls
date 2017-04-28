@@ -7,6 +7,13 @@
       'css!SBIS3.CONTROLS.WaitIndicator'
    ],
 
+   /*###
+    TODO: Убрать всё, связанное с suspend
+    TODO: Убрать
+    TODO: Убрать
+    TODO: Убрать
+    */
+
    /**
     * Класс, описывающий индикатор ожидания завершения процесса. Позволяет инициировать отображение индикатора(ов), задавать свойсва отображения и
     * прекращения его(их) работы.
@@ -142,35 +149,6 @@
           */
          get container () {
             return this._container;
-         },
-
-         /**
-          * Геттер свойства, указывает, что индикатор является глобальным
-          * @public
-          * @type {boolean}
-          */
-         get isGlobal () {
-            return !this.container;
-         },
-
-         /**
-          * Геттер свойства, указывает, что индикатор является видимым в данный момент
-          * @public
-          * @type {boolean}
-          */
-         get isVisible () {
-            var poolItem = WaitIndicatorPool.search(this.container);
-            return !!poolItem && !poolItem.isLocked && !!poolItem.indicators.length && poolItem.indicators[0] === this;
-         },
-
-         /**
-          * Геттер свойства, указывает, что индикатор является текущим в данный момент
-          * @public
-          * @type {boolean}
-          */
-         get isCurrent () {
-            var poolItem = WaitIndicatorPool.search(this.container);
-            return !!poolItem && !!poolItem.indicators.length && poolItem.indicators[0] === this;
          },
 
          /**
