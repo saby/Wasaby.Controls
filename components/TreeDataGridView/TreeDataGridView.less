@@ -142,6 +142,7 @@
 
       .controls-TreeView__ellipsis-container {
          float: left;
+         white-space: nowrap;
          height: @tree-view-ellipsis-wrapper-height;
       }
 
@@ -315,5 +316,6 @@
    flex-direction: row;
    .controls-DataGridView__columnValue, .controls-TreeView__folderTitle {
       width: 100%;
+      min-width: 0;
    }
 }
