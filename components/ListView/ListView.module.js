@@ -1778,7 +1778,7 @@ define('js!SBIS3.CONTROLS.ListView',
                page = Math.floor(scrollPage.element.index() / this._limit);
             }
             // прибавим к полученой странице количество еще не загруженных страниц
-            return page + Math.floor((this._scrollOffset.top + this._limit) / this._limit);
+            return page + Math.floor((this._scrollOffset.top) / this._limit);
          },
          /**
           * Метод установки/замены обработчика клика по строке.
