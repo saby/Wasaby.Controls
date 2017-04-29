@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
-            this._setVariables();
+            this._setPickerVariables();
             this._bindItemSelect();
 
             if(!this._isHoverMode()) {
@@ -643,7 +643,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            this._setVariables();
+            this._setHeadVariables();
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
@@ -711,10 +711,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _getHtmlItemByItem: function (item) {
             return $('.controls-DropdownList__item[data-id="' + item.getId() + '"]', this._getPickerContainer());
-         },
-         _setVariables: function() {
-            this._setHeadVariables();
-            this._setPickerVariables();
          },
          _setPickerVariables: function() {
             var pickerContainer,
