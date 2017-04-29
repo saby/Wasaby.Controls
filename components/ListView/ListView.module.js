@@ -3640,9 +3640,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
             //_findItemByElement, без завязки на _items.
             if (target.length) {
-               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
-                  return false;
-               }
                var  selectedItems = this.getSelectedItems(),
                   targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
                   items = this._getDragItems(targetsItem, selectedItems),

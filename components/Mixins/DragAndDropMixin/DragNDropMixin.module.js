@@ -320,9 +320,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 self = this,
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if (self._isDrag(moveEvent, clickEvent)) {
-                        self._beginDrag(clickEvent);
-                        EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable').length === 0) {
+                        if (self._isDrag(moveEvent, clickEvent)) {
+                            self._beginDrag(clickEvent);
+                            EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+                        }
                     }
                 };
             this._preparePageXY(clickEvent);
