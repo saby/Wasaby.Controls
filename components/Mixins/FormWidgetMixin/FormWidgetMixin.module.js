@@ -346,7 +346,6 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                      hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
                }
-               target.focus();
             }.bind(this));
          }
          this._container.addClass('ws-validation-error');
