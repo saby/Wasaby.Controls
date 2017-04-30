@@ -130,6 +130,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                hasResetVal = elem.hasOwnProperty('resetVisibilityValue');
 
                if(elem.hasOwnProperty('value')) {
+                  /* Если value === resetValue, то поле видимости берём из resetVisibilityValue,
+                     чтобы была возможность задать видимость по-умолчанию */
                   if(hasResetVal && isEqual) {
                      elem.visibilityValue = elem.resetVisibilityValue;
                   } else {
