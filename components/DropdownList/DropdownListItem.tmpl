@@ -1,7 +1,7 @@
 <div class="controls-DropdownList__item {{className}}
             {{multiselect ? 'controls-DropdownList__multiselect'}}
             {{(item.get && item.get('isEmptyValue')) ? 'controls-DropdownList__defaultItem'}}
-            {{(item.get && item.get(it.parentProperty)) ? 'controls-DropdownList__child'}}
+            {{(item.get && item.get(parentProperty)) ? 'controls-DropdownList__child'}}
             {{((item.getId && item.getId()) === defaultId) ? 'controls-ListView__defaultItem'}}"
     data-hash="{{projItem.getHash()}}"
     data-id="{{item.getId ? item.getId()}}">
