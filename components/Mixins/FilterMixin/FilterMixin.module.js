@@ -123,11 +123,20 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
       _updateFilterStructure: function(filterStructure, filter, captions, visibility) {
          var processElementVisibility = function(elem) {
+            var isEqual, hasResetVal;
+
             if(elem.hasOwnProperty('internalVisibilityField')) {
+               isEqual = FilterToStringUtil.isEqualValues(elem.value, elem.resetValue);
+               hasResetVal = elem.hasOwnProperty('resetVisibilityValue');
+
                if(elem.hasOwnProperty('value')) {
-                  elem.visibilityValue = !FilterToStringUtil.isEqualValues(elem.value, elem.resetValue);
+                  if(hasResetVal && isEqual) {
+                     elem.visibilityValue = elem.resetVisibilityValue;
+                  } else {
+                     elem.visibilityValue = !isEqual;
+                  }
                } else {
-                  elem.visibilityValue = elem.hasOwnProperty('resetVisibilityValue') ? elem.resetVisibilityValue : false;
+                  elem.visibilityValue = hasResetVal ? elem.resetVisibilityValue : false;
                }
             }
          };
@@ -282,7 +291,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                if (element.hasOwnProperty(prop)) {
                   result[element.internalVisibilityField] = element[prop];
                } else {
-                  result[element.internalVisibilityField] = false;
+                  result[element.internalVisibilityField] = element.hasOwnProperty('resetVisibilityValue') ? element.resetVisibilityValue : false;
                }
             }
             return result;
