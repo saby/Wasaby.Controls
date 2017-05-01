@@ -407,6 +407,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       self.setSelectedItems(result);
                    }
                 });
+
+                this.subscribeTo(this._getSelectorAction(), 'onExecute', function (event, meta) {
+                   event.setResult(self._notify('onChooserClick', meta));
+                });
              }
 
              if(this._options.multiselect) {

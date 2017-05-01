@@ -162,6 +162,10 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                      self.setSelectedItems(result);
                   }
                });
+
+               this.subscribeTo(this._getSelectorAction(), 'onExecute', function (event, meta) {
+                  event.setResult(self._notify('onChooserClick', meta));
+               });
             });
          }
       },
