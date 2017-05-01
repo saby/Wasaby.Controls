@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
             }
          },
          _doExecute: function(meta) {
-            this._move(meta.movedItem || meta.from);
+            return this._move(meta.movedItem || meta.from);
          },
          /**
           * Метод выполнящий перемещение
