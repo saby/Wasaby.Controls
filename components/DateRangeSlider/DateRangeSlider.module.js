@@ -202,10 +202,10 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                offset: (baseWidth - pickerWidth)/2
             },
             verticalAlign: {
-               side: 'top',
-               offset: -6
+               side: 'top'
             },
-            closeByExternalClick: true
+            closeByExternalClick: true,
+            className: 'controls-DateRangeSlider__picker'
          };
       }
    });

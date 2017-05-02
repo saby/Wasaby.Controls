@@ -149,15 +149,15 @@
    }
 }
 
-.generate-padding-class(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+.generate-padding-class-TV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
    :not(.controls-GridView__searchMode).controls-TreeView.controls-ListView__padding-@{val} > .controls-ListView__itemsContainer > .controls-ListView__item,
    :not(.controls-ListView__multiselect).controls-TreeView.controls-ListView__padding-@{val} > .controls-ListView__itemsContainer > .controls-TreeView__folderFooterContainer {
       padding-left: ~"@{controls-view-padding-@{val}}";
    }
-   .generate-padding-class(@i + 1);
+   .generate-padding-class-TV(@i + 1);
 }
-.generate-padding-class();
+.generate-padding-class-TV();
 
 .dragdropBody {
    .controls-TreeView {

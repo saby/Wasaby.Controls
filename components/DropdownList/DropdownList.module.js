@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/EventBus",
    "Core/IoC",
    "Core/core-merge",
+   "Core/core-instance",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -17,26 +18,21 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DropdownListMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
    "js!WS.Data/Collection/List",
-   "js!SBIS3.CONTROLS.ScrollContainer",
-   "html!SBIS3.CONTROLS.DropdownList",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListItem",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
-   "Core/core-instance",
+   "tmpl!SBIS3.CONTROLS.DropdownList",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListHead",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListItem",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "i18n!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance) {
+   function (constants, Deferred, EventBus, IoC, cMerge, cInstance, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -383,7 +379,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
-            this._setVariables();
+            this._setPickerVariables();
             this._bindItemSelect();
 
             if(!this._isHoverMode()) {
@@ -647,7 +643,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            this._setVariables();
+            this._setHeadVariables();
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
@@ -715,10 +711,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _getHtmlItemByItem: function (item) {
             return $('.controls-DropdownList__item[data-id="' + item.getId() + '"]', this._getPickerContainer());
-         },
-         _setVariables: function() {
-            this._setHeadVariables();
-            this._setPickerVariables();
          },
          _setPickerVariables: function() {
             var pickerContainer,

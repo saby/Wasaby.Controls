@@ -8,13 +8,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "html!SBIS3.CONTROLS.RichEditorToolbar",
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
    'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
-   "js!SBIS3.CONTROLS.Button",
+   "js!WSControls/Buttons/Button",
    "js!WSControls/Buttons/ToggleButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   'js!SBIS3.CONTROLS.MenuButton',
+   'js!SBIS3.CONTROLS.ComboBox',
    'css!SBIS3.CONTROLS.RichEditorToolbar',
-   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
-   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton',
    "css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square"
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
@@ -22,7 +20,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
 
    var
       constants = {
-         toolbarHeight: 24
+         toolbarHeight: 32
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbar
@@ -87,7 +85,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             _textFormats: {
                title: false,
                subTitle: false,
-               selectedMainText: false,
                additionalText: false
             },
             _textAlignState: {
@@ -95,14 +92,14 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                alignright: false,
                aligncenter: false,
                alignjustify: false
-            }
+            },
+            _styleItem: undefined
          },
 
          $constructor: function() {
             this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton').bind('click', this.toggleToolbar.bind(this));
             this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
          },
-
          setExpanded: function(expanded) {
             var
                self = this;
@@ -130,7 +127,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _nodeChangeHandler : function(event, tinyEvent) {
-            this._buttonSetEnabled('unlink', tinyEvent.element.nodeName === 'A');
+            this._buttonSetEnabled('unlink', $(tinyEvent.element).closest('a').length);
          },
 
          _formatChangeHandler : function(event, obj, state) {
@@ -139,6 +136,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                case 'italic':
                case 'underline':
                case 'strikethrough':
+               case 'blockquote':
                   this._toggleState(state, obj);
                break;
                case 'alignleft':
@@ -160,21 +158,25 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             var
                selectors = {
                   'bold':  'strong',
+                  'blockquote':  'blockquote',
                   'italic':  'em',
                   'underline':  'span[style*="decoration: underline"]',
                   'strikethrough':  'span[style*="decoration: line-through"]'
-               };
-            if (!state && $(obj.node).closest(selectors[obj.format]).length) {
+               },
+               name = obj.format === 'blockquote' ? 'mceBlockQuote' : obj.format;
+            if (!state && $(obj.node).closest(selectors[name]).length) {
                state = true;
             }
-             if (this.getItemInstance(obj.format)) {
-                this.getItemInstance(obj.format).setChecked(state);
+             if (this.getItemInstance(name)) {
+                this.getItemInstance(name).setChecked(state);
             }
          },
 
          _updateTextAlignButtons: function(state, obj) {
             this._textAlignState[obj.format] = state;
-            if (this.getItemInstance('align')) {
+            var
+               button = this.getItemInstance('align');
+            if (button) {
                var
                   align = 'alignleft';
                for (var a in this._textAlignState) {
@@ -182,13 +184,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      align = a;
                   }
                }
-               this.getItemInstance('align')._drawSelectedItems([align]);
+               button.setIcon(button.getItems().getRecordById(align).get('icon'));
             }
          },
 
          _updateTextFormat: function(state, obj) {
             this._textFormats[obj.format] = state;
-            if (this.getItemInstance('style')) {
+            var
+               button = this.getItemInstance('style');
+            if (button) {
                var
                   textFormat = 'mainText';
                for (var tf in this._textFormats) {
@@ -196,7 +200,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      textFormat = tf;
                   }
                }
-               this.getItemInstance('style')._drawSelectedItems([textFormat]);
+               button.setText(button.getItems().getRecordById(textFormat).get('title'));
             }
          },
 
@@ -333,9 +337,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
-         _pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
+         _pasteFromBufferWithStyles: function(onAfterCloseHandler, target, saveStyles) {
             if (this._options.linkedEditor) {
-               this._options.linkedEditor.pasteFromBufferWithStyles(onAfterCloseHandler, target);
+               this._options.linkedEditor.pasteFromBufferWithStyles(onAfterCloseHandler, target, saveStyles);
             }
          },
 

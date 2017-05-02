@@ -7,14 +7,13 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'html!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
-   'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.StylesPanelNew',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel, Di) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, StylesPanel, Di) {
 
    'use strict';
    var
@@ -118,11 +117,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             RichEditorRoundToolbar.superclass.setExpanded.apply(this, arguments);
          },
 
-         _bindEditor: function() {
-            RichEditorRoundToolbar.superclass._bindEditor.apply(this, arguments);
-            this._fillHistory();
-         },
-
          _formatChangeHandler : function(event, obj, state) {
             if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._toggleState(state, obj);
@@ -152,55 +146,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                }
             }
             return items;
-         },
-
-         _fillHistory: function(){
-            var
-               prepareHistory = function(value){
-                  var
-                     stripText, title,
-                     $tmpDiv = $('<div/>').append(value);
-                  $tmpDiv.find('.ws-fre__smile').each(function(){
-                     var smileName = $(this).attr('title');
-                     $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
-                  });
-                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
-                  stripText = stripText.replace('/\n/gi', '');
-                  if (!stripText && value) {
-                     stripText = rk('Контент содержит только html-разметку, без текста.');
-                  } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
-                     stripText = stripText.substr(0, 140) + ' ...';
-                  }
-                  return stripText;
-               };
-            if (this.getItems().getRecordById('history')) {
-               this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
-                  //Проблема:
-                  //          После прихода данных тулбар уже может быть уничтожен
-                  //Решение 1:
-                  //          Хранить deferred вызова и убивать его в destroy
-                  //Решение 2:
-                  //          Проверять на isDestroyed
-                  if (!this.isDestroyed()) {
-                     var
-                        items = [],
-                        history = this.getItemInstance('history');
-                     for (var i in arrBL) {
-                        if (arrBL.hasOwnProperty(i)) {
-                           items.push({
-                              key: items.length,
-                              title: prepareHistory(arrBL[i]),
-                              value: arrBL[i]
-                           })
-                        }
-                     }
-                     if (!arrBL.length) {
-                        history.setEnabled(false);
-                     }
-                     history.setItems(items);
-                  }
-               }.bind(this));
-            }
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
@@ -237,12 +182,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          _execCommand : function(name) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.execCommand(name);
-            }
-         },
-
-         _setText: function(text) {
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor.setText(text);
             }
          },
 
