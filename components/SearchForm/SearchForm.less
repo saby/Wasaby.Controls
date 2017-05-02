@@ -34,7 +34,7 @@
       }
     }
 
-  &.controls-TextBox .controls-TextBox__fieldWrapper {
+  & .controls-TextBox__fieldWrapper {
     margin: 0 @search-form-field-wrapper-margin-right 0 @search-left-margin;
     padding: 0;
   }
@@ -43,6 +43,17 @@
     width: @search-buttons-wrapper-width;
     padding: @search-button-wrapper-padding;
   }
+}
+
+.controls-Suggest__picker.controls-searchForm__suggest {
+  margin-left: -8px;
+  margin-top: -32px;
+  .box-shadow(@menu-shadow);
+  padding-top: 40px;
+}
+
+.controls-searchForm__suggest .controls-PopupMixin__closeButton {
+  top: 8px;
 }
 
 .controls-SearchForm {
