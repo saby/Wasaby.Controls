@@ -18,7 +18,7 @@
 @default-font-size:                       1.14rem;
 @default-border-width:						.07rem;
 @font-popup-size:                         1.43rem;
-@font-folder-size:                        .5rem;
+@font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
  @check-box-default-font-size:				1.14rem;
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
@@ -26,14 +26,15 @@
 @closeBigButtonWidth:                     60px;
 @closeBigButtonHeight:                    1.43rem;
 
-@default-itemHover-color:                 @primary-color;
+@default-itemHover-color:                 #1b2530;
 @default-itemSelected-color:              @primary-color;
 
 @hover-color:                             @primary-color;
 // ---- //
 // Link //
 // ---- //
-
+@DropdownList-linkStyleHoverColor:		rgb(187, 233, 255);
+@DropdownList-linkStyleColor:			@link-text-color;	
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
 @link-font-size:                          1.43rem;
@@ -122,7 +123,7 @@
 // Normal default button
 @button-border:                           @button-border-width solid #26b8ff;
 @button-shadow: 							none;
-@button-line-height: 1.43rem;
+@button-line-height: 						2.73rem;
 @button-hover-border:                     @button-border;
 @button-text-color:                       #E4E4E4;
 @button-active-text-color:                @button-text-color;
@@ -140,7 +141,7 @@
 @button-primary-hover-bg:                rgb(217, 71, 0);
 
 @button-primary-active-text-color:        @button-active-text-color;
-@button-primary-active-border:            #d94700;
+@button-primary-active-border:            2px solid #d94700;
 @button-primary-active-shadow:            @button-active-shadow;
 @button-primary-active-bg:                #d94700;
 
@@ -295,13 +296,23 @@
 // -------- //
 // Switcher //
 // -------- //
-@switcher-width: 100px;
-@switcher-height: 50px;
+@switcher-width: 3.57rem;
+@switcher-height: 1.7857rem;
 @switcher-line-color-disabled:                  @gray-light-color;
+@switcher-btn-radius:							1rem;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-btn-bg-color:                         #202835;
+@switcher-btn-color-inactive:					#8991A9;
 @switcher-line-color:							#8991A9;
-@switcher-border:                               2px solid #293543;
+@switcher-border:                               2px solid #2C4458;
+@switcherline-height:                           3px;
+@switcher-btn-border-width:						3px;
+@switcher-do-border:                            2px solid #2C4458;
+@switcher-do-vertical-toggle-width:				1.43rem;
+@switcher-do-horizontal-btn-size:				.93rem;	
+@switcher-btn-size:								.93rem;
+@switcher-btn-margin:							.357rem;
+@switcher-border-radius:						1rem;
 @switcher-btn-color:                            #FF7033;
 @switcher-do-horizontal-line-background-color:  #8991A9;
 @switcher-do-text-color:                        @white-color;

@@ -497,15 +497,29 @@ define('js!SBIS3.CONTROLS.ListView',
                 *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
                 *     <li>false. Действия доступны всегда.</li>
                 * </ul>
+                *
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
                /**
                 * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
                 * @remark
-                * Если для контрола установлено значение false в опции {@link SBIS3.CORE.Control#enabled}, то операции не будут отображаться при наведении курсора мыши.
-                * Однако с помощью подопции allowChangeEnable можно изменить это поведение.
+                * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
+                * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
+                *
+                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
+                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
+                * Для отображения чекбоксов необходимо обозначить их место в шаблоне отображения элемента коллекции.
+                * Сделать это можно используя CSS-классы "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
+                * В данном примере тег span обозначает место отображения чекбокса:
+                * <pre>
+                *     <div class="listViewItem" style="height: 30px;">
+                *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
+                *        {{=it.item.get("title")}}
+                *     </div>
+                * </pre>
+                *
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
@@ -545,8 +559,58 @@ define('js!SBIS3.CONTROLS.ListView',
                 *           this.showRecordDialog();
                 *        }
                 *     }]
+                * </pre>
+                * <b>Пример 3.</b> Установка обработчика удаления записи
                 * <pre>
+                * <div>
+                *    <ws:SBIS3.Engine.Browser name="goodsBrowser">
+                *        <ws:content type="string">
+                *            <ws:SBIS3.CONTROLS.DataGridView>
+                *                // ...
+                *                <ws:itemsActions>
+                *                    <ws:Array>
+                *                        <ws:Object name="delete" caption="Удалить" tooltip="Удалить" icon="sprite:icon-16 icon-Erase icon-error" isMainAction="true" onActivated="{{ deleteRecord }}"></ws:Object>
+                *                    </ws:Array>
+                *                </ws:itemsActions>
+                *            </ws:SBIS3.CONTROLS.DataGridView>
+                *        </ws:content>
+                *    </ws:SBIS3.Engine.Browser>
+                * </div>
+                * </pre>
+                *
+                * Создаём секцию $protected перед функцией init. Определяем в ней переменную "deleteRecord", с заданным значением по умолчанию:
+                * <pre>
+                * $protected: {
+                *    _options: {
+                *       deleteRecord: null
+                *    }
+                * }
+                *</pre>
+                *
+                * Добавляем на одном уровне с функцией init новую функцию deleteRecord:
+                * <pre>
+                * init: function() {
+                *    ...
+                * },
+                * _deleteRecord: function($tr, id) {
+                *    // Вызываем метод списка - удаление записей по переданным идентификаторам
+                *    this.deleteRecords(id);
+                * }
+                * </pre>
+                *
+                * После функции init добавляем секцию "_modifyOptions", в которой в переменную "deleteRecord" передаётся значение функции. Это необходимо для установки обработчика удаления записи списка через шаблонизатор.
+                * <pre>
+                * // Модификация опций компонента, нужна для передачи обработчиков
+                * _modifyOptions: function() {
+                *    var options = moduleClass.superclass._modifyOptions.apply(this, arguments);
+                *    Serializer.setToJsonForFunction(this._deleteRecord, 'js!SBIS3.Site.MainTable', 'prototype._deleteRecord');
+                *    options.deleteRecord = this._deleteRecord;
+                *    return options;
+                * }
+                * </pre>
+                *
                 * @see setItemsActions
+                * @see getItemsActions
                 */
                itemsActions: [{
                   name: 'delete',
@@ -1775,7 +1839,7 @@ define('js!SBIS3.CONTROLS.ListView',
                page = Math.floor(scrollPage.element.index() / this._limit);
             }
             // прибавим к полученой странице количество еще не загруженных страниц
-            return page + Math.floor((this._scrollOffset.top + this._limit) / this._limit);
+            return page + Math.floor((this._scrollOffset.top) / this._limit);
          },
          /**
           * Метод установки/замены обработчика клика по строке.
@@ -3649,7 +3713,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,

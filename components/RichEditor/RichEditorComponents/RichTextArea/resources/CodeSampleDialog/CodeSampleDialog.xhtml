@@ -1,0 +1,28 @@
+<div class="controls-Menu__Popup controls-CodeSampleDialog  controls-FloatArea">
+   <div  class="controls-CodeSampleDialog__header">
+      <div class="controls-CodeSampleDialog__title" title="{{=it.windowTitle}}">{{=it.windowTitle}}</div>
+      <component data-component="SBIS3.CONTROLS.IconButton" class="controls-CodeSampleDialog__applyButton controls-IconButton__round-border controls-IconButton__round icon-size" name="Apply">
+         <option name="icon">sprite:icon-16 icon-Yes icon-done</option>
+         <option name="activableByClick">false</option>
+      </component>
+   </div>
+   <div class="controls-CodeSampleDialog__type_wrap">
+      <component data-component="SBIS3.CONTROLS.ComboBox" class="controls-CodeSampleDialog__type" name="Type">
+         <option name="items" type="ref">{{@it.languages}}</option>
+         <option name="idProperty">key</option>
+         <option name="displayProperty">title</option>
+         <option name="selectedKey">markup</option>
+         <option name="editable">false</option>
+         <option name="activableByClick">false</option>
+      </component>
+   </div>
+   <div class="controls-CodeSampleDialog__area_wrap">
+      <component data-component="SBIS3.CONTROLS.TextArea" class="controls-CodeSampleDialog__area" name="Area">
+         <option name="minLinesCount">10</option>
+         <options name="autoResize">
+            <option name="maxLinesCount">50</option>
+            <option name="state">true</option>
+         </options>
+      </component>
+   </div>
+</div>

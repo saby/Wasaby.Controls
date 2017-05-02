@@ -5,7 +5,7 @@
 @default-font-line-height:                      24px;
 @data-grid-basic-height:                        44px;
 
-@default-height:                                50px;
+@default-height:                                24px;
 
 @default-itemHover-color:                       #E1ECF6;
 @default-itemSelected-color:                    #FDECD9;
@@ -40,7 +40,7 @@
 @menu-item-icon-top-offset:                     14px;
 @back-button-font-size:                         @globalDefaultFontSize;
 @back-button-margin-before:                     0 4px 0 0;
-@back-button-padding-before:                    4px 0;
+@back-button-padding-before:                    1px 0;
 
 // icon
 @icon-size:                                     24px;
@@ -72,6 +72,7 @@
 // Data Range Slider //
 // ----------------- //
 @date-range-slider-font-size:                   @globalDefaultFontSize;
+@date-range-slider-value-min-width:             124px;
 @date-range-slider-value-padding:               0;
 @date-range-slider-year-state-width:            136px;
 @date-range-slider-height:                      40px;
@@ -484,20 +485,20 @@
 @check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 28px 74px;
 
 // Переменные для нового стандарта
-@check-box-icon-width:                          50px;
-@check-box-default-font-size:                   32px;
+@check-box-icon-width:                          24px;
+@check-box-default-font-size:                   24px;
 @check-box-icon-height:                         @check-box-icon-width;
 @check-box-icon-font-size:                      @check-box-icon-width;
-@check-box-icon-bottom:                         6px;
-@check-box-icon-left:                           6px;
+@check-box-icon-bottom:                         1px;
+@check-box-icon-left:                           4px;
 
-@check-box-icon-null-width:                     18px;
+@check-box-icon-null-width:                     14px;
 @check-box-icon-null-height:                    @check-box-icon-null-width;
 
-@check-box-caption-padding:                     9px 0;
-@check-box-icon-box:                            32px;
+@check-box-caption-padding:                     0 0;
+@check-box-icon-box:                            20px;
 
-@check-box-icon-box-color:                      #8991A9;
+@check-box-icon-box-color:                      #A6A6A6;
 
 // -------------- //
 // Checkbox group //
@@ -549,6 +550,7 @@
 @menu-link-menu-revert-item-container-padding:  0;
 @list-view-actions-menu-icon-width:             24px;
 @listView-check-box-width:                      24px;
+@list-view-actions-icon-top:                    14px;
 @listView-check-box-height:                     24px;
 
 @controls-Popup-closeButton-top:                10px;
@@ -567,6 +569,7 @@
 @controls-movedialog-activate-right:            76px;
 @controls-movedialog-activate-top:              10px;
 @controls-movedialog-min-width:                 536px;
+@controls-movedialog-max-width:                 536px;
 
 // PrintDialog
 @controls-printdialog-activate-right:           @controls-movedialog-activate-right;
@@ -586,6 +589,7 @@
 @controls-OperationsPanel-separator-height:     27px;
 @controls-OperationsPanel-separator-line-height:40px;
 @controls-OperationsPanel-actions-margin:       0 8px;
+@controls-OperationsPanel-actions-mark-margin:  @controls-OperationsPanel-actions-margin;
 @controls-OperationsPanel-actions-padding-left: 8px;
 @controls-OperationsMark-checkBox-margin:       0 8px 0 8px;
 @controls-OperationsPanel-bg:                   #E5ECF5;
