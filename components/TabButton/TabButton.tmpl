@@ -1,11 +1,11 @@
 <div class="controls-TabButton controls-TabButton__{{align}}-align{{checked ? ' controls-Checked__checked'}}">
    <div class="controls-TabButton__inner">
-      <div>
-         <span class="controls-TabButton__icon">
-            <ws:if data="{{_iconClass}}">
+      <div class="controls-TabButton__wrapper">
+         <ws:if data="{{_iconClass}}">
+            <span class="controls-TabButton__icon">
                <span class="{{_iconClass}}"></span>
-            </ws:if>
-         </span>
+            </span>
+         </ws:if>
          <span class="controls-TabButton__caption">
             <ws:partial template="{{sanitize}}" scope="{{ {'caption' : caption} }}" />
          </span>

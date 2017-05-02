@@ -75,6 +75,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
             var text = this.getText();
             if(text && text.length >= this._options.startCharacter) {
                this._onResetIsFired = false;
+               this._searchText = text;
             }
          }
       },

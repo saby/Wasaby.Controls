@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
 
    var
       constants = {
-         toolbarHeight: 24
+         toolbarHeight: 32
       },
       /**
        * Контрол "Богатый текстовый редактор" (БТР). Состоит из двух компонентов: {@link SBIS3.CONTROLS.RichTextArea} и {@link SBIS3.CONTROLS.RichEditorToolbar}.

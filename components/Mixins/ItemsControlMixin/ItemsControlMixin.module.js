@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/functional-helpers",
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
-   "Core/helpers/Object/isEmpty"
+   "Core/helpers/Object/isEmpty",
+   "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
    constants,
@@ -55,7 +56,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    fHelpers,
    strHelpers,
    SourceUtil,
-   isEmpty) {
+   isEmpty,
+   debounce) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -741,7 +743,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             light: true
          };
 
-         var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
+         var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = fHelpers.forAliveOnly(function() {
             debouncedDrawItemsCallback();
@@ -1391,17 +1393,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
+         this._onBeforeCollectionChange = onBeforeCollectionChange.bind(this);
          this._onAfterCollectionChange = onAfterCollectionChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._options._itemsProjection, 'onBeforeCollectionChange', this._onBeforeCollectionChange);
          this.subscribeTo(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onBeforeCollectionChange', this._onBeforeCollectionChange);
          this.unsubscribeFrom(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
        /**
@@ -2516,11 +2521,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    };
 
    var
-      onCollectionItemChange = function(eventObject, item, index, property) {
+      onBeforeCollectionChange = function() {
          this._revivePackageParams = {
             light: true,
             revive: false
          };
+      },
+
+      onCollectionItemChange = function(eventObject, item, index, property) {
          //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
          this._onUpdateItemProperty(item, property);
       },
@@ -2535,10 +2543,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-         this._revivePackageParams = {
-            light: true,
-            revive: false
-         };
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:

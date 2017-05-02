@@ -76,7 +76,11 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                /**
                 * @noShow
                 */
-               activableByClick: false
+               activableByClick: false,
+               /**
+                * @noShow
+                */
+               additionalClass: 'controls-NotificationPopup_popup'
             },
 
             _customIcon: false

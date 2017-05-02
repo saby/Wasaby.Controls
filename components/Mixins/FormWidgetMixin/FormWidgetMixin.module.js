@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
 ], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, strHelpers) {
    /**
     * Миксин, который добавляет функционал валидаторов.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/index/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -342,7 +342,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                   this._infobox.show({
                      control: target,
                      message: this._alterTooltipText(),
-                     autoHide: true
+                     delay: 0,
+                     hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
                }
             }.bind(this));

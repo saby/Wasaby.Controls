@@ -23,11 +23,11 @@
 }
 .add-editors-style(@controls-view-eip-padding-DEFAULT, @controls-view-padding-DEFAULT);
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
-.generate-padding-class(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+.generate-padding-class-EIP(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
    .controls-ListView__padding-@{val} {
       .add-editors-style(~"@{controls-view-eip-padding-@{val}}", ~"@{controls-view-padding-@{val}}");
    }
-   .generate-padding-class(@i + 1);
+   .generate-padding-class-EIP(@i + 1);
 }
-.generate-padding-class();
+.generate-padding-class-EIP();
