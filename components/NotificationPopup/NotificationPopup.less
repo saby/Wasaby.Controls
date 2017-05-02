@@ -3,6 +3,9 @@
    border-left: @controls-NotificationPopup-border-left;
    border-right: @controls-NotificationPopup-border-right;
    border-bottom: @controls-NotificationPopup-border-bottom;
+}
+
+.controls-NotificationPopup_popup {
    max-width: @controls-NotificationPopup-max-width;
    min-width: @controls-NotificationPopup-min-width;
 }
@@ -11,6 +14,9 @@
    padding: @controls-NotificationPopup-header-padding;
    .flexbox();
    .align-items(@align: center);
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   overflow: hidden;
 }
 
 .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {

@@ -1,11 +1,12 @@
 
 define('js!WSControls/Buttons/Button', [
    'Core/constants',
+   'Core/Sanitize',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
    'tmpl!WSControls/Buttons/resources/contentTemplate',
    'css!WSControls/Buttons/resources/ButtonCommonStyles'
-], function(constants, ButtonBase, dotTplFn, contentTemplate) {
+], function(constants, Sanitize, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
 
@@ -102,7 +103,8 @@ define('js!WSControls/Buttons/Button', [
       },
 
       setCaption: function(caption){
-          Button.superclass.setCaption.call(this, caption);
+         caption = Sanitize(caption, {validNodes: {component: true}});
+         Button.superclass.setCaption.call(this, caption);
          var btnText = $('.js-controls-Button__text', this._container.get(0));
          btnText.toggleClass('controls-Button__emptyCaption', !caption);
          btnText.html(caption || '');
@@ -157,16 +159,8 @@ define('js!WSControls/Buttons/Button', [
         *    btn.setIcon('sprite:icon16 icon-Alert icon-done');
         * </pre>
         */
-      _drawIcon: function(icon) {
-         var content,
-             caption = $('.js-controls-Button__text', this._container.get(0)).html();
-         if (!icon) {
-             content = $('<span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
-         } else {
-             content = $('<i class="controls-Button__icon js-controls-Button__icon' + this._options._iconClass + '"></i><span class="controls-Button__text js-controls-Button__text">' + caption + '</span>');
-         }
-         $('.controls-Button__text', content).toggleClass('controls-Button__emptyCaption', !caption);
-         this._container.html(content);
+      _drawIcon: function() {
+          this._container.get(0).innerHTML = contentTemplate(this._options);
       },
 
       setEnabled: function(enabled){

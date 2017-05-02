@@ -183,9 +183,20 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          
       },
       _drawSelectedItems: function() {
-         var self = this;
+         var self = this,
+            items;
          this.getSelectedItems(true).addCallback(function(list){
-            self.setItems(list || []);
+            items = self.getItems();
+         
+            if(list) {
+               self.setItems(list);
+            } else if(items) {
+               // TODO перевести на observableList, для этого необходимо отказать от получание записей по методу getRecordById
+               items.clear();
+               self.setItems(items);
+            } else {
+               self.setItems(new List());
+            }
             return list;
          });
       },

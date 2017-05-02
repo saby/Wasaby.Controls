@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.OperationMove', [
    'js!SBIS3.CONTROLS.Link',
+   'js!SBIS3.CONTROLS.Action.List.InteractiveMove',
    'i18n!SBIS3.CONTROLS.OperationMove'
-], function(Link) {
+], function(Link, InteractiveMove) {
    /**
     * Операция перемещения.
     *
@@ -51,15 +52,19 @@ define('js!SBIS3.CONTROLS.OperationMove', [
             action: undefined
          }
       },
-
-      $constructor: function() {
+      init: function () {
+         OperationMove.superclass.init.call(this);
+         if (!this._options.action) {
+            this._options.action = new InteractiveMove({
+               linkedObject: this._options.linkedView
+            });
+         }
       },
       _clickHandler: function() {
-         if (this._options.action) {
-            this._options.action.execute();
-         } else {
-            this._options.linkedView.moveRecordsWithDialog();
-         }
+         this._options.action.execute();
+      },
+      setLinkedView: function (val) {
+         this._options.action.setLinkedObject(val)
       }
    });
 

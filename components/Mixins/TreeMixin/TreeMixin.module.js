@@ -15,8 +15,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/functional-helpers",
    "Core/IoC",
+   "Core/helpers/Object/isEmpty",
+   "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC) {
+], function ( cFunctions, cMerge, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -205,7 +207,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (item.isNode()){
                cfg.hasNodes = true;
             }
-            if (!Object.isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
+            if (!isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
                if (prevGroupId != group) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
@@ -817,7 +819,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          else {
             var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
             for (var i = 0; i < items.length; i++) {
-               if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup) {
+               if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
                      prevGroupId = groupId;
                      if (this._getGroupItems(groupId).length <= items.length) {
@@ -989,7 +991,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var
             filter = cFunctions.clone(this._options.filter),
             parentProperty;
-         if ((this._options.deepReload || deepReload) && !Object.isEmpty(this._options.openedPath)) {
+         if ((this._options.deepReload || deepReload) && !isEmpty(this._options.openedPath)) {
             parentProperty = this._options.parentProperty;
             if (!(filter[parentProperty] instanceof Array)) {
                filter[parentProperty] = [];

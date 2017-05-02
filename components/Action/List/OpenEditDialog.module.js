@@ -632,16 +632,23 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _getDialogConfig: function () {
          var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
-            self = this;
+             self = this;
          return cMerge(config, {
             handlers: {
                onAfterClose: function (e, meta) {
-                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, this._record);
-                  self._dialog = undefined;
-               }
+                  self._clearVariables();
+               },
+               //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
+               //onAfterClose не будет, смотрим на destroy
+               onDestroy: self._clearVariables.bind(self)
             }
          });
+      },
+
+      _clearVariables: function() {
+         this._isExecuting = false;
+         this._dialog = undefined;
       },
 
       destroy: function() {

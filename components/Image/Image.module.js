@@ -329,10 +329,20 @@ define('js!SBIS3.CONTROLS.Image',
                    * @cfg {Boolean} Устанавливает использование web-камеры для загрузки изображения
                    * @example
                    * <pre>
-                   *     <option name="imageBar">webCam</option>
+                   *     <option name="webCam">true</option>
                    * </pre>
                    */
-                  webCam: true
+                  webCam: true,
+                  /**
+                   * @cfg {Boolean} Устанавливает способ установки src в тег img,
+                   *    установка данной опции в false обеспечит более быструю смену изображения,
+                   *    но возлагает на прикладного программиста ответсвенность за кеширование изображений
+                   * @example
+                   * <pre>
+                   *     <option name="avoidCache">false</option>
+                   * </pre>
+                   */
+                  avoidCache: true
                },
                _imageBar: undefined,
                _imageUrl: '',
@@ -352,7 +362,9 @@ define('js!SBIS3.CONTROLS.Image',
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
                //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
-               this._setImage = this._setImage.debounce(0);
+               if (this._options.avoidCache) {
+                  this._setImage = this._setImage.debounce(0);
+               }
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
@@ -543,15 +555,34 @@ define('js!SBIS3.CONTROLS.Image',
             _loadImage: function(url) {
                var
                   self = this;
-               //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-               cHelpers.reloadImage(this._image, url)
-                  .addCallback(function(){
-                     self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
-                     self._onChangeImage();
-                  })
-                  .addErrback(function(){
-                     self._onErrorLoad();
-                  });
+               if (this._options.avoidCache) {
+                  //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
+                  cHelpers.reloadImage(this._image, url)
+                     .addCallback(function(){
+                        self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                        self._onChangeImage();
+                     })
+                     .addErrback(function(){
+                        self._onErrorLoad();
+                     });
+               } else {
+                  var
+                     img = this._image[0],
+                     onLoadHandler = function(){
+                        self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
+                        self._onChangeImage();
+                        img.removeEventListener('load',onLoadHandler);
+                        img.removeEventListener('error',onErrorHandler);
+                     },
+                     onErrorHandler = function(){
+                        self._onErrorLoad();
+                        img.removeEventListener('error',onErrorHandler);
+                        img.removeEventListener('load',onLoadHandler);
+                     };
+                  img.addEventListener('load', onLoadHandler);
+                  img.addEventListener('error', onErrorHandler);
+                  img.setAttribute('src', url);
+               }
             },
             _showEditDialog: function(imageType) {
                var

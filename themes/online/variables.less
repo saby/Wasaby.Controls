@@ -551,8 +551,8 @@
 // Checkbox group //
 // -------------- //
 
-@check-box-group-horizontal-item-margin:        @button-group-horizontal-item-margin;
-@check-box-group-vertical-item-margin:          @button-group-vertical-item-margin;
+@check-box-group-horizontal-item-margin:        0 12px 0 0;
+@check-box-group-vertical-item-margin:          0 0 8px 0;
 
 
 
@@ -565,6 +565,8 @@
 @switcher-width:                                46px;
 @switcher-height:                               24px;
 @switcher-line-height:                          @switcher-height;
+@switcherline-height:                           2px;
+
 @switcher-line-color:							@gray-color;
 @switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
@@ -1110,7 +1112,6 @@
 @suggest-loading-height:                        16px;
 @suggest-loading-width:                         @suggest-loading-height;
 @suggest-loading-right:                         3px;
-@suggest-loading-top:                           3px;
 
 @suggest-picker-border:                         1px solid #cccccc;
 @suggest-picker-border-radius:                  0;
@@ -1332,6 +1333,7 @@
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
+@date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
@@ -1433,9 +1435,9 @@
 
 @date-range-choose-years-only-curent-year-color:   @darkcyan-color;
 
-@date-range-choose-home-button-size:            24px;
+@date-range-choose-home-button-size:            28px;
 @date-range-choose-home-button-font-size:       14px;
-@date-range-choose-home-button-line-height:     22px;
+@date-range-choose-home-button-line-height:     26px;
 @date-range-choose-home-color:                  @date-range-choose-color;
 @date-range-choose-home-button-margin:          0 auto 12px;
 
@@ -2299,6 +2301,7 @@
 @controls-movedialog-activate-right:               38px;
 @controls-movedialog-activate-top:                 8px;
 @controls-movedialog-min-width:                    auto;
+@controls-movedialog-max-width:                    400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 @controls-movedialog-min-width:                    auto;

@@ -183,6 +183,9 @@ define('js!SBIS3.CONTROLS.SearchController',
             view._options.hierarchyViewMode = false;
          } else {
             view.setExpand(false);
+            /* Закрываем ветки после сброса поиска через опцию,
+               чтобы не вызвалась лишняя перерисовка */
+            view._options.openedPath = {};
          }
          //Если мы ничего не искали, то и сбрасывать нечего
          if (this._firstSearch) {

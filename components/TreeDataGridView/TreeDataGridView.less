@@ -142,6 +142,7 @@
 
       .controls-TreeView__ellipsis-container {
          float: left;
+         white-space: nowrap;
          height: @tree-view-ellipsis-wrapper-height;
       }
 
@@ -230,16 +231,16 @@
 }
 
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
-.generate-padding-class(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+.generate-padding-class-TDGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
    :not(.controls-ListView__multiselect).controls-TreeDataGridView.controls-ListView__padding-@{val} {
       .controls-TreeView__folderFooterContainer {
          padding-left: ~"@{controls-view-padding-@{val}}";
       }
    }
-   .generate-padding-class(@i + 1);
+   .generate-padding-class-TDGV(@i + 1);
 }
-.generate-padding-class();
+.generate-padding-class-TDGV();
 
 /* Отступы для классов .controls-TreeDataGridView__withPhoto-S|M|L */
 .generate-photo-padding-class(@i: 1) when (@i =< length(@controls-view-photo-padding-variants)) {
@@ -315,5 +316,6 @@
    flex-direction: row;
    .controls-DataGridView__columnValue, .controls-TreeView__folderTitle {
       width: 100%;
+      min-width: 0;
    }
 }

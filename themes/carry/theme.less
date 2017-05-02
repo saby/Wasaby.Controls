@@ -18,11 +18,14 @@
 
 .controls__filterButton {
    .controls__filterButton-button {
-      &.icon-size {
+      .icon-size {
          font-size: 32px !important;
          width: 32px;
          height: 32px;
       }
+   }
+   .controls__filterButton__filterLine-text {
+      line-height: @button-height;
    }
 }
 
@@ -70,8 +73,8 @@
 // код лежит здесь, т.к. Engine не поддерживает тематизацию
 .controls-Browser {
    .engine-Browser__path {
-      display: flex;
-      justify-content: flex-start;
+      .flexbox();
+      .justify-content(flex-start);
 
       .controls-BreadCrumbs {
          top: 0;
@@ -415,7 +418,6 @@
    }
    .controls-Browser__breadCrumbs {
       max-height: @browser-path-height;
-      top: -7px;
    }
    .controls-Browser__backButton {
       max-height: @browser-path-height;
