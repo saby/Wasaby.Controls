@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.Scrollbar',
-      'html!SBIS3.CONTROLS.ScrollContainer',
+      'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
