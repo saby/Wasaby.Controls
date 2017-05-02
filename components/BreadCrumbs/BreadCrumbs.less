@@ -98,11 +98,12 @@
 		}
 	}
 
-   .controls-MenuItem{
+   .controls-MenuItem {
       .flexbox();
    }
    &.controls-Menu__Popup {
-      padding: 4px 0;
+      padding: @bread-crumbs-menu-padding;
+      max-width: @bread-crumbs-menu-max-width;
    }
    &.ws-disabled {
       .controls-BreadCrumbs__crumb, .controls-BreadCrumbs__crumb:hover {
@@ -117,6 +118,12 @@
          }
       }
    }
+}
+
+.controls-BreadCrumbs__menuTitle {
+   width: 100%;
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
 .ws-is-webkit, .ws-is-mobile-chrome-ios {
