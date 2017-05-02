@@ -678,7 +678,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemsSortMethod: undefined,
             itemsFilterMethod: undefined,
             easyGroup: false,
-            task1173537554: false
+            task1173537554: false,
+            task1173770359: false
          },
          _loader: null
 
@@ -1546,7 +1547,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              //TODO удалить после 3.7.5
-             if (this.hasEventHandlers('onBeforeDataLoad')) {
+             if (this.hasEventHandlers('onBeforeDataLoad') && !this._options.task1173770359) {
                 IoC.resolve('ILogger').error('3.7.5 onBeforeDataLoad', 'Событие устарело и вскоре будет удалено. Вместо него используйте onBeforeProviderCall из источника данных');
              }
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
