@@ -44,12 +44,9 @@ define('js!SBIS3.CONTROLS.FilterController', [
       
             /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
             var filterChangeHandler = function() {
-                  if(this === filterButton) {
-                     view.setActive(true);
-                     if(fastDataFilter) {
-                        syncFilters(filterButton, fastDataFilter);
-                     }
-                  } else if(filterButton) {
+                  if (this === filterButton && fastDataFilter) {
+                     syncFilters(filterButton, fastDataFilter);
+                  } else if (filterButton) {
                      syncFilters(fastDataFilter, filterButton);
                   }
          

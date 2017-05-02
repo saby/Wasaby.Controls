@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.Browser', [
    'js!SBIS3.CONTROLS.ColumnsController',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'Core/core-instance'
-], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance){
+   'Core/core-instance',
+   'Core/helpers/Object/find'
+], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance, cFind){
    'use strict';
 
    /**
@@ -323,6 +324,9 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._fastDataFilter = this._getFastDataFilter();
          
          if (this._filterButton) {
+            this.subscribeTo(this._filterButton, 'onApplyFilter', function() {
+               this.getView().setActive(true);
+            });
             if(this._options.historyId) {
                this._bindFilterHistory();
             } else {
@@ -332,7 +336,9 @@ define('js!SBIS3.CONTROLS.Browser', [
             this._notifyOnFiltersReady();
          }
          
-         if(this._filterButton || this._fastDataFilter) {
+         if( (this._filterButton || this._fastDataFilter) &&
+            /* Новый механизм включаем, только если нет биндов на структуру фильтров */
+            !cFind(this._filterButton._getOption('bindings'), function(obj) {return obj.propName === 'filterStructure'})) {
             this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
          }
 
