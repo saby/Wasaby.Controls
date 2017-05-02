@@ -116,10 +116,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              var fb = this._options.filterButton,
                  self = this;
 
-             this.subscribeTo(fb, 'onResetFilter', function() {
-                self.clearActiveFilter();
-                if (!self.isNowSaving()) {
-                   self.saveToUserParams();
+             this.subscribeTo(fb, 'onResetFilter', function(event, internal) {
+                if(!internal) {
+                   self.clearActiveFilter();
+                   if (!self.isNowSaving()) {
+                      self.saveToUserParams();
+                   }
                 }
              });
 
