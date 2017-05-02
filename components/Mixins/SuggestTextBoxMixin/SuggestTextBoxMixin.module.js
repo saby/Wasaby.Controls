@@ -51,7 +51,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {String} Имя параметра фильтрации для поиска
              */
-            searchParam : ''
+            searchParam : '',
+            /**
+             * @cfg {Boolean} Использовать механизм смены неверной раскладки
+             */
+            keyboardLayoutRevert: true
          }
       },
       $constructor: function () {
@@ -139,6 +143,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             this._searchController = new SearchController({
                view: this.getList(),
                searchForm: this,
+               keyboardLayoutRevert: this._options.keyboardLayoutRevert,
                searchParamName: this._options.searchParam,
                doNotRespondOnReset: true,
                searchFormWithSuggest: true
