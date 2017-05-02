@@ -883,14 +883,24 @@ define('js!SBIS3.CONTROLS.ListView',
                this.setGroupBy(this._options.groupBy, false);
             }
             this._prepareInfiniteScroll();
-            
+            ListView.superclass.init.call(this);
             if (this._options.virtualScrolling){
                this._virtualScrollController = new VirtualScrollController({
-                  view: this
+                  view: this,
+                  projection: this._getItemsProjection(),
+                  beginWrapper: $('.controls-ListView__virtualScrollTop', this.getContainer()),
+                  endWrapper: $('.controls-ListView__virtualScrollBottom', this.getContainer()),
+                  viewport: this._getScrollWatcher().getScrollContainer(),
+                  viewContainer: this.getContainer(),
+                  itemsContainer: this._getItemsContainer()
                });
+               this.subscribeTo(this._virtualScrollController, 'onItemsAdd', function(event, items, at){
+                  this._addItems(items, at);
+               }.bind(this));
+               this.subscribeTo(this._virtualScrollController, 'onItemsRemove', function(event, items){
+                  this._removeItems(items);
+               }.bind(this));
             }
-
-            ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
 
