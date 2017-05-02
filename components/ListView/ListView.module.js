@@ -1932,13 +1932,31 @@ define('js!SBIS3.CONTROLS.ListView',
          beforeNotifyOnItemClick: function() {
             var handler = this._notifyOnItemClick;
             return function() {
-               var args = arguments;
+               var
+                  args = arguments,
+                  self = this,
+                  result = new Deferred();
+               // https://inside.tensor.ru/opendoc.html?guid=b5d015f2-4724-4784-aee2-8be010625b41&des=
+               // Согласно текущей реализации deferred'ов, подобный код кидает исключение:
+               // var a = new Deferred(), b = new Deferred();
+               // a.addCallback(function(){ return b });
+               // a.callback();
+               // b.addCallback(function(){});
                if (this._hasEditInPlace()) {
-                  return this._getEditInPlace().addCallback(function(editInPlace) {
-                     return editInPlace.endEdit(true);
-                  }).addCallback(function() {
-                     return handler.apply(this, args)
-                  }.bind(this));
+                  this._getEditInPlace().addCallback(function(editInPlace) {
+                     editInPlace.endEdit(true).addCallback(function() {
+                        var
+                           handlerRes = handler.apply(self, args);
+                        if (handlerRes instanceof Deferred) {
+                           handlerRes.addCallback(function(res) {
+                              result.callback(res);
+                           });
+                        } else {
+                           result.callback(handlerRes);
+                        }
+                     });
+                  });
+                  return result;
                } else {
                   return handler.apply(this, args)
                }
