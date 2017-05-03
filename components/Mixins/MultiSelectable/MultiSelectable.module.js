@@ -587,6 +587,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             if(newMultiselect === false && selectedKeys.length > 1) {
                this.setSelectedKeys(selectedKeys);
             }
+            this._notifyOnPropertyChanged('multiselect');
          }
       },
 
