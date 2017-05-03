@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
    "Core/constants",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    "i18n!SBIS3.CONTROLS.RichEditor"
-], function ( constants,smiles) {
+], function ( constants, smiles) {
 
    'use strict';
 
@@ -354,6 +354,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._codeSample(this);
             }
          },
+         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 170
       }
    ];
