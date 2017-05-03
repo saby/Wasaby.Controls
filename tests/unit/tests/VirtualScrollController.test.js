@@ -195,5 +195,61 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController'], function(VirtualScrollCont
             assert.deepEqual(newState, { top: [ 0, 9 ], bottom: [ 21, 30 ] });
          });
       });
+
+      describe('._getPage', function() {
+         //scrollTop, viewportHeight, additionalHeight, pages
+         it('1st page', function() {
+            newState = controller._getPage(0, 500, 0, pages);
+            assert.equal(newState, 0);
+         });
+         it('2nd page', function() {
+            newState = controller._getPage(500, 500, 0, pages);
+            assert.equal(newState, 1);
+         });
+         it('End of 2nd page', function() {
+            newState = controller._getPage(999, 500, 0, pages);
+            assert.equal(newState, 1);
+         });
+         it('Last page', function() {
+            newState = controller._getPage(99999999, 500, 0, pages);
+            assert.equal(newState, 14);
+         });
+         it('Additional height', function() {
+            newState = controller._getPage(4000, 500, 1001, pages);
+            assert.equal(newState, 3);
+         });
+      });
+
+      describe('._getItemsToRemove', function() {
+         //range, offset, projCount
+         it('1 element', function() {
+            newState = controller._getItemsToRemove([0, 0], 0, 100);
+            assert.deepEqual(newState, [0]);
+         });
+         it('5 elements', function() {
+            newState = controller._getItemsToRemove([0, 5], 0, 100);
+            assert.deepEqual(newState, [0, 1, 2, 3, 4, 5]);
+         });
+         it('Range bigger than count', function() {
+            newState = controller._getItemsToRemove([0, 5], 0, 1);
+            assert.deepEqual(newState, [0, 1]);
+         });
+      });
+
+      describe('._getItemsToAdd', function() {
+         //range, offset, projCount
+         it('1 element', function() {
+            newState = controller._getItemsToAdd([0, 0], 0, 100);
+            assert.deepEqual(newState, [0]);
+         });
+         it('5 elements', function() {
+            newState = controller._getItemsToAdd([0, 5], 0, 1);
+            assert.deepEqual(newState, [0, 1]);
+         });
+         it('Range bigger than count', function() {
+            newState = controller._getItemsToAdd([0, 5], 0, 1);
+            assert.deepEqual(newState, [0, 1]);
+         });
+      });
    });
 });

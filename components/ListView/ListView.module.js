@@ -884,24 +884,39 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
+            
             if (this._options.virtualScrolling){
-               this._virtualScrollController = new VirtualScrollController({
-                  view: this,
-                  projection: this._getItemsProjection(),
-                  beginWrapper: $('.controls-ListView__virtualScrollTop', this.getContainer()),
-                  endWrapper: $('.controls-ListView__virtualScrollBottom', this.getContainer()),
-                  viewport: this._getScrollWatcher().getScrollContainer(),
-                  viewContainer: this.getContainer(),
-                  itemsContainer: this._getItemsContainer()
-               });
-               this.subscribeTo(this._virtualScrollController, 'onItemsAdd', function(event, items, at){
-                  this._addItems(items, at);
-               }.bind(this));
-               this.subscribeTo(this._virtualScrollController, 'onItemsRemove', function(event, items){
-                  this._removeItems(items);
-               }.bind(this));
+               this._initVirtualScrolling();
             }
             this._initLoadMoreButton();
+         },
+
+         _initVirtualScrolling: function(){
+            this._virtualScrollController = new VirtualScrollController({
+               view: this,
+               projection: this._getItemsProjection(),
+               beginWrapper: $('.controls-ListView__virtualScrollTop', this.getContainer()),
+               endWrapper: $('.controls-ListView__virtualScrollBottom', this.getContainer()),
+               viewport: this._getScrollWatcher().getScrollContainer(),
+               viewContainer: this.getContainer(),
+               itemsContainer: this._getItemsContainer()
+            });
+
+            this.subscribeTo(this._virtualScrollController, 'onItemsAdd', function(event, indexes, at){
+               var items = [];
+               for (var i = 0; i < indexes.length; i++) {
+                  items.push(this._getItemsProjection().at(indexes[i]));
+               }
+               this._addItems(items, at);
+            }.bind(this));
+
+            this.subscribeTo(this._virtualScrollController, 'onItemsRemove', function(event, indexes){
+               var items = [];
+               for (var i = 0; i < indexes.length; i++) {
+                  items.push(this._getItemsProjection().at(indexes[i]));
+               }
+               this._removeItems(items);
+            }.bind(this));
          },
 
          _bindEventHandlers: function(container) {

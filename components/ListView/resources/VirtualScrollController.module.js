@@ -32,8 +32,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          init: function () {
             var view = this._options.view;
             VirtualScrollController.superclass.init.call(this);
-            this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, this._virtualPages.length);
-            this._options.viewport[0].addEventListener('scroll', this._scrollHandler.bind(this), { passive: true });
+            // В начале только одна страница
+            this._currentWindow = this._getRangeToShow(0, BATCH_SIZE, 1);
+            if (this._options.viewport) {
+               this._options.viewport[0].addEventListener('scroll', this._scrollHandler.bind(this), { passive: true });
+            }
          },
 
          _scrollHandler: function (e, scrollTop) {
@@ -56,12 +59,10 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          _getPage: function (scrollTop, viewportHeight, additionalHeight, pages) {
             for (var i = 0; i < pages.length; i++) {
-               var pageOffset = pages[i].offset;
-               if (pageOffset + additionalHeight >= scrollTop) {
+               if (pages[i].offset + additionalHeight >= scrollTop) {
                   return i;
                }
             }
-
             return pages.length - 1;
          },
 
@@ -89,8 +90,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
 
             // разница между промежутками
-            // если начало списка вверху то, top - элменты которые нужно убрать, bottom - элементы которые нужно добавить
-            // если список снизу вверх - то наоборот 
             var diff = this._getDiff(this._currentWindow, newWindow);
 
             // нет разницы - нечего делать
@@ -104,9 +103,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                console.log('widnow', newWindow);
                console.log('diff.top', diff.top);
                console.log('diff.bottom', diff.bottom);
+               console.log('WINDOWS. Current:', this._currentWindow[0], this._currentWindow[1], 'New:', newWindow[0], newWindow[1]);
             }
 
-            console.log('WINDOWS. Current:', this._currentWindow[0], this._currentWindow[1], 'New:', newWindow[0], newWindow[1]);
 
             // Прокрутка к концу списка
             if ((this._currentWindow[0] < newWindow[0] || this._currentWindow[0] > newWindow[1]) && this._currentWindow[1] > newWindow[0]) {
@@ -148,12 +147,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
             // удаляем записи
             if (haveToRemove) {
-               items = this._getItemsToRemove(segments[0], removeOffset, this._options.projection);
+               items = this._getItemsToRemove(segments[0], removeOffset, projCount);
                this._notify('onItemsRemove', items);
             }
             // добавляем записи
             if (haveToAdd) {
-               items = this._getItemsToAdd(segments[1], addOffset, this._options.projection);
+               items = this._getItemsToAdd(segments[1], addOffset, projCount);
                this._processingAdd = true;
                this._notify('onItemsAdd', items, at);
                this._processingAdd = false;
@@ -245,23 +244,18 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @param  {Number} отступ
           * @param  {IList} проекция
           */
-         _getItemsToRemove: function (range, offset, projection) {
+         _getItemsToRemove: function (range, offset, count) {
             var toRemove = [],
                from = range[0],
-               to = range[1],
-               projCount = projection.getCount(),
-               prjItem, index;
+               to = range[1] < count ? range[1] : count,
+               index;
             for (var i = from; i <= to; i++) {
                if (this._options.mode == 'down') {
                   index = i;
                } else {
-                  index = projCount - i - 1 + offset;
+                  index = count - i - 1 + offset;
                }
-               prjItem = projection.at(index);
-               if (!prjItem) {
-                  break;
-               }
-               toRemove.push(prjItem);
+               toRemove.push(index);
             }
             if (this._DEBUG) {
                console.log('remove from', from, 'to', to);
@@ -275,12 +269,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @param  {Number} отступ
           * @param  {IList} проекция
           */
-         _getItemsToAdd: function (range, offset, projection) {
+         _getItemsToAdd: function (range, offset, count) {
             var toAdd = [],
                from = range[0],
-               to = range[1],
-               projCount = projection.getCount(),
-               prjItem, index;
+               to = range[1] < count ? range[1] : count,
+               index;
 
             offset = offset || this._notAddedAmount;
 
@@ -288,13 +281,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                if (this._options.mode == 'down') {
                   index = i;
                } else {
-                  index = projCount - i - 1 + offset;
+                  index = count - i - 1 + offset;
                }
-               prjItem = projection.at(index);
-               if (!prjItem) {
-                  break;
-               }
-               toAdd.push(prjItem);
+               toAdd.push(index);
             }
             if (this._options.mode == 'up') {
                toAdd.reverse();
@@ -463,18 +452,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          getCurrentRange: function () {
             return this._currentWindow;
-         },
-
-         isInShownRange: function (index) {
-            var allow;
-            this._notAddedAmount += 1;
-            if (index < BATCH_SIZE || this._processingAdd) {
-               allow = true;
-            } else {
-               index = this._options.projection.getCount() - index;
-               allow = index > this._currentWindow[0];
-            }
-            return allow;
          }
 
       });
