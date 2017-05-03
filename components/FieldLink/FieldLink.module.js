@@ -109,7 +109,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *       <b>Через автодополнение.</b>
         *       Автодополнение - это функционал отображения возможных результатов поиска по введенным символам. По умолчанию для поля связи автодополнение отключено.
         *       Чтобы при печати в поле ввода отображались релевантные для выбора значения, нужно для поля связи установить конфигурацию автодополнения в опциях {@link list}, {@link listFilter} и {@link text}.
-        *       Чтобы установить временную задержку перед началом поиска релевантного значения, используют опцию {@link delay}.
         *       Чтобы отображать полный список значений автодополнения при переходе фокуса на контрол, используют опцию {@link autoShow}.
         *       Демонстрацию работы автодополнения с полем связи вы можете найти в блоке интерактивных примеров в описании к классу.
         *    </li>
@@ -154,10 +153,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__hideSelector Скрывает отображение (устанавливает CSS-свойство "display:none") кнопки, с помощью которой производят открытие справочников.
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает отображение (устанавливает CSS-свойство "display:none") контрола "Поле связи", если выполнены два условия: опция {@link enabled}=false и отсутствуют выбранные записи.
         *
-        * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
+        * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect selectedIndex
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
-        * @ignoreEvents onListItemSelect onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        * @ignoreEvents onListItemSelect onDataLoad onDataLoadError onBeforeDataLoad onDrawItems onFilterBuild onItemsReady
         *
         * @control
         * @public
