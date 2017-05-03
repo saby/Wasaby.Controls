@@ -1,7 +1,12 @@
 /**
  * Created by am.gerasimov on 12.04.2017.
  */
-define(['js!SBIS3.CONTROLS.Utils.ItemsSelection', 'js!WS.Data/Entity/Model'], function (ItemsSelection, Model) {
+define([
+   'js!SBIS3.CONTROLS.Utils.ItemsSelection',
+   'js!WS.Data/Entity/Model',
+   'js!SBIS3.CONTROLS.Action.SelectorAction',
+   'js!SBIS3.CONTROLS.SelectorButton'
+], function (ItemsSelection, Model, SelectorAction, SelectorButton) {
    'use strict';
    
    describe('SBIS3.CONTROLS.Utils.ItemsSelection', function () {
@@ -60,6 +65,22 @@ define(['js!SBIS3.CONTROLS.Utils.ItemsSelection', 'js!WS.Data/Entity/Model'], fu
             assert.isTrue(
                ItemsSelection.checkItemForSelect(getModel(null, null), getModel(idPropValue, displayPropValue), idProp, displayProp, false)
             )
+         });
+         
+      });
+   
+      describe('ItemsSelection::initSelectorAction', function() {
+         var action = new SelectorAction();
+         var selectorButton = new SelectorButton();
+         
+         ItemsSelection.initSelectorAction(action, selectorButton);
+   
+         it('has event handler for onExecuted', function() {
+            assert.isTrue(action.hasEventHandlers('onExecuted'))
+         });
+   
+         it('has event handler for onExecute', function() {
+            assert.isTrue(action.hasEventHandlers('onExecute'))
          });
          
       });
