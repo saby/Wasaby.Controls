@@ -325,7 +325,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          
          if (this._filterButton) {
             this.subscribeTo(this._filterButton, 'onApplyFilter', function() {
-               this.getView().setActive(true);
+               self.getView().setActive(true);
             });
             if(this._options.historyId) {
                this._bindFilterHistory();
