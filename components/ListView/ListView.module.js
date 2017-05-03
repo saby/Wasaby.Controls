@@ -244,6 +244,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Событие происходит при вызове команды {@link beginAdd} и при <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/'>добавлении по месту</a> из пользовательского интерфейса.
           * В обработчике события можно установить инициализирующие значения полей для создаваемого элемента коллекции.
           * @param {Core/EventObject} eventObject Дескриптор события.
+          * @returns {Object|Deferred} Object - опции создания записи. Deferred - используется для самостоятельной подготовки добавляемой записи. Из Deferred необходимо обязательно возвращать запись, открываемую на добавление.
           * @example
           * В качестве результата события передают Object или экземпляр класса {@link WS.Data/Entity/Model}.
           * <pre>
@@ -2149,6 +2150,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _isModeAutoAdd: function() {
+            return this._options.editMode.indexOf('autoadd') !== -1;
+         },
+
          _getEditInPlaceConfig: function() {
             var
                config = {
@@ -2163,7 +2168,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   element: $('<div>'),
                   opener: this,
                   endEditByFocusOut: this._options.editMode.indexOf('toolbar') === -1,
-                  modeAutoAdd: this._options.editMode.indexOf('autoadd') !== -1,
+                  modeAutoAdd: this._isModeAutoAdd(),
                   modeSingleEdit: this._options.editMode.indexOf('single') !== -1,
                   handlers: {
                      onItemValueChanged: function(event, difference, model) {
@@ -3552,9 +3557,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see beginAdd
           * @see activateItem
           */
-         _commitEdit: function() {
+         _commitEdit: function(checkAutoAdd) {
+            var
+               self = this;
             return this._getEditInPlace().addCallback(function(editInPlace) {
-               return editInPlace.endEdit(true);
+               // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
+               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
             });
          },
          destroy: function () {
