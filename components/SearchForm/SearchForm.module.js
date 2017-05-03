@@ -114,6 +114,24 @@ define('js!SBIS3.CONTROLS.SearchForm', [
          SearchForm.superclass._onListItemSelect.apply(this, arguments);
          this.applySearch(true);
       },
+   
+      _setPickerConfig: function() {
+         var config =  SearchForm.superclass._setPickerConfig.apply(this, arguments),
+            self = this;
+      
+         config.parentContainer = this.getContainer().parent();
+         config.className = 'controls-searchForm__suggest';
+         config.closeButton = true;
+         config.handlers = {
+            onShow: function() {
+               self.getContainer().css('z-index', parseInt(self._picker.getContainer().css('z-index'), 10) + 1);
+            },
+            onClose: function() {
+               self.getContainer().css('z-index', '');
+            }
+         };
+         return config;
+      },
 
       /**
        * Обработчик нажатия клавиши
