@@ -157,11 +157,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
          if(this._options.useSelectorAction) {
             this.subscribe('onInit', function () {
-               this.subscribeTo(this._getSelectorAction(), 'onExecuted', function (event, meta, result) {
-                  if (result) {
-                     self.setSelectedItems(result);
-                  }
-               });
+               ItemsSelectionUtil.initSelectorAction(this._getSelectorAction(), this);
             });
          }
       },

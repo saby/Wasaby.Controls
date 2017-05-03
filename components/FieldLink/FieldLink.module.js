@@ -396,17 +396,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  });
 
              if(this._options.useSelectorAction) {
-                this.subscribeTo(this._getSelectorAction(), 'onExecuted', function(event, meta, result) {
-                   /* После выбора из панели выбора, надо фокус возвращать в поле связи:
-                      после закрытия панели фокус будет проставляться на компонент, который был активным до этого (механизм WindowManager),
-                      последним активным компонентом была кнопка открытия справочника/ссылка открывающая справочник,
-                      но по стандарту курсор должен проставиться в поле ввода поля связи после выбора из панели,
-                      поэтому руками устанавливаем фокус в поле связи  */
-                   self.setActive(true);
-                   if(result) {
-                      self.setSelectedItems(result);
-                   }
-                });
+                ItemsSelectionUtil.initSelectorAction(this._getSelectorAction(), this);
              }
 
              if(this._options.multiselect) {
