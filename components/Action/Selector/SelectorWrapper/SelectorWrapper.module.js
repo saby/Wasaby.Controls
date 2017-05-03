@@ -144,7 +144,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
              2) Если запись не выделена, клик по листу должен его выбирать, по записи должно происходить проваливание */
             if(!linkedObject._isEmptySelection()) {
                if(!isBranch) {
-                  linkedObject.addItemsSelection([id]);
+                  linkedObject.toggleItemsSelection([id]);
                }
             } else if(!isBranch) {
                this._applyItemSelect(item);
