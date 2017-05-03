@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @returns {onColumnsChangeResult} Позволяет определить, что выполнять после установки колонок - перерисовку или перезагрузку.
        */
       /**
-       * @typedef {Object} СolumnsConfigObject
+       * @typedef {Object} ColumnsConfigObject
        * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
        * Поля записи:
        * <ol>
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             showCheckBoxes: false,
 	        contentTpl: null,
             /**
-             * @cfg {СolumnsConfigObject} Устанавливает параметры для Панели редактирования колонок.
+             * @cfg {ColumnsConfigObject} Устанавливает параметры для Панели редактирования колонок.
              * @remark
              * Вызов панели производят кликом по иконке с шестерёнкой, которая расположена справа от строки поиска.
              * Иконка отображается, когда в опции установлено значение.
