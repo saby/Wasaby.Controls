@@ -231,14 +231,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
 
          if (this._options.parentContainer) {
-            var appendContainer;
-            if (this._options.target) {
-               appendContainer = this._options.target.closest('.' + this._options.parentContainer)
-            }
-            else {
-               appendContainer = $('.' + this._options.parentContainer);
-            }
-            container.appendTo(appendContainer);
+            container.appendTo(this._getParentContainer());
          }
          else {
             container.appendTo('body');
@@ -303,7 +296,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _checkFixed: function(element){
          element = $(element);
          while (element.parent().length){
-            if (this._options.parentContainer && !element.hasClass(this._options.parentContainer)) {
+            if (this._options.parentContainer && this._getParentContainer()[0] !== element[0]) {
                break;
             }
             if (element.css('position') == 'fixed'){
@@ -326,6 +319,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._defaultCorner = this._options.corner;
          this._defaultVerticalAlignSide = this._options.verticalAlign.side;
          this._defaultHorizontalAlignSide = this._options.horizontalAlign.side;
+      },
+      
+      _getParentContainer: function() {
+         var parCont = this._getOption('parentContainer');
+         
+         if(parCont instanceof jQuery) {
+            return parCont;
+         } else if (this._getOption('target')) {
+            return this._getOption('target').closest('.' + parCont);
+         } else {
+            return $('.' + parCont);
+         }
       },
 
       isFixed: function(){
@@ -638,14 +643,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             };
 
             if (this._options.parentContainer) {
-               var parContainer;
-               if (this._options.target) {
-                  parContainer = this._options.target.closest('.' + this._options.parentContainer)
-               }
-               else {
-                  parContainer = $('.' + this._options.parentContainer);
-               }
-               var parOffset = parContainer.offset();
+               var parContainer = this._getParentContainer(),
+                   parOffset = parContainer.offset();
+               
                this._targetSizes.offset.top = this._targetSizes.offset.top - parOffset.top + parContainer.scrollTop();
                this._targetSizes.offset.left = this._targetSizes.offset.left - parOffset.left + parContainer.scrollLeft();
             }
