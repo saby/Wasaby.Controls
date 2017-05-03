@@ -140,7 +140,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                editorConfig: {
                   plugins: 'media,paste,lists,noneditable,codesample',
                   inline: true,
-                  fixed_toolbar_container: '.controls-RichEditor__fakeArea',
                   relative_urls: false,
                   convert_urls: false,
                   formats: constants.styles,
@@ -238,6 +237,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._fakeArea = this._container.find('.controls-RichEditor__fakeArea');
             this._initInputHeight();
             this._options.editorConfig.selector = '#' + this.getId() + ' > .controls-RichEditor__editorFrame';
+            this._options.editorConfig.fixed_toolbar_container = '#' + this.getId() + ' > .controls-RichEditor__fakeArea';
             this._options.editorConfig.setup = function(editor) {
                self._tinyEditor = editor;
                self._bindEvents();
