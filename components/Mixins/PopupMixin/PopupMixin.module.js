@@ -1245,7 +1245,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                       /* При скрытии popUp'a:
                          если ниже по стеку тоже popup вешаем на него класс, который фиксит скролл
                          если нет, то убираем класс с body, фиксить скролл не надо */
-                      if(isPopUp) {
+                      if(isPopUp && topWindow._options._canScroll) {
                          topWindow.getContainer().addClass('controls-Popup__touchScroll-fix');
                       } else {
                          constants.$body.removeClass('controls-ScrollContainer-overflow-scrolling-auto');

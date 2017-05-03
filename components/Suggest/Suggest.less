@@ -18,6 +18,12 @@
   width: @suggest-picker-standard-width;
   border: @suggest-picker-border;
   margin: @suggest-picker-margin;
+  .box-shadow(@suggest-picker-box-shadow);
+  
+  &.controls-popup-revert-vertical {
+    .box-shadow(@suggest-picker-box-shadow-reverted);
+    margin: @suggest-picker-margin-reverted;
+  }
 
   .controls-ListView {
     .controls-ListView__EmptyData {
