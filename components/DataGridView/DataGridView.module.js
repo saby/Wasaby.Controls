@@ -835,9 +835,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _bindHead: function() {
          if (!this._thead) {
             // при фиксации заголовка таблицы в шапке реальный thead перемещён в шапку, а в контроле лежит заглушка
-            this._thead = this._container.find('>.controls-DataGridView__table>.controls-DataGridView__thead');
+            this._thead = $('>.controls-DataGridView__table>.controls-DataGridView__thead', this._container.get(0));
          }
-         this._colgroup = this._container.find('>.controls-DataGridView__table>.controls-DataGridView__colgroup');
+         this._colgroup = $('>.controls-DataGridView__table>.controls-DataGridView__colgroup', this._container.get(0));
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
          }
@@ -853,7 +853,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              Поэтому мы вынуждены посчитать... и установить минимальную ширину на всю таблицу целиком.
              В этом случае плавающая ширина скукоживаться не будет.
              Пример можно посмотреть в реестре номенклатур. */
-            /*this._setColumnWidthForPartScroll();*/
+            this._setColumnWidthForPartScroll();
          }
       },
 
