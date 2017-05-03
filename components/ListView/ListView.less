@@ -69,6 +69,10 @@
       }
    }
 }
+// Убираем минимальную высоту установленную выше для таблиц вложенных в контейнер фиксированных заголовков.
+.ws-sticky-header__header-container > .controls-ListView:not(.controls-ListView__dataLoaded) {
+   min-height: initial;
+}
 
 //Данные стили обеспечивают правильное поведение ListView при активации.
 //Фокус должен переходить на элемент с position fixed.
