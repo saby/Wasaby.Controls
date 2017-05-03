@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                doNotRespondOnReset: doNotRespondOnReset,
                breadCrumbs: this._options.breadCrumbs,
                backButton: this._options.backButton,
-               keyboardLayoutRevert: keyboardLayoutRevert,
+               keyboardLayoutRevert: keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert,
                hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
             });
          }
