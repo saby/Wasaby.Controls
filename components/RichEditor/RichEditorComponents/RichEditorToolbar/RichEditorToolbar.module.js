@@ -156,19 +156,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
 
          _toggleState: function(state, obj) {
             var
-               selectors = {
-                  'bold':  'strong',
-                  'blockquote':  'blockquote',
-                  'italic':  'em',
-                  'underline':  'span[style*="decoration: underline"]',
-                  'strikethrough':  'span[style*="decoration: line-through"]'
-               },
-               name = obj.format === 'blockquote' ? 'mceBlockQuote' : obj.format;
-            if (!state && $(obj.node).closest(selectors[name]).length) {
-               state = true;
-            }
-             if (this.getItemInstance(name)) {
-                this.getItemInstance(name).setChecked(state);
+               result = RichEditorToolbar.superclass._toggleState.apply(this, arguments);
+            if (this.getItems().getRecordById(result.name) && this.getItemInstance(result.name)) {
+                this.getItemInstance(result.name).setChecked(result.state);
             }
          },
 
@@ -200,7 +190,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      textFormat = tf;
                   }
                }
-               button.setText(button.getItems().getRecordById(textFormat).get('title'));
+               button._drawText(button.getItems().getRecordById(textFormat).get('title'));
             }
          },
 

@@ -38,7 +38,20 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          enabled: false,
          order: 10
       },
-
+      {
+         name: 'styles',
+         componentType: 'WSControls/Buttons/Button',
+         tooltip: rk('Стили'),
+         icon: 'sprite:icon-24 icon-TFCurtailRTE2 icon-primary',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         handlers: {
+            onActivated: function() {
+               this.getParent()._openStylesPanel(this);
+            }
+         },
+         visible: false,
+         order: 15
+      },
       {
          name: 'style',
          componentType: 'SBIS3.CONTROLS.ComboBox',
