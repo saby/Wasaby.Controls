@@ -325,7 +325,12 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
 
       getFilter: function() {
-         return this._mapFilterStructureByProp('value');
+         return colHelpers.reduce(this._filterStructure, function(result, element) {
+            if (element.hasOwnProperty('value')) {
+               result[element.filterField || element.internalValueField] = element.value;
+            }
+            return result;
+         }, {});
       },
 
       getResetVisibilityValue: function() {
