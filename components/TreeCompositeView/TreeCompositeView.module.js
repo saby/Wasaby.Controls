@@ -397,6 +397,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       setViewMode: function() {
          this._prevMode = null;
+         // Сбрасываем открытые узлы именно через set'тер, т.к. только так можно закрыть узлы и в проекции
+         this.setOpenedPath({});
          TreeCompositeView.superclass.setViewMode.apply(this, arguments);
       },
 
