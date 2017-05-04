@@ -1166,7 +1166,15 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
             self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();
-         }, self)).addErrback(fHelpers.forAliveOnly(function(){
+         }, self)).addErrback(fHelpers.forAliveOnly(function(error){
+
+            if (error instanceof Error && !error.canceled) {
+               if (!error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+                  error.message = error.message.toString().replace('Error: ', '');
+                  fHelpers.alert(error);
+                  error.processed = true;
+               }
+            }
             throw new Error(rk('Ошибка получения данных для диаграммы'));
          }, self));
 
