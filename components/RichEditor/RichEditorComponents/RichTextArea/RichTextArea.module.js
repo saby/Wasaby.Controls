@@ -498,7 +498,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                },
                onPaste = function(event) {
                   var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
-                  if (!content || save) {
+                  if (!content || !save) {
                      content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
                      content.replace('orphans: 31415;','');
                   }
