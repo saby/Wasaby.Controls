@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.ListView.Drag', [
    'Core/Abstract',
    'js!SBIS3.CONTROLS.DragObject',
-   'Core/core-instance',
+   'Core/core-instance'
 ], function (Abstract, DragObject, cInstance) {
    var  DRAG_META_INSERT = {
       on: 'on',
@@ -13,6 +13,12 @@ define('js!SBIS3.CONTROLS.ListView.Drag', [
       _$listView: null,
       _$mover: null,
       _$projection: null,
+      _mouse: {
+         target: null,
+         x: 0,
+         iter: 0,
+         level: 0
+      },
       onDrag: function (e) {
          if (this._canDragMove(DragObject)) {
             var
@@ -29,16 +35,18 @@ define('js!SBIS3.CONTROLS.ListView.Drag', [
                var placeholder = this._getDragPlaceHolder();
                if (target.getPosition() !== 'on') {
                   placeholder.show();
-                  var item;
+                  var item = this._$projection.getItemBySourceItem(targetsModel);
                   if (target.getPosition() == 'before') {
                      placeholder.insertBefore(target.getDomElement());
-                     item = this._$projection.getItemBySourceItem(targetsModel);
                   } else {
                      placeholder.insertAfter(target.getDomElement());
-                     var index = this._$projection.getIndexBySourceItem(targetsModel);
-                     item = this._$projection.at(index-1);
                   }
-                  placeholder.find('.controls-DataGridView__firstContentCell ').css('padding-left', (22*(item.isNode()&&!item.isExpanded() ? item.getLevel():item.getLevel()-1))+'px')
+                  var level = item.getLevel()+this._mouse.level;
+                  if (item.isNode() && item.isExpanded() && target.getPosition() == 'after') {
+                     level += 1;
+                  }
+                  var offset = 22*(level-1)+8;
+                  placeholder.find('.controls-DataGridView__firstContentCell ').css('padding-left', offset+'px')
                } else {
                   placeholder.hide();
                   target.getDomElement().addClass('controls-DragNDrop__hierarchy_move');
@@ -82,9 +90,8 @@ define('js!SBIS3.CONTROLS.ListView.Drag', [
          return false;
       },
       updateDragTarget: function (e, domElement) {
-         var model = this._getDragTarget(domElement),
+         var model = this._getDragTarget(domElement, e),
             target;
-
          if (model) {
             var position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
             if (!domElement.hasClass('controls-DragNDrop__placeholder')) {
@@ -178,11 +185,13 @@ define('js!SBIS3.CONTROLS.ListView.Drag', [
             DragObject.getTargetsControl() === this._$listView &&
             cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
       },
-      _getDragTarget: function(htmlItem) {
+      _getDragTarget: function(htmlItem, e) {
          var item;
-
-         if (htmlItem.length > 0 && !htmlItem.hasClass('controls-DragNDrop__placeholder')) {
+         if (htmlItem.length > 0) {
             item = this._$projection.getByHash(htmlItem.data('hash'));
+         }
+         if (htmlItem.hasClass('controls-DragNDrop__placeholder') && this._mouse.level !== 0) {
+            this._updateMouseObject(item, e);
          }
 
          return item ? item.getContents() : undefined;
@@ -239,6 +248,30 @@ define('js!SBIS3.CONTROLS.ListView.Drag', [
       _hideDragHilight: function (DragObject) {
          this._getDragPlaceHolder(DragObject).hide();
          $('.controls-DragNDrop__hierarchy_move').removeClass('controls-DragNDrop__hierarchy_move');
+      },
+      _updateMouseObject: function (target, e) {
+         if (target !== this._mouse.target) {
+            this._mouse = {
+               target: target,
+               iter: 0,
+               x: e.pageX,
+               level:0
+            };
+         } else {
+            var level = this._mouse.level;
+            if (this._mouse.iter%3 ==0) {
+               level = this._mouse.iter / 3;
+            }
+            if(this._mouse.x > e.pageX ) {
+               this._mouse.iter--;
+            } else if(this._mouse.x < e.pageX ) {
+               this._mouse.iter++;
+            }
+
+            this._mouse.level = level;
+         }
+         console.log(this._mouse.level);
+         this._mouse.x = e.pageX;
       }
    });
    return ListViewDrag;
