@@ -204,7 +204,7 @@
 
    .controls-FieldLink__Link {
       display: inline;
-      line-height: 20px;
+      line-height: 22px;
    }
 }
 
@@ -228,6 +228,14 @@
    .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
       padding: @controls-FieldLink-afterField-padding;
    }
+}
+
+.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
+   display: none;
+}
+
+.controls-FieldLink__multiselect .controls-TextBox__fieldWrapper {
+   min-width: @controls-FieldLink-fieldWrapper-minWidth;
 }
 
 .controls-Link.controls-FieldLink__Link {
