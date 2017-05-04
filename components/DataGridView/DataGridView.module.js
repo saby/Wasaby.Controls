@@ -779,6 +779,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             headData,
             headMarkup;
 
+         if (!this._thead) {
+            this._bindHead();
+         }
+
          headData = prepareHeadData(this._options);
          headData.columnsScrollPosition = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
@@ -925,6 +929,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updatePartScroll();
          }
          DataGridView.superclass._drawItemsCallback.call(this);
+
+         /* TODO В IE, по непонятным причинам, при смене колонок, не всегда пересчитывается ширина этих колонок, в следствии чего
+            колонки без ширины не расстягиваются и таблица смещается влево. Поэтому вставим в таблицу div и удалим его,
+              таким образом заставив таблицу пересчитать ширину. */
+         if (constants.browser.isIE){
+            $('<div></div>').appendTo(this.getContainer().find('>.controls-DataGridView__table')).remove();
+         }
       },
 
       _editFieldFocusHandler: function(focusedCtrl) {
