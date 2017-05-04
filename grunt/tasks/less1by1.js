@@ -7,7 +7,7 @@ const helpers = require('./helpers'),
     less = require('less'),
     getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
     DEFAULT_THEME = 'online',
-    themes = ['online', 'carry', 'prestonew'],
+    themes = ['online', 'carrynew', 'prestonew'],
     errors = [];
 
 /**

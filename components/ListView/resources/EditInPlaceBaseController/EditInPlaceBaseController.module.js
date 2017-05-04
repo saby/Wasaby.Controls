@@ -208,8 +208,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === constants.key.enter || key === constants.key.down || key === constants.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this._editNextTarget(this._getCurrentTarget(), key === constants.key.down || key === constants.key.enter);
+                  this.editNextTarget(key === constants.key.down || key === constants.key.enter);
                }
+            },
+            editNextTarget: function(editNextRow) {
+               this._editNextTarget(this._getCurrentTarget(), editNextRow);
             },
             _editNextTarget: function (currentTarget, editNextRow) {
                var
@@ -251,6 +254,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else {
                   return this.add(options, withoutActivateFirstControl);
                }
+            },
+            isAdd: function() {
+               return this._isAdd;
             },
             edit: function (model, withoutActivateFirstControl) {
                var
@@ -496,20 +502,29 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._savingDeferred.callback();
                }
             },
+            _prepareAdd: function(options) {
+               var
+                  creatingDeferred,
+                  modelOptions,
+                  // Поддержал deferred в качестве результата onBeginAdd, что позволит самостоятельно создавать записи при добавлении по месту
+                  beginAddResult = this._notify('onBeginAdd');
+               if (beginAddResult instanceof Deferred) {
+                  creatingDeferred = beginAddResult;
+               } else {
+                  modelOptions = options.model || beginAddResult;
+                  creatingDeferred = this._createModel(modelOptions, options.preparedModel)
+               }
+               return creatingDeferred;
+            },
             add: function(options, withoutActivateFirstControl) {
                var
                   self = this,
-                  modelOptions,
-                  editingRecord,
-                  beginAddResult;
-
+                  editingRecord;
                if (!this._addLock) {
                   this._addLock = true;
-                  beginAddResult = this._notify('onBeginAdd');
-                  modelOptions = options.model || beginAddResult;
                   this._lastTargetAdding = options.target;
                   return this.endEdit(true).addCallback(function() {
-                     return self._createModel(modelOptions, options.preparedModel).addCallback(function (createdModel) {
+                     return self._prepareAdd(options).addCallback(function (createdModel) {
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
                               model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : null);
@@ -588,7 +603,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              */
             _focusCatch: function (event) {
                if (event.which === constants.key.tab) {
-                  this._editNextTarget(this._getCurrentTarget(), !event.shiftKey);
+                  this.editNextTarget(!event.shiftKey);
                }
             },
             _onChildFocusOut: function (event, destroyed, focusedControl) {

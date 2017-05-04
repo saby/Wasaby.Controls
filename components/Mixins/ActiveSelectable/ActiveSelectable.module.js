@@ -31,12 +31,20 @@ define('js!SBIS3.CONTROLS.ActiveSelectable', [
          _loadItemDeferred: null
       },
 
-      after: {
+      before: {
          _modifyOptions: function(opts) {
             if(opts.selectedItem instanceof Model) {
                return opts;
             }
-
+   
+            // Для совместимости, удалится при массовом удалении displayField, keyField
+            if (opts.displayField) {
+               opts.displayProperty = opts.displayField;
+            }
+            if (opts.keyField) {
+               opts.idProperty = opts.keyField;
+            }
+            
             /* Пре-инициализация selectedItem, если selectedItem пришёл как объект
                требуется проинициализировать, чтобы была возможность построить вёрстку на уровне шаблонизатора */
             if(opts.selectedItem && !Object.isEmpty(opts.selectedItem) && opts.selectedItem[opts.idProperty] && opts.selectedItem[opts.displayProperty]) {

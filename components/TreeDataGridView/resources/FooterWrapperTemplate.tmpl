@@ -2,14 +2,19 @@
     <ws:if data="{{multiselect}}">
         <td></td>
     </ws:if>
-    <td colspan="{{colspan}}">
-        <div class="controls-TreeView__folderFooterContainer" style="padding-left: {{padding}}px">
+    <td class="controls-TreeDataGridView__folderFooter-td" colspan="{{colspan}}">
+      <div class="controls-TreeView__folderFooterContainer">
+         <div class="controls-TreeDataGridView__levelPaddingWrap">
+            <ws:for data="i in level">
+               <div class="controls-TreeDataGridView__levelPadding">&nbsp;</div>
+            </ws:for>
             <ws:if data="{{footerTpl}}">
-                <div class="controls-TreeDataGridView__folderFooterTmpl">
-                    <ws:partial template="{{footerTpl}}" scope="{{...}}"></ws:partial>
-                </div>
+               <div class="controls-TreeDataGridView__folderFooterTmpl">
+                  <ws:partial template="{{footerTpl}}" scope="{{...}}"></ws:partial>
+               </div>
             </ws:if>
             <ws:SBIS3.CONTROLS.TreePaging scope="{{pagerOptions}}"></ws:SBIS3.CONTROLS.TreePaging>
-        </div>
+         </div>
+      </div>
     </td>
 </tr>

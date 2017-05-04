@@ -123,11 +123,22 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
       _updateFilterStructure: function(filterStructure, filter, captions, visibility) {
          var processElementVisibility = function(elem) {
+            var isEqual, hasResetVal;
+
             if(elem.hasOwnProperty('internalVisibilityField')) {
+               isEqual = FilterToStringUtil.isEqualValues(elem.value, elem.resetValue);
+               hasResetVal = elem.hasOwnProperty('resetVisibilityValue');
+
                if(elem.hasOwnProperty('value')) {
-                  elem.visibilityValue = !FilterToStringUtil.isEqualValues(elem.value, elem.resetValue);
+                  /* Если value === resetValue, то поле видимости берём из resetVisibilityValue,
+                     чтобы была возможность задать видимость по-умолчанию */
+                  if(hasResetVal && isEqual) {
+                     elem.visibilityValue = elem.resetVisibilityValue;
+                  } else {
+                     elem.visibilityValue = !isEqual;
+                  }
                } else {
-                  elem.visibilityValue = elem.hasOwnProperty('resetVisibilityValue') ? elem.resetVisibilityValue : false;
+                  elem.visibilityValue = hasResetVal ? elem.resetVisibilityValue : false;
                }
             }
          };
@@ -282,7 +293,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                if (element.hasOwnProperty(prop)) {
                   result[element.internalVisibilityField] = element[prop];
                } else {
-                  result[element.internalVisibilityField] = false;
+                  result[element.internalVisibilityField] = element.hasOwnProperty('resetVisibilityValue') ? element.resetVisibilityValue : false;
                }
             }
             return result;
@@ -314,7 +325,12 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
 
 
       getFilter: function() {
-         return this._mapFilterStructureByProp('value');
+         return colHelpers.reduce(this._filterStructure, function(result, element) {
+            if (element.hasOwnProperty('value')) {
+               result[element.filterField || element.internalValueField] = element.value;
+            }
+            return result;
+         }, {});
       },
 
       getResetVisibilityValue: function() {

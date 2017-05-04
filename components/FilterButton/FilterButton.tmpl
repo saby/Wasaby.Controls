@@ -1,6 +1,6 @@
 <div class="controls__filterButton {{ 'controls__filterButton-' + filterAlign }}">
     <ws:if data="{{ filterLineComponent }}">
-        <ws:partial template="{{ filterLineComponent }}" name="filterLine" activableByClick="{{ false }}"/>
+        <ws:partial template="{{ (filterLineComponent.indexOf('js!') !== 0 ? ('js!' + filterLineComponent) : filterLineComponent) }}" name="filterLine" activableByClick="{{ false }}"/>
     </ws:if>
     <ws:else data="{{ filterLineTemplate }}">
         <ws:partial template="{{ filterLineTemplate }}"/>

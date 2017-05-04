@@ -1,10 +1,9 @@
 .controls-SelectorButton {
-   .inline-flexbox();
-   .align-items(baseline);
-   cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
-   align-items: baseline;
+   .button-default-style();
+   .inline-flexbox();
+   .align-items(center);
 
    &.ws-validation-error {
       outline: @controls-SelectorButton-error-outline;
@@ -12,17 +11,18 @@
    }
    &.ws-disabled {
       cursor: default;
+      color: @link-disabled-text-color;
       .controls-SelectorButton__cross {
          display: none;
       }
    }
-
-}
-
-.controls-SelectorButton__icon,
-.controls-SelectorButton__cross {
-   .align-self(center);
-   text-decoration: none;
+   .controls-ListView__item:after {
+      content: ',';
+   }
+   
+   .controls-ListView__item:last-child:after {
+      content: none;
+   }
 }
 
 .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
@@ -30,15 +30,12 @@
 }
 
 .controls-SelectorButton__text {
-   display: inline-block;
-   max-width: 100%;
    .text-overflow();
+   .align-self(baseline);
 }
 
-.controls-SelectorButton__withoutCross {
-   .controls-SelectorButton__cross {
-      display: none;
-   }
+.controls-SelectorButton__withoutCross .controls-SelectorButton__cross {
+   display: none;
 }
 
 .controls-SelectorButton__asLink {

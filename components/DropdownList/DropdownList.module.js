@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/EventBus",
    "Core/IoC",
    "Core/core-merge",
+   "Core/core-instance",
    "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -17,26 +18,21 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.DropdownListMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.IconButton",
-   "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Display/Display",
    "js!WS.Data/Collection/List",
-   "js!SBIS3.CONTROLS.ScrollContainer",
-   "html!SBIS3.CONTROLS.DropdownList",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListHead",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListItem",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
-   "html!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
-   "Core/core-instance",
+   "tmpl!SBIS3.CONTROLS.DropdownList",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListHead",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListItem",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListItemContent",
+   "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPicker",
    "i18n!SBIS3.CONTROLS.DropdownList",
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, Button, IconButton, Link, TemplateUtil, RecordSet, Projection, List, ScrollContainer, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker, cInstance) {
+   function (constants, Deferred, EventBus, IoC, cMerge, cInstance, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -324,7 +320,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _defaultId: null,
             _buttonChoose : null,
             _buttonHasMore: null,
-            _currentSelection: {},
+            _currentSelection: [],
             _emptyText: 'Не выбрано',
             _hideAllowed : true,
             _changedSelectedKeys: [] //Массив ключей, которые были выбраны, но еще не сохранены в выпадающем списке
@@ -383,7 +379,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             header.append(dotTplFn(this._options));
-            this._setVariables();
+            this._setPickerVariables();
             this._bindItemSelect();
 
             if(!this._isHoverMode()) {
@@ -406,14 +402,18 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _removeOldKeys: function(){
             var keys = this.getSelectedKeys(),
-                items = this.getItems();
+                items = this.getItems(),
+                i = 0;
             //После установки новых данных, некоторых выбранных ключей может не быть в наборе. Оставим только те, которые есть
             //emptyValue в наборе нет, но если selectedKeys[0] === null, то его в этом случае удалять не нужно
             if (!this._options.emptyValue || keys[0] !== null){
                if (!this._isEnumTypeData()) {
-                  for (var i = 0, l = keys.length; i < l; i++) {
+                  while (i < keys.length) {
                      if (!items.getRecordById(keys[i])) {
                         keys.splice(i, 1);
+                     }
+                     else {
+                        i++;
                      }
                   }
                   if (!keys.length){
@@ -455,12 +455,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _updateCurrentSelection: function(){
-            var keys;
-            this._currentSelection = {};
-            keys = this.getSelectedKeys();
-            for (var i = 0, len = keys.length; i < len; i++ ) {
-               this._currentSelection[keys[i]] = true;
-            }
+            this._currentSelection = [];
+            this._currentSelection = this.getSelectedKeys().slice(0);
          },
          _initializePicker: function() {
             DropdownList.superclass._initializePicker.apply(this, arguments);
@@ -481,16 +477,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if(event.type === 'mousedown') {
                eventsChannel.notify('onDocumentClick', event);
             }
-         },
-         _getCurrentSelection: function(){
-            var keys = [];
-            for (var i in this._currentSelection) {
-               if (this._currentSelection.hasOwnProperty(i) && this._currentSelection[i]) {
-                  //Если ключи были number, они станут здесь строкой
-                  keys.push(i);
-               }
-            }
-            return keys;
          },
          //Проверка на нестрогое равенство массивов
          //TODO это дублЬ! нужно вынести в хелпер!!!
@@ -528,7 +514,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   this._buttonChoose.getContainer().removeClass('ws-hidden');
                   selected =  !row.hasClass('controls-DropdownList__item__selected');
                   row.toggleClass('controls-DropdownList__item__selected', selected);
-                  this._currentSelection[itemId] = selected;
+
+                  var selectedItemIndex = this._currentSelection.indexOf(itemId);
+                  //Добавляем/Удаляем id из набора выбранных ключей
+                  if (selected && selectedItemIndex === -1) {
+                     this._currentSelection.push(itemId);
+                  }
+                  else if (!selected && selectedItemIndex > -1) {
+                     this._currentSelection.splice(selectedItemIndex, 1);
+                  }
+
                } else {
                   self.setSelectedKeys([itemId]);
                   self.hidePicker();
@@ -537,14 +532,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _getIdByRow: function(row){
-            var itemProjection;
             if (!row.length || !row.data('hash')) {
                return undefined;
             }
+            var itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             if (this._isEnumTypeData()) {
-               return this._getItemsProjection().getIndexByHash(row.data('hash'));
+               return this._getItemsProjection().getSourceIndexByItem(itemProjection);
             }
-            itemProjection = this._getItemsProjection().getByHash(row.data('hash'));
             //Если запись в проекции не найдена - значит выбрали пустую запись(добавляется опцией emptyValue), у которой ключ null
             return itemProjection ? itemProjection.getContents().getId() : null;
          },
@@ -577,7 +571,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._changedSelectedKeys = [];
                //Восстановим выделение по элементам
                for (var i = 0 ; i < items.length; i++) {
-                  $(items[i]).toggleClass('controls-DropdownList__item__selected', !!this._currentSelection[this._getIdByRow($(items[i]))]);
+                  $(items[i]).toggleClass('controls-DropdownList__item__selected', this._currentSelection.indexOf(this._getIdByRow($(items[i]))) > -1);
                }
                //Если выбрали дефолтную запись - скрываем крестик сброса
                //Нужно перед показом пикера, чтобы перед позиционированием контейнер имел правильные размеры, т.к.
@@ -649,7 +643,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _dataLoadedCallback: function() {
             DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
-            this._setVariables();
+            this._setHeadVariables();
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
@@ -718,10 +712,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _getHtmlItemByItem: function (item) {
             return $('.controls-DropdownList__item[data-id="' + item.getId() + '"]', this._getPickerContainer());
          },
-         _setVariables: function() {
-            this._setHeadVariables();
-            this._setPickerVariables();
-         },
          _setPickerVariables: function() {
             var pickerContainer,
                 self = this;
@@ -742,10 +732,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                if (this._options.multiselect) {
                   this._buttonChoose = this._picker.getChildControlByName('DropdownList_buttonChoose');
                   this._buttonChoose.subscribe('onActivated', function(){
-                     var currSelection = self._getCurrentSelection();
                      self._hideAllowed = true;
-                     if (!self._isSimilarArrays(self.getSelectedKeys(), currSelection)) {
-                        self.setSelectedKeys(currSelection);
+                     if (!self._isSimilarArrays(self.getSelectedKeys(), self._currentSelection)) {
+                        var keys = self._currentSelection.length ? self._currentSelection : [self._defaultId];
+                        self.setSelectedKeys(keys);
                      }
                      self.hidePicker();
                   });
@@ -968,6 +958,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                   side: 'top',
                   offset: offset.top
                },
+               _canScroll: true,
                horizontalAlign: {
                   side: 'left',
                   offset: offset.left

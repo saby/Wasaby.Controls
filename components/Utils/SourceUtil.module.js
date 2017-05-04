@@ -2,8 +2,16 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 define('js!SBIS3.CONTROLS.Utils.SourceUtil', ['Core/core-instance'], function(cInstance) {
-
-   return {
+    /**
+     * @class SBIS3.CONTROLS.Utils.SourceUtil
+     * @public
+     */
+   return /** @lends SBIS3.CONTROLS.Utils.SourceUtil.prototype */ {
+       /**
+        *
+        * @param sourceOpt
+        * @returns {*}
+        */
       prepareSource: function(sourceOpt) {
          var result;
 

@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.Spoiler', [
-   'js!WS.Controls.ButtonBase',
+   'js!WSControls/Buttons/ButtonBase',
    'js!SBIS3.CONTROLS.Expandable',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!SBIS3.CONTROLS.Spoiler',
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     * @remark
     * Длинный заголовок спойлера по умолчанию обрезается.
     * @class SBIS3.CONTROLS.Spoiler
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.Expandable
     *
 	 * @demo SBIS3.CONTROLS.Demo.MySpoiler

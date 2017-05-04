@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Menu', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
-   'html!SBIS3.CONTROLS.Menu',
+   'tmpl!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
