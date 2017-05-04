@@ -782,7 +782,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!this._thead) {
             this._bindHead();
          }
-
          headData = prepareHeadData(this._options);
          headData.columnsScrollPosition = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
