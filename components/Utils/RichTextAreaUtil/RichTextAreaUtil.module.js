@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             oldOrphans = event.target.style.orphans;
          //согласно документации https://developer.mozilla.org/ru/docs/Web/API/Selection/focusNode
          //focusNode является узлом на котором закончилось выделение
+         //$.contains(node,node) вернет false, необходимо дополнительно проверить равеноство узлов
          if (document.getSelection() && ($.contains(event.currentTarget , document.getSelection().focusNode)  || event.currentTarget  === document.getSelection().focusNode)) {
             //orphans = '31415' - метка показывающая что содержимое было скопировано из богатого редактора
             event.target.style.orphans = '31415'; //Pi
