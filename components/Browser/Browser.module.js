@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          
          if( (this._filterButton || this._fastDataFilter) &&
             /* Новый механизм включаем, только если нет биндов на структуру фильтров */
-            (this._filterButton && !cFind(this._filterButton._getOption('bindings'), function(obj) {return obj.propName === 'filterStructure'}))) {
+            (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOption('bindings'), function(obj) {return obj.propName === 'filterStructure'}))) {
             this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
          }
 
