@@ -1,8 +1,7 @@
-echo *** Run coverage test via Node.js ***
+rem Run coverage via Node.js
 
 node -v
 call npm install
 
-node depencyCollector
-node tests/unit/list.build
-node coverage tests/unit/coverage.run
+node build
+node node_modules/ws-unit-testing/cover test-isolated
