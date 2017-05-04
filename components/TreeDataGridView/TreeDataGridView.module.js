@@ -271,7 +271,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _getRowPadding: function(target) {
-         return parseInt(window.getComputedStyle(target.find('.controls-DataGridView__firstContentCell').get(0), null).getPropertyValue('padding-left'));
+         // На редактироавние могут быть открыты хлебные крошки и тогда левый отступ строки не нужно учитывать.
+         var
+            paddingElement = target.find('.controls-DataGridView__firstContentCell').get(0);
+         return paddingElement ? parseInt(window.getComputedStyle(paddingElement, null).getPropertyValue('padding-left')) : 0;
       },
 
       _getLevelPaddingWidth: function() {
