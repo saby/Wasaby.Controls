@@ -1,0 +1,14 @@
+<div class="controls-RichEditor">
+   <div
+      class="controls-RichEditor__dataReview ws-basic-style{{ enabled ? ' ws-hidden' }}"
+      tabindex="1"
+      style="{{ autoHeight &&  minimalHeight ? 'min-height:' + minimalHeight + 'px;'}} {{ autoHeight &&  maximalHeight ? 'max-height:' + maximalHeight + 'px;'}}"
+   >{{ !enabled && text ? _prepareReviewContent(text) }}</div>
+   <div class="controls-RichEditor__placeholder" >{{ placeholder }}</div>
+   <div
+      class="controls-RichEditor__editorFrame ws-basic-style {{ !enabled ? ' ws-hidden' }}"
+      style="{{ autoHeight &&  minimalHeight ? 'min-height:' + minimalHeight + 'px;'}} {{ autoHeight &&  maximalHeight ? 'max-height:' + maximalHeight + 'px;'}}"
+   >{{ enabled && text ? _prepareContent(_prepareReviewContent(text)) }}</div>
+   <textarea class="controls-RichEditor__fakeArea" tabindex="0"></textarea>
+   <div class="controls-RichEditor__sourceContainer ws-hidden"><textarea class="controls-RichEditor__sourceArea"></textarea></div>
+</div>
