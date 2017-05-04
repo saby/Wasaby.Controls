@@ -72,7 +72,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        'use strict';
 
-       var INPUT_MIN_WIDTH = 100;
        var SHOW_ALL_LINK_WIDTH = 22;
 
        var classes = {
@@ -751,6 +750,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _getLinkCollection: fHelpers.memoize(function() {
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
+          
+          _getInputMinWidth: fHelpers.memoize(function() {
+             return parseInt(this.getContainer().find('.controls-TextBox__fieldWrapper').css('min-width'));
+          }, '_getInputMinWidth'),
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
@@ -759,7 +762,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  toAdd = [],
                  isEnabled = this.isEnabled(),
                  needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
-                 availableWidth, items, additionalWidth, itemWidth, itemsCount, $item;
+                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item;
 
              if(!linkCollection.isPickerVisible()) {
                 if (!this._isEmptySelection()) {
@@ -778,7 +781,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
                       if (this._options.multiselect || this._options.alwaysShowTextBox) {
                          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
-                         additionalWidth += (this.isEnabled() ? INPUT_MIN_WIDTH : SHOW_ALL_LINK_WIDTH);
+                         additionalWidth += parseInt(this.isEnabled() ?
+                                  this._getInputMinWidth() + (itemsCount > 1 ? SHOW_ALL_LINK_WIDTH : 0) :
+                                  SHOW_ALL_LINK_WIDTH);
                       }
 
                       /* Высчитываем ширину, доступную для элементов */
@@ -786,19 +791,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
                       /* Считаем, сколько элементов может отобразиться */
                       for (var i = itemsCount - 1; i >= 0; i--) {
-                         $item = items.eq(i);
-                         itemWidth = $item.outerWidth();
+                         item = items[i];
+                         itemWidth = Math.ceil(item.getBoundingClientRect().width);
 
                          if ((itemsWidth + itemWidth) > availableWidth) {
                             this._toggleShowAll(itemsCount > 1);
                             /* Если ни один элемент не влезает, то устанавливаем первому доступную ширину */
                             if (!itemsWidth) {
-                               $item.outerWidth(availableWidth);
-                               toAdd.push($item[0]);
+                               $(item).outerWidth(availableWidth);
+                               toAdd.push(item);
                             }
                             break;
                          }
-                         toAdd.unshift($item[0]);
+                         toAdd.unshift(item);
                          itemsWidth += itemWidth;
                       }
 
