@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
    "Core/constants",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    "i18n!SBIS3.CONTROLS.RichEditor"
-], function ( constants,smiles) {
+], function ( constants, smiles) {
 
    'use strict';
 
@@ -56,11 +56,12 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'style',
          componentType: 'SBIS3.CONTROLS.ComboBox',
          items: [
-            { key: 'title', title: rk('Заголовок') },
-            { key: 'subTitle', title: rk('Подзаголовок') },
-            { key: 'mainText', title: rk('Основной текст') },
-            { key: 'additionalText', title: rk('Дополнительный текст') }
+            { key: 'title', title: rk('Заголовок'), className: 'titleText'},
+            { key: 'subTitle', title: rk('Подзаголовок'),  className: 'subTitleText' },
+            { key: 'mainText', title: rk('Основной') },
+            { key: 'additionalText', title: rk('Дополнительный'), className: 'additionalText' }
          ],
+         pickerClassName: 'controls-RichEditorToolbar__stylePicker',
          idProperty: 'key',
          selectedKey: 'mainText',
          editable: false,
@@ -366,6 +367,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._codeSample(this);
             }
          },
+         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 170
       }
    ];
