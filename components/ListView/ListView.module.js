@@ -903,17 +903,25 @@ define('js!SBIS3.CONTROLS.ListView',
             });
 
             this.subscribeTo(this._virtualScrollController, 'onItemsAdd', function(event, indexes, at){
-               var items = [];
+               var items = [],
+                  item;
                for (var i = 0; i < indexes.length; i++) {
-                  items.push(this._getItemsProjection().at(indexes[i]));
+                  item = this._getItemsProjection().at(indexes[i]);
+                  if (item) {
+                     items.push(item);
+                  }
                }
                this._addItems(items, at);
             }.bind(this));
 
             this.subscribeTo(this._virtualScrollController, 'onItemsRemove', function(event, indexes){
-               var items = [];
+               var items = [],
+                  item;
                for (var i = 0; i < indexes.length; i++) {
-                  items.push(this._getItemsProjection().at(indexes[i]));
+                  item = this._getItemsProjection().at(indexes[i]);
+                  if (item) {
+                     items.push(item);
+                  }
                }
                this._removeItems(items);
             }.bind(this));
@@ -2628,7 +2636,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
-            if (this._options.virtualScrolling) {
+            if (this._virtualScrollController) {
                this._virtualScrollController.addItems(newItems, newItemsIndex);
             }
          },

@@ -94,25 +94,25 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController'], function(VirtualScrollCont
          });
       });
 
-      describe('._getWrappersHeight', function() {
+      describe('._calculateWrappersHeight', function() {
          it('From start', function() {
             pages[0].dettached = false;
-            newState = controller._getWrappersHeight(pages, [0, 2]);
+            newState = controller._calculateWrappersHeight(pages, [0, 2]);
             assert.deepEqual(newState, [0, 12000]);
          });
          it('All pages', function() {
             pages[0].dettached = false;
-            newState = controller._getWrappersHeight(pages, [0, 15]);
+            newState = controller._calculateWrappersHeight(pages, [0, 15]);
             assert.deepEqual(newState, [0, 0]);
          });
          it('From second page', function() {
             pages[0].dettached = false;
-            newState = controller._getWrappersHeight(pages, [1, 3]);
+            newState = controller._calculateWrappersHeight(pages, [1, 3]);
             assert.deepEqual(newState, [2000, 11000]);
          });
          it('To last page', function() {
             pages[0].dettached = false;
-            newState = controller._getWrappersHeight(pages, [10, 15]);
+            newState = controller._calculateWrappersHeight(pages, [10, 15]);
             assert.deepEqual(newState, [11000, 0]);
          });
       });
@@ -144,30 +144,30 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController'], function(VirtualScrollCont
          });
       });
 
-      describe('._getRangeToShow', function() {
+      describe('._calculateRangeToShow', function() {
          //pageNumber, pageSize, pagesCount
          it('Simple [page size 1]', function() {
-            newState = controller._getRangeToShow(0, 1, 1);
+            newState = controller._calculateRangeToShow(0, 1, 1);
             assert.deepEqual(newState, [0, 0]);
          });
          it('Simple [page size 10]', function() {
-            newState = controller._getRangeToShow(0, 10, 1);
+            newState = controller._calculateRangeToShow(0, 10, 1);
             assert.deepEqual(newState, [0, 9]);
          });
          it('Two pages [page size 1]', function() {
-            newState = controller._getRangeToShow(0, 1, 2);
+            newState = controller._calculateRangeToShow(0, 1, 2);
             assert.deepEqual(newState, [0, 1]);
          });
          it('Two pages [page size 10]', function() {
-            newState = controller._getRangeToShow(0, 10, 2);
+            newState = controller._calculateRangeToShow(0, 10, 2);
             assert.deepEqual(newState, [0, 19]);
          });
          it('Not from start [page size 1]', function() {
-            newState = controller._getRangeToShow(10, 1, 2);
+            newState = controller._calculateRangeToShow(10, 1, 2);
             assert.deepEqual(newState, [9, 11]);
          });
          it('Not from start [page size 10]', function() {
-            newState = controller._getRangeToShow(10, 10, 2);
+            newState = controller._calculateRangeToShow(10, 10, 2);
             assert.deepEqual(newState, [90, 119]);
          });
       });
