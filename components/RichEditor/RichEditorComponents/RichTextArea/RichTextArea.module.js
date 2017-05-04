@@ -1853,15 +1853,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {
-               checkDataAttribute: false,
-               validNodes: {
-                  embed: {
-                     type: true,
-                     src: true
-                  }
-               }
-            });
+            text = Sanitize(text, {checkDataAttribute: false});
             return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
