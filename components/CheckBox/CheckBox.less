@@ -4,7 +4,6 @@
 }
 
 .controls-CheckBox__caption {
-  display: inline-block;
   word-wrap: break-word;
   line-height: @default-height - 2 * extract(@check-box-caption-padding, 1);
 }
@@ -20,7 +19,7 @@
 
 .controls-CheckBox__caption_size {
   font-size: @check-box-default-font-size;
-  width: calc(e("100% - @{default-height}"));
+  margin-left: @default-height;
   padding: @check-box-caption-padding;
 }
 
