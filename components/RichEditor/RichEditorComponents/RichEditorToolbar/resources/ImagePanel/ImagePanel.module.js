@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!SBIS3.CORE.FileStorageLoader',
       'js!WS.Data/Di',
       'Core/helpers/fast-control-helpers',
-      'html!SBIS3.CONTROLS.RichEditor.ImagePanel',
+      'tmpl!SBIS3.CONTROLS.RichEditor.ImagePanel',
       "Core/EventBus",
       'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
    ], function(CompoundControl, PopupMixin, LikeWindowMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
