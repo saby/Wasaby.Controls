@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.CommandsButton', [
-   'js!SBIS3.CONTROLS.MenuIcon',
+   'js!WSControls/Buttons/MenuButton',
    'js!SBIS3.CONTROLS.ContextMenu',
-   'css!SBIS3.CONTROLS.CommandsButton'
+   'css!SBIS3.CONTROLS.CommandsButton',
+   'css!SBIS3.CONTROLS.IconButton'
 ], function(MenuIcon){
 
    'use strict';
@@ -31,9 +32,10 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      */
    var CommandsButton = MenuIcon.extend({
       _modifyOptions: function(opts) {
-         opts.cssClassName += ' controls-Menu__hide-menu-header';
+         opts.cssClassName += ' controls-Menu__hide-menu-header controls-IconButton';
          opts.icon = 'sprite:icon-24 icon-ExpandDown icon-primary';
-         opts.pickerClassName += ' controls-CommandsButton__picker controls-MenuIcon__Menu';
+         opts.pickerClassName += ' controls-CommandsButton__picker';
+         opts.className += ' '
          if (opts.pickerConfig) {
             opts.pickerConfig.locationStrategy = 'bodyBounds';
          }
