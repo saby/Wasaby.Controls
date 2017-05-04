@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
              /* Т.к. контроллер следит за событием onDataLoad, то им надо стрелять один раз,
               когда все списки згрузились */
-             if(e.name === 'onDataLoad') {
+             if(e.name === 'ondataload') {
                 this._viewsIterator(function(view) {
                    isLoaded &= !view.isLoading();
                 });
