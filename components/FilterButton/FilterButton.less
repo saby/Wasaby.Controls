@@ -57,3 +57,14 @@
    .inline-flexbox();
    .align-items(center);
 }
+
+.ws-is-ie10 {
+   .controls__filterButton {
+      .inline-flexbox();
+   }
+   .controls__filterButton__filterLine-items,
+   .controls__filterButton__filterLine {
+      -ms-flex-negative: 1;
+      max-width: none;
+   }
+}
