@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/detection',
    'js!SBIS3.CONTROLS.ListView.Mover',
    'Core/helpers/Function/throttle',
+   'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, Sanitize) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize) {
 
      'use strict';
 
@@ -1290,13 +1291,13 @@ define('js!SBIS3.CONTROLS.ListView',
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
                $target.toggleClass('controls-DataGridView__th__checkBox__checked');
             }
-            if (this._options.groupBy && !Object.isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
+            if (this._options.groupBy && !isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
                var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
                if (closestGroup.length) {
                   this._options.groupBy.clickHandler.call(this, $target);
                }
             }
-            if (!Object.isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
+            if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
                var idGroup = $(e.target).closest('.controls-GroupBy').data('group');
                this.toggleGroup(idGroup);
             }
@@ -1743,7 +1744,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             var i, itemsContainer = this._getItemsContainer();
             //Если точно знаем что изменилось, можем оптимизировать отрисовку
-            if (changes && !Object.isEmpty(changes)) {
+            if (changes && !isEmpty(changes)) {
                var rmKeyItems, addKeyItems;
                addKeyItems = findElements(changes.added, itemsContainer);
                rmKeyItems = findElements(changes.removed, itemsContainer);
