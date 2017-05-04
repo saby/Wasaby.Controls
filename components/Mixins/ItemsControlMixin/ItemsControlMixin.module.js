@@ -82,7 +82,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
             method = function(item, index, projItem){
-               return item.get(field);
+               //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
+               return item.get(field) + '';
             }
          }
          else {

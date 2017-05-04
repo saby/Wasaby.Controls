@@ -1298,7 +1298,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
-               var idGroup = $(e.target).closest('.controls-GroupBy').data('group');
+               var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
                this.toggleGroup(idGroup);
             }
          },
