@@ -836,11 +836,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _bindHead: function() {
+         var tableContainer = this._getTableContainer();
          if (!this._thead) {
             // при фиксации заголовка таблицы в шапке реальный thead перемещён в шапку, а в контроле лежит заглушка
-            this._thead = $('>.controls-DataGridView__table>.controls-DataGridView__thead', this._container.get(0));
+            this._thead = tableContainer.find('>.controls-DataGridView__thead');
          }
-         this._colgroup = $('>.controls-DataGridView__table>.controls-DataGridView__colgroup', this._container.get(0));
+         this._colgroup = tableContainer.find('>.controls-DataGridView__colgroup');
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
          }
@@ -882,7 +883,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (isSticky && !this._options.showHead) {
                return;
             }
-            this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
+            this._getTableContainer().toggleClass('ws-sticky-header__table', isSticky);
          }
       },
 
@@ -890,7 +891,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!this._options.stickyHeader) {
             return;
          }
-         var table = this.getContainer().find('>.controls-DataGridView__table'),
+         var table = this._getTableContainer(),
             isFixed = table.hasClass('ws-sticky-header__table');
 
          if (isFixed === isSticky) {
@@ -933,7 +934,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             колонки без ширины не расстягиваются и таблица смещается влево. Поэтому вставим в таблицу div и удалим его,
               таким образом заставив таблицу пересчитать ширину. */
          if (constants.browser.isIE){
-            $('<div></div>').appendTo(this.getContainer().find('>.controls-DataGridView__table')).remove();
+            $('<div></div>').appendTo(this._getTableContainer()).remove();
          }
       },
 
@@ -1547,6 +1548,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _isCompositeRecordValue: function(colName){
          return colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2);
+      },
+
+      _getTableContainer: function(){
+         return this.getContainer().find('>.controls-DataGridView__table');
       }
    });
 
