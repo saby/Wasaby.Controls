@@ -209,7 +209,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                controls = folderFooter.find('.ws-component');
                for (var j = 0; j < controls.length; j++) {
                   inst = controls[j].wsControl;
-                  inst.destroy && inst.destroy();
+                  inst && inst.destroy && inst.destroy();
                }
                folderFooter.remove();
             }
