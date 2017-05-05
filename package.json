@@ -36,8 +36,7 @@
     "less": "^2.7.2",
     "merge": "1.2.0",
     "minimatch": "^3.0.3",
-    "progress": "^2.0.0",
-    "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-1.0"
+    "progress": "^2.0.0"
   },
   "devDependencies": {
     "grunt": "0.4.5",
@@ -49,6 +48,7 @@
     "grunt-express-server": "0.4.19",
     "gulp-livereload": "^3.8.1",
     "load-grunt-config": "0.16.0",
-    "requirejs": "2.1.18"
+    "requirejs": "2.1.18",
+    "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#release-1.0"
   }
 }
