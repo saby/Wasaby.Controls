@@ -29,7 +29,7 @@
    .controls-Scrollbar.controls-Scrollbar__dragging {
       opacity: 1
    }
-   &:hover .controls-Scrollbar {
+   &:hover > .controls-Scrollbar {
       opacity: 1;
    }
 }
@@ -47,7 +47,7 @@
    }
    -webkit-overflow-scrolling: touch;
    isolation: isolate;
-   
+
    &.ws-sticky-header__scrollable-container {
       width: auto;
    }
@@ -76,7 +76,7 @@
 }
 
 // показываем нативный скролл только на android и ios
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-touch {
    .controls-ScrollContainer {
       overflow: auto;
    }

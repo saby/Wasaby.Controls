@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.TreePaging', [
       },
       setHasMore: function(more) {
          this._options.hasMore = !!more;
-         this._container.toggleClass('ws-hidden', !this._options.hasMore);
+         this._container.toggleClass('ws-hidden', !(this._options.pageSize && more));
       }
    });
 

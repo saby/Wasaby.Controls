@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ToggleButton', ['js!WS.Controls.ToggleButton', 'css!SBIS3.CONTROLS.Button', 'css!SBIS3.CONTROLS.ToggleButton'], function(WSToggleButton) {
+define('js!SBIS3.CONTROLS.ToggleButton', ['js!WSControls/Buttons/ToggleButton', 'css!SBIS3.CONTROLS.Button', 'css!SBIS3.CONTROLS.ToggleButton'], function(WSToggleButton) {
 
    'use strict';
 

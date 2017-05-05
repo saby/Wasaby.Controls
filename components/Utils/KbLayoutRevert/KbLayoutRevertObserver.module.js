@@ -128,8 +128,12 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          if(data.getCount()) {
             /* Есть данные и раскладка менялась - > просто меняем текст в строке поиска */
             if(this._textBeforeTranslate) {
-               this._options.textBox.setText(searchValue);
-               view.setHighlightText(searchValue, false);
+               /* Могут изменить введённый текст в промежуток между событием onSearch (500мс задержка) и прошлым вводом,
+                  проверим это */
+               if(this._getOption('textBox').getText().length === searchValue.length) {
+                  this._options.textBox.setText(searchValue);
+                  view.setHighlightText(searchValue, false);
+               }
                this._textBeforeTranslate = null;
                this._toggleItemsEventRising(true, true);
             }

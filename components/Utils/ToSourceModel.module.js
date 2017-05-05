@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
    'js!WS.Data/Di',
    'Core/core-instance',
    'Core/core-functions',
-   'js!WS.Data/Chain'
-], function(Di, cInstance, cFunc, Chain) {
+   'js!WS.Data/Chain',
+   'js!WS.Data/Utils'
+], function(Di, cInstance, cFunc, Chain, Utils) {
 
    function getModel(model, config) {
       return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
@@ -32,11 +33,16 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
              Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
              Задача:
              https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
-            if(saveParentRecordChanges) {
+            if(saveParentRecordChanges || (!saveParentRecordChanges && cInstance.instanceOfMixin(items, 'WS.Data/Entity/OneToManyMixin'))) {
                parent = items._getMediator().getParent(items);
 
                if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
-                  changedFields = cFunc.clone(parent._changedFields);
+                  if(saveParentRecordChanges) {
+                     changedFields = cFunc.clone(parent._changedFields);
+                  } else {
+                     Utils.logger.error('ToSourceModel: модель, указанная для источника контрола '+
+                        'отличается от модели переданного рекордсета. Возможны изменения в родительской записи.')
+                  }
                }
             }
 

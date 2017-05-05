@@ -12,11 +12,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.FilterHistoryController',
        'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
        'js!SBIS3.CONTROLS.DateRangeRelationController',
+       'js!SBIS3.CONTROLS.FilterController',
        "Core/helpers/collection-helpers",
        "Core/core-instance",
        "Core/helpers/functional-helpers"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, colHelpers, cInstance, fHelpers) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -49,7 +50,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    function drawItemsCallback(operationPanel, view) {
       //TODO: После перехода на экшены, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
       colHelpers.forEach(operationPanel.getItemsInstances(), function(instance) {
-         if (cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.OperationsMark')) {
+         if (typeof instance.setLinkedView == 'function') {
             instance.setLinkedView(view);
          } else {
             instance._options.linkedView = view;
@@ -111,7 +112,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          _breadCrumbsController: null,
          _filterHistoryController: null,
          _pagingHistoryController: null,
-         _dateRangeRelationController: null
+         _dateRangeRelationController: null,
+         _filterController: null
       },
 
       /**
@@ -161,7 +163,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                doNotRespondOnReset: doNotRespondOnReset,
                breadCrumbs: this._options.breadCrumbs,
                backButton: this._options.backButton,
-               keyboardLayoutRevert: keyboardLayoutRevert,
+               keyboardLayoutRevert: keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert,
                hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
             });
          }
@@ -229,6 +231,19 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             toggleCheckBoxes(operationPanel, view, hideCheckBoxes);
          });
       },
+      
+      bindFilters: function(filterButton, fastDataFilter, view) {
+         if(!this._filterController) {
+            this._filterController = new FilterController({
+               view: view,
+               filterButton: filterButton,
+               fastDataFilter: fastDataFilter
+            });
+         }
+   
+         this._filterController.bindFilters();
+      },
+      
       /**
        * Метод для связывания истории фильтров с представлением данных
        */

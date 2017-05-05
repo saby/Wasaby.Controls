@@ -107,7 +107,8 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
          } else {
             this.getChildControlByName('Link').setCaption(caption);
          }
-
+         //Сбрасываем валидацию после изменения значения
+         this.clearMark();
       },
 
       _getCaption: function (opts) {

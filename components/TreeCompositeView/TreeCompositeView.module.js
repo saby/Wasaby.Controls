@@ -636,6 +636,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          } else {
             return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
          }
+      },
+
+      _onCollectionAddMoveRemove: function() {
+         //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
+         //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку
+         if (this._options.viewMode == 'table') {
+            TreeCompositeView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+         }
+         else {
+            this.redraw();
+         }
       }
 
    });

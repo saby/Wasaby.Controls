@@ -63,10 +63,30 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], functio
       }
    }
    
+   /**
+    * Инициализация selectorAction'a, подписка на необходимые события, обработка этих событий
+    * @param action
+    * @param ctrl
+    */
+   function initSelectorAction(action, ctrl) {
+      ctrl.subscribeTo(action, 'onExecuted', function(event, meta, result) {
+         ctrl.setActive(true);
+         if(result) {
+            ctrl.setSelectedItems(result);
+         }
+      });
+   
+      ctrl.subscribeTo(action, 'onExecute', function (event, meta) {
+         //TODO нелогично называется событие - переименовать
+         event.setResult(ctrl._notify('onChooserClick', meta));
+      });
+   }
+   
    
    return {
       isEmptyItem: isEmptyItem,
       checkItemForSelect: checkItemForSelect,
-      delayedNotify: delayedNotify
+      delayedNotify: delayedNotify,
+      initSelectorAction: initSelectorAction
    }
 });
