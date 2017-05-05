@@ -360,7 +360,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       _calculateTileWidth: function(){
          var itemsContainer = this._getItemsContainer(),
             tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__item-type-node)', itemsContainer),
-            folders = $('.controls-ListView__type-true', itemsContainer);
+            folders = $('.controls-ListView__item-type-node', itemsContainer);
          if (!this._tileWidth) {
             this._tileWidth = $(tiles[0]).width();
          }
