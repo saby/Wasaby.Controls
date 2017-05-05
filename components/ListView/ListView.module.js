@@ -2740,11 +2740,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                this._createScrollWatcher();
 
+               this._createLoadingIndicator();
                if (this._options.infiniteScroll == 'demand'){
                   this._setInfiniteScrollState('down');
                   return;
                }
-               this._createLoadingIndicator();
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
                this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
                /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
