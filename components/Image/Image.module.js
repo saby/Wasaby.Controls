@@ -4,7 +4,8 @@
 define('js!SBIS3.CONTROLS.Image',
    [
    "Transport/BLObject",
-   "Core/helpers/helpers",
+   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   'Core/helpers/vital/processImagePath',
    "Core/Indicator",
    "Core/core-merge",
    "Core/CommandDispatcher",
@@ -25,7 +26,7 @@ define('js!SBIS3.CONTROLS.Image',
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
+], function( BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
       'use strict';
       //TODO: Избавится от дублирования
       var
@@ -265,7 +266,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: cHelpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
+                  defaultImage: processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
                   /**
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
@@ -557,7 +558,7 @@ define('js!SBIS3.CONTROLS.Image',
                   self = this;
                if (this._options.avoidCache) {
                   //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-                  cHelpers.reloadImage(this._image, url)
+                  ImageUtil.reloadImage(this._image, url)
                      .addCallback(function(){
                         self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
                         self._onChangeImage();
