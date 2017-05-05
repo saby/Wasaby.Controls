@@ -418,9 +418,11 @@
     }
   }
   &:not(.ws-disabled):not(.controls-Click__active) {
-    &:hover .@{textSelector} {
-      cursor: pointer;
-      text-decoration: underline;
+    &:hover {
+      .@{textSelector}, .controls-Link-link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
 }
