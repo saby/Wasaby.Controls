@@ -190,6 +190,11 @@ define([
                   name: 'space after protocol before www',
                   question: 'https:// www.youtube.com/watch?v=_avffmEHKf8',
                   answer: 'https:// <a rel="noreferrer" class="asLink" target="_blank" href="www.youtube.com/watch?v=_avffmEHKf8">www.youtube.com/watch?v=_avffmEHKf8</a>'
+               },
+               {
+                  name: 'www without dot',
+                  question: 'wwwanytext',
+                  answer: 'wwwanytext'
                }
             ];
 
