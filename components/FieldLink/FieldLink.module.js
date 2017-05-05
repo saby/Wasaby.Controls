@@ -78,7 +78,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           MULTISELECT: 'controls-FieldLink__multiselect',
           SELECTED: 'controls-FieldLink__selected',
           SELECTED_SINGLE: 'controls-FieldLink__selected-single',
-          INVISIBLE: 'ws-invisible',
+          INPUT_MIN_WIDTH: 'controls-FieldLink__inputMinWidth',
           HIDDEN: 'ws-hidden'
        };
 
@@ -719,6 +719,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(cfg.multiselect) {
                 classesToAdd.push(classes.MULTISELECT);
              }
+             
+             if(cfg.multiselect || cfg.alwaysShowTextBox) {
+                classesToAdd.push(classes.INPUT_MIN_WIDTH);
+             }
 
              if(selectedKeysLength || cfg.selectedKey !== null) {
                 classesToAdd.push(classes.SELECTED);
@@ -999,11 +1003,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.getContainer().toggleClass(classes.SELECTED, hasSelectedKeys)
                                 .toggleClass(classes.SELECTED_SINGLE, keysArrLen === 1);
 
-             if(!this._options.alwaysShowTextBox) {
-
-                if(!this.getMultiselect()) {
-                   this._toggleInput(keysArrLen === 0);
-                }
+             if(!this._options.alwaysShowTextBox && !this.getMultiselect() && hasSelectedKeys) {
+                this.hidePicker();
              }
 
              this._loadAndDrawItems(keysArrLen, this._options.pageSize);
@@ -1160,18 +1161,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
                 this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass(classes.HIDDEN, !show);
-             }
-          },
-
-          _toggleInput: function(show) {
-             /* Поле ввода нельзя вырывать из потока (display: none),
-              иначе ломается базовая линия, поэтому скрываем его через visibility: hidden */
-             this.getContainer().find('.controls-TextBox__fieldWrapper').toggleClass(classes.INVISIBLE, !show);
-
-             /* Записи в поле связи могут проставлять програмно,
-                поэтому это надо отслеживать и скрыть автодополнение, если скрывается input */
-             if(this.isPickerVisible() && !show) {
-                this.hidePicker();
              }
           },
 
