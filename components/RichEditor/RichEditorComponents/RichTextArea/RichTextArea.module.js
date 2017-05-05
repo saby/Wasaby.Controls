@@ -811,7 +811,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      onReady: function () {
                         var
                            self = this,
-                           hrefLabel = $('<div class="controls-RichEditor__insertLinkHrefLabel">' + rk(Адрес) + '</div>'),
+                           hrefLabel = $('<div class="controls-RichEditor__insertLinkHrefLabel">' + rk('Адрес') + '</div>'),
                            okButton = $('<div class="controls-RichEditor__insertLinkButton"></div>'),
                            linkAttrs = {
                               target: '_blank',
