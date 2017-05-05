@@ -309,7 +309,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          this.setItemsDragNDrop(false);
          this._options.viewMode = mode;
          this.setItemsDragNDrop(dragndrop);
-         this._options.openedPath = {};
          this._drawViewMode(mode);
          this._notify('onViewModeChanged');
       },
