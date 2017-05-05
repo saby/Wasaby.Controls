@@ -742,7 +742,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          this._revivePackageParams = {
             revive: false,
-            light: true
+            light: true,
+            processed: true
          };
 
          var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
@@ -2524,10 +2525,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    var
       onBeforeCollectionChange = function() {
-         this._revivePackageParams = {
-            light: true,
-            revive: false
-         };
+         //У Лехи Мальцева не всегда соблюдается 100% последовательность before / change / after
+         //поэтому сброс в before делаем только тогда когда был соотве after
+         if (this._revivePackageParams.processed) {
+            this._revivePackageParams = {
+               light: true,
+               revive: false,
+               processed: false
+            };
+         }
       },
 
       onCollectionItemChange = function(eventObject, item, index, property) {
@@ -2580,6 +2586,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
+         this._revivePackageParams.processed = true;
       };
    return ItemsControlMixin;
 
