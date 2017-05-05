@@ -427,6 +427,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
              * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
              * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
+             * @property {Boolean} [sorting] Активирует режим сортировки по полю. Подробное описание можно найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/list-sorting/">Сортировка записей в списках</a>.
              * @property {Boolean} [allowChangeEnable] Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
              * Данные, которые передаются в cellTemplate:
