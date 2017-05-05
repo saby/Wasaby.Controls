@@ -93,7 +93,22 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                aligncenter: false,
                alignjustify: false
             },
-            _styleItem: undefined
+            _styleBox: undefined,
+            _pickerOpenHandler: undefined,
+            _fromFormatChange: false
+         },
+         init: function() {
+            var
+               self = this;
+            RichEditorToolbar.superclass.init.call(this);
+            if (this.getItems().getRecordById('style')){
+               this._styleBox = this.getItemInstance('style');
+               self._pickerOpenHandler = function() {
+                  self._styleBox._picker._container.on('mousedown focus', self._blockFocusEvents);
+               }.bind(self);
+               self._styleBox.once('onPickerOpen', self._pickerOpenHandler);
+            }
+
          },
 
          $constructor: function() {
@@ -190,7 +205,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      textFormat = tf;
                   }
                }
-               button._drawText(button.getItems().getRecordById(textFormat).get('title'));
+               this._fromFormatChange = true;
+               button.setSelectedKey(button.getItems().getRecordById(textFormat).get('key'));
+               this._fromFormatChange = false;
             }
          },
 
@@ -298,7 +315,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _setFontStyle: function(style) {
-            if (this._options.linkedEditor) {
+            if (this._options.linkedEditor && !this._fromFormatChange) {
                this._options.linkedEditor.setFontStyle(style);
             }
          },
@@ -354,6 +371,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          destroy: function() {
             this._toggleToolbarButton.unbind('click');
             this._toggleToolbarButton = null;
+            if (this.getItems().getRecordById('style')) {
+               this._pickerOpenHandler = null;
+               this._styleBox.unsubscribe('onPickerOpen', this._pickerOpenHandler);
+            }
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
          }
