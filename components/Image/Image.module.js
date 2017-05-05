@@ -3,8 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-   "Transport/BLObject",
-   "js!SBIS3.CONTROLS.Utils.ImageUtil",
+   'Transport/BLObject',
+   'js!SBIS3.CONTROLS.Utils.ImageUtil',
    'Core/helpers/vital/processImagePath',
    "Core/Indicator",
    "Core/core-merge",
