@@ -73,11 +73,11 @@ gemini.suite('SBIS3.CONTROLS.FieldLink Online', function () {
             })
 
             .capture('hovered_text_2', function (actions) {
-                actions.mouseMove('[data-id="2"] .controls-FieldLink__item-caption');
+                actions.mouseMove('[data-id="3"] .controls-FieldLink__item-caption');
             })
 
             .capture('hovered_close_icon_2', function (actions) {
-                actions.mouseMove('[data-id="2"] .controls-FieldLink__item-cross');
+                actions.mouseMove('[data-id="3"] .controls-FieldLink__item-cross');
             })
 
             .capture('hovered_more', function (actions) {
