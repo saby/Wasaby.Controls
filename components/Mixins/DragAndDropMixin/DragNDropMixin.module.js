@@ -98,7 +98,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
              */
-            _constShiftLimit: 3
+            _constShiftLimit: 3,
+            _beginDragTarget:null
         },
         //region public
         $constructor: function () {
@@ -323,6 +324,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                     if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable').length === 0) {
                         if (self._isDrag(moveEvent, clickEvent)) {
                             self._beginDrag(clickEvent);
+                            self._beginDragTarget = clickEvent.target;
                             EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                         }
                     }
@@ -403,6 +405,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 //touchend всегда срабатывает не над droppable контейнером, так что для него запускаем всегда
                 this._updateDragTarget(DragObject, e);
             }
+            this._breakClickBySelf(e.target);
             DragObject.setDragging(false);
             var res = this._notify('onEndDrag', DragObject, e);
             if (res !== false) {
@@ -511,9 +514,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                     return false;
                 }
             }
-        }
-
-        //endregion mouseHandler
+        },
+       /**
+        * Останавливает распространение клика если элемент бросили над самим собой либо над его родителем
+        * @param target
+        * @private
+        */
+       _breakClickBySelf: function (target) {
+           if (this._beginDragTarget &&
+              (this._beginDragTarget == target || $(target).find(this._beginDragTarget).length > 0)
+           ) {
+               $(target).one('click', function (event) {
+                   event.preventDefault();
+                   return false;
+               });
+           }
+       }
     };
 
     return DragAndDropMixin;
