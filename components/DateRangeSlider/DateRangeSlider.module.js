@@ -207,6 +207,17 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             closeByExternalClick: true,
             className: 'controls-DateRangeSlider__picker'
          };
+      },
+
+      hidePicker: function () {
+         DateRangeSlider.superclass.hidePicker.apply(this, arguments);
+         // В нормальном режиме у DateRangeSlider нет внутренних компонентов и он не получает фокус т.к.
+         // когда закрывается пикер, то фокус возвращается на предыдущий контрол(DateRangeSlider) и происходит проверка
+         // на всех внетренних контролах могут ли они принимать фокус. А внутренний контрол есть только один.
+         // Это сам пиккер который уже скрыт и не может принять фокус. Устанавливаем фокус вручную.
+         if (this._options.type === 'normal') {
+            this.setActive(true);
+         }
       }
    });
 
