@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
     * @author Борисов Пётр Сергеевич
     */
    var
-      urlRegExpString = '((https?|ftp|file):\/\/|www\.)[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/([-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()\'\[\\\]](?!nbsp;|amp;nbsp;))*)*',
+      urlRegExpString = '((https?|ftp|file):\/\/|www\\\.)[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/([-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()\'\[\\\]](?!nbsp;|amp;nbsp;))*)*',
       excludeLinkString = '<[\\s]*a[\\s\\S]*?>[\\s\\S]*?<\/a>|',
       WrapUtil = /** @lends SBIS3.CONTROLS.Utils.LinkWrap.prototype */{
          urlRegExpString: urlRegExpString,
