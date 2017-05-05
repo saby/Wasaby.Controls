@@ -8,7 +8,7 @@
 /node_modules
 /SBIS3.CONTROLS/*
 /themes/**/*.css
-/tests/unit/artifacts/*
+/artifacts/*
 /tests/int/.idea
 /tests/int/config.ini
 /tests/int/result.db
