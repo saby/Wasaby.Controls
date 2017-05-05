@@ -184,6 +184,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                verticalAlign: verticalAlign,
                horizontalAlign: horizontalAlign,
                closeByExternalClick: true,
+               _canScroll: true,
                handlers: {
                   onClose: function() {
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
