@@ -156,28 +156,31 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          var
             moveStrategy = this.getMoveStrategy();
-         if (moveStrategy) {
-            if (this._checkRecordsForMove(movedItems, target, position)) {
+         movedItems = movedItems.filter(function (item) {
+            return this._checkRecordForMove(item, target, position);
+         }.bind(this));
+         if (movedItems.length > 0) {
+            if (moveStrategy) {
                //todo поддерживаем стратегии перемещения, потом убрать
                if (isChangeOrder) {
                   result = moveStrategy.move(movedItems, target, position == 'after');
                } else {
                   result = moveStrategy.hierarchyMove(movedItems, target);
                }
-            }
-         } else {
-            var result = this._notify('onBeginMove', movedItems, target, position);
-            if (result instanceof Deferred) {
-               result.addCallback(function (result) {
-                  return this._move(movedItems, target, position, result)
-               }.bind(this))
             } else {
-               result = this._move(movedItems, target, position, result);
+               var result = this._notify('onBeginMove', movedItems, target, position);
+               if (result instanceof Deferred) {
+                  result.addCallback(function (result) {
+                     return this._move(movedItems, target, position, result)
+                  }.bind(this))
+               } else {
+                  result = this._move(movedItems, target, position, result);
+               }
+               result.addBoth(function (result) {
+                  this._notify('onEndMove', result, movedItems, target, position);
+                  return result;
+               }.bind(this));
             }
-            result.addBoth(function (result) {
-               this._notify('onEndMove', result, movedItems, target, position);
-               return result;
-            }.bind(this));
          }
          return (result instanceof Deferred) ? result : new Deferred().callback(result);
       },
@@ -186,14 +189,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (result == Mover.ON_BEGIN_MOVE_RESULT.MOVE_IN_ITEMS) {
             this._moveInItems(movedItems, target, position);
          } else if (result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
-            if ((this._checkRecordsForMove(movedItems, target, position))) {
-               return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
-                  this._moveInItems(movedItems, target, position);
-                  return result;
-               }.bind(this));
-            } else {
-               result = false;
-            }
+            return this._callMoveMethod(movedItems, target, position, result).addCallback(function (result) {
+               this._moveInItems(movedItems, target, position);
+               return result;
+            }.bind(this));
          }
          return  new Deferred().callback(result);
       },
@@ -297,13 +296,14 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       //endregion move_strategy
       //region checkmove
       /**
-       * Проверяет можно ли перенести элементы
-       * @param {Array} movedItems Массив перемещаемых элементов
-       * @param {WS.Data/Entity/Record} target рекорд к которому надо переместить
+       * Проверяет можно ли перенести элемент
+       * @param {WS.Data/Entity/Model} movedItem Перемещаемый элементов
+       * @param {WS.Data/Entity/Model} target рекорд к которому надо переместить
+       * @param {Position} Позиция
        * @returns {Boolean}
        * @private
        */
-      _checkRecordsForMove: function(movedItems, target, position) {
+      _checkRecordForMove: function(movedItem, target, position) {
          var
             key,
             toMap = [],
@@ -319,11 +319,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                }
                toMap = this._getParentsMap(target.getId());
             }
-            for (var i = 0; i < movedItems.length; i++) {
-               key = '' + (cInstance.instanceOfModule(movedItems[i], 'WS.Data/Entity/Model') ? movedItems[i].getId() : movedItems[i]);
-               if (toMap.indexOf(key) !== -1) {
-                  return false;
-               }
+            key = '' + (cInstance.instanceOfModule(movedItem, 'WS.Data/Entity/Model') ? movedItem.getId() : movedItem);
+            if (toMap.indexOf(key) !== -1) {
+               return false;
             }
          }
          return true;
