@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/Indicator',
       'Core/core-merge',
       'Core/IoC',
-      'Core/core-instance'
+      'Core/core-instance',
+      'Core/constants'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance, constants) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -169,6 +170,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          init: function () {
             InteractiveMove.superclass.init.call(this);
             this._syncOptions();
+
          },
 
          _move: function(movedItems, target) {
@@ -228,11 +230,20 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                   parentProperty: this._options.linkedObject.getParentProperty(),
                   nodeProperty: this._options.linkedObject.getNodeProperty()
                }, {preferSource: true});
+               this.subscribeTo(this._options.linkedObject, 'onKeyPressed', this._keyPressHandler.bind(this));
             }
          },
          setLinkedObject: function (value) {
             InteractiveMove.superclass.setLinkedObject.call(this, value);
             this._syncOptions();
+         },
+
+         _keyPressHandler: function(busE, e){
+            switch (e.which) {
+               case constants.key.m:
+                  e.ctrlKey && this.execute();
+                  break;
+            }
          }
       });
       return InteractiveMove;
