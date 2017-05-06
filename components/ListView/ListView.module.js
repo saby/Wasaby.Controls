@@ -3911,7 +3911,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         useDefaultMove
                      ).addCallback(function (result) {
                         if (result !== false && cInstance.instanceOfMixin(dragOwner, 'SBIS3.CONTROLS.MultiSelectable')) {
-                           dragOwner.removeItemsSelectionAll();
+                           dragOwner.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
                         }
                      });
                   }
