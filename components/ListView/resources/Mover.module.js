@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             }
             return result;
          });
+         return def;
       },
       /**
        * Перемещает переданные записи
