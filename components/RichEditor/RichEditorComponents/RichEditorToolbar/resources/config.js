@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'align',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Выравнивание текста'),
          items: [
             { key: 'alignleft',title: ' ', tooltip: rk('По левому краю'), icon: 'icon-24 icon-AlignmentLeft icon-primary'},
@@ -157,11 +157,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          pickerConfig: {
             verticalAlign: {
                side: "top",
-               offset: 1 //border
+               offset: 2 //border
             },
             horizontalAlign: {
                side: "left",
-               offset: 2
+               offset: 6
             }
          },
          order: 80
@@ -169,11 +169,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'color',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Цвет текста'),
          icon: 'sprite:icon-24 icon-LetterA icon-primary',
          className: 'fre-color controls-ToggleButton__square controls-ToggleButton-square__medium',
-         pickerClassName: 'fre-color controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-color controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          items: [
             { key: 'black', tooltip: rk('Черный'), title: '<div  unselectable ="on" class="controls-RichEditorToolbar__color controls-RichEditorToolbar__colorBlack"></div>'},
             { key: 'red', tooltip: rk('Красный'), title: '<div  unselectable ="on" class="controls-RichEditorToolbar__color controls-RichEditorToolbar__colorRed"></div>' },
@@ -188,6 +188,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          pickerConfig: {
+             verticalAlign: {
+                 side: "top",
+                 offset: 2 //border
+             },
             horizontalAlign: {
                side: "left",
                offset: 6
@@ -198,10 +202,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'list',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Вставить/Удалить список'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
-         pickerClassName: 'fre-list  controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-list controls-RichEditorToolbarMenu controls-Menu__hide-menu-header',
          icon   : 'sprite:icon-24 icon-ListMarked icon-primary',
          items: [
             { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
@@ -215,11 +219,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          pickerConfig: {
             verticalAlign: {
                side: "top",
-               offset: 1 //border
+               offset: 2 //border
             },
             horizontalAlign: {
                side: "left",
-               offset: 2
+               offset: 6
             }
          },
          order: 90
@@ -273,9 +277,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'smile',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
-         pickerClassName: 'fre-smiles  controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-smiles controls-Menu__hide-menu-header',
          className: 'fre-smiles controls-ToggleButton__square controls-ToggleButton-square__medium',
          items: smiles,
          handlers: {
@@ -289,7 +293,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'paste',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          caption: rk('Вставка'),
          tooltip: rk('Вставка'),
@@ -333,7 +337,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'history',
          caption: 'История ввода',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
+         pickerClassName: 'controls-MenuIcon__Menu',
          icon: 'sprite:icon-24 icon-InputHistory icon-primary',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
