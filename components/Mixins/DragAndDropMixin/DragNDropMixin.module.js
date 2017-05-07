@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 self = this,
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable').length === 0) {
+                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
                         if (self._isDrag(moveEvent, clickEvent)) {
                             self._beginDrag(clickEvent);
                             self._beginDragTarget = clickEvent.target;
