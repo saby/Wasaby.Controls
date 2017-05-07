@@ -627,15 +627,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   onActivated: function (item) {
                      this.deleteRecords(item.data('id'));
                   }
-               },{
-                  name: 'move',
-                  icon: 'sprite:icon-16 icon-Move icon-primary',
-                  tooltip: rk('Перенести'),
-                  caption: rk('Перенести'),
-                  isMainAction: false,
-                  onActivated: function (item) {
-                     this.moveRecordsWithDialog([item.data('id')]);
-                  }
                }],
                /**
                 * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
@@ -3930,7 +3921,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,
