@@ -366,6 +366,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        */
       setColumnsConfig: function(config) {
          this._options.columnsConfig = config;
+         this._columnsController.setState(this._options.columnsConfig.selectedColumns);
          this._notifyOnPropertyChanged('columnsConfig');
       },
       /**
