@@ -22,6 +22,8 @@
 
       .controls-ItemActions__itemsContainer {
          .controls-ItemActions__item {
+            border: 0;
+            border-radius: 0;
             padding: 0 12px;
             margin: 0;
             height: 100%;
@@ -41,15 +43,26 @@
                }
             }
 
-            &.controls-IconButton .controls-Button__icon {
-               height: 100%;
-               &:before {
-                  left: 0;
-                  top: 50%;
-                  margin-top: -@list-view-actions-item-height / 2;
-                  position: absolute;
+            &.controls-IconButton {
+               &.controls-IconButton__round-border-24 {
+                  height: 100% !important;
+                  width: auto !important;
+                  .controls-Button__icon {
+                     height: 100% !important;
+                     font-size: 24px !important;
+                  }
+               }
+               .controls-Button__icon {
+                  height: 100%;
+                  &:before {
+                     left: 0;
+                     top: 50%;
+                     margin-top: -@list-view-actions-item-height / 2;
+                     position: absolute;
+                  }
                }
             }
+
          }
 
          .controls-ItemActions__menu-button,
