@@ -82,6 +82,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
                }
             }
          ];
+         opts.value.forEach(function(value) {
+            opts.properties.items.getRecordById(value.id).set('hierarchy', value.hierarchy);
+         });
          properties.dataSource = new Memory({
             data: opts.properties.items.getRawData(),
             idProperty: opts.properties.idProperty
