@@ -876,12 +876,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            },
                            element: okButton
                         });
-                        if (cConstants.browser.isMobileIOS) {
-                           //финт ушами, тк фокус с редактора убрать никак нельзя
-                           //тк кнопки на которую нажали у нас в обработчике тоже нет
-                           //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
-                           okButton.focus();
-                        }
                      },
                      onAfterClose: function() {
                         if (typeof onAfterCloseHandler === 'function') {

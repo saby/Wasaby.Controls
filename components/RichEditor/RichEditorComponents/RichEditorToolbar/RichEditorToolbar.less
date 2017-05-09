@@ -112,6 +112,21 @@
    }
 }
 
+.controls-RichEditorToolbarMenu {
+   .controls-MenuItem {
+      padding: 0 5px;
+      .controls-MenuItem__content {
+         width: 30px;
+         .controls-MenuItem__icon.icon-24 {
+            left: 3px;
+         }
+         .controls-MenuItem__text {
+            display: none;
+         }
+      }
+   }
+}
+
 /* Блок смайлов */
 .fre-smiles {
    &.controls-MenuButton__Menu {
@@ -204,6 +219,14 @@
          font-size: 12px;
          line-height: 15px;
          color: #999999;
+      }
+   }
+}
+
+.ws-is-firefox {
+   .controls-RichEditorToolbar {
+      .controls-RichEditorToolbar__item.controls-ComboBox .controls-TextBox__field {
+         padding-top: 0;
       }
    }
 }
