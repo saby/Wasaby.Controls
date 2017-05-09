@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _changeRootHandler: function(){
-         var curRoot = view.getCurrentRoot();
+         var curRoot = this._options.view.getCurrentRoot();
          this._options.paging.setSelectedKey(0);
          this._options.paging.setPagesCount(0);
          this._currentScrollPage = 0;
