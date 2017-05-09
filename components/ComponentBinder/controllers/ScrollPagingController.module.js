@@ -22,7 +22,16 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          //Говорим, что элемент видимый, чтобы WindowManager учитывал его при нахождении максимального zIndex
          WindowManager.setVisible(this._zIndex);
          // отступ viewport от верха страницы
-         this._containerOffset = this._options.view._getScrollWatcher().getScrollContainer().offset().top;
+         this._containerOffset = this._getViewportOffset();
+      },
+
+      _getViewportOffset: function(){
+         var viewport = this._options.view._getScrollWatcher().getScrollContainer();
+         if (viewport[0] == window) {
+            return 0;
+         } else {
+            return viewport.offset().top;
+         }
       },
 
       bindScrollPaging: function(paging) {
