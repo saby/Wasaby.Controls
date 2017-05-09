@@ -308,22 +308,24 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
        * @private
        */
       _mapFilterStructureByResetValue: function(partial, prop) {
-         var resetProp = 'reset' + ucFirst.call(prop);
+         var resetProp = 'reset' + ucFirst.call(prop),
+             isPartial, ivf;
          
          return colHelpers.reduce(this.getFilterStructure(), function(result, element) {
-            if(element.hasOwnProperty(resetProp)) {
+            isPartial = partial && element.itemTemplate === null && element.historyItemTemplate !== null && element.hasOwnProperty(prop);
+            ivf = element.internalValueField;
+
+            if (element.hasOwnProperty(resetProp)) {
                /* Надо смотреть только на itemTemplate, но сейчас есть проблема с компонентом dateRange,
                   который делают через две дополнительные структуры и его сбрасывать надо. Как будет сделан компонент,
                   который может отображать дату по стандарту в фильтра FIXME удалить "element.historyItemTemplate !== null" */
-               if(partial && element.itemTemplate === null && element.historyItemTemplate !== null) {
-                  if(element.hasOwnProperty(prop)) {
-                     result[element.internalValueField] = element[prop];
-                  }
+               if (isPartial) {
+                  result[ivf] = element[prop];
                } else {
-                  result[element.internalValueField] = element[resetProp];
+                  result[ivf] = element[resetProp];
                }
-            } else if(element.hasOwnProperty(prop)) {
-               result[element.internalValueField] = element[prop];
+            } else if (isPartial) {
+               result[ivf] = element[prop];
             }
             return result;
          }, {});
