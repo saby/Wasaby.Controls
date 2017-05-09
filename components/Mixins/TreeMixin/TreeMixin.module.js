@@ -593,7 +593,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             hierarchyViewModeItemTpl: '',
             hierarchyViewModeItemContentTpl: '',
             /**
-             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
              * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
              * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
              *
