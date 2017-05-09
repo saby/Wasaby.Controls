@@ -2622,7 +2622,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                if(!containsHoveredItem) {
-                  if(!hoveredItemContainer) {
+                  if(!hoveredItemContainer || !hoveredItemContainer.length) {
                      this._mouseLeaveHandler();
                   } else {
                      this._updateHoveredItem(hoveredItemContainer);
