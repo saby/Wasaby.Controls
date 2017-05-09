@@ -66,11 +66,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj, projCfg = {};
+      projCfg.idProperty = cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : '');
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
       if (cfg.itemsFilterMethod) {
          projCfg.filter = cfg.itemsFilterMethod;
+      }
+      if (cfg.loadItemsStrategy == 'merge') {
+         projCfg.unique = true;
       }
       proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
@@ -602,6 +606,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * </pre>
              */
             sorting: [],
+            /**
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
+             * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
+             * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
+             *
+             */
+            loadItemsStrategy: 'append',
             /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              * @example
