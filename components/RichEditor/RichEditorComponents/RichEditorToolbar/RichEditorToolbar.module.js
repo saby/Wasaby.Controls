@@ -372,8 +372,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             this._toggleToolbarButton.unbind('click');
             this._toggleToolbarButton = null;
             if (this.getItems().getRecordById('style')) {
-               this._pickerOpenHandler = null;
                this._styleBox.unsubscribe('onPickerOpen', this._pickerOpenHandler);
+               this._pickerOpenHandler = null;
             }
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
