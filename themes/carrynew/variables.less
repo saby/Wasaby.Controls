@@ -1,4 +1,27 @@
 @import "../prestonew/variables";
+
+// Default vars
+@default-text-size:                       1rem;
+@small-text-size:                         .857rem;
+@large-text-size:                         1.14rem;
+@huge-text-size:						              1.43rem;
+@default-text-color:                      #e4e4e4;
+@default-color:                           #587AB0;
+@primary-color:                           #D94700;
+@disabled-color:                          #2C4458;
+@innacent-color:                     	    #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FA9C33;
+@success-color:                           #72BE44;
+@default-bg-color:                        #1D2834;
+@accent-color:							              #26B8FF;
+@default-hover-color:                     #E0ECF5;
+@innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@basic-block-bg-color:					          #fff; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@default-height:								          1.7857rem;
+
+//=============
+
 @black-color:                             #333;
 @default-color:								transparent;
 @gray-color:                              #3b5d79;
@@ -50,9 +73,9 @@
 @button-text-color:                       #000;
 @button-active-text-color:                @button-text-color;
 @button-active-border:                    @button-border;
-@button-active-bg:                        #fff;
-@button-hover-bg: #e0ecf5;
-@button-bg: 								#f0f5fb;
+@button-active-bg:                        #e0ecf5;
+@button-hover-bg:                         #e0ecf5;
+@button-bg: 								              #f0f5fb;
 // Normal primary button
 @button-primary-text-color:               #fff;
 @button-primary-border:                  0.07rem solid #d94700;
@@ -60,10 +83,10 @@
 
 @button-primary-hover-border:             @button-primary-border;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                rgb(217, 71, 0);
+@button-primary-hover-bg:                  #EC5B19;
 
 @button-primary-active-text-color:        @button-active-text-color;
-@button-primary-active-border:            #d94700;
+@button-primary-active-border:            2px solid #d94700;
 @button-primary-active-shadow:            @button-active-shadow;
 @button-primary-active-bg:                #d94700;
 
@@ -85,7 +108,7 @@
 @button-big-active-bg: #c1441b;
 @button-big-active-text-color:            @button-active-text-color;
 @button-big-active-border:                @button-big-border;
-@button-primary-hover-text-color: #000;
+@button-primary-hover-text-color:           #fff;
 // Big primary button
 
 @button-big-primary-hover-border:         @button-primary-hover-border;
@@ -191,8 +214,7 @@
 // -------- //
 // Switcher //
 // -------- //
-@switcher-width: 100px;
-@switcher-height: 50px;
+
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-btn-bg-color:                         #202835;
@@ -701,7 +723,7 @@
 
 @data-grid-bg:                                  #fff;
 
-@data-grid-row-hover-bg:                        #1b2530;
+@data-grid-row-hover-bg:                        @default-hover-color;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-cell-text-color:           #000;
@@ -871,3 +893,8 @@
 @data-grid-cell-separator-color:              #1a242e;
 
 @menu-header-bg-color:                    #23b8ff;
+ @date-range-big-header-bg:                 #fff;
+ @date-range-big-bg:                         #fff;
+
+ @switcher-border:                               2px solid #e4e4e4;
+ @switcher-do-border:                            2px solid #e4e4e4;
