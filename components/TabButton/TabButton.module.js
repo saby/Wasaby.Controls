@@ -50,6 +50,16 @@ define(
 
       $constructor: function () {
       },
+      
+      init: function () {
+         TabButton.superclass.init.call(this);
+
+         // если у tabbutton нет потомков, он не должен участовать в обходе по табу и принимать активность на activateFirstControl
+         // если внутри есть потомки, об обходе их по табу должен беспокоиться их создатель
+         if (!this.getImmediateChildControls().length) {
+            this.setTabindex(0);
+         }
+      },
 
       _checkEnabledByClick: function(){
          return true;

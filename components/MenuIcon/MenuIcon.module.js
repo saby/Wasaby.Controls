@@ -68,15 +68,14 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
 
          opts.cssClassName += opts.caption ? '' : ' controls-Button__withoutCaption';
 
-         var cssModificators = [
-            'controls-IconButton__round-border',
-            'controls-IconButton__round-border-24'
-         ];
-         for (var i = 0, l = cssModificators.length; i < l; i++){
-            if (opts.className.indexOf(cssModificators[i]) !== -1){
-               opts.pickerClassName += ' ' + cssModificators[i];
+         if(opts.className && opts.className.indexOf('controls-IconButton__round-border') !== -1){
+            if(opts.className.indexOf('controls-IconButton__round-border-24') !== -1){
+                opts.pickerClassName += ' controls-IconButton__round-border-24';
+            }else {
+                opts.pickerClassName += ' controls-IconButton__round-border';
             }
          }
+
          if (opts.icon && opts.icon.indexOf('icon-24') !== -1 && opts.className.indexOf('controls-Menu__hide-menu-header') === -1){
             opts.pickerClassName += ' controls-Menu__big-header';
          }
