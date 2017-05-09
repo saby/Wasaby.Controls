@@ -1,8 +1,14 @@
-<div style="{{getItemTemplateData(...).computedPadding}}" class="{{getItemTemplateData(...).addClasses}}"
+<div class="{{getItemTemplateData(...).addClasses}}"
      data-parent-hash="{{projItem.getParent().getHash()}}" data-hash="{{projItem.getHash()}}"
      data-id="{{item.getId() + ''}}">
-    <ws:if data="{{getItemTemplateData(...).drawExpandIcon}}">
-        <div class="controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open' : ''}}"></div>
-    </ws:if>
-    <ws:partial template="{{itemContent}}" scope="{{...}}" />
+      <ws:if data="{{ !isSearch }}">
+         <ws:for data="i in itemLevel">
+            <div class="controls-TreeView__levelPadding">&nbsp;</div>
+         </ws:for>
+         <div class="controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open' : ''}}"></div>
+      </ws:if>
+      <ws:else data="{{ !projItem.isNode() && projItem.getLevel() > 1 }}">
+         <div class="controls-TreeView__levelPadding">&nbsp;</div>
+      </ws:else>
+   <ws:partial template="{{itemContent}}" scope="{{...}}" />
 </div>
