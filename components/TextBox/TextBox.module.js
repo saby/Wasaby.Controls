@@ -320,6 +320,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
             }
             else if (this._options.tooltip) {
                this.setTooltip(this._options.tooltip);
+            }else if (this._container.attr('title')) {
+                this._container.attr('title', '');
             }
             this._tooltipText = this._options.text;
          }
