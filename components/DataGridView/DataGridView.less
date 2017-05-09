@@ -21,7 +21,7 @@
    }
    
    &:not(.controls-ListView__disableHover) {
-      .controls-ListView__hoveredItem {
+      .controls-ListView__hoveredItem:not(.controls-editInPlace) {
          background: @data-grid-row-hover-bg;
          
          .controls-DataGridView__th {
