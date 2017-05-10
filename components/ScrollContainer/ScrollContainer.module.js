@@ -74,9 +74,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _containerReady: function() {
             
             if (window && this._container && (typeof this._container.length === "number")) {
-               if (this._container[0].startTag &&
-                  /^<COMPONENT/.test(this._container[0].startTag.toUpperCase()))
-                  return;
 
                this._content = $('> .controls-ScrollContainer__content', this.getContainer());
                this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
