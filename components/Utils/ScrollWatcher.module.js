@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
     * @class SBIS3.CONTROLS.ScrollWatcher
     * @extends SBIS3.CORE.Abstract
     * @author Крайнов Дмитрий Олегович
+    * @public
     */
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
@@ -105,7 +106,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          var elem = event.target;
          this._processScrollEvent(elem.scrollTop);
       },
-
+       /**
+        *
+        * @returns {*}
+        */
       getScrollContainer: function(){
          if (!this._options.element.length){
             var element = this._findScrollElement();
@@ -131,7 +135,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          offset = offset || 0;
          return element.scrollTop() + element.outerHeight() >= this.getScrollHeight(element[0]) - offset;
       },
-
+      /**
+       *
+       * @returns {boolean}
+       */
       isScrollOnTop: function(){
          var element = this.getScrollContainer();
          return element.scrollTop() <= this._options.totalScrollOffset;

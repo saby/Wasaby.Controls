@@ -17,8 +17,8 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
          _options: {
             name: 'dialogForSelect',
             autoHeight: false,
-            width: '400px',
-            height: '400px',
+            height: 'auto',
+            width: 'auto',
             resizable: false,
             linkedView: undefined,
             records: undefined,

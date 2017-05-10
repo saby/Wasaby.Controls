@@ -587,6 +587,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             if(newMultiselect === false && selectedKeys.length > 1) {
                this.setSelectedKeys(selectedKeys);
             }
+            this._notifyOnPropertyChanged('multiselect');
          }
       },
 
@@ -919,7 +920,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             if(colHelpers.isEqualObject(selectedKeys, EMPTY_SELECTION)) {
 
                /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
-               if(items && items.getRecordById(EMPTY_SELECTION[0])) {
+               if(items && items.getIndexByValue(this._options.idProperty, EMPTY_SELECTION[0]) !== -1) {
                   isEmpty = false;
                }
 

@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.CommandsButton', [
-   'js!SBIS3.CONTROLS.MenuIcon',
+   'js!WSControls/Buttons/MenuButton',
    'js!SBIS3.CONTROLS.ContextMenu',
-   'css!SBIS3.CONTROLS.CommandsButton'
+   'css!SBIS3.CONTROLS.CommandsButton',
+   'css!SBIS3.CONTROLS.IconButton'
 ], function(MenuIcon){
 
    'use strict';
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      *     Когда выпадающе меню отображено, иконка меняется на "Стрелка вверх" (ExpandUp) - класс "icon-24 icon-ExpandUp icon-primary".
      *     Список иконок вы можете найти <a href='https://wi.sbis.ru/docs/icons/'>здесь</a>.
      *     </li>
-     *     <li><b>Заголовок в выпадающем меню.</b> (опция {@link SBIS3.CONTROLS.WSButtonBase#caption}). Скрыт. По умолчанию установлен css-модификатор "controls-Menu__hide-menu-header".</li>
+     *     <li><b>Заголовок в выпадающем меню.</b> (опция {@link WSControls/Buttons/ButtonBase#caption}). Скрыт. По умолчанию установлен css-модификатор "controls-Menu__hide-menu-header".</li>
      *     <li>Для выпадающего меню раскрытие производится в правую сторону от кнопки.</li>
      * </ul>
      *
@@ -31,9 +32,10 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      */
    var CommandsButton = MenuIcon.extend({
       _modifyOptions: function(opts) {
-         opts.cssClassName += ' controls-Menu__hide-menu-header';
+         opts.cssClassName += ' controls-Menu__hide-menu-header controls-IconButton';
          opts.icon = 'sprite:icon-24 icon-ExpandDown icon-primary';
-         opts.pickerClassName += ' controls-CommandsButton__picker controls-MenuIcon__Menu';
+         opts.pickerClassName += ' controls-CommandsButton__picker';
+         opts.className += ' '
          if (opts.pickerConfig) {
             opts.pickerConfig.locationStrategy = 'bodyBounds';
          }

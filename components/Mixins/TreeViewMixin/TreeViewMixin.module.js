@@ -15,7 +15,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             key: key,
             item: model,
             level: item.getLevel(),
-            padding: cfg._paddingSize * item.getLevel() + cfg._originallPadding,
             footerTpl: cfg.folderFooterTpl,
             multiselect: cfg.multiselect,
             pagerOptions: cfg._getFolderPagerOptions(cfg, item, key)
@@ -201,19 +200,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _destroyItemsFolderFooter: function(key) {
-         var
-            inst,
-            controls,
-            folderFooter = this._getFolderFooter(key);
-
-            if (folderFooter.length) {
-               controls = folderFooter.find('.ws-component');
-               for (var j = 0; j < controls.length; j++) {
-                  inst = controls[j].wsControl;
-                  inst.destroy && inst.destroy();
-               }
-               folderFooter.remove();
-            }
+         var folderFooter = this._getFolderFooter(key);
+         this._destroyControls(folderFooter);
+         folderFooter.remove();
       },
 
       _getFolderFooter: function(id) {

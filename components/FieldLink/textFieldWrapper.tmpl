@@ -7,5 +7,5 @@
 	maxlength="{{maxLength ? maxLength}}"
 />
 <div if="{{ !_useNativePlaceholder }}" class="controls-TextBox__placeholder">
-  {{ placeholder|sanitize }}
+	<ws:partial template="{{ placeholder }}"/>
 </div>

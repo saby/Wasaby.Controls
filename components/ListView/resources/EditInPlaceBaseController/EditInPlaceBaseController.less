@@ -1,34 +1,33 @@
 .controls-ListView__item {
-  &.controls-editInPlace__editing {
-    background: @controls-editInPlace-editor-bg;
+   &.controls-editInPlace__editing {
+      background: @controls-editInPlace-editor-bg;
 
-    .controls-DataGridView__td {
-      background-color: @controls-editInPlace-editor-bg;
-    }
-  }
-}
-
-.generate-side-class(@i: 1) when (@i =< length(@data-grid-side-cell-padding-variants)) {
-  @nval: extract(@data-grid-side-cell-padding-variants, @i);
-  @val: (@nval - 5) * 1px;
-  .controls-DataGridView__sidePadding-@{nval} {
-    .add-editors-style(@val);
-  }
-  .generate-side-class(@i + 1);
-}
-.add-editors-style(@val) {
-  .controls-editInPlace__withEditor {
-    &:first-child {
-      .controls-editInPlace__editor {
-        padding-left: @val;
+      .controls-DataGridView__td {
+         background-color: @controls-editInPlace-editor-bg;
       }
-    }
-    &:last-child {
-      .controls-editInPlace__editor {
-        padding-right: @val;
-      }
-    }
-  }
+   }
 }
-.add-editors-style(@controls-editInPlace-first-editor-padding-left);
-.generate-side-class();
+.add-editors-style(@left, @right) {
+   .controls-editInPlace__withEditor {
+      &:first-child {
+         .controls-editInPlace__editor {
+            padding-left: @left;
+         }
+      }
+      &:last-child {
+         .controls-editInPlace__editor {
+            padding-right: @right;
+         }
+      }
+   }
+}
+.add-editors-style(@controls-view-eip-padding-DEFAULT, @controls-view-padding-DEFAULT);
+/* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
+.generate-padding-class-EIP(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+   @val: extract(@controls-view-padding-variants, @i);
+   .controls-ListView__padding-@{val} {
+      .add-editors-style(~"@{controls-view-eip-padding-@{val}}", ~"@{controls-view-padding-@{val}}");
+   }
+   .generate-padding-class-EIP(@i + 1);
+}
+.generate-padding-class-EIP();

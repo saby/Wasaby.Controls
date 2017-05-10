@@ -183,8 +183,12 @@
 
       .controls-DropdownList__multiselect.controls-DropdownList__item {
          padding-left: 0;
-         .controls-DropdownList__itemTextWrapper {
-            max-width: calc(~"100% - 16px"); /* 16px чекбокс */
+      }
+   }
+   &.controls-DropdownList__type-filter {
+      &.controls-DropdownList__has-empty-value {
+         .controls-ListView__defaultItem {
+            display: none;
          }
       }
    }
@@ -344,14 +348,15 @@
 
       &.controls-DropdownList__item {
          font-size: 0;
+         .flexbox();
+         .controls-DropdownList__itemCheckBox {
+            .flex-shrink(0);
+         }
          * {
             font-size: @DropdownList-picker-menu-font-size;
          }
       }
 
-      &.controls-DropdownList__item.controls-DropdownList__item__selected {
-         display: block;
-      }
       &.controls-DropdownList__item__selected .controls-DropdownList__itemCheckBox {
          background: @DropdownList-icon-checked-bg-pathFilter;
          visibility: visible;
@@ -361,14 +366,12 @@
          font-weight: bold;
          & .controls-DropdownList__itemCheckBox {
             visibility: hidden;
-
          }
       }
 
       .controls-DropdownList__itemCheckBox {
          width: 16px;
          height: 16px;
-         background: none;
          cursor: pointer;
          display: inline-block;
          background: @DropdownList-icon-bg-pathFilter;
@@ -399,6 +402,11 @@
             top: -@DropdownList-picker-menu-item-height - 5px;
          }
       }
+      .controls-DropdownList__multiselect {
+         .controls-DropdownList__itemCheckBox {
+            bottom: 0;
+         }
+      }
    }
    .controls-DropdownList__afterCaptionWrapper {
       top: 3px;
@@ -407,22 +415,6 @@
 
 .ws-is-ie, .ws-is-firefox {
   .controls-DropdownList .controls-DropdownList__selectedItem{
-     display: inline-block;
      .inline-flexbox();
   }
-}
-
-.ws-is-mobile-platform {
-   //На мобильной платформе при сглаживании появляется линия в пол пикселя в вертикальной ориентации. Перекрываю через псевдо-элемент
-   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter {
-      .controls-DropdownList__header:before {
-         content: '';
-         position: absolute;
-         right: 0;
-         left: 0;
-         bottom: -1px;
-         height: 2px;
-         background: @DropdownList-header-bg;
-      }
-   }
 }

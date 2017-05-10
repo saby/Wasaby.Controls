@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Menu', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.ButtonGroupBaseDS',
-   'html!SBIS3.CONTROLS.Menu',
+   'tmpl!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.hierarchyMixin',
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.Menu', [
       _createSubMenu : function(target, parent, isFirstLevel, item) {
          target = $(target);
          var config = this._getSubMenuConfig(isFirstLevel, item);
-         config.element = $('<div class="controls-Menu__Popup controls-Menu__SubMenuPopup"></div>');
+         config.element = $('<div class="controls-Menu__SubMenuPopup ' + this.getClassName() + '"></div>');
          config.parent = parent;
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;

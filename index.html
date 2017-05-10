@@ -232,6 +232,14 @@
                </li>
 
             </ul>
+            <h3>Индикатор процесса</h3>
+            <ul>
+               <style>.my-own-class { background: deepskyblue }</style>
+               <li>Одно значение<span class="processStateIndicator" data-numvals="1" data-state="50"></span></li>
+               <li>Два значения<span class="processStateIndicator" data-numvals="2" data-state="20,30"></span></li>
+               <li>Три значения<span class="processStateIndicator" data-numvals="3" data-state="10,20,30"></span></li>
+               <li>Три значения (второй цвет свой)<span class="processStateIndicator" data-colors=",my-own-class" data-numvals="3" data-state="10,20,30"></span></li>
+            </ul>
          </td>
       </tr>
       <tr>
@@ -249,6 +257,7 @@
                </li>
             </ul>
          </td>
+         
       </tr>
    </table>
 
@@ -609,6 +618,17 @@
                href: '/theme-preview/preview.html'
             })
          });
+         require(['js!SBIS3.CONTROLS.ProcessStateIndicator'], function(r){
+            $('.processStateIndicator').each(function(){
+               var colors = this.getAttribute('data-colors');
+               new r({
+                  element: this,
+                  colors: colors && colors.split(',') || undefined,
+                  numValues: +this.getAttribute('data-numvals'),
+                  state: this.getAttribute('data-state').split(',')
+               })
+            })
+         })
       })
    });
 </script>

@@ -397,6 +397,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       setViewMode: function() {
          this._prevMode = null;
+         // Сбрасываем открытые узлы именно через set'тер, т.к. только так можно закрыть узлы и в проекции
+         this.setOpenedPath({});
          TreeCompositeView.superclass.setViewMode.apply(this, arguments);
       },
 
@@ -607,6 +609,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return this.partialyReload(idArray);
          } else {
             return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
+         }
+      },
+
+      _onCollectionAddMoveRemove: function() {
+         //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
+         //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку
+         if (this._options.viewMode == 'table') {
+            TreeCompositeView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+         }
+         else {
+            this.redraw();
          }
       }
 

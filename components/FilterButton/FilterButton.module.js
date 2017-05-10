@@ -407,6 +407,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              return {
                 corner: isRightAlign ? 'tl' : 'tr',
+                opener: this,
                 parent: this,
                 horizontalAlign: {
                    side: isRightAlign ? 'left' : 'right'
@@ -430,14 +431,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
                          self._picker.destroy();
                          self._picker = null;
                       }
-                   },
-
-                   onShow: function() {
-                      if (!firstTime) {
-                         updatePickerContext();
-                      }
-
-                      firstTime = false;
                    },
 
                    onKeyPressed: function(event, e) {

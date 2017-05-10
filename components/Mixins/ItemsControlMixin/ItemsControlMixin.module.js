@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/functional-helpers",
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
-   "Core/helpers/Object/isEmpty"
+   "Core/helpers/Object/isEmpty",
+   "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
    constants,
@@ -55,7 +56,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    fHelpers,
    strHelpers,
    SourceUtil,
-   isEmpty) {
+   isEmpty,
+   debounce) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -64,11 +66,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj, projCfg = {};
+      projCfg.idProperty = cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : '');
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
       if (cfg.itemsFilterMethod) {
          projCfg.filter = cfg.itemsFilterMethod;
+      }
+      if (cfg.loadItemsStrategy == 'merge') {
+         projCfg.unique = true;
       }
       proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
@@ -80,7 +86,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
             method = function(item, index, projItem){
-               return item.get(field);
+               //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
+               return item.get(field) + '';
             }
          }
          else {
@@ -600,6 +607,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             sorting: [],
             /**
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
+             * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
+             * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
+             *
+             */
+            loadItemsStrategy: 'append',
+            /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              * @example
              * <pre>
@@ -676,7 +690,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemsSortMethod: undefined,
             itemsFilterMethod: undefined,
             easyGroup: false,
-            task1173537554: false
+            task1173537554: false,
+            task1173770359: false
          },
          _loader: null
 
@@ -738,10 +753,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          this._revivePackageParams = {
             revive: false,
-            light: true
+            light: true,
+            processed: true
          };
 
-         var debouncedDrawItemsCallback = fHelpers.forAliveOnly(this._drawItemsCallback, this).debounce(0);
+         var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
          // FIXME сделано для правильной работы медленной отрисовки
          this._drawItemsCallbackDebounce = fHelpers.forAliveOnly(function() {
             debouncedDrawItemsCallback();
@@ -1391,17 +1407,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._onAfterItemsLoad = onAfterItemsLoad.bind(this);
          this._dataLoadedCallback = this._dataLoadedCallback.bind(this);*/
          this._onCollectionChange = onCollectionChange.bind(this);
+         this._onBeforeCollectionChange = onBeforeCollectionChange.bind(this);
          this._onAfterCollectionChange = onAfterCollectionChange.bind(this);
          /*this._onCurrentChange = onCurrentChange.bind(this);*/
       },
 
       _setItemsEventHandlers: function() {
          this.subscribeTo(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.subscribeTo(this._options._itemsProjection, 'onBeforeCollectionChange', this._onBeforeCollectionChange);
          this.subscribeTo(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
 
       _unsetItemsEventHandlers: function () {
          this.unsubscribeFrom(this._options._itemsProjection, 'onCollectionChange', this._onCollectionChange);
+         this.unsubscribeFrom(this._options._itemsProjection, 'onBeforeCollectionChange', this._onBeforeCollectionChange);
          this.unsubscribeFrom(this._options._itemsProjection, 'onAfterCollectionChange', this._onAfterCollectionChange);
       },
        /**
@@ -1541,7 +1560,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           if (this._dataSource) {
              this._toggleIndicator(true);
              //TODO удалить после 3.7.5
-             if (this.hasEventHandlers('onBeforeDataLoad')) {
+             if (this.hasEventHandlers('onBeforeDataLoad') && !this._options.task1173770359) {
                 IoC.resolve('ILogger').error('3.7.5 onBeforeDataLoad', 'Событие устарело и вскоре будет удалено. Вместо него используйте onBeforeProviderCall из источника данных');
              }
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
@@ -2516,11 +2535,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    };
 
    var
+      onBeforeCollectionChange = function() {
+         //У Лехи Мальцева не всегда соблюдается 100% последовательность before / change / after
+         //поэтому сброс в before делаем только тогда когда был соотве after
+         if (this._revivePackageParams.processed) {
+            this._revivePackageParams = {
+               light: true,
+               revive: false,
+               processed: false
+            };
+         }
+      },
+
       onCollectionItemChange = function(eventObject, item, index, property) {
-         this._revivePackageParams = {
-            light: true,
-            revive: false
-         };
          //Вызываем обработчик для обновления проперти. В наследниках itemsControlMixin иногда требуется по особому обработать изменение проперти.
          this._onUpdateItemProperty(item, property);
       },
@@ -2535,10 +2562,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @private
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-         this._revivePackageParams = {
-            light: true,
-            revive: false
-         };
          if (this._isNeedToRedraw()) {
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
@@ -2574,6 +2597,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
+         this._revivePackageParams.processed = true;
       };
    return ItemsControlMixin;
 

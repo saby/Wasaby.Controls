@@ -9,14 +9,21 @@
     height: @suggest-loading-height;
     position: absolute;
     right: @suggest-loading-right;
-    top: @suggest-loading-top;
+    top: 50%;
+    margin-top: -@suggest-loading-height/2;
     width: @suggest-loading-width;
   }
 }
-.controls-FloatArea.controls-Suggest__picker {
+.controls-Suggest__picker {
   width: @suggest-picker-standard-width;
   border: @suggest-picker-border;
   margin: @suggest-picker-margin;
+  .box-shadow(@suggest-picker-box-shadow);
+  
+  &.controls-popup-revert-vertical {
+    .box-shadow(@suggest-picker-box-shadow-reverted);
+    margin: @suggest-picker-margin-reverted;
+  }
 
   .controls-ListView {
     .controls-ListView__EmptyData {

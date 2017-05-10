@@ -1,0 +1,19 @@
+<div class="controls-TabButtons{{(items && items.length) ? ' hasItems'}}{{idProperty ? ' hasKeyField'}}">
+   <div class="controls-TabButtons__leftContainer">
+      <ws:if data="{{ _serverRender }}">
+         <ws:partial template="{{_itemsTemplate}}" records="{{_records['left']}}" tplData="{{_itemData}}" />
+      </ws:if>
+   </div>
+   <ws:if data="{{ tabSpaceTemplate }}">
+   <div class="controls-TabButtons__tabSpace-template">
+      <div class="controls-TabButtons__tabSpace-template-inner">
+         <ws:partial template="{{tabSpaceTemplate}}" scope="{{...}}"/>
+      </div>
+   </div>
+   </ws:if>
+   <div class="controls-TabButtons__rightContainer">
+      <ws:if data="{{ _serverRender }}">
+         <ws:partial template="{{_itemsTemplate}}" records="{{_records['right']}}" tplData="{{_itemData}}" />
+      </ws:if>
+   </div>
+</div>
