@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
 
             var direction = this._getDirection(this._currentWindow, newWindow),
-               updateConfig = this._getUpdateConfig(diff, direction, this._newItemsCount, projCount);
+               updateConfig = this._getUpdateConfig(diff, direction, this._newItemsCount);
 
             // удаляем записи
             if (updateConfig.removed) {
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             return (currentWindow[0] < newWindow[0] || currentWindow[0] > newWindow[1]) && currentWindow[1] > newWindow[0];
          },
 
-         _getUpdateConfig: function(diff, direction, newItemsCount, projCount) {
+         _getUpdateConfig: function(diff, direction, newItemsCount) {
             var segments = [],
                pagesToRemove = [],
                pagesToAdd = [],
@@ -164,7 +164,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          _markPages: function(flag, pages) {
             var changed = false;
-            for (i = 0; i < pages.length; i++) {
+            for (var i = 0; i < pages.length; i++) {
                if (this._virtualPages[pages[i]] && this._virtualPages[pages[i]].dettached != flag) {
                   this._virtualPages[pages[i]].dettached = flag;
                   changed = true;
@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @param  {String} mode       режим работы
           * @return {Number}            позиция вставки
           */
-         _getPositionToAdd: function(diff, direction, mode){
+         _getPositionToAdd: function(diff, direction, mode, projCount){
             var at = 0;
             if (direction) {
                if (mode == 'down') {
