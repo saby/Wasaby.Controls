@@ -101,6 +101,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             var
                self = this;
             RichEditorToolbar.superclass.init.call(this);
+            //Необходимо делать блокировку фокуса на пикере comboBox`a чтобы редактор не терял выделение
+            //Делаем это при первом показе пикера
             if (this.getItems().getRecordById('style')){
                this._styleBox = this.getItemInstance('style');
                self._pickerOpenHandler = function() {
@@ -315,6 +317,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _setFontStyle: function(style) {
+         //_fromFormatChange - означает, что формат сменился под курсором и не нужно применять стиль
             if (this._options.linkedEditor && !this._fromFormatChange) {
                this._options.linkedEditor.setFontStyle(style);
             }
