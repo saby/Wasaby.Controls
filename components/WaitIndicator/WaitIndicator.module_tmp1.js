@@ -33,11 +33,12 @@
     * Для отображения индикатора используется статический метод класса WaitIndicator.make:
     * <pre>
     *    WaitIndicator.make({
-    *       target: dataGrid,
-    *       message: 'Данные загружаются...',
-    *       scroll: 'bottom',
-    *       stopper: stopper,
-    *    });
+    *          target: dataGrid,
+    *          message: 'Данные загружаются...',
+    *          scroll: 'bottom',
+    *       }
+    *       stopper
+    *    );
     * </pre>
     * <br/>
     * Созданный таким способом индикатор можно остановить с помощью отложенного стопа stopper, который представляет собой экземпляр класса Promise
@@ -49,7 +50,6 @@
     *    <li>{HTMLElement|jQuery|SBIS3.CORE.Control} target - Объект привязки индикатора</li>
     *    <li>{string} message - Текст сообщения индикатора</li>
     *    <li>{number} delay - Задержка перед началом показа индикатора. Если указана неотрицательная закаржка - она будет использована, если нет - будет использована задержка по умолчанию в 2 секунды</li>
-    *    <li>{Promise|Deferred} stopper - Отложенный стоп, при срабатывании которого индикатор будет удалён</li>
     *    <li>{string} scroll - Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom</li>
     *    <li>{string} overlay - Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй</li>
     *    <li>{boolean} small - Использовать уменьшеный размер</li>
@@ -309,16 +309,14 @@
       Object.defineProperty(WaitIndicator, 'SUSPEND_MAX_LIFETIME', {value:600000, writable:false, enumerable:true});
 
       /**
-       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. Если в опциях присутствует отложенный
-       * стоп - он будет использован для удаления индикатора. Возвращает колбэк, при вызове которого индикатор будет удалён. С задержкой, если она
-       * будет указана при вызове колбэка.
+       * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. Отложенный стоп будет использован
+       * для последующего удаления индикатора. С задержкой, если она будет указана при вызове колбэка
        * @public
        * @static
        * @param {object} options Опции конфигурации
        * @param {HTMLElement|jQuery|SBIS3.CORE.Control} options.target Объект привязки индикатора
        * @param {string} options.message Текст сообщения индикатора
        * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
-       * @param {Promise|Deferred} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
        * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
        * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
        * @param {boolean} options.small Использовать уменьшеный размер
@@ -326,32 +324,29 @@
        *                               Если не задан - индикатор центрируется
        * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
        *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
-       * @return {function}
+       * @param {Promise|Deferred} stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
        */
-      WaitIndicator.make = function (options) {
+      WaitIndicator.make = function (options, stopper) {
+         var method = typeof Promise !== 'undefined' && stopper instanceof Promise ? 'then'
+            // Будем определять instanceOf Deferred не прямо, чтобы не создавать зависимости и не подгружать класс (утиная типизация)
+            : (stopper && ['addBoth', 'addCallback', 'addCallbacks', 'addErrback', 'callback', 'errback'].every(function (method) { return typeof stopper[method] === 'function'; }) ? 'addCallbacks' : null);
+         if (!method) {
+            throw new Error('Valid stopper is not supplied');
+         }
          var indicator = new WaitIndicator(
             options ? options.target : null,
             options ? options.message : null,
             options,
             options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.getParam('defaultDelay')
          );
-         var cb = function (delay) {
-            indicator.remove(delay);
-         };
-         if (options && options.stopper) {
-            var erfun = function (err) {
+         stopper[method](
+            function (delay) {
+               indicator.remove(delay);
+            },
+            function (err) {
                indicator.remove();
-            };
-            if (typeof Promise !== 'undefined' && options.stopper instanceof Promise) {
-               options.stopper.then(cb, erfun);
             }
-            else
-            // Будем определять instanceOf Deferred не прямо, чтобы не создавать зависимости и не подгружать класс (утиная типизация)
-            if (['addBoth', 'addCallback', 'addCallbacks', 'addErrback', 'callback', 'errback'].every(function (method) { return typeof options.stopper[method] === 'function'; })) {
-               options.stopper.addCallbacks(cb, erfun);
-            }
-         }
-         return cb;
+         );
       };
 
       /**
