@@ -238,11 +238,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
          // Уберем троеточие, что бы оно не мешало при расчете размеров
          // или создадим его, если его нет
-         if (this._dots){
-            this._dots.detach();
-         } else {
-            this._dots = $(dotsTpl());
-         }
+
 
          var targetContainer = this._getTargetContainer(),
             maxWidth = parseFloat(this._container.css('max-width')),
@@ -319,6 +315,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          var isEmpty = (!this.getItems() || (this.getItems() && (this.getItems().getCount() === 0)));
          this._toggleHomeIcon(isEmpty);
          this.toggle(!isEmpty);
+         //
+         if (this._dots){
+            this._dots.detach();
+         } else {
+            this._dots = $(dotsTpl());
+         }
+         
          BreadCrumbs.superclass.redraw.call(this);
          if (this.getItems() && this.getItems().getCount() && this.isVisible()){
             this._calculateSizes();
