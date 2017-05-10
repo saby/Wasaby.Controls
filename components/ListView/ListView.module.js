@@ -2652,7 +2652,7 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
-         _removeItems: function(items, groupId){
+         _removeItems: function(items, groupId) {
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items, groupId);
             if (this.isInfiniteScroll()) {
@@ -2661,7 +2661,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId){
-            ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                if (action == IBindCollection.ACTION_ADD) {
                   this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -2669,10 +2668,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
+            ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
             return items.length;
          },
