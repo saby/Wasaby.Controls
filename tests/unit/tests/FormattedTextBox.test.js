@@ -5,14 +5,17 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
 
    'use strict';
    describe('js!SBIS3.CONTROLS.FormattedTextBox', function () {
-      beforeEach(function() {
-         $('#mocha').append('<div id="component"></div>');
-      });
+      $('#mocha').append('<div id="component"></div>');
+
       let FTB = new FormattedTextBox({
          element: 'component',
          mask: 'xx:xx:xx'
       });
       let inputField = FTB._inputField;
+
+      beforeEach(function() {
+      });
+
       describe('Android: Get inputted symbol and symbol position', function (){
          it('Not changed', function (){
             assert.equal(FTB._getTextDiff(), false);
