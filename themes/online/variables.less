@@ -110,7 +110,7 @@
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
 
-
+@link-additional-color:                   @gray-color;
 
 // ------ //
 // Button //
@@ -277,6 +277,14 @@
 @icon-button-done-color: #72BE44;
 @icon-button-error-color: #EF463A;
 
+@icon-button-round-border-position:     absolute;
+@icon-button-round-border-width:        28px;
+@icon-button-round-border-height:       28px;
+@icon-button-round-border-line-height:  26px;
+@border-radius:                         14px;
+@icon-button-border-width:              1px;
+
+
 // ------------- //
 // Toggle button //
 // ------------- //
@@ -323,7 +331,8 @@
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
-@tab-buttons-border-bottom:                     1px solid #CCCCCC;
+@tab-buttons-border-bottom-height:              1px;
+@tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #CCCCCC;
 @tab-buttons-div-display:                       table-cell;
 @tab-buttons-div-space:                         nowrap;
 @tab-buttons-div-align:                         middle;
@@ -530,6 +539,7 @@
 @check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
 @check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
+@check-box-caption-margin-left:                 0px;
 // ------------------------------------------------------------------------------------- //
 
 @check-box-icon-width:                          18px;
@@ -565,6 +575,8 @@
 @switcher-width:                                46px;
 @switcher-height:                               24px;
 @switcher-line-height:                          @switcher-height;
+@switcherline-height:                           2px;
+
 @switcher-line-color:							@gray-color;
 @switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
@@ -1110,12 +1122,13 @@
 @suggest-loading-height:                        16px;
 @suggest-loading-width:                         @suggest-loading-height;
 @suggest-loading-right:                         3px;
-@suggest-loading-top:                           3px;
 
 @suggest-picker-border:                         1px solid #cccccc;
 @suggest-picker-border-radius:                  0;
-@suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
-@suggest-picker-margin:                         -2px 0 0 0;
+@suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
+@suggest-picker-box-shadow-reverted:            0 -4px 8px rgba(0, 0, 0, 0.15);
+@suggest-picker-margin:                         -1px 0 0 0;
+@suggest-picker-margin-reverted:                1px 0 0 0;
 @suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
@@ -1332,6 +1345,7 @@
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
+@date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
@@ -1433,9 +1447,9 @@
 
 @date-range-choose-years-only-curent-year-color:   @darkcyan-color;
 
-@date-range-choose-home-button-size:            24px;
+@date-range-choose-home-button-size:            28px;
 @date-range-choose-home-button-font-size:       14px;
-@date-range-choose-home-button-line-height:     22px;
+@date-range-choose-home-button-line-height:     26px;
 @date-range-choose-home-color:                  @date-range-choose-color;
 @date-range-choose-home-button-margin:          0 auto 12px;
 
@@ -1791,7 +1805,7 @@
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 0 10px 0;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
-@tree-view-ellipsis-copyArrow-width:            16px;
+@tree-view-ellipsis-copyArrow-width:            19px;
 @tree-view-ellipsis-copyArrow-right:            -1px;
 @tree-view-firstCell-margin-searchMode:         2px;
 
@@ -2145,7 +2159,7 @@
 @controls-filterButton-history-maxHeight-height:  120px;
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
-@controls-filterButton-history-actions-left:      -4px !important;
+@controls-filterButton-history-actions-left:      -6px !important;
 @controls-filterButton-history-actions-bottom:    -1px;
 
 @controls-filterButton-history-item-min-height:   24px;
@@ -2222,7 +2236,8 @@
 @controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
 
-@controls-FieldLink-fieldWrapper-margin:           0 !important;
+@controls-FieldLink-fieldWrapper-margin:           0;
+@controls-FieldLink-fieldWrapper-minWidth:         100px;
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
@@ -2279,14 +2294,16 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
-@back-button-arrow-paddingleft:                   4px;
-@bread-crumb-title-hover-color:                   @primary-color;
+@back-button-arrow-paddingleft:                    4px;
+@bread-crumb-title-hover-color:                    @primary-color;
 @bread-crumb-title-color:                          #0055BB;
-@bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
+@bread-crumbs-hier-wrapper-bg:					      url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
 @breadcrumbs-small-items-top:                      @breadcrumbs-top;
+@bread-crumbs-menu-padding:                        4px 0;
+@bread-crumbs-menu-max-width:                      800px;
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
@@ -2299,6 +2316,8 @@
 @controls-movedialog-activate-right:               38px;
 @controls-movedialog-activate-top:                 8px;
 @controls-movedialog-min-width:                    auto;
+@controls-movedialog-max-width:                    400px;
+@controls-movedialog-height:                       400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 @controls-movedialog-min-width:                    auto;
@@ -2519,3 +2538,5 @@
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;
+@date-range-big-header-bg:								#f9f9f9;
+@date-range-big-bg:										#fff;

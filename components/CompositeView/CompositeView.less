@@ -2,13 +2,7 @@
   .controls-CompositeView__itemsContainer{
      overflow: hidden;
   }
-
-   &.controls-CompositeView-tile {
-      .controls-ItemsToolbar {
-         right: @list-view-items-toolbar-right-tile;
-         bottom: @list-view-items-toolbar-bottom-tile;
-      }
-   }
+   
    /* Стили для режима 'Список' */
   .controls-CompositeView__listItem {
     height: @data-grid-cell-height;
@@ -156,6 +150,14 @@
       }
    }
 }
+
+.controls-CompositeView-tile {
+   .controls-ItemsToolbar {
+      right: @list-view-items-toolbar-right-tile;
+      bottom: @list-view-items-toolbar-bottom-tile;
+   }
+}
+
 .controls-CompositeView-tile__static, .controls-CompositeView-tile__dynamic {
    .controls-CompositeView__itemsContainer {
       overflow: visible;

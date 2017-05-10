@@ -1,13 +1,10 @@
 html {
   color: #e4e4e4;
-  background-color: #1d2834;
 }
 body {
   font-size: 1rem !important;
 }
-.controls-ListView {
-  background-color: #1d2834;
-}
+
 .controls-SearchForm {
   .icon-size {
     font-size: 3rem !important;
@@ -104,10 +101,25 @@ body .ws-enabled .icon-primary{
 }
 body {
   .icon-16 {
-    font-size: 1.43rem !important;
-    line-height: 1.43rem !important;
-    width: 1.43rem;
-    height: 1.43rem;
+    font-size: 1.32rem !important;
+    line-height: 1.32rem !important;
+    width: 1.32rem;
+    height: 1.32rem;
+  }
+  .icon-24 {
+    font-size: 1.7857rem !important;
+    height: 1.7857rem !important;
+    width: 1.7857rem !important;
+    line-height: 1.7857rem !important;
+
+  }
+  .icon-32 {
+
+        font-size: 3rem!important;
+        height: 3rem!important;
+        width: 3rem!important;
+        line-height: 3rem !important;
+
   }
 }
 .controls-Button.controls-Button--prestogray {
@@ -171,10 +183,9 @@ body {
 
 body {
   .ws-window-titlebar {
-    color: #e4e4e4;
+    color: @default-text-color;
     line-height: 3.57rem;
     height: 3.57rem;
-    background: transparent;
     position: absolute;
     left: 0;
     right: 0;
@@ -182,6 +193,7 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
+    background: #2e404f;
     box-shadow: none!important;
   }
   &.ws-window-titlebar-custom {
@@ -203,7 +215,7 @@ body {
 body {
   .controls__filter-button__clear-filter {
     font-size: 1.14rem;
-    
+
     &:hover {
       color: #26b8ff !important;
     }
@@ -224,34 +236,125 @@ body {
 .controls-ComboBox.controls-TextBox.controls-Picker__show {
   border-bottom: none;
 }
-.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable
- {
-  color: #e4e4e4 !important;
- }
+
 
  .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
- 
+
     background: #FF7033;
 }
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
 .icon-small {
-  font-size: 1.857rem !important;
-  height: 1.857rem !important;
-  width: 1.857rem !important;
+  font-size: 1.85rem !important;
+  height: 1.85rem !important;
+  width: 1.85rem !important;
 }
-.icon-medium {
-  font-size: 2.21rem !important;
-  height: 2.21rem !important;
-  width: 2.21rem !important;
-}
-.icon-large {
-  font-size: 3rem !important;
-  height: 3rem !important;
-  width: 3rem !important;
-}
+
 
 body .ws-loadingimg {
   top: 30%;
+}
+
+body {
+
+  .ws-float-area-title-generated {
+      line-height: 3.57rem;
+  }
+  .ws-float-area-title {
+    padding-left: .857rem;
+  }
+  .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+    height: 3.57rem;
+
+      .ws-float-area-title {
+        line-height: 3.57rem;
+      }
+  }
+  .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+
+    font-size: 1.14rem;
+
+  }
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    width: 1.43rem !important;
+    height: 1.43rem !important;
+    font-size: 1.43rem !important;
+     border: none !important;
+    color: #2D68B5 !important;
+    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+        font-size: 1.43rem !important;
+        color: #2D68B5 !important;
+        border: none !important;
+        left: 7px;
+    }
+
+    .controls-DateBox {
+      min-height: 3rem;
+    }
+
+}
+
+.controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+  display: none;
+}
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
+    height: 3.57rem;
+}
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+  border-color: #2c3e50;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+    font-size: inherit !important;
+
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+         font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+       font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    margin-right: 1rem;
+  }
+}
+.controls-DateBox.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
+    border-color: #314559 #314559 #314559 #314559 !important;
+ }
+ .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
+      border-color: #314559 #314559 #314559 #314559 !important;
+ }
+ .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
+     margin-left: 2.4rem !important;
+ }
+  .controls-Button .controls-Button__icon.icon-large + .controls-Button__text {
+      margin-left: 2.4rem !important;
+  }
+body .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
+    padding-left: .5rem;
+}
+body .controls-BackButton {
+  line-height: 3.64rem;
+}
+
+body .ws-float-area-nostack-panel-shadow-standart {
+    border: 1px solid #2e404f;
+    background: #2e404f;
+}
+.controls-editInPlace .controls-editInPlace__editor {
+  background: @basic-block-bg-color;
+}
+.controls-ListView .controls-ItemsToolbar__editActions {
+    background: @basic-block-bg-color;
+}
+
+body .ws-float-area-title-generated {
+    margin-right: 3rem;
 }

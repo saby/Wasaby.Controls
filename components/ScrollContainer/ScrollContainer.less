@@ -53,6 +53,11 @@
    }
 }
 
+body.ws-is-ie .controls-ScrollContainer__content {
+  // Хак. IE не поддерживает isolation: isolate;
+  transform: scale(1);
+}
+
 .controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
    -webkit-overflow-scrolling: auto!important;
 }
@@ -76,7 +81,7 @@
 }
 
 // показываем нативный скролл только на android и ios
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-touch.ws-is-ie {
    .controls-ScrollContainer {
       overflow: auto;
    }

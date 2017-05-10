@@ -1,11 +1,12 @@
 
 define('js!WSControls/Buttons/Button', [
    'Core/constants',
+   'Core/Sanitize',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
    'tmpl!WSControls/Buttons/resources/contentTemplate',
    'css!WSControls/Buttons/resources/ButtonCommonStyles'
-], function(constants, ButtonBase, dotTplFn, contentTemplate) {
+], function(constants, Sanitize, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
 
@@ -102,7 +103,8 @@ define('js!WSControls/Buttons/Button', [
       },
 
       setCaption: function(caption){
-          Button.superclass.setCaption.call(this, caption);
+         caption = Sanitize(caption, {validNodes: {component: true}});
+         Button.superclass.setCaption.call(this, caption);
          var btnText = $('.js-controls-Button__text', this._container.get(0));
          btnText.toggleClass('controls-Button__emptyCaption', !caption);
          btnText.html(caption || '');
@@ -184,24 +186,25 @@ define('js!WSControls/Buttons/Button', [
       _unregisterDefaultButton: function() {
          this.sendCommand('unregisterDefaultButtonAction');
       },
-      _registerDefaultButton: function() {
-         function defaultAction(e) {
-            if (self && self.isEnabled()) {
-               self._onClickHandler(e);
-               return false;
-            } else {
-               return true;
-            }
-         }
-         var self = this;
 
+      _registerDefaultButton: function() {
+         this._defaultAction = function(e) {
+             if (this && this.isEnabled()) {
+                 this._onClickHandler(e);
+                 return false;
+             } else {
+                 return true;
+             }
+         };
+         this._defaultAction = this._defaultAction.bind(this);
          // регистрироваться имеют права только видимые кнопки. если невидимая кнопка зарегистрируется, мы нажмем enter и произойдет неведомое действие
          if (this.isVisible()) {
             // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
             this._unregisterDefaultButton();
-            this.sendCommand('registerDefaultButtonAction', defaultAction, this);
+            this.sendCommand('registerDefaultButtonAction', this._defaultAction, this);
          }
       },
+
        /**
         * @noShow
         * @param isDefault

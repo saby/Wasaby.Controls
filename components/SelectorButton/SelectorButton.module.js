@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @mixes SBIS3.CONTROLS.ActiveSelectable
     * @mixes SBIS3.CONTROLS.SyncSelectionMixin
     * @mixes SBIS3.CONTROLS.ChooserMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     *
     * @cssModifier controls-SelectorButton__asLink Отображает текст как ссылку.
     * @cssModifier controls-SelectorButton__withoutCross Скрывает крестик справа от текста.
@@ -157,11 +157,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 
          if(this._options.useSelectorAction) {
             this.subscribe('onInit', function () {
-               this.subscribeTo(this._getSelectorAction(), 'onExecuted', function (event, meta, result) {
-                  if (result) {
-                     self.setSelectedItems(result);
-                  }
-               });
+               ItemsSelectionUtil.initSelectorAction(this._getSelectorAction(), this);
             });
          }
       },
@@ -183,9 +179,20 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          
       },
       _drawSelectedItems: function() {
-         var self = this;
+         var self = this,
+            items;
          this.getSelectedItems(true).addCallback(function(list){
-            self.setItems(list || []);
+            items = self.getItems();
+         
+            if(list) {
+               self.setItems(list);
+            } else if(items) {
+               // TODO перевести на observableList, для этого необходимо отказать от получание записей по методу getRecordById
+               items.clear();
+               self.setItems(items);
+            } else {
+               self.setItems(new List());
+            }
             return list;
          });
       },

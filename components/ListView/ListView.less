@@ -11,7 +11,7 @@
     position: relative;
   }
    
-   &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem {
+   &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem:not(.controls-editInPlace) {
       background-color: @default-itemHover-color;
    }
 
@@ -68,6 +68,10 @@
          cursor: @list-view-disabled-cursor;
       }
    }
+}
+// Убираем минимальную высоту установленную выше для таблиц вложенных в контейнер фиксированных заголовков.
+.ws-sticky-header__header-container > .controls-ListView:not(.controls-ListView__dataLoaded) {
+   min-height: initial;
 }
 
 //Данные стили обеспечивают правильное поведение ListView при активации.
@@ -274,6 +278,11 @@
       display: none;
    }
 }
+
+.ws-float-area-animate .controls-ListView__scrollPager {
+   display: none;
+}
+
 .controls-ScrollContainer {
    > .controls-ListView__scrollPager{
       position: absolute;

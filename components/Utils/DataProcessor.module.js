@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                 endpoint: object
             });
          exportDeferred = source.call(methodName, cfg).addErrback(function(error) {
-            IoC.resolve('ILogger').log(rk('DataProcessor. Ошибка выгрузки данных'), error.details);
+            fcHelpers.alert(error);
             return error;
          });
          if (object !== "Excel") {

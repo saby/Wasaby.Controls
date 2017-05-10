@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
-                menuClassName = '',
+                menuClassName = 'controls-ItemActions__menu',
                 parentContainer = this.getParent().getContainer(),
                 items = this.getItems().clone(),
                 target;
@@ -186,6 +186,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                verticalAlign: verticalAlign,
                horizontalAlign: horizontalAlign,
                closeByExternalClick: true,
+               _canScroll: true,
                handlers: {
                   onClose: function() {
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
