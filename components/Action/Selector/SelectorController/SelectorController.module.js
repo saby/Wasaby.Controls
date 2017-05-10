@@ -177,9 +177,9 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                    }
 
                    if(index === -1) {
-                      currentItems.add(item);
+                      currentItems.add(item.clone());
                    } else {
-                      currentItems.replace(item, index);
+                      currentItems.replace(item.clone(), index);
                    }
                 });
                 onChangeSelection();
