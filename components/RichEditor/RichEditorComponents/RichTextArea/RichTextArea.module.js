@@ -782,6 +782,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @param target объект рядом с которым будет позиционироваться  диалог вставки ссылки
           */
          insertLink: function(onAfterCloseHandler, target) {
+            //TODO: переписать этот метод на отдельный компонент
             var
                editor = this._tinyEditor,
                selection = editor.selection,
@@ -876,6 +877,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            },
                            element: okButton
                         });
+
+                     },
+                     onAfterShow: function(){
+                        if (cConstants.browser.isMobileIOS) {
+                           //финт ушами, тк фокус с редактора убрать никак нельзя
+                           //тк кнопки на которую нажали у нас в обработчике тоже нет
+                           //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
+                           $('.controls-RichEditor__insertLinkButton').focus();
+                        }
                      },
                      onAfterClose: function() {
                         if (typeof onAfterCloseHandler === 'function') {
