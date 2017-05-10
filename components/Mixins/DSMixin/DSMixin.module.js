@@ -510,7 +510,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              */
             autoRedraw: true
          },
-         _loader: null
+         _loader: null,
+
+         addedOnlyExtraNew: true
       },
 
       $constructor: function () {
@@ -1365,16 +1367,22 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          }
       },
 
+
       _fillItemInstances: function () {
+         this.addedOnlyExtraNew = true;
          var childControls = this.getChildControls();
          for (var i = 0; i < childControls.length; i++) {
             if (childControls[i].getContainer().hasClass('controls-ListView__item')) {
                var id = childControls[i].getContainer().attr('data-id');
                this._itemsInstances[id] = childControls[i];
+               if (!childControls[i]._template) {
+                  this.addedOnlyExtraNew = false;
+               }
             }
          }
 
       },
+
        /**
         * Метод получения элементов коллекции.
         * @returns {*}
@@ -1387,7 +1395,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * </pre>
         */
       getItemsInstances: function () {
-         if (Object.isEmpty(this._itemsInstances)) {
+         if ( this.addedOnlyExtraNew || Object.isEmpty(this._itemsInstances)) {
             this._fillItemInstances();
          }
          return this._itemsInstances;

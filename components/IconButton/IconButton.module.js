@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!WSControls/Buttons/Button', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton, template) {
 
    'use strict';
 
@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WSControls/Buttons/Button', 'css!SBI
     * Класс контрола, который предназначен для отображения кнопки в виде иконки.
     *
     * @class SBIS3.CONTROLS.IconButton
-    * @extends WSControls/Buttons/ButtonBase
+    * @extends SBIS3.CONTROLS.WSButtonBase
     * @mixes SBIS3.CONTROLS.IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Борисов Петр Сергеевич
@@ -53,42 +53,17 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!WSControls/Buttons/Button', 'css!SBI
     */
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
-      $protected: {
-         _options: {
-         }
-      },
-
-      _modifyOptions: function () {
-         var
-             options = IconButton.superclass._modifyOptions.apply(this, arguments),
-             iconClass = options._iconClass;
-
-         options.cssClassName += ' controls-IconButton';
-
-         if(options.caption && !options.tooltip){
-             options.tooltip = options.caption;
-         }
-
-         if (iconClass) {
-            if (((iconClass.indexOf('icon-error') >= 0) || (iconClass.indexOf('icon-done') >= 0))){
-               if (iconClass.indexOf('icon-error') >= 0) {
-                  options.cssClassName += ' controls-IconButton__errorBorder';
-               }
-               else {
-                  options.cssClassName += ' controls-IconButton__doneBorder';
-               }
-            }
-         }
-         return options;
-      },
-
-      $constructor: function () {
+      _template: template,
+      _controlName: 'SBIS3.CONTROLS.IconButtonFuck',
+      _useNativeAsMain: true,
+      _containerReady: function (container) {
+         IconButton.superclass._containerReady.call(this, container);
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
           * в котором прописаны поведение и цвета для иконок по ховеру*/
-         var className = this._container.get(0).className;
+         var className = (typeof(container.get)==="function") && container.get(0).className;
          if (className && className.indexOf('controls-IconButton__round-border') >= 0) {
-            this._container.removeClass('action-hover');
+            container.removeClass('action-hover');
          }
       }
    });
