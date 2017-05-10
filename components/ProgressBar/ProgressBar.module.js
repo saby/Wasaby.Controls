@@ -157,10 +157,9 @@ define('js!SBIS3.CONTROLS.ProgressBar',
          },
 
          _drawProgress: function(progress) {
-            var progressPercent = progress + '%';
             this.getLinkedContext().setValueSelf('progress', {
-               backgroundSize: progressPercent + ' 100%',
-               value: progressPercent
+               backgroundSize: progress + '% 100%',
+               value: progress + ' %'
             });
       }
    });
