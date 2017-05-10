@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    "Core/core-functions",
    "Core/core-merge",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
-   "Core/helpers/collection-helpers"
-], function ( cFunctions, cMerge,FilterToStringUtil, colHelpers) {
+   "Core/helpers/collection-helpers",
+   "Core/helpers/String/ucFirst"
+], function ( cFunctions, cMerge,FilterToStringUtil, colHelpers, ucFirst) {
 
 
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
@@ -241,13 +242,14 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       _resetFilter: function(internalOnly, partial) {
          var context = this._getCurrentContext(),
              resetFilter = this.getResetFilter(partial),
+             resetCaption = this._getResetCaption(partial),
              toSet = {};
 
          /* Синхронизация св-в должна происходить один раз, поэтому делаю обёртку */
          propertyUpdateWrapper(function() {
             if (context) {
                toSet[this._options.internalContextFilterName] = {
-                  caption: this._mapFilterStructureByProp('resetCaption'),
+                  caption: resetCaption,
                   filter: resetFilter,
                   visibility: this.getResetVisibilityValue()
                };
@@ -255,7 +257,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             }
 
             if (!internalOnly) {
-               this._updateFilterStructure(undefined, resetFilter);
+               this._updateFilterStructure(undefined, resetFilter, resetCaption);
                this._notifyFilterUpdate();
             }
          }).call(this);
@@ -301,23 +303,29 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       },
 
       /**
-       * Собирает значения для сброса фильтра
+       * Собирает значения для сброса по value / caption
        * @returns {*}
        * @private
        */
-      _mapFilterStructureByResetValue: function(partial) {
+      _mapFilterStructureByResetValue: function(partial, prop) {
+         var resetProp = 'reset' + ucFirst.call(prop),
+             isPartial, ivf;
+         
          return colHelpers.reduce(this.getFilterStructure(), function(result, element) {
-            if(element.hasOwnProperty('resetValue')) {
+            isPartial = partial && element.itemTemplate === null && element.historyItemTemplate !== null && element.hasOwnProperty(prop);
+            ivf = element.internalValueField;
+
+            if (element.hasOwnProperty(resetProp)) {
                /* Надо смотреть только на itemTemplate, но сейчас есть проблема с компонентом dateRange,
                   который делают через две дополнительные структуры и его сбрасывать надо. Как будет сделан компонент,
                   который может отображать дату по стандарту в фильтра FIXME удалить "element.historyItemTemplate !== null" */
-               if(partial && element.itemTemplate === null && element.historyItemTemplate !== null) {
-                  if(element.hasOwnProperty('value')) {
-                     result[element.internalValueField] = element['value'];
-                  }
+               if (isPartial) {
+                  result[ivf] = element[prop];
                } else {
-                  result[element.internalValueField] = element['resetValue'];
+                  result[ivf] = element[resetProp];
                }
+            } else if (isPartial) {
+               result[ivf] = element[prop];
             }
             return result;
          }, {});
@@ -340,11 +348,15 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       getFilterStructure: function() {
          return this._filterStructure;
       },
-
+   
       getResetFilter: function(partial) {
-         return this._mapFilterStructureByResetValue(partial);
+         return this._mapFilterStructureByResetValue(partial, 'value');
+      },
+   
+      _getResetCaption: function(partial) {
+         return this._mapFilterStructureByResetValue(partial, 'caption');
       }
-   };
+    };
 
    return FilterMixin;
 
