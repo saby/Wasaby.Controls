@@ -1059,16 +1059,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          });
       },
 
-      _getAdditionalOffset: function(items){
-         var currentRootItems = 0;
-         for (i = 0; i < items.length; i++){
-            if (items[i].getContents().get(this._options.parentProperty) == this.getCurrentRoot()){
-               currentRootItems++;
-            }
-         }
-         return currentRootItems;
-      },
-
       _afterAddItems: function() {
          // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
          if (this._options.hasNodes && this._isSearchMode()) {
