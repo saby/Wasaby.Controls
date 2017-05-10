@@ -42,6 +42,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
          this._updateValue();
       },
 
+	  _elemClickHandler: function(e, id) {
+		 var
+			view = this._getListView();
+		 FilterPanelChooserDetailsList.superclass._elemClickHandler.apply(this, arguments);
+		 view.redrawItem(view.getItems().getRecordById(id));
+	  },
+	  
       init: function() {
          var
             self = this;
