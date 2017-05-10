@@ -236,7 +236,8 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {Boolean} hierarchyViewMode Включать группировку при поиске.
              */
-            hierarchyViewMode: true
+            hierarchyViewMode: true,
+            backButtonTemplate: null
          }
       },
 
@@ -280,7 +281,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                   this._componentBinder = new ComponentBinder({
                      backButton : this._backButton,
                      breadCrumbs : this._breadCrumbs,
-                     view: this._view
+                     view: this._view,
+                     backButtonTemplate: this._options.backButtonTemplate
                   });
                   this._componentBinder.bindBreadCrumbs();
                }
