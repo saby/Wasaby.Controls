@@ -1,6 +1,7 @@
-.icon-mixin(@icon-left, @icon-width) {
-  left: @icon-left;
+.icon-mixin(@icon-width) {
+  left: 50%;
   top: 50%;
+  margin-left: -@icon-width/2;
   margin-top: -@icon-width/2;
 }
 
@@ -59,10 +60,20 @@
       .controls-Button__icon {
         position: @icon-button-round-border-position;
         &.icon-16 {
-          .icon-mixin(5px, 16px);
+          .icon-mixin(16px);
         }
         &.icon-24 {
-          .icon-mixin(1px, 24px);
+          .icon-mixin(24px);
+        }
+
+        &.icon-small {
+          .icon-mixin(@icon-small-size);
+        }
+        &.icon-medium {
+          .icon-mixin(@icon-medium-size);
+        }
+        &.icon-large {
+          .icon-mixin(@icon-large-size);
         }
       }
       height: @icon-button-round-border-width;
