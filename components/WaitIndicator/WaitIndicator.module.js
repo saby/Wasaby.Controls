@@ -44,11 +44,12 @@
     * Для отображения индикатора используется статический метод класса WaitIndicator.make:
     * <pre>
     *    WaitIndicator.make({
-    *       target: dataGrid,
-    *       message: 'Данные загружаются...',
-    *       scroll: 'bottom',
-    *       stopper: stopper,
-    *    });
+    *          target: dataGrid,
+    *          message: 'Данные загружаются...',
+    *          scroll: 'bottom'
+    *       },
+    *       stopper
+    *    );
     * </pre>
     * <br/>
     * Созданный таким способом индикатор можно остановить с помощью отложенного стопа stopper, который представляет собой экземпляр класса Promise
@@ -60,7 +61,6 @@
     *    <li>{HTMLElement|jQuery|SBIS3.CORE.Control} target - Объект привязки индикатора</li>
     *    <li>{string} message - Текст сообщения индикатора</li>
     *    <li>{number} delay - Задержка перед началом показа индикатора. Если указана неотрицательная закаржка - она будет использована, если нет - будет использована задержка по умолчанию в 2 секунды</li>
-    *    <li>{Promise|Deferred} stopper - Отложенный стоп, при срабатывании которого индикатор будет удалён</li>
     *    <li>{string} scroll - Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom</li>
     *    <li>{string} overlay - Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй</li>
     *    <li>{boolean} small - Использовать уменьшеный размер</li>
@@ -321,7 +321,6 @@
           * @param {HTMLElement|jQuery|SBIS3.CORE.Control} options.target Объект привязки индикатора
           * @param {string} options.message Текст сообщения индикатора
           * @param {number} options.delay Задержка перед началом показа/скрытия индикатора
-          * @param {Promise|Deferred} options.stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
           * @param {string} options.scroll Отображать для прокручивания объекта привязки, допустимые значения - left, right, top, bottom
           * @param {string} options.overlay Настройка оверлэя, допустимые значения - dark, no, none. Если не задан, используется прозрачный оверлэй
           * @param {boolean} options.small Использовать уменьшеный размер
@@ -329,10 +328,10 @@
           *                               Если не задан - индикатор центрируется
           * @param {string[]} options.mods Массив произвольных модификаторов, для каждого из котороых к DOM элементу индикатора будет добавлен класс
           *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
+          * @param {Promise|Deferred} stopper Отложенный стоп, при срабатывании которого индикатор будет удалён
           */
-         make: function (options) {
-            var method = options && typeof options === 'object' ? (typeof Promise !== 'undefined' && options.stopper instanceof Promise ?
-               'then' : (options.stopper instanceof Deferred ? 'addCallbacks' : null)) : null;
+         make: function (options, stopper) {
+            var method = typeof Promise !== 'undefined' && stopper instanceof Promise ? 'then' : (stopper instanceof Deferred ? 'addCallbacks' : null);
             if (!method) {
                throw new Error('Valid stopper is not supplied');
             }
@@ -342,7 +341,7 @@
                options,
                options && typeof options.delay === 'number' && 0 <= options.delay ? options.delay : WaitIndicator.DEFAULT_DELAY
             );
-            options.stopper[method](function (delay) {
+            stopper[method](function (delay) {
                indicator.remove(delay);
             }, function (err) {
                indicator.remove();
