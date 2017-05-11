@@ -329,7 +329,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              function updatePickerContext() {
                 context.setValue(rootName, {
                    filterChanged: self.getLinkedContext().getValue('filterChanged'),
-                   filter: self.getFilter(),
+                   filter: self._getFilter(true),
                    caption: self._mapFilterStructureByProp('caption'),
                    visibility: self._mapFilterStructureByVisibilityField('visibilityValue')
                 });
@@ -467,7 +467,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 );
              } else if (pickerVisible) {
                 toSet = {};
-                toSet[filterPath] = this.getFilter();
+                toSet[filterPath] = this._getFilter(true);
                 toSet[descriptionPath] = this._mapFilterStructureByProp('caption');
                 this._changeFieldInternal(toSet);
              }

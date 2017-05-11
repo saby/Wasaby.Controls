@@ -184,14 +184,16 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
       _setPickerConfig: function() {
          var pickerWidth = 0,
-            baseWidth = this.getContainer().outerWidth();
+            baseWidth = this.getContainer().outerWidth(),
+            wrapperWidth = this.getContainer().children('.controls-DateRangeSlider__value-wrapper').css('min-width');
          // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
+         // Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=73b59c8e-f962-433c-9432-1218fbe754aa
          if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
-            pickerWidth = 80;
+            pickerWidth = wrapperWidth === '124px' ? 136 : 80;
          } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
-            pickerWidth = 178;
+            pickerWidth = wrapperWidth === '124px' ? 204 : 178;
          } else {
-            pickerWidth = 148;
+            pickerWidth = wrapperWidth === '124px' ? 204 : 148;
          }
          return {
             corner: 'tl',
