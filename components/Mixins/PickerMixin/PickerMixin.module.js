@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              *    </options>
              * </pre>
              */
-            pickerConfig: undefined
+            pickerConfig: null
          }
       },
 
