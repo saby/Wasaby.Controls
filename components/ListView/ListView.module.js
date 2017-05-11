@@ -4121,7 +4121,7 @@ define('js!SBIS3.CONTROLS.ListView',
          initializeSelectedItems: function() {
             var items = this.getItems();
 
-            if (cInstance.instanceOfModule(items, 'js!WS.Data/Collection/RecordSet')) {
+            if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: items.getAdapter(),
