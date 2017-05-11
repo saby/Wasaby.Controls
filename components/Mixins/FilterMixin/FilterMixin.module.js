@@ -334,7 +334,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
        /**
         * Возвращает объект собраный из элементов стрктуры:
         * {
-        *    key (internalValueField) : value
+        *    key (internalValueField) : value,
+        *    ...
         * }
         * @returns {Object}
         *
