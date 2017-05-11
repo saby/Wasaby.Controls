@@ -130,6 +130,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
+         visible: false, //todo: цитата наславиается на обтекаемое избражение
          order: 65
       },
 
@@ -280,7 +281,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
          pickerClassName: 'fre-smiles controls-Menu__hide-menu-header',
-         className: 'fre-smiles controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
          items: smiles,
          handlers: {
             onMenuItemActivate: function(event, key) {
