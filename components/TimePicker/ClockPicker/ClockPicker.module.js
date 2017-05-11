@@ -91,6 +91,13 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                this._offset = this._container.offset();
                this._centerX = this._offset.left + this._container.width() / 2;
                this._centerY = this._offset.top + this._container.height() / 2;
+
+               /**
+                * В каждой теме свои размеры и поэтому, что бы определить когда нам смещаться
+                * на внутренний круг мы расчитаем это расстояние.
+                */
+               var outerCircle = this._container.find('.controls-ClockPicker__circle_outer');
+               this._innerCircleRadius = (outerCircle.outerHeight() - outerCircle.children()[0].clientHeight - 4) / 2;
             }.bind(this));
             this._container.on('mousedown touchstart', '.js-controls-ClockPicker__arrowTip', this._getDragInitHandler());
             this._container.bind('mousedown touchstart', this._onMousedownHandler.bind(this));
@@ -217,7 +224,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                setTime, circle, deg, tick, arrowConfig;
 
             if (this._isViewHours) {
-               circle = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < 103 ? 'inner' : 'outer';
+               circle = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < this._innerCircleRadius ? 'inner' : 'outer';
             } else {
                circle = 'outer';
             }

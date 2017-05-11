@@ -2555,11 +2555,17 @@
 @scrollpager-bg:                                         white;
 
 //--------------//
+//  TimePicker  //
+//--------------//
+@time-picker-background-color:                      @default-bg-color;
+
+//--------------//
 //  TimeHeader  //
 //--------------//
 @time-header-height:                                40px;
 @time-header-font-size:                             18px;
 @time-header-element-margin-left:                   12px;
+@time-header-background-color:                      @gray-f4f4f4-color;
 
 // ---------- //
 // ToggleTime //
@@ -2572,9 +2578,12 @@
 
 @clock-picker-height:                               306px;
 @clock-picker-width:                                314px;
+@clock-picker-background-color:                     @time-picker-background-color;
 
 @clock-picker-animation-active-scale:               1;
 @clock-picker-animation-passive-scale:              1.2;
+
+@clock-picker-tick-hover-background-color:          @default-hover-color;
 
 @clock-picker-outer-tick-radius:                    20px;
 
@@ -2582,17 +2591,22 @@
 @clock-picker-inner-tick-background-color:          #F2F2F2;
 
 @clock-picker-outer-circle-radius:                  125px;
+@clock-picker-outer-circle-border-color:            @gray-f4f4f4-color;
 
 @clock-picker-inner-circle-radius:                  83px;
 
 @clock-picker-unit-time-font-size:                  18px;
 @clock-picker-unit-time-z-index:                    16;
+@clock-picker-unit-time-color:                      @gray-ccc-color;
 
 @clock-picker-arrow-width:                          1px;
+@clock-picker-arrow-color:                          @blue-dark-color;
 
 @clock-picker-inner-arrow-z-index:                  4;
 
 @clock-picker-arrow-tip-border-width:               2px;
+@clock-picker-arrow-tip-color:                      @blue-dark-color;
+@clock-picker-arrow-tip-border-color:               @clock-picker-arrow-tip-color;
 
 @clock-picker-outer-arrow-height:                   @clock-picker-outer-circle-radius - @clock-picker-outer-tick-radius - @clock-picker-arrow-tip-border-width;
 

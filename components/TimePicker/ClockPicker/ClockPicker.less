@@ -61,6 +61,7 @@
   position: relative;
   height: @clock-picker-height;
   width: @clock-picker-width;
+  background-color: @clock-picker-background-color;
   .controls-ClockPicker-flex-center();
   .user-select();
 }
@@ -74,7 +75,7 @@
   width: 2 * (@clock-picker-outer-circle-radius - @default-border-width);
   top: @clock-picker-height / 2 - @clock-picker-outer-circle-radius;
   left: @clock-picker-width / 2 - @clock-picker-outer-circle-radius;
-  border-color: @gray-f4f4f4-color;
+  border-color: @clock-picker-outer-circle-border-color;
   border-style: @default-border-style;
   border-width: @default-border-width;
   .border-radius(100%);
@@ -97,7 +98,7 @@
   cursor: pointer;
   .border-radius(100%);
   &:hover {
-    background-color: @default-itemHover-color;
+    background-color: @clock-picker-tick-hover-background-color;
   }
 }
 
@@ -119,7 +120,7 @@
 .controls-ClockPicker__arrow {
   position: absolute;
   width: @clock-picker-arrow-width;
-  background-color: @blue-dark-color;
+  background-color: @clock-picker-arrow-color;
   top: @clock-picker-height / 2;
   left: (@clock-picker-width - @clock-picker-arrow-width) / 2;
   .transform-origin(@y:0);
@@ -128,9 +129,9 @@
 .controls-ClockPicker__arrowTip {
   position: absolute;
   cursor: pointer;
-  color: @blue-dark-color;
+  color: @clock-picker-arrow-tip-color;
   font-weight: @bold-font-weight;
-  border-color: @blue-dark-color;
+  border-color: @clock-picker-arrow-tip-border-color;
   border-style: @default-border-style;
   border-width: @clock-picker-arrow-tip-border-width;
   .border-radius(100%);
@@ -141,7 +142,7 @@
   .controls-ClockPicker__arrowTip {
     bottom: -(2 * (@clock-picker-outer-tick-radius + @clock-picker-arrow-tip-border-width));
     left: -(@clock-picker-outer-tick-radius + @clock-picker-arrow-tip-border-width);
-    background-color: @white-color;
+    background-color: @clock-picker-background-color;
   }
 }
 
@@ -168,8 +169,8 @@
   font-size: @clock-picker-unit-time-font-size;
   line-height: @clock-picker-unit-time-font-size;
   font-weight: @bold-font-weight;
-  color: @gray-ccc-color;
-  background-color: @white-color;
+  color: @clock-picker-unit-time-color;
+  background-color: @clock-picker-background-color;
 }
 
 .controls-ClockPicker-position-ticks-generator();
