@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                    if(currentItems.getCount() && !multiselect && index === -1) {
                       index = 0;
                    }
-
+                   item = item.clone();//клонируем итем что бы у него не менялся владелец
                    if(index === -1) {
                       currentItems.add(item);
                    } else {
