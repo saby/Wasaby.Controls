@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.Accordion', [
     * @extends SBIS3.CORE.CompoundControl
     * @author Авраменко Алексей Сергеевич
     * @public
-    * @mixin SBIS3.CONTROLS.ItemsControlMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     */
 
    var Accordion = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.Accordion.prototype */ {

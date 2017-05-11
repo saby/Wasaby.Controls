@@ -2,13 +2,7 @@
   .controls-CompositeView__itemsContainer{
      overflow: hidden;
   }
-
-   &.controls-CompositeView-tile {
-      .controls-ItemsToolbar {
-         right: @list-view-items-toolbar-right-tile;
-         bottom: @list-view-items-toolbar-bottom-tile;
-      }
-   }
+   
    /* Стили для режима 'Список' */
   .controls-CompositeView__listItem {
     height: @data-grid-cell-height;
@@ -136,26 +130,36 @@
       }
    }
    /* Стили для выделенных элементов */
-   .controls-ListView__item__selected {
+   &:not(.controls-ListView__withoutMarker) {
+      .controls-ListView__item__selected {
 
-      /* Заливка выделенных элементов */
-      &.controls-CompositeView__listItem.controls-ListView__item-type-node,
-      &.controls-CompositeView__tileItem {
-         background-color: @default-itemHover-color;
-      }
+         /* Заливка выделенных элементов */
+         &.controls-CompositeView__listItem.controls-ListView__item-type-node,
+         &.controls-CompositeView__tileItem {
+            background-color: @default-itemHover-color;
+         }
 
-      /* Рамка выделенных элементов (Для режима 'плитки' всегда, для режима 'Список', если есть класс */
-      &.js-controls-CompositeView__verticalItemActions,
-      &.controls-CompositeView__tileItem {
-         border-color: @multiView-tile-selected-item-border-color;
-      }
+         /* Рамка выделенных элементов (Для режима 'плитки' всегда, для режима 'Список', если есть класс */
+         &.js-controls-CompositeView__verticalItemActions,
+         &.controls-CompositeView__tileItem {
+            border-color: @multiView-tile-selected-item-border-color;
+         }
 
-      &.controls-CompositeView__listItem:not(.controls-ListView__item-type-node),
-      &.controls-CompositeView__listItem:not(.controls-CompositeView__verticalItemActions) {
-        .marker(left top)
+         &.controls-CompositeView__listItem:not(.controls-ListView__item-type-node),
+         &.controls-CompositeView__listItem:not(.controls-CompositeView__verticalItemActions) {
+            .marker(left top)
+         }
       }
    }
 }
+
+.controls-CompositeView-tile {
+   .controls-ItemsToolbar {
+      right: @list-view-items-toolbar-right-tile;
+      bottom: @list-view-items-toolbar-bottom-tile;
+   }
+}
+
 .controls-CompositeView-tile__static, .controls-CompositeView-tile__dynamic {
    .controls-CompositeView__itemsContainer {
       overflow: visible;

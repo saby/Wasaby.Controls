@@ -19,7 +19,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
             })
 
             .capture('opened', function (actions) {
-                actions.mouseMove(this.title);
+                actions.click(this.title);
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 1000);
             })
 
@@ -60,7 +60,7 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
             })
 
             .capture('opened', function (actions) {
-                actions.mouseMove(this.title);
+                actions.click(this.title);
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 40000);
             })
 
@@ -104,13 +104,13 @@ gemini.suite('SBIS3.CONTROLS.FastDataFilter Online', function () {
             })
 
             .capture('opened_one', function (actions) {
-                actions.mouseMove(this.first_title)
+                actions.click(this.first_title)
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
             })
 
             .capture('opened_two', function (actions) {
                 actions.click(this.box);
-				actions.mouseMove(this.second_title)
+				actions.click(this.second_title)
 				actions.waitForElementToShow('.controls-DropdownList__item[data-id="2"]', 4000);
             })
     });

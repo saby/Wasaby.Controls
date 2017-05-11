@@ -54,6 +54,10 @@
       .flex-direction(column-reverse);
       padding: 0;
 
+      &.controls-Menu__SubMenuPopup {
+         padding: @menu-subpopup-padding;
+      }
+
       .controls-Menu__header + .controls-Menu__itemsContainer {
          padding: @menu-link-menu-revert-item-container-padding;
       }
@@ -133,7 +137,6 @@
       height: @menu-header-height;
    }
    &.controls-Menu__hide-menu-header {
-      margin: -8px 0 0 -13px;
       .controls-Menu__header {
          display: none;
       }
@@ -141,13 +144,31 @@
          margin: -7px 0 0 -7px;
          .controls-ListView__item:first-child {
             .controls-MenuItem__icon {
-               .round-button-mixin(@gray-ccc-color);
+               .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
                height: 24px !important;
                width: 24px !important;
                line-height: 22px !important;
                top: 2px;
                left: -6px;
             }
+         }
+      }
+   }
+}
+
+.ws-is-ie {
+   //в IE flex-direction(column-reverse) должен находиться на контейнере, у которого переворачиваем узлы
+   //Иначе вылезает баг: не появится скролл.
+   .controls-Menu__SubMenuPopup {
+      .controls-Menu__submenu {
+         .flexbox();
+         .flex-direction(column);
+      }
+      &.controls-popup-revert-vertical {
+         .flex-direction(column);
+         .controls-Menu__submenu {
+            overflow-y: auto;
+            .flex-direction(column-reverse);
          }
       }
    }

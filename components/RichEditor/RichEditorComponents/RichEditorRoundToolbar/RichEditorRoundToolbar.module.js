@@ -7,26 +7,16 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'html!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
-   'Core/helpers/string-helpers',
-   'js!SBIS3.CONTROLS.StylesPanelNew',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, strHelpers , StylesPanel, Di) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, Di) {
 
    'use strict';
    var
       constants = {
-         colorsMap: {
-            'rgb(0, 0, 0)': 'black',
-            'rgb(255, 0, 0)': 'red',
-            'rgb(0, 128, 0)': 'green',
-            'rgb(0, 0, 255)': 'blue',
-            'rgb(128, 0, 128)': 'purple',
-            'rgb(128, 128, 128)': 'grey'
-         },
          INLINE_TEMPLATE: '6'
       },
       /**
@@ -85,14 +75,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                 * @cfg {Boolean} Сторона с которой находится кнопка переключения видимости
                 */
                side: 'right'
-            },
-            _buttons:{
-               bold:false,
-               italic:false,
-               underline:false,
-               strikethrough: false
-            },
-            _stylesPanel: undefined
+            }
          },
 
          _modifyOptions: function(options) {
@@ -118,31 +101,11 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             RichEditorRoundToolbar.superclass.setExpanded.apply(this, arguments);
          },
 
-         _bindEditor: function() {
-            RichEditorRoundToolbar.superclass._bindEditor.apply(this, arguments);
-            this._fillHistory();
-         },
-
          _formatChangeHandler : function(event, obj, state) {
             if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._toggleState(state, obj);
             }
          },
-
-         _toggleState: function(state, obj) {
-            var
-               selectors = {
-                  'bold':  'strong',
-                  'italic':  'em',
-                  'underline':  'span[style*="decoration: underline"]',
-                  'strikethrough':  'span[style*="decoration: line-through"]'
-               };
-            if (!state && $(obj.node).closest(selectors[obj.format]).length) {
-               state = true;
-            }
-            this._buttons[obj.format] = state;
-         },
-
          _prepareItems: function(items, defaultconfig, expanded) {
             var
                items = RichEditorRoundToolbar.superclass._prepareItems.apply(this, arguments);
@@ -152,55 +115,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                }
             }
             return items;
-         },
-
-         _fillHistory: function(){
-            var
-               prepareHistory = function(value){
-                  var
-                     stripText, title,
-                     $tmpDiv = $('<div/>').append(value);
-                  $tmpDiv.find('.ws-fre__smile').each(function(){
-                     var smileName = $(this).attr('title');
-                     $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
-                  });
-                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
-                  stripText = stripText.replace('/\n/gi', '');
-                  if (!stripText && value) {
-                     stripText = rk('Контент содержит только html-разметку, без текста.');
-                  } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов
-                     stripText = stripText.substr(0, 140) + ' ...';
-                  }
-                  return stripText;
-               };
-            if (this.getItems().getRecordById('history')) {
-               this.getLinkedEditor().getHistory().addCallback(function (arrBL) {
-                  //Проблема:
-                  //          После прихода данных тулбар уже может быть уничтожен
-                  //Решение 1:
-                  //          Хранить deferred вызова и убивать его в destroy
-                  //Решение 2:
-                  //          Проверять на isDestroyed
-                  if (!this.isDestroyed()) {
-                     var
-                        items = [],
-                        history = this.getItemInstance('history');
-                     for (var i in arrBL) {
-                        if (arrBL.hasOwnProperty(i)) {
-                           items.push({
-                              key: items.length,
-                              title: prepareHistory(arrBL[i]),
-                              value: arrBL[i]
-                           })
-                        }
-                     }
-                     if (!arrBL.length) {
-                        history.setEnabled(false);
-                     }
-                     history.setItems(items);
-                  }
-               }.bind(this));
-            }
          },
 
          /*БЛОК ФУНКЦИЙ ОБЁРТОК ДЛЯ ОТПРАВКИ КОМАНД РЕДАКТОРУ*/
@@ -237,75 +151,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
          _execCommand : function(name) {
             if (this._options.linkedEditor) {
                this._options.linkedEditor.execCommand(name);
-            }
-         },
-
-         _setText: function(text) {
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor.setText(text);
-            }
-         },
-
-         _openStylesPanel: function(button){
-            var
-               stylesPanel = this.getStylesPanel(button);
-            stylesPanel.setStylesFromObject({
-               fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
-               color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)],
-               bold: this._buttons.bold,
-               italic: this._buttons.italic,
-               underline: this._buttons.underline,
-               strikethrough: this._buttons.strikethrough
-            });
-            stylesPanel.show();
-         },
-
-         getStylesPanel: function(button){
-            var
-               self = this;
-            if (!this._stylesPanel) {
-               this._stylesPanel = new StylesPanel({
-                  parent: button,
-                  target: button.getContainer(),
-                  corner: 'tl',
-                  verticalAlign: {
-                     side: 'top',
-                     offset: -4
-                  },
-                  horizontalAlign: {
-                     side: 'left'
-                  },
-                  element: $('<div></div>'),
-                  fontSizes: [12, 14, 15, 18],
-                  colors: [
-                     {color:'black'},
-                     {color:'red'},
-                     {color:'green'},
-                     {color:'blue'},
-                     {color:'purple'},
-                     {color:'grey'}
-                  ],
-                  activableByClick: false
-               });
-
-               this._stylesPanel.subscribe('changeFormat', function(){
-                  self._applyFormats(self._stylesPanel.getStylesObject())
-               });
-            }
-            return this._stylesPanel;
-         },
-
-         _applyFormats: function(formats){
-            if (this._options.linkedEditor) {
-               this._options.linkedEditor.setFontColor(formats.color);
-               this._options.linkedEditor.setFontSize(formats.fontsize);
-               for ( var button in this._buttons) {
-                  if (this._buttons.hasOwnProperty(button)) {
-                     if (this._buttons[button] !== formats[button]) {
-                        this._options.linkedEditor.execCommand(button);
-                     }
-                  }
-               }
             }
          }
 

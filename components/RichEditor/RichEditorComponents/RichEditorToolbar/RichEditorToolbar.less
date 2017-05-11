@@ -1,4 +1,9 @@
-@import "../RichTextArea/RichTextArea";
+@freToolbarShowButtonPrimary: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAj0lEQVR42mN4+ubrf0oww6gBowaMGoBmwMPz/9fMm/l/5kwgXrD1/6knaIqfXELIz9vw/9hDbC5AVoRsCJrmE0/weQFF8ab/J+7g1ow7DJANmYlbM/5AfILfZuJiAWTIYtyaR1PiqAHUM+DRy08BT159OU+qRpAekF4GKGAk1iAkjYwMWABOgwhpxGkQIY0A4t0NLMoQAuoAAAAASUVORK5CYII=');
+@freToolbarShowButtonHover: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAkklEQVR42mN4+ubrf0oww6gBowaMGoBmwMNT/+sjK/4b2lX8N0tZ9v/wMzTFz87C5Q0j5//f8RCbC5AUoRiCpnnvM3xeQDYkbtH/vbdxa8YdBsg22uHWjD8Qn+G3mbhYABmSiVvzaEocNYB6Bjx6+Sngyasv50nVCNID0ssABYzEGoSkkZEBC8BpECGNOA0ipBEApZ348FmE4MYAAAAASUVORK5CYII=');
+@freToolbarHideButtonPrimary: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAhklEQVR42u3SOwqAMAyA4XhDr5dFBFcRTyFuguDmUqmD4iQ6RwuCIn35GFPI+H9NodBPK30ZYIABBjwAWVOa5FTKN4CKIyTEfSIzAs4Y7Qg4b25ryiybgNfasqE81iMnICr7m29IIfgnMvAn0A1zKMelehqqRrVwnMAXuoQBaI4RcoVGyBVu09oNLOSz8lQAAAAASUVORK5CYII=');
+@freToolbarHideButtonHover: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAgCAYAAAAbifjMAAAAhklEQVR42mN4+ubrf0oww6gBowaMGkCEAc/O/q/PnP9/7zNyDABpjqz4b2gHxJG4DWEgqNkOvyEMBG2+ffZ/axxuQxiIcvazi/8npGA3BGHAw1P4/YxmyI6Hoylx1ABqGvDo5aeAJ6++nCdVI0gPSC8DFDASaxCSRkYGLACnQYQ04jSIkEYAZ2f49HXkPqUAAAAASUVORK5CYII=');
+
+@fieldRichEditorToolbarColor: #E5ECF5;
 .controls-RichEditorToolbar {
    height: auto;
    cursor: default;
@@ -17,16 +22,10 @@
 
    .controls-RichEditorToolbar__toggleButton {
       background-size: 100% 100%;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
       position: absolute;
       display: block;
-      height: 28px;
-      width: 16px;
+      height: 32px;
+      width: 18px;
       right: 0px;
       top: 0px;
       z-index: 2;
@@ -36,123 +35,93 @@
       cursor: pointer;
       background-image: @freToolbarHideButtonPrimary;
       .box-shadow(none);
+      .user-select(none)
    }
-}
-.controls-RichEditorToolbar__itemsContainer {
-   height: 24px;
-   background-color: @fieldRichEditorToolbarColor;
-   text-align: left;
-   display: flex;
-   padding-left: 6px;
-   overflow: hidden;
-   -webkit-touch-callout: none;
-   -webkit-user-select: none;
-   -khtml-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
-}
 
-//Стили для элементов тулбара богатого редактора
-.controls-RichEditorToolbar__item {
-   margin: 0 2px !important;
-   float: left !important;
-
-   &.controls-Button.controls-ListView__item {
-      overflow: hidden;
-      .controls-Button__icon, &.controls-Checked__checked:not(.ws-disabled) .controls-Button__icon {
-         position: relative;
-         left: 0;
-         top: 0;
-         margin-left: 0;
-      }
-      padding: 0;
-      border:none;
-      outline: 0;
-      border-radius: 0;
-      text-decoration: none;
-      &.controls-Checked__checked {
-         background: @fieldRichEditorButtonsCheckedColor;
-         border:none;
-
-         &.controls-MenuButton {
-            padding-bottom: 2px;
-         }
-
-         &.controls-Picker__show {
-            &,&:hover:not(.ws-disabled) {
-               background: @white-color;
-               border-top: 2px solid @gray-light-color;
-               border-right: 2px solid @gray-light-color;
-               border-left: 2px solid @gray-light-color;
-               border-top-left-radius: 4px;
-               border-top-right-radius: 4px;
-               &:not(.controls-Click__active) {
-                  background: @white-color;
-               }
-            }
-         }
-         .controls-RichEditorMenuButton__headArrow{
-            top: -3px;
-            padding-right: 4px;
-         }
-      }
-      .controls-RichEditorMenuButton__headArrow{
-         top: -1px;
-         padding-right: 6px;
-         right: 0;
-      }
-      .controls-Button__emptyCaption{
-         display:none;
-      }
-      &:hover{
-         &:not(.ws-disabled){
-            &:not(.controls-Click__active) {
-               border: none !important;
-               background: none !important;
-               &.controls-Checked__checked {
-                  background: @fieldRichEditorButtonsCheckedColor !important;
-               }
-            }
-            &.controls-Checked__checked {
-               border: none !important;
-            }
-         }
-      }
-      &.controls-Click__active {
-         .controls-Button__icon {
-            color: @blue-dark-color !important
-         }
-      }
-   }
-   .controls-RichEditorMenuButton__headArrow {
-      background-image:@RichEditorDropdownArrow;
-      width: 16px;
-      position: absolute;
-      right: 4px;
-      left: auto;
-      top:-2px;
-      &:before {
-         content: none;
-      }
-   }
-   &.controls-DropdownList{
-      line-height: normal;
-   }
-}
-
-//Стили для элементов НА(!) тулбаре богатого редактора
-.controls-RichEditorToolbar__itemsContainer .controls-RichEditorToolbar__item {
-   &.controls-MenuButton {
-      width:24px;
-      margin: 0 !important;
+   .controls-RichEditorToolbar__itemsContainer {
+      height: 32px;
+      background-color: @fieldRichEditorToolbarColor;
       text-align: left;
-      &.controls-Checked__checked {
-         .controls-Button__icon {
-            padding-left:2px;
-            //перебить стили темы online ( в ie8 ломается отображение при ховере)
-            left: 0px;
-            top: 1px;
+      display: flex;
+      padding-left: 4px;
+      overflow: hidden;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+   }
+   .controls-RichEditorToolbar__item {
+      margin: 2px 4px;
+      .flex-shrink(0);
+      &.controls-ComboBox {
+         margin: 4px;
+         width:126px;
+         .controls-TextBox__field {
+            overflow: hidden;
+         }
+      }
+      &.controls-Button.controls-Button__default {
+         border: 1px transparent solid;
+         &:hover, .controls-Checked__checked {
+            border: 1px transparent solid !important;
+         }
+      }
+   }
+}
+
+/*Блок выбора цвета*/
+.fre-color {
+   .controls-ListView__item {
+      height: 32px !important;
+      width: 32px;
+      margin: 0 4px;
+      padding: 0 !important;
+
+      .controls-MenuItem__content {
+         width: auto;
+      }
+      .controls-MenuItem__text {
+         margin: 0;
+      }
+      .controls-RichEditorToolbar__color {
+         height: 16px;
+         width: 16px;
+         margin: 8px;
+         border-radius: 2px;
+         &Black {
+            background-color: black;
+         }
+         &Red {
+            background-color: red;
+         }
+         &Green {
+            background-color: green;
+         }
+         &Blue {
+            background-color: blue;
+         }
+         &Purple {
+            background-color: purple;
+         }
+         &Grey {
+            background-color: grey;
+         }
+      }
+   }
+}
+
+.controls-RichEditorToolbarMenu {
+   .controls-MenuItem {
+      padding: 0 5px;
+      .controls-MenuItem__content {
+         width: 30px;
+         .controls-MenuItem__icon.icon-24 {
+            left: 3px;
+         }
+         .controls-MenuItem__text {
+            display: none;
          }
       }
    }
@@ -191,90 +160,6 @@
       margin-top: 2px !important; //important тк margin 0 прописывается inline стилем при расчете picker`a
    }
 }
-/*Блок вставки удаления списка*/
-.fre-list{
-   .controls-ListView__item {
-      width:34px;
-   }
-}
-/*Блок выбора цвета*/
-.fre-color {
-   &.controls-RichEditorToolbar__menuButtonPicker {
-      .controls-ListView__item {
-         display: block;
-         width: 34px;
-
-         .controls-MenuItem__content {
-            min-height: 16px;
-         }
-
-         .controls-MenuItem__text {
-            margin: 0;
-         }
-         .controls-RichEditorToolbar__color {
-            height: 16px;
-            width: 16px;
-            margin: 8px 3px;
-            &Black {
-               background-color: black;
-            }
-            &Red {
-               background-color: red;
-            }
-            &Green {
-               background-color: green;
-            }
-            &Blue {
-               background-color: blue;
-            }
-            &Purple {
-               background-color: purple;
-            }
-            &Grey {
-               background-color: grey;
-            }
-         }
-      }
-   }
-}
-/*Блок выбора стиля*/
-.fre-style {
-   .controls-RichEditorDropdown__head {
-      width:128px;
-      .controls-RichEditorDropdown__headText{
-         width: 105px;
-      }
-   }
-   .controls-DropdownList__selectedItem .controls-RichEditorDropdown__headText, .controls-RichEditorDropdown__headText, .controls-RichEditorDropdown__itemText{
-      &__title{
-         font-size: 18px;
-      }
-      &__subTitle{
-         font-size: 15px;
-      }
-      &__additionalText{
-         font-size: 12px;
-      }
-      &__selectedMainText{
-         font-weight: bold;
-      }
-   }
-}/*Блок выбора выравнивания*/
-.fre-align {
-   .controls-RichEditorDropdown__head,{
-      width:22px;
-      .controls-RichEditorDropdown__headArrow{
-         right: 8px;
-      }
-      .controls-RichEditorDropdown__headIcon {
-         padding: 0px 0px 0px 2px;
-      }
-   }
-   .controls-DropdownList__header, .controls-DropdownList__body{
-      width:34px;
-   }
-}
-
 .ws-is-desktop-platform {
    .controls-RichEditorToolbar {
       &.controls-RichEditorToolbar__hide {
@@ -314,17 +199,34 @@
       }
    }
 }
+.controls-RichEditorToolbar__stylePicker {
+   .controls-ComboBox__itemRow.controls-ListView__item { //2 Для большего веча селектора
+      &.titleText{
+         font-size: 18px;
+         line-height: 23px;
+         color: #313E78;
+         font-weight: bold;
+      }
 
-.ws-is-firefox {
-   .controls-RichEditorToolbar {
-      .controls-MenuButton {
-         &:before {
-            content: '';
-         }
-         .controls-Button__icon {
-            left: 4px;
-         }
+      &.subTitleText {
+         font-size: 15px;
+         line-height: 19px;
+         color: #313E78;
+         font-weight: bold;
+      }
+
+      &.additionalText {
+         font-size: 12px;
+         line-height: 15px;
+         color: #999999;
       }
    }
 }
 
+.ws-is-firefox {
+   .controls-RichEditorToolbar {
+      .controls-RichEditorToolbar__item.controls-ComboBox .controls-TextBox__field {
+         padding-top: 0;
+      }
+   }
+}

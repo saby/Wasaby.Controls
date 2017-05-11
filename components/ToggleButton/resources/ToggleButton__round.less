@@ -1,13 +1,15 @@
 .controls-ToggleButton__round {
     .button-default-style();
+    background-color: transparent;
     border-color: #cccccc;
     border-radius: 13px;
     border-style: solid;
     border-width: 1px;
     width: 28px;
     height: 28px;
+    line-height: 28px;
     user-select: none;
-    .button-baseline-fix();
+    .baseline-fix();
 
     .controls-Button__text {
       visibility: hidden;
@@ -23,6 +25,12 @@
     &.controls-Checked__checked {
       background-color: #F3F3F3;
       border-color: #587AB0;
+    }
+
+    &.ws-disabled {
+      .controls-Button__icon {
+        color: @icon-color-disabled;
+      }
     }
 }
 

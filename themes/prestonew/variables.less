@@ -1,38 +1,64 @@
 @import "../carry/variables";
+// Default vars
+@default-text-size:                       1rem;
+@small-text-size:                         .857rem;
+@large-text-size:                         1.14rem;
+@huge-text-size:						              1.43rem;
+@default-text-color:                      #e4e4e4;
+@default-color:                           #587AB0;
+@primary-color:                           #D94700;
+@disabled-color:                          #2C4458;
+@innacent-color:                     	    #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FA9C33;
+@success-color:                           #72BE44;
+@default-bg-color:                        #1D2834;
+@accent-color:							              #26B8FF;
+@default-hover-color:                     #B9E9FF;
+@innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@default-height:								          1.7857rem;
 
+@icon-small-size:                         1.32rem;
+@icon-medium-size:                        1.7857rem;
+@icon-large-size:                         3rem;
+
+//=============
 @black-color:                             #333;
-@default-color:								transparent;
-@gray-color:                              #aaa;
+@gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
 @default-text-color:                      #e4e4e4;
-@primary-color:                           #ffcc99;
+@primary-color:                           #FF7033;
 @secondary-color:                         #4e5762;
 @back-button-caption-hover-color : rgb(185, 233, 255);
 @back-button-caption-active-color: @back-button-caption-hover-color;
 @bg:                                      @secondary-color;
+@date-range-big-bg:		#2c3e50;
 @text-color:                              @white-color;
+@default-border-style:						solid;
 @blue-dark-color: #FFCC99;
 @darkcyan-color: 							#8991A9;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-
+@default-border-width:					  1px;
 @font-popup-size:                         1.43rem;
-@font-folder-size:                        .5rem;
+@font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
-
+@check-box-default-font-size:				1.14rem;
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
 @closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -3rem;
 @closeBigButtonWidth:                     60px;
 @closeBigButtonHeight:                    1.43rem;
 
-@default-itemHover-color:                 @primary-color;
+@default-itemHover-color:                 #1b2530;
 @default-itemSelected-color:              @primary-color;
 
 @hover-color:                             @primary-color;
 // ---- //
 // Link //
 // ---- //
-
+@DropdownList-linkStyleHoverColor:		rgb(187, 233, 255);
+@DropdownList-linkStyleColor:			@link-text-color;
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
 @link-font-size:                          1.43rem;
@@ -42,6 +68,20 @@
 @link-icon-margin:                        -2px 0 0;
 
 @link-icon-field-margin:                  0 0 0 .14rem;
+
+@link-additional-color:                   @darkcyan-color;
+
+// ------------ //
+//  Icon Button //
+// ------------ //
+
+@icon-button-round-border-position:     relative;
+@icon-button-round-border-width:        2.286rem;
+@icon-button-round-border-height:       2.286rem;
+@icon-button-round-border-line-height:  2.2rem;
+@border-radius:                         2.4rem;
+@icon-button-border-width:              0.072rem;
+
 
 // ------ //
 // Button //
@@ -121,7 +161,7 @@
 // Normal default button
 @button-border:                           @button-border-width solid #26b8ff;
 @button-shadow: 							none;
-@button-line-height: 1.43rem;
+@button-line-height: 						2.73rem;
 @button-hover-border:                     @button-border;
 @button-text-color:                       #E4E4E4;
 @button-active-text-color:                @button-text-color;
@@ -136,10 +176,10 @@
 
 @button-primary-hover-border:             @button-primary-border;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                rgb(217, 71, 0);
+@button-primary-hover-bg:                  #EC5B19;
 
 @button-primary-active-text-color:        @button-active-text-color;
-@button-primary-active-border:            #d94700;
+@button-primary-active-border:             0.07rem solid #d94700;
 @button-primary-active-shadow:            @button-active-shadow;
 @button-primary-active-bg:                #d94700;
 
@@ -157,13 +197,13 @@
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
 @button-big-icon-top-offset:              20px;                             // top offset of 16x16 icon
-@button-big-icon-left-offset:             8px;
+@button-big-icon-left-offset:             0.57rem;
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
 @button-big-icon-big-top-offset:          15px;                             // top offset of 24x24 icon
 @button-big-icon-big-left-offset:         @button-big-icon-left-offset;
 @button-big-icon-big-text-margin:         @button-icon-big-text-margin;     // margin of text following 24x24 icon
-@button-big-text-margin:                  0 8px 0 8px;
-@button-big-text-margin-left:             8px;
+@button-big-text-margin:                  0.57rem;
+@button-big-text-margin-left:             0.57rem;
 @button-hover-text-color:                    #e4e4e4;
 @button-big-hover-text-color:             @button-hover-text-color;
 @button-big-hover-border:                 @button-hover-border;
@@ -260,17 +300,16 @@
 // Checkbox //
 // -------- //
 
-@check-box-text-margin:                         0 8px;
-
-@check-box-text-color:                          @default-text-color;
-@check-box-hover-text-color:                    #e4e4e4;
-
-@check-box-disabled-text-color:                 @gray-color;
-
-@check-box-icon-width:                          1.714rem;
-@check-box-icon-height:                         1.714rem;
-@check-box-icon-line-height:                    1.714rem;
-
+@check-box-icon-size:                           50px;
+@check-box-icon-successful-size:                50px;
+@check-box-font-size:                           32px;
+@check-box-icon-successful-bottom:              6px;
+@check-box-icon-successful-left:                6px;
+@check-box-icon-null-size:                      18px;
+@check-box-caption-padding:                     9px 0;
+@check-box-icon-box-size:                       32px;
+@check-box-icon-box-color:                      rgba(102, 170, 221, .4);
+@check-box-disabled-color:                      #37536C;
 
 @check-box-icon-border:                         1px solid @default-color;
 @check-box-icon-bg:                          	url(@check-box-icon-spritesheet) 0 1px;
@@ -294,15 +333,25 @@
 // -------- //
 // Switcher //
 // -------- //
-@switcher-width: 100px;
-@switcher-height: 50px;
+@switcher-width: 3.57rem;
+@switcher-height: 1.7857rem;
 @switcher-line-color-disabled:                  @gray-light-color;
+@switcher-btn-radius:							1rem;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-btn-bg-color:                         #202835;
-
-@switcher-border:                               1px solid #293543;
+@switcher-btn-color-inactive:					#8991A9;
+@switcher-line-color:							#8991A9;
+@switcher-border:                               2px solid #2C4458;
+@switcherline-height:                           3px;
+@switcher-btn-border-width:						3px;
+@switcher-do-border:                            2px solid #2C4458;
+@switcher-do-vertical-toggle-width:				1.43rem;
+@switcher-do-horizontal-btn-size:				.93rem;
+@switcher-btn-size:								.93rem;
+@switcher-btn-margin:							.357rem;
+@switcher-border-radius:						1rem;
 @switcher-btn-color:                            #FF7033;
-@switcher-do-horizontal-line-background-color:  @switcher-btn-color;
+@switcher-do-horizontal-line-background-color:  #8991A9;
 @switcher-do-text-color:                        @white-color;
 @switcher-do-unselected-text-color:             #999999;
 
@@ -499,7 +548,7 @@
 @text-box-editor-text-color:              #999999;
 @combobox-picker-border-width:            2px;
 @combo-box-picker-show-background-color : #f0f5fb;
-@combo-box-picker-show-border-color     :#48bffc;
+@combo-box-picker-show-border-color:	   #23b8ff;
 @text-box-focus-border-color:             @text-box-border-color;
 
 @compo-box-picker-show-color:             #324352;
@@ -574,7 +623,7 @@
 @search-hover-border-color:                           #5d687b;
 @search-bottom-border-color:                          #2e3a45;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-form-icon-padding:                            .7rem 8px 0 0;
+@search-form-icon-padding:                            .6rem 8px 0 0;
 @search-form-icon-disabled-display:                   block;
 
 @search-focus-background:                             #2e3a45;
@@ -585,18 +634,18 @@
 @combo-box-arrow-spritesheet:                   '';
 @combo-box-picker-item-font-size: 1.14rem;
 @combo-box-arrow-width:                         1.75rem;
-@combo-box-arrow-height:                        8px;
+@combo-box-arrow-height:                        10px;
 @combo-box-arrow-margin:                        -2px 0 0;
 @combo-box-arrow-right-offset:                  .14rem;
 
-@combo-box-arrow-border-width:                  8px 8px 0 8px;
+@combo-box-arrow-border-width:                  10px 10px 0 10px;
 @combo-box-arrow-border-color:                  @primary-color transparent transparent transparent;
 @combo-box-arrow-bg:                            transparent;
 
 @combo-box-arrow-hover-border-color:            darken(@primary-color, 10%) transparent transparent transparent;
 @combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
 
-@combo-box-arrow-active-border-width:           0 8px 8px 8px;
+@combo-box-arrow-active-border-width:           10px 10px 0 10px;
 @combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
 @combo-box-field-text-color : #314559;
 @text-box-border-color: #314559 #314559 #314559 #314559;;
@@ -612,7 +661,7 @@
 @combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
-@combo-box-picker-border:                      .07rem solid #48bffc;
+@combo-box-picker-border:                      0rem solid #48bffc;
 @combo-box-picker-item-padding:                 1.14rem 0.57rem 1.14rem 0.57rem;
 @text-box-field-font-size: 1.14rem;
 @combo-box-picker-item-bg:                      #e1ecf6;
@@ -669,7 +718,7 @@
 // -------- //
 
 @calendar-width:                                auto;
-@calendar-bg:                                   darken(@secondary-color, 5%);
+@calendar-bg:                                   #2c3e50;
 
 @data-grid-cell-box-sizing: 									border-box;
 @calendar-day-cell-text-color:                  @default-text-color;
@@ -694,7 +743,7 @@
 @month-view-font:                                 inherit;
 @month-view-width:                                215px;
 @month-view-padding:                              8px 0 0;
-@month-view-bg:                                   @white-color;
+@month-view-bg:                                   #2c3e50;
 
 @month-view-month-picker-width:                   148px;
 
@@ -820,17 +869,17 @@
 // Date Range Big //
 // -------------- //
 
-@date-range-big-choose-years-height:                           1.43rem;
+@date-range-big-choose-years-height:                           3.57rem;
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
 
 @date-range-big-choose-quarters-half-years-font-size:                inherit;
 @date-range-big-choose-month-range-padding:                          8px;
-@date-range-big-choose-month-range-picker-month-width:               3rem;
-@date-range-big-choose-month-range-picker-month-height:              96px;
-@date-range-big-choose-month-range-picker-caption-height:            0.86rem;
-@date-range-big-choose-month-range-picker-caption-font-size:         .5rem;
-@date-range-big-choose-month-range-picker-table-element-height:      11px;
-@date-range-big-choose-month-range-picker-table-element-font-size:   8px;
+@date-range-big-choose-month-range-picker-month-width:               6.07rem;
+@date-range-big-choose-month-range-picker-month-height:              5.07rem;
+@date-range-big-choose-month-range-picker-caption-height:            1.7857rem;
+@date-range-big-choose-month-range-picker-caption-font-size:         1.14rem;
+@date-range-big-choose-month-range-picker-table-element-height:      .57rem;
+@date-range-big-choose-month-range-picker-table-element-font-size:   .43rem;
 
 // ------------- //
 // Edit at place //
@@ -848,6 +897,7 @@
 // --------- //
 // List view //
 // --------- //
+@list-view-min-height:                           90px;
 @listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
 @listView-check-box-icon-bg:                    @check-box-icon-bg;
 @listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
@@ -915,7 +965,7 @@
 // Data grid //
 // --------- //
 
-@data-grid-bg:                                  #1d2834;
+@data-grid-bg:                                  transparent;
 
 @data-grid-row-hover-bg:                        #1b2530;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
@@ -923,17 +973,15 @@
 @data-grid-row-hover-cell-text-color:           #e4e4e4;
 
 @data-grid-header-cell-height:                  1.14rem;
-@data-grid-cell-line-height:                    21px;
+@data-grid-cell-line-height:                    1.7857rem;
 @data-grid-header-cell-padding:                 0 10px;
 @data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               0.86rem;
 @data-grid-row-selected-cell-text-color: #e4e4e4;
 @data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
 
-@data-grid-cell-height:                         50px;
+@data-grid-cell-height:                         1.7857rem;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -941,7 +989,7 @@
 @data-grid-edge-cell-separator-color:           #2B3546;
 
 @data-grid-td-checkbox-width:                   1.75rem;
-@data-grid-td-visible-checkbox-width:           0.86rem;
+@data-grid-td-visible-checkbox-width:           1.4rem;
 @data-grid-check-box-top:                       5px;
 @data-grid-check-box-left:                      .14rem;
 @data-grid-folder-font-size: 							15px;
@@ -977,8 +1025,6 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    1px;
-@controls-editInPlace-editor-without-offset-margin: 0;
 
 // --------------- //
 // OperationsMark //
@@ -1012,7 +1058,7 @@
 @controls-filterButton-button-width:			2rem;
 @filter-button-font-size:							2rem !important; //перебиваем .icon-24
 
- @controls-filterButton-button-height:			2rem;	
+ @controls-filterButton-button-height:			2rem;
 @controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       0;
@@ -1021,8 +1067,8 @@
 @controls-Popup-closeButton-top:                  1.75rem;
 
 @controls-filterButton-button-height:             0.86rem;
-@controls-filterButton-button-margin:             8px 8px 8px 0;
-@controls-filterButton-button-margin-ff:          8px 32px 8px 0;
+@controls-filterButton-button-margin:             16px 8px 8px 0;
+@controls-filterButton-button-margin-ff:          16px 32px 8px 0;
 @controls-filterButton-area-text-weight:		   normal;
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
@@ -1121,7 +1167,7 @@
 @controls-Paging-btn-padding:                      8px;
 
 //Scrollbar
-@controls-Scrollbar-width:                         .14rem;
+@controls-Scrollbar-width:                         .357rem;
 @controls-Scrollbar-thumb-border-radius:          .07rem;
 @controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
 @controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
@@ -1160,9 +1206,10 @@
 @tab-button-inner-height:                        3.57rem;
 @tab-button-checked-height:                       3.57rem;
 @tab-button-simple-inner-color:                 #8991A9;
-@tab-button-simple-inner-padding:               0 8px 0 6px;
+@tab-button-simple-inner-padding:               0px .857rem 0 .857rem;
 @tab-control-smple-bottomline-height:          .214rem;
 @tab-button-color:                               #8991A9;
+@tab-control-padding-top:							3.57rem;
 @tab-control-background-color:					transparent;
 
 @tab-button-font:                               1.43rem 'TensorFont', sans-serif;
@@ -1171,10 +1218,12 @@
 @tab-button-checked-inner-color:                rgb(255, 204, 153);
 @tab-button-simple-inner-checked-color:         rgb(255, 204, 153);
 @tab-button-simple-checked-bottomline-color:    rgb(255, 204, 153);
+@tab-button-large-inner-max-width:				100%;
+@tab-button-inner-padding:                      0px .857rem 0 .857rem;
+
 
 @tab-button-inner-after-bg-color: transparent;
 //Browser
-@controls-Browser-ListView-minHeight:           90px;
 @text-box-field-font-size: 1.14rem;
 
 @controls-Paging-btn-width:                     3rem;
@@ -1186,3 +1235,29 @@
 @data-grid-cell-separator-color:              #1a242e;
 @closeBigButtonWidth:                         3rem;
 @menu-header-bg-color:                    #23b8ff;
+
+@date-range-big-header-bg: #2c3e50;
+@date-range-big-choose-border-color:		#2c3e50;
+@date-range-big-choose-width:				25.8rem;
+@date-range-big-choose-left-right-width:     3rem;
+@date-range-big-choose-years-panel-current-year-button-font-size: 1.43rem;
+@date-range-big-choose-years-panel-current-year-button-line-height: 1.43rem;
+@date-range-big-choose-date-range-picker-left:	 5.71rem;
+@date-range-big-choose-date-range-picker-right:  1.2857rem;
+@date-range-big-choose-date-range-picker-table-element-height:   84px;
+@date-range-big-choose-date-range-picker-table-element-width:   74px;
+@date-range-big-choose-date-range-picker-table-element-title-padding-top: .7857rem;
+@date-range-big-choose-date-range-picker-color:							#e4e4e4;
+@date-box-wrapper-border-radius: 0;
+@date-box-wrapper-border-color: #3b5e7a;
+@date-range-big-choose-header-range-dash-width: 4px;
+@controls-SubmitPopup-size-standard-width:				28rem;
+@tab-buttons-height:							3.57rem;
+@date-picker-calendar-icon-height: 				1.32rem;
+@date-picker-calendar-icon-width: 				1.32rem;
+@button-without-caption-min-width: 			     3rem;
+@controls-toolbar-menu-margin-left:				.5rem;
+@text-box-error-bg:                       #202835;
+@back-button-linheight-before:              3.2rem;
+@back-button-width-before:                  .7rem;
+@back-button-text-fontweight:               @default-font-weight;

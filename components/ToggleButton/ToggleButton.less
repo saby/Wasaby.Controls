@@ -1,6 +1,16 @@
+.toggle-button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right){
+  left: @icon-left - @border-width;
+
+  & + .controls-Button__text {
+    margin-right: @margin-right - @border-width;
+    margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+  }
+}
+
 .controls-Button {
   &.controls-ToggleButton__normal {
     &.controls-Checked__checked:not(.ws-disabled) {
+      line-height: @button-line-height - @button-checked-border-width;
       &.controls-Button__default {
         border: @button-checked-border;
         background: @button-checked-bg;
@@ -16,11 +26,13 @@
       }
 
       .controls-Button__icon {
-        margin-left:  @button-text-margin-left - @button-checked-border-width;
-        & + .controls-Button__text {
-          margin: @button-checked-text-icon-margin;
-        }
+        .toggle-button-mixin(@button-icon-left-offset; 16px; @button-checked-border-width; @button-text-margin-left; @button-text-margin-right);
       }
+
+      .controls-Button__icon.icon-24 {
+        .toggle-button-mixin(@button-icon-big-left-offset, 24px, @button-checked-border-width, @button-text-margin-left, @button-text-margin-right);
+      }
+
       &.controls-Button__withoutCaption {
         .controls-Button__icon {
           margin-left: 0;
@@ -31,16 +43,19 @@
 }
 
 .controls-Button.controls-Button__big.controls-Checked__checked:not(.ws-disabled) {
+    line-height: @button-big-height - 2 * @button-checked-border-width;
     .controls-Button__text {
       margin-left: @button-big-checked-text-margin-left;
       margin-right: @button-big-checked-text-margin-right;
     }
-
     .controls-Button__icon {
-      margin-left:  @button-big-text-margin-left - @button-checked-border-width;
-      & + .controls-Button__text {
-        margin: @button-big-checked-text-icon-margin;
-      }
+      .toggle-button-mixin(@button-big-icon-big-left-offset, 16px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
+    .controls-Button__icon.icon-24 {
+      .toggle-button-mixin(@button-big-icon-big-left-offset, 24px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
+    }
+    .controls-Button__icon.icon-32 {
+      .toggle-button-mixin(@button-big-icon-32-left-offset, 32px, @button-checked-border-width, @button-big-text-margin-left, @button-big-text-margin-right);
     }
 }
 
@@ -58,36 +73,4 @@
       }
     }
   }
-}
-
-@-moz-document url-prefix() {
-  .controls-Button.controls-Checked__checked {
-    .controls-Button__icon {
-      top: @button-icon-top-offset - @button-checked-border-width;
-
-      &.icon-24 {
-        top: @button-icon-big-top-offset - @button-checked-border-width;
-      }
-    }
-
-    &.controls-Button__big {
-      .controls-Button__icon {
-        top: @button-big-icon-top-offset - @button-checked-border-width;
-
-        &.icon-24 {
-          top: @button-big-icon-big-top-offset - @button-checked-border-width;
-        }
-      }
-    }
-  }
-}
-// хак для мозиллы, выравнивающий иконки в залипшей кнопке
-@-moz-document url-prefix() {
-   .controls-Button.controls-Checked__checked:not(.controls-Button__big) {
-      .controls-Button__icon {
-         &.icon-24 {
-            top: @button-icon-big-top-offset - @button-border-width - 2 !important;
-         }
-      }
-   }
 }

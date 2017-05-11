@@ -4,7 +4,7 @@
  * @description
  */
 define('js!SBIS3.CONTROLS.CommandsSeparator', [
-   'js!WS.Controls.ButtonBase',
+   'js!WSControls/Buttons/ButtonBase',
    'js!SBIS3.CONTROLS.Checkable',
    'tmpl!SBIS3.CONTROLS.CommandsSeparator',
    'css!SBIS3.CONTROLS.CommandsSeparator'
@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.CommandsSeparator', [
    /**
     * Контрол, отображающий разделитель.
     * @class SBIS3.CONTROLS.CommandsSeparator
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     *
     * @public

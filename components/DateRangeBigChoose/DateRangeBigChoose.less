@@ -67,7 +67,7 @@
 
 .controls-DateRangeBigChoose {
 
-   background-color: #fff;
+   background-color: @date-range-big-bg;
    border: 1px solid @date-range-big-choose-border-color;
    border-radius: 0;
    width: @date-range-big-choose-width;
@@ -77,7 +77,7 @@
    position: relative;
 
    .controls-DateRangeBigChoose__header {
-      background-color: #f9f9f9;
+      background-color: @date-range-big-header-bg;
       border-bottom: 1px solid @date-range-big-choose-border-color;
       padding: @date-range-big-choose-header-padding;
 
@@ -87,8 +87,9 @@
          margin: @date-range-big-choose-header-home-button-margin;
          border-radius: @date-range-big-choose-header-home-button-size/2;
          line-height: @date-range-big-choose-header-home-button-line-height !important;
-         .controls-Button__icon {
+         .controls-Button__icon.icon-16 {
             font-size: @date-range-big-choose-header-home-button-font-size !important;
+            left: @date-range-big-choose-header-home-button-left;
          }
       }
 
@@ -103,9 +104,10 @@
          line-height: @date-range-big-choose-header-apply-button-line-height !important;
          margin-left: @date-range-big-choose-header-apply-button-margin-left;
          float: right;
-         .controls-Button__icon {
+         .controls-Button__icon.icon-16 {
             font-size: @date-range-big-choose-header-apply-button-font-size !important;
             width: @date-range-big-choose-header-apply-button-font-size;
+            left: @date-range-big-choose-header-apply-button-left;
          }
       }
       .controls-DateRangeBigChoose__header-rangeDash {
@@ -200,6 +202,10 @@
          .range-button-bar-mixin();
 
          span.controls-Button {
+            .inline-flexbox();
+            .justify-content(center);
+            .align-items(center);
+            line-height: normal;
             border: none;
             float: left;
             width: 16.6666%;
@@ -234,7 +240,7 @@
       }
 
       .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link {
-         margin: 0 18px 0 10px;
+         margin: 0 18px 0 14px;
          font-size: @date-range-big-choose-years-panel-current-year-button-font-size !important;
          line-height: @date-range-big-choose-years-panel-current-year-button-line-height !important;
 
@@ -265,7 +271,7 @@
          display: inline-flex;
          border: 1px dotted transparent;
          margin: 0 20px 0 19px;
-         padding: 2px 0 0 2px;
+         padding: 0 0 0 2px;
          width: @date-range-big-choose-years-panel-back-button-line-height + 2;
          height: @date-range-big-choose-years-panel-back-button-line-height + 2;
          .box-sizing(border-box);
@@ -315,6 +321,10 @@
             background-color: transparent;
             font-size: @date-range-big-choose-quarters-half-years-font-size;
             border-bottom: none;
+            .inline-flexbox();
+            .justify-content(center);
+            .align-items(center);
+
          }
          &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
             border-top: none;
@@ -408,6 +418,9 @@
          .range-vertical-button-bar-mixin();
 
          span.controls-Button {
+            .inline-flexbox();
+            .justify-content(flex-start);
+            .align-items(center);
             width: 100%;
             height: @date-range-big-choose-months-button-height;
             border-top: none;
@@ -418,7 +431,6 @@
             padding-left: 8px;
             border-left-color: transparent;
             background-color: transparent;
-            justify-content: flex-start;
 
             &:first-child {
                height: @date-range-big-choose-months-button-first-height;
@@ -481,6 +493,7 @@
    .controls-DateRangeBigChoose__years-nextYearBtn {
       //margin: 0 auto;
       //display: block;
+      height: @date-range-big-choose-years-btn;
    }
 
    &.controls-DateRangeBigChoose__selectionProcessing {

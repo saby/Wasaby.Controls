@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             this._zIndex =  cWindowManager.getMaxZIndex() + 1;
 
             $(window).on('resize', function(){
-               self._checkCapacity();
+               self._updatePositions();
             });
 
             this.subscribeTo(EventBus.globalChannel(), 'FloatAreaZIndexChanged', function(e, zIndex){
@@ -112,7 +112,6 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
             }
 
             this._updatePositions();
-            this._checkCapacity();
          },
 
          _updateZIndex: function(zIndex){
@@ -128,57 +127,10 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
          _deleteNotification: function(instId){
             var index = this._getItemIndexById(instId);
             if(index !== -1){
-
-               for(var i = 0, l = this._hiddenItems.length; i < l; i++){
-                  if(this._hiddenItems[i].getId() === this._items[index].getId()){
-                     this._hiddenItems.splice(i, 1);
-                     break;
-                  }
-               }
-
                this._items[index].destroy();
                this._items.splice(index, 1);
 
                this._updatePositions();
-               this._checkCapacity();
-            }
-         },
-
-         /**
-          * Проверирить, вместимость в окно браузера и при необходимости скрыть окна, которые не вмещаются
-          * @private
-          */
-         _checkCapacity: function(){
-            var itemsLength = this._items.length;
-            if(itemsLength){
-               var upperVisibleItemIndex = itemsLength - this._hiddenItems.length - 1;
-
-
-               if(upperVisibleItemIndex !== -1 && this._items[upperVisibleItemIndex].getContainer().offset().top <= 0){
-
-                  while(upperVisibleItemIndex !== -1 && this._items[upperVisibleItemIndex].getContainer().offset().top <= 0){
-                     //Скрываем последний видимый элемент
-                     this._items[upperVisibleItemIndex].getContainer().addClass('ws-hidden');
-                     this._hiddenItems.push(this._items[upperVisibleItemIndex]);
-                     upperVisibleItemIndex--;
-                  }
-
-               }
-               else {
-                  for(var i = this._hiddenItems.length - 1; i >= 0; i--){
-                     var itemContainer = this._hiddenItems[i].getContainer();
-                     itemContainer.removeClass('ws-hidden');
-
-                     if(itemContainer.offset().top <= 0){
-                        //Показали лишку, скрываем последний показанный и выходим
-                        itemContainer.addClass('ws-hidden');
-                        return;
-                     }
-                     else {
-                        this._hiddenItems.pop();
-                     }
-                  }
-               }
             }
          },
 
@@ -188,8 +140,9 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
           */
          _updatePositions: function(){
             var bottom = BOTTOM;
+
             for(var i = 0, l = this._items.length; i < l; i++){
-               var controlContainer = this._items[i].getContainer();
+               var container = this._items[i].getContainer();
                var zIndex = this._zIndex;
 
                /*Самозакрывающиеся окна показываем выше всех модальных*/
@@ -197,15 +150,20 @@ define('js!SBIS3.CONTROLS.Utils.NotificationStackManager',
                   zIndex = 1000000;
                }
 
-               controlContainer.css({
+               container.css({
                   bottom: bottom,
                   right: RIGHT,
+                  display: 'block',
                   'z-index': zIndex
                });
 
                this._items[i]._zIndex = zIndex;
 
-               bottom += controlContainer.height() + BLOCK_MARGIN;
+               bottom += container.height() + BLOCK_MARGIN;
+
+               if(container.offset().top <= 0){
+                  container.css('display', 'none');
+               }
             }
          },
 

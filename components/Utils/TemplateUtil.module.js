@@ -3,7 +3,16 @@
  */
 define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
 
-   return {
+    /**
+     * @class SBIS3.CONTROLS.Utils.TemplateUtil
+     * @public
+     */
+   return /** @lends SBIS3.CONTROLS.Utils.TemplateUtil.prototype */{
+       /**
+        *
+        * @param tpl
+        * @returns {*}
+        */
       prepareTemplate: function(tpl) {
          var template;
 

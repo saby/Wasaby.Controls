@@ -1,7 +1,7 @@
 
 define('js!SBIS3.CONTROLS.Button', [
    'Core/constants',
-   'js!WS.Controls.Button',
+   'js!WSControls/Buttons/Button',
    'css!SBIS3.CONTROLS.Button'
 ], function(constants, WSButton) {
 
@@ -12,14 +12,14 @@ define('js!SBIS3.CONTROLS.Button', [
     * Можно настроить:
     * <ol>
     *    <li>{@link SBIS3.CORE.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
-    *    <li>{@link SBIS3.CONTROLS.WSButtonBase#caption текст на кнопке};</li>
+    *    <li>{@link WSControls/Buttons/ButtonBase#caption текст на кнопке};</li>
     *    <li>{@link SBIS3.CORE.Control#enabled возможность взаимодействия с кнопкой};</li>
     *    <li>{@link SBIS3.CONTROLS.IconMixin#icon иконку на кнопке};</li>
     *    <li>{@link primary по умолчанию ли кнопка};</li>
     *    <li>{@link SBIS3.CORE.Control#visible видимость кнопки};</li>
     * </ol>
     * @class SBIS3.CONTROLS.Button
-    * @extends SBIS3.CONTROLS.WSButtonBase
+    * @extends WSControls/Buttons/ButtonBase
 	* @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Крайнов Дмитрий Олегович

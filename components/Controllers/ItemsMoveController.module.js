@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
          // При перемещении записи необходимо менять её позицию в рекордсете
          linkedView.move([item], moveTo, at);
          // и в списке выбранных записей (в случае если среди отмеченных присутствуют заменяемая запись)
-         if (newItemIndex !== -1) {
+         if (newItemIndex !== -1 && currentItemIndex !== -1) {
             selectedKeys[newItemIndex] = item.getId();
             selectedKeys[currentItemIndex] = moveTo.getId();
          }

@@ -307,6 +307,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return resultTpl;
       },
 
+      _isSlowDrawing: function() {
+         var flag = TreeCompositeView.superclass._isSlowDrawing.apply(this, arguments);
+         if (this._options.viewMode === 'list' && this._options.listFolderTemplate) {
+            flag = true;
+         }
+         return flag;
+      },
+
       _buildTplArgs: function(item) {
          var parentOptions = TreeCompositeView.superclass._buildTplArgs.call(this, item);
          if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
@@ -377,6 +385,20 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       setListFolderTemplate : function(tpl) {
          this._options.listFolderTemplate = tpl;
       },
+      /**
+       * Задаёт шаблон отображения каждого элемента коллекциия для отрисовки папки в режимах "Список"
+       * @see listFolderTpl
+       */
+      setListFolderTpl : function(tpl) {
+         this._options.listFolderTpl = tpl;
+      },
+      /**
+       * Задаёт шаблон отображения содержимого каждого элемента коллекциия для отрисовки папки в режимах "Список"
+       * @see listFolderContentTpl
+       */
+      setListFolderContentTpl : function(tpl) {
+         this._options.listFolderContentTpl = tpl;
+      },
 
       redraw: function() {
          if (this._options.hierarchyViewMode) {
@@ -397,6 +419,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       setViewMode: function() {
          this._prevMode = null;
+         // Сбрасываем открытые узлы именно через set'тер, т.к. только так можно закрыть узлы и в проекции
+         this.setOpenedPath({});
          TreeCompositeView.superclass.setViewMode.apply(this, arguments);
       },
 
@@ -536,7 +560,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   if ( String(curRoot) == branchId  &&  self._infiniteScrollOffset) { // т.к. null != "null", _infiniteScrollOffset проверяем на случай, если нет подгрузки по скроллу
                      limit = self._infiniteScrollOffset + self._options.pageSize;
                   } else if (self._limit !== undefined) {
-                     limit = (self._folderOffsets.hasOwnProperty(branchId) ? self._folderOffsets[branchId] : 0) + self._limit;
+                     limit = (self._options._folderOffsets.hasOwnProperty(branchId) ? self._options._folderOffsets[branchId] : 0) + self._limit;
                   }
                   self._notify('onBeforeDataLoad', filter, self.getSorting(), self._offset, limit);
                   return self._callQuery(filter, self.getSorting(), self._offset, limit)
@@ -607,6 +631,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return this.partialyReload(idArray);
          } else {
             return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
+         }
+      },
+
+      _onCollectionAddMoveRemove: function() {
+         //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
+         //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку
+         if (this._options.viewMode == 'table') {
+            TreeCompositeView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+         }
+         else {
+            this.redraw();
          }
       }
 

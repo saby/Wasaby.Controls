@@ -7,8 +7,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.CompoundControl',
        'js!SBIS3.CONTROLS.IconButton',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
-       'html!SBIS3.CONTROLS.ItemsToolbar',
-       'html!SBIS3.CONTROLS.ItemsToolbar/editActions',
+       'tmpl!SBIS3.CONTROLS.ItemsToolbar',
+       'tmpl!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'Core/helpers/dom&controls-helpers',
        'Core/helpers/collection-helpers',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
-                top: targetCords.top - parentCords.top + parentContainer.scrollTop,
+                top: Math.floor(targetCords.top - parentCords.top + parentContainer.scrollTop),
                 left: targetCords.left - parentCords.left
              };
              this._currentTarget.size = {

@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Di',
    "Core/core-instance",
    "Core/CommandDispatcher",
-   "Core/core-functions"
+   "Core/core-functions",
+   "Core/helpers/Function/once"
 ], function (
    constants,
    SearchController,
@@ -20,7 +21,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Di,
    cInstance,
    CommandDispatcher,
-   cFunctions ) {
+   cFunctions,
+   once) {
 
    'use strict';
 
@@ -49,13 +51,22 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {String} Имя параметра фильтрации для поиска
              */
-            searchParam : ''
+            searchParam : '',
+            /**
+             * @cfg {Boolean} Использовать механизм смены неверной раскладки
+             */
+            keyboardLayoutRevert: true
          }
       },
       $constructor: function () {
          var self = this;
 
          this._options.observableControls.unshift(this);
+         
+         /* Инициализация searchController'a происходит лениво,
+            только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
+            на onSearch (и лишних созданий контроллера), метод инициализации позволяем вызывать только один раз. */
+         this._initializeSearchController = once.call(this._initializeSearchController);
 
          this.once('onListReady', function(e, list) {
             self.subscribeTo(list, 'onKeyPressed', function (event, jqEvent) {
@@ -116,6 +127,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._options.searchParam = paramName;
          if(this._searchController) {
             this._searchController.setSearchParamName(paramName);
+         } else {
+            this._initializeSearchController();
          }
       },
 
@@ -130,6 +143,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             this._searchController = new SearchController({
                view: this.getList(),
                searchForm: this,
+               keyboardLayoutRevert: this._options.keyboardLayoutRevert,
                searchParamName: this._options.searchParam,
                doNotRespondOnReset: true,
                searchFormWithSuggest: true

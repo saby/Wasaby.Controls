@@ -3,7 +3,6 @@
    background: @button-bg;
    background-size: contain;
    white-space: nowrap;
-   .justify-content(center);
    .user-select();
    color: @button-text-color;
    min-width: @button-min-width;
@@ -11,7 +10,6 @@
    line-height: @button-line-height;
    .border-radius(@button-border-radius);
    .box-shadow(@button-shadow);
-   .button-baseline-fix();
 
    &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
       background-color: #ffffff;
@@ -25,9 +23,27 @@
 
    // Button's icon
    .controls-Button__icon {
-      margin-left: @button-text-margin-left - @button-border-width;
-      & + .controls-Button__text {
-         margin: @button-text-icon-margin;
+      position: absolute;
+
+      &.icon-small {
+         .button-mixin(@button-icon-left-offset; @icon-small-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-medium {
+         .button-mixin(@button-icon-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-large {
+         .button-mixin(@button-icon-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+
+      // оставляем для совместимости
+      &.icon-16 {
+         .button-mixin(@button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-24 {
+         .button-mixin(@button-icon-big-left-offset; 24px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-32 {
+         .button-mixin(@button-icon-32-left-offset; 32px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
    }
    /* Start Button themes */
@@ -60,15 +76,37 @@
    &.controls-Button__big {
       font-size: @button-big-font-size;
       height: @button-big-height;
+      line-height: @button-big-height -  2 * @button-border-width;
       .border-radius(@button-big-border-radius);
 
       .controls-Button__text {
          margin: @button-big-text-margin;
       }
+
+      // Button's icon
       .controls-Button__icon {
-         margin-left: @button-big-text-margin-left - @button-border-width;
-         & + .controls-Button__text {
-            margin: @button-big-text-icon-margin;
+         position: absolute;
+
+         &.icon-small {
+            .button-mixin(@button-big-icon-left-offset; @icon-small-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+         &.icon-medium {
+            .button-mixin(@button-big-icon-big-left-offset; @icon-medium-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+         &.icon-large {
+            .button-mixin(@button-big-icon-32-left-offset; @icon-large-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+
+
+         // оставляем для совместимости
+         &.icon-16 {
+              .button-mixin(@button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+           }
+         &.icon-24 {
+            .button-mixin(@button-big-icon-big-left-offset; 24px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+         &.icon-32 {
+            .button-mixin(@button-big-icon-32-left-offset; 32px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
          }
       }
    }
@@ -77,16 +115,37 @@
    &.controls-Button__withoutCaption {
       min-width: @button-without-caption-min-width;
       .controls-Button__icon {
-         margin-left: 0;
+         left: 50%;
+         &.icon-small {
+            margin-left: -@icon-small-size/2;
+         }
+         &.icon-medium {
+            margin-left: -@icon-medium-size/2;
+         }
+         &.icon-large {
+            margin-left: -@icon-large-size/2;
+         }
+
+         &.icon-16 {
+            margin-left: -8px;
+         }
+         &.icon-24 {
+            margin-left: -12px;
+         }
+         &.icon-32 {
+            margin-left: -16px;
+         }
+
+      }
+      &.controls-Button__big {
+         .controls-Button__icon {
+            left: 50%;
+         }
       }
       .controls-Button__text {
          display: none;
       }
-      &.controls-Button__big {
-         .controls-Button__icon {
-            margin-left: 0;
-         }
-      }
+      .baseline-fix();
    }
 
    &.ws-disabled {
@@ -101,6 +160,11 @@
 
    &.controls-Button__filled {
       background-color: #ffffff;
+   }
+   &.controls-Button__ellipsis .controls-Button__text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
    }
 }
 
@@ -126,55 +190,17 @@
    }
 }
 
-.controls-Button__ellipsis .controls-Button__text {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-}
-
-// Normal offsets' override for Firefox
-@-moz-document url-prefix() {
-   .controls-Button {
-      &.controls-Button__big {
-         .controls-Button__icon {
-            top: @button-big-icon-top-offset - @button-border-width;
-            &.icon-24 {
-               top: @button-big-icon-big-top-offset - @button-border-width;
-            }
-            &.icon-32 {
-               top: @button-big-icon-32-top-offset - @button-border-width;
-            }
-         }
-      }
-   }
-}
-// хак для ie9, 10, 11 выравнивающий иконки
-@media screen and (min-width:~"0\0") {
-   .controls-Button {
-      .controls-Button__icon {
-         &.icon-24 {
-            top: -2px !important;
-         }
-      }
-   }
-}
-
 .ws-is-firefox {
    .controls-Button {
-      .controls-Button__icon {
-         &.icon-24 {
-            padding-bottom: 2px;
-         }
-      }
+      line-height: @button-line-height - 1px;
       .controls-Button__text {
          padding-bottom: 1px;
       }
-      &.controls-Button__withoutCaption {
-         .controls-Button__icon {
-            &.icon-24 {
-               padding-bottom: 0;
-            }
-         }
+      .controls-Button__icon.icon-24 {
+         margin-top: -13px;
+      }
+      &.controls-Button__big {
+         line-height: @button-big-height -  2 * @button-border-width;
       }
    }
 }

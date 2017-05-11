@@ -53,7 +53,7 @@
     float: left;
   }
 
-  &.controls-Checked__checked:before {
+  &.controls-ToggleButton__normal.controls-Button__default.controls-Checked__checked:before {
     content: @toggle-header-checked-before-content;
   }
 
@@ -104,7 +104,7 @@
 .ws-is-desktop-platform {
   .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
     &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-      &:hover .controls-Link-link {
+      &:hover .controls-Link-link, &:hover .controls-Link__field {
         text-decoration: @link-header-text-decoration;
       }
     }
@@ -120,13 +120,15 @@
     }
   }
 
-  .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader {
+  .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button__default {
     border: @toggle-header-border;
     background: @toggle-header-background;
     font: @toggle-header-font;
     color: @toggle-header-hover-color;
   }
-  .controls-Button:not(.ws-disabled).ws-toggleHeader {
+  // сейчас нельзя использовать абстрактную кнопку в новом шаблонизаторе из-за слешей в название компонента
+  // поэтому временно усиливаю селекторыыы
+  .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button__default {
     &, &.controls-Checked__checked {
       &:hover {
         border: @toggle-header-border;
@@ -136,7 +138,7 @@
       // TODO избавиться от каскада при переходе на абстрактную кнопку
       &:hover.controls-Button {
         color: @toggle-header-hover-color;
-        border: none;
+        border: none !important;
       }
     }
   }
@@ -151,7 +153,7 @@
   }
 }
 
-.controls-Button.ws-toggleHeader {
+.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button__default {
   &, &.controls-Checked__checked:not(.ws-disabled) {
     &, &.controls-Click__active {
       border: @toggle-header-border;

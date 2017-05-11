@@ -1,3 +1,10 @@
+.hiddenPlaceholder() {
+   &::-webkit-input-placeholder { opacity: 0 }
+   &:-moz-placeholder {  opacity: 0 }
+   &::-moz-placeholder {  opacity: 0 }
+   &:-ms-input-placeholder {  opacity: 0 }
+}
+
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
@@ -160,18 +167,6 @@
       max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
    }
-   &.controls-TextBox {
-      .controls-TextBox__afterFieldWrapper {
-         .inline-flexbox();
-         .align-items(center);
-         height: @controls-FieldLink-afterField-height;
-         width: auto;
-
-         > * {
-            padding: @controls-FieldLink-afterField-padding;
-         }
-      }
-   }
 
    &.ws-validation-error {
       .controls-TextBox__afterFieldWrapper {
@@ -180,8 +175,8 @@
    }
 
    &.ws-disabled {
-
-      .controls-TextBox__afterFieldWrapper {
+      
+      .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
 
@@ -190,10 +185,7 @@
       }
 
       .controls-TextBox__field {
-         &::-webkit-input-placeholder { opacity: 0 }
-         &:-moz-placeholder {  opacity: 0 }
-         &::-moz-placeholder {  opacity: 0 }
-         &:-ms-input-placeholder {  opacity: 0 }
+         .hiddenPlaceholder();
       }
 
       .controls-FieldLink__item {
@@ -204,11 +196,50 @@
          display: none;
       }
    }
+   
+   .controls-FieldLink__dropAllLinks {
+      color: @controls-FieldLink-link-color;
+      display: none;
+   }
 
    .controls-FieldLink__Link {
       display: inline;
-      line-height: 20px;
+      line-height: 22px;
    }
+}
+
+.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) {
+   .controls-TextBox__placeholder {
+      display: none;
+   }
+   .controls-TextBox__field {
+      .hiddenPlaceholder();
+   }
+}
+
+.controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
+   .inline-flexbox();
+   .align-items(center);
+   height: @controls-FieldLink-afterField-height;
+   width: auto;
+}
+
+.controls-TextBox__afterFieldWrapper {
+   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+      padding: @controls-FieldLink-afterField-padding;
+   }
+}
+
+.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
+   display: none;
+}
+
+.ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
+   min-width: @controls-FieldLink-fieldWrapper-minWidth;
+}
+
+.controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-TextBox__fieldWrapper {
+   visibility: hidden;
 }
 
 .controls-Link.controls-FieldLink__Link {
@@ -279,8 +310,8 @@
    }
 }
 
-.controls-FieldLink__dropAllLinks {
-   color: @controls-FieldLink-link-color;
+.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
+   display: inline-block;
 }
 
 .controls-FieldLink__copyShowAll {
@@ -309,26 +340,14 @@
 
 .ws-is-firefox {
    .controls-FieldLink {
+      vertical-align: middle;
+      
       .controls-TextBox__beforeFieldWrapper, .controls-TextBox__fieldWrapper {
          margin-top: -1px;
       }
       .controls-FieldLink__item-cross {
          top: -1px;
       }
-   
-      /* FIXING FF FLEXBOX BASELINE https://bugzilla.mozilla.org/show_bug.cgi?id=969874 */
-      &:before {
-         content: '.';
-         visibility: hidden;
-         z-index: -1;
-      }
-      .controls-TextBox__beforeFieldWrapper,
-      .controls-TextBox__afterFieldWrapper,
-      .controls-TextBox__fieldWrapper {
-         position: relative;
-         top: -@text-box-field-min-height;
-      }
-
       &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
          display: none;
       }

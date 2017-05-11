@@ -1,8 +1,13 @@
+.icon-mixin(@icon-left, @icon-width) {
+  left: @icon-left;
+  top: 50%;
+  margin-top: -@icon-width/2;
+}
+
 .controls-IconButton {
   vertical-align: middle;
-  .justify-content(center);
-  .button-default-style();
-  background: inherit;
+  line-height: normal;
+  .button-default-style(0);
   .controls-Button__icon {
     position: relative;
   }
@@ -50,18 +55,30 @@
      }
    }
    &.controls-IconButton__round-border{
-      .round-button-mixin(@gray-ccc-color);
-      height: 28px;
-      width: 28px;
-      line-height: 26px!important;
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
+      .controls-Button__icon {
+        position: @icon-button-round-border-position;
+        &.icon-16 {
+          .icon-mixin(5px, 16px);
+        }
+        &.icon-24 {
+          .icon-mixin(1px, 24px);
+        }
+      }
+      height: @icon-button-round-border-width;
+      width: @icon-button-round-border-height;
+      line-height: @icon-button-round-border-line-height !important;
    }
 
    &.controls-IconButton__round-border-24{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       height: 24px !important;
       width: 24px !important;
       line-height: 24px !important;
       .controls-Button__icon.icon-16 {
+         position: absolute;
+         top: 0;
+         left: 0;
          box-sizing: content-box;
          height: 22px !important;
          width: 22px !important;
@@ -69,7 +86,7 @@
       }
    }
    &.controls-IconButton__round-border-32{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       border-radius: 20px;
       height: 38px !important;
       width: 38px !important;

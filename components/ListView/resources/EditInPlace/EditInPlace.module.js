@@ -242,12 +242,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._notify('onEndEdit');
             },
             setOffset: function(model) {
-               var container = this.getContainer();
+               var
+                  container = this.getContainer();
                if (this._options.getEditorOffset) {
                   if (!this._options.editingTemplate) {
                      container = container.children().get(this._options.ignoreFirstColumn ? 1 : 0);
                   }
-                  $(container).find('.controls-editInPlace__editor').css('padding-left', this._options.getEditorOffset(model));
+                  $(container).find('.controls-editInPlace__editor').css('padding-left', this._options.getEditorOffset(model, this.getTarget()));
                }
             },
             updatePosition: function() {

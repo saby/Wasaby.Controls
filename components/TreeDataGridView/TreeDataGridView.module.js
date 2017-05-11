@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/IoC",
    "Core/core-merge",
    "Core/constants",
+   'Core/CommandDispatcher',
    'Core/helpers/dom&controls-helpers',
    "js!SBIS3.CONTROLS.DataGridView",
    "html!SBIS3.CONTROLS.TreeDataGridView",
@@ -10,20 +11,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "js!SBIS3.CONTROLS.IconButton",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
    "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    "Core/ConsoleLogger",
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( IoC, cMerge, constants, CommandDispatcher, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
-   var HIER_WRAPPER_WIDTH = 16,
-       //Число 19 это сумма padding'ов, margin'ов элементов которые составляют отступ у первого поля, по которому строится лесенка отступов в дереве
-       ADDITIONAL_LEVEL_OFFSET = 19,
-       ADDITIONAL_LEVEL_OFFSET_SEARCH_MODE = 7,
+   var
+      DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
+      DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
+      DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
+      DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
       buildTplArgsTDG = function(cfg) {
          var tplOptions, tvOptions;
          tplOptions = cfg._buildTplArgsDG.call(this, cfg);
@@ -47,6 +49,16 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
+      },
+      getFolderFooterOptions = function(cfg) {
+         var options = cfg._getFolderFooterOptionsTVM.apply(this, arguments);
+         options.colspan = cfg.columns.length;
+         return options;
+      },
+      hasFolderFooters = function() {
+         //Отключаем отрисовку футеров на сервере, потому что пока что нет возможности построить treePaging,
+         //т.к. в момент отрисовки нет информации, есть ли ещё записи в открытой папке.
+         return false;
       };
 
    'use strict';
@@ -113,7 +125,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
         * </ul>
         */
       $protected: {
-         _footerWrapperTemplate: FooterWrapperTemplate,
          _options: {
             _buildTplArgs: buildTplArgsTDG,
             _buildTplArgsTDG: buildTplArgsTDG,
@@ -121,7 +132,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             _defaultSearchRender: searchRender,
+            _footerWrapperTemplate: FooterWrapperTemplate,
+            _getFolderFooterOptions: getFolderFooterOptions,
             _getSearchCfg: getSearchCfg,
+            _hasFolderFooters: hasFolderFooters,
             /**
              * @cfg {Function}
              * @see editArrow
@@ -165,12 +179,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       $constructor: function() {
+         CommandDispatcher.declareCommand(this, 'loadNode', this._folderLoad);
       },
       init: function(){
          TreeDataGridView.superclass.init.call(this);
-         if (this._container.hasClass('controls-TreeDataGridView__withPhoto')){
-            this._options._paddingSize = 42;
-         }
          if (this._options._serverRender) {
             this._createAllFolderFooters();
          }
@@ -238,47 +250,41 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return cfg;
       },
 
-      _createFolderFooter: function(key) {
-         TreeDataGridView.superclass._createFolderFooter.apply(this, arguments);
+      _getEditorOffset: function(model, target) {
          var
-            pagerContainer,
-            lastContainer = this._getLastChildByParent(this._getItemsContainer(), this._getItemProjectionByItemId(key));
-
-         //TODO: Сделать FolderPager отдельным контроллом и перенести создание в шаблон FolderFooterTemplate
-         pagerContainer = $('<div class="controls-TreePager-container">').appendTo(this._foldersFooters[key].find('.controls-TreeView__folderFooterContainer'));
-         this._createFolderPager(key, pagerContainer, this._folderHasMore[key]);
-
-         this._foldersFooters[key].insertAfter(lastContainer);
-         this.reviveComponents();
-      },
-      _getFolderFooterOptions: function(key) {
-         var level = this._getItemProjectionByItemId(key).getLevel();
-         return {
-            key: key,
-            item: this.getItems().getRecordById(key),
-            level: level,
-            footerTpl: this._options.folderFooterTpl,
-            multiselect: this._options.multiselect,
-            colspan: this._options.columns.length,
-            padding: this._options._paddingSize * level + this._options._originallPadding
+            container = this.getContainer(),
+            parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty)),
+            // Без режима поиска и при наличии родителя - необходимо учесть отступ иерархии
+            levelOffset = !this._isSearchMode() && parentProj ? parentProj.getLevel() * this._getLevelPaddingWidth() : 0,
+            hasCheckbox = container.hasClass('controls-ListView__multiselect'),
+            checkboxOffset = this._options.editingTemplate && hasCheckbox && !container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_SELECT_CHECKBOX_WIDTH : 0,
+            // Считаем необходимый отступ слева-направо:
+            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота
+            result = checkboxOffset + this._getRowPadding(target) + levelOffset + DEFAULT_EXPAND_ELEMENT_WIDTH;
+         // Если не задан шаблон редактирования строки и отображаются чекбоксы - компенсируем разницу оступов в полях ввода и ячеек таблицы (в полях ввода 5px, в таблице - 6px)
+         if (!this._options.editingTemplate && hasCheckbox) {
+            result += DEFAULT_CELL_PADDING_DIFFERENCE;
+         } else { // иначе - компенсируем отступ до редактора, исходя из оступов в полях ввода
+            result -= DEFAULT_FIELD_PADDING_SIZE;
          }
+         return result;
       },
-      _getFolderFooterWrapper: function() {
-         return this._footerWrapperTemplate;
-      },
-      _getEditorOffset: function(model) {
+
+      _getRowPadding: function(target) {
+         // На редактироавние могут быть открыты хлебные крошки и тогда левый отступ строки не нужно учитывать.
          var
-             treeLevel = 0,
-             parentProj = this._getItemProjectionByItemId(model.get(this._options.parentProperty));
-         // Если мы в режиме поиска, то:
-         // - при наличии родительской записи (записей) уровень иерархии равен 1
-         // - в остальных случаях уровень иерархии равен 0
-         if (this._isSearchMode()) {
-            treeLevel = parentProj ? 1 : 0;
-         } else if (parentProj) {
-            treeLevel = parentProj.getLevel();
-         }
-         return treeLevel * HIER_WRAPPER_WIDTH + (this._isSearchMode() ? ADDITIONAL_LEVEL_OFFSET_SEARCH_MODE : ADDITIONAL_LEVEL_OFFSET);
+            paddingElement = target.find('.controls-DataGridView__firstContentCell').get(0);
+         return paddingElement ? parseInt(window.getComputedStyle(paddingElement, null).getPropertyValue('padding-left')) : 0;
+      },
+
+      _getLevelPaddingWidth: function() {
+         var
+            $levelPadding = $('<div class="controls-TreeDataGridView__levelPadding" style="position: absolute; visibility: hidden;">'),
+            result;
+         $levelPadding.appendTo(this._getItemsContainer());
+         result = parseInt($levelPadding.width());
+         $levelPadding.remove();
+         return result;
       },
 
       _keyboardHover: function(e) {
@@ -349,7 +355,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(arrowContainer.length === 2) {
             /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
                учитываем возможные отступы иерархии и ширину expander'a*/
-            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right + HIER_WRAPPER_WIDTH) {
+            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right + this._getLevelPaddingWidth(hoveredItem.container)) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
@@ -490,7 +496,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
 
          /* При клике по треугольнику надо просто раскрыть ветку */
-         if (closestExpand.hasClass('js-controls-TreeView__expand') && closestExpand.hasClass('has-child')) {
+         if (closestExpand.hasClass('js-controls-TreeView__expand')) {
             this.toggleNode(id);
             return;
          }

@@ -118,9 +118,9 @@
   background-clip: padding-box;
 }
 
-.round-button-mixin(@border-color) {
-  border: 1px solid @border-color;
-  border-radius: 14px;
+.round-button-mixin(@border-color, @border-radius, @icon-button-border-width) {
+  border: @icon-button-border-width solid @border-color;
+  border-radius: @border-radius;
   text-align: center;
 
   &.ws-disabled {
@@ -132,14 +132,13 @@
   box-sizing: border-box;
 }
 
-.button-default-style() {
+.button-default-style(@button-font-size: @link-font-size) {
   cursor: pointer;
-  .inline-flexbox();
-  .align-items(center);
+  display: inline-block;
   outline: none;
   .box-sizing(border-box);
   font-family: @default-font-name;
-  font-size: @link-font-size;
+  font-size: @button-font-size;
   font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
@@ -148,7 +147,7 @@
   padding: 0;
 }
 
-.button-baseline-fix(@height: auto) {
+.baseline-fix(@height: auto) {
   &:before {
     content: '.';
     width: 0;
@@ -353,12 +352,18 @@
 
 .justify-content(@justify: flex-start) {
    -webkit-justify-content: @justify;
-   -ms-flex-pack: @justify; //ie 10
    -ms-justify-content: @justify;
    justify-content: @justify;
-   //ie 10 fix space-between
+   //ie 10 fix
+   -ms-flex-pack: @justify; //ie 10
    & when (@justify = space-between) {
       -ms-flex-pack: justify;
+   }
+   & when (@justify = flex-end) {
+      -ms-flex-pack: end;
+   }
+   & when (@justify = flex-start) {
+      -ms-flex-pack: start;
    }
 }
 .align-items(@align: stretch) {
@@ -412,9 +417,11 @@
     }
   }
   &:not(.ws-disabled):not(.controls-Click__active) {
-    &:hover .@{textSelector} {
-      cursor: pointer;
-      text-decoration: underline;
+    &:hover {
+      .@{textSelector}, .controls-Link-link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -452,8 +459,10 @@
   }
 }
 
-.button-mixin(@border-width; @margin-left; @margin-right; @icon-width) {
-  left:  @margin-left - @border-width;
+.button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
+  left: @icon-left - @border-width;
+  top: 50%;
+  margin-top: -@icon-width/2;
 
   & + .controls-Button__text {
     margin-right: @margin-right - @border-width;

@@ -39,6 +39,9 @@
 
       .controls-operationsPanel__actionMark {
          padding-left: @controls-OperationsPanel-actions-padding-left;
+         height: @controls-OperationsPanel-height;
+         .flexbox();
+         .align-items(center);
          &:after {
             margin-left: @controls-OperationsPanel-separator-margin-left;
             margin-right: @controls-OperationsPanel-separator-margin-right;
@@ -57,6 +60,9 @@
       .controls-operationsPanel__actionType-selection,
       .controls-operationsPanel__actionType-all {
          margin: @controls-OperationsPanel-actions-margin;
+      }
+      .controls-IconButton {
+         display: inline-flex;
       }
       .controls-operationsPanel__actionType-mark {
          margin: @controls-OperationsPanel-actions-mark-margin;
