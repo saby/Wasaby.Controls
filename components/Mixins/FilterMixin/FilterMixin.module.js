@@ -330,12 +330,27 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             return result;
          }, {});
       },
-
-
+   
+       /**
+        * Возвращает объект собраный из элементов стрктуры:
+        * {
+        *    key (internalValueField) : value
+        * }
+        * @returns {Object}
+        *
+        * @see filterStructure
+        * @see setFilterStructure
+        */
       getFilter: function() {
+         return this._getFilter(false);
+      },
+      
+      _getFilter: function(byInternal) {
          return colHelpers.reduce(this._filterStructure, function(result, element) {
             if (element.hasOwnProperty('value')) {
-               result[element.filterField || element.internalValueField] = element.value;
+               /* FIXME для внедрения в задачах используется filterField, т.к. у них internalValueField не совпадает
+                  с полем фильтра */
+               result[byInternal ? element.internalValueField : (element.filterField || element.internalValueField)] = element.value;
             }
             return result;
          }, {});
