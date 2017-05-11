@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
-                top: targetCords.top - parentCords.top + parentContainer.scrollTop,
+                top: Math.floor(targetCords.top - parentCords.top + parentContainer.scrollTop),
                 left: targetCords.left - parentCords.left
              };
              this._currentTarget.size = {
