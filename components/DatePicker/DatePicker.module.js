@@ -177,6 +177,7 @@ define(
        */
       _timeInit: function() {
          if (this.isEnabled()) {
+            this._options.pickerConfig.closeButton = true;
             this.togglePicker();
 
             this._initFocusInHandler();
@@ -218,7 +219,6 @@ define(
             }));
 
          // Добавляем в пикер
-         this._picker.getContainer().empty();
          this._picker.getContainer().append(this._getPickerMethod('Create')(element));
       },
 
