@@ -182,8 +182,6 @@ define(
             element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
 
          this._picker.getContainer().empty();
-         // Добавляем в пикер
-         this._picker.getContainer().append(element);
          // Преобразуем контейнер в контролл Calendar и запоминаем
          self._chooserControl = new DateRangeBigChoose({
             parent: this._picker,
@@ -192,6 +190,9 @@ define(
             startValue: this.getDate(),
             endValue: this.getDate()
          });
+
+         // Добавляем в пикер
+         this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
          this._chooserControl.subscribe('onChoose', this._onChooserChange.bind(this));
