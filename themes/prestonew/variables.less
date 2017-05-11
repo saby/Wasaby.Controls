@@ -1,7 +1,30 @@
 @import "../carry/variables";
-@default-height:								1.7857rem;
+// Default vars
+@default-text-size:                       1rem;
+@small-text-size:                         .857rem;
+@large-text-size:                         1.14rem;
+@huge-text-size:						              1.43rem;
+@default-text-color:                      #e4e4e4;
+@default-color:                           #587AB0;
+@primary-color:                           #D94700;
+@disabled-color:                          #2C4458;
+@innacent-color:                     	    #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FA9C33;
+@success-color:                           #72BE44;
+@default-bg-color:                        #1D2834;
+@accent-color:							              #26B8FF;
+@default-hover-color:                     #B9E9FF;
+@innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@default-height:								          1.7857rem;
+
+@icon-small-size:                         1.32rem;
+@icon-medium-size:                        1.7857rem;
+@icon-large-size:                         3rem;
+
+//=============
 @black-color:                             #333;
-@default-color:								transparent;
 @gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
 @default-text-color:                      #e4e4e4;
@@ -17,11 +40,11 @@
 @darkcyan-color: 							#8991A9;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-@default-border-width:						.07rem;
+@default-border-width:					  1px;
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
- @check-box-default-font-size:				1.14rem;
+@check-box-default-font-size:				1.14rem;
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
 @closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -3rem;
 @closeBigButtonWidth:                     60px;
@@ -45,6 +68,20 @@
 @link-icon-margin:                        -2px 0 0;
 
 @link-icon-field-margin:                  0 0 0 .14rem;
+
+@link-additional-color:                   @darkcyan-color;
+
+// ------------ //
+//  Icon Button //
+// ------------ //
+
+@icon-button-round-border-position:     relative;
+@icon-button-round-border-width:        2.286rem;
+@icon-button-round-border-height:       2.286rem;
+@icon-button-round-border-line-height:  2.2rem;
+@border-radius:                         2.4rem;
+@icon-button-border-width:              0.072rem;
+
 
 // ------ //
 // Button //
@@ -139,10 +176,10 @@
 
 @button-primary-hover-border:             @button-primary-border;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                rgb(217, 71, 0);
+@button-primary-hover-bg:                  #EC5B19;
 
 @button-primary-active-text-color:        @button-active-text-color;
-@button-primary-active-border:            2px solid #d94700;
+@button-primary-active-border:             0.07rem solid #d94700;
 @button-primary-active-shadow:            @button-active-shadow;
 @button-primary-active-bg:                #d94700;
 
@@ -263,17 +300,16 @@
 // Checkbox //
 // -------- //
 
-@check-box-text-margin:                         0 8px;
-@check-box-icon-box:							1.14rem;
-@check-box-text-color:                          @default-text-color;
-@check-box-hover-text-color:                    #e4e4e4;
-
-@check-box-disabled-text-color:                 @gray-color;
-
-@check-box-icon-width:                          1.714rem;
-@check-box-icon-height:                         1.714rem;
-@check-box-icon-line-height:                    1.714rem;
-
+@check-box-icon-size:                           50px;
+@check-box-icon-successful-size:                50px;
+@check-box-font-size:                           32px;
+@check-box-icon-successful-bottom:              6px;
+@check-box-icon-successful-left:                6px;
+@check-box-icon-null-size:                      18px;
+@check-box-caption-padding:                     9px 0;
+@check-box-icon-box-size:                       32px;
+@check-box-icon-box-color:                      rgba(102, 170, 221, .4);
+@check-box-disabled-color:                      #37536C;
 
 @check-box-icon-border:                         1px solid @default-color;
 @check-box-icon-bg:                          	url(@check-box-icon-spritesheet) 0 1px;
@@ -587,7 +623,7 @@
 @search-hover-border-color:                           #5d687b;
 @search-bottom-border-color:                          #2e3a45;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-form-icon-padding:                            .7rem 8px 0 0;
+@search-form-icon-padding:                            .6rem 8px 0 0;
 @search-form-icon-disabled-display:                   block;
 
 @search-focus-background:                             #2e3a45;
@@ -1215,3 +1251,13 @@
 @date-box-wrapper-border-radius: 0;
 @date-box-wrapper-border-color: #3b5e7a;
 @date-range-big-choose-header-range-dash-width: 4px;
+@controls-SubmitPopup-size-standard-width:				28rem;
+@tab-buttons-height:							3.57rem;
+@date-picker-calendar-icon-height: 				1.32rem;
+@date-picker-calendar-icon-width: 				1.32rem;
+@button-without-caption-min-width: 			     3rem;
+@controls-toolbar-menu-margin-left:				.5rem;
+@text-box-error-bg:                       #202835;
+@back-button-linheight-before:              3.2rem;
+@back-button-width-before:                  .7rem;
+@back-button-text-fontweight:               @default-font-weight;

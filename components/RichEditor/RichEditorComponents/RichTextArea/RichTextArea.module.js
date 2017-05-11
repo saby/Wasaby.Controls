@@ -782,6 +782,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @param target объект рядом с которым будет позиционироваться  диалог вставки ссылки
           */
          insertLink: function(onAfterCloseHandler, target) {
+            //TODO: переписать этот метод на отдельный компонент
             var
                editor = this._tinyEditor,
                selection = editor.selection,
@@ -876,11 +877,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            },
                            element: okButton
                         });
+
+                     },
+                     onAfterShow: function(){
                         if (cConstants.browser.isMobileIOS) {
                            //финт ушами, тк фокус с редактора убрать никак нельзя
                            //тк кнопки на которую нажали у нас в обработчике тоже нет
                            //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
-                           okButton.focus();
+                           $('.controls-RichEditor__insertLinkButton').focus();
                         }
                      },
                      onAfterClose: function() {
@@ -1218,6 +1222,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
                   e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
                }
+               self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
                // и послыаем метку форматной вставки, если метка присутствует не надо обрабатывать событие
                // нашим обработчиком, а просто прокинуть его в дальше
@@ -1275,7 +1280,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (!self._mouseIsPressed && (!event.targetClone || (event.targetClone && !$(event.targetClone).hasClass('controls-RichEditor__noneditable'))))  {
                   event.preventDefault();
                }
-               self._mouseIsPressed = false;
             });
 
             editor.on('dragstart', function(event) {

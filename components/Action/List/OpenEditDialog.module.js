@@ -631,6 +631,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
              self = this;
          return cMerge(config, {
+            catchFocus: false,
             handlers: {
                onAfterClose: function (e, meta) {
                   self._notifyOnExecuted(meta, this._record);

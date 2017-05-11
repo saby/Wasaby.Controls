@@ -2,7 +2,7 @@
 @default-text-size:                       14px;
 @small-text-size:                         12px;
 @large-text-size:                         15px;
-@huge-text-size:						  17px;
+@huge-text-size:						              17px;
 @default-text-color:                      #000;
 @default-color:                           #587AB0;
 @primary-color:                           #ff7033;
@@ -16,6 +16,8 @@
 @default-hover-color:                     #F0F5FB;
 @innacent-color2:						  #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @basic-block-bg-color:					  #EAEAEA; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@default-font-weight:                     400;
+@bold-font-weight:                        700;
 //=============================
 @white-color:                             #fff;
 @black-color:                             #000;
@@ -84,7 +86,15 @@
 @hover-color:                             @blue-dark-color;
 @controls-panel-shadow:                   0px 0px 12px 0px rgba(0,0,0,0.4);
 
-// ---- //
+@icon-small-size:                         16px;
+@icon-medium-size:                        24px;
+@icon-large-size:                         32px;
+
+@default-icon-small-font:                 'cbuc-icons';
+@default-icon-medium-font:                'cbuc-icons24';
+@default-icon-large-font:                 @default-icon-small-font;
+
+  // ---- //
 // Link //
 // ---- //
 
@@ -110,7 +120,7 @@
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
 
-
+@link-additional-color:                   @gray-color;
 
 // ------ //
 // Button //
@@ -277,6 +287,14 @@
 @icon-button-done-color: #72BE44;
 @icon-button-error-color: #EF463A;
 
+@icon-button-round-border-position:     absolute;
+@icon-button-round-border-width:        28px;
+@icon-button-round-border-height:       28px;
+@icon-button-round-border-line-height:  26px;
+@border-radius:                         14px;
+@icon-button-border-width:              1px;
+
+
 // ------------- //
 // Toggle button //
 // ------------- //
@@ -323,7 +341,8 @@
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
-@tab-buttons-border-bottom:                     1px solid #CCCCCC;
+@tab-buttons-border-bottom-height:              1px;
+@tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #CCCCCC;
 @tab-buttons-div-display:                       table-cell;
 @tab-buttons-div-space:                         nowrap;
 @tab-buttons-div-align:                         middle;
@@ -530,22 +549,20 @@
 @check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
 @check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
+@check-box-caption-margin-left:                 0px;
 // ------------------------------------------------------------------------------------- //
 
-@check-box-icon-width:                          18px;
-@check-box-default-font-size:                   14px;
-@check-box-icon-height:                         @check-box-icon-width;
-@check-box-icon-font-size:                      @check-box-icon-width;
-@check-box-icon-bottom:                         6px;
-@check-box-icon-left:                           5px;
-
-@check-box-icon-null-width:                     6px;
-@check-box-icon-null-height:                    @check-box-icon-null-width;
-
+@check-box-icon-size:                           24px;
+@check-box-icon-successful-size:                18px;
+@check-box-font-size:                           @default-text-size;
+@check-box-icon-successful-bottom:              6px;
+@check-box-icon-successful-left:                5px;
+@check-box-icon-null-size:                      6px;
 @check-box-caption-padding:                     3px 0;
-@check-box-icon-box:                            12px;
-
-@check-box-icon-box-color:                      #999;
+@check-box-icon-box-size:                       12px;
+@check-box-icon-box-color:                      @innacent-color2;
+@check-box-caption-margin-left:                 0;
+@check-box-disabled-color:                      @disabled-color;
 
 // -------------- //
 // Checkbox group //
@@ -2086,9 +2103,9 @@
 @DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 
-@DropdownList-icon-spritesheet:                          'img/CheckBox.png';
-@DropdownList-icon-bg-pathFilter:                        url(@DropdownList-icon-spritesheet) 0 2px;
-@DropdownList-icon-checked-bg-pathFilter:                url(@DropdownList-icon-spritesheet) 0 50px;
+@DropdownList-icon-spritesheet:                       'img/CheckBox.png';
+@DropdownList-icon-bg-pathFilter:                     url(@DropdownList-icon-spritesheet) 0 1px;
+@DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
 
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
@@ -2519,7 +2536,7 @@
 @process-state-indicator-sector2:                          @icon-color-attention;
 @process-state-indicator-sector3:                          @red-color;
 @process-state-indicator-empty-sector:                     @gray-ccc-color;
-@process-state-indicator-sector-width:                     6px; 
+@process-state-indicator-sector-width:                     6px;
 @process-state-indicator-sector-height:                    8px;
 @process-state-indicator-sector-spacing:                   2px;
 @process-state-indicator-sector-side-padding:              6px;
@@ -2530,3 +2547,6 @@
 @scrollpager-bg:                                         white;
 @date-range-big-header-bg:								#f9f9f9;
 @date-range-big-bg:										#fff;
+@back-button-linheight-before:                inherit;
+@back-button-width-before:                                  8px;
+@back-button-text-fontweight:               @bold-font-weight;

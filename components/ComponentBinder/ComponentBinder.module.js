@@ -188,12 +188,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        *     myBinder.bindBreadCrumbs();
        * </pre>
        */
-      bindBreadCrumbs: function(breadCrumbs, backButton){
+      bindBreadCrumbs: function(breadCrumbs, backButton, backButtonTemplate){
          if (!this._breadCrumbsController){
             this._breadCrumbsController = new BreadCrumbsController({
                view: this._options.view,
                breadCrumbs: breadCrumbs || this._options.breadCrumbs,
-               backButton: backButton || this._options.backButton
+               backButton: backButton || this._options.backButton,
+               backButtonTemplate: backButtonTemplate || this._options.backButtonTemplate
             });
          }
          this._breadCrumbsController.bindBreadCrumbs(breadCrumbs, backButton);

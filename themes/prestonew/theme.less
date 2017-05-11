@@ -7,7 +7,7 @@ body {
 
 .controls-SearchForm {
   .icon-size {
-    font-size: 2rem !important;
+    font-size: 3rem !important;
     width: 2rem;
     height: 3rem;
   }
@@ -101,20 +101,25 @@ body .ws-enabled .icon-primary{
 }
 body {
   .icon-16 {
-    font-size: 1.85rem !important;
-    line-height: 1.85rem !important;
-    width: 1.85rem;
-    height: 1.85rem;
+    font-size: 1.32rem !important;
+    line-height: 1.32rem !important;
+    width: 1.32rem;
+    height: 1.32rem;
   }
   .icon-24 {
-    font-size: 2.21rem !important;
-    height: 2.21rem !important;
-    width: 2.21rem !important;
+    font-size: 1.7857rem !important;
+    height: 1.7857rem !important;
+    width: 1.7857rem !important;
+    line-height: 1.7857rem !important;
+
   }
   .icon-32 {
-    font-size: 2rem !important;
-    height: 3rem !important;
-    width: 3rem !important;
+
+        font-size: 3rem!important;
+        height: 3rem!important;
+        width: 3rem!important;
+        line-height: 3rem !important;
+
   }
 }
 .controls-Button.controls-Button--prestogray {
@@ -178,10 +183,9 @@ body {
 
 body {
   .ws-window-titlebar {
-    color: #e4e4e4;
+    color: @default-text-color;
     line-height: 3.57rem;
     height: 3.57rem;
-    background: transparent;
     position: absolute;
     left: 0;
     right: 0;
@@ -189,6 +193,7 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
+    background: #2e404f;
     box-shadow: none!important;
   }
   &.ws-window-titlebar-custom {
@@ -334,4 +339,22 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
   }
 body .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
     padding-left: .5rem;
+}
+body .controls-BackButton {
+  line-height: 3.64rem;
+}
+
+body .ws-float-area-nostack-panel-shadow-standart {
+    border: 1px solid #2e404f;
+    background: #2e404f;
+}
+.controls-editInPlace .controls-editInPlace__editor {
+  background: @basic-block-bg-color;
+}
+.controls-ListView .controls-ItemsToolbar__editActions {
+    background: @basic-block-bg-color;
+}
+
+body .ws-float-area-title-generated {
+    margin-right: 3rem;
 }

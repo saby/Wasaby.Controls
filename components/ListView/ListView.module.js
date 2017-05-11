@@ -2577,12 +2577,6 @@ define('js!SBIS3.CONTROLS.ListView',
          //КОНЕЦ БЛОКА ОПЕРАЦИЙ НАД ЗАПИСЬЮ //
          //*********************************//
          _drawItemsCallback: function () {
-            var hoveredItem,
-                hoveredItemContainer,
-                hash,
-                projItem,
-                containsHoveredItem;
-
             ListView.superclass._drawItemsCallback.apply(this, arguments);
 
             /* Проверяем, нужно ли ещё подгружать данные в асинхронном _drawItemsCallback'e,
@@ -2594,15 +2588,34 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._drawSelectedItems(this._options.selectedKeys, {});
 
-            hoveredItem = this.getHoveredItem();
-            hoveredItemContainer = hoveredItem.container;
+            //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
+            if (this._scrollBinder){
+               this._scrollBinder._updateScrollPages(true);
+            } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
+               this._createScrollPager();
+            }
+            this._notifyOnSizeChanged(true);
+         },
 
-             /* Если после перерисовки выделенный элемент удалился из DOM дерава,
-               то событие mouseLeave не сработает, поэтому вызовем руками метод,
-               если же он остался, то обновим положение кнопки опций*/
+         _drawItemsCallbackSync: function() {
+            var hoveredItem = this.getHoveredItem(),
+                hoveredItemContainer = hoveredItem.container,
+                containsHoveredItem, hash, projItem;
+
+            ListView.superclass._drawItemsCallbackSync.call(this);
+            /* Подскролл после подгрузки вверх надо производить после отрисовки синхронно,
+               иначе скролл будет дёргаться */
+            if (this.isInfiniteScroll()) {
+               if (this._needScrollCompensation) {
+                  this._moveTopScroll();
+               }
+            }
+            /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
+
+            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+              то событие mouseLeave не сработает, поэтому вызовем руками метод,
+              если же он остался, то обновим положение кнопки опций. */
             if(hoveredItemContainer){
-               // FIXME УДАЛИТЬ, вызывается, чтобы проходили тесты, просто создаёт индекс по хэшу в енумераторе
-               this._getItemsProjection().getByHash(null);
                containsHoveredItem = dcHelpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
 
                if(!containsHoveredItem && hoveredItemContainer) {
@@ -2612,7 +2625,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   hash = hoveredItemContainer.attr('data-hash');
                   projItem = this._getItemsProjection().getByHash(hash);
                   /* Если в проекции нет элемента и этого элемента нет в DOM'e,
-                     но на него осталась jQuery ссылка, то надо её затереть */
+                   но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
                      hoveredItemContainer = this._getDomElementByItem(projItem);
                   } else {
@@ -2621,40 +2634,21 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                if(!containsHoveredItem) {
-                  if(!hoveredItemContainer) {
+                  if(!hoveredItemContainer || !hoveredItemContainer.length) {
                      this._mouseLeaveHandler();
                   } else {
                      this._updateHoveredItem(hoveredItemContainer);
                   }
                } else {
                   /* Даже если контейнер выбранной записи не изменился,
-                     надо обновить выделнный элемент, т.к. могло измениться его положение */
+                   надо обновить выделнный элемент, т.к. могло измениться его положение */
                   this._updateHoveredItem(hoveredItemContainer);
-               }
-            }
-
-            //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
-            if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(true);
-            } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
-               this._createScrollPager();
-            }
-            this._notifyOnSizeChanged(true);
-         },
-         _drawItemsCallbackSync: function() {
-            ListView.superclass._drawItemsCallbackSync.call(this);
-            /* Подскролл после подгрузки вверх надо производить после отрисовки синхронно,
-               иначе скролл будет дёргаться */
-            if (this.isInfiniteScroll()) {
-               if (this._needScrollCompensation) {
-                  this._moveTopScroll();
                }
             }
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             ListView.superclass._onResizeHandler.call(this);
-            var self = this;
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
@@ -2673,7 +2667,7 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
-         _removeItems: function(items, groupId){
+         _removeItems: function(items, groupId) {
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items, groupId);
             if (this.isInfiniteScroll()) {
@@ -2682,7 +2676,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId){
-            ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
             if (this._getSourceNavigationType() == 'Offset'){
                if (action == IBindCollection.ACTION_ADD) {
                   this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
@@ -2690,10 +2683,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
+            ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         // необходимо для навигации по Offset'ам - переопределяется в TreeMixin для учета записей только в корне
          _getAdditionalOffset: function(items){
             return items.length;
          },
@@ -2752,11 +2745,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this.isInfiniteScroll()) {
                this._createScrollWatcher();
 
+               this._createLoadingIndicator();
                if (this._options.infiniteScroll == 'demand'){
                   this._setInfiniteScrollState('down');
                   return;
                }
-               this._createLoadingIndicator();
                // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
                this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
                /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
@@ -3891,7 +3884,6 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
-                  dropBySelf = false,
                   source = dragObject.getSource();
 
                if (target && source) {
@@ -3899,16 +3891,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   source.each(function(item) {
                      var model = item.getModel();
                      models.push(model);
-                     if (targetsModel == model) {
-                        dropBySelf = true;
-                     }
                   });
-                  if (dropBySelf) {//TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-                     var clickHandler = this._elemClickHandler;
-                     this._elemClickHandler = function () {
-                        this._elemClickHandler = clickHandler;
-                     };
-                  }
+
                   if (dragObject.getOwner() === this) {
                      var position = target.getPosition();
                      this._getMover().move(models, target.getModel(), position).addCallback(function(result){
@@ -3926,7 +3910,15 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                     this._getMover().moveFromOutside(dragObject.getSource(),
+                        dragObject.getTarget(),
+                        dragOwner.getItems(),
+                        useDefaultMove
+                     ).addCallback(function (result) {
+                        if (result !== false && cInstance.instanceOfMixin(dragOwner, 'SBIS3.CONTROLS.MultiSelectable')) {
+                           dragOwner.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
+                        }
+                     });
                   }
                }
             }
@@ -4141,7 +4133,7 @@ define('js!SBIS3.CONTROLS.ListView',
          initializeSelectedItems: function() {
             var items = this.getItems();
 
-            if (cInstance.instanceOfModule(items, 'js!WS.Data/Collection/RecordSet')) {
+            if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
                this._options.selectedItems = Di.resolve('collection.recordset', {
                   ownerShip: false,
                   adapter: items.getAdapter(),

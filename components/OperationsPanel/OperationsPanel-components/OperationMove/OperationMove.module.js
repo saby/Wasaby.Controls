@@ -52,19 +52,15 @@ define('js!SBIS3.CONTROLS.OperationMove', [
             action: undefined
          }
       },
-      init: function () {
-         OperationMove.superclass.init.call(this);
-         if (!this._options.action) {
-            this._options.action = new InteractiveMove({
-               linkedObject: this._options.linkedView
-            });
-         }
+
+      $constructor: function() {
       },
       _clickHandler: function() {
-         this._options.action.execute();
-      },
-      setLinkedView: function (val) {
-         this._options.action.setLinkedObject(val)
+         if (this._options.action) {
+            this._options.action.execute();
+         } else {
+            this._options.linkedView.moveRecordsWithDialog();
+         }
       }
    });
 

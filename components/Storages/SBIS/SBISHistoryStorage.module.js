@@ -180,13 +180,21 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       saveHistory: function() {
          var self = this;
 
-         if(!this.isNowSaving()) {
+         if (!this.isNowSaving()) {
             this._saveParamsDeferred = new Deferred();
 
-            this._setStorageValue(this._history).addCallback(fHelpers.forAliveOnly(function() {
+            this._setStorageValue(this._history).addCallback(fHelpers.forAliveOnly(function(res) {
                self._saveParamsDeferred.callback();
+               return res;
             }, self));
             this._historyChannel.notify('onHistoryUpdate', this._history);
+         } else {
+            /* Если во время сохранения истории её поменяли ещё раз, то необходимо дождаться предыдущего запроса,
+               и позвать запрос с новыми данными. Иначе будут гонки, какой запрос первей отработает. */
+            this._saveParamsDeferred.addCallback(function(res) {
+               self.saveHistory();
+               return res;
+            });
          }
 
          return this._saveParamsDeferred;

@@ -130,6 +130,10 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                element = $(['<div class="', this._cssRangeSlider.pickerContainer, '"></div>'].join(' '));
 
             this._picker.getContainer().empty();
+
+            // Добавляем в пикер
+            this._picker.getContainer().append(element);
+            
             // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
             self._chooserControl = new DateRangeChoose({
                parent: this._picker,
@@ -150,9 +154,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
                uncheckedIconTitle: this._options.uncheckedIconTitle,
                iconsHandler: this._options.iconsHandler
             });
-
-            // Добавляем в пикер
-            this._picker.getContainer().append(element);
 
             this._chooserControl.subscribe('onChoose', this._onChooserRangeChange.bind(this));
          }

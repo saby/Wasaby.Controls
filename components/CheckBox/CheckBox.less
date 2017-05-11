@@ -1,12 +1,13 @@
 .controls-CheckBox {
   display: inline-block;
-  line-height: @default-height;
+  line-height: @check-box-icon-size;
+  //TODO: удалить стиль и переменную, когда перейдем на carrynew и prestonew.
+  margin-right: @check-box-caption-margin-left;
 }
 
 .controls-CheckBox__caption {
-  display: inline-block;
   word-wrap: break-word;
-  line-height: @default-height - 2 * extract(@check-box-caption-padding, 1);
+  line-height: @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
 }
 
 .controls-CheckBox__icon {
@@ -19,22 +20,22 @@
 }
 
 .controls-CheckBox__caption_size {
-  font-size: @check-box-default-font-size;
-  width: calc(e("100% - @{default-height}"));
+  font-size: @check-box-font-size;
+  margin-left: @check-box-icon-size;
   padding: @check-box-caption-padding;
 }
 
 .controls-CheckBox__icon_size {
-  width: @default-height;
-  height: @default-height;
+  width: @check-box-icon-size;
+  height: @check-box-icon-size;
 }
 
 .controls-CheckBox__iconBox_size {
   position: absolute;
-  width: @check-box-icon-box - 2 * @default-border-width;
-  height: @check-box-icon-box - 2 * @default-border-width;
+  width: @check-box-icon-box-size - 2 * @default-border-width;
+  height: @check-box-icon-box-size - 2 * @default-border-width;
   border-width: @default-border-width;
-  margin: (@default-height - @check-box-icon-box) / 2;
+  margin: (@check-box-icon-size - @check-box-icon-box-size) / 2;
 }
 
 .controls-CheckBox__iconBox_color {
@@ -45,12 +46,12 @@
   .controls-CheckBox__icon:before {
     content: '\e616';
     position: absolute;
-    font-size: @check-box-icon-font-size;
-    height: @check-box-icon-height;
-    width: @check-box-icon-width;
-    line-height: @check-box-icon-height;
-    bottom: @check-box-icon-bottom;
-    left: @check-box-icon-left;
+    font-size: @check-box-icon-successful-size;
+    height: @check-box-icon-successful-size;
+    width: @check-box-icon-successful-size;
+    line-height: @check-box-icon-successful-size;
+    bottom: @check-box-icon-successful-bottom;
+    left: @check-box-icon-successful-left;
   }
 }
 
@@ -58,10 +59,10 @@
   .controls-CheckBox__icon:before {
     content: '';
     position: absolute;
-    height: @check-box-icon-null-height;
-    width: @check-box-icon-null-width;
-    line-height: @check-box-icon-null-height;
-    margin: (@default-height - @check-box-icon-null-height) / 2;
+    height: @check-box-icon-null-size;
+    width: @check-box-icon-null-size;
+    line-height: @check-box-icon-null-size;
+    margin: (@check-box-icon-size - @check-box-icon-null-size) / 2;
   }
 }
 
@@ -89,22 +90,22 @@
 
 .ws-disabled {
   &.controls-CheckBox {
-  cursor: @disabled-hover-cursor;
+    cursor: @disabled-hover-cursor;
   }
   .controls-CheckBox__caption {
     color: @disabled-text-color;
   }
   .controls-CheckBox__iconBox_color {
-    border-color: @disabled-color;
+    border-color: @check-box-disabled-color;
   }
   &.controls-Checked__checked {
     .controls-CheckBox__icon:before {
-      color: @disabled-color;
+      color: @check-box-disabled-color;
     }
   }
   &.controls-ToggleButton__null {
     .controls-CheckBox__icon:before {
-      background-color: @disabled-color;
+      background-color: @check-box-disabled-color;
     }
   }
 }
