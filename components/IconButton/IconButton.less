@@ -55,9 +55,9 @@
      }
    }
    &.controls-IconButton__round-border{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       .controls-Button__icon {
-        position: absolute;
+        position: @icon-button-round-border-position;
         &.icon-16 {
           .icon-mixin(5px, 16px);
         }
@@ -65,13 +65,13 @@
           .icon-mixin(1px, 24px);
         }
       }
-      height: 28px;
-      width: 28px;
-      line-height: 26px!important;
+      height: @icon-button-round-border-width;
+      width: @icon-button-round-border-height;
+      line-height: @icon-button-round-border-line-height !important;
    }
 
    &.controls-IconButton__round-border-24{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       height: 24px !important;
       width: 24px !important;
       line-height: 24px !important;
@@ -86,7 +86,7 @@
       }
    }
    &.controls-IconButton__round-border-32{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       border-radius: 20px;
       height: 38px !important;
       width: 38px !important;

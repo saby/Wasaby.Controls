@@ -66,11 +66,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj, projCfg = {};
+      projCfg.idProperty = cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : '');
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
       if (cfg.itemsFilterMethod) {
          projCfg.filter = cfg.itemsFilterMethod;
+      }
+      if (cfg.loadItemsStrategy == 'merge') {
+         projCfg.unique = true;
       }
       proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
@@ -82,7 +86,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!cfg.groupBy.method) {
             var field = cfg.groupBy.field;
             method = function(item, index, projItem){
-               return item.get(field);
+               //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
+               return item.get(field) + '';
             }
          }
          else {
@@ -602,6 +607,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             sorting: [],
             /**
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
+             * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
+             * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
+             *
+             */
+            loadItemsStrategy: 'append',
+            /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              * @example
              * <pre>
@@ -741,7 +753,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          this._revivePackageParams = {
             revive: false,
-            light: true
+            light: true,
+            processed: true
          };
 
          var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
@@ -2523,10 +2536,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    var
       onBeforeCollectionChange = function() {
-         this._revivePackageParams = {
-            light: true,
-            revive: false
-         };
+         //У Лехи Мальцева не всегда соблюдается 100% последовательность before / change / after
+         //поэтому сброс в before делаем только тогда когда был соотве after
+         if (this._revivePackageParams.processed) {
+            this._revivePackageParams = {
+               light: true,
+               revive: false,
+               processed: false
+            };
+         }
       },
 
       onCollectionItemChange = function(eventObject, item, index, property) {
@@ -2579,6 +2597,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
+         this._revivePackageParams.processed = true;
       };
    return ItemsControlMixin;
 

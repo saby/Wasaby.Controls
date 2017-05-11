@@ -1,12 +1,12 @@
 .controls-CheckBoxGroup {
   display: inline-block;
-  .controls-ListView__item {
+  .controls-ListView__item:not(:last-child) {
     margin: @check-box-group-horizontal-item-margin;
   }
 
   &.controls-ButtonGroup__vertical {
-    .controls-ListView__item {
-      width: 100%;
+    .controls-ListView__item:not(:last-child) {
+      display: block;
       margin: @check-box-group-vertical-item-margin;
     }
   }
