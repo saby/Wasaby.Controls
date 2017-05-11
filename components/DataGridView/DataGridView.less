@@ -245,6 +245,12 @@
       background-color: @data-grid-header-cell-hover-bg;
    }
 
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      &.controls-DataGridView__th__checkBox__checked{
+         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+      }
+   }
    &.controls-DataGrid__column__type-money {
       padding-right:20px;
    }
