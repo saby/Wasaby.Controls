@@ -1,4 +1,7 @@
-<span name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}" tabindex="{{_options.tabindex}}" class="controls-Button controls-ButtonBase{{!_options.visible ? ' ws-hidden'}}{{!_options.enabled ? ' ws-disabled':' ws-enabled'}}{{_options.primary ? ' controls-Button__primary':' controls-Button__default'}}" title="{{_options.tooltip}}" disabled="{{!_options.enabled ? 'disabled'}}" type="button">
+<span name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}"
+
+      event:onclick="_onClick()"
+      tabindex="{{_options.tabindex}}" class="controls-Button controls-ButtonBase{{!_options.visible ? ' ws-hidden'}}{{!_options.enabled ? ' ws-disabled':' ws-enabled'}}{{_options.primary ? ' controls-Button__primary':' controls-Button__default'}}" title="{{_options.tooltip}}" disabled="{{!_options.enabled ? 'disabled'}}" type="button">
     <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
        <i class="controls-Button__icon js-controls-Button__icon {{_options._iconClass?_options._iconClass:_options.icon}}"></i>
     </ws:if>

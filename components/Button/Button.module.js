@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.Button',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
       'css!SBIS3.CONTROLS.Button'
@@ -17,12 +18,13 @@ define('js!SBIS3.CONTROLS.Button',
              AreaAbstractCompatible,
              BaseCompatible,
              ButtonCompatible,
+             InstantiableMixin,
              template,
              functions) {
 
       'use strict';
 
-      var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible],
+      var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
          {
             _controlName: 'SBIS3.CONTROLS.Button',
             _template: template,
