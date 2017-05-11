@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.
 
    var IconButton = WSButton.extend([], /** @lends SBIS3.CONTROLS.IconButton.prototype */ {
       _template: template,
-      _controlName: 'SBIS3.CONTROLS.IconButtonFuck',
+      _controlName: 'SBIS3.CONTROLS.IconButton',
       _useNativeAsMain: true,
       _containerReady: function (container) {
          IconButton.superclass._containerReady.call(this, container);
