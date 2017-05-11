@@ -1,5 +1,10 @@
 .controls-ScrollContainer {
    overflow: hidden;
+   // Если включена фиксация заголовков внутри скролируемой области, то иногда стили на ws-sticky-header__wrapper
+   // переопределяют overflow
+   &.ws-sticky-header__wrapper {
+      overflow: hidden;
+   }
    position: relative;
    outline: none;
    .controls-ScrollContainer__scrollbar{
