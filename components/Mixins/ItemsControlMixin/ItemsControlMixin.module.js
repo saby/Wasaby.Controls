@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj, projCfg = {};
-      projCfg.idProperty = cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : '');
+      projCfg.idProperty = cfg.idProperty || ((cfg.dataSource && typeof cfg.dataSource.getIdProperty === 'function') ? cfg.dataSource.getIdProperty() : '');
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
@@ -712,6 +712,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;
                   newCfg._items = parsedCfg._items;
+                  /*TODO убрать этот код с переходом на легкие инстансы. В текущей реализации методы не могут нормально сериализоваться при построении на сервере*/
+                  applyGroupingToProjection(newCfg._itemsProjection, newCfg);
                } else {
                   if (newCfg.items instanceof Array) {
                      if (!newCfg.idProperty) {
