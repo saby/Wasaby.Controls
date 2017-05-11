@@ -377,7 +377,6 @@
          background: @DropdownList-icon-bg-pathFilter;
          visibility: hidden;
          position: relative;
-         bottom: 1px;
       }
 
       &.controls-DropdownList__buttonsBlock {
@@ -402,11 +401,6 @@
             top: -@DropdownList-picker-menu-item-height - 5px;
          }
       }
-      .controls-DropdownList__multiselect {
-         .controls-DropdownList__itemCheckBox {
-            bottom: 0;
-         }
-      }
    }
    .controls-DropdownList__afterCaptionWrapper {
       top: 3px;
@@ -417,4 +411,14 @@
   .controls-DropdownList .controls-DropdownList__selectedItem{
      .inline-flexbox();
   }
+}
+
+.ws-is-mobile-safari, .ws-is-firefox {
+   .controls-DropdownList__picker {
+      .controls-DropdownList__multiselect {
+         .controls-DropdownList__itemCheckBox {
+            bottom: -1px;
+         }
+      }
+   }
 }

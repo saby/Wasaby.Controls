@@ -604,17 +604,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _lastDrawn : undefined,
          _lastPath : [],
          _loadedNodes: {},
-         _previousRoot: null,
+         _previousRoot: undefined,
          _hier: [],
          _hierPages: {}
       },
 
-      $constructor : function(cfg) {
+      $constructor : function() {
          var
             filter = this.getFilter() || {};
-         cfg = cfg || {};
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
-         this._options._curRoot = this._options.root;
          if (typeof this._options.root != 'undefined') {
             filter[this._options.parentProperty] = this._options.root;
          }
@@ -622,7 +620,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'С узлами и листьями';
          }
-         this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
          CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
@@ -1078,6 +1075,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       before: {
          _modifyOptions: function(cfg) {
+            cfg._curRoot = cfg.root;
+            this._previousRoot = cfg._curRoot;
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('TreeMixin', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;
