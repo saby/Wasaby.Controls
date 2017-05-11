@@ -46,13 +46,19 @@ define('js!SBIS3.CONTROLS.TimeHeader',
 
             //Инициализируем контекст
             this._setContextActive();
-            this.getLinkedContext().setValueSelf('hours', this._getStringTime(this.getTime().hours));
-            this.getLinkedContext().setValueSelf('minutes', this._getStringTime(this.getTime().minutes));
+            this._setContextTime();
 
             //Найдем внутренние контролы
             this._homeButton = this.getChildControlByName('homeButton');
 
             this._homeButton.subscribe('onActivated', this._onHomeButtonActivatedHandler.bind(this));
+         },
+
+         setActiveTime: function(activeTime) {
+            var isSet = TimeHeader.superclass.setActiveTime.call(this, activeTime);
+            if (isSet) {
+               this._setContextActive(activeTime);
+            }
          },
 
          /**
@@ -70,44 +76,10 @@ define('js!SBIS3.CONTROLS.TimeHeader',
           * @public
           */
          setTime: function(time) {
-            var setTime = {};
-            for (var system in this.getTime()) {
-               if (!(system in time) || this.getTime()[system] === time[system]) {
-                  continue;
-               }
-               this.getTime()[system] = time[system];
-               setTime[system] = time[system];
-               this.getLinkedContext().setValueSelf(system, this._getStringTime(this.getTime()[system]));
+            var isSet = TimeHeader.superclass.setTime.call(this, time).isSet;
+            if (isSet) {
+               this._setContextTime();
             }
-
-            if (!Object.isEmpty(setTime)) {
-               this._notify('onChangeTime', setTime);
-               this._notifyOnPropertyChanged('time');
-            }
-         },
-
-         /**
-          * Получить активное время.
-          * @returns {String} активное время.
-          * @public
-          */
-         getActiveTime: function() {
-            return this._options.activeTime;
-         },
-
-         /**
-          * Изменить активное время.
-          * @param {String} activeTime новое активное время.
-          */
-         setActiveTime: function(activeTime) {
-            if (this.getActiveTime() === activeTime) {
-               return;
-            }
-
-            this._options.activeTime = activeTime;
-            this._setContextActive();
-            this._notify('onChangeActiveTime', this.getActiveTime());
-            this._notifyOnPropertyChanged('activeTime');
          },
 
          /**
@@ -120,6 +92,14 @@ define('js!SBIS3.CONTROLS.TimeHeader',
                minutes: this.getActiveTime() === 'minutes'
             };
             this.getLinkedContext().setValueSelf('active', active);
+         },
+
+         _setContextTime: function() {
+            var time = {
+               hours: this._getStringTime(this.getTime().hours),
+               minutes: this._getStringTime(this.getTime().minutes)
+            };
+            this.getLinkedContext().setValueSelf('time', time);
          },
 
          /**
@@ -137,7 +117,9 @@ define('js!SBIS3.CONTROLS.TimeHeader',
             } else if (~event.target.className.indexOf('js-controls-TimeHeader__minutes')) {
                activeTime = 'minutes';
             }
-            activeTime && this.setActiveTime(activeTime);
+            if (activeTime) {
+               this.setActiveTime(activeTime)
+            }
          },
 
          /**

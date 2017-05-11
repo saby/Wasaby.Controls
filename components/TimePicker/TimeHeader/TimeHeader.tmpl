@@ -5,7 +5,7 @@
          <div
             class="controls-TimeHeader__time js-controls-TimeHeader__hours"
             data-bind="{
-               html: hours,
+               html: time/hours,
                css: {
                   'controls-TimeHeader__time_active': active/hours,
                   'controls-TimeHeader__time_passive': active/minutes
@@ -16,7 +16,7 @@
          <div
             class="controls-TimeHeader__time js-controls-TimeHeader__minutes"
             data-bind="{
-               html: minutes,
+               html: time/minutes,
                css: {
                   'controls-TimeHeader__time_active': active/minutes,
                   'controls-TimeHeader__time_passive': active/hours

@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
          /**
           * @event onChangeActiveTime Происходит после смены активного времени.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} viewName Текущее активное время.
+          * @param {Object} activeTime Текущее активное время.
           */
          $protected: {
             _options: {
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
                setTime[system] = time[system];
                isSet = true;
                if (!isSetActiveTime) {
-                  isSetActiveTime = this.getViewName() === system;
+                  isSetActiveTime = this.getActiveTime() === system;
                }
             }
 
@@ -109,7 +109,10 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
             if (isSet) {
                this._setUtilOption('time', setTime);
             }
-            return [isSet, isSetActiveTime];
+            return {
+               isSet: isSet,
+               isSetActiveTime: isSetActiveTime
+            };
          },
 
          /**
@@ -129,7 +132,7 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
           */
          setActiveTime: function(activeTime) {
             //Проверим можем ли мы установить новое представление или не совподает ли оно с текущим.
-            if (this.getActiveTime() === activeTime || !(activeTime in this.getTime())) {
+            if (this.getActiveTime() === activeTime || !(activeTime === 'hours' || activeTime === 'minutes')) {
                return false;
             }
             this._setUtilOption('activeTime', activeTime);

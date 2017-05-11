@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.ClockPicker',
       'tmpl!SBIS3.CONTROLS.ClockPicker/resources/Circle',
       'Core/core-functions',
       'Core/helpers/String/ucFirst',
+      'js!SBIS3.CONTROLS.TimePickerUtils',
       'css!SBIS3.CONTROLS.ClockPicker'
    ],
-   function(CompoundControl, dotTplFn, DragNDropMixinNew, circleTplFn, coreFunctions, ucFirst) {
+   function(CompoundControl, dotTplFn, DragNDropMixinNew, circleTplFn, coreFunctions, ucFirst, Utils) {
 
       'use strict';
 
@@ -25,39 +26,24 @@ define('js!SBIS3.CONTROLS.ClockPicker',
        * @initial
        * Пример инициализации контрола.
        * Результат: ClockPicker с выбором минут, и стрелкой показывающей на 17. При смене
-       *            представления на hours(см. {@link setViewName}) будет ClockPicker с выбором часов,
+       *            представления на hours(см. {@link setActiveTime}) будет ClockPicker с выбором часов,
        *            и стрелкой показывающей на 20.
        *
-       * <ol>
-       *    <li>
-       *       На dot.js:
-       *       <component data-component="SBIS3.CONTROLS.ClockPicker">
-       *          <options name="time">
-       *             <option name="hours">20</option>
-       *             <option name="minutes">17</option>
-       *          </options>
-       *          <option name="viewName">minutes</option>
-       *       </component>
-       *    </li>
-       *    <li>
-       *       На logicless:
-       *       <ws:SBIS3.CONTROLS.ClockPicker>
-       *          <ws:time>
-       *             <ws:Object>
-       *                <ws:hours>20</ws:hours>
-       *                <ws:minutes>17</ws:minutes>
-       *             </ws:Object>
-       *          </ws:time>
-       *          <ws:viewName>minutes</ws:view>
-       *       </ws:SBIS3.CONTROLS.ClockPicker>
-       *    </li>
-       * </ol>
+       * <ws:SBIS3.CONTROLS.ClockPicker>
+       *    <ws:time>
+       *       <ws:Object>
+       *          <ws:hours>20</ws:hours>
+       *          <ws:minutes>17</ws:minutes>
+       *       </ws:Object>
+       *    </ws:time>
+       *    <ws:activeTime>minutes</ws:activeTime>
+       * </ws:SBIS3.CONTROLS.ClockPicker>
        *
        * @control
        * @public
        * @author Крайнов Дмитрий Олегович
        */
-      var ClockPicker = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS.ClockPicker.prototype */ {
+      var ClockPicker = CompoundControl.extend([DragNDropMixinNew, Utils], /** @lends SBIS3.CONTROLS.ClockPicker.prototype */ {
          _dotTplFn: dotTplFn,
 
          /**
@@ -67,78 +53,12 @@ define('js!SBIS3.CONTROLS.ClockPicker',
           */
 
          /**
-          * @event onChangeViewName Происходит после смены представления.
+          * @event onChangeActiveTime Происходит после смены представления.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} viewName Текущее имя представления.
+          * @param {Object} activeTime Текущее имя представления.
           */
 
          $protected: {
-            _options: {
-               /**
-                * @cfg {Object} Положение стрелки в разных представлениях.
-                *
-                * @example
-                * Установить стрелку представлений hours на 20, а minutes на 17.
-                * <ol>
-                *    <li>
-                *       На dot.js:
-                *       <pre>
-                *          <options name="time">
-                *             <option name="hours">20</option>
-                *             <option name="minutes">17</option>
-                *          </options>
-                *       </pre>
-                *    </li>
-                *    <li>
-                *       На logicless:
-                *       <pre>
-                *          <ws:time>
-                *             <ws:Object>
-                *                <ws:hours>20</ws:hours>
-                *                <ws:minutes>17</ws:minutes>
-                *             </ws:Object>
-                *          </ws:time>
-                *       </pre>
-                *    </li>
-                * </ol>
-                *
-                * @see getTime
-                * @see setTime
-                */
-               time: {
-                  hours: 0,
-                  minutes: 0
-               },
-
-               /**
-                * @cfg {String} Имя текущего предсталения.
-                * <ol>
-                *    <li>Часов: hours.</li>
-                *    <li>Минут: minutes.</li>
-                * </ol>
-                *
-                * @example
-                * Установить представление минут.
-                * <ol>
-                *    <li>
-                *       На dot.js:
-                *       <pre>
-                *          <option name="viewName">minutes</option>
-                *       </pre>
-                *    </li>
-                *    <li>
-                *       На logicless:
-                *       <pre>
-                *          <ws:viewName>minutes</ws:view>
-                *       </pre>
-                *    </li>
-                * </ol>
-                *
-                * @see getViewName
-                * @see setViewName
-                */
-               viewName: 'hours'
-            },
             //Хранит в себе jQuery объекты помеченных tick.
             _markTick: {},
 
@@ -161,32 +81,24 @@ define('js!SBIS3.CONTROLS.ClockPicker',
             }
          },
 
-         $constructor: function() {
-            this._publish('onChangeTime', 'onChangeViewName');
-         },
-
          init: function() {
             ClockPicker.superclass.init.call(this);
 
-            this._isViewHours = this.getViewName() === 'hours';
+            this._isViewHours = this.getActiveTime() === 'hours';
 
             //Подпишимся на события для работы стрелки.
+            this._container.one('mousedown touchstart', function() {
+               this._offset = this._container.offset();
+               this._centerX = this._offset.left + this._container.width() / 2;
+               this._centerY = this._offset.top + this._container.height() / 2;
+            }.bind(this));
             this._container.on('mousedown touchstart', '.js-controls-ClockPicker__arrowTip', this._getDragInitHandler());
             this._container.bind('mousedown touchstart', this._onMousedownHandler.bind(this));
             this._container.bind('mouseup touchend', this._endDragHandler.bind(this));
 
             //Расчитаем положение стрелки и установим название представления.
             this._calcArrow(true);
-            this.getLinkedContext().setValueSelf('unitTime', this._unitTime[this.getViewName()]);
-         },
-
-         /**
-          * Получить положение стрелки.
-          * @returns {Object} положение стрелки в разных представлениях.
-          * @public
-          */
-         getTime: function() {
-            return this._getOption('time');
+            this.getLinkedContext().setValueSelf('unitTime', this._unitTime[this.getActiveTime()]);
          },
 
          /**
@@ -195,48 +107,23 @@ define('js!SBIS3.CONTROLS.ClockPicker',
           * @public
           */
          setTime: function(time) {
-            var
-               setTime = coreFunctions.clone(this.getTime()),
-               //isSet - изменилось ли время, isSetView - изменилось ли время на активном представлении.
-               isSet, isSetView;
-
-            for (var system in setTime) {
-               if (!(system in time) || this.getTime()[system] === time[system]) {
-                  continue;
-               }
-               setTime[system] = time[system];
-               isSet = true;
-               isSetView = this.getViewName() === system || isSetView;
+            var isSetActiveTime = ClockPicker.superclass.setTime.call(this, time).isSetActiveTime;
+            if (isSetActiveTime) {
+               this._calcArrow();
             }
-
-            //Проверим изменилось ли время.
-            if (isSet) {
-               this._setClockPickerOption('time', setTime);
-               //Пересчитаем положение стрелки, если изменилось время на активном представлении.
-               isSetView && this._calcArrow();
-            }
-         },
-
-         /**
-          * Получить имя активного представления.
-          * @returns {String} имя активного представления.
-          * @public
-          */
-         getViewName: function() {
-            return this._getOption('viewName');
          },
 
          /**
           * Изменить активное представление.
-          * @param {String} viewName имя нового представления.
+          * @param {String} activeTime имя нового представления.
           * @public
           */
-         setViewName: function(viewName) {
+         setActiveTime: function(activeTime) {
             //Проверим можем ли мы установить новое представление или не совподает ли оно с текущим.
-            if (this.getViewName() === viewName || !(viewName in this.getTime())) {
+            if (this.getActiveTime() === activeTime || !(activeTime in this.getTime())) {
                return;
             }
-            this._setClockPickerOption('viewName', viewName);
+            this._setUtilOption('activeTime', activeTime);
             this._isViewHours = !this._isViewHours;
             this._createView && this._createView();
 
@@ -249,14 +136,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                this._container.toggleClass(className);
                this.getLinkedContext().setValueSelf('arrow/visible', true);
                this.getLinkedContext().setValueSelf('arrow/hidden', false);
-               this.getLinkedContext().setValueSelf('unitTime', this._unitTime[viewName]);
+               this.getLinkedContext().setValueSelf('unitTime', this._unitTime[activeTime]);
             }.bind(this), ANIMATION_TIME);
-         },
-
-         _setClockPickerOption: function(name, value, silent) {
-            this._setOption(name, value, silent);
-            this._notify('onChange' + ucFirst.call(name), value);
-            this._notifyOnPropertyChanged(name);
          },
 
          _modifyOptions: function(options) {
@@ -284,13 +165,13 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                circle,
                arrow = this._container.find('.js-controls-ClockPicker__arrow');
 
-            for (circle in this._options._ticks[this.getViewName()]) {
+            for (circle in this._options._ticks[this.getActiveTime()]) {
                arrow[circle === 'outer' ? 'before' : 'after']($(circleTplFn({
-                  viewName: this.getViewName(),
+                  activeTime: this.getActiveTime(),
                   circleName: circle,
-                  ticks: this._options._ticks[this.getViewName()][circle],
+                  ticks: this._options._ticks[this.getActiveTime()][circle],
                   animationTime: ANIMATION_TIME,
-                  isMark: this.getViewName() === 'minutes'
+                  isMark: this.getActiveTime() === 'minutes'
                })));
             }
             /**
@@ -308,9 +189,6 @@ define('js!SBIS3.CONTROLS.ClockPicker',
           * Вернуть метод который инициализирует DragNDrop
           */
          _getDragInitHandler: function() {
-            this._offset = this._container.offset();
-            this._centerX = this._offset.left + this._container.width() / 2;
-            this._centerY = this._offset.top + this._container.height() / 2;
             return (function(e) {
                this._initDrag.call(this, e);
                e.preventDefault();
@@ -335,8 +213,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
             var
                x = e.clientX - this._centerX,
                y = e.clientY - this._centerY,
-               angularOffset = 30 / this._tickOffset[this.getViewName()],
-               setTime, circle, deg, tick;
+               angularOffset = 30 / this._tickOffset[this.getActiveTime()],
+               setTime, circle, deg, tick, arrowConfig;
 
             if (this._isViewHours) {
                circle = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) < 103 ? 'inner' : 'outer';
@@ -348,17 +226,17 @@ define('js!SBIS3.CONTROLS.ClockPicker',
             deg = -Math.round(Math.atan2(x, y) * 57.29577951308232 / angularOffset) * angularOffset;
             deg <= 0 && (deg += 360);
 
-            if (this._isSetArrow(circle, deg)) {
-               return;
-            }
-
             tick = this._getTick(circle, deg);
 
-            if (this.getTime()[this.getViewName()] !== tick) {
+            arrowConfig = this._getArrowConfig(circle, deg);
+            circle = arrowConfig.circle;
+            deg = arrowConfig.deg;
+
+            if (this.getTime()[this.getActiveTime()] !== tick) {
                this._setArrow(circle, deg, tick);
                setTime = coreFunctions.clone(this.getTime());
-               setTime[this.getViewName()] = tick;
-               this._setClockPickerOption('time', setTime);
+               setTime[this.getActiveTime()] = tick;
+               this._setUtilOption('time', setTime);
             }
          },
 
@@ -368,14 +246,14 @@ define('js!SBIS3.CONTROLS.ClockPicker',
              * Организуем поведение при котором при окончательном выборе часов, происходила смена
              * представления на минуты.
              */
-            this.getViewName() === 'hours' && this.setViewName('minutes');
+            this.getActiveTime() === 'hours' && this.setActiveTime('minutes');
          },
 
          _getArrowConfig: function(circle, deg) {
-            return [
-               (this._arrowConfig.circle === circle || circle) && undefined,
-               (this._arrowConfig.deg === deg || deg) && undefined
-            ];
+            return {
+               circle: this._arrowConfig.circle !== circle && circle,
+               deg: this._arrowConfig.deg !== deg && deg
+            };
          },
 
          /**
@@ -387,8 +265,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
           */
          _getTick: function(circle, deg) {
             var
-               angularOffset = 30 / this._tickOffset[this.getViewName()],
-               countTick = 12 * this._tickOffset[this.getViewName()],
+               angularOffset = 30 / this._tickOffset[this.getActiveTime()],
+               countTick = 12 * this._tickOffset[this.getActiveTime()],
                tick = (deg / angularOffset + countTick / 2) % countTick;
 
             this._isViewHours && (circle === 'outer' ^ !tick) && (tick += countTick);
@@ -410,9 +288,9 @@ define('js!SBIS3.CONTROLS.ClockPicker',
              * Если клик был произведен по меченному tick, то нужно встать на этот tick.
              */
             tick = parseInt((/js-controls-ClockPicker__tick-([0-9]{2})/.exec(event.target.className) || [])[1]);
-            if (tick) {
+            if (!isNaN(tick)) {
                time = coreFunctions.clone(this.getTime());
-               time[this.getViewName()] = tick;
+               time[this.getActiveTime()] = tick;
                this.setTime(time);
                return;
             }
@@ -448,10 +326,12 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                   tick: this._getStringTick(tick),
                   transform: 'rotate(' + (-deg) + 'deg)'
                });
+            } else if (typeof tick === 'number') {
+               this.getLinkedContext().setValueSelf('arrowTip/tick', this._getStringTick(tick));
             }
 
             nearestDistance = 2;
-            tickOffset = this._tickOffset[this.getViewName()];
+            tickOffset = this._tickOffset[this.getActiveTime()];
 
             nearestVisibleTick = tick % tickOffset;
             if (nearestVisibleTick < tickOffset / 2) {
@@ -509,7 +389,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
          _calcArrow: function() {
             var circle, deg, tick, arrowConfig;
 
-            tick = this.getTime()[this.getViewName()];
+            tick = this.getTime()[this.getActiveTime()];
 
             if (this._isViewHours) {
                if (tick > 12 || tick === 0) {
@@ -520,7 +400,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
             } else {
                circle = 'outer';
             }
-            deg = 30 / this._tickOffset[this.getViewName()] * tick + 180;
+            deg = 30 / this._tickOffset[this.getActiveTime()] * tick + 180;
 
             this._arrowConfig.circle = circle;
             this._arrowConfig.deg = deg;

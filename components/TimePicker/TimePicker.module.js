@@ -78,8 +78,6 @@ define('js!SBIS3.CONTROLS.TimePicker',
          init: function() {
             TimePicker.superclass.init.call(this);
 
-            delete this._options._time;
-
             //Найдем внутренние контролы
             this._header = this.getChildControlByName('header');
             this._body = this.getChildControlByName('body');

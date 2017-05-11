@@ -9,7 +9,7 @@ define(
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
-      'js!SBIS3.CONTROLS.ClockPicker',
+      'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker/resources/ElementPickerContent',
       'Core/helpers/dom&controls-helpers',
@@ -204,7 +204,7 @@ define(
       },
 
       _timeShow: function() {
-         return;
+         this._pickerContent.setTime(this.getDate());
       },
 
       /**
@@ -246,7 +246,12 @@ define(
             element: element,
             time: this.getDate()
          });
+         this._pickerContent.subscribe('onChangeTime', this._onChangeTimeHandler.bind(this));
          return element;
+      },
+
+      _onChangeTimeHandler: function(event, time) {
+         this.setDate(time);
       },
 
       _onChooserChange: function(event, date) {
