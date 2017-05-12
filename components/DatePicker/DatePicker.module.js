@@ -230,6 +230,9 @@ define(
             startValue: this.getDate(),
             endValue: this.getDate()
          });
+         // Добавляем в пикер
+         this._picker.getContainer().append(element);
+
          // Нажатие на календарный день в пикере устанавливает дату
          this._pickerContent.subscribe('onChoose', this._onChooserChange.bind(this));
          this._pickerContent.subscribe('onCancel', this._onChooserClose.bind(this));
