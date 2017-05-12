@@ -51,7 +51,9 @@
       height: auto;
    }
    -webkit-overflow-scrolling: touch;
-   isolation: isolate;
+   // isolation создает изолированный контект отображения и iframe в полноэкранном режиме отображается неправильно
+   // (элементы с isolation: isolate отображаются поверх него, т.к. у них собственный контекст рендера)
+   z-index: 0;
 
    &.ws-sticky-header__scrollable-container {
       width: auto;

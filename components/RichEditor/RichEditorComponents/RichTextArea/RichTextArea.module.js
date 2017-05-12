@@ -293,6 +293,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
+                  ' allowfullscreen',
                   ' frameborder="0" >',
                   '</iframe>'
                ].join('');
