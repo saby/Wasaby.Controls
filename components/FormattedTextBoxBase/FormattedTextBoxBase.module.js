@@ -7,7 +7,7 @@ define(
       'Core/core-extend',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
-      'is!msIe?js!SBIS3.CONTROLS.FormattedTextBoxBase/resources/ext/ierange-m2-min'
+      'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],
    function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
 

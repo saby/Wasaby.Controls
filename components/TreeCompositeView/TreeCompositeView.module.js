@@ -307,6 +307,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return resultTpl;
       },
 
+      _isSlowDrawing: function() {
+         var flag = TreeCompositeView.superclass._isSlowDrawing.apply(this, arguments);
+         if (this._options.viewMode === 'list' && this._options.listFolderTemplate) {
+            flag = true;
+         }
+         return flag;
+      },
+
       _buildTplArgs: function(item) {
          var parentOptions = TreeCompositeView.superclass._buildTplArgs.call(this, item);
          if ((this._options.viewMode == 'list') || (this._options.viewMode == 'tile')) {
@@ -377,6 +385,20 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       setListFolderTemplate : function(tpl) {
          this._options.listFolderTemplate = tpl;
       },
+      /**
+       * Задаёт шаблон отображения каждого элемента коллекциия для отрисовки папки в режимах "Список"
+       * @see listFolderTpl
+       */
+      setListFolderTpl : function(tpl) {
+         this._options.listFolderTpl = tpl;
+      },
+      /**
+       * Задаёт шаблон отображения содержимого каждого элемента коллекциия для отрисовки папки в режимах "Список"
+       * @see listFolderContentTpl
+       */
+      setListFolderContentTpl : function(tpl) {
+         this._options.listFolderContentTpl = tpl;
+      },
 
       redraw: function() {
          if (this._options.hierarchyViewMode) {
@@ -397,6 +419,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       setViewMode: function() {
          this._prevMode = null;
+         // Сбрасываем открытые узлы именно через set'тер, т.к. только так можно закрыть узлы и в проекции
+         this.setOpenedPath({});
          TreeCompositeView.superclass.setViewMode.apply(this, arguments);
       },
 

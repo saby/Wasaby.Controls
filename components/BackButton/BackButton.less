@@ -1,20 +1,23 @@
 .controls-BackButton {
    cursor: pointer;
    display: inline-block;
+   line-height: 24px;
    position: relative;
    white-space: nowrap;
    font-weight: 700;
    font-size: @back-button-font-size;
 
    .controls-BackButton__caption.controls-Link {
-      .inline-flexbox();
       font-style: normal;
       color: @blue-dark-color;
-      padding-left: @back-button-arrow-paddingleft;
+      overflow: hidden;
+      padding-left: 4px;
+      text-overflow: ellipsis;
       white-space: nowrap;
       text-align: left;
       max-width: calc(~"100% - 8px");
-      font-weight: 700;
+      line-height: normal;
+      font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
       .controls-Button__text {
          overflow: hidden;
@@ -22,13 +25,14 @@
       }
    }
    &:before {
-      width: 8px;
+      width: @back-button-width-before;
       color: @primary-color;
       font-weight: normal;
       content: '\e003';
       float: left;
       margin: @back-button-margin-before;
       padding: @back-button-padding-before;
+      line-height: @back-button-linheight-before;
    }
 
    &.controls-BackButton__show-arrow{
@@ -56,7 +60,7 @@
       }
       .controls-BackButton__arrow {
          position: relative;
-         top: 2px;
+         top: -3px;
          &:before{
             float: right;
             position: relative;

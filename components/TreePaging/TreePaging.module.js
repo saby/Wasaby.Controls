@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.TreePaging', [
    "js!SBIS3.CORE.Control",
-   "tmpl!SBIS3.CONTROLS.TreePaging"
+   "tmpl!SBIS3.CONTROLS.TreePaging",
+   'i18n!SBIS3.CONTROLS.TreePaging'
 ], function(Control, tmplFn) {
    var TreePaging = Control.Control.extend({
       _dotTplFn: tmplFn,
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.TreePaging', [
       },
       setHasMore: function(more) {
          this._options.hasMore = !!more;
-         this._container.toggleClass('ws-hidden', !this._options.hasMore);
+         this._container.toggleClass('ws-hidden', !(this._options.pageSize && more));
       }
    });
 

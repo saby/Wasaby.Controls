@@ -8,12 +8,20 @@
    .text-overflow();
 }
 .controls-DataGridView {
+   .controls-DataGridView__th, .controls-DataGridView__td {
+      &.controls-DataGridView__firstContentCell {
+         padding-left: @controls-view-padding-DEFAULT;
+      }
+      &:last-child {
+         padding-right: @controls-view-padding-DEFAULT;
+      }
+   }
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
    
    &:not(.controls-ListView__disableHover) {
-      .controls-ListView__hoveredItem {
+      .controls-ListView__hoveredItem:not(.controls-editInPlace) {
          background: @data-grid-row-hover-bg;
          
          .controls-DataGridView__th {
@@ -102,27 +110,12 @@
       }
    }
 
-   .generate-side-class(@i: 1) when (@i =< length(@data-grid-side-cell-padding-variants)) {
-      @nval: extract(@data-grid-side-cell-padding-variants, @i);
-      @val: @nval * 1px;
-      &.controls-DataGridView__sidePadding-@{nval} {
-         .controls-DataGridView__th, .controls-DataGridView__td {
-            &.controls-DataGridView__firstContentCell {
-               padding-left: @val;
-            }
-            &:last-child {
-               padding-right: @val;
-            }
-         }
-      }
-      .generate-side-class(@i + 1);
-   }
-   .generate-side-class();
-
   &.controls-ListView__multiselect {
-     .controls-DataGridView__th, .controls-DataGridView__td {
-        &.controls-DataGridView__firstContentCell {
-           padding-left: @data-grid-ms-first-content-cell-padding-left;
+     .controls-DataGridView__table {
+        .controls-DataGridView__th, .controls-DataGridView__td {
+           &.controls-DataGridView__firstContentCell {
+              padding-left: @data-grid-ms-first-content-cell-padding-left;
+           }
         }
      }
 
@@ -204,20 +197,11 @@
    }
 }
 
-.controls-DataGridView__th, .controls-DataGridView__td {
-   &.controls-DataGridView__firstContentCell {
-      padding-left: @data-grid-side-cell-padding;
-   }
-   &:last-child {
-      padding-right: @data-grid-side-cell-padding;
-   }
-}
-
 .controls-DataGridView__results {
    background: @data-grid-row-bg;
    font-weight: bold;
    font-size: 14px;
-   color: #313E78;
+   color: @accent-color;
 }
 
 .controls-DataGridView__results .controls-DataGridView__td{
@@ -260,18 +244,11 @@
       color: @data-grid-header-cell-hover-text-color;
       background-color: @data-grid-header-cell-hover-bg;
    }
-   
-   .controls-ListView__itemCheckBox{
-      margin: -3px 0 0 4px;
-      background: @listView-check-box-icon-bg;
+
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
       &.controls-DataGridView__th__checkBox__checked{
-         background: @listView-check-box-icon-checked-bg;
-         &:hover{
-            background: @listView-check-box-icon-checked-bg;
-         }
-      }
-      &:hover{
-         background: @listView-check-box-icon-hover-bg;
+         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
       }
    }
    &.controls-DataGrid__column__type-money {
@@ -352,6 +329,22 @@
 
    }
 }
+/* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
+.generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+   @val: extract(@controls-view-padding-variants, @i);
+   .controls-ListView__padding-@{val} {
+      .controls-DataGridView__td, .controls-DataGridView__th {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: ~"@{controls-view-padding-@{val}}";
+         }
+         &:last-child {
+            padding-right: ~"@{controls-view-padding-@{val}}";
+         }
+      }
+   }
+   .generate-padding-class-DGV(@i + 1);
+}
+.generate-padding-class-DGV();
 /*Для строк идущих после группировки не должно быть верхних бордеров*/
 .controls-DataGridView {
    &.controls-DataGridView__hasSeparator {

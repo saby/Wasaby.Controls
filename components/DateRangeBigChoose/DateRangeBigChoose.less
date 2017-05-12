@@ -67,7 +67,7 @@
 
 .controls-DateRangeBigChoose {
 
-   background-color: #fff;
+   background-color: @date-range-big-bg;
    border: 1px solid @date-range-big-choose-border-color;
    border-radius: 0;
    width: @date-range-big-choose-width;
@@ -77,7 +77,7 @@
    position: relative;
 
    .controls-DateRangeBigChoose__header {
-      background-color: #f9f9f9;
+      background-color: @date-range-big-header-bg;
       border-bottom: 1px solid @date-range-big-choose-border-color;
       padding: @date-range-big-choose-header-padding;
 
@@ -89,7 +89,7 @@
          line-height: @date-range-big-choose-header-home-button-line-height !important;
          .controls-Button__icon.icon-16 {
             font-size: @date-range-big-choose-header-home-button-font-size !important;
-            left: @date-range-big-choose-header-home-button-left;
+            margin-left: -@date-range-big-choose-header-home-button-margin-left;
          }
       }
 
@@ -107,7 +107,7 @@
          .controls-Button__icon.icon-16 {
             font-size: @date-range-big-choose-header-apply-button-font-size !important;
             width: @date-range-big-choose-header-apply-button-font-size;
-            left: @date-range-big-choose-header-apply-button-left;
+            margin-left: @date-range-big-choose-header-apply-button-icon-margin-left;
          }
       }
       .controls-DateRangeBigChoose__header-rangeDash {

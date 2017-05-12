@@ -118,6 +118,9 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       setLinkedObject: function(linkedObject){
          this._options.linkedObject = linkedObject;
       },
+      getLinkedObject: function() {
+         return this._options.linkedObject;
+      },
       /**
        * Должен вернуть ключ записи, которую редактируем в диалоге
        */
@@ -364,10 +367,10 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _getFormControllerHandlers: function(){
          return {
-            onReadModel: this._actionHandler.bind(this),
-            onUpdateModel: this._actionHandler.bind(this),
-            onDestroyModel: this._actionHandler.bind(this),
-            onCreateModel: this._actionHandler.bind(this)
+            onReadModel: this._actionHandler.bind(this, 'onReadModel'),
+            onUpdateModel: this._actionHandler.bind(this, 'onUpdateModel'),
+            onDestroyModel: this._actionHandler.bind(this, 'onDestroyModel'),
+            onCreateModel: this._actionHandler.bind(this, 'onCreateModel')
          }
       },
 
@@ -418,7 +421,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _destroyModel: function(model, additionalData) {
          var collectionRecord = this._getCollectionRecord(model, additionalData),
-            collection = this._options.linkedObject;
+             collection = this.getLinkedObject();
          if (!collectionRecord){
             return;
          }
@@ -445,31 +448,25 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * Обработка событий formController'a. Выполнение переопределяемых методов и notify событий.
        * Если из обработчиков событий и переопределяемых методов вернули не OpenEditDialog.ACTION_CUSTOM, то выполняем базовую логику.
        */
-      _actionHandler: function(event, model, additionalData) {
-         var eventName = event.name,
-            args = Array.prototype.slice.call(arguments, 0),
-            self = this,
-            eventResult,
-            actionResult,
-            methodResult;
-
-         args.splice(0, 1); //Обрежем первый аргумент типа EventObject, его не нужно прокидывать в события и переопределяемый метод
-         eventResult = actionResult = this._notify.apply(this, [eventName].concat(args));
+      _actionHandler: function(eventName, event, model, additionalData) {
+         var args = Array.prototype.slice.call(arguments, 2), //Обрежем event аргументы, их не нужно прокидывать в события и переопределяемый метод
+             eventResult = this._notify.apply(this, [eventName].concat(args)),
+             actionResult = eventResult,
+             methodResult;
 
          if (eventResult !== OpenEditDialog.ACTION_CUSTOM) {
             methodResult  = this['_' + eventName].apply(this, args);
             actionResult = methodResult || eventResult;
          }
-         if (actionResult === OpenEditDialog.ACTION_CUSTOM || !this._options.linkedObject) {
-            return;
-         }
 
-         if (actionResult instanceof Deferred){
-            actionResult.addCallback(function(result){
-               self._processingResult(eventName, result, model, additionalData);
-            })
-         } else {
-            this._processingResult(eventName, actionResult, model, additionalData);
+         if (actionResult !== OpenEditDialog.ACTION_CUSTOM && this.getLinkedObject()) {
+            if (actionResult instanceof Deferred){
+               actionResult.addCallback(function(result){
+                  this._processingResult(eventName, result, model, additionalData);
+               }.bind(this))
+            } else {
+               this._processingResult(eventName, actionResult, model, additionalData);
+            }
          }
       },
 
@@ -511,8 +508,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _createRecord: function(model, at, additionalData){
-         var collection = this._options.linkedObject,
-            rec;
+         var collection = this.getLinkedObject(),
+             rec;
          at = at || 0;
          if (cInstance.instanceOfModule(collection.getItems(), 'WS.Data/Collection/RecordSet')) {
             //Создаем новую модель, т.к. Record не знает, что такое первичный ключ - это добавляется на модели.
@@ -591,7 +588,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          });
       },
       _collectionReload: function(){
-         this._options.linkedObject.reload();
+         this.getLinkedObject().reload();
       },
       /**
        * Получаем запись из связного списка по ключу редактируемой записи
@@ -623,7 +620,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _getCollectionData:function(){
-         var collection = this._options.linkedObject;
+         var collection = this.getLinkedObject();
          if (cInstance.instanceOfMixin(collection, 'SBIS3.CONTROLS.ItemsControlMixin')) {
             collection = collection.getItems();
          }
@@ -632,16 +629,24 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _getDialogConfig: function () {
          var config = OpenEditDialog.superclass._getDialogConfig.apply(this, arguments),
-            self = this;
+             self = this;
          return cMerge(config, {
+            catchFocus: false,
             handlers: {
                onAfterClose: function (e, meta) {
-                  self._isExecuting = false;
                   self._notifyOnExecuted(meta, this._record);
-                  self._dialog = undefined;
-               }
+                  self._clearVariables();
+               },
+               //При множественном клике панель может начать закрываться раньше, чем откроется, в этом случае
+               //onAfterClose не будет, смотрим на destroy
+               onDestroy: self._clearVariables.bind(self)
             }
          });
+      },
+
+      _clearVariables: function() {
+         this._isExecuting = false;
+         this._dialog = undefined;
       },
 
       destroy: function() {

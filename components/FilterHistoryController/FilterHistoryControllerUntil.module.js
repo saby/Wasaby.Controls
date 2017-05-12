@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
     [
        'Core/core-functions',
        'Core/helpers/collection-helpers',
-       'Core/IoC'
-    ], function(cFunctions, colHelpers, IoC) {
+       'Core/helpers/String/ucFirst'
+    ], function(cFunctions, colHelpers, ucFirst) {
 
    'use strict';
 
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
    /* Сбрасывает поле в структуре к reset значению,
       или удаляет, если нет reset значения */
    function resetField(fieldName, structElem) {
-      var resetFieldName = 'reset' + fieldName.ucFirst(),
+      var resetFieldName = 'reset' + ucFirst.call(fieldName),
           resVal = structElem[resetFieldName];
 
       if(structElem.hasOwnProperty(fieldName)) {

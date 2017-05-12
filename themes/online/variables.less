@@ -2,7 +2,7 @@
 @default-text-size:                       14px;
 @small-text-size:                         12px;
 @large-text-size:                         15px;
-@huge-text-size:						  17px;
+@huge-text-size:						              17px;
 @default-text-color:                      #000;
 @default-color:                           #587AB0;
 @primary-color:                           #ff7033;
@@ -16,6 +16,8 @@
 @default-hover-color:                     #F0F5FB;
 @innacent-color2:						  #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @basic-block-bg-color:					  #EAEAEA; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@default-font-weight:                     400;
+@bold-font-weight:                        700;
 //=============================
 @white-color:                             #fff;
 @black-color:                             #000;
@@ -84,7 +86,15 @@
 @hover-color:                             @blue-dark-color;
 @controls-panel-shadow:                   0px 0px 12px 0px rgba(0,0,0,0.4);
 
-// ---- //
+@icon-small-size:                         16px;
+@icon-medium-size:                        24px;
+@icon-large-size:                         32px;
+
+@default-icon-small-font:                 'cbuc-icons';
+@default-icon-medium-font:                'cbuc-icons24';
+@default-icon-large-font:                 @default-icon-small-font;
+
+  // ---- //
 // Link //
 // ---- //
 
@@ -110,7 +120,7 @@
 @link-field-margin:                       0;
 @link-icon-field-margin:                  0 0 0 6px;
 
-
+@link-additional-color:                   @gray-color;
 
 // ------ //
 // Button //
@@ -253,6 +263,7 @@
 @button-big-text-margin-left:             24px;
 @button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-icon-margin:             0 @button-big-text-margin-left - @button-border-width 0 @button-icon-gap;
+
 @button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
@@ -276,6 +287,14 @@
 
 @icon-button-done-color: #72BE44;
 @icon-button-error-color: #EF463A;
+
+@icon-button-round-border-position:     absolute;
+@icon-button-round-border-width:        28px;
+@icon-button-round-border-height:       28px;
+@icon-button-round-border-line-height:  26px;
+@border-radius:                         14px;
+@icon-button-border-width:              1px;
+
 
 // ------------- //
 // Toggle button //
@@ -323,7 +342,8 @@
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
-@tab-buttons-border-bottom:                     1px solid #CCCCCC;
+@tab-buttons-border-bottom-height:              1px;
+@tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #CCCCCC;
 @tab-buttons-div-display:                       table-cell;
 @tab-buttons-div-space:                         nowrap;
 @tab-buttons-div-align:                         middle;
@@ -530,29 +550,27 @@
 @check-box-icon-checked-border:                 @check-box-icon-border;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
 @check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
+@check-box-caption-margin-left:                 0px;
 // ------------------------------------------------------------------------------------- //
 
-@check-box-icon-width:                          18px;
-@check-box-default-font-size:                   14px;
-@check-box-icon-height:                         @check-box-icon-width;
-@check-box-icon-font-size:                      @check-box-icon-width;
-@check-box-icon-bottom:                         6px;
-@check-box-icon-left:                           5px;
-
-@check-box-icon-null-width:                     6px;
-@check-box-icon-null-height:                    @check-box-icon-null-width;
-
+@check-box-icon-size:                           24px;
+@check-box-icon-successful-size:                18px;
+@check-box-font-size:                           @default-text-size;
+@check-box-icon-successful-top:                 0;
+@check-box-icon-successful-left:                5px;
+@check-box-icon-null-size:                      6px;
 @check-box-caption-padding:                     3px 0;
-@check-box-icon-box:                            12px;
-
-@check-box-icon-box-color:                      #999;
+@check-box-icon-box-size:                       12px;
+@check-box-icon-box-color:                      @innacent-color2;
+@check-box-caption-margin-left:                 0;
+@check-box-disabled-color:                      @disabled-color;
 
 // -------------- //
 // Checkbox group //
 // -------------- //
 
-@check-box-group-horizontal-item-margin:        @button-group-horizontal-item-margin;
-@check-box-group-vertical-item-margin:          @button-group-vertical-item-margin;
+@check-box-group-horizontal-item-margin:        0 12px 0 0;
+@check-box-group-vertical-item-margin:          0 0 8px 0;
 
 
 
@@ -565,6 +583,8 @@
 @switcher-width:                                46px;
 @switcher-height:                               24px;
 @switcher-line-height:                          @switcher-height;
+@switcherline-height:                           2px;
+
 @switcher-line-color:							@gray-color;
 @switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
@@ -1110,12 +1130,13 @@
 @suggest-loading-height:                        16px;
 @suggest-loading-width:                         @suggest-loading-height;
 @suggest-loading-right:                         3px;
-@suggest-loading-top:                           3px;
 
 @suggest-picker-border:                         1px solid #cccccc;
 @suggest-picker-border-radius:                  0;
-@suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.2);
-@suggest-picker-margin:                         -2px 0 0 0;
+@suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
+@suggest-picker-box-shadow-reverted:            0 -4px 8px rgba(0, 0, 0, 0.15);
+@suggest-picker-margin:                         -1px 0 0 0;
+@suggest-picker-margin-reverted:                1px 0 0 0;
 @suggest-picker-standard-width:                 500px;
 
 @suggest-picker-item-font:                      @suggest-field-font;
@@ -1318,7 +1339,7 @@
 @date-range-dash-color:                         @black-color;
 @date-range-dash-margin:                        0 3px 4px 3px;
 
-@date-range-choose-border-hover-width:          2px;
+@date-range-choose-border-hover-width:          1px;
 // ----------------- //
 // Data Range Slider //
 // ----------------- //
@@ -1332,6 +1353,7 @@
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
 @date-range-slider-value-font-weight:           bold;
+@date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
@@ -1433,9 +1455,9 @@
 
 @date-range-choose-years-only-curent-year-color:   @darkcyan-color;
 
-@date-range-choose-home-button-size:            24px;
+@date-range-choose-home-button-size:            28px;
 @date-range-choose-home-button-font-size:       14px;
-@date-range-choose-home-button-line-height:     22px;
+@date-range-choose-home-button-line-height:     26px;
 @date-range-choose-home-color:                  @date-range-choose-color;
 @date-range-choose-home-button-margin:          0 auto 12px;
 
@@ -1461,7 +1483,7 @@
 @date-range-big-choose-header-home-button-margin:              2px 0 0 0;
 @date-range-big-choose-header-home-button-size:                24px;
 @date-range-big-choose-header-home-button-font-size:           14px;
-@date-range-big-choose-header-home-button-left:                3px;
+@date-range-big-choose-header-home-button-margin-left:         8px;
 @date-range-big-choose-header-home-button-line-height:         22px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
@@ -1471,7 +1493,7 @@
 @date-range-big-choose-header-date-picker-height:              auto;
 @date-range-big-choose-header-apply-button-size:               28px;
 @date-range-big-choose-header-apply-button-font-size:          18px;
-@date-range-big-choose-header-apply-button-left:               4px;
+@date-range-big-choose-header-apply-button-icon-margin-left:   -9px;
 @date-range-big-choose-header-apply-button-line-height:        26px;
 @date-range-big-choose-header-apply-button-margin-left:        8px;
 @date-range-big-choose-header-range-dash-width:                2px;
@@ -1592,10 +1614,10 @@
 // List view //
 // --------- //
 @list-view-min-height:                           90px;
-@listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
-@listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
-@listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
-@listView-check-box-icon-checked-bg:            url(@listView-check-box-icon-spritesheet) 0 72px;
+
+@listView-check-box-left:                       0px;
+@listView-check-box-top:                        0px;
+
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1705,6 +1727,30 @@
 @list-view-separator-expander-size:                16px;
 @list-view-separator-content-hover-color:          @blue-dark-color;
 
+// -------------------- //
+//  View padding sizes
+// -------------------- //
+@controls-view-padding-variants:                   XS, S, M, L, XL;
+@controls-view-padding-DEFAULT:                    8px;
+@controls-view-padding-XS:                         0;
+@controls-view-padding-S:                          12px;
+@controls-view-padding-M:                          16px;
+@controls-view-padding-L:                          20px;
+@controls-view-padding-XL:                         24px;
+// Padding with photo
+@controls-view-photo-padding-variants:             S, M, L;
+@controls-view-photo-padding-S:                    0 6px 0 4px;
+@controls-view-photo-padding-M:                    0 10px 0 4px;
+@controls-view-photo-padding-L:                    0 14px 0 8px;
+@controls-view-photo-padding-DEFAULT:              0 18px 0 12px;
+// Edit in place padding
+@controls-view-eip-padding-DEFAULT:                3px;
+@controls-view-eip-padding-XS:                     0px;
+@controls-view-eip-padding-S:                      7px;
+@controls-view-eip-padding-M:                      11px;
+@controls-view-eip-padding-L:                      15px;
+@controls-view-eip-padding-XL:                     19px;
+
 // --------- //
 //  ToolBar  //
 // --------- //
@@ -1726,11 +1772,15 @@
 
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
-@tree-view-expand-margin:                       0 4px 0 -2px;
+@tree-view-expand-margin:                       0 6px 0 4px;
+
+@tree-view-level-padding:                       26px;
+@tree-view-level-padding-photo:                 46px;
+@tree-view-level-padding-photo-S:               26px;
+@tree-view-level-padding-photo-M:               30px;
+@tree-view-level-padding-photo-L:               38px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
-
-@tree-view-first-td-padding-left:               6px;
 
 @tree-view-editArrow-position:                  relative;
 @tree-view-editArrow-top:                       2px;
@@ -1763,9 +1813,9 @@
 @tree-view-ellipsis-wrapper-height:             @data-grid-cell-line-height;
 @tree-view-ellipsis-copyArrow-shadow:           -10px 0 10px 0;
 @tree-view-ellipsis-copyArrow-padding:          0 0 0 3px;
-@tree-view-ellipsis-copyArrow-width:            16px;
+@tree-view-ellipsis-copyArrow-width:            19px;
 @tree-view-ellipsis-copyArrow-right:            -1px;
-@tree-view-firstCell-margin-searchMode:         6px;
+@tree-view-firstCell-margin-searchMode:         2px;
 
 @tree-view-item-content-margin:                 0 0 0 15px;
 
@@ -1828,8 +1878,6 @@
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
-@data-grid-side-cell-padding:                   8px;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
@@ -1973,20 +2021,13 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    3px;
-@controls-editInPlace-editor-without-offset-margin: -6px;
 @controls-editInPlace-editor-bg:                    #f3f3f3 !important;
-
+@controls-editInPlace-editor-without-offset-margin: -6px;
 
 // --------------- //
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                           0px;
-@listView-check-box-top:                            0px;
-@listView-check-box-width:                          24px;
-@listView-check-box-height:                         24px;
-@listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
 @multiView-tile-item-min-height:                    128px;
@@ -2058,9 +2099,9 @@
 @DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
 
-@DropdownList-icon-spritesheet:                          'img/CheckBox.png';
-@DropdownList-icon-bg-pathFilter:                        url(@DropdownList-icon-spritesheet) 0 2px;
-@DropdownList-icon-checked-bg-pathFilter:                url(@DropdownList-icon-spritesheet) 0 50px;
+@DropdownList-icon-spritesheet:                       'img/CheckBox.png';
+@DropdownList-icon-bg-pathFilter:                     url(@DropdownList-icon-spritesheet) 0 1px;
+@DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
 
 //ProgressBar
 @controls-ProgressBar-height:                     17px;
@@ -2121,7 +2162,7 @@
 @controls-filterButton-history-maxHeight-height:  120px;
 @controls-filterButton-history-maxHeight-overflow:hidden;
 @controls-filterButton-history-actions-right:     auto !important;
-@controls-filterButton-history-actions-left:      -4px !important;
+@controls-filterButton-history-actions-left:      -6px !important;
 @controls-filterButton-history-actions-bottom:    -1px;
 
 @controls-filterButton-history-item-min-height:   24px;
@@ -2198,7 +2239,8 @@
 @controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
 
-@controls-FieldLink-fieldWrapper-margin:           0 !important;
+@controls-FieldLink-fieldWrapper-margin:           0;
+@controls-FieldLink-fieldWrapper-minWidth:         100px;
 @controls-FieldLink-showAllLinks-top:              2px;
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
 @controls-FieldLink-linkItem-line-height:          18px;
@@ -2255,14 +2297,16 @@
 @icon-height:                                      16px;
 
 // BreadCrumbs
-@back-button-arrow-paddingleft:                   4px;
-@bread-crumb-title-hover-color:                   @primary-color;
+@back-button-arrow-paddingleft:                    4px;
+@bread-crumb-title-hover-color:                    @primary-color;
 @bread-crumb-title-color:                          #0055BB;
-@bread-crumbs-hier-wrapper-bg:					   url('img/BreadCrumbs_hierWrapper.png');
+@bread-crumbs-hier-wrapper-bg:					      url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
 @breadcrumbs-smallItems-font-size:                 14px;
 @breadcrumbs-arrow-top:                            2px;
 @breadcrumbs-small-items-top:                      @breadcrumbs-top;
+@bread-crumbs-menu-padding:                        4px 0;
+@bread-crumbs-menu-max-width:                      800px;
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
@@ -2275,6 +2319,8 @@
 @controls-movedialog-activate-right:               38px;
 @controls-movedialog-activate-top:                 8px;
 @controls-movedialog-min-width:                    auto;
+@controls-movedialog-max-width:                    400px;
+@controls-movedialog-height:                       400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 @controls-movedialog-min-width:                    auto;
@@ -2486,7 +2532,7 @@
 @process-state-indicator-sector2:                          @icon-color-attention;
 @process-state-indicator-sector3:                          @red-color;
 @process-state-indicator-empty-sector:                     @gray-ccc-color;
-@process-state-indicator-sector-width:                     6px; 
+@process-state-indicator-sector-width:                     6px;
 @process-state-indicator-sector-height:                    8px;
 @process-state-indicator-sector-spacing:                   2px;
 @process-state-indicator-sector-side-padding:              6px;
@@ -2495,3 +2541,9 @@
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;
+@date-range-big-header-bg:								#f9f9f9;
+@date-range-big-bg:										#fff;
+@back-button-linheight-before:                inherit;
+@back-button-width-before:                                  8px;
+@back-button-text-fontweight:               @bold-font-weight;
+@dropdownlist-item-text-color:              inherit;

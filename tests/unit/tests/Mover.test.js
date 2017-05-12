@@ -204,6 +204,14 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
                mover.move([items.at(2)], items.at(0).getId(), 'before');
                assert.equal(items.at(0).getId(), id);
             });
+
+            it('should filter wrong items', function(done){
+               treeMover.move([treeItems.at(0), treeItems.at(4)], treeItems.at(6), 'on').addCallback(function(result){
+                  assert.equal(treeItems.at(4).get('parent'), treeItems.at(6).getId());
+                  assert.equal(treeItems.at(0).get('parent'), null);
+                  done();
+               });
+            });
          });
       });
       describe('onBeginMove', function () {
@@ -263,17 +271,31 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             mover.move([items.at(0)], items.at(2), 'after');
             assert.equal(items.at(2).getId(), id);
          });
-         it('should notify onBeginMove when wrong move target', function (done) {
-            treeMover.subscribe('onBeginMove', function(e) {
-               done();
-            });
-            treeMover.move([treeItems.at(0)], treeItems.at(0), 'on');
-         });
       });
-      describe('_checkRecordsForMove', function () {
+      describe('_checkRecordForMove', function () {
          it('should return false if target undefined', function(){
             var id = items.at(0).getId();
-            assert.isFalse(mover._checkRecordsForMove([items.at(0)], undefined, true));
+            assert.isFalse(mover._checkRecordForMove(items.at(0), undefined, 'before'));
+         });
+         it('should return false if target doesnt folder', function(){
+            var id = items.at(0).getId();
+            assert.isFalse(mover._checkRecordForMove(items.at(0), items.at(1), 'on'));
+         });
+         it('should return false if move on himself', function(){
+            var id = items.at(0).getId();
+            assert.isFalse(treeMover._checkRecordForMove(treeItems.at(0), treeItems.at(0), 'on'));
+         });
+         it('should return true if move on folder', function(){
+            var id = items.at(0).getId();
+            assert.isTrue(treeMover._checkRecordForMove(treeItems.at(0), treeItems.at(1), 'on'));
+         });
+         it('should return true if move before item', function(){
+            var id = items.at(0).getId();
+            assert.isTrue(mover._checkRecordForMove(items.at(1), items.at(0), 'before'));
+         });
+         it('should return true if move after item', function(){
+            var id = items.at(0).getId();
+            assert.isTrue(mover._checkRecordForMove(items.at(0), items.at(1), 'before'));
          });
       });
       describe('onEndMove', function () {
@@ -511,5 +533,6 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             assert.equal(treeItems.getRecordById('121').get('parent'), treeItems.at(0).getId());
          });
       });
+
    });
 });

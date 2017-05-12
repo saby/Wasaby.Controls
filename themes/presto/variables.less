@@ -3,6 +3,7 @@
 // Кошерные переменные "на выход"
 @default-text-color:                      #E4E4E4;
 @disabled-color:                          #37536C;
+@accent-color:                            #ffcc99;
 //=============================
 
 @black-color:                             #333;
@@ -281,19 +282,6 @@
 @check-box-icon-disabled-bg:                    transparent;
 @check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
 @check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
-
-@check-box-icon-width:                          50px;
-@check-box-default-font-size:                   32px;
-@check-box-icon-height:                         @check-box-icon-width;
-@check-box-icon-font-size:                      @check-box-icon-width;
-@check-box-icon-bottom:                         6px;
-@check-box-icon-left:                           6px;
-
-@check-box-icon-null-width:                     18px;
-@check-box-icon-null-height:                    @check-box-icon-null-width;
-
-@check-box-caption-padding:                     9px 0;
-@check-box-icon-box:                            32px;
 
 @check-box-icon-box-color:                      rgba(102, 170, 221, .4);
 
@@ -617,7 +605,7 @@
 // Text area //
 // --------- //
 
-@text-area-field-line-height:                   @text-box-field-line-height;
+@text-area-field-line-height:                   40px !important;
 
 
 @text-area-border-color:                        @gray-dark-color;
@@ -778,6 +766,7 @@
 
 @date-range-choose-year-font-size:              @date-range-choose-font-size;
 @date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
+@date-range-choose-year-padding-left:           16px;
 
 // -------------- //
 // Date Range Big //
@@ -812,10 +801,10 @@
 // List view //
 // --------- //
 @list-view-min-height:                           90px;
-@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
-@listView-check-box-icon-bg:                    @check-box-icon-bg;
-@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
-@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
+
+@listView-check-box-left:                       3px;
+@listView-check-box-top:                        5px;
+
 @list-view-actions-item-height:                 24px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
@@ -896,8 +885,6 @@
 
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -941,8 +928,6 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    1px;
-@controls-editInPlace-editor-without-offset-margin: 0;
 
 // --------------- //
 // OperationsMark //
@@ -953,11 +938,6 @@
 // --------------- //
 //    MultiView    //
 // --------------- //
-@listView-check-box-left:                           3px;
-@listView-check-box-top:                            5px;
-@listView-check-box-border:                         1px solid;
-@listView-check-box-width:                          18px;
-@listView-check-box-height:                         18px;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-image-margin:                  10px 40px;

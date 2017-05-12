@@ -1,13 +1,14 @@
-.icon-mixin(@icon-left, @icon-width) {
-  left: @icon-left;
+.icon-mixin(@icon-width) {
+  left: 50%;
   top: 50%;
+  margin-left: -@icon-width/2;
   margin-top: -@icon-width/2;
 }
 
 .controls-IconButton {
   vertical-align: middle;
+  line-height: normal;
   .button-default-style(0);
-  background: inherit;
   .controls-Button__icon {
     position: relative;
   }
@@ -55,23 +56,33 @@
      }
    }
    &.controls-IconButton__round-border{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       .controls-Button__icon {
-        position: absolute;
+        position: @icon-button-round-border-position;
         &.icon-16 {
-          .icon-mixin(5px, 16px);
+          .icon-mixin(16px);
         }
         &.icon-24 {
-          .icon-mixin(1px, 24px);
+          .icon-mixin(24px);
+        }
+
+        &.icon-small {
+          .icon-mixin(@icon-small-size);
+        }
+        &.icon-medium {
+          .icon-mixin(@icon-medium-size);
+        }
+        &.icon-large {
+          .icon-mixin(@icon-large-size);
         }
       }
-      height: 28px;
-      width: 28px;
-      line-height: 26px!important;
+      height: @icon-button-round-border-width;
+      width: @icon-button-round-border-height;
+      line-height: @icon-button-round-border-line-height !important;
    }
 
    &.controls-IconButton__round-border-24{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       height: 24px !important;
       width: 24px !important;
       line-height: 24px !important;
@@ -86,7 +97,7 @@
       }
    }
    &.controls-IconButton__round-border-32{
-      .round-button-mixin(@gray-ccc-color);
+      .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       border-radius: 20px;
       height: 38px !important;
       width: 38px !important;
