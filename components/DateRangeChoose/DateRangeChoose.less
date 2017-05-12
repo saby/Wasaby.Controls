@@ -113,6 +113,7 @@
       line-height: @date-range-choose-year-line-height;
       vertical-align: middle;
       padding-left: @date-range-choose-year-padding-left; //2px;
+      margin-left: @controls-date-range-year-marginleft;
       .flex-grow(1);
       &.controls-DateRangeChoose__year-clickable{
          cursor: pointer;
@@ -120,10 +121,6 @@
             background-color: @date-range-choose-year-bg-hover-color;
          }
       }
-   }
-   .controls-DateRangeChoose__year {
-      padding-left: 2px;
-      margin-left: @controls-date-range-year-marginleft;
    }
    // В зависимости от режима немного меняется позиционирование элементов в шапке
    &.controls-DateRangeChoose__showMonths {
