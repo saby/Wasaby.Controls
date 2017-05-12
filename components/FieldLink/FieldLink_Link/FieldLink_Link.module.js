@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.FieldLink.Link', [
 
           _modifyOptions: function() {
              var cfg = FieldLink_Link.superclass._modifyOptions.apply(this, arguments);
-             cfg.cssClassName += ' controls-FieldLink__Link';
+             cfg.cssClassName += ' controls-FieldLink__Link controls-Link__disabledHover';
              /* Зашиваем комманду для обработки полем связи */
              cfg.command = 'showSelector';
              return cfg;
