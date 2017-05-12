@@ -1,8 +1,11 @@
 <i if="{{!!icon}}" class="controls-Button__icon js-controls-Button__icon controls-SelectorButton__icon {{_iconClass}}"></i>
 <span class="controls-Button__text js-controls-Button__text controls-SelectorButton__text">
-    <ws:if data="{{ _serverRender }}">
+    <ws:if data="{{ _serverRender && items && items.getCount() }}">
         <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
     </ws:if>
+    <ws:else>
+        {{ defaultCaption }}
+    </ws:else>
 </span>
 <i class="controls-SelectorButton__cross icon-16 icon-Close icon-disabled action-hover {{ (!items || !items.getCount()) ? 'ws-hidden' }}"></i>
 
