@@ -158,12 +158,14 @@
       .icon-size(@list-view-items-toolbar-icon-size);
    }
    .controls-IconButton__round-border-24 {
+      border-width: @list-view-items-toolbar-icon-button-border-width;
+      border-radius: @list-view-items-toolbar-icon-button-border-radius;
       .controls-Button__icon.icon-size {
-         font-size: 16px !important;
+         font-size: @list-view-items-toolbar-icon-button-border-font-size !important;
          box-sizing: content-box;
-         height: 22px !important;
-         width: 22px !important;
-         line-height: 22px !important;
+         height: @icon-button-edit-round-border-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
+         width: @icon-button-edit-round-border-width - 2 * @list-view-items-toolbar-icon-button-border-width !important;
+         line-height: @icon-button-edit-round-border-line-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
          font-family: 'cbuc-icons' !important;
       }
    }
