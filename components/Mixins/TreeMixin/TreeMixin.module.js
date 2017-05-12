@@ -287,6 +287,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       }
    },
+   applyFilterToProjection = function(projection, cfg) {
+      if (cfg.displayType == 'folders') {
+         projection.setFilter(projectionFilterOnlyFolders.bind(this));
+      }
+      else {
+         projection.setFilter(projectionFilter.bind(this));
+      }
+   },
    expandAllItems = function(projection) {
       var
          recordSet = projection.getCollection(),
@@ -586,6 +594,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
+            _applyFilterToProjection: applyFilterToProjection,
              /**
               * @cfg {Boolean}
               */
@@ -623,6 +632,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          this.setFilter(filter, true);
          CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
+
       /**
        * Устанавливает поле иерархии.
        * @param {String }hierField Название поля иерархии.
