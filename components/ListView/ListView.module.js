@@ -855,7 +855,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHandler.bind(this));
+            this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
+         },
+
+         _unbindEventHandlers: function(container) {
+            container.off('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
          _modifyOptions : function(opts){
@@ -3444,6 +3449,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._massSelectionController) {
                this._massSelectionController.destroy();
             }
+            this._unbindEventHandlers(this._container);
             ListView.superclass.destroy.call(this);
          },
          /**
