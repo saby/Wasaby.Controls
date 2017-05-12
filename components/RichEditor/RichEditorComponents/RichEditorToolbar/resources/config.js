@@ -278,6 +278,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'smile',
+         tooltip: 'Вставить смайлик',
          componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
          pickerClassName: 'fre-smiles controls-Menu__hide-menu-header',
