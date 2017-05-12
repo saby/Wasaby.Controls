@@ -20,100 +20,77 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          "dettached": true
       }, {
          "offset": 5000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 6000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 7000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 8000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 9000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 10000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 11000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 12000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 13000,
-         "dettached": true
+         "dettached": false
       }, {
          "offset": 14000,
-         "dettached": true
+         "dettached": false
       }];
    describe('SBIS3.CONTROLS.VirtualScrollController', function() {
       var controller = new VirtualScrollController();
       describe('._getShownPages', function() {
-         it('First page [5]', function() {
+         controller._virtualPages = cFunctions.clone(pages);
+         it('First page', function() {
             newState = controller._getShownPages(0, 5);
             assert.deepEqual(newState, [0, 5]);
          });
-         it('First page [1]', function() {
-            newState = controller._getShownPages(0, 1);
-            assert.deepEqual(newState, [0, 1]);
-         });
-         it('Second page [5]', function() {
+         it('Second page', function() {
             newState = controller._getShownPages(1, 5);
             assert.deepEqual(newState, [0, 5]);
          });
-         it('Second page [1]', function() {
-            newState = controller._getShownPages(1, 1);
-            assert.deepEqual(newState, [0, 2]);
-         });
-         it('Fourth page [5]', function() {
+         it('Fourth page', function() {
             newState = controller._getShownPages(3, 5); 
-            assert.deepEqual(newState, [0, 6]);
+            assert.deepEqual(newState, [1, 6]);
          });
-         it('Fourth page [1]', function() {
-            newState = controller._getShownPages(3, 1); 
-            assert.deepEqual(newState, [2, 4]);
-         });
-         it('Fifth page [5]', function() {
+         it('Fifth page', function() {
             newState = controller._getShownPages(4, 5);
-            assert.deepEqual(newState, [1, 7]);
+            assert.deepEqual(newState, [2, 7]);
          });
-         it('Fifth page [1]', function() {
-            newState = controller._getShownPages(4, 1);
-            assert.deepEqual(newState, [3, 5]);
-         });
-         it('Large page [5]', function() {
-            newState = controller._getShownPages(7890, 5);
-            assert.deepEqual(newState, [7887, 7893]);
-         });
-         it('Large page [1]', function() {
-            newState = controller._getShownPages(7890, 1);
-            assert.deepEqual(newState, [7889, 7891]);
+         it('Large page', function() {
+            newState = controller._getShownPages(12, 5);
+            assert.deepEqual(newState, [10, 14]);
          });
       });
 
       describe('._calculateWrappersHeight', function() {
-         var cPages = cFunctions.clone(pages);
+         controller._virtualPages = cFunctions.clone(pages);
          it('From start', function() {
-            cPages[0].dettached = false;
-            newState = controller._calculateWrappersHeight(cPages, [0, 2]);
+            newState = controller._calculateWrappersHeight([0, 2]);
             assert.deepEqual(newState, { begin: 0, end: 12000 });
          });
          it('All pages', function() {
-            cPages[0].dettached = false;
-            newState = controller._calculateWrappersHeight(cPages, [0, 15]);
+            newState = controller._calculateWrappersHeight([0, 14]);
             assert.deepEqual(newState, { begin: 0, end: 0 });
          });
          it('From second page', function() {
-            cPages[0].dettached = false;
-            newState = controller._calculateWrappersHeight(cPages, [1, 3]);
+            newState = controller._calculateWrappersHeight([2, 3]);
             assert.deepEqual(newState, { begin: 2000, end: 11000 });
          });
          it('To last page', function() {
-            cPages[0].dettached = false;
-            newState = controller._calculateWrappersHeight(cPages, [10, 15]);
+            newState = controller._calculateWrappersHeight([11, 14]);
             assert.deepEqual(newState, { begin: 11000, end: 0 });
          });
       });
@@ -199,25 +176,25 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
 
       describe('._getPage', function() {
          //scrollTop, viewportHeight, additionalHeight, pages
-         var cPages = cFunctions.clone(pages);
+         controller._virtualPages = cFunctions.clone(pages);
          it('1st page', function() {
-            newState = controller._getPage(0, 500, 0, cPages);
+            newState = controller._getPage(0, 500, 0);
             assert.equal(newState, 0);
          });
          it('2nd page', function() {
-            newState = controller._getPage(500, 500, 0, cPages);
+            newState = controller._getPage(500, 500, 0);
             assert.equal(newState, 1);
          });
          it('End of 2nd page', function() {
-            newState = controller._getPage(999, 500, 0, cPages);
+            newState = controller._getPage(999, 500, 0);
             assert.equal(newState, 1);
          });
          it('Last page', function() {
-            newState = controller._getPage(99999999, 500, 0, cPages);
+            newState = controller._getPage(99999999, 500, 0);
             assert.equal(newState, 14);
          });
          it('Additional height', function() {
-            newState = controller._getPage(4000, 500, 1001, cPages);
+            newState = controller._getPage(4000, 500, 1001);
             assert.equal(newState, 3);
          });
       });
