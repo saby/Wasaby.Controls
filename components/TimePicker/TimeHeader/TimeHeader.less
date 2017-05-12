@@ -15,16 +15,17 @@
   display: inline-block;
   font-size: @time-header-font-size;
   font-weight: @bold-font-weight;
-  margin-left: @time-header-element-margin-left;
+  margin-left: @time-header-toggle-time-margin-left;
+  color: @time-header-title-color;
 }
 
 .controls-TimeHeader__toggleTime {
   display: inline-block;
-  margin-left: @time-header-element-margin-left;
+  margin-left: @time-header-toggle-time-margin-left;
 }
 
 .controls-TimeHeader__homeButton {
-  margin-right: @time-header-element-margin-left + @closeButtonHeight;
+  margin-right: @time-header-home-button-margin-left + @closeButtonWidth;
 }
 
 .controls-TimeHeader__time {
@@ -41,13 +42,13 @@
 .controls-TimeHeader__time_active {
   font-size: @time-header-font-size;
   font-weight: @bold-font-weight;
-  color: @blue-dark-color;
+  color: @toggle-time-active-color;
 }
 
 .controls-TimeHeader__time_passive {
   font-size: @time-header-font-size;
   font-weight: @bold-font-weight;
-  color: @gray-color;
+  color: @toggle-time-passive-color;
   &:hover {
     text-decoration: @toggle-time-passive-hover-text-decoration;
   }

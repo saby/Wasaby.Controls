@@ -40,7 +40,7 @@
 @darkcyan-color: 							#8991A9;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-@default-border-width:					  1px;
+@default-border-width:					  0.036rem;
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
@@ -1277,42 +1277,46 @@
 //--------------//
 @time-header-height:                                100px;
 @time-header-font-size:                             40px;
-@time-header-element-margin-left:                   24px;
+@time-header-title-margin-left:                     24px;
+@time-header-toggle-time-margin-left:               32px;
+@time-header-home-button-margin-left:               8px;
 @time-header-background-color:                      @time-picker-background-color;
+@time-header-title-color:                           @innacent-color;
 
 // ---------- //
 // ToggleTime //
 // ---------- //
 @toggle-time-passive-hover-text-decoration:         none;
+@toggle-time-passive-color:                         @default-text-color;
 
 //---------------//
 //  ClockPicker  //
 //---------------//
 
-@clock-picker-height:                               542px;
-@clock-picker-width:                                558px;
+@clock-picker-height:                               19.357rem;
+@clock-picker-width:                                19.929rem;
 @clock-picker-background-color:                     @time-picker-background-color;
 
-@clock-picker-outer-tick-radius:                    35px;
+@clock-picker-outer-tick-radius:                    1.25rem;
 @clock-picker-tick-hover-background-color:          #273B4D;
 
-@clock-picker-inner-tick-radius:                    28px;
+@clock-picker-inner-tick-radius:                    1rem;
 @clock-picker-inner-tick-background-color:          #354B62;
 
-@clock-picker-outer-circle-radius:                  220px;
+@clock-picker-outer-circle-radius:                  7.857rem;
 @clock-picker-outer-circle-border-color:            @clock-picker-inner-tick-background-color;
 
-@clock-picker-inner-circle-radius:                  140px;
+@clock-picker-inner-circle-radius:                  5rem;
 
-@clock-picker-unit-time-font-size:                  48px;
+@clock-picker-unit-time-font-size:                  1.714rem;
 @clock-picker-unit-time-z-index:                    16;
 @clock-picker-unit-time-color:                      @clock-picker-inner-tick-background-color;
 
-@clock-picker-arrow-width:                          1px;
+@clock-picker-arrow-width:                          0.036rem;
 @clock-picker-arrow-color:                          @accent-color;
 
 @clock-picker-inner-arrow-z-index:                  4;
 
-@clock-picker-arrow-tip-border-width:               2px;
+@clock-picker-arrow-tip-border-width:               0.072rem;
 @clock-picker-arrow-tip-color:                      @default-text-color;
 @clock-picker-arrow-tip-border-color:               @clock-picker-arrow-color;
