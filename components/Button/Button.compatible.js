@@ -110,6 +110,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          if (!this._options.enabled)
             return;
 
+         this._container.removeClass('controls-Click__active');
+
+         if (!this._isControlActive) {
+            this.setActive(true);
+         }
 
          if (!!this._options.command) {
             var args = [this._options.command].concat(this._options.commandArgs);
