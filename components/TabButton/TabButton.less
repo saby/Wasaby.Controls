@@ -163,12 +163,15 @@
             color: @black-color;
             font-size: @default-font-size;
          }
-         .controls-TextBox .controls-TextBox__fieldWrapper{
-           padding-top: 1px;
-           box-sizing: content-box;
-   
-            .controls-EditAtPlace__textField {
-               vertical-align: middle;
+         .controls-TextBox {
+            .controls-TextBox__fieldWrapper {
+               padding-top: 1px;
+               box-sizing: content-box;
+            }
+            &.controls-EditAtPlace__ellipsis {
+               .controls-EditAtPlace__textField {
+                  vertical-align: middle;
+               }
             }
          }
       }
