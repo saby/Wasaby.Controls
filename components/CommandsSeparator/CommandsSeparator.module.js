@@ -4,18 +4,18 @@
  * @description
  */
 define('js!SBIS3.CONTROLS.CommandsSeparator', [
-   'js!SBIS3.CONTROLS.ButtonBase',
+   'js!WSControls/Buttons/ButtonBase',
    'js!SBIS3.CONTROLS.Checkable',
    'tmpl!SBIS3.CONTROLS.CommandsSeparator',
    'css!SBIS3.CONTROLS.CommandsSeparator'
-], function(ButtonBase, Checkable, dotTplFn) {
+], function(WSButtonBase, Checkable, dotTplFn) {
 
    'use strict';
 
    /**
     * Контрол, отображающий разделитель.
     * @class SBIS3.CONTROLS.CommandsSeparator
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     *
     * @public
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.CommandsSeparator', [
     * </component>
     */
 
-   var CommandsSeparator = ButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.CommandsSeparator.prototype */ {
+   var CommandsSeparator = WSButtonBase.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
       _dotTplFn: dotTplFn,
       $protected: {
       }

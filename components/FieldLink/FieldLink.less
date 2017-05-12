@@ -1,3 +1,10 @@
+.hiddenPlaceholder() {
+   &::-webkit-input-placeholder { opacity: 0 }
+   &:-moz-placeholder {  opacity: 0 }
+   &::-moz-placeholder {  opacity: 0 }
+   &:-ms-input-placeholder {  opacity: 0 }
+}
+
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
@@ -76,34 +83,37 @@
 
 .controls-FieldLink__picker,
 .controls-FieldLink {
-   &.controls-FieldLink__itemsEdited {
-      .controls-FieldLink__item:hover {
-         text-decoration: @link-hover-text-decoration;
-         cursor: @link-cursor;
-      }
-   }
-   &.controls-FieldLink__itemsBold {
-      .controls-FieldLink__item-caption {
-         font-weight: bold;
-      }
-   }
-   &.controls-FieldLink__hideSelector {
-      .controls-FieldLink__showSelector {
-         display: none;
-      }
-   }
-   &.controls-FieldLink__big-fontSize {
-      .controls-FieldLink__item-caption {
-         font-size: @controls-FieldLink-big-fontSize;
-         font-weight: bold;
-         color: @controls-FieldLink-big-fontSize-color;
-      }
-   }
-
    &.ws-disabled {
       .controls-FieldLink__item-cross {
          display: none;
       }
+   }
+}
+
+.controls-FieldLink__itemsEdited {
+   .controls-FieldLink__item-caption:hover {
+      text-decoration: @link-hover-text-decoration;
+      cursor: @link-cursor;
+   }
+}
+
+.controls-FieldLink__itemsBold {
+   .controls-FieldLink__item-caption {
+      font-weight: bold;
+   }
+}
+
+.controls-FieldLink__hideSelector {
+   .controls-FieldLink__showSelector {
+      display: none;
+   }
+}
+
+.controls-FieldLink__big-fontSize {
+   .controls-FieldLink__item-caption {
+      font-size: @controls-FieldLink-big-fontSize;
+      font-weight: bold;
+      color: @controls-FieldLink-big-fontSize-color;
    }
 }
 
@@ -143,41 +153,19 @@
    }
 
    .controls-TextBox__fieldWrapper {
+      .flexbox();
+      padding: 0;
       margin-right: @controls-FieldLink-fieldWrapper-margin;
-      display: inline-block;
-      order: 1;
+   }
+
+   .controls-TextBox__field, .controls-TextBox__placeholder {
+      padding: @text-box-wrapper-padding;
    }
 
    .controls-TextBox__beforeFieldWrapper {
-      order: 0;
       /* Учитываем ширину "гамбургера" в поле связи */
       max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
       overflow: hidden;
-
-      .controls-FieldLink__linksWrapper {
-         height: 100%;
-         display: inline-block;
-         float: right;
-
-         .controls-FieldLinkItemsCollection {
-            .controls-FieldLink__item {
-               .text-overflow();
-            }
-         }
-      }
-   }
-   &.controls-TextBox {
-      .controls-TextBox__afterFieldWrapper {
-         order: 2;
-         .inline-flexbox();
-         .align-items(center);
-         height: @controls-FieldLink-afterField-height;
-         width: auto;
-
-         > * {
-            padding: @controls-FieldLink-afterField-padding;
-         }
-      }
    }
 
    &.ws-validation-error {
@@ -187,8 +175,8 @@
    }
 
    &.ws-disabled {
-
-      .controls-TextBox__afterFieldWrapper {
+      
+      .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
 
@@ -197,10 +185,7 @@
       }
 
       .controls-TextBox__field {
-         &::-webkit-input-placeholder { opacity: 0 }
-         &:-moz-placeholder {  opacity: 0 }
-         &::-moz-placeholder {  opacity: 0 }
-         &:-ms-input-placeholder {  opacity: 0 }
+         .hiddenPlaceholder();
       }
 
       .controls-FieldLink__item {
@@ -211,17 +196,50 @@
          display: none;
       }
    }
+   
+   .controls-FieldLink__dropAllLinks {
+      color: @controls-FieldLink-link-color;
+      display: none;
+   }
 
    .controls-FieldLink__Link {
       display: inline;
-      line-height: 20px;
+      line-height: 22px;
    }
 }
 
-.ws-invisible > .controls-TextBox__field {
-   //!important используется, чтобы перебить ширину, которая задана в style,
-   //перебить её можно, т.к. input скрыт, но скрыт он через visibility: hidden (чтобы не ломать базовую линию)
-   width: 0 !important;
+.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) {
+   .controls-TextBox__placeholder {
+      display: none;
+   }
+   .controls-TextBox__field {
+      .hiddenPlaceholder();
+   }
+}
+
+.controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
+   .inline-flexbox();
+   .align-items(center);
+   height: @controls-FieldLink-afterField-height;
+   width: auto;
+}
+
+.controls-TextBox__afterFieldWrapper {
+   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+      padding: @controls-FieldLink-afterField-padding;
+   }
+}
+
+.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
+   display: none;
+}
+
+.ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
+   min-width: @controls-FieldLink-fieldWrapper-minWidth;
+}
+
+.controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-TextBox__fieldWrapper {
+   visibility: hidden;
 }
 
 .controls-Link.controls-FieldLink__Link {
@@ -247,20 +265,31 @@
    }
 }
 
-.controls-TextBox__beforeFieldWrapper {
-   .controls-FieldLink__showAllLinks {
-      position: relative;
-      width: 20px;
-      line-height: @controls-FieldLink-showAllLinks-lineHeight;
-      padding: @controls-FieldLink-showAllLinks-padding;
-      float: left;
+.controls-FieldLink__linksWrapper {
+   height: 100%;
+   display: inline-block;
+   float: right;
+}
+
+.controls-FieldLinkItemsCollection {
+   .controls-FieldLink__item {
+      .text-overflow();
    }
+}
+
+.controls-Link.controls-FieldLink__showAllLinks {
+   position: relative;
+   width: 20px;
+   line-height: @controls-FieldLink-showAllLinks-lineHeight;
+   padding: @controls-FieldLink-showAllLinks-padding;
+   float: left;
+   display: inline-block;
 }
 
 .controls-FieldLink__copyShowAll.controls-Link {
    float: left;
    position: relative;
-   top: -22px;
+   top: -@controls-FieldLink-showAllLinks-lineHeight;
    width: 16px;
    line-height: @controls-FieldLink-showAllLinks-lineHeight;
    margin-right: -22px;
@@ -281,8 +310,8 @@
    }
 }
 
-.controls-FieldLink__dropAllLinks {
-   color: @controls-FieldLink-link-color;
+.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
+   display: inline-block;
 }
 
 .controls-FieldLink__copyShowAll {
@@ -309,39 +338,23 @@
    }
 }
 
-.controls-FieldLink__dynamicInputWidth {
-   .controls-TextBox__fieldWrapper {
-      .flexbox();
-
-      .controls-TextBox__field {
-         width: 100%;
-      }
-   }
-}
-
-/* Для того, чтобы при инициализации не прыгал placeholder +
-   в дальнейшем можно будет вообще не считать размеры поля, просто использовать этот класс*/
-.controls-FieldLink__selected {
-   .controls-TextBox__field {
-      width: 0;
-   }
-}
-
 .ws-is-firefox {
-   .controls-FieldLink.controls-TextBox {
+   .controls-FieldLink {
+      vertical-align: middle;
+      
       .controls-TextBox__beforeFieldWrapper, .controls-TextBox__fieldWrapper {
          margin-top: -1px;
       }
       .controls-FieldLink__item-cross {
          top: -1px;
       }
-
       &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
          display: none;
       }
 
       .controls-FieldLink__copyShowAll {
          margin-right: @controls-FieldLink-showAll-margin-right-ff;
+         top: @controls-FieldLink-showAll-top-ff;
       }
    }
 }

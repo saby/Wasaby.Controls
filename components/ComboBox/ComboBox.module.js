@@ -336,6 +336,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   } else if (e.which === constants.key.down) {
                      this.setSelectedKey(nextRec.getId());
                   }
+                  else if (e.which === constants.key.esc) {
+                     return true;//Если пикера не было и нажали esc - combobox делать ничего не нужно, пробрасывает событие выше
+                  }
                }
             }
          }
@@ -472,15 +475,18 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   return;
                }
                index = self._getItemsProjection().getIndex(projItem);
-               self.setSelectedIndex(index);
                self.hidePicker();
+               // чтобы не было выделения текста, когда фокус вернули в выпадашку
+               self._fromTab = false;
+               if (self._options.activableByClick) {
+                  self.setActive(true);
+               }
+               self.setSelectedIndex(index);
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
                   self.redraw();
                }
-               // чтобы не было выделения текста, когда фокус вернули в выпадашку
-               self._fromTab = false;
-               self.setActive(true);
+
             }
             e.stopPropagation();
          });
@@ -499,6 +505,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                side: 'left'
             },
             closeByExternalClick: true,
+            _canScroll: true,
             targetPart: true,
             activableByClick: false,
             template : this._dotTplFnPicker({})
@@ -653,6 +660,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
             this._picker.recalcPosition(true);
+            this._onResizeHandler();
          }
          else {
             this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex);
@@ -736,10 +744,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _setWidth: function(){
-         var self = this;
-         if (self._picker._options.target){
+         var self = this,
+             target = self._picker.getTarget();
+         if (target){
+            //Борьба с полупикселями, устанавливаю ровно ту ширину, которая отрисовалась в таргете
             this._picker.getContainer().css({
-               'min-width': self._picker._options.target.outerWidth()
+               'min-width': target[0].getBoundingClientRect().width
             });
          }
       },

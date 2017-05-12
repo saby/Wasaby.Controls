@@ -3,6 +3,7 @@
    width: @tab-buttons-width;
    border-bottom: @tab-buttons-border-bottom;
    height: @tab-buttons-height;
+   box-sizing: border-box;
    border-collapse: @tab-buttons-border-collapse;
 
   @-moz-document url-prefix() {
@@ -24,7 +25,7 @@
          width: @tab-buttons-tabSpace-template-inner-width;
          min-width: @tab-buttons-tabSpace-template-inner-min-width;
          overflow: @tab-buttons-tabSpace-template-overflow;
-         height: @tab-buttons-height;
+         height: @tab-buttons-height - @tab-buttons-border-bottom-height;
          position: relative;
          z-index: 50;
       }

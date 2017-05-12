@@ -13,13 +13,14 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
     * @class SBIS3.CONTROLS.ScrollWatcher
     * @extends SBIS3.CORE.Abstract
     * @author Крайнов Дмитрий Олегович
+    * @public
     */
    var ScrollWatcher = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
       /**
        * @event onScroll Событие проиходит, когда срабатывает проверка на скроллею Например, когда достигли низа страницы
        * @remark
        *
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} type - какое именно событие произошло. Достигли дна окна, контейнера, всплывающей панели.
        * Или это наоборот доскроллили вверх
        * @param {jQuery} event - то самое соыбтие scroll, на которое подписан ScrollWatcher
@@ -105,7 +106,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          var elem = event.target;
          this._processScrollEvent(elem.scrollTop);
       },
-
+       /**
+        *
+        * @returns {*}
+        */
       getScrollContainer: function(){
          if (!this._options.element.length){
             var element = this._findScrollElement();
@@ -131,7 +135,10 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          offset = offset || 0;
          return element.scrollTop() + element.outerHeight() >= this.getScrollHeight(element[0]) - offset;
       },
-
+      /**
+       *
+       * @returns {boolean}
+       */
       isScrollOnTop: function(){
          var element = this.getScrollContainer();
          return element.scrollTop() <= this._options.totalScrollOffset;

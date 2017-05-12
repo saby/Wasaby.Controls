@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
    var Selectable = /**@lends SBIS3.CONTROLS.Selectable.prototype  */{
        /**
         * @event onSelectedItemChange Происходит при смене выбранного элемента коллекции.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {String|Number} id Идентификатор (значение поля первичного ключа) выбранного элемента коллекции.
         * @param {String} index Порядковый номер выбранного элемента коллекции среди других элементов источника данных.
         * @example

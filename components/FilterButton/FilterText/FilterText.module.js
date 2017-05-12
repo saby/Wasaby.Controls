@@ -3,23 +3,23 @@
  */
 define('js!SBIS3.CONTROLS.FilterText',
     [
-       'js!SBIS3.CONTROLS.ButtonBase',
+       'js!WSControls/Buttons/ButtonBase',
        'html!SBIS3.CONTROLS.FilterText',
        'js!SBIS3.CONTROLS.ITextValue'
-    ], function(ButtonBase, dotTplFn, ITextValue) {
+    ], function(WSButtonBase, dotTplFn, ITextValue) {
        'use strict';
 
        /**
         * Компонент, отображающий текст с крестиком удаления, при клике на крест скрывается.
         * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
         * @class SBIS3.CONTROLS.FilterText
-        * @extends SBIS3.CONTROLS.ButtonBase
+        * @extends WSControls/Buttons/ButtonBase
         * @author Герасимов Александр Максимович
         * @control
         * @public
         */
 
-       var FilterText = ButtonBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.FilterText.prototype */ {
+       var FilterText = WSButtonBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.FilterText.prototype */ {
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {

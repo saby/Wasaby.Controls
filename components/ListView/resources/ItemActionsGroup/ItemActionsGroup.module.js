@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
-                menuClassName = '',
+                menuClassName = 'controls-ItemActions__menu',
                 parentContainer = this.getParent().getContainer(),
                 items = this.getItems().clone(),
                 target;
@@ -184,6 +184,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                verticalAlign: verticalAlign,
                horizontalAlign: horizontalAlign,
                closeByExternalClick: true,
+               _canScroll: true,
                handlers: {
                   onClose: function() {
                      self._activeItem.container.removeClass('controls-ItemActions__activeItem');
@@ -310,7 +311,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   actionHandler.call(this._options.linkedControl,
                       this._activeItem.container,
                       this._activeItem.key,
-                      this._activeItem.record);
+                      this._activeItem.record,
+                      item);
                }
                /* В обработчике могут вызвать destroy */
                if (!this.isDestroyed()) {

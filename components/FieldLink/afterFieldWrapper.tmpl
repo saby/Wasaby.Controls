@@ -1,0 +1,36 @@
+<ws:SBIS3.CONTROLS.IconButton
+    cssClassName="controls-FieldLink__dropAllLinks"
+    title="Очистить все"
+    command="clearAllItems"
+    icon="icon-16 icon-Close"
+    tabindex="0"
+    activableByClick="{{ false }}"
+/>
+
+<ws:if data="{{ menuSelector }}">
+    <ws:SBIS3.CONTROLS.MenuIcon
+        name="fieldLinkMenu"
+        cssClassName="controls-FieldLink__showSelector"
+        icon="icon-16 icon-size icon-ListView icon-primary action-hover"
+        tabindex="0"
+        displayProperty="caption"
+        idProperty="caption"
+    />
+</ws:if>
+<ws:else>
+    <ws:SBIS3.CONTROLS.IconButton
+        name="fieldLinkMenu"
+        cssClassName="controls-FieldLink__showSelector"
+        icon="icon-16 icon-size icon-ListView icon-primary action-hover"
+        tabindex="0"
+        command="showSelector"
+    />
+</ws:else>
+
+<ws:SBIS3.CONTROLS.Action.SelectorAction
+   if="{{ useSelectorAction }}"
+   name="FieldLinkSelectorAction"
+   mode="{{ selectMode }}"
+   visible="{{ false }}"
+/>
+

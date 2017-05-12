@@ -65,16 +65,18 @@
          margin-left: 18px;
       }
    }
-   &.controls-ListView__multiselect__off {
-      .controls-DataGridView__table {
-         .controls-DataGridView__tbody {
-            .controls-DataGridView__td {
-               &.controls-DataGridView__firstContentCell {
-                  padding-left: @tree-view-first-td-padding-left;
-               }
-            }
+   &.controls-GridView__searchMode {
+      .controls-DataGridView__th, .controls-DataGridView__td {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: @controls-view-padding-DEFAULT;
+         }
+         &:last-child {
+            padding-right: @controls-view-padding-DEFAULT;
          }
       }
+   }
+   &:not(.controls-ListView__multiselect) .controls-TreeView__folderFooterContainer {
+      padding-left: @controls-view-padding-DEFAULT;
    }
 }
 .controls-TreeDataGridView__hideExpandsOnHiddenNodes {
@@ -137,9 +139,11 @@
    .controls-TreeView__ellipsis-wrapper {
       overflow: hidden;
       height: @tree-view-ellipsis-wrapper-height;
+      .flex-shrink(1);
 
       .controls-TreeView__ellipsis-container {
          float: left;
+         white-space: nowrap;
          height: @tree-view-ellipsis-wrapper-height;
       }
 
@@ -197,13 +201,15 @@
    }
 }
 
-.controls-TreeView__expand__leaf + .controls-DataGridView__columnValue {
-   margin-left: @tree-view-value-left-margin;
+.controls-TreeDataGridView__levelPadding {
+   font-size: 0;
+   width: @tree-view-level-padding;
+   .flex-shrink(0);
 }
 
-.controls-TreeDataGridView__withPhoto{
+.controls-TreeDataGridView__withPhoto, .controls-TreeDataGridView__withPhoto-S, .controls-TreeDataGridView__withPhoto-M, .controls-TreeDataGridView__withPhoto-L {
    .controls-ListView__item {
-      &.controls-ListView__item-type-leaf{
+      &.controls-ListView__item-type-leaf {
          .controls-TreeView__expand{
             display: none;
          }
@@ -211,17 +217,79 @@
             margin-left: 0;
          }
       }
-      &.controls-ListView__item-type-node{
-         .controls-TreeView__expand{
-            margin: 0 16px 0 12px;
-         }
+   }
+}
+
+.controls-TreeDataGridView__withPhoto {
+   .controls-TreeDataGridView__levelPadding {
+      width: @tree-view-level-padding-photo;
+   }
+   .controls-ListView__item {
+      &.controls-ListView__item-type-node .controls-TreeView__expand {
+         margin: @controls-view-photo-padding-DEFAULT;
       }
    }
 }
 
-.controls-TreeView__editArrow-container {
-   position: absolute;
-   z-index: 1;
+/* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
+.generate-padding-class-TDGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
+   @val: extract(@controls-view-padding-variants, @i);
+   :not(.controls-ListView__multiselect).controls-TreeDataGridView.controls-ListView__padding-@{val} {
+      .controls-TreeView__folderFooterContainer {
+         padding-left: ~"@{controls-view-padding-@{val}}";
+      }
+   }
+   .generate-padding-class-TDGV(@i + 1);
+}
+.generate-padding-class-TDGV();
+
+/* Отступы для классов .controls-TreeDataGridView__withPhoto-S|M|L */
+.generate-photo-padding-class(@i: 1) when (@i =< length(@controls-view-photo-padding-variants)) {
+   @val: extract(@controls-view-photo-padding-variants, @i);
+   .controls-TreeDataGridView__withPhoto-@{val} {
+      .controls-TreeDataGridView__levelPadding {
+         width: ~"@{tree-view-level-padding-photo-@{val}}";
+      }
+      .controls-ListView__item {
+         &.controls-ListView__item-type-node .controls-TreeView__expand {
+            margin: ~"@{controls-view-photo-padding-@{val}}";
+         }
+      }
+   }
+   .generate-photo-padding-class(@i + 1);
+}
+.generate-photo-padding-class();
+
+.controls-TreeView__emptyIconInEmptyNode {
+   .controls-ListView__item-type-node.controls-ListView__item-without-child {
+      .controls-TreeView__expand {
+         visibility: hidden;
+         &:before {
+            content: '\e96c';
+         }
+      }
+   }
+   .controls-ListView__item-type-node.controls-ListView__item-without-child {
+      &:hover {
+         .controls-TreeView__expand {
+            visibility: visible;
+         }
+      }
+      &.controls-TreeView__item-expanded {
+         .controls-TreeView__expand {
+            visibility: visible;
+            &:before {
+               content: '\e96b';
+            }
+         }
+      }
+   }
+}
+.controls-IconButton {
+   &.controls-TreeView__editArrow-container {
+      position: absolute;
+      z-index: 3;
+   }
 }
 .controls-TreeView__searchBreadCrumbs {
    width: 100%;
@@ -241,5 +309,15 @@
       .controls-ListView__itemCheckBox {
          display: none;
       }
+   }
+}
+
+.controls-TreeDataGridView__levelPaddingWrap {
+   .flexbox();
+   flex-direction: row;
+   .controls-DataGridView__columnValue, .controls-TreeView__folderTitle {
+      width: 100%;
+      min-width: 0;
+      .flex-shrink(1);
    }
 }

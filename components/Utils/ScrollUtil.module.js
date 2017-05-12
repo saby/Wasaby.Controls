@@ -3,7 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.ScrollUtil', ['Core/Abstract'], function(cAbstract, ConsoleLogger) {
    'use strict';
-   var ScrollUtil = cAbstract.extend(/** @lends SBIS3.CONTROLS.ScrollWatcher.prototype */{
+    /**
+     * @class SBIS3.CONTROLS.ScrollUtil
+     * @public
+     */
+   var ScrollUtil = cAbstract.extend(/** @lends SSBIS3.CONTROLS.ScrollUtil.prototype */{
       /**
        * Находится ли скролл внизу
        * @return {Boolean} Находится ли скролл внизу

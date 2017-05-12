@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       _modifyOptions: function() {
          var opts = SuggestTextBox.superclass._modifyOptions.apply(this, arguments);
-         opts.className += ' controls-SuggestTextBox';
+         opts.cssClassName += ' controls-SuggestTextBox';
          return opts;
       },
 
@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
       _setEqualPickerWidth: function() {
          var textBoxWidth = this.getContainer()[0].clientWidth,
              pickerContainer = this._picker.getContainer()[0],
+             needSetWidth = true,
              minWidth;
 
          if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
@@ -100,14 +101,17 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
                Для правильного позиционирования popup необходимо чтобы в момент расчета размеры соотвествовали конечным
                поэтому устанавливаем min-width, а после его затираем, чтобы не перебивать прикладные стили
                 */
-            pickerContainer.style.maxWidth = textBoxWidth + 'px';
             minWidth = parseInt(this._picker.getContainer().css('min-width'));
-            if(!minWidth || minWidth < textBoxWidth) {
+            needSetWidth = !minWidth || minWidth < textBoxWidth;
+            if(needSetWidth) {
                pickerContainer.style.minWidth = textBoxWidth + 'px';
+               pickerContainer.style.maxWidth = textBoxWidth + 'px';
             }
             this._picker.recalcPosition(true);
-            pickerContainer.style.width = textBoxWidth + 'px';
-            pickerContainer.style.minWidth = '';
+            if(needSetWidth) {
+                pickerContainer.style.width = textBoxWidth + 'px';
+                pickerContainer.style.minWidth = '';
+            }
          }
       }
    });

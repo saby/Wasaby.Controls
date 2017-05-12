@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    [
    "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
+   "js!SBIS3.CONTROLS.ItemsControlMixin",
    'Core/Deferred',
    "js!SBIS3.CONTROLS.DropdownList",
    "html!SBIS3.CONTROLS.FastDataFilter",
@@ -48,7 +48,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             _options: {
                itemTpl: ItemTpl,
                displayProperty: '',
-               hidingDelay: 0,
                /**
                 * @cfg {String} Поле в контексте, где будет храниться внутренний фильтр компонента
                 * @remark
@@ -142,8 +141,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _subscribeItemToHandlers : function(item){
             var self = this;
 
-            this._subscribeToMouseEvents(item);
-
             this.subscribeTo(item, 'onClickMore', function(){
                self._notify('onClickMore', item);
             });
@@ -176,58 +173,9 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                self._setItemPositionForIE10();
             });
          },
-         _subscribeToMouseEvents: function (item) {
-            item._pickerHeadContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, true));
-            item._pickerBodyContainer.bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, false));
-            item._getPickerContainer().bind('mouseleave', this._pickerMouseLeaveHandler.bind(this, item, null));
-
-            item._pickerHeadContainer.bind('mouseenter', this._pickerMouseEnterHandler.bind(this, item));
-            item._pickerBodyContainer.bind('mouseenter', this._pickerMouseEnterHandler.bind(this, item));
-            item._getPickerContainer().bind('mouseenter', this._pickerMouseEnterHandler.bind(this, item));
-         },
-         _pickerMouseEnterHandler: function (item) {
-            if (this._hoveredItem && this._hoveredItem !== item) {
-               this._hoveredItem.hidePicker();
-            }
-            this._hoveredItem = item;
-            this._hoveredItem._isHideRunning = false;
-         },
-         _pickerMouseLeaveHandler: function (item, fromHeader, e) {
-            var pickerContainer = item._getPickerContainer(),
-               toElement = $(e.toElement || e.relatedTarget),
-               containerToCheck;
-
-            if (fromHeader) {
-               containerToCheck = item._pickerBodyContainer;
-            } else if (fromHeader === null) {
-               containerToCheck = pickerContainer;
-            } else {
-               containerToCheck = dcHelpers.hasScrollbar(pickerContainer) ? pickerContainer : item._pickerHeadContainer;
-            }
-
-            if (item._hideAllowed && !toElement.closest(containerToCheck, pickerContainer).length) {
-               this._hideItem(item);
-            }
-         },
-         _hideItem: function (item) {
-            if (!item._isHideRunning) {
-               if (this._options.hidingDelay) {
-                  item._isHideRunning = true;
-                  setTimeout(function () {
-                     if (item._isHideRunning){
-                        item._isHideRunning = false;
-                        item.hidePicker();
-                     }
-                  }.bind(this), this._options.hidingDelay);
-               }
-               else {
-                  item.hidePicker();
-               }
-            }
-         },
          _recalcDropdownWidth: function(){
             this._resetMaxWidth();
-            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
                var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
                    ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
                    containerWidth = this.getContainer().width() + ieWidth;
@@ -247,7 +195,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _resetMaxWidth: function(){
             var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
                dropdownLimitProperty = 'flex-shrink';
-            if (constants.browser.isIE && constants.browser.IEVersion <= 10){
+            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
                dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
                dropdownLimitProperty = 'max-width';
             }

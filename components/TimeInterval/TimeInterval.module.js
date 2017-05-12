@@ -30,7 +30,7 @@ define(
          _dotTplFn: dotTplFn,
           /**
            * @event onChangeInterval Срабатывает при изменении временного интервала.
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} interval Количество времени.
            * @example
            * <pre>

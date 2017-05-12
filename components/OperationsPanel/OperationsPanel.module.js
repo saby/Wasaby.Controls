@@ -50,7 +50,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @extends SBIS3.CORE.CompoundControl
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
-    * @demo SBIS3.CONTROLS.Demo.SumAction Пример 2. Операция суммирования записей, которая реализована с использованием {@link SBIS3.CONTROLS.Action.List.Sum}.
     *
     * @author Крайнов Дмитрий Олегович
     * @ignoreOptions contextRestriction independentContext
@@ -68,7 +67,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    var OperationsPanel = Control.extend([DSMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       /**
        * @event onToggle Происходит при изменении видимости панели действий: появление или скрытие.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       _dotTplFn: dotTplFn,
       $protected: {

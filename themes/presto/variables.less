@@ -1,5 +1,11 @@
 @import "../carry/variables";
 
+// Кошерные переменные "на выход"
+@default-text-color:                      #E4E4E4;
+@disabled-color:                          #37536C;
+@accent-color:                            #ffcc99;
+//=============================
+
 @black-color:                             #333;
 
 @gray-color:                              #aaa;
@@ -9,13 +15,15 @@
 @secondary-color:                         #4e5762;
 
 @bg:                                      @secondary-color;
-@text-color:                              @white-color;
+@default-text-color:                      @white-color;
 
-@font-basic-name:                         'TensorFont Regular', 'TensorFont', sans-serif;;
-@font-basic-size:                         14px;
-@font-popup-size:                         14px;
+@default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
+@default-font-size:                       14px;
+@popup-font-size:                         14px;
 @font-folder-size:                        14px;
-@font-basic-line-height:                  20px;
+@default-font-line-height:                20px;
+
+@default-height:                          50px;
 
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
 @closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -40px;
@@ -36,7 +44,7 @@
 @link-hover-text-color:                   #FFA34F;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
-@link-icon-margin:                        -2px 0 0;
+@link-icon-margin:                        1px 0 0;
 
 @link-icon-field-margin:                  0 0 0 4px;
 
@@ -46,7 +54,9 @@
 
 // Normal button
 @button-font-size:                        24px;
-@button-font:                             @button-font-size @font-basic-name;
+@button-font:                             @button-font-size @default-font-name;
+@button-text-color:                       @black-color;
+@button-hover-text-color:                 @button-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        24px;
 @button-padding:                          0 8px;
@@ -141,7 +151,8 @@
 @button-disabled-bg:                      @gray-light-color;
 
 // Big button
-@button-big-font:                         (@font-basic-size * 1.285714285714286) @font-basic-name;
+@button-big-font-size:                    (@default-font-size * 1.285714285714286);
+@button-big-font:                         @button-big-font-size @default-font-name;
 @button-big-height:                       58px;
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
@@ -159,15 +170,6 @@
 
 @button-big-active-text-color:            @button-active-text-color;
 @button-big-active-border:                @button-active-border;
-
-// Big primary button
-@button-big-primary-hover-text-color:     @button-primary-hover-text-color;
-@button-big-primary-hover-border:         @button-primary-hover-border;
-@button-big-primary-hover-shadow:         @button-primary-hover-shadow;
-
-@button-big-primary-active-text-color:    @button-primary-active-text-color;
-@button-big-primary-active-border:        @button-primary-active-border;
-@button-big-primary-active-shadow:        @button-primary-active-shadow;
 
 @button-icon-32-top-offset:               0;
 @button-icon-32-left-offset:              0;
@@ -205,9 +207,6 @@
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 
-// Big primary button
-@button-big-primary-checked-border:       @button-big-primary-active-border;
-
 // ---------- //
 // Tab button //
 // ---------- //
@@ -224,7 +223,7 @@
 @radio-button-height:                           auto;
 @radio-button-lineheight:                       normal;
 
-@radio-button-text-color:                       @text-color;
+@radio-button-text-color:                       @default-text-color;
 
 @radio-button-hover-text-decoration:            none;
 
@@ -256,7 +255,7 @@
 
 @check-box-text-margin:                         0 8px;
 
-@check-box-text-color:                          @text-color;
+@check-box-text-color:                          @default-text-color;
 @check-box-hover-text-color:                    @primary-color;
 
 @check-box-disabled-text-color:                 @gray-color;
@@ -284,7 +283,7 @@
 @check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
 @check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
 
-
+@check-box-icon-box-color:                      rgba(102, 170, 221, .4);
 
 // -------- //
 // Switcher //
@@ -315,10 +314,8 @@
 
 @menu-expand-border-width:                8px 0 8px 8px;
 @menu-expand-border-color:                transparent transparent transparent @primary-color;
-@menu-expand-bg:                          transparent;
 
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
-@menu-expand-hover-bg:                    @menu-expand-bg;
 
 @menu-header-height:                      24px;
 @menu-big-header-height:                  32px;
@@ -331,7 +328,7 @@
 @menu-big-item-height:                    32px;
 @menu-item-padding:                       0 32px 0 16px;
 
-@menu-item-text-color:                    @text-color;
+@menu-item-text-color:                    @default-text-color;
 @menu-item-bg:                            @text-box-focus-bg;
 
 @menu-item-hover-text-color:              @secondary-color;
@@ -607,7 +604,7 @@
 // Text area //
 // --------- //
 
-@text-area-field-line-height:                   @text-box-field-line-height;
+@text-area-field-line-height:                   40px !important;
 
 
 @text-area-border-color:                        @gray-dark-color;
@@ -648,7 +645,7 @@
 @calendar-bg:                                   darken(@secondary-color, 5%);
 
 @data-grid-cell-box-sizing: 									border-box;
-@calendar-day-cell-text-color:                  @text-color;
+@calendar-day-cell-text-color:                  @default-text-color;
 @calendar-day-cell-bg:                          @secondary-color;
 @calendar-day-cell-hover-text-color:            @black-color;
 @calendar-day-cell-hover-bg:                    @default-color;
@@ -670,7 +667,7 @@
 
 @month-view-day-border-spacing:                   1px;
 
-@month-view-day-header-font:                      11px @font-basic-name;
+@month-view-day-header-font:                      11px @default-font-name;
 @month-view-day-header-text-alignment:            center;
 
 @month-view-day-body-font:                        @month-view-font;
@@ -723,7 +720,7 @@
 @month-picker-wrapper-border:                   1px solid @gray-color;
 @month-picker-wrapper-bg:                       @text-box-focus-bg;
 
-@month-picker-item-text-color:                  @text-color;
+@month-picker-item-text-color:                  @default-text-color;
 
 @month-picker-item-hover-text-color:            @black-color;
 @month-picker-item-hover-bg:                    @default-color;
@@ -768,6 +765,7 @@
 
 @date-range-choose-year-font-size:              @date-range-choose-font-size;
 @date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
+@date-range-choose-year-padding-left:           16px;
 
 // -------------- //
 // Date Range Big //
@@ -801,11 +799,12 @@
 // --------- //
 // List view //
 // --------- //
-@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
-@listView-check-box-icon-bg:                    @check-box-icon-bg;
-@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
-@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
-@list-view-actions-item-height:                 16px;
+@list-view-min-height:                           90px;
+
+@listView-check-box-left:                       3px;
+@listView-check-box-top:                        5px;
+
+@list-view-actions-item-height:                 24px;
 @list-view-actions-margin:                      0 4px;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-active-bg:                   #F3F3F3;
@@ -815,6 +814,7 @@
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
+@list-view-items-toolbar-bottom:                     8px;
 
 @list-view-actions-menu-icon-width:             16px;
 
@@ -870,6 +870,7 @@
 
 @data-grid-row-hover-bg:                        @default-color;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
+@data-grid-row-hover-cell-bg: 					#e7f0f9;
 
 @data-grid-row-hover-cell-text-color:           @black-color;
 
@@ -883,8 +884,6 @@
 
 @data-grid-cell-height:                         @data-grid-header-cell-height;
 @data-grid-cell-padding:                        @data-grid-header-cell-padding;
-@data-grid-side-cell-padding:                   @data-grid-header-cell-padding-side;
-@data-grid-side-cell-padding-variants:          8, 12, 16, 20, 24;
 @data-grid-ms-first-content-cell-padding-left:  @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
@@ -928,8 +927,6 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-@controls-editInPlace-first-editor-padding-left:    1px;
-@controls-editInPlace-editor-without-offset-margin: 0;
 
 // --------------- //
 // OperationsMark //
@@ -940,11 +937,6 @@
 // --------------- //
 //    MultiView    //
 // --------------- //
-@listView-check-box-left:                           3px;
-@listView-check-box-top:                            5px;
-@listView-check-box-border:                         1px solid;
-@listView-check-box-width:                          18px;
-@listView-check-box-height:                         18px;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-image-margin:                  10px 40px;
@@ -1026,6 +1018,7 @@
 @controls-FieldLink-link-color-hover:              #313E78;
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
+@controls-FieldLink-showAll-top-ff:                -24px;
 
 @controls-FieldLink-big-fontSize:                  15px;
 @controls-FieldLink-big-fontSize-color:            #313E78;
@@ -1096,6 +1089,3 @@
 
 //TabButton
 @tab-buttons-border-bottom:                     1px solid #293543;
-
-//Browser
-@controls-Browser-ListView-minHeight:           90px;

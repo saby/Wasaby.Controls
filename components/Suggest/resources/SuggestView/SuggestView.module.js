@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
              /* Т.к. контроллер следит за событием onDataLoad, то им надо стрелять один раз,
               когда все списки згрузились */
-             if(e.name === 'onDataLoad') {
+             if(e.name === 'ondataload' || e.name === 'onDataLoad') { //FIXME пока не залили правки Санникова
                 this._viewsIterator(function(view) {
                    isLoaded &= !view.isLoading();
                 });
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
           _modifyOptions: function() {
              var opts = SuggestView.superclass._modifyOptions.apply(this, arguments);
              if(opts.items.length === 1) {
-                opts.className += ' controls-suggestView__singleTab';
+                opts.cssClassName += ' controls-suggestView__singleTab';
              }
              if (opts.displayField) {
                 IoC.resolve('ILogger').log('SuggestView', 'Опция displayField является устаревшей, используйте displayProperty');

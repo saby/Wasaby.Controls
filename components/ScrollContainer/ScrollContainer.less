@@ -1,5 +1,10 @@
 .controls-ScrollContainer {
    overflow: hidden;
+   // Если включена фиксация заголовков внутри скролируемой области, то иногда стили на ws-sticky-header__wrapper
+   // переопределяют overflow
+   &.ws-sticky-header__wrapper {
+      overflow: hidden;
+   }
    position: relative;
    outline: none;
    .controls-ScrollContainer__scrollbar{
@@ -29,7 +34,7 @@
    .controls-Scrollbar.controls-Scrollbar__dragging {
       opacity: 1
    }
-   &:hover .controls-Scrollbar {
+   &:hover > .controls-Scrollbar {
       opacity: 1;
    }
 }
@@ -47,10 +52,15 @@
    }
    -webkit-overflow-scrolling: touch;
    isolation: isolate;
-   
+
    &.ws-sticky-header__scrollable-container {
       width: auto;
    }
+}
+
+body.ws-is-ie .controls-ScrollContainer__content {
+  // Хак. IE не поддерживает isolation: isolate;
+  transform: scale(1);
 }
 
 .controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
@@ -76,7 +86,7 @@
 }
 
 // показываем нативный скролл только на android и ios
-.ws-is-mobile-safari, .ws-is-mobile-chrome-ios{
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios, .ws-is-touch.ws-is-ie {
    .controls-ScrollContainer {
       overflow: auto;
    }
@@ -100,23 +110,20 @@
    width: auto;
 }
 
+.controls-ScrollContainer > .ws-sticky-header__header-container {
+   z-index: initial;
+}
+
 .controls-ScrollContainer__hiddenScrollbar .controls-Scrollbar {
    display: none;
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex {
-   display: flex;
-   flex-direction: column;
-   align-content: stretch;
+   .flexbox();
+   .flex-direction(column);
+   .align-content(stretch);
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
-   overflow: auto;
    height:100%;
-}
-
-.ws-is-ie {
-   .controls-ScrollContainer_no-scrollbar .controls-ScrollContainer__content {
-      margin-right: 0 !important;
-   }
 }

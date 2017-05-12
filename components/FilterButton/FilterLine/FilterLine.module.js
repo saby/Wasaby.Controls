@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
    [
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
-      'html!SBIS3.CONTROLS.FilterButton.FilterLine',
+      'tmpl!SBIS3.CONTROLS.FilterButton.FilterLine',
       'Core/helpers/string-helpers',
       'Core/Sanitize'
    ],
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
                      linkText = context.getValue('filterResetLinkText');
                   }
 
-                  linkText = Sanitize(linkText, {validNodes: {component: true}});
+                  linkText = Sanitize(linkText, { validNodes: {component: true}, escapeInvalidTags: true });
 
                   context.setValueSelf({
                      linkText: linkText,
@@ -48,11 +48,6 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
             updateContext();
             context.subscribe('onFieldsChanged', updateContext);
-            this._container.on('click', '.controls__filterButton__filterLine-cross', function() {
-               if(self.isEnabled()) {
-                  self.sendCommand('reset-filter', true);
-               }
-            });
          }
       });
 

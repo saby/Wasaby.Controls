@@ -1,5 +1,4 @@
 .controls-MenuIcon {
-   position: relative;
    &.controls-IconButton__round-border{
       padding-right: 0;
    }
@@ -31,26 +30,18 @@
          &.controls-Menu__hasChild{
             padding-right: @menu-item-expand-padding-right
          }
-      }
-   }
-
-   &.controls-Button__withoutCaption {
-      .controls-Menu__header {
-         .icon-16, .icon-24 {
-            padding-right: 0;
-         }
-      }
-   }
-}
-
-.ws-is-firefox {
-   .controls-MenuIcon__Menu {
-      &.controls-Menu__big-header {
-         margin: -4px 0 0 -13px;
-      }
-      &.controls-IconButton__round-border {
-         &.controls-Menu__big-header {
-            margin: -2px 0 0 -11px;
+         &.controls-IconButton__round-border-24 {
+            margin: -7px 0 0 -7px;
+            .controls-ListView__item:first-child {
+               .controls-MenuItem__icon {
+                  .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
+                  height: 24px !important;
+                  width: 24px !important;
+                  line-height: 22px !important;
+                  top: 2px;
+                  left: -6px;
+               }
+            }
          }
       }
    }

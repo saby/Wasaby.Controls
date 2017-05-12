@@ -1,0 +1,44 @@
+.controls-ToggleButton__round {
+    .button-default-style();
+    background-color: transparent;
+    border-color: #cccccc;
+    border-radius: 13px;
+    border-style: solid;
+    border-width: 1px;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    user-select: none;
+    .baseline-fix();
+
+    .controls-Button__text {
+      display: none;
+    }
+
+    .controls-Button__icon {
+      position: absolute;
+      left: 5px;
+      top: 5px;
+      margin-left: 0;
+    }
+
+    &.controls-Checked__checked {
+      background-color: #F3F3F3;
+      border-color: #587AB0;
+    }
+
+    &.ws-disabled {
+      .controls-Button__icon {
+        color: @icon-color-disabled;
+      }
+    }
+}
+
+
+.ws-is-desktop-platform {
+    .controls-ToggleButton__round:not(.ws-disabled) {
+      &:hover:not(.controls-Checked__checked) {
+        border-color: #587AB0;
+      }
+    }
+}

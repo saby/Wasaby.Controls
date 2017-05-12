@@ -10,7 +10,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Di',
    "Core/core-instance",
    "Core/CommandDispatcher",
-   "Core/core-functions"
+   "Core/core-functions",
+   "Core/helpers/Function/once"
 ], function (
    constants,
    SearchController,
@@ -20,7 +21,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Di,
    cInstance,
    CommandDispatcher,
-   cFunctions ) {
+   cFunctions,
+   once) {
 
    'use strict';
 
@@ -49,13 +51,22 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {String} Имя параметра фильтрации для поиска
              */
-            searchParam : ''
+            searchParam : '',
+            /**
+             * @cfg {Boolean} Использовать механизм смены неверной раскладки
+             */
+            keyboardLayoutRevert: true
          }
       },
       $constructor: function () {
          var self = this;
 
          this._options.observableControls.unshift(this);
+         
+         /* Инициализация searchController'a происходит лениво,
+            только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
+            на onSearch (и лишних созданий контроллера), метод инициализации позволяем вызывать только один раз. */
+         this._initializeSearchController = once.call(this._initializeSearchController);
 
          this.once('onListReady', function(e, list) {
             self.subscribeTo(list, 'onKeyPressed', function (event, jqEvent) {
@@ -132,6 +143,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             this._searchController = new SearchController({
                view: this.getList(),
                searchForm: this,
+               keyboardLayoutRevert: this._options.keyboardLayoutRevert,
                searchParamName: this._options.searchParam,
                doNotRespondOnReset: true,
                searchFormWithSuggest: true
@@ -169,7 +181,35 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
                //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
                var idProp = this.getList().getItems().getIdProperty(),
-                   index = this._historyController.getIndexByValue(idProp, item.get(idProp));
+                   itemId = item.get(idProp),
+                   index = -1;
+
+               this._historyController.each(function(model, i) {
+                  var historyModelObject = model.get('data').toObject();
+                  var historyModelId;
+                  //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
+                  //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
+                  //свойства модели не инициализируются, соответственно dataRecord.get('anyField') не вернет ничего.
+                  //Пока не доработали механизм истории на запоминание только id, приходится искать добавляемую запись в рекордсете истории вручную по сырым данным.
+                  if (historyModelObject.d instanceof Array && historyModelObject.s instanceof Array) {
+                     var fieldIndex = -1;
+                     for (var j = 0; j < historyModelObject.s.length; j++) {
+                        if (historyModelObject.s[j].n === idProp) {
+                           fieldIndex = j;
+                           break;
+                        }
+                     }
+                     if (fieldIndex > -1) {
+                        historyModelId = historyModelObject.d[fieldIndex];
+                     }
+                  }
+                  else {
+                     historyModelId = historyModelObject[idProp];
+                  }
+                  if (itemId === historyModelId) {
+                     index = i;
+                  }
+               });
                if(index !== -1) {
                   this._historyController.removeAt(index);
                }
@@ -307,6 +347,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
+            parentConfig.closeOnTargetMove = true;
             return parentConfig;
          },
 

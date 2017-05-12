@@ -27,19 +27,19 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       var EditAtPlaceGroup = CompoundControl.extend([PickerMixin, EditAtPlaceMixin], /** @lends SBIS3.CONTROLS.EditAtPlaceGroup.prototype */{
          /**
           * @event onCancel Происходит при отмене сохранения изменений.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @remark
           * Выход из режима редактирования производится нажатием клавиши Esc или кнопки "Нет" в диалоге, который появляется при клике вне области редактирования.
           */
          /**
           * @event onApply Происходит при сохранении изменений.
-          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Core/EventObject} eventObject Дескриптор события.
           * @remark
           * Сохранение изменений производится нажатием клавиши "Enter" или кнопки "Да" в диалоге, который появляется при клике вне области редактирования.
           */
           /**
            * @event onShowEditor Происходит при переходе в режим редактирования.
-           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+           * @param {Core/EventObject} eventObject Дескриптор события.
            */
          _dotTplFn: dotTplFn,
          $protected: {

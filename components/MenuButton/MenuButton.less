@@ -1,26 +1,43 @@
 .controls-Button {
-  // Normal button
-  &.controls-MenuButton {
-    position: relative;
-  }
+   // Normal button
+   &.controls-MenuButton {
+      position: relative;
+      // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
+      // т.к. браузер неправильно делал расчет ширины контента
+      &:after {
+         font-family: 'TensorFont', sans-serif;
+         font-weight: bold;
+         content: '';
+      }
+   }
 }
 
 .controls-MenuButton {
-  .controls-Button__text, .controls-Button__icon + .controls-Button__text {
-    margin-right: @button-text-margin;
-  }
+   .controls-Button__text, .controls-Button__icon + .controls-Button__text {
+      margin-right: @button-text-margin;
+   }
 }
 
 .controls-Menu.controls-MenuButton__Menu {
-  margin: -5px 0 0 -1px;
-  border-width: @menu-button-menu-border-width;
-  border-style: @menu-button-menu-border-style;
-  border-color: @menu-button-menu-border-color;
-  background: @menu-button-menu-bg;
-  border-top-left-radius: 0;
+   margin: -5px 0 0 -1px;
+   border-width: @menu-button-menu-border-width;
+   border-style: @menu-button-menu-border-style;
+   border-color: @menu-button-menu-border-color;
+   background: @menu-button-menu-bg;
+   border-top-left-radius: 0;
 
-  &.controls-popup-revert-horizontal {
-    border-top-left-radius: @menu-border-radius;
-    border-top-right-radius: 0;
-  }
+   &.controls-popup-revert-horizontal {
+      border-top-left-radius: @menu-border-radius;
+      border-top-right-radius: 0;
+   }
+}
+
+.ws-is-firefox {
+   .controls-MenuButton__Menu {
+      .controls-Menu__header-icon {
+         &.icon-24 {
+            padding-bottom: 2px;
+         }
+      }
+   }
 }

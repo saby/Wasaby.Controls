@@ -7,10 +7,11 @@ define(
    'js!SBIS3.CONTROLS.TabButton',
    [
       'js!SBIS3.CONTROLS.RadioButtonBase',
-      'html!SBIS3.CONTROLS.TabButton',
+      'tmpl!SBIS3.CONTROLS.TabButton',
       'js!SBIS3.CONTROLS.IconMixin',
+      'Core/Sanitize',
       'css!SBIS3.CONTROLS.TabButton'
-   ], function (RadioButtonBase, dotTplFn, IconMixin) {
+   ], function (RadioButtonBase, dotTplFn, IconMixin, Sanitize) {
 
    'use strict';
    /**
@@ -38,9 +39,25 @@ define(
       },
       _dotTplFn: dotTplFn,
 
+      _modifyOptions: function() {
+         //TODO костыль какой-то
+         var opts = TabButton.superclass._modifyOptions.apply(this, arguments);
+         opts.sanitize = function(markup) {
+            return Sanitize (markup.caption, {validNodes: {component: true}, validAttributes : {config: true} })
+         };
+         return opts;
+      },
+
       $constructor: function () {
-         if (this._options.icon){
-            this.setIcon(this._options.icon);
+      },
+      
+      init: function () {
+         TabButton.superclass.init.call(this);
+
+         // если у tabbutton нет потомков, он не должен участовать в обходе по табу и принимать активность на activateFirstControl
+         // если внутри есть потомки, об обходе их по табу должен беспокоиться их создатель
+         if (!this.getImmediateChildControls().length) {
+            this.setTabindex(0);
          }
       },
 

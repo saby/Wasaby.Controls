@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             filter[view.getParentProperty()] = undefined;
          }
 
-         view.once('onDataLoad', function(event, data) {
+         view.once('onDataLoad', function() {
             var root;
             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
             if (self._options.backButton) {
@@ -118,12 +118,17 @@ define('js!SBIS3.CONTROLS.SearchController',
                callProjectionMethod('setEventRaising', [true]);
             }
          });
-
-         view.reload(filter, view.getSorting(), 0).addCallback(function() {
-            if (self._options.hierarchyViewMode) {
-               view._container.addClass('controls-GridView__searchMode');
+   
+         view.once('onDrawItems', function() {
+            /* Т.к. onDataLoad может стрельнуть несколько раз и до отрисовки,
+             то, для того, чтобы не прыгали записи (меняются отступы в режиме поиска),
+             класс вешаем по onDrawItems */
+            if(self._searchMode && self._options.hierarchyViewMode) {
+               view.getContainer().addClass('controls-GridView__searchMode');
             }
          });
+
+         view.reload(filter, view.getSorting(), 0);
          this._searchMode = true;
 
       },
@@ -178,6 +183,9 @@ define('js!SBIS3.CONTROLS.SearchController',
             view._options.hierarchyViewMode = false;
          } else {
             view.setExpand(false);
+            /* Закрываем ветки после сброса поиска через опцию,
+               чтобы не вызвалась лишняя перерисовка */
+            view._options.openedPath = {};
          }
          //Если мы ничего не искали, то и сбрасывать нечего
          if (this._firstSearch) {

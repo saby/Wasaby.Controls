@@ -6,11 +6,11 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!WS.Data/Di',
       'Core/Indicator',
       'Core/core-merge',
-      "Core/helpers/collection-helpers",
-      "Core/IoC",
-      'Core/core-instance'
+      'Core/IoC',
+      'Core/core-instance',
+      'Core/constants'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, colHelpers, IoC, cInstance) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance, constants) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -73,7 +73,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *    ...
        *    move = new InteractiveMove({
        *       linkedObject: this.getChildControlByName('MyListView')
-       *       moveStrategy: 'movestrategy.base'
        *    });
        *    ...
        * </pre>
@@ -131,12 +130,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                IoC.resolve('ILogger').log('InteractiveMove', 'Опция componentOptions.displayField является устаревшей, используйте componentOptions.displayProperty');
                cfg.componentOptions.displayProperty = cfg.componentOptions.displayField;
             }
-            if (cInstance.instanceOfMixin(cfg.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
-               cMerge(cfg, {
-                  parentProperty: cfg.linkedObject.getParentProperty(),
-                  nodeProperty: cfg.linkedObject.getNodeProperty()
-               }, {preferSource: true});
-            }
             return InteractiveMove.superclass._modifyOptions.apply(this, arguments);
          },
 
@@ -174,16 +167,22 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             return options;
          },
 
+         init: function () {
+            InteractiveMove.superclass.init.call(this);
+            this._syncOptions();
+
+         },
+
          _move: function(movedItems, target) {
             Indicator.show();
             if (target && target.getId() == null) {
                target = null; //selectorwrapper возвращает корень как модель с идентификатором null
             }
-            return this.getMoveStrategy().hierarchyMove(movedItems, target).addCallback(function(result){
+            return this._getMover().move(movedItems, target, 'on').addCallback(function (result) {
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
                }
-            }.bind(this)).addBoth(function() {
+            }.bind(this)).addBoth(function () {
                Indicator.hide();
             });
          },
@@ -192,27 +191,18 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             var config = InteractiveMove.superclass._getDialogConfig.call(this, meta),
                movedItems = meta.movedItems;
             cMerge(config, {
-               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + ' ' + rk('в'),
+               title: rk('Перенести') + ' ' + movedItems.length + strHelpers.wordCaseByNumber(movedItems.length, ' ' + rk('записей'), ' ' + rk('запись'), ' ' + rk('записи')) + ' ' + rk('в'),
                opener: this._getListView()
             }, {preferSource: true});
             return config;
          },
 
-         _makeMoveStrategy: function () {
-            return Di.resolve(this._options.moveStrategy, {
-               dataSource: this.getDataSource(),
-               hierField: this._options.parentProperty,
-               parentProperty: this._options.parentProperty,
-               nodeProperty: this._options.nodeProperty,
-               listView: this._getListView()
-            });
-         },
          _getComponentOptions: function() {
             var options = ['displayField', 'partialyReload', 'keyField', 'idProperty', 'hierField', 'displayProperty'],
                listView = this._getListView(),
                result = this._options.componentOptions || {};
             if (listView) {
-               colHelpers.forEach(options, function (name) {
+               options.forEach(function (name) {
                   if (!result.hasOwnProperty(name)) {
                      try {
                         result[name] = listView.getProperty(name);
@@ -232,6 +222,27 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
                }.bind(this));
             } else {
                InteractiveMove.superclass._notifyOnExecuted.call(this, meta, result);
+            }
+         },
+         _syncOptions: function () {
+            if (cInstance.instanceOfMixin(this._options.linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
+               cMerge(this._options, {
+                  parentProperty: this._options.linkedObject.getParentProperty(),
+                  nodeProperty: this._options.linkedObject.getNodeProperty()
+               }, {preferSource: true});
+               this.subscribeTo(this._options.linkedObject, 'onKeyPressed', this._keyPressHandler.bind(this));
+            }
+         },
+         setLinkedObject: function (value) {
+            InteractiveMove.superclass.setLinkedObject.call(this, value);
+            this._syncOptions();
+         },
+
+         _keyPressHandler: function(busE, e){
+            switch (e.which) {
+               case constants.key.m:
+                  e.ctrlKey && this.execute();
+                  break;
             }
          }
       });

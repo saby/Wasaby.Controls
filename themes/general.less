@@ -1,7 +1,7 @@
 @import "header";
 
 //body, html {
-//  font: @font-basic-size @font-basic-name;
+//  font: @default-font-size @default-font-name;
 //  color: @text-color;
 //  background: @bg;
 //}
@@ -73,7 +73,7 @@ input[type="reset"]::-moz-focus-inner {
   }
 
   &.additionalLink {
-    color: @gray-color;
+    color: @link-additional-color;
   }
   &.additionalLink__2 {
     color: @black-color;
@@ -96,6 +96,50 @@ input[type="reset"]::-moz-focus-inner {
   .action-hover:not(.ws-disabled):hover {
     color: @blue-dark-color;
   }
+}
+
+.icon-small, .icon-medium, .icon-large {
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+}
+
+.icon-small {
+  font-family: @default-icon-small-font !important;
+}
+
+.icon-medium {
+  font-family: @default-icon-medium-font !important;
+}
+
+.icon-large {
+  font-family: @default-icon-large-font !important;
+}
+
+
+.icon-small {
+  font-size: @icon-small-size !important;
+  line-height: @icon-small-size !important;
+  width: @icon-small-size;
+  height: @icon-small-size;
+}
+
+.icon-medium {
+  font-size: @icon-medium-size !important;
+  line-height: @icon-medium-size !important;
+  width: @icon-medium-size;
+  height: @icon-medium-size;
+}
+
+.icon-large {
+  font-size: @icon-large-size !important;
+  line-height: @icon-large-size !important;
+  width: @icon-large-size;
+  height: @icon-large-size;
 }
 
 .ws-unSelectable {

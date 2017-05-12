@@ -1,3 +1,39 @@
+.icon-Home3:before {
+    content: "\e920";
+}
+
+.icon-Notes:before {
+    content: "\e91f";
+}
+
+.icon-Classifications:before {
+    content: "\e918";
+}
+
+.icon-Directory:before {
+    content: "\e919";
+}
+
+.icon-PatternsPoints:before {
+    content: "\e91a";
+}
+
+.icon-Statistics:before {
+    content: "\e91b";
+}
+
+.icon-Pack2:before {
+    content: "\e91c";
+}
+
+.icon-Profile2:before {
+    content: "\e91d";
+}
+
+.icon-Company2:before {
+    content: "\e91e";
+}
+
 .icon-DesktopOff:before {
    content: "\e917";
 }

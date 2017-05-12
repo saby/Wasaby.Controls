@@ -1,8 +1,5 @@
 .controls-MenuLink {
    line-height: @menu-link-line-height;
-   position: relative;
-   text-decoration: @menu-link-text-decoration;
-   color: @menu-link-text-color;
    // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
    // т.к. браузер неправильно делал расчет ширины контента
    &:after {
@@ -19,26 +16,5 @@
    border-width: @menu-link-menu-border-width;
    .controls-Menu__header {
       background-color: @menu-link-header-bg-color;
-   }
-}
-
-@-moz-document url-prefix() {
-   .controls-Menu.controls-MenuLink__Menu {
-      .controls-Menu__header {
-         .icon-16 {
-            margin-top: -1px;
-         }
-      }
-   }
-}
-
-.ws-is-desktop-platform {
-   .controls-MenuLink {
-      &.ws-enabled {
-         &:hover {
-            text-decoration: @menu-link-hover-text-decoration;
-            color: @menu-link-hover-text-color;
-         }
-      }
    }
 }

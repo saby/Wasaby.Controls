@@ -54,6 +54,10 @@
       }
    }
 
+   &.ws-disabled {
+      color: @date-range-slider-disabled-text-color;
+   }
+
    &.controls-DateRangeSlider__link {
       .controls-DateRangeSlider__prev,
       .controls-DateRangeSlider__next {
@@ -62,7 +66,16 @@
    }
 
    &.controls-DateRangeSlider__normal {
-      color: @date-range-slider-color;
+      &.ws-enabled {
+         color: @date-range-slider-color;
+
+         .controls-DateRangeSlider__prev,
+         .controls-DateRangeSlider__next {
+            &:hover {
+               color: @date-range-slider-prev-next-buttons-hover-color;
+            }
+         }
+      }
       & > * {
          height: @date-range-slider-height;
       }
@@ -81,10 +94,13 @@
          line-height: @date-range-slider-height;
          height: @date-range-slider-height;
          width: @date-range-slider-prev-next-buttons-width;
-         &:hover {
-            color: @date-range-slider-prev-next-buttons-hover-color;
-         }
       }
    }
 
+   &.ws-validation-error {
+      border-width: @date-range-slider-error-border-width;
+      border-style: @date-range-slider-error-border-style;
+      border-color: @date-range-slider-error-border-color;
+      background: @date-range-slider-error-bg;
+   }
 }

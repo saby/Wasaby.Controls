@@ -8,20 +8,19 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "html!SBIS3.CONTROLS.RichEditorToolbar",
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
    'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.ToggleButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorMenuButton",
-   "js!SBIS3.CONTROLS.RichEditor.RichEditorDropdown",
+   "js!WSControls/Buttons/Button",
+   "js!WSControls/Buttons/ToggleButton",
+   'js!SBIS3.CONTROLS.MenuButton',
+   'js!SBIS3.CONTROLS.ComboBox',
    'css!SBIS3.CONTROLS.RichEditorToolbar',
-   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorDropdown/RichEditorDropdown',
-   'css!SBIS3.CONTROLS.RichEditorToolbar/resources/RichEditorMenuButton/RichEditorMenuButton'
+   "css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square"
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
 
    var
       constants = {
-         toolbarHeight: 24
+         toolbarHeight: 32
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbar
@@ -86,7 +85,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             _textFormats: {
                title: false,
                subTitle: false,
-               selectedMainText: false,
                additionalText: false
             },
             _textAlignState: {
@@ -94,14 +92,31 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                alignright: false,
                aligncenter: false,
                alignjustify: false
+            },
+            _styleBox: undefined,
+            _pickerOpenHandler: undefined,
+            _fromFormatChange: false
+         },
+         init: function() {
+            var
+               self = this;
+            RichEditorToolbar.superclass.init.call(this);
+            //Необходимо делать блокировку фокуса на пикере comboBox`a чтобы редактор не терял выделение
+            //Делаем это при первом показе пикера
+            if (this.getItems().getRecordById('style')){
+               this._styleBox = this.getItemInstance('style');
+               self._pickerOpenHandler = function() {
+                  self._styleBox._picker._container.on('mousedown focus', self._blockFocusEvents);
+               }.bind(self);
+               self._styleBox.once('onPickerOpen', self._pickerOpenHandler);
             }
+
          },
 
          $constructor: function() {
             this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton').bind('click', this.toggleToolbar.bind(this));
             this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
          },
-
          setExpanded: function(expanded) {
             var
                self = this;
@@ -129,7 +144,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _nodeChangeHandler : function(event, tinyEvent) {
-            this._buttonSetEnabled('unlink', tinyEvent.element.nodeName === 'A');
+            this._buttonSetEnabled('unlink', $(tinyEvent.element).closest('a').length);
          },
 
          _formatChangeHandler : function(event, obj, state) {
@@ -138,6 +153,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                case 'italic':
                case 'underline':
                case 'strikethrough':
+               case 'blockquote':
                   this._toggleState(state, obj);
                break;
                case 'alignleft':
@@ -157,23 +173,17 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
 
          _toggleState: function(state, obj) {
             var
-               selectors = {
-                  'bold':  'strong',
-                  'italic':  'em',
-                  'underline':  'span[style*="decoration: underline"]',
-                  'strikethrough':  'span[style*="decoration: line-through"]'
-               };
-            if (!state && $(obj.node).closest(selectors[obj.format]).length) {
-               state = true;
-            }
-             if (this.getItemInstance(obj.format)) {
-                this.getItemInstance(obj.format).setChecked(state);
+               result = RichEditorToolbar.superclass._toggleState.apply(this, arguments);
+            if (this.getItems().getRecordById(result.name) && this.getItemInstance(result.name)) {
+                this.getItemInstance(result.name).setChecked(result.state);
             }
          },
 
          _updateTextAlignButtons: function(state, obj) {
             this._textAlignState[obj.format] = state;
-            if (this.getItemInstance('align')) {
+            var
+               button = this.getItemInstance('align');
+            if (button) {
                var
                   align = 'alignleft';
                for (var a in this._textAlignState) {
@@ -181,13 +191,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      align = a;
                   }
                }
-               this.getItemInstance('align')._drawSelectedItems([align]);
+               button.setIcon(button.getItems().getRecordById(align).get('icon'));
             }
          },
 
          _updateTextFormat: function(state, obj) {
             this._textFormats[obj.format] = state;
-            if (this.getItemInstance('style')) {
+            var
+               button = this.getItemInstance('style');
+            if (button) {
                var
                   textFormat = 'mainText';
                for (var tf in this._textFormats) {
@@ -195,7 +207,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                      textFormat = tf;
                   }
                }
-               this.getItemInstance('style')._drawSelectedItems([textFormat]);
+               this._fromFormatChange = true;
+               button.setSelectedKey(button.getItems().getRecordById(textFormat).get('key'));
+               this._fromFormatChange = false;
             }
          },
 
@@ -278,8 +292,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                this._imagePanel = new ImagePanel({
                   parent: button,
                   target: button.getContainer(),
-                  corner: 'tr',
-                  closeByExternalClick: true,
                   verticalAlign: {
                      side: 'top',
                      offset: -10
@@ -305,7 +317,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _setFontStyle: function(style) {
-            if (this._options.linkedEditor) {
+         //_fromFormatChange - означает, что формат сменился под курсором и не нужно применять стиль
+            if (this._options.linkedEditor && !this._fromFormatChange) {
                this._options.linkedEditor.setFontStyle(style);
             }
          },
@@ -334,9 +347,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
-         _pasteFromBufferWithStyles: function(onAfterCloseHandler, target) {
+         _pasteFromBufferWithStyles: function(onAfterCloseHandler, target, saveStyles) {
             if (this._options.linkedEditor) {
-               this._options.linkedEditor.pasteFromBufferWithStyles(onAfterCloseHandler, target);
+               this._options.linkedEditor.pasteFromBufferWithStyles(onAfterCloseHandler, target, saveStyles);
             }
          },
 
@@ -361,6 +374,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          destroy: function() {
             this._toggleToolbarButton.unbind('click');
             this._toggleToolbarButton = null;
+            if (this.getItems().getRecordById('style') && this._pickerOpenHandler) {
+               this._styleBox.unsubscribe('onPickerOpen', this._pickerOpenHandler);
+               this._pickerOpenHandler = null;
+            }
             RichEditorToolbar.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
          }

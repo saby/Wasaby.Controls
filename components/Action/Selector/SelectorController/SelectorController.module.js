@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
        var SelectorController = CompoundControl.extend([], /**@lends SBIS3.CONTROLS.SelectorController.prototype  */{
            /**
             * @event onSelectComplete Происходит при выборе элементов коллекции.
-            * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+            * @param {Core/EventObject} eventObject Дескриптор события.
             * @param {Array.<String>} Набор выбранных элементов (см. {@link selectedItems}).
             */
           $protected: {
@@ -114,9 +114,9 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
           _modifyOptions: function() {
              var opts = SelectorController.superclass._modifyOptions.apply(this, arguments);
-             opts.className += ' controls-SelectorController';
+             opts.cssClassName += ' controls-SelectorController';
              if(opts.multiselect) {
-                opts.className += ' ' + MULTISELECT_CLASS;
+                opts.cssClassName += ' ' + MULTISELECT_CLASS;
              }
              return opts;
           },
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                    if(currentItems.getCount() && !multiselect && index === -1) {
                       index = 0;
                    }
-
+                   item = item.clone();//клонируем итем что бы у него не менялся владелец
                    if(index === -1) {
                       currentItems.add(item);
                    } else {
@@ -212,10 +212,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
               dataSource = options.dataSource;
 
           return Query(dataSource, [
-             options.filter || {},
-             {},
+             options.hasOwnProperty('filter') ? options.filter : {},
+             options.hasOwnProperty('sorting') ? options.sorting : {},
              0,
-             25]);
+             options.hasOwnProperty('pageSize') ? options.pageSize : 25]);
        };
 
        return SelectorController;

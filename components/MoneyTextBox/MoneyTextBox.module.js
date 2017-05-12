@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    'use strict';
 
    function formatText(value, integers, maxLength){
-      value = value + "";
+      value = value + '';
 
       value = cDefaultRenders.numeric(
           value,
@@ -73,14 +73,17 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              * </pre>
              * @see text
              */
-             moneyValue: null
+             moneyValue: null,
+             _decimalsPart: '00',
+             _integersPart: '0'
          }
       },
 
       _modifyOptions: function(options){
-         var value;
+         var value,
+             dotPos;
          options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
-         options.className = ' controls-MoneyTextBox';
+         options.cssClassName = ' controls-MoneyTextBox';
 
          value = options.text || options.moneyValue;
          if (value){
@@ -89,25 +92,24 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
                 options.integers,
                 options.maxLength
             );
+             dotPos = options.text.indexOf('.');
+             if(dotPos){
+                 options._integersPart = options.text.substring(0, options.text.length - 3);
+                 options._decimalsPart = options.text.substring(options.text.length - 2);
+             }
          }
          return options;
       },
 
       $constructor: function () {
-         this._decimalsContainer = $('.js-MoneyTextBox__decimals', this.getContainer().get(0));
+         if(!this._decimalsContainer) {
+             this._decimalsContainer = this._getDecimalsContainer();
+         }
       },
 
       _setEnabled: function(enabled){
-         var text = this._inputField.text();
          this._inputField[0].contentEditable = enabled;
-         if(!enabled) {
-            // Рассчеты и отрисовку нужно разделить
-            // TODO сделать это в рамках работы по стандартизации полей ввода
-            this._decimalsContainer[0].innerHTML = text.substring(text.length - 3, text.length);
-            this._setInputValue(this._getIntegerPart(this._getInputValue()));
-         }else{
-            this._setInputValue(this._options.text);
-         }
+         this._setInputValue(this._options.text);
          this._decimalsContainer.toggleClass('ws-hidden', enabled);
          MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
@@ -135,7 +137,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
 
       _setNumericValue: function(value) {
          if (typeof(value) == 'string'){
-            value = value.replace(/\s+/g,"");
+            value = value.replace(/\s+/g,'');
          }
          this._options.numericValue = parseFloat(value);
          this._options.moneyValue = value;
@@ -144,21 +146,43 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _getInputValue: function() {
-         return this._inputField[0].innerHTML;
+         var decimalsPart,
+             value = this._inputField[0].innerHTML;
+
+         if(!this.isEnabled()){
+            decimalsPart = this._decimalsContainer[0].innerHTML;
+            value += decimalsPart;
+         }
+         return value;
       },
 
       _setInputValue: function(value) {
+         value = value + '';
          this._updateCompatPlaceholderVisibility();
-         this._inputField[0].innerHTML = value;
+         if(!this.isEnabled()) {
+            // Рассчеты и отрисовку нужно разделить
+            // TODO сделать это в рамках работы по стандартизации полей ввода
+            if(!this._decimalsContainer){
+               this._decimalsContainer = this._getDecimalsContainer();
+            }
+            this._decimalsContainer[0].innerHTML = value.substring(value.length - 3, value.length);
+            this._inputField[0].innerHTML = this._getIntegerPart(value);
+         }else{
+            this._inputField[0].innerHTML = value;
+         }
       },
 
       _getInputField: function() {
          return $('.js-MoneyTextBox__input', this.getContainer().get(0));
       },
 
-      _getIntegerPart: function(value) {
-         var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
-         return value.substr(0, dotPosition);
+       _getIntegerPart: function(value) {
+        var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
+        return value.substr(0, dotPosition);
+      },
+
+      _getDecimalsContainer: function () {
+        return  $('.js-MoneyTextBox__decimals', this.getContainer().get(0));
       },
 
       _formatText: function(value){

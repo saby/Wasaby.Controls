@@ -207,15 +207,19 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._filterAccordion.setItems(this._filterRecordSet);
          this._updateResetFilterButtons();
       },
-      _onFilterItemChange: function(event, model, index, changes) {
-         if (changes.value !== undefined) {
+      _updateState: function(updateTextValue, updateFilter) {
+         if (updateTextValue) {
+            this.setTextValue(this._prepareTextValue());
+         }
+         if (updateFilter) {
             this._updateFilterProperty();
             if (this._contentInitialized) {
                this._updateResetFilterButtons();
             }
-         } else if (changes.textValue !== undefined) {
-            this.setTextValue(this._prepareTextValue());
          }
+      },
+      _onFilterItemChange: function(event, model, index, changes) {
+         this._updateState(changes.textValue !== undefined, changes.value !== undefined);
       },
       _updateResetFilterButtons: function() {
          var
@@ -355,10 +359,15 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
        * @command resetFilter
        */
       _resetFilter: function() {
+         // Отключаем нотификацию об изменениях, т.к. иначе событие onFilterChange будет стрелять на сброс каждого поля
+         this._filterRecordSet.setEventRaising(false);
          this._filterRecordSet.each(function(item) {
             item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
             item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
          });
+         this._filterRecordSet.setEventRaising(true);
+         // После сброса - сами вызываем пересчёт текущего состояния фильтра и его текстового описания со всеми нотификациями
+         this._updateState(true, true);
          this._notify('onFilterReset', this.getFilter());
       },
       /**

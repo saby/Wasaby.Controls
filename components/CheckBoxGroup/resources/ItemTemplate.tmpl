@@ -1,8 +1,8 @@
 <ws:SBIS3.CONTROLS.CheckBox
-	className="controls-ListView__item"
+	cssClassName="controls-ListView__item"
 	attributes="{{ {
 		'data-hash': projItem.getHash(),
-		'data-id': item.getId()
+		'data-id': getPropertyValue(item, idProperty)
 	} }}"
 	caption="{{getPropertyValue(item, displayProperty)}}"
 />

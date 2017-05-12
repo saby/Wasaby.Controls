@@ -1,0 +1,74 @@
+.controls-ToggleButton__square {
+  .button-default-style(initial);
+  border-color: transparent;
+  background-color: transparent;
+  border-radius: 2px;
+  border-style: solid;
+  border-width: 1px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  user-select: none;
+  .baseline-fix();
+
+  .controls-Button__text {
+    display: none;
+  }
+
+  .controls-Button__icon {
+    position: absolute;
+    left: 3px;
+    top: 50%;
+    margin-top: -8px;
+    margin-left: 0;
+  }
+  &.controls-Checked__checked {
+    background-color: #F3F3F3;
+    border-color: #587AB0;
+  }
+
+  &.controls-ToggleButton-square__medium {
+    height: 28px;
+    width: 28px;
+    line-height: 28px;
+    border-radius: 2px;
+    .controls-Button__icon {
+      left: 1px;
+      margin-top: -12px;
+    }
+  }
+  &.controls-ToggleButton-square__big {
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    border-radius: 2px;
+    .controls-Button__icon {
+      left: 3px;
+      margin-top: -12px;
+    }
+  }
+
+  &.ws-disabled {
+    .controls-Button__icon {
+      color: @icon-color-disabled;
+    }
+  }
+
+  &.ws-disabled {
+    .controls-Button__icon {
+      color: @icon-color-disabled;
+    }
+  }
+}
+
+.ws-is-desktop-platform {
+    .controls-ToggleButton__square:not(.ws-disabled) {
+      &:hover:not(.controls-Checked__checked) {
+        background-color: #F0F5FB;
+        border-color: transparent;
+        .controls-Button__icon {
+          color: #313E78 !important;
+        }
+      }
+    }
+}

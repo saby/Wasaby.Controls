@@ -13,11 +13,11 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
    var PickerMixin = /** @lends SBIS3.CONTROLS.PickerMixin.prototype */{
       /**
        * @event onPickerOpen Происходит при открытии блока.
-       * @param {$ws.proto.EventObject} Дескриптор события.
+       * @param {Core/EventObject} Дескриптор события.
        */
        /**
         * @event onPickerClose Происходит при закрытии блока.
-        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Core/EventObject} Дескриптор события.
         */
       $protected: {
          _picker : null,
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              *    </options>
              * </pre>
              */
-            pickerConfig: undefined
+            pickerConfig: null
          }
       },
 

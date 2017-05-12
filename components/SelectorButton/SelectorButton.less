@@ -1,27 +1,28 @@
 .controls-SelectorButton {
-   .inline-flexbox();
-   align-items: baseline;
-   cursor: @link-cursor;
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
+   .button-default-style();
+   .inline-flexbox();
+   .align-items(center);
 
    &.ws-validation-error {
       outline: @controls-SelectorButton-error-outline;
       outline-offset: -1px;
    }
-
    &.ws-disabled {
       cursor: default;
+      color: @link-disabled-text-color;
       .controls-SelectorButton__cross {
          display: none;
       }
    }
-}
-
-.controls-SelectorButton__icon,
-.controls-SelectorButton__cross {
-   align-self: center;
-   text-decoration: none;
+   .controls-ListView__item:after {
+      content: ',';
+   }
+   
+   .controls-ListView__item:last-child:after {
+      content: none;
+   }
 }
 
 .controls-SelectorButton__icon + .controls-SelectorButton__text:not(.ws-hidden) {
@@ -30,12 +31,11 @@
 
 .controls-SelectorButton__text {
    .text-overflow();
+   .align-self(baseline);
 }
 
-.controls-SelectorButton__withoutCross {
-   .controls-SelectorButton__cross {
-      display: none;
-   }
+.controls-SelectorButton__withoutCross .controls-SelectorButton__cross {
+   display: none;
 }
 
 .controls-SelectorButton__asLink {
@@ -46,24 +46,6 @@
 .ws-is-desktop-platform {
    .controls-SelectorButton__asLink {
       .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-SelectorButton__text);
-   }
-}
-// Для ie, которые плохо поддерживают flexbox =(
-.ws-is-ie10 {
-   .controls-SelectorButton {
-      display: inline-block;
-      white-space: nowrap;
-      vertical-align: middle;
-
-      .controls-SelectorButton__cross,
-      .controls-SelectorButton__icon {
-         margin-top: 4px;
-         vertical-align: top;
-      }
-
-      .controls-SelectorButton__text {
-         display: inline-block;
-      }
    }
 }
 

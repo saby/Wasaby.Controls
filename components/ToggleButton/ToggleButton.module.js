@@ -3,7 +3,7 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.CONTROLS.Checkable', 'html!SBIS3.CONTROLS.ToggleButton', 'css!SBIS3.CONTROLS.ToggleButton', 'css!SBIS3.CONTROLS.IconButton'], function(Button, Checkable, dotTplFn) {
+define('js!SBIS3.CONTROLS.ToggleButton', ['js!WSControls/Buttons/ToggleButton', 'css!SBIS3.CONTROLS.Button', 'css!SBIS3.CONTROLS.ToggleButton'], function(WSToggleButton) {
 
    'use strict';
 
@@ -40,12 +40,19 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!SBIS3.CONTROLS.Button', 'js!SBIS3.
     * </component>
     */
 
-   var ToggleButton = Button.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
-      _dotTplFn: dotTplFn,
+   var ToggleButton = WSToggleButton.extend([], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
       $protected: {
          _options: {
 
          }
+      },
+
+      _modifyOptions: function () {
+         var
+             options = ToggleButton.superclass._modifyOptions.apply(this, arguments);
+
+         options.cssClassName +=  ' controls-ToggleButton__normal controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
+         return options;
       }
    });
 

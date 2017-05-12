@@ -6,11 +6,10 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    "js!SBIS3.CONTROLS.SuggestTextBoxMixin",
    "js!SBIS3.CONTROLS.ChooserMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
-   "html!SBIS3.CONTROLS.SearchForm",
-   "html!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
+   "tmpl!SBIS3.CONTROLS.SearchForm/resources/SearchFormButtons",
    'css!SBIS3.CONTROLS.SearchForm',
    'css!SBIS3.CONTROLS.Suggest'
-], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, dotTplFn, buttonsTpl) {
+], function ( constants,TextBox, SearchMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin, PickerMixin, buttonsTpl) {
 
    'use strict';
 
@@ -19,7 +18,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
     * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
+    *
     * @mixes SBIS3.CONTROLS.SearchMixin
+    * @mixes SBIS3.CONTROLS.SuggestMixin
+    * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
+    * @mixes SBIS3.CONTROLS.ChooserMixin
+    * @mixes SBIS3.CONTROLS.PickerMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MySearchForm
     * @author Крайнов Дмитрий Олегович
     *
@@ -31,14 +36,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
    var SearchForm = TextBox.extend([SearchMixin, PickerMixin, SuggestMixin, SuggestTextBoxMixin, ChooserMixin],/** @lends SBIS3.CONTROLS.SearchForm.prototype */ {
       /**
        * @event onSearch При нажатии кнопки поиска
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
        */
       /**
        * @event onReset При нажатии кнопки отмена (крестик)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
-      _dotTplFn : dotTplFn,
       $protected: {
          _options: {
             afterFieldWrapper: buttonsTpl,
@@ -74,6 +78,12 @@ define('js!SBIS3.CONTROLS.SearchForm', [
             }
          });
       },
+      
+      _modifyOptions: function () {
+         var opts = SearchForm.superclass._modifyOptions.apply(this, arguments);
+         opts.className += ' controls-SearchForm';
+         return opts;
+      },
 
       /**
        * Обработчик поднятия клавиши
@@ -103,6 +113,24 @@ define('js!SBIS3.CONTROLS.SearchForm', [
       _onListItemSelect: function() {
          SearchForm.superclass._onListItemSelect.apply(this, arguments);
          this.applySearch(true);
+      },
+   
+      _setPickerConfig: function() {
+         var config =  SearchForm.superclass._setPickerConfig.apply(this, arguments),
+            self = this;
+      
+         config.parentContainer = this.getContainer().parent();
+         config.className = 'controls-searchForm__suggest';
+         config.closeButton = true;
+         config.handlers = {
+            onShow: function() {
+               self.getContainer().css('z-index', parseInt(self._picker.getContainer().css('z-index'), 10) + 1);
+            },
+            onClose: function() {
+               self.getContainer().css('z-index', '');
+            }
+         };
+         return config;
       },
 
       /**

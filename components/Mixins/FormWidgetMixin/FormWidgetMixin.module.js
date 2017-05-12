@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
 ], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, strHelpers) {
    /**
     * Миксин, который добавляет функционал валидаторов.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/index/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    var FormWidgetMixin = /** @lends SBIS3.CONTROLS.FormWidgetMixin.prototype */{
        /**
         * @event onValidate Происходит при прохождении валидации.
-        * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+        * @param {Core/EventObject} eventObject Дескриптор события.
         * @param {Boolean} result Результат прохождения валидации.
         * @param {Array} errors Массив ошибок валидации.
         * @param {Boolean} previousStatus Предыдущий результат валидации.
@@ -189,8 +189,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             vResult,
             cont = this.getContainer(),
             previousStatus = this._prevValidationResult;
-         this.clearMark();
          if (this._validating || (!this._options.validateIfDisabled && !this.isEnabled()) || !cont || cont.hasClass('ws-hidden') === true) {
+            this.clearMark();
             return true;
          }
 
@@ -217,6 +217,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
 
          if (vResult.errors.length > 0) {
             this.markControl(vResult.errors, true);
+         }
+         else {
+            this.clearMark();
          }
          this._calcPrevValidationResult();
 
@@ -342,7 +345,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                   this._infobox.show({
                      control: target,
                      message: this._alterTooltipText(),
-                     autoHide: true
+                     delay: 0,
+                     hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
                }
             }.bind(this));

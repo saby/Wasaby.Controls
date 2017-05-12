@@ -1,0 +1,326 @@
+html {
+  color: #000;
+}
+body {
+  font-size: 1rem !important;
+}
+
+.controls-SearchForm {
+  .icon-size {
+    font-size: 3rem !important;
+    width: 2rem;
+    height: 3rem;
+  }
+}
+
+.controls-ComboBox {
+  &.controls-Picker__show {
+    border-width: 0;
+    border-style: @text-box-hover-border-style;
+    border-color: @text-box-hover-border-color;
+  }
+}
+
+.controls-ComboBox__picker {
+  .controls-ComboBox__itemRow {
+    &.controls-ComboBox__itemRow__selected {
+      font-weight: bold;
+    }
+  }
+}
+
+.controls-Button__closeButton {
+   display: inline-block;
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
+   background: @closeButtonImage;
+   &:hover {
+      background: @closeButtonImageHover;
+   }
+   &:active {
+      background: @closeButtonImageHover;
+   }
+}
+
+.controls-PopupMixin__closeButton {
+  position: absolute;
+  top: 10px;
+  right: @controls-Popup-closeButton-right;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  background: @closeBigButtonImage;
+  &:hover {
+    background: @closeBigButtonImageHover;
+  }
+  &:active {
+    background: @closeBigButtonImageHover;
+  }
+  z-index: 1;
+}
+
+.controls-Button {
+  white-space: normal;
+   padding-bottom: 0; // FF only
+}
+
+.icon-24() {
+  font-size: 1.785rem !important;
+  line-height: 1.785rem !important;
+  width: 1.785rem;
+  height: 1.785rem;
+  font-family: 'cbuc-icons24' !important;
+}
+@text-box-height-prestoBig:   50px;
+@text-box-height-prestoFont:  36px;
+.controls-TextBox {
+   &.controls-TextBox__big {
+
+   }
+}
+
+
+
+.controls-listView td {
+  font-size: 1rem;
+}
+body {
+  .icon-16 {
+    font-size: 1.32rem !important;
+    line-height: 1.32rem !important;
+    width: 1.32rem;
+    height: 1.32rem;
+  }
+  .icon-24 {
+    font-size: 1.7857rem !important;
+    height: 1.7857rem !important;
+    width: 1.7857rem !important;
+    line-height: 1.7857rem !important;
+
+  }
+  .icon-32 {
+
+        font-size: 3rem!important;
+        height: 3rem!important;
+        width: 3rem!important;
+        line-height: 3rem !important;
+
+  }
+}
+
+.controls-ListView__scrollPager {
+  height: 3rem !important;
+}
+.control-Paging__btn  {
+  border: 2px solid #26b8ff;
+}
+.ws-moneyDecorator {
+  &__integer{
+    font-size: @money-decorator-integer-font-size;
+    color: @money-decorator-integer-font-color;
+    &__AccentResults{
+      font-size: @money-decorator-integer-accent-results-font-size;
+      color: @money-decorator-integer-accent-results-font-color;
+      font-weight: @money-decorator-integer-accent-results-font-weight;
+    }
+    &__NoAccentResults{
+      font-size: @money-decorator-integer-no-accent-results-font-size;
+      color: @money-decorator-integer-no-accent-results-font-color;
+      font-weight: @money-decorator-integer-no-accent-results-font-weight;
+    }
+    &__Group{
+      font-size: @money-decorator-integer-group-font-size;
+      color: @money-decorator-integer-group-font-color;
+    }
+    &__BasicRegistry{
+
+    }
+    &__NoBasicRegistry{
+      font-size: @money-decorator-integer-no-basic-registry-font-size;
+      color: @money-decorator-integer-no-basic-registry-font-color;
+    }
+    &__AccentRegistry{
+      font-size: @money-decorator-integer-accent-registry-font-size;
+      color: @money-decorator-integer-accent-registry-font-color;
+      font-weight: @money-decorator-integer-accent-registry-font-weight;
+    }
+    &__NoAccentRegistry{
+      font-size: @money-decorator-integer-no-accent-registry-font-size;
+      color: @money-decorator-integer-no-accent-registry-font-color;
+      font-weight: @money-decorator-integer-no-accent-registry-font-weight;
+    }
+  }
+  &__fraction{
+    font-size: .857rem;
+    color: #8991A9;
+    line-height: normal;
+    font-weight: normal !important;
+  }
+}
+.controls-Link.controls__filter-button__clear-filter.ws-disabled {
+  font-size: 1.14rem;
+}
+
+
+body {
+  .ws-window-titlebar {
+    color: @default-text-color;
+    line-height: 3.57rem;
+    height: 3.57rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 1.43rem;
+    white-space: nowrap;
+    -moz-box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+  }
+  &.ws-window-titlebar-custom {
+    position: relative;
+    height: 2rem !important;
+    .ws-float-area-title {
+      line-height: 1rem !important;
+    }
+  }
+  .ws-float-area-title {
+      font-size: 1.43rem!important;
+      font-weight: normal !important;
+  }
+}
+.controls-FloatArea {
+  border: 2px solid #2196F3;
+  background: #fff;
+}
+body {
+  .controls__filter-button__clear-filter {
+    font-size: 1.14rem;
+
+    &:hover {
+      color: #26b8ff !important;
+    }
+  }
+  .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+    width: 3rem !important;
+    height: 3rem !important;
+    background: @closeBigButtonImage;
+    &:hover {
+      background: @closeBigButtonImageHover;
+    }
+    &:active {
+      background: @closeBigButtonImageHover;
+    }
+}
+
+}
+.controls-ComboBox.controls-TextBox.controls-Picker__show {
+  border-bottom: none;
+}
+
+
+ .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
+
+    background: #FF7033;
+}
+.controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
+  border-color: #26b8ff;
+}
+
+
+body .ws-loadingimg {
+  top: 30%;
+}
+
+body {
+
+  .ws-float-area-title-generated {
+      line-height: 3.57rem;
+  }
+  .ws-float-area-title {
+    padding-left: .857rem;
+  }
+  .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+    height: 3.57rem;
+
+      .ws-float-area-title {
+        line-height: 3.57rem;
+      }
+  }
+  .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+
+    font-size: 1.14rem;
+
+  }
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    width: 1.43rem !important;
+    height: 1.43rem !important;
+    font-size: 1.43rem !important;
+     border: none !important;
+    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+        font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+    }
+
+    .controls-DateBox {
+      min-height: 3rem;
+    }
+
+}
+
+.controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+  display: none;
+}
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
+    height: 3.57rem;
+}
+
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+    font-size: inherit !important;
+
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+         font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+       font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    margin-right: 1rem;
+  }
+}
+
+ .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
+     margin-left: 2.4rem !important;
+ }
+  .controls-Button .controls-Button__icon.icon-large + .controls-Button__text {
+      margin-left: 2.4rem !important;
+  }
+body .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
+    padding-left: .5rem;
+}
+body .controls-BackButton {
+  line-height: 3.64rem;
+}
+
+body .ws-float-area-nostack-panel-shadow-standart {
+    border: 1px solid #2e404f;
+    background: #2e404f;
+}
+.controls-editInPlace .controls-editInPlace__editor {
+  background: @basic-block-bg-color;
+}
+.controls-ListView .controls-ItemsToolbar__editActions {
+    background: @basic-block-bg-color;
+}
+
+body .ws-float-area-title-generated {
+    margin-right: 3rem;
+}

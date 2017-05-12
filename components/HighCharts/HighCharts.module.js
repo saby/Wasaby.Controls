@@ -9,11 +9,12 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "html!SBIS3.CONTROLS.HighCharts",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
-   "browser!/cdn/highcharts/4.2.3/highcharts-more-min.js",
+   'Core/helpers/fast-control-helpers',
+   "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers){
+function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers, fcHelpers){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -798,7 +799,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
 
 
                   /*если стоит автообновление из контекста*/
-                  if (filter.refresh) {
+                  if (!this._isRefresh && filter.refresh) {
                      this._isRefresh = true;
                      /* Первое на смену поля в контексте. Второе на смену рекорда во всплывающей панели
                      *  из-за WS приходится делать два разных события*/
@@ -1166,7 +1167,15 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
             self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();
-         }, self)).addErrback(fHelpers.forAliveOnly(function(){
+         }, self)).addErrback(fHelpers.forAliveOnly(function(error){
+
+            if (error instanceof Error && !error.canceled) {
+               if (!error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
+                  error.message = error.message.toString().replace('Error: ', '');
+                  fcHelpers.alert(error);
+                  error.processed = true;
+               }
+            }
             throw new Error(rk('Ошибка получения данных для диаграммы'));
          }, self));
 
@@ -1197,9 +1206,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
          if (this._chartObj) {
             this._chartObj.destroy();
          }
-         if (this._dataSource) {
-            this._dataSource.destroy();
-         }
+         this._dataSource = null;
          dcHelpers.trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }

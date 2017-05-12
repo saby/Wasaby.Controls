@@ -17,13 +17,13 @@ define('js!SBIS3.CONTROLS.SearchMixin',
    var SearchMixin = /**@lends SBIS3.CONTROLS.SearchMixin.prototype  */{
       /**
        * @event onSearch При поиске
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} text Текст введенный в поле поиска
        * @param {String} forced Срабатывание события было без задержки (searchDelay)
        */
       /**
        * @event onReset При нажатии кнопки отмена (крестик)
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected: {
          //Чтобы событие onReset не отправлялось непрерывно
@@ -75,6 +75,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
             var text = this.getText();
             if(text && text.length >= this._options.startCharacter) {
                this._onResetIsFired = false;
+               this._searchText = text;
             }
          }
       },

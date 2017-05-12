@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       /**
        * @event onFilterBuild Происходит после построения фильтра.
        * Событие происходит после построения фильтра, который будет передан в контрол, отображающий список значений для автодополнения.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} filter Собранный фильтр.
        * @param {Object} bindings Карта соответствия поле контекста -> поле фильтра.
        */
@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @event onListReady Происходит при готовности контрола списка сущностей.
        * Событие происходит после создания экземпляра класса контрола, отображающего список значений для автодополнения и
        * проведения настроек по его привязке.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {SBIS3.CORE.Control} list Контрол списка сущностей.
        */
 
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @event onListItemSelect Происходит перед применением выбранной записи к полям контекста.
        * Событие происходит просле выбора пользователем записи в контроле списка сущностей, перед моментом присваивания
        * значений из полей записи полями контекста.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {SBIS3.CONTROLS.Record} item Выбранная запись.
        * @param {Object} bindings Карта соответствия: поле контекста -> поле записи.
        */
@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       around: {
          _modifyOptions: function(parentFnc, opts) {
             var options = parentFnc.call(this, opts);
-            options.className += ' controls-Suggest';
+            options.cssClassName += ' controls-Suggest';
             options.pickerClassName += ' controls-Suggest__picker';
             return options;
          }
@@ -653,10 +653,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       _showAllButtonHandler: function() {
-         var showAllConfig = this._getShowAllConfig();
-
          this.hidePicker();
-         this._showChooser(showAllConfig.template, showAllConfig.componentOptions, showAllConfig.selectionType || null);
+         this.showSelector(this._getShowAllConfig());
       },
 
       /**
@@ -778,6 +776,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             });
 
             this._listReversed = !this._listReversed;
+            /* Сбрасываем выбранную запись в списке, чтобы после перерисовки курсор установился на первую запись
+             и после переворота был на последней.
+             Если запись не сбрасывать курсор будет вверху после переворота. */
+            this.getList().setSelectedKey(null);
             items.assign(itemsArray.reverse());
          }
       }

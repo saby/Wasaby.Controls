@@ -159,6 +159,17 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          /**
+          * Если не прошла валидация - включаем режим отображения редакторов  
+          */
+         validate: function(){
+            var result = EditAtPlace.superclass.validate.apply(this, arguments);
+            if (!result) {
+               this.setInPlaceEditMode(true);
+            }
+            return result;
+         },
+
+         /**
           * При потере полем редактирования фокуса вызываем завершение редактирования
           * @private
           */
@@ -257,6 +268,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (inPlace) {
                this._notify('onShowEditor');
             }
+            this._notifyOnSizeChanged(this, this, true);
          },
 
          _cancelEdit: function () {

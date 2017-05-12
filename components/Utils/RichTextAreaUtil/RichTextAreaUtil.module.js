@@ -60,7 +60,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             oldOrphans = event.target.style.orphans;
          //согласно документации https://developer.mozilla.org/ru/docs/Web/API/Selection/focusNode
          //focusNode является узлом на котором закончилось выделение
-         if (document.getSelection() && $.contains(event.currentTarget , document.getSelection().focusNode)) {
+         //$.contains(node,node) вернет false, необходимо дополнительно проверить равеноство узлов
+         if (document.getSelection() && ($.contains(event.currentTarget , document.getSelection().focusNode)  || event.currentTarget  === document.getSelection().focusNode)) {
             //orphans = '31415' - метка показывающая что содержимое было скопировано из богатого редактора
             event.target.style.orphans = '31415'; //Pi
             setTimeout(function() {
@@ -82,7 +83,12 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                      var
                         className = getAttribute(content.childNodes[i], 'class');
                      //3 if-блока для поддержки разных версий декорированных ссылок
-                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink') {
+                     //LinkDecorator - версия января 2017
+                     //LinkDecorator__simpleLink - тег <a> с ссылкой
+                     //LinkDecorator__linkWrap - если выделили только одну декорированную ссылку и пытаются её вставить данный класс висит на <a>
+                     //LinkDecorator__decoratedLink - версия февраля 2017
+                     //LinkDecorator__wrap - актуальная версия
+                     if (className === 'LinkDecorator__link' || className == 'LinkDecorator' || className == 'LinkDecorator__simpleLink'|| className == 'LinkDecorator__linkWrap') {
                         replaceToHref(content, i);
                      } else if (className == 'LinkDecorator__decoratedLink'){
                         content.childNodes.splice(i, 1);
@@ -117,17 +123,23 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                   href,
                   node,
                   linkNode,
+                  imageNode,
                   i = 0;
                while (i < content.childNodes[index].childNodes.length) {
                   var
                      className = getAttribute(content.childNodes[index].childNodes[i], 'class');
                   if (className == 'LinkDecorator__linkWrap'){
+                     var
+                        linkChild = content.childNodes[index].childNodes[i].childNodes[0];
                      linkNode = content.childNodes[index].childNodes[i];
+                     if (linkChild && linkChild.nodeName === 'img' ) {
+                        imageNode = linkChild;
+                     }
                      break;
                   }
                   i++;
                }
-               href = getAttribute(linkNode, 'href');
+               href = linkChild ? getAttribute(linkChild, 'alt') : getAttribute(linkNode, 'href');
                node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
                content.childNodes[index] = node;
             };

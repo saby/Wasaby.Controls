@@ -1,13 +1,13 @@
 
 define('js!SBIS3.CONTROLS.CheckBox', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.ButtonBase",
+   "js!WSControls/Buttons/ButtonBase",
    "js!SBIS3.CONTROLS.Checkable",
    "tmpl!SBIS3.CONTROLS.CheckBox",
    "tmpl!SBIS3.CONTROLS.CheckBox/resources/ContentTemplate",
    "js!SBIS3.CONTROLS.ITextValue",
    'css!SBIS3.CONTROLS.CheckBox'
-], function( constants,ButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
+], function( constants,WSButtonBase, Checkable, dotTplFn, defaultContentTemplate, ITextValue) {
 
    'use strict';
    var prepareChecked = function(checked, threeState) {
@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     * </ol>
     * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
     * @class SBIS3.CONTROLS.CheckBox
-    * @extends SBIS3.CONTROLS.ButtonBase
+    * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
     * @author Крайнов Дмитрий Олегович
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     * </component>
     */
 
-   var CheckBox = ButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
+   var CheckBox = WSButtonBase.extend([Checkable, ITextValue], /** @lends SBIS3.CONTROLS.CheckBox.prototype */ {
       _dotTplFn : dotTplFn,
       $protected: {
          _checkBoxCaption: null,
@@ -81,10 +81,10 @@ define('js!SBIS3.CONTROLS.CheckBox', [
       },
 
       _modifyOptions: function() {
-         var
-             cfg = CheckBox.superclass._modifyOptions.apply(this, arguments);
-         cfg._contentTemplate = cfg.contentTemplate || defaultContentTemplate;
-         return cfg;
+         var options = CheckBox.superclass._modifyOptions.apply(this, arguments);
+         options.contentTemplate = options.contentTemplate || defaultContentTemplate;
+
+         return options;
       },
 
       $constructor: function() {

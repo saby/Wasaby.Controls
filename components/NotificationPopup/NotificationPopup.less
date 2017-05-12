@@ -3,7 +3,11 @@
    border-left: @controls-NotificationPopup-border-left;
    border-right: @controls-NotificationPopup-border-right;
    border-bottom: @controls-NotificationPopup-border-bottom;
+}
+
+.controls-NotificationPopup_popup {
    max-width: @controls-NotificationPopup-max-width;
+   min-width: @controls-NotificationPopup-min-width;
 }
 
 .controls-NotificationPopup__header {
@@ -25,4 +29,7 @@
 .controls-NotificationPopup__header_caption{
    font-size: @controls-NotificationPopup-header-caption-font-size;
    .flex-shrink();
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   overflow: hidden;
 }

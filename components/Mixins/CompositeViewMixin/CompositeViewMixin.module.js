@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    var MultiView = /** @lends SBIS3.CONTROLS.CompositeViewMixin.prototype */{
        /**
         * @event onViewModeChanged Происходит при изменении режима отображения {@link mode}.
-        * @param {$ws.proto.EventObject} Дескриптор события.
+        * @param {Core/EventObject} Дескриптор события.
         */
       _dotTplFn : dotTplFn,
       $protected: {
@@ -309,7 +309,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          this.setItemsDragNDrop(false);
          this._options.viewMode = mode;
          this.setItemsDragNDrop(dragndrop);
-         this._options.openedPath = {};
          this._drawViewMode(mode);
          this._notify('onViewModeChanged');
       },
@@ -360,7 +359,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
       _calculateTileWidth: function(){
          var itemsContainer = this._getItemsContainer(),
             tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__item-type-node)', itemsContainer),
-            folders = $('.controls-ListView__type-true', itemsContainer);
+            folders = $('.controls-ListView__item-type-node', itemsContainer);
          if (!this._tileWidth) {
             this._tileWidth = $(tiles[0]).width();
          }

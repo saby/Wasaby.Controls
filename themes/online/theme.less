@@ -1,7 +1,7 @@
 @themeName: 'online';
 .body {
-  font-family: @font-basic-name;
-  font-size: @font-basic-size;
+  font-family: @default-font-name;
+  font-size: @default-font-size;
 }
 
 .icon-size {
@@ -12,35 +12,6 @@
    text-transform: none;
    line-height: 1;
    display: inline-block;
-}
-.controls-Button.controls-Button__withoutCaption {
-   width: 48px;
-   .controls-Button__icon{
-      left: 16px;
-   }
-   .controls-Button__icon{
-      &.icon-24 {
-         left: 11px;
-      }
-      &.icon-32 {
-         left: 9px;
-      }
-
-   }
-   .controls-Button__text {
-      visibility: hidden;
-   }
-}
-.controls-Button.controls-Checked__checked.controls-Button__withoutCaption {
-   .controls-Button__icon{
-      left: 15px;
-   }
-   .controls-Button__icon{
-      &.icon-24 {
-         left: 11px;
-      }
-
-   }
 }
 
 .controls-PopupMixin__closeButton {
@@ -117,8 +88,7 @@
 
 
 .controls-TreePager-container {
-   float: left;
-   padding-left: 18px;
+   padding: 6px 0 3px 16px;
 }
 .controls-CompositeView.controls-CompositeView-tile .controls-TreePager-container, .controls-CompositeView.controls-CompositeView-list  .controls-TreePager-container{
    display: none;
@@ -140,7 +110,7 @@
    border-color: @menu-border-color;
 }
 
-.controls-Popup__touchScroll-fix .controls-ScrollContainer__content {
+.controls-Popup__touchScroll-fix .controls-ScrollContainer__content, .controls-Menu__Popup {
    -webkit-overflow-scrolling: touch!important;
 }
 
@@ -185,5 +155,6 @@
       font-size: @money-decorator-fraction-font-size;
       color: @money-decorator-fraction-font-color;
       line-height: normal;
+      font-weight: normal !important;
    }
 }

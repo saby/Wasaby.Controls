@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [
    "Core/core-functions",
-   "js!WS.Data/Relation/Hierarchy"
-], function ( cFunctions,Hierarchy) {
+   "js!WS.Data/Relation/Hierarchy", 'Core/IoC'
+], function ( cFunctions,Hierarchy, IoC) {
 
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
        * При каждой загрузке данных, например вызванной методом {@link SBIS3.CONTROLS.ListView#reload}, происходит событие onSetRoot.
        * В этом есть необходимость, потому что в переданных данных может быть установлен новый path - путь для хлебных крошек (см. {@link WS.Data/Collection/RecordSet#meta}).
        * Хлебные крошки не перерисовываются, так как корень не поменялся.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} curRoot Идентификатор узла, который установлен в качестве текущего корня иерархии.
        * @param {Array.<object>} hierarchy Массив объектов, каждый из которых описывает узлы иерархии установленного пути.
        * Каждый объект содержит следующие свойства:
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
        * @event onBeforeSetRoot Происходит при установке текущего корня иерархии.
        * @remark
        * Событие может быть инициировано при использовании метода {@link setCurrentRoot}.
-       * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+       * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String|Number|Null} key Идентификатор узла иерархии, который нужно установить. Null - это вершина иерархии, в наборе данных отображены только те записи, которые являются родительскими для других.
        * @see onSetRoot
        */
