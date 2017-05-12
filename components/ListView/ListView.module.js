@@ -1872,6 +1872,9 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          toggleCheckboxes: function(toggle) {
+            // Лучшего решения сейчас нет. Редактирование по месту позиционируется абсолютно и размеры свои менять не может.
+            // При переключении видимости чекбоксов у таблицы меняются размеры и блок с редактированием позиционируется неправильно.
+            this._cancelEdit();
             this._container.toggleClass('controls-ListView__hideCheckBoxes', !toggle);
             this._notifyOnSizeChanged(true);
          },
@@ -3540,9 +3543,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _cancelEdit: function() {
-            return this._getEditInPlace().addCallback(function(editInPlace) {
-               return editInPlace.endEdit();
-            });
+            if (this._hasEditInPlace()) {
+               return this._getEditInPlace().addCallback(function(editInPlace) {
+                  return editInPlace.endEdit();
+               });
+            } else {
+               return Deferred.success();
+            }
          },
          /**
           * Завершает редактирование по месту с сохранением изменений.

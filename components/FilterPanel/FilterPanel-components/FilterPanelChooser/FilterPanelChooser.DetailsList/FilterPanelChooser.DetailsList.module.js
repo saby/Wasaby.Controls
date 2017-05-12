@@ -42,6 +42,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
          this._updateValue();
       },
 
+	  _elemClickHandler: function(e, id) {
+		 var
+			view = this._getListView();
+		 FilterPanelChooserDetailsList.superclass._elemClickHandler.apply(this, arguments);
+		 view.redrawItem(view.getItems().getRecordById(id));
+	  },
+	  
       init: function() {
          var
             self = this;
@@ -82,6 +89,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
                }
             }
          ];
+         opts.value.forEach(function(value) {
+            opts.properties.items.getRecordById(value.id).set('hierarchy', value.hierarchy);
+         });
          properties.dataSource = new Memory({
             data: opts.properties.items.getRawData(),
             idProperty: opts.properties.idProperty
