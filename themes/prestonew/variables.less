@@ -18,6 +18,8 @@
 @innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
+@icon-color-primary:                      @default-text-color;
+@icon-active-color:                       @default-hover-color;
 
 @icon-small-size:                         1.32rem;
 @icon-medium-size:                        1.7857rem;
@@ -40,7 +42,7 @@
 @darkcyan-color: 							#8991A9;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-@default-border-width:					  1px;
+@default-border-width:					  2px;
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
@@ -83,6 +85,14 @@
 @icon-button-border-width:              0.072rem;
 
 
+@list-view-items-toolbar-icon-button-border-width: 0;
+@list-view-items-toolbar-icon-button-border-radius: 0;
+@list-view-items-toolbar-icon-button-border-font-size: @icon-large-size;
+
+@icon-button-edit-round-border-height:             @icon-large-size;
+@icon-button-edit-round-border-width:              @icon-large-size;
+@icon-button-edit-round-border-line-height:        @icon-large-size;
+
 // ------ //
 // Button //
 // ------ //
@@ -114,6 +124,10 @@
 @FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 0.86rem;
 @FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -0.86rem;
 @FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -0.86rem;
+
+
+@closeButtonImage:                              url('img/areaBigCloseButton.png') 0 0;
+@closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -3rem;
 
 // ------------------ //
 // FilterPanelChooser //
@@ -1043,6 +1057,16 @@
 // --------------- //
 @DropdownList-border-color:                   #e4e4e4;
 
+//ProgressBar
+@controls-ProgressBar-height:             37px;
+@controls-ProgressBar-first-color:        #26B8FF;
+@controls-ProgressBar-last-color:         @controls-ProgressBar-first-color;
+@controls-ProgressBar-border-color:       rgba(102, 170, 221, .15);;
+@controls-ProgressBar-background-color:   #354B62;
+@controls-ProgressBar-border-radius:      0;
+@controls-ProgressBar-value-font-size:    28px;
+@controls-ProgressBar-value-color:        @default-text-color;
+
 //Pager
 @controls-Pager-amount-text :                     #999999;
 
@@ -1104,8 +1128,8 @@
 @controls-FieldLink-linkItem-padding:              0 17px 0 .14rem;
 @controls-FieldLink-linkItem-caption-height:       1.75rem;
 @controls-FieldLink-linkItem-cross-width:          20px;
-@controls-FieldLink-linkItem-cross-right:          -.14rem;
-@controls-FieldLink-linkItem-cross-top:            -3px;
+@controls-FieldLink-linkItem-cross-right:          0;
+@controls-FieldLink-linkItem-cross-top:            .5rem;
 
 @controls-FieldLink-afterField-padding:            0 .14rem 0 0;
 @controls-FieldLink-afterField-height:             3rem;
@@ -1176,7 +1200,7 @@
 @controls-InformationPopup-border-right:        @controls-InformationPopup-border;
 
 //SubmitPopup
-@controls-SubmitPopup-button-min-width:         11.3rem;
+@controls-SubmitPopup-button-min-width:         10rem;
 @controls-SubmitPopup-button-height:            3rem;
 @controls-SubmitPopup-border-top:               none;
 @controls-SubmitPopup-border-bottom:            none;
@@ -1261,3 +1285,4 @@
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
+@controls-FieldLink-picker-show-color:		#243548;

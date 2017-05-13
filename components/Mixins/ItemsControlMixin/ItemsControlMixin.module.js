@@ -100,6 +100,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       return projection;
    },
+   applyFilterToProjection = function(projection, cfg) {
+      if (cfg.itemsFilterMethod) {
+         projection.setFilter(cfg.itemsFilterMethod);
+      }
+   },
 
    _oldGroupByDefaultMethod = function (record, at, last, item) {
       var curField = record.get(this._options.groupBy.field),
@@ -336,6 +341,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
             _applyGroupingToProjection: applyGroupingToProjection,
+            _applyFilterToProjection: applyFilterToProjection,
 
             _groupItemProcessing: groupItemProcessing,
             /*TODO ременные переменные для группировки*/
@@ -714,6 +720,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   newCfg._items = parsedCfg._items;
                   /*TODO убрать этот код с переходом на легкие инстансы. В текущей реализации методы не могут нормально сериализоваться при построении на сервере*/
                   applyGroupingToProjection(newCfg._itemsProjection, newCfg);
+                  newCfg._applyFilterToProjection(newCfg._itemsProjection, newCfg);
                } else {
                   if (newCfg.items instanceof Array) {
                      if (!newCfg.idProperty) {

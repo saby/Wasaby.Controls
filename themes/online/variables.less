@@ -295,6 +295,13 @@
 @border-radius:                         14px;
 @icon-button-border-width:              1px;
 
+@list-view-items-toolbar-icon-button-border-width:      @icon-button-border-width;
+@list-view-items-toolbar-icon-button-border-radius:     @border-radius;
+@list-view-items-toolbar-icon-button-border-font-size:  16px;
+@icon-button-edit-round-border-height:             24px;
+@icon-button-edit-round-border-width:              24px;
+@icon-button-edit-round-border-line-height:        24px;
+
 
 // ------------- //
 // Toggle button //
@@ -2104,16 +2111,19 @@
 @DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
 
 //ProgressBar
-@controls-ProgressBar-height:                     17px;
-@controls-ProgressBar-empty-bg:                   #F3F3F3;
-@controls-ProgressBar-progress-bg:                #A2E68C;
-@controls-ProgressBar-progress-bg-grad:           linear-gradient(to top, #8DCF66, #B6F5A9);
-@controls-ProgressBar-border-radius:              8px;
-@controls-ProgressBar-side-space:                 40px;
+@controls-ProgressBar-height:             16px;
+@controls-ProgressBar-first-color:        @blue-dark-color;
+@controls-ProgressBar-last-color:         #61B1EE;
+@controls-ProgressBar-border-color:       @gray-light-color;
+@controls-ProgressBar-background-color:   @gray-f4f4f4-color;
+@controls-ProgressBar-border-radius:      3px;
+@controls-ProgressBar-value-padding:      0 6px;
+@controls-ProgressBar-value-font-size:    @small-text-size;
+@controls-ProgressBar-value-color:        @disabled-color;
 
 //Pager
-@controls-Pager-amount-text : @gray-color;//FilterButton
-@controls-Pager-minHeight:                        35px;
+@controls-Pager-amount-text:              @gray-color;
+@controls-Pager-minHeight:                35px;
 
 //FilterButton
 @filter-button-font-size:							inherit;

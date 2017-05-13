@@ -93,9 +93,6 @@ body {
 .ws-window-content {
   background-color: #202835 !important;
 }
-body .ws-enabled .icon-primary{
-  color: #e4e4e4 !important;
-}
 .controls-listView td {
   font-size: 1rem;
 }
@@ -126,8 +123,9 @@ body {
     color: #2C3E50;
   background: #e4e4e4;
 }
-.controls-ListView__scrollPager {
+body .controls-ListView__scrollPager {
   height: 3rem !important;
+  background: #2e404f;
 }
 .control-Paging__btn  {
   border: 2px solid #26b8ff;
@@ -389,4 +387,19 @@ body .ws-info-box .ws-infobox-content p {
 }
 .controls-Link__field {
   vertical-align: middle;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
+    font-size: 1.14rem;
+    height: 3.57rem;
+    color: #000;
+    line-height: 3.57rem;
+}
+body .ws-float-area-stack-panel-shadow {
+    border-left: 2px solid #00a2ef;
+    border-color: #00a4f0;
+    border-width: 0 0 0 2px;
+    border-style: solid;
+    -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+    -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+    box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
 }
