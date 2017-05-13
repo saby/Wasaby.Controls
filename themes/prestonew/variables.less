@@ -29,7 +29,6 @@
 @black-color:                             #333;
 @gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
-@default-text-color:                      #e4e4e4;
 @primary-color:                           #FF7033;
 @secondary-color:                         #4e5762;
 @back-button-caption-hover-color : rgb(185, 233, 255);
@@ -658,7 +657,7 @@
 
 @combo-box-arrow-active-border-width:           10px 10px 0 10px;
 @combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
-@combo-box-field-text-color : #314559;
+@combo-box-field-text-color : 					@default-text-color;
 @text-box-border-color: #314559 #314559 #314559 #314559;;
 @combo-box-arrow-active-hover-border-width:     @combo-box-arrow-active-border-width;
 @combo-box-arrow-active-hover-border-style:     @combo-box-arrow-active-border-style;
@@ -921,7 +920,7 @@
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px .07rem 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                1.75rem;
 @list-view-items-toolbar-vertical-line-height:       0.86rem;
-@list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
+@list-view-items-toolbar-locked-bg:                  transparent;
 @list-view-items-toolbar-icon-size:                  1.785rem;
 @touch-mode-items-toolbar-icon-margin-top:           -0.86rem;
 @list-view-actions-active-bg: @data-grid-bg;
@@ -1276,3 +1275,4 @@
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
 @controls-FieldLink-picker-show-color:		#243548;
+@controls-editInPlace-editor-bg:			transparent;
