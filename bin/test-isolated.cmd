@@ -1,7 +1,8 @@
-rem Run testing via Node.js
+echo *** Run unit tests via Node.js ***
 
 node -v
 call npm install
 
-node build
-node node_modules/ws-unit-testing/mocha -t 10000 -R xunit test-report
+node depencyCollector
+node tests/unit/list.build
+node mocha -t 10000 -R XUnit tests/unit/isolated.run
