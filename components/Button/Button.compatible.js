@@ -6,6 +6,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 ], function (cConstants) {
    'use strict';
 
+   /**
+    * В этом файле собраны методы, работающие с домом и со старой архитектурой WS
+    */
    if (typeof window !== 'undefined') {
       $(document).on("touchend  mouseup", function () {
          $('.controls-Click__active').removeClass('controls-Click__active');
@@ -18,6 +21,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       iWantVDOM: true,
 
 
+      /*TODO: Удалить при переходе на VDOM*/
       _containerReady:function(container){
          if (window) {
             container.on('click', this._onClickHandler.bind(this));
@@ -43,6 +47,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
       },
 
+      /**
+      * Далее в файле идут методы для сохранения старого АПИ
+      */
       _drawIcon: function(icon){
          this.setIcon(icon);
       },
@@ -111,6 +118,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          if (!this._options.enabled)
             return;
 
+         this._container.removeClass('controls-Click__active');
+
+         if (!this._isControlActive) {
+            this.setActive(true);
+         }
 
          if (!!this._options.command) {
             var args = [this._options.command].concat(this._options.commandArgs);

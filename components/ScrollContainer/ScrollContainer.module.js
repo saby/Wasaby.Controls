@@ -25,7 +25,54 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              FloatAreaManager,
              StickyHeaderManager,
              compatibility) {
+      'use strict';
 
+
+      /**
+       * Контрол представляющий из себя контейнер для контента с тонким скроллом.
+       * Тонкий скролл {@link SBIS3.CONTROLS.Scrollbar}
+       *
+       * @class SBIS3.CONTROLS.ScrollContainer
+       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
+       * @extends SBIS3.CONTROLS.CompoundControl
+       * @author Крайнов Дмитрий Олегович
+       *
+       * @example
+       * Использование ScrollContainer с вложенным в него ListView, и настройкой автоподгрузки вниз.
+       * @remark Для  работы ScrollContainer требуется установить height или max-height.
+       * Если установить height, то тонкий скролл появится, когда высота контента станет больше установленной
+       * вами высоты ScrollContainer. Если установить max-height, то ScrollContainer будет растягивать по
+       * мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.
+       * <pre class="brush: html">
+       *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
+       *       <option name="content">
+       *          <component data-component="SBIS3.CONTROLS.ListView">
+       *             <option name="displayProperty">title</option>
+       *             <option name="idProperty">id</option>
+       *             <option name="infiniteScroll">down</option>
+       *             <option name="infiniteScrollContainer">.myScrollContainer</option>
+       *             <option name="pageSize">7</option>
+       *          </component>
+       *       </option>
+       *    </component>
+       * </pre>
+       *
+       * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрыть ползунок
+       *
+       * @control
+       * @public
+       *
+       * @initial
+       * <component data-component='SBIS3.CONTROLS.ScrollContainer' name="MyScrollContainer>
+       *     <option name="content">
+       *         <component data-component="SBIS3.CONTROLS.ListView" name="ContentList">
+       *             <option name="idProperty">key</option>
+       *             <option name="displayProperty">title</option>
+       *         </component>
+       *     </option>
+       * </component>
+       */
       var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible], {
          _template: template,
 

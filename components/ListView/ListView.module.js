@@ -944,7 +944,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _bindEventHandlers: function(container) {
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHandler.bind(this));
+            this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
+         },
+
+         _unbindEventHandlers: function(container) {
+            container.off('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
          _modifyOptions : function(opts){
@@ -1872,6 +1877,9 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          toggleCheckboxes: function(toggle) {
+            // Лучшего решения сейчас нет. Редактирование по месту позиционируется абсолютно и размеры свои менять не может.
+            // При переключении видимости чекбоксов у таблицы меняются размеры и блок с редактированием позиционируется неправильно.
+            this._cancelEdit();
             this._container.toggleClass('controls-ListView__hideCheckBoxes', !toggle);
             this._notifyOnSizeChanged(true);
          },
@@ -3540,9 +3548,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _cancelEdit: function() {
-            return this._getEditInPlace().addCallback(function(editInPlace) {
-               return editInPlace.endEdit();
-            });
+            if (this._hasEditInPlace()) {
+               return this._getEditInPlace().addCallback(function(editInPlace) {
+                  return editInPlace.endEdit();
+               });
+            } else {
+               return Deferred.success();
+            }
          },
          /**
           * Завершает редактирование по месту с сохранением изменений.
@@ -3603,6 +3615,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._mover) {
                this._mover.destroy();
             }
+            this._unbindEventHandlers(this._container);
             ListView.superclass.destroy.call(this);
          },
          /**
@@ -4104,25 +4117,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
          },
-         /**
-          * //todo коcтыль нужно разобраться почему долго работает
-          * Инициализирует опцию selectedItems
-          * @noShow
-          */
-         initializeSelectedItems: function() {
-            var items = this.getItems();
 
-            if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
-               this._options.selectedItems = Di.resolve('collection.recordset', {
-                  ownerShip: false,
-                  adapter: items.getAdapter(),
-                  idProperty: items.getIdProperty(),
-                  model: items.getModel()
-               });
-            } else {
-               ListView.superclass.initializeSelectedItems.call(this);
-            }
-         },
          /**
           * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
           * @remark

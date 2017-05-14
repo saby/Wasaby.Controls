@@ -263,6 +263,7 @@
 @button-big-text-margin-left:             24px;
 @button-big-text-margin-right:            @button-big-text-margin-left;
 @button-big-text-icon-margin:             0 @button-big-text-margin-left - @button-border-width 0 @button-icon-gap;
+
 @button-big-text-padding:                 0;
 @button-big-empty-text-margin:            @button-empty-text-margin;
 
@@ -293,6 +294,13 @@
 @icon-button-round-border-line-height:  26px;
 @border-radius:                         14px;
 @icon-button-border-width:              1px;
+
+@list-view-items-toolbar-icon-button-border-width:      @icon-button-border-width;
+@list-view-items-toolbar-icon-button-border-radius:     @border-radius;
+@list-view-items-toolbar-icon-button-border-font-size:  16px;
+@icon-button-edit-round-border-height:             24px;
+@icon-button-edit-round-border-width:              24px;
+@icon-button-edit-round-border-line-height:        24px;
 
 
 // ------------- //
@@ -555,7 +563,7 @@
 @check-box-icon-size:                           24px;
 @check-box-icon-successful-size:                18px;
 @check-box-font-size:                           @default-text-size;
-@check-box-icon-successful-bottom:              6px;
+@check-box-icon-successful-top:                 0;
 @check-box-icon-successful-left:                5px;
 @check-box-icon-null-size:                      6px;
 @check-box-caption-padding:                     3px 0;
@@ -1338,7 +1346,7 @@
 @date-range-dash-color:                         @black-color;
 @date-range-dash-margin:                        0 3px 4px 3px;
 
-@date-range-choose-border-hover-width:          2px;
+@date-range-choose-border-hover-width:          1px;
 // ----------------- //
 // Data Range Slider //
 // ----------------- //
@@ -1482,7 +1490,7 @@
 @date-range-big-choose-header-home-button-margin:              2px 0 0 0;
 @date-range-big-choose-header-home-button-size:                24px;
 @date-range-big-choose-header-home-button-font-size:           14px;
-@date-range-big-choose-header-home-button-left:                3px;
+@date-range-big-choose-header-home-button-margin-left:         8px;
 @date-range-big-choose-header-home-button-line-height:         22px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
@@ -1492,7 +1500,7 @@
 @date-range-big-choose-header-date-picker-height:              auto;
 @date-range-big-choose-header-apply-button-size:               28px;
 @date-range-big-choose-header-apply-button-font-size:          18px;
-@date-range-big-choose-header-apply-button-left:               4px;
+@date-range-big-choose-header-apply-button-icon-margin-left:   -9px;
 @date-range-big-choose-header-apply-button-line-height:        26px;
 @date-range-big-choose-header-apply-button-margin-left:        8px;
 @date-range-big-choose-header-range-dash-width:                2px;
@@ -1613,10 +1621,10 @@
 // List view //
 // --------- //
 @list-view-min-height:                           90px;
-@listView-check-box-icon-spritesheet:           'img/CheckBoxBig.png';
-@listView-check-box-icon-bg:                    url(@listView-check-box-icon-spritesheet) 0 0px;
-@listView-check-box-icon-hover-bg:              url(@listView-check-box-icon-spritesheet) 0 24px;
-@listView-check-box-icon-checked-bg:            url(@listView-check-box-icon-spritesheet) 0 72px;
+
+@listView-check-box-left:                       0px;
+@listView-check-box-top:                        0px;
+
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -2027,11 +2035,6 @@
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                           0px;
-@listView-check-box-top:                            0px;
-@listView-check-box-width:                          24px;
-@listView-check-box-height:                         24px;
-@listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
 @multiView-tile-item-min-height:                    128px;
@@ -2108,16 +2111,19 @@
 @DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
 
 //ProgressBar
-@controls-ProgressBar-height:                     17px;
-@controls-ProgressBar-empty-bg:                   #F3F3F3;
-@controls-ProgressBar-progress-bg:                #A2E68C;
-@controls-ProgressBar-progress-bg-grad:           linear-gradient(to top, #8DCF66, #B6F5A9);
-@controls-ProgressBar-border-radius:              8px;
-@controls-ProgressBar-side-space:                 40px;
+@controls-ProgressBar-height:             16px;
+@controls-ProgressBar-first-color:        @blue-dark-color;
+@controls-ProgressBar-last-color:         #61B1EE;
+@controls-ProgressBar-border-color:       @gray-light-color;
+@controls-ProgressBar-background-color:   @gray-f4f4f4-color;
+@controls-ProgressBar-border-radius:      3px;
+@controls-ProgressBar-value-padding:      0 6px;
+@controls-ProgressBar-value-font-size:    @small-text-size;
+@controls-ProgressBar-value-color:        @disabled-color;
 
 //Pager
-@controls-Pager-amount-text : @gray-color;//FilterButton
-@controls-Pager-minHeight:                        35px;
+@controls-Pager-amount-text:              @gray-color;
+@controls-Pager-minHeight:                35px;
 
 //FilterButton
 @filter-button-font-size:							inherit;
@@ -2550,3 +2556,5 @@
 @back-button-linheight-before:                inherit;
 @back-button-width-before:                                  8px;
 @back-button-text-fontweight:               @bold-font-weight;
+@dropdownlist-item-text-color:              inherit;
+@scroll-pager-bg:							@default-bg-color;			
