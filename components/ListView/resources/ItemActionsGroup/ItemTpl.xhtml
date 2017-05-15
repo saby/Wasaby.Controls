@@ -10,7 +10,7 @@
     {{? allowChangeEnable !== undefined }}<option name="allowChangeEnable" type="boolean">{{= allowChangeEnable }}</option>{{?}}
     {{? visible !== undefined }}<option name="visible" type="boolean">{{= visible }}</option>{{?}}
     {{? icon && viewMode !== 'caption'}}<option name="icon">{{=icon}} controls-ItemActions__icon</option>{{?}}
-    {{? (caption && !icon) || (caption && viewMode === 'caption')}}<option name="caption">{{= caption }}</option>{{?}}
+    {{? caption }}<option name="caption">{{= caption }}</option>{{?}}
     {{? it.item.get('tooltip') }}<option name="tooltip">{{= it.item.get('tooltip')}}</option>{{?}}
 </component>
 WS-EXPERT-->
