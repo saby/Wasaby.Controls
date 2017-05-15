@@ -197,9 +197,9 @@
 @button-primary-active-bg:                #d94700;
 
 // Normal disabled button
-@button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  @button-border;
-@button-disabled-bg:                      @gray-light-color;
+@button-disabled-text-color:              @disabled-color;
+@button-disabled-border:                  @button-primary-border;
+@button-disabled-bg:                      #ff7033;
 
 // Big button
 @button-big-line-height:                  @button-line-height;
@@ -622,7 +622,7 @@
 // ----------- //
 // Search form //
 // ----------- //
-@search-form-field-wrapper-margin-right:              5.1rem;
+@search-form-field-wrapper-margin-right:              5.3rem;
 @search-button-wrapper-padding:							0 .5rem 0 0;
 @search-buttons-wrapper-width:                        auto;
 @search-loop-size: 2rem;
@@ -633,7 +633,7 @@
 @search-hover-border-color:                           #5d687b;
 @search-bottom-border-color:                          #2e3a45;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-form-icon-padding:                            .7rem .4rem .4rem .4rem;
+@search-form-icon-padding:                            .7rem .4rem .4rem 0;
 @search-form-icon-disabled-display:                   block;
 
 @search-focus-background:                             #2e3a45;
@@ -1286,3 +1286,6 @@
 @dropdownlist-item-text-color:              #202835;
 @controls-FieldLink-picker-show-color:		#243548;
 @controls-editInPlace-editor-bg:			transparent;
+
+ @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+  @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
