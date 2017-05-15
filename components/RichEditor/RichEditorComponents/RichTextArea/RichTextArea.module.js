@@ -970,6 +970,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
             container.toggleClass('ws-hidden', sourceVisible);
             this._notify('onToggleContentSource', sourceVisible);
+            //установка фокуса в поле ввода на которое происходит переключение
             focusContainer.focus();
          },
 
