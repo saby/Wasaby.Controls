@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.
       _controlName: 'SBIS3.CONTROLS.IconButton',
       _useNativeAsMain: true,
       _containerReady: function (container) {
-         IconButton.superclass._containerReady.call(this, container);
+         /*TODO:: Эта логика не вызывается с VDom, но оставлена здесь, чтобы не забыть про нее*/
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
           * в котором прописаны поведение и цвета для иконок по ховеру*/
