@@ -3809,7 +3809,7 @@ define('js!SBIS3.CONTROLS.ListView',
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
-         _getDragTarget: function(dragObject) {
+         _getDragTarget: function(dragObject, e) {
             var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
                item,
                projection = this._getItemsProjection();
@@ -3817,20 +3817,30 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length > 0) {
                item = projection.getByHash(target.data('hash'));
             } else if (this._horisontalDragNDrop) {
-               item = projection.at(projection.getCount()-1);
+               var elements = document.elementsFromPoint(e.pageX+5, e.pageY+5);
+               target = this._findItemByElement($(elements[1]));
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               } else {
+                  item = projection.at(projection.getCount() - 1);
+               }
             }
 
-            return item ? item.getContents() : undefined;
+            return {
+               item: item ? item.getContents() : undefined,
+               domElement: target
+            };
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(dragObject),
+            var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (model) {
-               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
+            if (dragTarget.item) {
+               var domElement = dragTarget.domElement,
                   position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
+
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
+                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](dragTarget.item.getId()),
                      sourceIds = [];
                   dragObject.getSource().each(function (item) {
                      sourceIds.push(item.getModel().getId());
@@ -3842,7 +3852,7 @@ define('js!SBIS3.CONTROLS.ListView',
                target = this._makeDragEntity({
                   owner: this,
                   domElement: domElement,
-                  model: model,
+                  model: dragTarget.item,
                   position: position
                });
             }
