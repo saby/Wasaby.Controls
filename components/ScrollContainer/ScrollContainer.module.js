@@ -254,10 +254,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          destroy: function(){
-            this._content.off('scroll', this._onScroll);
+            if (this._content) {
+               this._content.off('scroll', this._onScroll);
+            }
             this._container.off('mousemove', this._initScrollbar);
 
-            AbstractCompatible.destroy.call(this);
+            BaseCompatible.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
             delete FloatAreaManager._scrollableContainers[ this.getId() ];

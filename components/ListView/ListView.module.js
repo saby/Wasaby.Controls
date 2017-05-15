@@ -1377,6 +1377,48 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnChangeHoveredItem();
          },
 
+         _updateHoveredItemAfterRedraw: function() {
+            var hoveredItem = this.getHoveredItem(),
+                hoveredItemContainer = hoveredItem.container,
+                containsHoveredItem, hash, projItem;
+
+            /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
+
+            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+             то событие mouseLeave не сработает, поэтому вызовем руками метод,
+             если же он остался, то обновим положение кнопки опций. */
+            if(hoveredItemContainer){
+               containsHoveredItem = dcHelpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
+
+               if(!containsHoveredItem && hoveredItemContainer) {
+                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+                   * хранить только идентификатор и данный код станет не нужен*/
+                  hash = hoveredItemContainer.attr('data-hash');
+                  projItem = this._getItemsProjection().getByHash(hash);
+                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
+                   но на него осталась jQuery ссылка, то надо её затереть */
+                  if (projItem) {
+                     hoveredItemContainer = this._getDomElementByItem(projItem);
+                  } else {
+                     hoveredItemContainer = null;
+                  }
+               }
+
+               if(!containsHoveredItem) {
+                  if(!hoveredItemContainer || !hoveredItemContainer.length) {
+                     this._mouseLeaveHandler();
+                  } else {
+                     this._updateHoveredItem(hoveredItemContainer);
+                  }
+               } else {
+                  /* Даже если контейнер выбранной записи не изменился,
+                   надо обновить выделнный элемент, т.к. могло измениться его положение */
+                  this._updateHoveredItem(hoveredItemContainer);
+               }
+            }
+         },
+
          _getDomElementByItem : function(item) {
             //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
             return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]:not(.controls-editInPlace)')
@@ -1454,6 +1496,11 @@ define('js!SBIS3.CONTROLS.ListView',
                if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
+                      if(this._itemsToolbar.getTouchMode()) {
+                          // ситуация, когда при смене выделенного элемента тулбар находится в тач режиме может возникнуть на планшетах и устройствах с zinFrame
+                          // необходимо выставить высотку тулбара, т.к. высота строки может измениться
+                          this._itemsToolbar.setHeightInTouchMode();
+                      }
                   }
                   // setItemsActions стреляет событием onChangeHoveredItem, чтобы прикладники могли скрыть/показать нужные опции для строки
                   // поэтому после события нужно обновить видимость элементов
@@ -1863,6 +1910,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
             this._drawSelectedItems(this.getSelectedKeys());
             this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
+            this._updateHoveredItemAfterRedraw();
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
@@ -2585,10 +2633,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawItemsCallbackSync: function() {
-            var hoveredItem = this.getHoveredItem(),
-                hoveredItemContainer = hoveredItem.container,
-                containsHoveredItem, hash, projItem;
-
             ListView.superclass._drawItemsCallbackSync.call(this);
             /* Подскролл после подгрузки вверх надо производить после отрисовки синхронно,
                иначе скролл будет дёргаться */
@@ -2597,41 +2641,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._moveTopScroll();
                }
             }
-            /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
-
-            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
-              то событие mouseLeave не сработает, поэтому вызовем руками метод,
-              если же он остался, то обновим положение кнопки опций. */
-            if(hoveredItemContainer){
-               containsHoveredItem = dcHelpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
-
-               if(!containsHoveredItem && hoveredItemContainer) {
-                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
-                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
-                   * хранить только идентификатор и данный код станет не нужен*/
-                  hash = hoveredItemContainer.attr('data-hash');
-                  projItem = this._getItemsProjection().getByHash(hash);
-                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
-                   но на него осталась jQuery ссылка, то надо её затереть */
-                  if (projItem) {
-                     hoveredItemContainer = this._getDomElementByItem(projItem);
-                  } else {
-                     hoveredItemContainer = null;
-                  }
-               }
-
-               if(!containsHoveredItem) {
-                  if(!hoveredItemContainer || !hoveredItemContainer.length) {
-                     this._mouseLeaveHandler();
-                  } else {
-                     this._updateHoveredItem(hoveredItemContainer);
-                  }
-               } else {
-                  /* Даже если контейнер выбранной записи не изменился,
-                   надо обновить выделнный элемент, т.к. могло измениться его положение */
-                  this._updateHoveredItem(hoveredItemContainer);
-               }
-            }
+            this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -3805,7 +3815,7 @@ define('js!SBIS3.CONTROLS.ListView',
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
-         _getDragTarget: function(dragObject) {
+         _getDragTarget: function(dragObject, e) {
             var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
                item,
                projection = this._getItemsProjection();
@@ -3813,20 +3823,30 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length > 0) {
                item = projection.getByHash(target.data('hash'));
             } else if (this._horisontalDragNDrop) {
-               item = projection.at(projection.getCount()-1);
+               var elements = document.elementsFromPoint(e.pageX+5, e.pageY+5);
+               target = this._findItemByElement($(elements[1]));
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               } else {
+                  item = projection.at(projection.getCount() - 1);
+               }
             }
 
-            return item ? item.getContents() : undefined;
+            return {
+               item: item ? item.getContents() : undefined,
+               domElement: target
+            };
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(dragObject),
+            var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (model) {
-               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
+            if (dragTarget.item) {
+               var domElement = dragTarget.domElement,
                   position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
+
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
+                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](dragTarget.item.getId()),
                      sourceIds = [];
                   dragObject.getSource().each(function (item) {
                      sourceIds.push(item.getModel().getId());
@@ -3838,7 +3858,7 @@ define('js!SBIS3.CONTROLS.ListView',
                target = this._makeDragEntity({
                   owner: this,
                   domElement: domElement,
-                  model: model,
+                  model: dragTarget.item,
                   position: position
                });
             }

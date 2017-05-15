@@ -312,6 +312,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
 
          _applyFormats: function(formats){
             if (this._options.linkedEditor) {
+               ['title',  'subTitle','additionalText'].forEach(function(stl){
+                  this._options.linkedEditor._removeFormat(stl);
+               }, this);
                this._options.linkedEditor.setFontColor(formats.color);
                this._options.linkedEditor.setFontSize(formats.fontsize);
                for ( var button in this._buttons) {

@@ -103,12 +103,15 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * @param {SBIS3.CONTROLS.ListView} linkedView
        */
       setLinkedView: function(linkedView) {
+         var self = this;
          if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
             this._useSelectAll = linkedView._options.useSelectAll;
-            //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
-            this.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
-            this.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
+            this.once('onPickerOpen', function() {
+               //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
+               self.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
+               self.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
+            });
             this._bindEvents();
             this._updateMark();
          }
