@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.SearchController',
             breadCrumbs: null,
             backButton: null,
             keyboardLayoutRevert: true,
-            hierarchyViewMode: true
+            hierarchyViewMode: true,
+            keyboardLayoutRevertNew: false
          },
          _kbLayoutRevertObserver: null,
          _firstSearch: true,
@@ -234,7 +235,8 @@ define('js!SBIS3.CONTROLS.SearchController',
             this._kbLayoutRevertObserver = new KbLayoutRevertObserver({
                textBox: searchForm,
                view: view,
-               param: this._options.searchParamName
+               param: this._options.searchParamName,
+               newStandart: self._options.keyboardLayoutRevertNew
             })
          }
          else {
