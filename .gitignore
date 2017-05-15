@@ -11,6 +11,7 @@
 /resources/SBIS3.CONTROLS
 /themes/**/*.css
 /tests/unit/artifacts/*
+/artifacts/*
 /tests/unit/contents.js*
 /tests/int/.idea
 /tests/int/config.ini
