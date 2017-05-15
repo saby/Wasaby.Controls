@@ -2,7 +2,7 @@
      data-parent-hash="{{projItem.getParent().getHash()}}" data-hash="{{projItem.getHash()}}"
      data-id="{{item.getId() + ''}}">
       <ws:if data="{{ !isSearch }}">
-         <ws:for data="i in itemLevel">
+         <ws:for data="i in getItemTemplateData(...).itemLevel">
             <div class="controls-TreeView__levelPadding">&nbsp;</div>
          </ws:for>
          <div class="controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open' : ''}}"></div>
