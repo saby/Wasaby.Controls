@@ -935,6 +935,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         getListNavigation: function() {
+            return this._listNavigation;
+         },
+
          init: function () {
             // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
             if (cDetection.isMobilePlatform && window) {
