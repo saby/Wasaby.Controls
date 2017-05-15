@@ -398,7 +398,7 @@ define('js!SBIS3.CONTROLS.Image',
                   }
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
-                     this._buttonUpload.once(function(){
+                     this._buttonUpload.once('onPickerOpen', function(){
                         pickerContainer = this._buttonUpload.getPicker().getContainer();
                         pickerContainer.mouseenter(function(){
                            this._cursorInside = true;
