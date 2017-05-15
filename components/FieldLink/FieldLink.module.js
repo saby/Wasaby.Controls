@@ -580,8 +580,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          setActive: function(active) {
+          setActive: function(active, shiftKey, noFocus, focusedControl) {
              var wasActive = this.isActive();
+             
+             /* КОСТЫЛЬ ДЛЯ 3.7.5.50
+                https://inside.tensor.ru/opendoc.html?guid=6be48dda-796d-4de7-a377-7e66c67b4f8a&des=
+                Задача в разработку 07.04.2017 В контроле надо поправить метод setActive Он в случае, если контрол активен всё равно выполняет для …  */
+             noFocus = this._options.task_1173772355 ? this._isControlActive : noFocus;
 
              /* Хак, который чинит баг firefox с невидимым курсором в input'e.
               Это довольно старая и распростронённая проблема в firefox'e,
@@ -603,7 +608,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 }, this), 30);
              }
 
-             FieldLink.superclass.setActive.apply(this, arguments);
+             FieldLink.superclass.setActive.call(this, active, shiftKey, noFocus, focusedControl);
 
              /* Для Ipad'a надо при setActive устанавливать фокус в поле ввода,
                 иначе не покажется клавиатура, т.к. установка фокуса в setAcitve работает асинхронно,
