@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="WINDOWS-1251"?>
-<deployment_schema template_id="9c69e54b-7b6a-4acb-8b7c-1b0439a7d662" template_name="Тестовый стенд">
-<database compliance="" host="{host}" login="{login}" name="{db_name}" password="{password}" port="{port}" template_id="00fceca1-e956-49ce-b34e-dfb0486272cd" template_name="Тестовая БД"/>
-<host name="{host}" threads="6"/>
-</deployment_schema>

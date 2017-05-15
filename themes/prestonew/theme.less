@@ -31,14 +31,14 @@ body {
 
 .controls-Button__closeButton {
    display: inline-block;
-   width: @closeButtonWidth;
-   height: @closeButtonHeight;
-   background: @closeButtonImage;
+   width: 3rem !important;
+   height: 3rem !important;
+   background: @closeBigButtonImage;
    &:hover {
-      background: @closeButtonImageHover;
+     background: @closeBigButtonImageHover;
    }
    &:active {
-      background: @closeButtonImageHover;
+     background: @closeBigButtonImageHover;
    }
 }
 
@@ -245,11 +245,7 @@ body {
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
-.icon-small {
-  font-size: 1.85rem !important;
-  height: 1.85rem !important;
-  width: 1.85rem !important;
-}
+
 
 
 body .ws-loadingimg {
@@ -357,4 +353,61 @@ body .ws-float-area-nostack-panel-shadow-standart {
 
 body .ws-float-area-title-generated {
     margin-right: 3rem;
+}
+.controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+    color: #cccccc;
+    height: 3rem;
+}
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
+
+    line-height: 2rem;
+
+  }
+ body .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+    height: 2.4rem;
+}
+body .controls-DateRange .controls-DateRange__Button .controls-Button__icon {
+  font-size: 2rem !important;
+}
+body .controls-DatePicker .controls-DatePicker__button .controls-Button__icon {
+    font-size: 2rem !important;
+    line-height: 2rem !important;
+}
+.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+    line-height: 3rem !important;
+
+}
+body .controls-Button .controls-Button__icon.icon-32 {
+  top: 20%
+}
+body .controls-Button .controls-Button__icon.icon-large {
+  top: 20%
+}
+body .ws-info-box .ws-infobox-content p {
+    margin: 0px 20px 8px 0;
+    font-size: 1.43rem;
+}
+.controls-Link__field {
+  vertical-align: middle;
+}
+.controls-FieldLink__item-cross {
+  margin-right: -.7rem; 
+}
+.controls-Paging .control-Paging__btn .controls-Button__icon {
+    line-height: 2rem!important;
+    padding-right: 0.4rem;
+}
+.controls-FieldLink__item-cross {
+    margin-right: -.7rem; 
+}
+.controls-Paging .control-Paging__btn .controls-Button__icon {
+    line-height: 2rem!important;
+    padding-right: 0.4rem;
+}
+body .controls-IconButton {
+  vertical-align: baseline;
+}
+.controls-DropdownList__picker .controls-DropdownList__item .controls-DropdownList__itemTextWrapper .controls-DropdownList__item-text {
+    color: #000;
+    line-height: 3rem;
 }

@@ -7,8 +7,8 @@ const helpers = require('./helpers'),
     less = require('less'),
     getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
     DEFAULT_THEME = 'online',
-    themes = ['online', 'carrynew', 'prestonew'],
-    errors = [];
+    themes = ['online', 'carrynew', 'prestonew'];
+    let errors = [];
 
 /**
  @workaround Временно ресолвим текущую тему по названию модуля.
@@ -21,8 +21,8 @@ function resolveThemeName(filepath) {
     switch (s3modName) {
         case 'Upravlenie_oblakom':
             return 'cloud';
-        case 'Presto':
-            return 'presto';
+          case 'Presto':
+              return 'presto';
         case 'sbis.ru':
             return 'sbisru';
         case 'Retail':
@@ -100,7 +100,7 @@ module.exports = function less1by1Task(grunt) {
                   let theme = resolveThemeName(filepath);
                     if (itIsControl(filepath)) {
                             bar.tick(1, {
-                                
+
                                 "file": filepath
                             });
 
@@ -119,6 +119,7 @@ module.exports = function less1by1Task(grunt) {
             errors.forEach((err) => {
                 grunt.log.error(err);
             });
+            errors = [];
             taskDone();
         });
     });

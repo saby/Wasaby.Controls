@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.CheckBox', [
             }
          }
          else {
-            this._checkBoxCaption.empty().addClass('ws-hidden');
+            this._checkBoxCaption.html('&nbsp;').addClass('ws-hidden');
             this._options.textValue = '';
          }
       },
