@@ -398,12 +398,14 @@ define('js!SBIS3.CONTROLS.Image',
                   }
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
-                     pickerContainer = this._buttonUpload.getPicker().getContainer();
-                     pickerContainer.mouseenter(function(){
-                        this._cursorInside = true;
-                     }.bind(this));
-                     pickerContainer.mouseleave(function(){
-                        this._cursorInside = false;
+                     this._buttonUpload.once('onPickerOpen', function(){
+                        pickerContainer = this._buttonUpload.getPicker().getContainer();
+                        pickerContainer.mouseenter(function(){
+                           this._cursorInside = true;
+                        }.bind(this));
+                        pickerContainer.mouseleave(function(){
+                           this._cursorInside = false;
+                        }.bind(this))
                      }.bind(this))
                   }
                }
