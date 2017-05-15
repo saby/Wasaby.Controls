@@ -3946,6 +3946,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      linkedObject: this,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
+                     dialogOptions: {
+                        opener:this
+                     },
                      moveStrategy: this.getMoveStrategy()//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   }),
                   items = this.getItems(),
