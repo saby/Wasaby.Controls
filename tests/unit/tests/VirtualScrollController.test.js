@@ -296,8 +296,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             newState = controller._getUpdateConfig({top: [40, 60], bottom: [120, 140]}, true, 0);
             console.log(newState);
             assert.deepEqual(newState, {
-               added: true,
-               removed: true,
                addOffset: 0,
                removeOffset: 0
             });
@@ -307,8 +305,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             newState = controller._getUpdateConfig({top: [40, 60], bottom: [60, 80]}, true, 0);
             console.log(newState);
             assert.deepEqual(newState, {
-               added: false,
-               removed: true,
                addOffset: 0,
                removeOffset: 0
             });
@@ -318,8 +314,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             newState = controller._getUpdateConfig({top: [0, 20], bottom: [120, 140]}, true, 0);
             console.log(newState);
             assert.deepEqual(newState, {
-               added: true,
-               removed: false,
                addOffset: 0,
                removeOffset: 0
             });
@@ -329,8 +323,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             newState = controller._getUpdateConfig({top: [120, 140], bottom: [40, 60]}, false, 0);
             console.log(newState);
             assert.deepEqual(newState, {
-               added: true,
-               removed: true,
                addOffset: 0,
                removeOffset: 0
             });
@@ -340,8 +332,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             newState = controller._getUpdateConfig({top: [60, 80], bottom: [40, 60]}, false, 0);
             console.log(newState);
             assert.deepEqual(newState, {
-               added: false,
-               removed: true,
                addOffset: 0,
                removeOffset: 0
             });
@@ -351,8 +341,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             newState = controller._getUpdateConfig({top: [120, 140], bottom: [0, 20]}, true, 0);
             console.log(newState);
             assert.deepEqual(newState, {
-               added: true,
-               removed: false,
                addOffset: 0,
                removeOffset: 0
             });
@@ -378,22 +366,5 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             assert.equal(newState, 79);
          });
       });
-
-      describe('._markPages', function() {
-         //oldWindow, newWindow
-         it('Changed', function() {
-            controller._virtualPages = cFunctions.clone(pages);
-            newState = controller._markPages(false, [0]);
-            assert.equal(newState, true);
-         });
-         it('Not changed', function() {
-            controller._virtualPages = cFunctions.clone(pages);
-            newState = controller._markPages(true, [0]);
-            assert.equal(newState, false);
-         });
-      });
-
-      
-
    });
 });

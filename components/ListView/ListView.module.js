@@ -951,10 +951,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
-            
-            if (this._options.virtualScrolling){
-               this._initVirtualScrolling();
-            }
             this._initLoadMoreButton();
          },
 
@@ -3232,6 +3228,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
+
+            if (this._options.virtualScrolling && !this._virtualScrollController) {
+               this._initVirtualScrolling();
+            }
          },
          _toggleIndicator: function(show){
             var self = this,
