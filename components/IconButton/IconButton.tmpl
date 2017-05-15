@@ -1,5 +1,13 @@
-<span name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" tabindex="{{_options.tabindex}}" newconfig={{_options.config}} class="controls-IconButton controls-ButtonBase{{!_options.visible ? ' ws-hidden'}}{{!_options.enabled ? ' ws-disabled':' ws-enabled'}}{{_options.icon && _options.icon.indexOf('icon-error') >= 0?' controls-IconButton__errorBorder'}}{{_options.icon && _options.icon.indexOf('icon-done') >= 0?' controls-IconButton__doneBorder'}}"
-   title="{{_options.tooltip}}" disabled="{{!_options.enabled ? 'disabled'}}" type="button" event:onclick="_onClick()">
+<span name="{{_options.name}}"
+      sbisname="{{_options.sbisname||_options.name}}"
+      tabindex="{{_options.tabindex}}"
+      newconfig="{{_options.config}}"
+      config="{{_options.config}}"
+      class="{{_options.class}} controls-IconButton controls-ButtonBase{{!_options.visible ? ' ws-hidden'}}{{!_options.enabled ? ' ws-disabled':' ws-enabled'}}{{_options.icon && _options.icon.indexOf('icon-error') >= 0?' controls-IconButton__errorBorder'}}{{_options.icon && _options.icon.indexOf('icon-done') >= 0?' controls-IconButton__doneBorder'}}"
+      title="{{_options.tooltip}}"
+      disabled="{{!_options.enabled ? 'disabled'}}"
+      type="button"
+      event:onclick="_onClick()">
     <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
        <i class="controls-Button__icon js-controls-Button__icon {{_options._iconClass?_options._iconClass:_options.icon}}"></i>
     </ws:if>
