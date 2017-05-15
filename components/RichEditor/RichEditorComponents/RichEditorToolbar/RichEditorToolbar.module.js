@@ -164,7 +164,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                   break;
                case 'title':
                case 'subTitle':
-               case 'selectedMainText':
                case 'additionalText':
                   this._updateTextFormat(state, obj);
                   break;
