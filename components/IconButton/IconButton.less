@@ -1,6 +1,7 @@
-.icon-mixin(@icon-left, @icon-width) {
-  left: @icon-left;
+.icon-mixin(@icon-width) {
+  left: 50%;
   top: 50%;
+  margin-left: -@icon-width/2;
   margin-top: -@icon-width/2;
 }
 
@@ -59,10 +60,20 @@
       .controls-Button__icon {
         position: @icon-button-round-border-position;
         &.icon-16 {
-          .icon-mixin(5px, 16px);
+          .icon-mixin(16px);
         }
         &.icon-24 {
-          .icon-mixin(1px, 24px);
+          .icon-mixin(24px);
+        }
+
+        &.icon-small {
+          .icon-mixin(@icon-small-size);
+        }
+        &.icon-medium {
+          .icon-mixin(@icon-medium-size);
+        }
+        &.icon-large {
+          .icon-mixin(@icon-large-size);
         }
       }
       height: @icon-button-round-border-width;
@@ -72,17 +83,17 @@
 
    &.controls-IconButton__round-border-24{
       .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
-      height: 24px !important;
-      width: 24px !important;
-      line-height: 24px !important;
+      height: @icon-button-edit-round-border-height;
+      width: @icon-button-edit-round-border-width;
+      line-height: @icon-button-edit-round-border-line-height;
       .controls-Button__icon.icon-16 {
          position: absolute;
          top: 0;
          left: 0;
          box-sizing: content-box;
-         height: 22px !important;
-         width: 22px !important;
-         line-height: 22px !important;
+         height: @icon-button-edit-round-border-height - 2 * @icon-button-border-width !important;
+         width: @icon-button-edit-round-border-width - 2 * @icon-button-border-width !important;
+         line-height: @icon-button-edit-round-border-line-height - 2 * @icon-button-border-width !important;
       }
    }
    &.controls-IconButton__round-border-32{

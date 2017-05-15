@@ -268,6 +268,9 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _setPickerContent: function() {
          this._createChooseControl();
 
+         this._picker.getContainer().empty();
+         // Добавляем в пикер
+         this._picker.getContainer().append(this._dateRangeChooseControl.getContainer());
          // Нажатие на календарный день в пикере устанавливает дату
          this._dateRangeChooseControl.subscribe('onChoose', this._onRangeChooseChange.bind(this));
          this._dateRangeChooseControl.subscribe('onCancel', this._onRangeChooseClose.bind(this));
@@ -277,10 +280,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
          var
             // Создаем пустой контейнер
             element = $('<div name= "DateRangeChoose" class="DateRange__choose"></div>');
-
-         this._picker.getContainer().empty();
-         // Добавляем в пикер
-         this._picker.getContainer().append(element);
          // Преобразуем контейнер в контролл DateRangeBigChoose и запоминаем
          this._dateRangeChooseControl = new this._chooseControlClass({
             parent: this._picker,

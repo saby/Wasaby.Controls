@@ -43,7 +43,9 @@
       height: @controls-Paging-btn-height;
       float: left;
       margin: @controls-Paging-btn-margin;
-      font-size: @paging-font-size!important;
+      .controls-Button__icon {
+         font-size: @paging-font-size !important;
+      }
    }
    .control-Paging__next, .control-Paging__begin, .control-Paging__end, .control-Paging__prev{
       width: @controls-Paging-item-width;
@@ -70,6 +72,16 @@
    .controls-Paging {
       .control-Paging__btn:not(.ws-disabled):hover {
          background-color: @default-itemHover-color;
+      }
+   }
+}
+
+.ws-is-mobile-safari {
+   .controls-Paging {
+      .control-Paging__btn {
+         .controls-Button__icon {
+            line-height: @paging-font-size !important;
+         }
       }
    }
 }

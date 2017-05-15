@@ -1893,6 +1893,9 @@ define('js!SBIS3.CONTROLS.ListView',
          //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
          //*******************************//
          toggleCheckboxes: function(toggle) {
+            // Лучшего решения сейчас нет. Редактирование по месту позиционируется абсолютно и размеры свои менять не может.
+            // При переключении видимости чекбоксов у таблицы меняются размеры и блок с редактированием позиционируется неправильно.
+            this._cancelEdit();
             this._container.toggleClass('controls-ListView__hideCheckBoxes', !toggle);
             this._notifyOnSizeChanged(true);
          },
@@ -3561,9 +3564,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see activateItem
           */
          _cancelEdit: function() {
-            return this._getEditInPlace().addCallback(function(editInPlace) {
-               return editInPlace.endEdit();
-            });
+            if (this._hasEditInPlace()) {
+               return this._getEditInPlace().addCallback(function(editInPlace) {
+                  return editInPlace.endEdit();
+               });
+            } else {
+               return Deferred.success();
+            }
          },
          /**
           * Завершает редактирование по месту с сохранением изменений.
@@ -3813,7 +3820,7 @@ define('js!SBIS3.CONTROLS.ListView',
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
-         _getDragTarget: function(dragObject) {
+         _getDragTarget: function(dragObject, e) {
             var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
                item,
                projection = this._getItemsProjection();
@@ -3821,20 +3828,30 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length > 0) {
                item = projection.getByHash(target.data('hash'));
             } else if (this._horisontalDragNDrop) {
-               item = projection.at(projection.getCount()-1);
+               var elements = document.elementsFromPoint(e.pageX+5, e.pageY+5);
+               target = this._findItemByElement($(elements[1]));
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               } else {
+                  item = projection.at(projection.getCount() - 1);
+               }
             }
 
-            return item ? item.getContents() : undefined;
+            return {
+               item: item ? item.getContents() : undefined,
+               domElement: target
+            };
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(dragObject),
+            var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (model) {
-               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
+            if (dragTarget.item) {
+               var domElement = dragTarget.domElement,
                   position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
+
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
+                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](dragTarget.item.getId()),
                      sourceIds = [];
                   dragObject.getSource().each(function (item) {
                      sourceIds.push(item.getModel().getId());
@@ -3846,7 +3863,7 @@ define('js!SBIS3.CONTROLS.ListView',
                target = this._makeDragEntity({
                   owner: this,
                   domElement: domElement,
-                  model: model,
+                  model: dragTarget.item,
                   position: position
                });
             }
@@ -4125,25 +4142,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
          },
-         /**
-          * //todo коcтыль нужно разобраться почему долго работает
-          * Инициализирует опцию selectedItems
-          * @noShow
-          */
-         initializeSelectedItems: function() {
-            var items = this.getItems();
 
-            if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
-               this._options.selectedItems = Di.resolve('collection.recordset', {
-                  ownerShip: false,
-                  adapter: items.getAdapter(),
-                  idProperty: items.getIdProperty(),
-                  model: items.getModel()
-               });
-            } else {
-               ListView.superclass.initializeSelectedItems.call(this);
-            }
-         },
          /**
           * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
           * @remark
