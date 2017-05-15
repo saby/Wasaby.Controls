@@ -587,6 +587,7 @@ define('js!SBIS3.CONTROLS.Image',
                }
             },
             _prepareUrl: function(url) {
+               //Хак для ff чтобы при смене src на такой же стреляли события load и error
                if (_const.browser.firefox || _const.browser.isIE12) {
                   if (url.indexOf('id=') > -1) {
                      url = url.replace(/\?id=(.+?)&/, function (a, b) {
