@@ -22,10 +22,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             _beginWrapperHeight: 0,
             _endWrapperHeight: 0,
             _newItemsCount: 0,
+            // высота добавленных элементов
             _additionalHeight: 0,
             _lastPageHeight: 0,
             _notAddedAmount: 0,
             _topDettachedCount: 0,
+            _scrollableHeight: 0,
             _DEBUG: true,
          },
 
@@ -52,7 +54,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                   scrollTop = this._options.viewContainer.height() - scrollTop - this._scrollableHeight;
                }
                var page = this._getPage(scrollTop, viewportHeight, this._additionalHeight);
-               if (page >= 0 && this._currentVirtualPage != page) {
+               if (this._currentVirtualPage != page) {
                   this._onVirtualPageChange(page);
                   this._currentVirtualPage = page;
                }
@@ -69,9 +71,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          _onVirtualPageChange: function (pageNumber) {
-            var pages = this._virtualPages,
-               segments = [],
-               projCount = this._options.projection.getCount(),
+            var projCount = this._options.projection.getCount(),
                newWindow = this._getRangeToShow(pageNumber, BATCH_SIZE, PAGES_COUNT),
                items;
 
@@ -118,11 +118,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             this._setWrappersHeight(pageNumber);
 
             // Если поменялась страница, или увеличилось окно (так может быть в начале) - запомним новое окно
-            if (this._currentVirtualPage !== pageNumber || this._currentWindow[1] > newWindow[1]) {
-               this._currentWindow = newWindow;
-               if (this._DEBUG) {
-                  console.log('displayed from ', newWindow[0], 'to', newWindow[1]);
-               }
+            this._currentWindow = newWindow;
+            if (this._DEBUG) {
+               console.log('displayed from ', newWindow[0], 'to', newWindow[1]);
             }
          },
 
