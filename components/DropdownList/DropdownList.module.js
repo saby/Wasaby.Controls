@@ -918,6 +918,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setPickerConfig: function () {
             var hasArrow = this.getContainer().hasClass('controls-DropdownList__withoutArrow'),
                 type = this._options.type,
+                isFastDataFilterType = type == 'fastDataFilter',
                 offset = {
                    top: -10,
                    left: -10
@@ -929,7 +930,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                offset.left = -2;
                offset.top = -1;
             }
-            else if (type == 'fastDataFilter') {
+            else if (isFastDataFilterType) {
                //Располагаем текст в пикере над текстом в ссылке. Позиция зависит от наличия треугольника
                offset.left = hasArrow ? -14 : 2;
             }
@@ -946,13 +947,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               locationStrategy: type == 'fastDataFilter' ? 'bodyBounds' : 'base',
+               closeOnTargetMove: isFastDataFilterType,
+               locationStrategy: isFastDataFilterType ? 'bodyBounds' : 'base',
                targetPart: true,
                template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,
                   'footerTpl' : this._options.footerTpl,
                   'hasHead': type == 'duplicateHeader' || type == 'titleHeader' || type == 'customHeader',
-                  'hasCloseButton': type == 'fastDataFilter'
+                  'hasCloseButton': isFastDataFilterType
                })
             };
          },
