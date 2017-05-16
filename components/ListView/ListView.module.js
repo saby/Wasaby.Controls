@@ -2906,7 +2906,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   this._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  var hasNextPage
+                  var hasNextPage;
                   if (this._options.navigation && this._options.navigation.type == 'cursor') {
                      this._listNavigation.analizeResponceParams(dataSet);
                      hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
