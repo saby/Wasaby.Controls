@@ -145,7 +145,6 @@
    }
 }
 
-
 .controls-ItemsToolbar {
    position: absolute;
    display: block;
@@ -193,6 +192,12 @@
    
    &.controls-ItemsToolbar__hidden {
       visibility: hidden;
+   }
+}
+
+.ws-is-firefox {
+   .controls-ItemsToolbar {
+      bottom: @list-view-items-toolbar-bottom + 1;
    }
 }
 
