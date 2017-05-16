@@ -82,10 +82,6 @@
    function (CoreExtend, Deferred, CoreControl, doT) {
       'use strict';
 
-
-
-
-
       /**
        * Конструктор
        * @public
@@ -122,7 +118,7 @@
             }
             this._id = ++WaitIndicatorCounter;
             this._container = WaitIndicatorInner.getContainer(target);
-            this.message = message;
+            this.setMessage(message);
             this._look = oLook;
             //this._starting = null;
             //this._suspending = null;
@@ -138,7 +134,7 @@
           * @public
           * @type {number}
           */
-         get id () {
+         getId: function () {
             return this._id;
          },
 
@@ -147,7 +143,7 @@
           * @public
           * @type {HTMLElement}
           */
-         get container () {
+         getContainer: function () {
             return this._container;
          },
 
@@ -156,12 +152,12 @@
           * @public
           * @type {string}
           */
-         set message (msg) {
-            var prevMsg = this.message,
+         setMessage: function (msg) {
+            var prevMsg = this._message,
                newMsg = msg && typeof msg === 'string' ? msg : null;
             if (newMsg !== prevMsg) {
                this._message = newMsg;
-               var poolItem = WaitIndicatorPool.search(this.container);
+               var poolItem = WaitIndicatorPool.search(this._container);
                if (poolItem && poolItem.indicators.length && poolItem.indicators[0] === this) {
                   WaitIndicatorInner.update(poolItem, prevMsg, this._look);
                }
@@ -173,7 +169,7 @@
           * @public
           * @type {string}
           */
-         get message () {
+         getMessage: function () {
             return this._message;
          },
 
@@ -182,7 +178,7 @@
           * @public
           * @type {object}
           */
-         get look () {
+         getLook: function () {
             return this._look;
          },
 
@@ -258,40 +254,8 @@
                promInf.success.call(null, this);
             }
             return promInf.promise;
-         },
-
-         /**
-          * Возвращает обещание, соответствующее последнему актуальному вызову метода start. Если актуального вызова нет - вернётся null
-          * @public
-          * @type {Promise|Deferred}
-          */
-         get nextStart () {
-            var o = this._starting;
-            return o ? o.promise : null;
-         },
-
-         /**
-          * Возвращает обещание, соответствующее последнему актуальному вызову метода suspend. Если актуального вызова нет - вернётся null
-          * @public
-          * @type {Promise|Deferred}
-          */
-         get nextSuspend () {
-            var o = this._suspending;
-            return o ? o.promise : null;
-         },
-
-         /**
-          * Возвращает обещание, соответствующее последнему актуальному вызову метода remove. Если актуального вызова нет - вернётся null
-          * @public
-          * @type {Promise|Deferred}
-          */
-         get nextRemove () {
-            var o = this._removing;
-            return o ? o.promise : null;
          }
       });
-
-
 
 
 
@@ -358,8 +322,6 @@
 
 
 
-
-
       var emptyPromise = function (useDeferred) {
          var promise,
             success,
@@ -381,8 +343,6 @@
             fail: fail
          };
       }
-
-
 
 
 
@@ -426,7 +386,7 @@
           * @param {WaitIndicatorInstance} indicator Индикатор
           */
          start: function (indicator) {
-            var container = indicator.container,
+            var container = indicator.getContainer(),
                isGlobal = !container;
             if (isGlobal) {
                WaitIndicatorPool.each(function (item) {
@@ -448,7 +408,7 @@
             }
             else {
                 // Индикатора в DOM-е не содержиться
-               var spinner = WaitIndicatorSpinner.create(container, indicator.message, indicator.look);
+               var spinner = WaitIndicatorSpinner.create(container, indicator.getMessage(), indicator.getLook());
                WaitIndicatorPool.add({container:container, spinner:spinner, indicators:[indicator]});
             }
          },
@@ -478,16 +438,16 @@
           * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
           */
          _remove: function (indicator, force) {
-            var container = indicator.container,
+            var container = indicator.getContainer(),
                isGlobal = !container,
                poolItem = WaitIndicatorPool.search(container);
             if (poolItem) {
                var inds = poolItem.indicators,
-                  id = indicator.id,
+                  id = indicator.getId(),
                   i = -1;
                if (inds.length) {
                   for (var j = 0; j < inds.length; j++) {
-                     if (inds[j].id === id) {
+                     if (inds[j].getId() === id) {
                         i = j;
                         break;
                      }
@@ -496,7 +456,7 @@
                if (i !== -1) {
                   if (1 < inds.length) {
                      inds.splice(i, 1);
-                     this.update(poolItem, indicator.message, indicator.look);
+                     this.update(poolItem, indicator.getMessage(), indicator.getLook());
                   }
                   else {
                      if (!force) {
@@ -548,8 +508,8 @@
          update: function (poolItem, prevMessage, prevLook) {
             var inds = poolItem.indicators;
             if (inds.length) {
-               var msg = inds[0].message;
-               var look = inds[0].look;
+               var msg = inds[0].getMessage();
+               var look = inds[0].getLook();
                // Сейчас look неизменяемый, такого сравнения достаточно
                if (prevMessage !== msg || look !== prevLook) {
                   poolItem.spinner = WaitIndicatorSpinner.change(poolItem.spinner, poolItem.container, msg, look);
@@ -569,8 +529,6 @@
             }
          }
       };
-
-
 
 
 
@@ -648,8 +606,6 @@
             this._list.forEach(func);
          }
       };
-
-
 
 
 
