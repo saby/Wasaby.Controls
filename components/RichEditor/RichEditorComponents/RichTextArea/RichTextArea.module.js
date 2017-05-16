@@ -662,6 +662,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
+            ['fontsize', 'forecolor', 'bold', 'italic', 'underline', 'strikethrough'].forEach(function(stl){
+               this._removeFormat(stl);
+            }, this);
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
