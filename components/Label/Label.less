@@ -1,0 +1,35 @@
+.controls-Label {
+  display: block;
+  margin: @label-text-margin;
+}
+.controls-Label__text {
+  display: inline-block;
+  cursor: @default-hover-cursor;
+}
+
+.controls-Label__text_size {
+  font-size: @default-font-size;
+  height: @text-box-height;
+  line-height: @text-box-height;
+}
+
+.controls-Label_requeredField .controls-Label__text:after {
+  content: ' *';
+}
+
+.ws-enabled {
+  .controls-Label__text_color {
+    color: @innacent-color;
+  }
+  &.controls-Label_requeredField {
+    .controls-Label__text_color:after {
+      color: @error-color;
+    }
+  }
+}
+
+.ws-disabled {
+  .controls-Label__text_color {
+    color: @disabled-color;
+  }
+}
