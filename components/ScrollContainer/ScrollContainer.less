@@ -52,17 +52,16 @@
    }
    -webkit-overflow-scrolling: touch;
    // isolation создает изолированный контект отображения и iframe в полноэкранном режиме отображается неправильно
-   // (элементы с isolation: isolate отображаются поверх него, т.к. у них собственный контекст рендера)
+   // (элементы с isolation: isolate отображаются поверх него, т.к. у них собственный контекст рендера).
+   // Если будут проблемы, то можно попробовать следующее решение:
+   // .controls-ScrollContainer__content {
+   //    transform: scale(1);
+   // }
    z-index: 0;
 
    &.ws-sticky-header__scrollable-container {
       width: auto;
    }
-}
-
-body.ws-is-ie .controls-ScrollContainer__content {
-  // Хак. IE не поддерживает isolation: isolate;
-  transform: scale(1);
 }
 
 .controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
