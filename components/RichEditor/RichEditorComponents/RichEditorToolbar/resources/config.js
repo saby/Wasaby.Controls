@@ -373,7 +373,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._codeSample(this);
             }
          },
-         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
+         visible: false, //!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 130
       }
    ];
