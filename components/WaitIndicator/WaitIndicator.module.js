@@ -7,13 +7,6 @@
       'css!SBIS3.CONTROLS.WaitIndicator'
    ],
 
-   /*###
-    TODO: Убрать всё, связанное с suspend
-    TODO: Убрать
-    TODO: Убрать
-    TODO: Убрать
-    */
-
    /**
     * Класс, описывающий индикатор ожидания завершения процесса. Позволяет инициировать отображение индикатора(ов), задавать свойсва отображения и
     * прекращения его(их) работы.
@@ -419,7 +412,7 @@
           * @param {WaitIndicatorInstance} indicator Индикатор
           */
          suspend: function (indicator) {
-         this._remove(indicator, false);
+            this._remove(indicator, false);
          },
 
          /**
@@ -428,7 +421,7 @@
           * @param {WaitIndicatorInstance} indicator Индикатор
           */
          remove: function (indicator) {
-         this._remove(indicator, true);
+            this._remove(indicator, true);
          },
 
          /**
