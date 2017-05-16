@@ -2893,18 +2893,27 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true),
+                  self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                   //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                   this._loader = null;
                   //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                  var hasNextPage
+                  if (this._options.navigation && this._options.navigation.type == 'cursor') {
+                     this._listNavigation.analizeResponceParams(dataSet);
+                     hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
+                  }
+                  else {
+                     hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                  }
 
                   this._updateScrollOffset();
                   //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать

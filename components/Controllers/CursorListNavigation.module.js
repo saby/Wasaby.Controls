@@ -14,6 +14,10 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
        */
       var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS.CursorListNavigation.prototype*/{
          $protected: {
+            _hasMore: {
+               'up' : false,
+               'down' : false
+            },
             _options: {
                type: 'cursor',
                config: {
@@ -54,7 +58,20 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
          },
 
          analizeResponceParams: function(dataset) {
-
+            var more = dataset.getMetaData().more;
+            if (typeof more == 'boolean') {
+               var direction;
+               if (this._options.config.direction == 'desc') {
+                  direction = 'down';
+               }
+               else {
+                  direction = 'up';
+               }
+               this._hasMore[direction] = more;
+            }
+            else {
+               this._hasMore = more;
+            }
          },
 
          setPosition: function(pos) {
@@ -63,6 +80,10 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
 
          setDirection: function(dir) {
             this._options.config.direction = dir;
+         },
+
+         hasNextPage: function(scrollDir) {
+            return this._hasMore[scrollDir];
          }
 
       });
