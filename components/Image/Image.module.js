@@ -3,7 +3,6 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-   'Core/constants',
    "Transport/BLObject",
    "Core/helpers/helpers",
    "Core/Indicator",
@@ -26,7 +25,7 @@ define('js!SBIS3.CONTROLS.Image',
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( _const, BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
+], function(BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
       'use strict';
       //TODO: Избавится от дублирования
       var
@@ -363,9 +362,7 @@ define('js!SBIS3.CONTROLS.Image',
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
                //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
-               if (this._options.avoidCache) {
-                  this._setImage = this._setImage.debounce(0);
-               }
+               this._setImage = this._setImage.debounce(0);
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
@@ -582,21 +579,8 @@ define('js!SBIS3.CONTROLS.Image',
                      };
                   img.addEventListener('load', onLoadHandler);
                   img.addEventListener('error', onErrorHandler);
-                  img.setAttribute('src', this._prepareUrl(url));
+                  img.setAttribute('src', url);
                }
-            },
-            _prepareUrl: function(url) {
-               //Хак для ff чтобы при смене src на такой же стреляли события load и error
-               if (_const.browser.firefox || _const.browser.isIE12) {
-                  if (url.indexOf('id=') > -1) {
-                     url = url.replace(/\?id=(.+?)&/, function (a, b) {
-                        return a.replace(b, (new Date().getTime()));
-                     });
-                  } else {
-                     url += (url.indexOf('?') > -1 ? '&' : '?') + ('&t=' + (new Date().getTime()));
-                  }
-               }
-               return url;
             },
             _showEditDialog: function(imageType) {
                var
