@@ -114,7 +114,6 @@
             this.setMessage(message);
             this._look = oLook;
             //this._starting = null;
-            //this._suspending = null;
             //this._removing = null;
             this._useDeferred = !!useDeferred;
             if (typeof delay === 'number' && 0 <= delay) {
@@ -177,7 +176,7 @@
 
          /**
           * Начать показ индикатора через (опциональное) время задержки
-          * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
+          * (Все предыдущие вызовы с задержками методов start и remove отменяются последним вызовом)
           * @public
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise|Deferred}
@@ -187,20 +186,8 @@
          },
 
          /**
-          * ВРЕМЕННО скрыть индикатор (без удаления из DOM) через (опциональное) время задержки
-          * Будьте осторожны при использовании, не забывайте очищать DOM вызовом метода remove
-          * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
-          * @public
-          * @param {number} delay Время задержки в миллисекундах
-          * @return {Promise|Deferred}
-          */
-         suspend: function (delay) {
-            return this._callDelayed('suspend', '_suspending', delay);
-         },
-
-         /**
           * Завершить показ индикатора через (опциональное) время задержки
-          * (Все предыдущие вызовы с задержками методов start, suspend и remove отменяются последним вызовом)
+          * (Все предыдущие вызовы с задержками методов start и remove отменяются последним вызовом)
           * @public
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise|Deferred}
@@ -210,7 +197,7 @@
          },
 
          /**
-          * Общая реализация для методов start, suspend и remove
+          * Общая реализация для методов start и remove
           * @protected
           * @param {string} method Имя подлежащего метода
           * @param {string} storing Имя защищённого свойства для хранения данных об отложенном вызове
@@ -218,7 +205,7 @@
           * @return {Promise|Deferred}
           */
          _callDelayed: function (method, storing, delay) {
-            for (var storings = ['_starting', '_suspending', '_removing'], i = 0; i < storings.length; i++) {
+            for (var storings = ['_starting', '_removing'], i = 0; i < storings.length; i++) {
                var key = storings[i];
                var inf = this[key];
                if (inf) {
@@ -260,14 +247,6 @@
           * @type {number}
           */
          DEFAULT_DELAY: 2000,
-
-         /**
-          * Константа - время по умолчанию до удаления приостановленных индикаторов из DOM-а
-          * @public
-          * @static
-          * @type {number}
-          */
-         SUSPEND_LIFETIME: 15000,
 
          /**
           * Создаёт индикатор ожидания завершения процесса, поведение и состояние определяется указанными опциями. Отложенный стоп будет использован
@@ -407,30 +386,11 @@
          },
 
          /**
-          * Запросить скрытие DOM-элемент индикатора без удаления из DOM-а. Будет выполнено, если нет других запросов на показ
-          * @public
-          * @param {WaitIndicatorInstance} indicator Индикатор
-          */
-         suspend: function (indicator) {
-            this._remove(indicator, false);
-         },
-
-         /**
           * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
           * @public
           * @param {WaitIndicatorInstance} indicator Индикатор
           */
          remove: function (indicator) {
-            this._remove(indicator, true);
-         },
-
-         /**
-          * Общая реализация для методов suspend и remove
-          * @protected
-          * @param {WaitIndicatorInstance} indicator Индикатор
-          * @param {boolean} force Удалить из DOM-а совсем, не просто скрыть
-          */
-         _remove: function (indicator, force) {
             var container = indicator.getContainer(),
                isGlobal = !container,
                poolItem = WaitIndicatorPool.search(container);
@@ -452,18 +412,8 @@
                      this.update(poolItem, indicator.getMessage(), indicator.getLook());
                   }
                   else {
-                     if (!force) {
-                        inds.splice(i, 1);
-                        WaitIndicatorSpinner.hide(poolItem.spinner);
-                        // Начать отсчёт времени до принудительного удаления из DOM-а
-                        poolItem.clearing = setTimeout(function () {
-                           this._delete(poolItem);
-                        }.bind(this), WaitIndicator.SUSPEND_LIFETIME);
-                     }
-                     else {
-                        // Удалить из DOM-а и из пула
-                        this._delete(poolItem);
-                     }
+                     // Удалить из DOM-а и из пула
+                     this._delete(poolItem);
                   }
                }
             }
