@@ -1083,7 +1083,7 @@ define('js!SBIS3.CONTROLS.ListView',
                visible: false,
                showPages: false,
                idProperty: 'id',
-               parent: this,
+               parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
             // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
