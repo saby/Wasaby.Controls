@@ -958,7 +958,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          toggleContentSource: function(visible) {
             var
                sourceVisible = visible !== undefined ? !!visible : this._sourceContainer.hasClass('ws-hidden'),
-               container = this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
+               container = this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl,
+               focusContainer = sourceVisible ? this._sourceArea : container;
             if (sourceVisible) {
                this._sourceContainer.css({
                   'height' : container.outerHeight(),
@@ -969,6 +970,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
             container.toggleClass('ws-hidden', sourceVisible);
             this._notify('onToggleContentSource', sourceVisible);
+            //установка фокуса в поле ввода на которое происходит переключение
+            focusContainer.focus();
          },
 
          insertImageTemplate: function(key, fileobj) {
