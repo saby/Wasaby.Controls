@@ -283,6 +283,15 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
 
       before: {
+         _keyboardHover: function (e) {
+            switch (e.which) {
+               case constants.key.m:
+                  //Метод moveRecordsWithDialog кидает ошибку, если у кого-то экшен создается в обработчике он ее увидит
+                  //и не получится так что тупо не показывается диалог.
+                  e.ctrlKey && this.moveRecordsWithDialog();
+                  break;
+            }
+         },
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
                var self = this;
