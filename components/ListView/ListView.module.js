@@ -2899,7 +2899,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
-               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+
+               /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
+               if (!this._options.navigation || this._options.navigation.type != 'cursor') {
+                  this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+               }
 
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
                   //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
@@ -3298,6 +3302,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
                   cMerge(queryFilter, addParams.filter);
                }
+            }
+            /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._notify('onBeforeDataLoad', queryFilter, sorting, offset, limit);
             }
             query.where(queryFilter)
                .offset(offset)
