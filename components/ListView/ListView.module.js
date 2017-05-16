@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!WS.Data/MoveStrategy/Base',
    'Core/WindowManager',
    'css!SBIS3.CONTROLS.ListView',
-   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup',
+   'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
