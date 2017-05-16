@@ -662,6 +662,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
+            //Удаление текущего форматирования под курсором перед установкой определенного стиля
             ['fontsize', 'forecolor', 'bold', 'italic', 'underline', 'strikethrough'].forEach(function(stl){
                this._removeFormat(stl);
             }, this);
