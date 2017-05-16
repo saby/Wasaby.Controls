@@ -82,8 +82,10 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
 
          this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
          this._historyChannel.subscribe('onHistoryUpdate', function(event, history) {
-            this._history = history;
-            this._notify('onHistoryUpdate', history);
+            if(history !== this._history) {
+               this._history = history;
+               this._notify('onHistoryUpdate', history);
+            }
          }.bind(this));
       },
 
