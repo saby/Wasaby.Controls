@@ -864,6 +864,24 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see showPaging
                 */
                partialPaging: true,
+               /**
+                * @typedef {Object} CursorNavigParams
+                * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
+                * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
+                * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
+                     - asc - по возрастанию
+                     - desc - по убыванию
+                     - both - в обе стороны от записи с navigation.config.position
+
+                */
+               /**
+                * @typedef {Object} ListViewNavigation
+                * @property {String} [type] Тип навигации. Например 'cursor'
+                * @property {CursorNavigParams} [config] Конфиг для контроллера навигации
+                */
+               /**
+                * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                */
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
