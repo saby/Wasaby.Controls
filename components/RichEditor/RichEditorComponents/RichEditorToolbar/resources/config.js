@@ -130,7 +130,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
-         visible: false, //todo: цитата наславиается на обтекаемое избражение
          order: 65
       },
 
