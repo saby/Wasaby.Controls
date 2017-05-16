@@ -110,13 +110,13 @@ define('js!SBIS3.CONTROLS.CheckBox', [
       setCaption: function(captionTxt){
          CheckBox.superclass.setCaption.call(this,captionTxt);
          if (captionTxt) {
-            this._checkBoxCaption.html(captionTxt).removeClass('ws-hidden');
+            this._checkBoxCaption.html(captionTxt).removeClass('controls-CheckBox__caption_empty');
             if (this._options.checked) {
                this._options.textValue = this._options.caption;
             }
          }
          else {
-            this._checkBoxCaption.html('&nbsp;').addClass('ws-hidden');
+            this._checkBoxCaption.html('&nbsp;').addClass('controls-CheckBox__caption_empty');
             this._options.textValue = '';
          }
       },
