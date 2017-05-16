@@ -81,8 +81,8 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          this._history = this._getStorageValue();
 
          this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
-         this._historyChannel.subscribe('onHistoryUpdate', function(event, history) {
-            if(history !== this._history) {
+         this._historyChannel.subscribe('onHistoryUpdate', function(event, history, store) {
+            if(store !== this) {
                this._history = history;
                this._notify('onHistoryUpdate', history);
             }
@@ -189,7 +189,8 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
                self._saveParamsDeferred.callback();
                return res;
             }, self));
-            this._historyChannel.notify('onHistoryUpdate', this._history);
+            this._notify('onHistoryUpdate', this._history);
+            this._historyChannel.notify('onHistoryUpdate', this._history, this);
          } else {
             /* Если во время сохранения истории её поменяли ещё раз, то необходимо дождаться предыдущего запроса,
                и позвать запрос с новыми данными. Иначе будут гонки, какой запрос первей отработает. */
