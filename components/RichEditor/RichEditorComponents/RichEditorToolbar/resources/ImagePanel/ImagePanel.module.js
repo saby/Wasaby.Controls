@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
-                  windowTitle: 'Вставка изображения',
+                  windowTitle: 'Выберите шаблон вставки изображения:',
                   closeButton: true,
                   canMultiSelect: false,
                   corner: 'tr',
