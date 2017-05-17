@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
+   'Core/WindowManager',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -67,8 +68,8 @@ define('js!SBIS3.CONTROLS.ListView',
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize) {
+    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
 
      'use strict';
 
@@ -938,6 +939,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            if (this._options.scrollPaging) {
+               this._pagingZIndex = WindowManager.acquireZIndex();
+               WindowManager.setVisible(this._pagingZIndex);
+            }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -1092,7 +1097,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
-               paging: this._scrollPager
+               paging: this._scrollPager,
+               pagingZIndex: this._pagingZIndex
             });
             this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
@@ -2901,46 +2907,51 @@ define('js!SBIS3.CONTROLS.ListView',
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
-                  //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
-                  //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
-                  this._loader = null;
-                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
-
-                  this._updateScrollOffset();
-                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                  this.getItems().setMetaData(dataSet.getMetaData());
-                  if (!hasNextPage) {
-                     this._toggleEmptyData(!this.getItems().getCount());
-                  }
-                  this._notify('onDataMerge', dataSet);
-                  //Если данные пришли, нарисуем
-                  if (dataSet.getCount()) {
-                     //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
-                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                     if (this._isSlowDrawing(this._options.easyGroup)) {
-                        this._needToRedraw = false;
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
+                  .addBoth(fHelpers.forAliveOnly(function(res) {
+                     this._loader = null;
+                     return res;
+                  }, this))
+                  .addCallback(fHelpers.forAliveOnly(function (dataSet) {
+                     //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+                     //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+                     //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+                     var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+         
+                     this._updateScrollOffset();
+                     //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                     this.getItems().setMetaData(dataSet.getMetaData());
+                     if (!hasNextPage) {
+                        this._toggleEmptyData(!this.getItems().getCount());
                      }
-                     this._drawPage(dataSet);
-                     //И выключаем после отрисовки
-                     if (this._isSlowDrawing(this._options.easyGroup)) {
-                        this._needToRedraw = true;
-                     }
-                  } else {
-                     // Если пришла пустая страница, но есть еще данные - догрузим их
-                     if (hasNextPage){
-                        this._scrollLoadNextPage();
+                     this._notify('onDataMerge', dataSet);
+                     //Если данные пришли, нарисуем
+                     if (dataSet.getCount()) {
+                        //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                        //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                        if (this._isSlowDrawing(this._options.easyGroup)) {
+                           this._needToRedraw = false;
+                        }
+                        this._drawPage(dataSet);
+                        //И выключаем после отрисовки
+                        if (this._isSlowDrawing(this._options.easyGroup)) {
+                           this._needToRedraw = true;
+                        }
                      } else {
-                        // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
-                        this._hideLoadingIndicator();
+                        // Если пришла пустая страница, но есть еще данные - догрузим их
+                        if (hasNextPage){
+                           this._scrollLoadNextPage();
+                        } else {
+                           // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
+                           this._hideLoadingIndicator();
+                        }
                      }
-                  }
-               }, this)).addErrback(function (error) {
-                  this._hideLoadingIndicator();
-                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
-                  return error;
-               }.bind(this));
+                  }, this))
+                  .addErrback(fHelpers.forAliveOnly(function (error) {
+                     this._hideLoadingIndicator();
+                     //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                     return error;
+                  }, this));
             }
          },
 
@@ -3947,12 +3958,15 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.17. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
+                     dialogOptions: {
+                        opener:this
+                     },
                      moveStrategy: this.getMoveStrategy()//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   }),
                   items = this.getItems(),
