@@ -242,6 +242,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             switch (e.which) {
                case constants.key.m:
                   e.ctrlKey && this.execute();
+                  busE.setResult(false);
                   break;
             }
          }

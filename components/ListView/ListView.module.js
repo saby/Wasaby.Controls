@@ -3952,7 +3952,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.17. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,
