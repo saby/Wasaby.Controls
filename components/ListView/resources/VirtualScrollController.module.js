@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
 
             var direction = this._getDirection(this._currentWindow, newWindow),
-               offsets = this._getOffsets(direction, this._newItemsCount);
+               offset = this._newItemsCount ? BATCH_SIZE - newItemsCount : 0;
             
             if (this._DEBUG) {
                console.log('page', pageNumber);
@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
 
             // удаляем записи
-            items = this._getItemsToRemove(direction ? diff.top : diff.bottom, offsets.remove, projCount);
+            items = this._getItemsToRemove(direction ? diff.top : diff.bottom, direction ? 0 : offset, projCount);
             if (items.length) {
                this._notify('onItemsRemove', items);
                
@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                }
             }
             // добавляем записи
-            items = this._getItemsToAdd(direction ? diff.bottom : diff.top, offsets.add, projCount);
+            items = this._getItemsToAdd(direction ? diff.bottom : diff.top, direction ? offset : 0, projCount);
             if (items.length) {
                var at = this._getPositionToAdd(diff, direction, this._options.mode);
                this._notify('onItemsAdd', items, at);
@@ -116,12 +116,10 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                   console.log('add from', items[0], 'to', items[items.length - 1], 'at', at);
                }
             }
-
             //Меняем высоту распорок
             this._setWrappersHeight(pageNumber);
-
-            // Если поменялась страница, или увеличилось окно (так может быть в начале) - запомним новое окно
             this._currentWindow = newWindow;
+
             if (this._DEBUG) {
                console.log('displayed from ', newWindow[0], 'to', newWindow[1]);
             }
@@ -135,20 +133,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           */
          _getDirection: function(currentWindow, newWindow) {
             return (currentWindow[0] < newWindow[0] || currentWindow[0] > newWindow[1]) && currentWindow[1] > newWindow[0];
-         },
-
-         _getOffsets: function(direction, newItemsCount){
-            var addOffset = 0,
-               removeOffset = 0;
-            if (direction) {
-               addOffset = newItemsCount ? BATCH_SIZE - newItemsCount : 0;
-            } else {
-               removeOffset = newItemsCount ? BATCH_SIZE - newItemsCount : 0;
-            }
-            return {
-               add: addOffset,
-               remove: removeOffset
-            };
          },
          /**
           * Получить положение для вставки в проекцию
