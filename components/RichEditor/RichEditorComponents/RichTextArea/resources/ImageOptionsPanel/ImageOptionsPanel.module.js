@@ -142,7 +142,6 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                      if (selection) {
                         selection.removeAllRanges();
                      }
-                     this.hide();
                      break;
                   case "edit":
                      var
