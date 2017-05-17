@@ -627,7 +627,7 @@
          else {
             promise = new Promise(function (resolve, reject) {
                success = resolve;
-               fail = fail;
+               fail = reject;
             });
          }
          return {

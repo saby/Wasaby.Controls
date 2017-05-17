@@ -219,7 +219,19 @@
                   this[key] = null;
                }
             }
-            var promInf = emptyPromise(this._useDeferred);
+            var promInf = {};
+            if (this._useDeferred || typeof Promise === 'undefined') {
+               var dfr = new Deferred();
+               promInf.promise = dfr;
+               promInf.success = dfr.callback.bind(dfr);
+               promInf.fail = dfr.errback.bind(dfr);
+            }
+            else {
+               promInf.promise = new Promise(function (resolve, reject) {
+                  promInf.success = resolve;
+                  promInf.fail = reject;
+               });
+            }
             if (typeof delay === 'number' && 0 < delay) {
                promInf.id = setTimeout(function () {
                   var prev = this[storing];
@@ -291,30 +303,6 @@
        * @type {number}
        */
       var WaitIndicatorCounter = 0;
-
-
-
-      var emptyPromise = function (useDeferred) {
-         var promise,
-            success,
-            fail;
-         if (useDeferred || typeof Promise === 'undefined') {
-            promise = new Deferred();
-            success = promise.callback.bind(promise);
-            fail = promise.errback.bind(promise);
-         }
-         else {
-            promise = new Promise(function (resolve, reject) {
-               success = resolve;
-               fail = fail;
-            });
-         }
-         return {
-            promise: promise,
-            success: success,
-            fail: fail
-         };
-      }
 
 
 
@@ -438,7 +426,7 @@
             // Удалить из DOM-а
             WaitIndicatorSpinner.remove(poolItem.spinner);
             // Удалить из пула
-            var i = _pool.indexOf(item);
+            var i = _pool.indexOf(poolItem);
             if (i !== -1) {
                _pool.splice(i, 1);
             }
