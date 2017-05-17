@@ -92,6 +92,18 @@ define('js!SBIS3.CONTROLS.Button',
 
             _onClick: function(){
                this._notify("onActivated");
+            },
+
+            _onMouseDown: function(){
+               if (this._options.class.indexOf("controls-Click__active")===-1) {
+                  this._options.class += " controls-Click__active ";
+                  this._setDirty();
+               }
+            },
+
+            _onMouseUp: function(){
+               this._options.class.replace("controls-Click__active","");
+               this._setDirty();
             }
 
          });

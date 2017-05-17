@@ -1,5 +1,7 @@
 <span name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}"
       event:onclick="_onClickHandler()"
+      event:onmousedown="_onMouseDown()"
+      event:onmouseup="_onMouseUp()"
       tabindex="{{_options.tabindex}}"
       class="controls-Button controls-ButtonBase{{!_options.visible ? ' ws-hidden'}}{{!_options.enabled ? ' ws-disabled':' ws-enabled'}}{{_options.primary ? ' controls-Button__primary':' controls-Button__default'}}"
       title="{{_options.tooltip}}"
