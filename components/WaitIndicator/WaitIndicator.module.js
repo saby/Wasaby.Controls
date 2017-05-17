@@ -149,7 +149,7 @@
                newMsg = msg && typeof msg === 'string' ? msg : null;
             if (newMsg !== prevMsg) {
                this._message = newMsg;
-               var poolItem = WaitIndicatorPool.search(this._container);
+               var poolItem = _poolSearch(this._container);
                if (poolItem && poolItem.indicators.length && poolItem.indicators[0] === this) {
                   WaitIndicatorInner.update(poolItem, prevMsg, this._look);
                }
@@ -361,14 +361,14 @@
             var container = indicator.getContainer(),
                isGlobal = !container;
             if (isGlobal) {
-               WaitIndicatorPool.each(function (item) {
+               _pool.forEach(function (item) {
                   if (item.container) {
                      WaitIndicatorSpinner.hide(item.spinner);
                      item.isLocked = true;
                   }
                });
             }
-            var poolItem = WaitIndicatorPool.search(container);
+            var poolItem = _poolSearch(container);
             if (poolItem) {
                // Индикатор уже есть в DOM-е
                if (!poolItem.indicators.length) {
@@ -381,7 +381,7 @@
             else {
                 // Индикатора в DOM-е не содержиться
                var spinner = WaitIndicatorSpinner.create(container, indicator.getMessage(), indicator.getLook());
-               WaitIndicatorPool.add({container:container, spinner:spinner, indicators:[indicator]});
+               _pool.push({container:container, spinner:spinner, indicators:[indicator]});
             }
          },
 
@@ -393,7 +393,7 @@
          remove: function (indicator) {
             var container = indicator.getContainer(),
                isGlobal = !container,
-               poolItem = WaitIndicatorPool.search(container);
+               poolItem = _poolSearch(container);
             if (poolItem) {
                var inds = poolItem.indicators,
                   id = indicator.getId(),
@@ -418,7 +418,7 @@
                }
             }
             if (isGlobal) {
-               WaitIndicatorPool.each(function (item) {
+               _pool.forEeach(function (item) {
                   if (item.container) {
                      WaitIndicatorSpinner.show(item.spinner);
                      item.isLocked = false;
@@ -438,7 +438,10 @@
             // Удалить из DOM-а
             WaitIndicatorSpinner.remove(poolItem.spinner);
             // Удалить из пула
-            WaitIndicatorPool.remove(poolItem);
+            var i = _pool.indexOf(item);
+            if (i !== -1) {
+               _pool.splice(i, 1);
+            }
          },
 
          /**
@@ -478,75 +481,24 @@
       /**
        * Пул содержащий информацию о находящихся в DOM-е элементах индикаторов
        * @protected
-       * @type {object}
+       * @type {object[]}
        */
-      var WaitIndicatorPool = {
-         /**
-          * Список элементов пула
-          * @protected
-          * @type {object[]}
-          */
-         _list: [],
+      var _pool = [];
 
-         /**
-          * Добавить элемент пула
-          * @public
-          * @param {object} item Элемент пула
-          */
-         add: function (item) {
-            this._list.push(item);
-         },
-
-         /**
-          * Найти индекс элемента пула по контейнеру
-          * @public
-          * @param {HTMLElement} container Контейнер индикатора
-          * @return {number}
-          */
-         searchIndex: function (container) {
-            if (this._list.length) {
-               for (var j = 0; j < this._list.length; j++) {
-                  var item = this._list[j];
-                  if (item.container === container) {
-                     return j;
-                  }
+      /**
+       * Найти элемента пула по контейнеру
+       * @protected
+       * @param {HTMLElement} container Контейнер индикатора
+       * @return {object}
+       */
+      var _poolSearch = function (container) {
+         if (_pool.length) {
+            for (var j = 0; j < _pool.length; j++) {
+               var item = _pool[j];
+               if (item.container === container) {
+                  return item;
                }
             }
-            return -1;
-         },
-
-         /**
-          * Найти элемента пула по контейнеру
-          * @public
-          * @param {HTMLElement} container Контейнер индикатора
-          * @return {object}
-          */
-         search: function (container) {
-            var i = this.searchIndex(container);
-            return i !== -1 ? this._list[i] : null;
-         },
-
-         /**
-          * Удалить элемент пула
-          * @public
-          * @param {object} item Элемент пула
-          */
-         remove: function (item) {
-            if (this._list.length) {
-               var i = this._list.indexOf(item);
-               if (i !== -1) {
-                  this._list.splice(i, 1);
-               }
-            }
-         },
-
-         /**
-          * Выполнить указанную функцию со всеми элементами
-          * @public
-          * @param {function} func Функция
-          */
-         each: function (func) {
-            this._list.forEach(func);
          }
       };
 
