@@ -15,16 +15,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                itemsContainer: null
             },
             _currentVirtualPage: 0,
-            _virtualPages: [{
-               offset: 0
-            }],
+            _virtualPages: [0],
+            _heights: [],
             _bottomIndex: null,
             _beginWrapperHeight: 0,
             _endWrapperHeight: 0,
             _newItemsCount: 0,
             // высота добавленных элементов
             _additionalHeight: 0,
-            _lastPageHeight: 0,
             _notAddedAmount: 0,
             // количество не отображаемых страниц сверху списка
             _dettachedCount: 0,
@@ -64,7 +62,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          _getPage: function (scrollTop, viewportHeight, additionalHeight) {
             for (var i = 0; i < this._virtualPages.length; i++) {
-               if (this._virtualPages[i].offset + additionalHeight >= scrollTop) {
+               if (this._virtualPages[i] + additionalHeight >= scrollTop) {
                   return i;
                }
             }
@@ -134,6 +132,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          _getDirection: function(currentWindow, newWindow) {
             return (currentWindow[0] < newWindow[0] || currentWindow[0] > newWindow[1]) && currentWindow[1] > newWindow[0];
          },
+
          /**
           * Получить положение для вставки в проекцию
           * @param  {Arra} diff         разница промежутков
@@ -183,18 +182,29 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           */
          _calculateWrappersHeight: function (shownPages) {
             var topPage = shownPages[0],
-               bottomPage = shownPages[1];
+               bottomPage = shownPages[1],
+               beginHeight = 0,
+               endHeight = 0;
 
-            this._beginWrapperHeight = this._virtualPages[topPage].offset + this._additionalHeight;
-            this._endWrapperHeight = this._virtualPages[this._virtualPages.length - 1].offset - this._virtualPages[bottomPage].offset;
+            for (var i = 0; i < topPage * BATCH_SIZE; i++) {
+               beginHeight += this._heights[i];
+            }
+
+            for (var i = bottomPage * BATCH_SIZE; i < this._heights.length; i++) {
+               endHeight += this._heights[i];
+            }
+
+            this._beginWrapperHeight = beginHeight; //this._virtualPages[topPage] + this._additionalHeight;
+            this._endWrapperHeight = endHeight; // this._virtualPages[this._virtualPages.length - 1] - this._virtualPages[bottomPage];
             
             if (this._DEBUG) {
                console.log('top height', this._beginWrapperHeight);
                console.log('bottom height', this._endWrapperHeight);
             }
+
             return {
-               begin: this._beginWrapperHeight, 
-               end: this._endWrapperHeight
+               begin: beginHeight, 
+               end: endHeight
             };
          },
 
@@ -369,14 +379,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                //Учитываем все что есть в itemsContainer (группировка и тд)
                listItems = $('> *', this._options.itemsContainer).filter(':visible'),
                count = 0,
-               dettachedCount = this._currentWindow[0] / BATCH_SIZE,
+               dettachedCount = this._currentWindow[0],
                lastPageStart;
 
             if (self._options.mode == 'up') {
                listItems = $(listItems.get().reverse());
             }
 
-            lastPageStart = (this._virtualPages.length - dettachedCount - 1) * BATCH_SIZE;
+            lastPageStart = this._heights.length - dettachedCount;
 
             if (lastPageStart <= listItems.length) {
                this._viewHeight = this._options.viewContainer[0].offsetHeight;
@@ -385,12 +395,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
             //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
             listItems.slice(lastPageStart).each(function () {
+               self._heights.push(this.offsetHeight);
                // Если набралось записей на выстору viewport'a добавим еще страницу
                // При этом нужно учесть отступ сверху от view и фиксированую шапку
                if (++count == BATCH_SIZE) {
-                  self._virtualPages.push({
-                     offset: self._getElementOffset(this) - self._additionalHeight
-                  });
+                  self._virtualPages.push(self._getElementOffset(this) - self._additionalHeight);
                   count = 0;
                }
             });
@@ -414,7 +423,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                hash = items[0].getHash();
                var itemHeight = $('[data-hash="' + hash + '"]', this._options.viewContainer).height();
                this._additionalHeight += itemHeight;
-               this._virtualPages[0].offset = -this._additionalHeight;
+               this._virtualPages[0] = -this._additionalHeight;
             }
 
             if (this._newItemsCount == BATCH_SIZE) {
