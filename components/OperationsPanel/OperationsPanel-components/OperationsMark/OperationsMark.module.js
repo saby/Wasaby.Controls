@@ -115,7 +115,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                self.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
                self.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
             });
-            this._bindEvents();
             this._updateMark();
          }
       },
