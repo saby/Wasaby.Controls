@@ -784,7 +784,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
                          поэтому считать надо. */
                    if (needResizeInput) {
-                      additionalWidth = isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0;
+                      additionalWidth = (isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0) + parseInt(this._container.css('border-left-width'))*2;
 
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
@@ -796,7 +796,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       }
 
                       /* Высчитываем ширину, доступную для элементов */
-                      availableWidth = this._container[0].clientWidth - additionalWidth;
+                      availableWidth = this._container[0].getBoundingClientRect().width - additionalWidth;
 
                       /* Считаем, сколько элементов может отобразиться */
                       for (var i = itemsCount - 1; i >= 0; i--) {
