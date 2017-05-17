@@ -1,0 +1,30 @@
+<div class="controls-filterButton__history-area ws-hidden">
+   <span class="controls-filterButton__secondary-title">Ранее отбирались</span>
+   <div class="controls-filterButton__footerAreas-wrapper controls-filterButton__footerAreas-maxHeight">
+      <ws:SBIS3.CONTROLS.ListView
+         name="historyView"
+         className="controls-ListView__withoutMarker controls-filterButton__historyView"
+         itemsActions="{{[]}}"
+         idProperty="id"
+         itemsDragNDrop=""
+      >
+         <ws:itemContentTpl>
+            <ws:partial template="tmpl!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl"/>
+         </ws:itemContentTpl>
+         <ws:itemTpl>
+            <ws:partial template="html!SBIS3.CONTROLS.FilterHistory/historyItemTpl"/>
+         </ws:itemTpl>
+         <ws:handlers>
+            <ws:Object>
+               <ws:onChangeHoveredItem>
+                  <ws:Function>js!SBIS3.CONTROLS.FilterHistory:prototype._onChangeHoverHistoryItem</ws:Function>
+               </ws:onChangeHoveredItem>
+            </ws:Object>
+         </ws:handlers>
+      </ws:SBIS3.CONTROLS.ListView>
+   </div>
+   <ws:SBIS3.CONTROLS.CommandsSeparator
+      name="toggleHistory"
+      command="toggleHistory"
+   />
+</div>
