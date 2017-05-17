@@ -71,11 +71,11 @@ body {
   height: 1.785rem;
   font-family: 'cbuc-icons24' !important;
 }
-@text-box-height-prestoBig:   50px;
-@text-box-height-prestoFont:  36px;
 .controls-TextBox {
    &.controls-TextBox__big {
-
+      .controls-TextBox__field {
+         font-size:  1.43rem;
+      }
    }
 }
 
@@ -410,6 +410,27 @@ body .controls-IconButton {
 .controls-DropdownList__picker .controls-DropdownList__item .controls-DropdownList__itemTextWrapper .controls-DropdownList__item-text {
     color: #000;
     line-height: 3rem;
+}
+.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
+    font-size: 1.14rem;
+    height: 3.57rem;
+    color: #000;
+    line-height: 3.57rem;
+}
+body .ws-float-area-stack-panel-shadow {
+    border-left: 2px solid #00a2ef;
+    border-color: #00a4f0;
+    border-width: 0 0 0 2px;
+    border-style: solid;
+    -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+    -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+    box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+}
+.icon-large {
+  vertical-align: middle !important;
+}
+.controls-ListView__scrollPager .controls-IconButton {
+  background: #1D2834;
 }
 body .controls-DropdownList .controls-DropdownList__selectedItem {
     display: inline-block;

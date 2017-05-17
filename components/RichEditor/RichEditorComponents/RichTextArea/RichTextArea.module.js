@@ -209,7 +209,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _imageOptionsPanel: undefined,
             _lastReview: undefined,
             _fromTouch: false,
-            _codeSampleDialog: undefined
+            _codeSampleDialog: undefined,
+            _beforeFocusOutRng: undefined
          },
 
          _modifyOptions: function(options) {
@@ -293,6 +294,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
+                  ' allowfullscreen',
                   ' frameborder="0" >',
                   '</iframe>'
                ].join('');
@@ -662,6 +664,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
             }
+            //Удаление текущего форматирования под курсором перед установкой определенного стиля
+            ['fontsize', 'forecolor', 'bold', 'italic', 'underline', 'strikethrough'].forEach(function(stl){
+               this._removeFormat(stl);
+            }, this);
             for (var stl in constants.styles) {
                if (style !== stl) {
                   this._removeFormat(stl);
@@ -958,7 +964,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          toggleContentSource: function(visible) {
             var
                sourceVisible = visible !== undefined ? !!visible : this._sourceContainer.hasClass('ws-hidden'),
-               container = this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl;
+               container = this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl,
+               focusContainer = sourceVisible ? this._sourceArea : container;
             if (sourceVisible) {
                this._sourceContainer.css({
                   'height' : container.outerHeight(),
@@ -969,6 +976,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
             container.toggleClass('ws-hidden', sourceVisible);
             this._notify('onToggleContentSource', sourceVisible);
+            //установка фокуса в поле ввода на которое происходит переключение
+            focusContainer.focus();
          },
 
          insertImageTemplate: function(key, fileobj) {
@@ -997,6 +1006,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
          codeSample: function(text, language) {
+            if (this._beforeFocusOutRng) {
+               this._tinyEditor.selection.setRng(this._beforeFocusOutRng);
+            }
             var
                wasClear = !this._tinyEditor.plugins.codesample.getCurrentCode(this._tinyEditor);
             this._tinyEditor.plugins.codesample.insertCodeSample( this._tinyEditor, language, text);
@@ -1004,6 +1016,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._tinyEditor.selection.collapse();
                this.insertHtml('<p>{$caret}</p>')
             }
+            this._beforeFocusOutRng = false;
          },
          getCodeSampleDialog: function(){
             var
@@ -1023,7 +1036,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                editor = this._tinyEditor,
                codeDialog = this.getCodeSampleDialog();
-            codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '')
+               this._beforeFocusOutRng = editor.selection.getRng(); // необходимо запоминать выделение пред открытием ддиалога, тк оно собьется при переходе в textarea
+            codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
             codeDialog.show();
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
