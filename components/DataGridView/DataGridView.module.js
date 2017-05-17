@@ -1200,7 +1200,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._lastLeftPos = null;
       },
 
-      _getDragContainer: function() {
+      _getDragAndDropContainer: function() {
          return this._thead.find('.controls-DataGridView__PartScroll__thumb, .controls-DataGridView__scrolledCell');
       },
 
@@ -1449,6 +1449,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._arrowRight.unbind('click');
             this._arrowRight = undefined;
             this._movableElems = [];
+         }
+         if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
+            this._updateStickyHeader(false);
          }
          DataGridView.superclass.destroy.call(this);
       },

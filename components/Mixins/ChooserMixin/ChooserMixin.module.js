@@ -54,6 +54,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
              * <pre class="brush: xml">
              *     <option name="oldViews">true</option>
              * </pre>
+             * @deprecated
              */
             oldViews: false,
             /**

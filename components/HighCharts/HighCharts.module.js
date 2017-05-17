@@ -1073,6 +1073,10 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
                   tempResult.addCallback(function(res){
                      self._sourceData.data = res;
                      resultDef.callback()
+                  });
+                  tempResult.addErrback(function(err){
+                     self.hide();
+                     resultDef.errback(err)
                   })
                }
                /*иначе данные - это то, что вернули*/

@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/core-merge",
    "Core/core-instance",
    "Core/ConsoleLogger",
+   "Core/core-functions",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -32,7 +33,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, cInstance, ConsoleLogger, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (constants, Deferred, EventBus, IoC, cMerge, cInstance, ConsoleLogger, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -376,7 +377,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
                }
             }
             // Собираем header через шаблон, чтобы не тащить стили прикладников
-            header.append(dotTplFn(this._options));
+            /* Надо делать клон, иначе в ие при определнии scope для шаблона затирается parent
+               https://online.sbis.ru/opendoc.html?guid=e5604962-8cea-4d32-88e8-1ead295e0adf&des=
+               Задача в разработку 15.05.2017 Не пробрасывать scope в ИЕ utils.js:: createSavingPrototype: function mergeSavingPrototype(scope… */
+            header.append(dotTplFn(cFunctions.shallowClone(this._options)));
             this._setPickerVariables();
             this._bindItemSelect();
 
@@ -914,6 +918,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setPickerConfig: function () {
             var hasArrow = this.getContainer().hasClass('controls-DropdownList__withoutArrow'),
                 type = this._options.type,
+                isFastDataFilterType = type == 'fastDataFilter',
                 offset = {
                    top: -10,
                    left: -10
@@ -925,7 +930,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                offset.left = -2;
                offset.top = -1;
             }
-            else if (type == 'fastDataFilter') {
+            else if (isFastDataFilterType) {
                //Располагаем текст в пикере над текстом в ссылке. Позиция зависит от наличия треугольника
                offset.left = hasArrow ? -14 : 2;
             }
@@ -942,13 +947,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               locationStrategy: type == 'fastDataFilter' ? 'bodyBounds' : 'base',
+               closeOnTargetMove: isFastDataFilterType,
+               locationStrategy: isFastDataFilterType ? 'bodyBounds' : 'base',
                targetPart: true,
                template : dotTplFnPicker({
                   'multiselect' : this._options.multiselect,
                   'footerTpl' : this._options.footerTpl,
                   'hasHead': type == 'duplicateHeader' || type == 'titleHeader' || type == 'customHeader',
-                  'hasCloseButton': type == 'fastDataFilter'
+                  'hasCloseButton': isFastDataFilterType
                })
             };
          },

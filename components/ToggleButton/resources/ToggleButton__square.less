@@ -1,5 +1,5 @@
 .controls-ToggleButton__square {
-  .button-default-style();
+  .button-default-style(initial);
   border-color: transparent;
   background-color: transparent;
   border-radius: 2px;
@@ -27,17 +27,30 @@
     border-color: #587AB0;
   }
 
-  &.controls-ToggleButton-square__big {
-    font-size: initial;
+  &.controls-ToggleButton-square__medium {
     height: 28px;
     width: 28px;
     line-height: 28px;
     border-radius: 2px;
     .controls-Button__icon {
       left: 1px;
-      top: 50%;
       margin-top: -12px;
-      margin-left: 0;
+    }
+  }
+  &.controls-ToggleButton-square__big {
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+    border-radius: 2px;
+    .controls-Button__icon {
+      left: 3px;
+      margin-top: -12px;
+    }
+  }
+
+  &.ws-disabled {
+    .controls-Button__icon {
+      color: @icon-color-disabled;
     }
   }
 
