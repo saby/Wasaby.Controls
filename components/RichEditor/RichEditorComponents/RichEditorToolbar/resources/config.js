@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: 'Вставить смайлик',
          componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
-         pickerClassName: 'fre-smiles controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-smiles controls-MenuButton__Menu controls-Menu__hide-menu-header',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          items: smiles,
          handlers: {
@@ -297,6 +297,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'paste',
          componentType: 'WSControls/Buttons/MenuButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
+         pickerClassName: 'controls-MenuButton__Menu',
          caption: rk('Вставка'),
          tooltip: rk('Вставка'),
          icon: 'sprite:icon-24 icon-PasteBtr icon-primary',
@@ -374,7 +375,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._codeSample(this);
             }
          },
-         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
+         visible: false, //!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 130
       }
    ];
