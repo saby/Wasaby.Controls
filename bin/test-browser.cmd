@@ -2,7 +2,7 @@ echo *** Run unit tests via browser ***
 
 node -v
 call npm install
-call npm install selenium-standalone@4.4.2 webdriverio@2.4.5
+call npm install selenium-standalone@6.4.1 webdriverio@3.0.4
 call node node_modules/selenium-standalone/bin/selenium-standalone install
 
 node depencyCollector
