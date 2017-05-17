@@ -287,6 +287,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       }
    },
+   applyFilterToProjection = function(projection, cfg) {
+      if (cfg.displayType == 'folders') {
+         projection.setFilter(projectionFilterOnlyFolders.bind(this));
+      }
+      else {
+         projection.setFilter(projectionFilter.bind(this));
+      }
+   },
    expandAllItems = function(projection) {
       var
          recordSet = projection.getCollection(),
@@ -586,6 +594,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see SBIS3.CONTROLS.ItemsControlMixin#setItemsSortMethod
              */
             itemsSortMethod: _defaultItemsSortMethod,
+            _applyFilterToProjection: applyFilterToProjection,
              /**
               * @cfg {Boolean}
               */
@@ -593,7 +602,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             hierarchyViewModeItemTpl: '',
             hierarchyViewModeItemContentTpl: '',
             /**
-             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в дерево записями
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
              * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
              * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
              *
@@ -604,17 +613,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _lastDrawn : undefined,
          _lastPath : [],
          _loadedNodes: {},
-         _previousRoot: null,
+         _previousRoot: undefined,
          _hier: [],
          _hierPages: {}
       },
 
-      $constructor : function(cfg) {
+      $constructor : function() {
          var
             filter = this.getFilter() || {};
-         cfg = cfg || {};
          this._publish('onSearchPathClick', 'onNodeExpand', 'onNodeCollapse', 'onSetRoot', 'onBeforeSetRoot');
-         this._options._curRoot = this._options.root;
          if (typeof this._options.root != 'undefined') {
             filter[this._options.parentProperty] = this._options.root;
          }
@@ -622,10 +629,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'С узлами и листьями';
          }
-         this._previousRoot = this._options._curRoot;
          this.setFilter(filter, true);
          CommandDispatcher.declareCommand(this, 'BreadCrumbsItemClick', this._breadCrumbsItemClick);
       },
+
       /**
        * Устанавливает поле иерархии.
        * @param {String }hierField Название поля иерархии.
@@ -1059,16 +1066,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          });
       },
 
-      _getAdditionalOffset: function(items){
-         var currentRootItems = 0;
-         for (i = 0; i < items.length; i++){
-            if (items[i].getContents().get(this._options.parentProperty) == this.getCurrentRoot()){
-               currentRootItems++;
-            }
-         }
-         return currentRootItems;
-      },
-
       _afterAddItems: function() {
          // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
          if (this._options.hasNodes && this._isSearchMode()) {
@@ -1088,6 +1085,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       before: {
          _modifyOptions: function(cfg) {
+            cfg._curRoot = cfg.root;
+            this._previousRoot = cfg._curRoot;
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('TreeMixin', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;

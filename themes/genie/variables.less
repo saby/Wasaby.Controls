@@ -252,6 +252,20 @@
 @icon-button-done-color: #72BE44;
 @icon-button-error-color: #EF463A;
 
+@icon-button-round-border-position:     absolute;
+@icon-button-round-border-width:        28px;
+@icon-button-round-border-height:       28px;
+@icon-button-round-border-line-height:  26px;
+@border-radius:                         14px;
+@icon-button-border-width:              1px;
+
+@list-view-items-toolbar-icon-button-border-width:      @icon-button-border-width;
+@list-view-items-toolbar-icon-button-border-radius:     @border-radius;
+@list-view-items-toolbar-icon-button-border-font-size:  16px;
+@icon-button-edit-round-border-height:             24px;
+@icon-button-edit-round-border-width:              24px;
+@icon-button-edit-round-border-line-height:        24px;
+
 // ------------- //
 // Toggle button //
 // ------------- //
@@ -291,7 +305,8 @@
 @tab-buttons-display:                           table;
 @tab-buttons-width:                             100%;
 @tab-buttons-border-collapse:                   collapse;
-@tab-buttons-border-bottom:                     1px solid #CCCCCC;
+@tab-buttons-border-bottom-height:              1px;
+@tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #CCCCCC;
 @tab-buttons-div-display:                       table-cell;
 @tab-buttons-div-space:                         nowrap;
 @tab-buttons-div-align:                         middle;
@@ -1385,7 +1400,7 @@
 @date-range-big-choose-header-home-button-margin:              2px 0 0 0;
 @date-range-big-choose-header-home-button-size:                24px;
 @date-range-big-choose-header-home-button-font-size:           14px;
-@date-range-big-choose-header-home-button-left:                3px;
+@date-range-big-choose-header-home-button-margin-left:         8px;
 @date-range-big-choose-header-home-button-line-height:         22px;
 @date-range-big-choose-header-date-box-border-color:           @gray-light-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @gray-ccc-color;
@@ -1516,10 +1531,9 @@
 // --------- //
 // List view //
 // --------- //@controls-Browser-ListView-minHeight
-@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
-@listView-check-box-icon-bg:                    @check-box-icon-bg;
-@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
-@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
+@listView-check-box-left:                       3px;
+@listView-check-box-top:                        5px;
+
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
 @list-view-actions-width:                       20px;
@@ -1899,11 +1913,6 @@
 //    MultiView    //
 // --------------- //
 @multiView-tile-itemsContainer-padding:             4px 0 0 1px;
-@listView-check-box-left:                           3px;
-@listView-check-box-top:                            5px;
-@listView-check-box-width:                          16px;
-@listView-check-box-height:                         16px;
-@listView-check-box-border:                         none;
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-min-height:                    128px;

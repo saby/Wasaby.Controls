@@ -42,6 +42,13 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
          this._updateValue();
       },
 
+	  _elemClickHandler: function(e, id) {
+		 var
+			view = this._getListView();
+		 FilterPanelChooserDetailsList.superclass._elemClickHandler.apply(this, arguments);
+		 view.redrawItem(view.getItems().getRecordById(id));
+	  },
+	  
       init: function() {
          var
             self = this;
@@ -82,6 +89,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
                }
             }
          ];
+         opts.value.forEach(function(value) {
+            opts.properties.items.getRecordById(value.id).set('hierarchy', value.hierarchy);
+         });
          properties.dataSource = new Memory({
             data: opts.properties.items.getRawData(),
             idProperty: opts.properties.idProperty
@@ -121,6 +131,23 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
             return items.getIndex(items.getRecordById(item1.id)) > items.getIndex(items.getRecordById(item2.id));
          });
          this._setValue(value);
+      },
+
+      _updateTextValue: function(value) {
+         // MultiSelectableMixin отдает записи, неупорядоченные, а в DetailsList важен именно порядок выбранных записей,
+         // т.к. на его основе формируется иерархия в представлении данных.
+         // Текстовое представление нужно тоже формировать согласно порядку выбранных записей.
+         var
+            textValues = [],
+            item,
+            items = this._getListView().getItems();
+         value.forEach(function(elem) {
+            item = items.getRecordById(elem.id);
+            if (item) {
+               textValues.push(item.get('title'));
+            }
+         });
+         this.setTextValue(textValues.join(', '));
       },
 
       _onChangeHoveredItem: function(event, hoveredItem) {

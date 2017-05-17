@@ -246,13 +246,17 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if(!mode) {
                 this.getContainer()[0].style.height = 'auto';
              }else {
-                this._setHeightInTouchMode();
+                this.setHeightInTouchMode();
              }
              if(this._itemsActions) {
                 this._itemsActions.setTouchMode(mode);
              }
           },
-          _setHeightInTouchMode: function(){
+          getTouchMode: function () {
+            return this._options.touchMode;
+          },
+
+          setHeightInTouchMode: function(){
              if(this._currentTarget) {
                 this.getContainer()[0].style.height = this._currentTarget.size.height + 'px';
              }
@@ -285,7 +289,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
-                top: targetCords.top - parentCords.top + parentContainer.scrollTop,
+                top: Math.floor(targetCords.top - parentCords.top + parentContainer.scrollTop),
                 left: targetCords.left - parentCords.left
              };
              this._currentTarget.size = {
@@ -399,7 +403,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if (animate) {
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
-                   this._setHeightInTouchMode();
+                   this.setHeightInTouchMode();
                    toolbarContent.animate({right: 0}, 350);
                 }
              }

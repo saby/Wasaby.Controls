@@ -39,3 +39,9 @@ fs.writeFileSync(path.join(__dirname, 'tests/unit/contents.js'), 'contents = ' +
 
 
 
+
+fs.writeFileSync(path.join(__dirname, 'tests/unit/contents.json'), JSON.stringify({jsModules: jsModules}, testPathFix, 3));
+fs.writeFileSync(path.join(__dirname, 'tests/unit/contents.js'), 'contents = ' + JSON.stringify({jsModules: jsModules}, testPathFix, 3) + ';');
+
+
+

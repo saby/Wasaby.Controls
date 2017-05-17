@@ -1,6 +1,28 @@
 @import "../prestonew/variables";
+
+// Default vars
+@default-text-size:                       1rem;
+@small-text-size:                         .857rem;
+@large-text-size:                         1.14rem;
+@huge-text-size:						              1.43rem;
+@default-text-color:                      #e4e4e4;
+@default-color:                           #587AB0;
+@primary-color:                           #D94700;
+@disabled-color:                          #2C4458;
+@innacent-color:                     	    #8991A9;
+@error-color:                             #EF463A;
+@warning-color:                           #FA9C33;
+@success-color:                           #72BE44;
+@default-bg-color:                        #1D2834;
+@accent-color:							              #26B8FF;
+@default-hover-color:                     #E0ECF5;
+@innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@basic-block-bg-color:					          #fff; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@default-height:								          1.7857rem;
+
+//=============
+
 @black-color:                             #333;
-@default-color:								transparent;
 @gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
 @default-text-color:                      #000;
@@ -20,6 +42,7 @@
 @default-itemHover-color:                 @primary-color;
 @default-itemSelected-color:              @primary-color;
 @hover-color:                             @primary-color;
+
 
 // ---- //
 // Link //
@@ -50,9 +73,9 @@
 @button-text-color:                       #000;
 @button-active-text-color:                @button-text-color;
 @button-active-border:                    @button-border;
-@button-active-bg:                        #fff;
-@button-hover-bg: #e0ecf5;
-@button-bg: 								#f0f5fb;
+@button-active-bg:                        #e0ecf5;
+@button-hover-bg:                         #e0ecf5;
+@button-bg: 								              #f0f5fb;
 // Normal primary button
 @button-primary-text-color:               #fff;
 @button-primary-border:                  0.07rem solid #d94700;
@@ -60,10 +83,10 @@
 
 @button-primary-hover-border:             @button-primary-border;
 @button-primary-hover-shadow:             @button-shadow;
-@button-primary-hover-bg:                rgb(217, 71, 0);
+@button-primary-hover-bg:                  #EC5B19;
 
 @button-primary-active-text-color:        @button-active-text-color;
-@button-primary-active-border:            #d94700;
+@button-primary-active-border:            2px solid #d94700;
 @button-primary-active-shadow:            @button-active-shadow;
 @button-primary-active-bg:                #d94700;
 
@@ -85,7 +108,7 @@
 @button-big-active-bg: #c1441b;
 @button-big-active-text-color:            @button-active-text-color;
 @button-big-active-border:                @button-big-border;
-@button-primary-hover-text-color: #000;
+@button-primary-hover-text-color:           #fff;
 // Big primary button
 
 @button-big-primary-hover-border:         @button-primary-hover-border;
@@ -162,11 +185,9 @@
 // Checkbox //
 // -------- //
 
-@check-box-text-color:                          @default-text-color;
-@check-box-hover-text-color:                    #000;
 
-@check-box-disabled-text-color:                 @gray-color;
-
+@check-box-icon-box-color:                      rgba(102, 170, 221, .4);
+@check-box-disabled-color:                      #CCC;
 
 
 @check-box-icon-border:                         1px solid #8991a9;
@@ -191,8 +212,7 @@
 // -------- //
 // Switcher //
 // -------- //
-@switcher-width: 100px;
-@switcher-height: 50px;
+
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-btn-bg-color:                         #202835;
@@ -651,11 +671,6 @@
 // --------- //
 // List view //
 // --------- //
-@listView-check-box-icon-spritesheet:           @check-box-icon-spritesheet;
-@listView-check-box-icon-bg:                    @check-box-icon-bg;
-@listView-check-box-icon-hover-bg:              @check-box-icon-hover-bg;
-@listView-check-box-icon-checked-bg:            @check-box-icon-checked-bg;
-
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px .07rem 5px @data-grid-row-hover-bg;
@@ -663,6 +678,8 @@
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
 
 @list-view-actions-active-bg: @data-grid-bg;
+@list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center;
+@list-view-loading-indicator-gradient-bg-up:    url(@list-view-scroll-spritesheet)  no-repeat center;
 
 
 
@@ -699,7 +716,7 @@
 
 @data-grid-bg:                                  #fff;
 
-@data-grid-row-hover-bg:                        #1b2530;
+@data-grid-row-hover-bg:                        @default-hover-color;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-cell-text-color:           #000;
@@ -749,9 +766,6 @@
 // --------------- //
 //    MultiView    //
 // --------------- //
-
-@listView-check-box-border:                         1px solid;
-
 @multiView-tile-item-border:                        1px solid @gray-light-color;
 
 
@@ -761,6 +775,13 @@
 // DropdownList//
 // --------------- //
 @DropdownList-border-color:                   #000;
+
+//ProgressBar
+@controls-ProgressBar-first-color:        #2D68B5;
+@controls-ProgressBar-last-color:         @controls-ProgressBar-first-color;
+@controls-ProgressBar-border-color:       @basic-block-bg-color;
+@controls-ProgressBar-background-color:   #F5F5F5;
+@controls-ProgressBar-value-color:        @disabled-color;
 
 //Pager
 @controls-Pager-amount-text :                     #999999;
@@ -869,3 +890,8 @@
 @data-grid-cell-separator-color:              #1a242e;
 
 @menu-header-bg-color:                    #23b8ff;
+ @date-range-big-header-bg:                 #fff;
+ @date-range-big-bg:                         #fff;
+
+ @switcher-border:                               2px solid #e4e4e4;
+ @switcher-do-border:                            2px solid #e4e4e4;

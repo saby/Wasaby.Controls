@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'toggle',
             componentType: 'SBIS3.CONTROLS.IconButton',
-            tooltip: rk('Стили'),
             icon: 'sprite:icon-16 icon-View icon-primary',
             handlers: {
                onActivated: function() {

@@ -1,9 +1,24 @@
+define('js!SBIS3.CONTROLS.Button',
+   [
+      'Core/core-extend',
+      "Core/Abstract.compatible",
+      'js!SBIS3.CORE.Control/Control.compatible',
+      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
+      'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'tmpl!SBIS3.CONTROLS.Button',
+      'Core/core-functions',
+      'css!SBIS3.CONTROLS.Button'
+   ],
 
-define('js!SBIS3.CONTROLS.Button', [
-   'Core/constants',
-   'js!WSControls/Buttons/Button',
-   'css!SBIS3.CONTROLS.Button'
-], function(constants, WSButton) {
+   function (extend,
+             AbstractCompatible,
+             ControlCompatible,
+             AreaAbstractCompatible,
+             BaseCompatible,
+             ButtonCompatible,
+             template,
+             functions) {
 
    'use strict';
 
@@ -20,7 +35,7 @@ define('js!SBIS3.CONTROLS.Button', [
     * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends WSControls/Buttons/ButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+    * @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -61,18 +76,23 @@ define('js!SBIS3.CONTROLS.Button', [
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
+      var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible],
+         {
+            _controlName: 'SBIS3.CONTROLS.Button',
+            _template: template,
 
-   var Button = WSButton.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
+            _useNativeAsMain: true,
 
-      _modifyOptions: function () {
-         var
-             options = Button.superclass._modifyOptions.apply(this, arguments);
+            constructor: function(cfg) {
+               this.deprecatedContr(cfg);
+               this._publish('onActivated');
+            },
 
-         options.cssClassName += ' controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
-         return options;
-      }
+            _onClick: function(){
+               this._notify("onActivated");
+            }
+
+         });
+
+      return Button;
    });
-
-   return Button;
-
-});

@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-   "Transport/BLObject",
-   "Core/helpers/helpers",
+   'Transport/BLObject',
+   'js!SBIS3.CONTROLS.Utils.ImageUtil',
+   'Core/helpers/vital/processImagePath',
    "Core/Indicator",
    "Core/core-merge",
    "Core/CommandDispatcher",
@@ -25,7 +26,7 @@ define('js!SBIS3.CONTROLS.Image',
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function( BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
+], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
       'use strict';
       //TODO: Избавится от дублирования
       var
@@ -265,7 +266,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: cHelpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
+                  defaultImage: processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
                   /**
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
@@ -362,9 +363,7 @@ define('js!SBIS3.CONTROLS.Image',
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
                //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
-               if (this._options.avoidCache) {
-                  this._setImage = this._setImage.debounce(0);
-               }
+               this._setImage = this._setImage.debounce(0);
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
@@ -397,12 +396,14 @@ define('js!SBIS3.CONTROLS.Image',
                   }
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
-                     pickerContainer = this._buttonUpload.getPicker().getContainer();
-                     pickerContainer.mouseenter(function(){
-                        this._cursorInside = true;
-                     }.bind(this));
-                     pickerContainer.mouseleave(function(){
-                        this._cursorInside = false;
+                     this._buttonUpload.once('onPickerOpen', function(){
+                        pickerContainer = this._buttonUpload.getPicker().getContainer();
+                        pickerContainer.mouseenter(function(){
+                           this._cursorInside = true;
+                        }.bind(this));
+                        pickerContainer.mouseleave(function(){
+                           this._cursorInside = false;
+                        }.bind(this))
                      }.bind(this))
                   }
                }
@@ -557,7 +558,7 @@ define('js!SBIS3.CONTROLS.Image',
                   self = this;
                if (this._options.avoidCache) {
                   //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-                  cHelpers.reloadImage(this._image, url)
+                  ImageUtil.reloadImage(this._image, url)
                      .addCallback(function(){
                         self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
                         self._onChangeImage();

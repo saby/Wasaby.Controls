@@ -427,6 +427,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
              * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
              * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
+             * @property {Boolean} [sorting] Активирует режим сортировки по полю. Подробное описание можно найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/list-sorting/">Сортировка записей в списках</a>.
              * @property {Boolean} [allowChangeEnable] Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
              * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
              * Данные, которые передаются в cellTemplate:
@@ -836,11 +837,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _bindHead: function() {
+         var tableContainer = this._getTableContainer();
          if (!this._thead) {
             // при фиксации заголовка таблицы в шапке реальный thead перемещён в шапку, а в контроле лежит заглушка
-            this._thead = $('>.controls-DataGridView__table>.controls-DataGridView__thead', this._container.get(0));
+            this._thead = tableContainer.find('>.controls-DataGridView__thead');
          }
-         this._colgroup = $('>.controls-DataGridView__table>.controls-DataGridView__colgroup', this._container.get(0));
+         this._colgroup = tableContainer.find('>.controls-DataGridView__colgroup');
          if(this._options.showHead) {
             this._isPartScrollVisible = false;
          }
@@ -882,7 +884,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             if (isSticky && !this._options.showHead) {
                return;
             }
-            this.getContainer().find('.controls-DataGridView__table').toggleClass('ws-sticky-header__table', isSticky);
+            this._getTableContainer().toggleClass('ws-sticky-header__table', isSticky);
          }
       },
 
@@ -890,7 +892,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (!this._options.stickyHeader) {
             return;
          }
-         var table = this.getContainer().find('>.controls-DataGridView__table'),
+         var table = this._getTableContainer(),
             isFixed = table.hasClass('ws-sticky-header__table');
 
          if (isFixed === isSticky) {
@@ -928,6 +930,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updatePartScroll();
          }
          DataGridView.superclass._drawItemsCallback.call(this);
+
+         /* TODO В IE, по непонятным причинам, при смене колонок, не всегда пересчитывается ширина этих колонок, в следствии чего
+            колонки без ширины не расстягиваются и таблица смещается влево. Поэтому вставим в таблицу div и удалим его,
+              таким образом заставив таблицу пересчитать ширину. */
+         if (constants.browser.isIE){
+            $('<div></div>').appendTo(this._getTableContainer()).remove();
+         }
       },
 
       _editFieldFocusHandler: function(focusedCtrl) {
@@ -1441,6 +1450,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._arrowRight = undefined;
             this._movableElems = [];
          }
+         if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
+            this._updateStickyHeader(false);
+         }
          DataGridView.superclass.destroy.call(this);
       },
       _setColumnSorting: function(colName) {
@@ -1540,6 +1552,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _isCompositeRecordValue: function(colName){
          return colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2);
+      },
+
+      _getTableContainer: function(){
+         return this.getContainer().find('>.controls-DataGridView__table');
       }
    });
 

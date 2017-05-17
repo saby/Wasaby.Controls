@@ -5,7 +5,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
          _options: {
             view: null,
             breadCrumbs: null,
-            backButton: null
+            backButton: null,
+            backButtonTemplate: null
          },
          _currentRoot: null,
          _pathDSRawData: [],
@@ -68,7 +69,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){
-               var lastHierElem = hierClone[hierClone.length - 1];
+               var lastHierElem = hierClone[hierClone.length - 1],
+                  caption;
                //Если пришла иерархия, которая не является продолжением уже установленной заменим ее целиком 
                if ((self._currentRoot && hierClone.length && lastHierElem.parent != self._currentRoot.id)){
                   self._currentRoot = hierClone[0];
@@ -101,7 +103,12 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                }
 
                breadCrumbs.setItems(self._path);
-               backButton.setCaption(self._currentRoot ? self._currentRoot.title : '');
+               if (self._options.backButtonTemplate && self._currentRoot) {
+                  caption = self._options.backButtonTemplate(self._currentRoot.data);
+               } else {
+                  caption = self._currentRoot ? self._currentRoot.title : '';
+               }
+               backButton.setCaption(caption);
             }
          });
 
