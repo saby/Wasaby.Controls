@@ -110,7 +110,7 @@
                });
             }
             this._id = ++WaitIndicatorCounter;
-            this._container = WaitIndicatorInner.getContainer(target);
+            this._container = _getContainer(target);
             this.setMessage(message);
             this._look = oLook;
             //this._starting = null;
@@ -151,7 +151,7 @@
                this._message = newMsg;
                var poolItem = _poolSearch(this._container);
                if (poolItem && poolItem.indicators.length && poolItem.indicators[0] === this) {
-                  WaitIndicatorInner.update(poolItem, prevMsg, this._look);
+                  _update(poolItem, prevMsg, this._look);
                }
             }
          },
@@ -182,7 +182,7 @@
           * @return {Promise|Deferred}
           */
          start: function (delay) {
-            return this._callDelayed('start', '_starting', delay);
+            return this._callDelayed(_start, '_starting', delay);
          },
 
          /**
@@ -193,13 +193,13 @@
           * @return {Promise|Deferred}
           */
          remove: function (delay) {
-            return this._callDelayed('remove', '_removing', delay);
+            return this._callDelayed(_remove, '_removing', delay);
          },
 
          /**
           * Общая реализация для методов start и remove
           * @protected
-          * @param {string} method Имя подлежащего метода
+          * @param {function} method Подлежащий метод
           * @param {string} storing Имя защищённого свойства для хранения данных об отложенном вызове
           * @param {number} delay Время задержки в миллисекундах
           * @return {Promise|Deferred}
@@ -236,13 +236,13 @@
                promInf.id = setTimeout(function () {
                   var prev = this[storing];
                   this[storing] = null;
-                  WaitIndicatorInner[method](this);
+                  method(this);
                   prev.success.call(null, this);
                }.bind(this), delay);
                this[storing] = promInf;
             }
             else {
-               WaitIndicatorInner[method](this);
+               method(this);
                promInf.success.call(null, this);
             }
             return promInf.promise;
@@ -307,160 +307,144 @@
 
 
       /**
-       * Объект с внутренними методами модуля
+       * Определить элемент DOM, соответствующий указанному объекту привязки
        * @protected
-       * @type {object}
+       * @static
+       * @param {HTMLElement|jQuery|SBIS3.CORE.Control} target Объект привязки индикатора
+       * @return {HTMLElement}
        */
-      var WaitIndicatorInner = {
-         /**
-          * Определить элемент DOM, соответствующий указанному объекту привязки
-          * @protected
-          * @static
-          * @param {HTMLElement|jQuery|SBIS3.CORE.Control} target Объект привязки индикатора
-          * @return {HTMLElement}
-          */
-         getContainer: function (target) {
-            if (!target || typeof target !== 'object' || target === window || target === document) {
+      var _getContainer = function (target) {
+         if (!target || typeof target !== 'object' || target === window || target === document) {
+            return null;
+         }
+         if (target instanceof CoreControl.Control) {
+            target = target.getContainer();
+         }
+         var container;
+         if (target instanceof Element) {
+            container = target;
+         }
+         else
+         if (target.jquery && typeof target.jquery === 'string') {
+            if (!target.length) {
                return null;
             }
-            if (target instanceof CoreControl.Control) {
-               target = target.getContainer();
-            }
-            var container;
-            if (target instanceof Element) {
-               container = target;
-            }
-            else
-            if (target.jquery && typeof target.jquery === 'string') {
-               if (!target.length) {
-                  return null;
-               }
-               container = target[0];
-            }
-            return container !== window && container !== document && container !== document.body ? container : null;
-         },
+            container = target[0];
+         }
+         return container !== window && container !== document && container !== document.body ? container : null;
+      };
 
-         /**
-          * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
-          * @public
-          * @param {WaitIndicatorInstance} indicator Индикатор
-          */
-         start: function (indicator) {
-            var container = indicator.getContainer(),
-               isGlobal = !container;
-            if (isGlobal) {
-               _pool.forEach(function (item) {
-                  if (item.container) {
-                     WaitIndicatorSpinner.hide(item.spinner);
-                     item.isLocked = true;
-                  }
-               });
-            }
-            var poolItem = _poolSearch(container);
-            if (poolItem) {
-               // Индикатор уже есть в DOM-е
-               if (!poolItem.indicators.length) {
-                  WaitIndicatorSpinner.show(poolItem.spinner);
+      /**
+       * Запросить помещение DOM-элемент индикатора в DOM. Будет выполнено, если элемента ещё нет в DOM-е
+       * @protected
+       * @param {WaitIndicatorInstance} indicator Индикатор
+       */
+      var _start = function (indicator) {
+         var container = indicator.getContainer(),
+            isGlobal = !container;
+         if (isGlobal) {
+            _pool.forEach(function (item) {
+               if (item.container) {
+                  WaitIndicatorSpinner.hide(item.spinner);
+                  item.isLocked = true;
                }
-               poolItem.indicators.push(indicator);
-               // Сбросить отсчёт времени до принудительного удаления из DOM-а
-               this._unclear(poolItem);
+            });
+         }
+         var poolItem = _poolSearch(container);
+         if (poolItem) {
+            // Индикатор уже есть в DOM-е
+            if (!poolItem.indicators.length) {
+               WaitIndicatorSpinner.show(poolItem.spinner);
             }
-            else {
-                // Индикатора в DOM-е не содержиться
-               var spinner = WaitIndicatorSpinner.create(container, indicator.getMessage(), indicator.getLook());
-               _pool.push({container:container, spinner:spinner, indicators:[indicator]});
-            }
-         },
-
-         /**
-          * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
-          * @public
-          * @param {WaitIndicatorInstance} indicator Индикатор
-          */
-         remove: function (indicator) {
-            var container = indicator.getContainer(),
-               isGlobal = !container,
-               poolItem = _poolSearch(container);
-            if (poolItem) {
-               var inds = poolItem.indicators,
-                  id = indicator.getId(),
-                  i = -1;
-               if (inds.length) {
-                  for (var j = 0; j < inds.length; j++) {
-                     if (inds[j].getId() === id) {
-                        i = j;
-                        break;
-                     }
-                  }
-               }
-               if (i !== -1) {
-                  if (1 < inds.length) {
-                     inds.splice(i, 1);
-                     this.update(poolItem, indicator.getMessage(), indicator.getLook());
-                  }
-                  else {
-                     // Удалить из DOM-а и из пула
-                     this._delete(poolItem);
-                  }
-               }
-            }
-            if (isGlobal) {
-               _pool.forEeach(function (item) {
-                  if (item.container) {
-                     WaitIndicatorSpinner.show(item.spinner);
-                     item.isLocked = false;
-                  }
-               });
-            }
-         },
-
-         /**
-          * Удалить из DOM-а и из пула
-          * @protected
-          * @param {object} poolItem Элемент пула
-          */
-         _delete: function (poolItem) {
+            poolItem.indicators.push(indicator);
             // Сбросить отсчёт времени до принудительного удаления из DOM-а
-            this._unclear(poolItem);
-            // Удалить из DOM-а
-            WaitIndicatorSpinner.remove(poolItem.spinner);
-            // Удалить из пула
-            var i = _pool.indexOf(poolItem);
-            if (i !== -1) {
-               _pool.splice(i, 1);
-            }
-         },
+            _unclear(poolItem);
+         }
+         else {
+            // Индикатора в DOM-е не содержиться
+            var spinner = WaitIndicatorSpinner.create(container, indicator.getMessage(), indicator.getLook());
+            _pool.push({container:container, spinner:spinner, indicators:[indicator]});
+         }
+      };
 
-         /**
-          * Проверить, и обновить, если нужно, отображение индикатора
-          * @public
-          * @param {object} poolItem Элемент пула
-          * @param {string} prevMessage Текущее (отображаемое) сообщение
-          * @param {object} prevLook Текущие (отображаемые) параметры внешнего вида
-          */
-         update: function (poolItem, prevMessage, prevLook) {
-            var inds = poolItem.indicators;
+      /**
+       * Запросить удаление DOM-элемент индикатора из DOM-а. Будет выполнено, если нет других запросов на показ
+       * @protected
+       * @param {WaitIndicatorInstance} indicator Индикатор
+       */
+      var _remove = function (indicator) {
+         var container = indicator.getContainer(),
+            isGlobal = !container,
+            poolItem = _poolSearch(container);
+         if (poolItem) {
+            var inds = poolItem.indicators,
+               id = indicator.getId(),
+               i = -1;
             if (inds.length) {
-               var msg = inds[0].getMessage();
-               var look = inds[0].getLook();
-               // Сейчас look неизменяемый, такого сравнения достаточно
-               if (prevMessage !== msg || look !== prevLook) {
-                  poolItem.spinner = WaitIndicatorSpinner.change(poolItem.spinner, poolItem.container, msg, look);
+               for (var j = 0; j < inds.length; j++) {
+                  if (inds[j].getId() === id) {
+                     i = j;
+                     break;
+                  }
                }
             }
-         },
-
-         /**
-          * Сбросить отсчёт времени до принудительного удаления из DOM-а
-          * @protected
-          * @param {object} poolItem Элемент пула
-          */
-         _unclear: function (poolItem) {
-            if ('clearing' in poolItem) {
-               clearTimeout(poolItem.clearing);
-               delete poolItem.clearing;
+            if (i !== -1) {
+               if (1 < inds.length) {
+                  inds.splice(i, 1);
+                  _update(poolItem, indicator.getMessage(), indicator.getLook());
+               }
+               else {
+                  // Удалить из DOM-а и из пула
+                  // Сбросить отсчёт времени до принудительного удаления из DOM-а
+                  _unclear(poolItem);
+                  // Удалить из DOM-а
+                  WaitIndicatorSpinner.remove(poolItem.spinner);
+                  // Удалить из пула
+                  var j = _pool.indexOf(poolItem);
+                  if (j !== -1) {
+                     _pool.splice(j, 1);
+                  }
+               }
             }
+         }
+         if (isGlobal) {
+            _pool.forEach(function (item) {
+               if (item.container) {
+                  WaitIndicatorSpinner.show(item.spinner);
+                  item.isLocked = false;
+               }
+            });
+         }
+      };
+
+      /**
+       * Проверить, и обновить, если нужно, отображение индикатора
+       * @protected
+       * @param {object} poolItem Элемент пула
+       * @param {string} prevMessage Текущее (отображаемое) сообщение
+       * @param {object} prevLook Текущие (отображаемые) параметры внешнего вида
+       */
+      var _update = function (poolItem, prevMessage, prevLook) {
+         var inds = poolItem.indicators;
+         if (inds.length) {
+            var msg = inds[0].getMessage();
+            var look = inds[0].getLook();
+            // Сейчас look неизменяемый, такого сравнения достаточно
+            if (prevMessage !== msg || look !== prevLook) {
+               poolItem.spinner = WaitIndicatorSpinner.change(poolItem.spinner, poolItem.container, msg, look);
+            }
+         }
+      };
+
+      /**
+       * Сбросить отсчёт времени до принудительного удаления из DOM-а
+       * @protected
+       * @param {object} poolItem Элемент пула
+       */
+      var _unclear = function (poolItem) {
+         if ('clearing' in poolItem) {
+            clearTimeout(poolItem.clearing);
+            delete poolItem.clearing;
          }
       };
 
