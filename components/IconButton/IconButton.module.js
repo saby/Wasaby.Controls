@@ -56,8 +56,31 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.
       _template: template,
       _controlName: 'SBIS3.CONTROLS.IconButton',
       _useNativeAsMain: true,
-      _containerReady: function (container) {
-         /*TODO:: Эта логика не вызывается с VDom, но оставлена здесь, чтобы не забыть про нее*/
+      iWantVDOM: false,
+      /*TODO: Удалить при переходе на VDOM*/
+      _containerReady:function(container){
+         if (window) {
+            container.on('click', this._onClickHandler.bind(this));
+            var self = this;
+
+            container.keydown(function(e) {
+               var result = self._notify('onKeyPressed', e);
+               if (e.which == cConstants.key.enter && result !== false ) {
+                  self._onClickHandler(e);
+               }
+
+               if(this._icanrulefocus && e.which == cConstants.key.tab){
+                  self.moveFocus(e);
+               }
+            });
+
+            container.on("touchstart  mousedown", function (e) {
+               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
+                  self._container.addClass('controls-Click__active');
+               }
+               //return false;
+            });
+         }
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
           * в котором прописаны поведение и цвета для иконок по ховеру*/

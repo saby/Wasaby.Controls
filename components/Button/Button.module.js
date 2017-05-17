@@ -84,6 +84,7 @@ define('js!SBIS3.CONTROLS.Button',
             _template: template,
 
             _useNativeAsMain: true,
+            iWantVDOM: true,
 
             constructor: function(cfg) {
                this.deprecatedContr(cfg);
@@ -104,6 +105,20 @@ define('js!SBIS3.CONTROLS.Button',
             _onMouseUp: function(){
                this._options.class.replace("controls-Click__active","");
                this._setDirty();
+            },
+
+            _onKeyDown: function(e){
+               var result = this._notify('onKeyPressed', e);
+               if(this._keysWeHandle.indexOf(e.nativeEvent.which) && result !== false ){
+                  var res = this._onClickHandler(e);
+                  if(!res){
+                     e.preventDefault();
+                     e.stopPropagation();
+                     return false;
+                  }
+                  return res;
+               }
+               return res;
             }
 
          });

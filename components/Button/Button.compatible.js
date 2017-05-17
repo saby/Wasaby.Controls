@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       _isControlActive: false,
       _needRegistWhenParent: false,
-      iWantVDOM: true,
 
 
       /**
