@@ -110,12 +110,7 @@ define('js!SBIS3.CONTROLS.Button',
          _onKeyDown: function (e) {
             var result = this._notify('onKeyPressed', e);
             if (e.nativeEvent.key === 'Enter' && result !== false) {
-               var res = this._onClick(e);
-               if (!res) {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  return false;
-               }
+               this._onClick(e);
             }
          }
 
