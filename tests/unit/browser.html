@@ -67,7 +67,7 @@
             Squire: '../../../node_modules/squirejs/src/Squire'
         }
     });
-
+    mocha.globals(['_zIndexChanged']);
     mocha.checkLeaks();
 
     $ws.core.ready.addCallback(function () {
