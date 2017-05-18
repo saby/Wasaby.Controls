@@ -1781,7 +1781,7 @@ define('js!SBIS3.CONTROLS.ListView',
                for (i = 0; i < ids.length; i++) {
                   //сначала ищем непосредственно в контейнере, чтоб не найти вложенные списки
                   //TODO переделать при отказе от data-id
-                  if (ids[i].indexOf('\'') < 0) {
+                  if ((ids[i] + '').indexOf('\'') < 0) {
                      elem = itemsContainer.children(".controls-ListView__item[data-id='" + ids[i] + "']");
                   }
                   else {
@@ -1793,7 +1793,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   else {
                      //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
                      //TODO переделать при отказе от data-id
-                     if (ids[i].indexOf('\'') < 0) {
+                     if ((ids[i] + '').indexOf('\'') < 0) {
                         elem = itemsContainer.find(".controls-ListView__item[data-id='" + ids[i] + "']");
                      }
                      else {
