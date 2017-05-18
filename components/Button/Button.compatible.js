@@ -20,32 +20,6 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _needRegistWhenParent: false,
 
 
-      /*TODO: Удалить при переходе на VDOM*/
-      _containerReady:function(container){
-         if (window) {
-            container.on('click', this._onClickHandler.bind(this));
-            var self = this;
-
-            container.keydown(function(e) {
-               var result = self._notify('onKeyPressed', e);
-               if (e.which == cConstants.key.enter && result !== false ) {
-                  self._onClickHandler(e);
-               }
-
-               if(this._icanrulefocus && e.which == cConstants.key.tab){
-                  self.moveFocus(e);
-               }
-            });
-
-            container.on("touchstart  mousedown", function (e) {
-               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
-                  self._container.addClass('controls-Click__active');
-               }
-               //return false;
-            });
-         }
-      },
-
       /**
       * Далее в файле идут методы для сохранения старого АПИ
       */
@@ -109,15 +83,16 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       _onClickHandler: function(e)
       {
-         try{
+         if (!this.iWantVDOM && e && e.stopImmediatePropagation) {
             e.stopImmediatePropagation();
             e.stopPropagation();
-         }catch(e){}
-
+         }
          if (!this._options.enabled)
             return;
 
-         this._container.removeClass('controls-Click__active');
+         if (!this.iWantVDOM) {
+            this._container.removeClass('controls-Click__active');
+         }
 
          if (!this._isControlActive) {
             this.setActive(true);
@@ -127,7 +102,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             var args = [this._options.command].concat(this._options.commandArgs);
             this.sendCommand.apply(this, args);
          }
-         this._onClick();
+
+         if (!this.iWantVDOM) {
+            this._notify("onActivated");
+         }
       }
 
    };

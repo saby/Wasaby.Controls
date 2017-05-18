@@ -72,6 +72,7 @@ exports.run = function (config, wsConfig, rootPath) {
    //Запускаем тесты
    unit.test.getList().forEach(function (test) {
       try {
+         console.log("LOAD:: "+test);
          requirejs(test);
       } catch (e) {
          console.log(e.toString());
