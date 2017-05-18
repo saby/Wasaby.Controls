@@ -78,48 +78,67 @@ define('js!SBIS3.CONTROLS.Button',
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
-      var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
-         {
-            _controlName: 'SBIS3.CONTROLS.Button',
-            _template: template,
-            iWantVDOM: true,
+   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
+      {
+         _controlName: 'SBIS3.CONTROLS.Button',
+         _template: template,
+         iWantVDOM: true,
 
-            constructor: function(cfg) {
-               this.deprecatedContr(cfg);
-               this._publish('onActivated');
-            },
+         constructor: function (cfg) {
+            this.deprecatedContr(cfg);
+            this._publish('onActivated');
+         },
 
-            _onClick: function(){
-               this._notify("onActivated");
-            },
+         //<editor-fold desc="Event handlers">
 
-            _onMouseDown: function(){
-               if (this._options.class.indexOf("controls-Click__active")===-1) {
-                  this._options.class += " controls-Click__active ";
-                  this._setDirty();
-               }
-            },
+         _onClick: function (e) {
+            try {
+               e.stopImmediatePropagation();
+               e.stopPropagation();
+            } catch (e) {
+            }
 
-            _onMouseUp: function(){
-               this._options.class.replace("controls-Click__active","");
-               this._setDirty();
-            },
+            if (!this._options.enabled)
+               return;
 
-            _onKeyDown: function(e){
-               var result = this._notify('onKeyPressed', e);
-               if(this._keysWeHandle.indexOf(e.nativeEvent.which) && result !== false ){
-                  var res = this._onClickHandler(e);
-                  if(!res){
-                     e.preventDefault();
-                     e.stopPropagation();
-                     return false;
-                  }
-                  return res;
+            if (!this._isControlActive) {
+               this.setActive(true);
+            }
+
+            if (!!this._options.command) {
+               var args = [this._options.command].concat(this._options.commandArgs);
+               this.sendCommand.apply(this, args);
+            }
+
+            this._notify("onActivated");
+         },
+
+         _onMouseDown: function () {
+            this._isActiveByClick = true;
+            this._setDirty();
+         },
+
+         _onMouseUp: function () {
+            this._isActiveByClick = false;
+            this._setDirty();
+         },
+
+         _onKeyDown: function (e) {
+            var result = this._notify('onKeyPressed', e);
+            if (e.nativeEvent.which === 13 && result !== false) {
+               var res = this._onClick(e);
+               if (!res) {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  return false;
                }
                return res;
             }
+            return res;
+         }
 
-         });
+         //</editor-fold>
+      });
 
       return Button;
    });

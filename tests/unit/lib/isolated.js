@@ -69,9 +69,20 @@ exports.run = function (config, wsConfig, rootPath) {
       resources: wsConfig.resourceRoot
    });
 
+   global.rk = function(val){return val;};
+
+   global.$ = function (str) {
+      return {
+         get: function () {
+            [];
+         }
+      }
+   };
+
    //Запускаем тесты
    unit.test.getList().forEach(function (test) {
       try {
+         console.log("LOAD:: "+test);
          requirejs(test);
       } catch (e) {
          console.log(e.toString());
