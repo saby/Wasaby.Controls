@@ -83,15 +83,16 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
       _onClickHandler: function(e)
       {
-         try{
+         if (!this.iWantVDOM && e && e.stopImmediatePropagation) {
             e.stopImmediatePropagation();
             e.stopPropagation();
-         }catch(e){}
-
+         }
          if (!this._options.enabled)
             return;
 
-         this._container.removeClass('controls-Click__active');
+         if (!this.iWantVDOM) {
+            this._container.removeClass('controls-Click__active');
+         }
 
          if (!this._isControlActive) {
             this.setActive(true);
@@ -101,7 +102,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             var args = [this._options.command].concat(this._options.commandArgs);
             this.sendCommand.apply(this, args);
          }
-         this._onClick();
+
+         if (!this.iWantVDOM) {
+            this._notify("onActivated");
+         }
       }
 
    };

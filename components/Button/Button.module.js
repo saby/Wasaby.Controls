@@ -83,6 +83,7 @@ define('js!SBIS3.CONTROLS.Button',
          _controlName: 'SBIS3.CONTROLS.Button',
          _template: template,
          iWantVDOM: true,
+         _isActiveByClick: false,
 
          constructor: function (cfg) {
             this.deprecatedContr(cfg);
@@ -92,49 +93,30 @@ define('js!SBIS3.CONTROLS.Button',
          //<editor-fold desc="Event handlers">
 
          _onClick: function (e) {
-            try {
-               e.stopImmediatePropagation();
-               e.stopPropagation();
-            } catch (e) {
-            }
-
+            this._onClickHandler(e);
             if (!this._options.enabled)
                return;
-
-            if (!this._isControlActive) {
-               this.setActive(true);
-            }
-
-            if (!!this._options.command) {
-               var args = [this._options.command].concat(this._options.commandArgs);
-               this.sendCommand.apply(this, args);
-            }
-
-            this._notify("onActivated");
+            return this._notify("onActivated");
          },
 
          _onMouseDown: function () {
             this._isActiveByClick = true;
-            this._setDirty();
          },
 
          _onMouseUp: function () {
             this._isActiveByClick = false;
-            this._setDirty();
          },
 
          _onKeyDown: function (e) {
             var result = this._notify('onKeyPressed', e);
-            if (e.nativeEvent.which === 13 && result !== false) {
+            if (e.nativeEvent.key === 'Enter' && result !== false) {
                var res = this._onClick(e);
                if (!res) {
                   e.preventDefault();
                   e.stopPropagation();
                   return false;
                }
-               return res;
             }
-            return res;
          }
 
          //</editor-fold>
