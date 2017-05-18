@@ -82,8 +82,6 @@ define('js!SBIS3.CONTROLS.Button',
          {
             _controlName: 'SBIS3.CONTROLS.Button',
             _template: template,
-
-            _useNativeAsMain: true,
             iWantVDOM: true,
 
             constructor: function(cfg) {
