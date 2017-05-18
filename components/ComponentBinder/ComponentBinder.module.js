@@ -332,7 +332,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             this._pagingController = new PagingController({
                view: this._options.view,
                paging: paging || this._options.paging
-            })
+            });
          }
       },
 
@@ -354,8 +354,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
-               paging: paging || this._options.paging
-            })
+               paging: paging || this._options.paging,
+               zIndex: this._options.pagingZIndex
+            });
          }
          this._scrollPagingController.bindScrollPaging();
       },

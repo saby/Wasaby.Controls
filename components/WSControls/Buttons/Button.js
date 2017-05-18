@@ -187,19 +187,20 @@ define('js!WSControls/Buttons/Button', [
       },
 
       _registerDefaultButton: function() {
-         this._defaultAction = function(e) {
-             if (this && this.isEnabled()) {
-                 this._onClickHandler(e);
-                 return false;
-             } else {
-                 return true;
-             }
-         };
-         this._defaultAction = this._defaultAction.bind(this);
          // регистрироваться имеют права только видимые кнопки. если невидимая кнопка зарегистрируется, мы нажмем enter и произойдет неведомое действие
          if (this.isVisible()) {
             // сначала отменяем регистрацию текущего действия по умолчанию, а потом регистрируем новое действие
             this._unregisterDefaultButton();
+            // action создаем только после отмены регистрации, иначе он зануляется
+            this._defaultAction = function(e) {
+               if (this && this.isEnabled()) {
+                  this._onClickHandler(e);
+                  return false;
+               } else {
+                  return true;
+               }
+            };
+            this._defaultAction = this._defaultAction.bind(this);
             this.sendCommand('registerDefaultButtonAction', this._defaultAction, this);
          }
       },

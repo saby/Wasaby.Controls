@@ -7,7 +7,7 @@
 @default-text-color:                      #e4e4e4;
 @default-color:                           #587AB0;
 @primary-color:                           #D94700;
-@disabled-color:                          #2C4458;
+@disabled-color:                          #8991A9;
 @innacent-color:                     	    #8991A9;
 @error-color:                             #EF463A;
 @warning-color:                           #FA9C33;
@@ -41,7 +41,7 @@
 @darkcyan-color: 							#8991A9;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-@default-border-width:					  2px;
+@default-border-width:					  0.072rem;
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
@@ -197,9 +197,9 @@
 @button-primary-active-bg:                #d94700;
 
 // Normal disabled button
-@button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  @button-border;
-@button-disabled-bg:                      @gray-light-color;
+@button-disabled-text-color:              #8991A9;
+@button-disabled-border:                  2px solid #8991A9;
+@button-disabled-bg:                      #354B62;
 
 // Big button
 @button-big-line-height:                  @button-line-height;
@@ -310,14 +310,14 @@
 // Checkbox //
 // -------- //
 
-@check-box-icon-size:                           50px;
-@check-box-icon-successful-size:                50px;
-@check-box-font-size:                           32px;
-@check-box-icon-successful-top:                 -4px;
-@check-box-icon-successful-left:                6px;
-@check-box-icon-null-size:                      18px;
-@check-box-caption-padding:                     9px 0;
-@check-box-icon-box-size:                       32px;
+@check-box-icon-size:                           1.786rem;
+@check-box-icon-successful-size:                1.786rem;
+@check-box-font-size:                           1.143rem;
+@check-box-icon-successful-top:                 -0.143rem;
+@check-box-icon-successful-left:                0.214rem;
+@check-box-icon-null-size:                      0.643rem;
+@check-box-caption-padding:                     0.321rem 0;
+@check-box-icon-box-size:                       1.143rem;
 @check-box-icon-box-color:                      rgba(102, 170, 221, .4);
 @check-box-disabled-color:                      #37536C;
 
@@ -411,7 +411,7 @@
 
 @menu-item-icon-top-offset:               .2rem;
 
-@menu-item-icon-left-offset:              -.32rem;
+@menu-item-icon-left-offset:              -.4232rem;
 
 @menu-item-icon24-top-offset:               0px;
 @menu-item-icon24-top-offset-big:           0px;
@@ -527,7 +527,7 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-margin:                   -5px 0 0 5px;
+@menu-icon-menu-margin:                   -7px 0 0 -4px;
 
 // Menu header
 @menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
@@ -547,7 +547,7 @@
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
 
-@text-box-field-text-color:               rgba(96,170,221, .2 );
+@text-box-field-text-color:               #e4e4e4;
 
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
@@ -622,7 +622,7 @@
 // ----------- //
 // Search form //
 // ----------- //
-@search-form-field-wrapper-margin-right:              5.1rem;
+@search-form-field-wrapper-margin-right:              5.3rem;
 @search-button-wrapper-padding:							0 .5rem 0 0;
 @search-buttons-wrapper-width:                        auto;
 @search-loop-size: 2rem;
@@ -633,7 +633,7 @@
 @search-hover-border-color:                           #5d687b;
 @search-bottom-border-color:                          #2e3a45;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-form-icon-padding:                            .7rem .4rem .4rem .4rem;
+@search-form-icon-padding:                            .7rem .4rem .4rem 0;
 @search-form-icon-disabled-display:                   block;
 
 @search-focus-background:                             #2e3a45;
@@ -673,7 +673,7 @@
 
 @combo-box-picker-border:                      0rem solid #48bffc;
 @combo-box-picker-item-padding:                 1.14rem 0.57rem 1.14rem 0.57rem;
-@text-box-field-font-size: 1.14rem;
+@text-box-field-font-size: 1.43rem;
 @combo-box-picker-item-bg:                      #e1ecf6;
 @combo-box-picker-item-text-color               : #324352;
 @combo-box-picker-item-hover-text-color:        @black-color;
@@ -770,7 +770,7 @@
 @month-view-day-table-cell-padding:               0 0 0 8px;
 
 @month-view-day-cell-cursor:                      pointer;
-@month-view-day-cell-text-color:                  inherit;
+@month-view-day-cell-text-color:                  #fff;
 @month-view-day-cell-bg:                          #f2f2f2;
 @month-view-day-cell-hover-text-color:            @month-view-day-cell-text-color;
 @month-view-day-cell-hover-bg:                    #e5ecf4;
@@ -996,7 +996,7 @@
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
-@data-grid-edge-cell-separator-color:           #2B3546;
+@data-grid-edge-cell-separator-color:           rgba(0, 0, 0, 0.1);
 
 @data-grid-td-checkbox-width:                   1.75rem;
 @data-grid-td-visible-checkbox-width:           1.75rem;
@@ -1005,6 +1005,8 @@
 @data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
+@data-grid-cell-separator-color:                rgba(0, 0, 0, 0.1);
+@data-grid-cell-border-width:                   2px 0;
 
 // --------------- //
 // OperationsPanel //
@@ -1247,7 +1249,6 @@
 
 @paging-font-size:                            1.71rem;
 @scrollpager-bg:                              transparent;
-@data-grid-cell-separator-color:              #1a242e;
 @closeBigButtonWidth:                         3rem;
 @menu-header-bg-color:                    #23b8ff;
 
@@ -1277,7 +1278,7 @@
 @menu-item-icon-32-margin:							0 0 0 3rem;
 @menu-item-icon-24-margin:							0 0 0 1.78rem;
 @menu-item-icon-16-margin:							0 0 0 1.32rem;
-@text-box-error-bg:                       #202835;
+@text-box-error-bg:                       #472e35;
 @back-button-linheight-before:              3.2rem;
 @back-button-width-before:                  .7rem;
 @back-button-text-fontweight:               @default-font-weight;
@@ -1286,3 +1287,15 @@
 @dropdownlist-item-text-color:              #202835;
 @controls-FieldLink-picker-show-color:		#243548;
 @controls-editInPlace-editor-bg:			transparent;
+
+ @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+  @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+
+@textbox-font-size:							1.43rem;
+@scroll-pager-bg:							transparent;
+
+@DropdownList-height: 					3.57rem;
+@list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+@list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+@text-box-placeholder-color: 				rgb(96,170,221, .2);
+

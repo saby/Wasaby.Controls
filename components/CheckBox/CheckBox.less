@@ -31,6 +31,8 @@
 
 .controls-CheckBox__iconBox:after {
   content: '';
+  top: 0px;
+  left: 0px;
 }
 
 .controls-CheckBox__iconBox_size {
@@ -47,6 +49,10 @@
   &>.controls-CheckBox__icon {
     .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
   }
+}
+
+.controls-CheckBox__caption_empty {
+  width: 0px;
 }
 
 .ws-enabled {

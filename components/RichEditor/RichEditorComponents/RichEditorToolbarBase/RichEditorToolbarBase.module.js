@@ -312,8 +312,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
 
          _applyFormats: function(formats){
             if (this._options.linkedEditor) {
-               this._options.linkedEditor.setFontColor(formats.color);
-               this._options.linkedEditor.setFontSize(formats.fontsize);
+               ['title',  'subTitle','additionalText'].forEach(function(stl){
+                  this._options.linkedEditor._removeFormat(stl);
+               }, this);
                for ( var button in this._buttons) {
                   if (this._buttons.hasOwnProperty(button)) {
                      if (this._buttons[button] !== formats[button]) {
@@ -321,6 +322,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      }
                   }
                }
+               this._options.linkedEditor.setFontColor(formats.color);
+               this._options.linkedEditor.setFontSize(formats.fontsize);
             }
          },
          destroy: function() {

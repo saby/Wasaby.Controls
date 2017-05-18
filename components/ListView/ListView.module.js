@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
+   'Core/WindowManager',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -67,8 +68,8 @@ define('js!SBIS3.CONTROLS.ListView',
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize) {
+    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
 
      'use strict';
 
@@ -938,6 +939,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
             }
+            if (this._options.scrollPaging) {
+               this._pagingZIndex = WindowManager.acquireZIndex();
+               WindowManager.setVisible(this._pagingZIndex);
+            }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -1092,7 +1097,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
-               paging: this._scrollPager
+               paging: this._scrollPager,
+               pagingZIndex: this._pagingZIndex
             });
             this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
@@ -1377,6 +1383,48 @@ define('js!SBIS3.CONTROLS.ListView',
             this._notifyOnChangeHoveredItem();
          },
 
+         _updateHoveredItemAfterRedraw: function() {
+            var hoveredItem = this.getHoveredItem(),
+                hoveredItemContainer = hoveredItem.container,
+                containsHoveredItem, hash, projItem;
+
+            /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
+
+            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
+             то событие mouseLeave не сработает, поэтому вызовем руками метод,
+             если же он остался, то обновим положение кнопки опций. */
+            if(hoveredItemContainer){
+               containsHoveredItem = dcHelpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
+
+               if(!containsHoveredItem && hoveredItemContainer) {
+                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
+                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
+                   * хранить только идентификатор и данный код станет не нужен*/
+                  hash = hoveredItemContainer.attr('data-hash');
+                  projItem = this._getItemsProjection().getByHash(hash);
+                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
+                   но на него осталась jQuery ссылка, то надо её затереть */
+                  if (projItem) {
+                     hoveredItemContainer = this._getDomElementByItem(projItem);
+                  } else {
+                     hoveredItemContainer = null;
+                  }
+               }
+
+               if(!containsHoveredItem) {
+                  if(!hoveredItemContainer || !hoveredItemContainer.length) {
+                     this._mouseLeaveHandler();
+                  } else {
+                     this._updateHoveredItem(hoveredItemContainer);
+                  }
+               } else {
+                  /* Даже если контейнер выбранной записи не изменился,
+                   надо обновить выделнный элемент, т.к. могло измениться его положение */
+                  this._updateHoveredItem(hoveredItemContainer);
+               }
+            }
+         },
+
          _getDomElementByItem : function(item) {
             //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
             return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]:not(.controls-editInPlace)')
@@ -1454,6 +1502,11 @@ define('js!SBIS3.CONTROLS.ListView',
                if (target.container){
                   if (!this._touchSupport) {
                      this._showItemsToolbar(target);
+                      if(this._itemsToolbar.getTouchMode()) {
+                          // ситуация, когда при смене выделенного элемента тулбар находится в тач режиме может возникнуть на планшетах и устройствах с zinFrame
+                          // необходимо выставить высотку тулбара, т.к. высота строки может измениться
+                          this._itemsToolbar.setHeightInTouchMode();
+                      }
                   }
                   // setItemsActions стреляет событием onChangeHoveredItem, чтобы прикладники могли скрыть/показать нужные опции для строки
                   // поэтому после события нужно обновить видимость элементов
@@ -1553,7 +1606,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            this._getEmptyDataContainer().empty().html(Sanitize(html));
+            this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
@@ -1863,6 +1916,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //TODO: Временное решение для .100.  В .30 состояния выбранности элемента должны добавляться в шаблоне.
             this._drawSelectedItems(this.getSelectedKeys());
             this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
+            this._updateHoveredItemAfterRedraw();
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
@@ -2585,10 +2639,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawItemsCallbackSync: function() {
-            var hoveredItem = this.getHoveredItem(),
-                hoveredItemContainer = hoveredItem.container,
-                containsHoveredItem, hash, projItem;
-
             ListView.superclass._drawItemsCallbackSync.call(this);
             /* Подскролл после подгрузки вверх надо производить после отрисовки синхронно,
                иначе скролл будет дёргаться */
@@ -2597,41 +2647,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._moveTopScroll();
                }
             }
-            /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
-
-            /* Если после перерисовки выделенный элемент удалился из DOM дерава,
-              то событие mouseLeave не сработает, поэтому вызовем руками метод,
-              если же он остался, то обновим положение кнопки опций. */
-            if(hoveredItemContainer){
-               containsHoveredItem = dcHelpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
-
-               if(!containsHoveredItem && hoveredItemContainer) {
-                  /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
-                   * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
-                   * хранить только идентификатор и данный код станет не нужен*/
-                  hash = hoveredItemContainer.attr('data-hash');
-                  projItem = this._getItemsProjection().getByHash(hash);
-                  /* Если в проекции нет элемента и этого элемента нет в DOM'e,
-                   но на него осталась jQuery ссылка, то надо её затереть */
-                  if (projItem) {
-                     hoveredItemContainer = this._getDomElementByItem(projItem);
-                  } else {
-                     hoveredItemContainer = null;
-                  }
-               }
-
-               if(!containsHoveredItem) {
-                  if(!hoveredItemContainer || !hoveredItemContainer.length) {
-                     this._mouseLeaveHandler();
-                  } else {
-                     this._updateHoveredItem(hoveredItemContainer);
-                  }
-               } else {
-                  /* Даже если контейнер выбранной записи не изменился,
-                   надо обновить выделнный элемент, т.к. могло измениться его положение */
-                  this._updateHoveredItem(hoveredItemContainer);
-               }
-            }
+            this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
@@ -2891,46 +2907,51 @@ define('js!SBIS3.CONTROLS.ListView',
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
                this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
-                  //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
-                  //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
-                  this._loader = null;
-                  //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                  var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
-
-                  this._updateScrollOffset();
-                  //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
-                  this.getItems().setMetaData(dataSet.getMetaData());
-                  if (!hasNextPage) {
-                     this._toggleEmptyData(!this.getItems().getCount());
-                  }
-                  this._notify('onDataMerge', dataSet);
-                  //Если данные пришли, нарисуем
-                  if (dataSet.getCount()) {
-                     //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
-                     //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
-                     if (this._isSlowDrawing(this._options.easyGroup)) {
-                        this._needToRedraw = false;
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
+                  .addBoth(fHelpers.forAliveOnly(function(res) {
+                     this._loader = null;
+                     return res;
+                  }, this))
+                  .addCallback(fHelpers.forAliveOnly(function (dataSet) {
+                     //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
+                     //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
+                     //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
+                     var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+         
+                     this._updateScrollOffset();
+                     //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
+                     this.getItems().setMetaData(dataSet.getMetaData());
+                     if (!hasNextPage) {
+                        this._toggleEmptyData(!this.getItems().getCount());
                      }
-                     this._drawPage(dataSet);
-                     //И выключаем после отрисовки
-                     if (this._isSlowDrawing(this._options.easyGroup)) {
-                        this._needToRedraw = true;
-                     }
-                  } else {
-                     // Если пришла пустая страница, но есть еще данные - догрузим их
-                     if (hasNextPage){
-                        this._scrollLoadNextPage();
+                     this._notify('onDataMerge', dataSet);
+                     //Если данные пришли, нарисуем
+                     if (dataSet.getCount()) {
+                        //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
+                        //Возвращаем самостоятельную отрисовку данных, пришедших в загрузке по скроллу
+                        if (this._isSlowDrawing(this._options.easyGroup)) {
+                           this._needToRedraw = false;
+                        }
+                        this._drawPage(dataSet);
+                        //И выключаем после отрисовки
+                        if (this._isSlowDrawing(this._options.easyGroup)) {
+                           this._needToRedraw = true;
+                        }
                      } else {
-                        // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
-                        this._hideLoadingIndicator();
+                        // Если пришла пустая страница, но есть еще данные - догрузим их
+                        if (hasNextPage){
+                           this._scrollLoadNextPage();
+                        } else {
+                           // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
+                           this._hideLoadingIndicator();
+                        }
                      }
-                  }
-               }, this)).addErrback(function (error) {
-                  this._hideLoadingIndicator();
-                  //Здесь при .cancel приходит ошибка вида DeferredCanceledError
-                  return error;
-               }.bind(this));
+                  }, this))
+                  .addErrback(fHelpers.forAliveOnly(function (error) {
+                     this._hideLoadingIndicator();
+                     //Здесь при .cancel приходит ошибка вида DeferredCanceledError
+                     return error;
+                  }, this));
             }
          },
 
@@ -3075,7 +3096,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _createLoadingIndicator : function () {
-            this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
+            this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
             // При подгрузке вверх индикатор должен быть над списком
             if (this._options.infiniteScroll == 'up'){
                this._loadingIndicator.prependTo(this._container);
@@ -3805,7 +3826,7 @@ define('js!SBIS3.CONTROLS.ListView',
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
-         _getDragTarget: function(dragObject) {
+         _getDragTarget: function(dragObject, e) {
             var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
                item,
                projection = this._getItemsProjection();
@@ -3813,20 +3834,30 @@ define('js!SBIS3.CONTROLS.ListView',
             if (target.length > 0) {
                item = projection.getByHash(target.data('hash'));
             } else if (this._horisontalDragNDrop) {
-               item = projection.at(projection.getCount()-1);
+               var elements = document.elementsFromPoint(e.pageX+5, e.pageY+5);
+               target = this._findItemByElement($(elements[1]));
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               } else {
+                  item = projection.at(projection.getCount() - 1);
+               }
             }
 
-            return item ? item.getContents() : undefined;
+            return {
+               item: item ? item.getContents() : undefined,
+               domElement: target
+            };
          },
 
          _updateDragTarget: function(dragObject, e) {
-            var model = this._getDragTarget(dragObject),
+            var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (model) {
-               var domElement = this._findItemByElement($(dragObject.getTargetsDomElemet())),
+            if (dragTarget.item) {
+               var domElement = dragTarget.domElement,
                   position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
+
                if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](model.getId()),
+                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](dragTarget.item.getId()),
                      sourceIds = [];
                   dragObject.getSource().each(function (item) {
                      sourceIds.push(item.getModel().getId());
@@ -3838,7 +3869,7 @@ define('js!SBIS3.CONTROLS.ListView',
                target = this._makeDragEntity({
                   owner: this,
                   domElement: domElement,
-                  model: model,
+                  model: dragTarget.item,
                   position: position
                });
             }
@@ -3927,12 +3958,15 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.17. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,
                      parentProperty: this._options.parentProperty,
                      nodeProperty: this._options.nodeProperty,
+                     dialogOptions: {
+                        opener:this
+                     },
                      moveStrategy: this.getMoveStrategy()//todo пока передаем стратегию, после полного отказа от стратегий удалить
                   }),
                   items = this.getItems(),

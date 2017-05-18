@@ -74,6 +74,10 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._createMarkCheckBox();
          this._setCaptionRender();
       },
+      init: function() {
+         OperationsMark.superclass.init.call(this);
+         this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
+      },
       _initItems: function(items) {
          var self = this;
          $.each(items, function(key, val) {
@@ -94,9 +98,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._parseItem(item);
          OperationsMark.superclass.addItem.apply(this, [item]);
       },
-      _bindEvents: function() {
-         this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
-         this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
+      onSelectedItemsChange: function() {
+         this._updateMark();
       },
       /**
        * Метод установки или замены связанного представления данных.
@@ -112,7 +115,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                self.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
                self.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
             });
-            this._bindEvents();
             this._updateMark();
          }
       },
@@ -227,7 +229,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                threeState: true,
                parent: this,
                element: $('<span>').insertBefore(this._container),
-               className: 'controls-OperationsMark-checkBox',
+               className: 'controls-OperationsMark-checkBox js-controls-operationsPanel__action',
                handlers: {
                   onCheckedChange: this._onCheckedChange.bind(this)
                }
