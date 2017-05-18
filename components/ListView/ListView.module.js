@@ -856,6 +856,24 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see showPaging
                 */
                partialPaging: true,
+               /**
+                * @typedef {Object} CursorNavigParams
+                * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
+                * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
+                * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
+                     - asc - по возрастанию
+                     - desc - по убыванию
+                     - both - в обе стороны от записи с navigation.config.position
+
+                */
+               /**
+                * @typedef {Object} ListViewNavigation
+                * @property {String} [type] Тип навигации. Например 'cursor'
+                * @property {CursorNavigParams} [config] Конфиг для контроллера навигации
+                */
+               /**
+                * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                */
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
@@ -927,6 +945,10 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
                this._listNavigation = new CursorNavigation(this._options.navigation);
             }
+         },
+
+         getListNavigation: function() {
+            return this._listNavigation;
          },
 
          init: function () {
@@ -2904,12 +2926,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true),
+                  self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
-               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+
+               /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
+               if (!this._options.navigation || this._options.navigation.type != 'cursor') {
+                  this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+               }
+
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
@@ -2919,7 +2947,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                      //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                     var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                     var hasNextPage;
+                     if (this._options.navigation && this._options.navigation.type == 'cursor') {
+                        this._listNavigation.analizeResponceParams(dataSet);
+                        hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
+                     }
+                     else {
+                        hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                     }
          
                      this._updateScrollOffset();
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
@@ -3330,6 +3365,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
                   cMerge(queryFilter, addParams.filter);
                }
+            }
+            /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._notify('onBeforeDataLoad', queryFilter, sorting, offset, limit);
             }
             query.where(queryFilter)
                .offset(offset)
