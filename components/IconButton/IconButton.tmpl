@@ -5,7 +5,6 @@
       class="controls-IconButton controls-ButtonBase{{!_options.visible ? ' ws-hidden'}}{{!_options.enabled ? ' ws-disabled':' ws-enabled'}}{{_options.icon && _options.icon.indexOf('icon-error') >= 0?' controls-IconButton__errorBorder'}}{{_options.icon && _options.icon.indexOf('icon-done') >= 0?' controls-IconButton__doneBorder'}}"
       title="{{_options.tooltip}}"
       disabled="{{!_options.enabled ? 'disabled'}}"
-      type="button"
       event:onmousedown="_onMouseDown()"
       event:onmouseup="_onMouseUp()"
       event:onclick="_onClickHandler()">
