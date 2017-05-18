@@ -362,7 +362,10 @@ define('js!SBIS3.CONTROLS.Image',
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
                //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
-               this._setImage = this._setImage.debounce(0);
+               //Опция avoidCache = false означает что если нет изщображения то setDS будет вызываться с reload = false следоватьельно debounce не нужен
+               if (this._options.avoidCache) {
+                  this._setImage = this._setImage.debounce(0);
+               }
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
                CommandDispatcher.declareCommand(this, 'editImage', this._editImage);
