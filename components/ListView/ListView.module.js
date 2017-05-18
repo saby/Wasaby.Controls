@@ -894,7 +894,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Стандартным будет считаться поведение, useSelectAll = true.
                 * @deprecated
                 */
-               useSelectAll: false
+               useSelectAll: false,
+               //TODO коммент ниже
+               task1173941879: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -2933,17 +2935,42 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._needToRedraw = false;
                         }
                         this._drawPage(dataSet);
+
+                        if(this._dogNailSavedMode) {
+                           this._setInfiniteScrollState(this._dogNailSavedMode);
+                           this._dogNailSavedMode = null;
+                        }
+
                         //И выключаем после отрисовки
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = true;
                         }
                      } else {
+
+                        if(this._dogNailSavedMode) {
+                           this._setInfiniteScrollState(this._dogNailSavedMode);
+                           this._dogNailSavedMode = null;
+                        }
+
                         // Если пришла пустая страница, но есть еще данные - догрузим их
                         if (hasNextPage){
                            this._scrollLoadNextPage();
                         } else {
                            // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
                            this._hideLoadingIndicator();
+
+                           //TODO костыль для Догадкина и выпуска 50
+                           //суть в том что грузится страница вниз, на ней не приходят записи => мы не попадаем в drawItemsCallback
+                           //и не делаем проверку можно ли скроллить вверх, получается так что можно, но мы не грузим, из-за этого подгрузка вверх
+                           //выполняется неожидаемо в момент первого движения скролла вниз, хотя должна была запросить сразу после начальной отрисовки списка
+                           //страхуемся от этой ситуации, чтоб ничего не сломать https://online.sbis.ru/opendoc.html?guid=8da97ce8-7112-4f3f-8d2a-c6c6be03c74d&des=
+                           if (!this._dogNailSavedMode) {
+                              if ((this._options.task1173941879) && (this.isScrollOnTop())) {
+                                 this._dogNailSavedMode = this._infiniteScrollState.mode;
+                                 this._setInfiniteScrollState('up');
+                                 this._scrollLoadNextPage();
+                              }
+                           }
                         }
                      }
                   }, this))
