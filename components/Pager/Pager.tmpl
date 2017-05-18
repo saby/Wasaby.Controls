@@ -1,0 +1,32 @@
+<div class="controls-Pager" hasMarkup="true">
+    <!--Таблица здесь только потому, что собирала по-быстрому-->
+    <table class="controls-Pager__table">
+        <tr>
+            <td class="controls-Pager-block-amount">
+                <ws:SBIS3.CONTROLS.DropdownList
+                        className="controls-Pager-block controls-Pager__pageSize-container controls-DropdownList__withoutArrow controls-DropdownList__withoutCross controls-DropdownList__linkStyle"
+                        enabled="{{ true }}"
+                        multiselect="{{ false }}"
+                        mode="click"
+                        idProperty="id"
+                        displayProperty="value"
+                />
+                <span class="controls-Pager-block  controls-text controls-text-extra">&nbsp;по</span>
+                <div class="controls-Pager-block controls-text controls-Amount-text controls-Amount-text_js"></div>
+            </td>
+            <td class="controls-Pager-block-paging">
+                <ws:SBIS3.CORE.Paging
+                        name="controls-Pager_paging"
+                        className="controls-Pager-block controls-Pager__paging-container"
+                        recordsPerPage="{{ pagingOptions.recordsPerPage }}"
+                        currentPage="{{ pagingOptions.currentPage }}"
+                        recordsCount="{{ pagingOptions.recordsCount }}"
+                        pagesLeftRight="{{ pagingOptions.pagesLeftRight }}"
+                        onlyLeftSide="{{ pagingOptions.onlyLeftSide }}"
+                        rightArrow="{{ pagingOptions.rightArrow }}"
+                        allowEmptySelection="{{ false }}"
+                />
+            </td>
+        </tr>
+    </table>
+</div>
