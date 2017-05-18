@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: false,
-         order: 15
+         order: 25
       },
       {
          name: 'style',
@@ -130,12 +130,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
+         visible: false, //todo: цитата наславиается на обтекаемое избражение
          order: 65
       },
 
       {
          name: 'align',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Выравнивание текста'),
          items: [
             { key: 'alignleft',title: ' ', tooltip: rk('По левому краю'), icon: 'icon-24 icon-AlignmentLeft icon-primary'},
@@ -148,7 +149,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'icon-24 icon-AlignmentLeft icon-primary',
          selectedKey: 'alignleft',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
-         pickerClassName: 'controls-Menu__hide-menu-header',
+         pickerClassName: 'controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          handlers: {
             onMenuItemActivate: function(event, key) {
                this.getParent()._setTextAlign(key);
@@ -157,11 +158,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          pickerConfig: {
             verticalAlign: {
                side: "top",
-               offset: 1 //border
+               offset: 2 //border
             },
             horizontalAlign: {
                side: "left",
-               offset: 2
+               offset: 6
             }
          },
          order: 80
@@ -169,11 +170,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'color',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Цвет текста'),
          icon: 'sprite:icon-24 icon-LetterA icon-primary',
          className: 'fre-color controls-ToggleButton__square controls-ToggleButton-square__big',
-         pickerClassName: 'fre-color controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-color controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          items: [
             { key: 'black', tooltip: rk('Черный'), title: '<div  unselectable ="on" class="controls-RichEditorToolbar__color controls-RichEditorToolbar__colorBlack"></div>'},
             { key: 'red', tooltip: rk('Красный'), title: '<div  unselectable ="on" class="controls-RichEditorToolbar__color controls-RichEditorToolbar__colorRed"></div>' },
@@ -188,6 +189,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          pickerConfig: {
+             verticalAlign: {
+                 side: "top",
+                 offset: 2 //border
+             },
             horizontalAlign: {
                side: "left",
                offset: 6
@@ -198,10 +203,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'list',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Вставить/Удалить список'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
-         pickerClassName: 'fre-list  controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-list controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          icon   : 'sprite:icon-24 icon-ListMarked icon-primary',
          items: [
             { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
@@ -215,11 +220,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          pickerConfig: {
             verticalAlign: {
                side: "top",
-               offset: 1 //border
+               offset: 2 //border
             },
             horizontalAlign: {
                side: "left",
-               offset: 2
+               offset: 6
             }
          },
          order: 90
@@ -268,15 +273,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._openImagePanel(this);
             }
          },
-         order: 120
+         order: 140
       },
 
       {
          name: 'smile',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
-         pickerClassName: 'fre-smiles  controls-Menu__hide-menu-header',
-         className: 'fre-smiles controls-ToggleButton__square controls-ToggleButton-square__big',
+         pickerClassName: 'fre-smiles controls-MenuButton__Menu controls-Menu__hide-menu-header',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
          items: smiles,
          handlers: {
             onMenuItemActivate: function(event, key) {
@@ -284,13 +289,14 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: false,
-         order: 130
+         order: 150
       },
 
       {
          name: 'paste',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         pickerClassName: 'controls-MenuButton__Menu',
          caption: rk('Вставка'),
          tooltip: rk('Вставка'),
          icon: 'sprite:icon-24 icon-PasteBtr icon-primary',
@@ -314,7 +320,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
-         order: 140
+         order: 120
       },
 
       {
@@ -328,12 +334,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._toggleContentSource();
             }
          },
-         order: 150
+         order: 160
       },
       {
          name: 'history',
          caption: 'История ввода',
-         componentType: 'SBIS3.CONTROLS.MenuButton',
+         componentType: 'WSControls/Buttons/MenuButton',
+         pickerClassName: 'controls-MenuIcon__Menu',
          icon: 'sprite:icon-24 icon-InputHistory icon-primary',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
@@ -367,8 +374,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._codeSample(this);
             }
          },
-         visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
-         order: 170
+         visible: false, //!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
+         order: 130
       }
    ];
 });

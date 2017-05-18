@@ -163,9 +163,16 @@
             color: @black-color;
             font-size: @default-font-size;
          }
-         .controls-TextBox .controls-TextBox__fieldWrapper{
-           padding-top: 1px;
-           box-sizing: content-box;
+         .controls-TextBox {
+            .controls-TextBox__fieldWrapper {
+               padding-top: 1px;
+               box-sizing: content-box;
+            }
+            &.controls-EditAtPlace__ellipsis {
+               .controls-EditAtPlace__textField {
+                  vertical-align: middle;
+               }
+            }
          }
       }
    }
@@ -257,7 +264,7 @@
    }
 }
 
-.controls-TabButtons__simple-view{
+.controls-TabButtons__simple-view {
   &.controls-TabButtons__simple-view-select {
     .controls-TabButton.controls-Checked__checked {
       .controls-TabButton__inner{
@@ -269,6 +276,13 @@
     border-color: transparent;
     border-left: none;
     border-right: none;
+    //В simple-view нет border -> не нужны отступы
+    &.controls-TabButton__left-align .controls-TabButton__inner:before {
+       right: 0;
+    }
+    &.controls-TabButton__right-align .controls-TabButton__inner:before {
+       left: 0;
+    }
     .controls-TabButton__inner{
       border-color: transparent;
       color: @tab-button-simple-inner-color;

@@ -4,16 +4,6 @@
   font-size: @default-font-size;
 }
 
-.icon-size {
-   speak: none;
-   font-style: normal;
-   font-weight: normal;
-   font-variant: normal;
-   text-transform: none;
-   line-height: 1;
-   display: inline-block;
-}
-
 .controls-PopupMixin__closeButton {
    position: absolute;
    top: @controls-Popup-closeButton-top;
@@ -110,7 +100,7 @@
    border-color: @menu-border-color;
 }
 
-.controls-Popup__touchScroll-fix .controls-ScrollContainer__content {
+.controls-Popup__touchScroll-fix .controls-ScrollContainer__content, .controls-Menu__Popup {
    -webkit-overflow-scrolling: touch!important;
 }
 
@@ -157,4 +147,7 @@
       line-height: normal;
       font-weight: normal !important;
    }
+}
+.controls-ListView__scrollPager {
+   border-top-color: transparent;
 }

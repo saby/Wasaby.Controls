@@ -1,4 +1,3 @@
-@import "typography";
 .text-overflow() {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -119,9 +118,9 @@
   background-clip: padding-box;
 }
 
-.round-button-mixin(@border-color) {
-  border: 1px solid @border-color;
-  border-radius: 14px;
+.round-button-mixin(@border-color, @border-radius, @icon-button-border-width) {
+  border: @icon-button-border-width solid @border-color;
+  border-radius: @border-radius;
   text-align: center;
 
   &.ws-disabled {
@@ -418,9 +417,11 @@
     }
   }
   &:not(.ws-disabled):not(.controls-Click__active) {
-    &:hover .@{textSelector} {
-      cursor: pointer;
-      text-decoration: underline;
+    &:hover {
+      .@{textSelector}, .controls-Link-link {
+        cursor: pointer;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -466,5 +467,78 @@
   & + .controls-Button__text {
     margin-right: @margin-right - @border-width;
     margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+  }
+}
+
+.checkbox(@size) {
+  .user-select();
+  width: @size;
+  height: @size;
+}
+
+.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth, @borderRadius: 0) {
+  &:after {
+    content: '';
+    position: absolute;
+    border-width: @borderWidth;
+    border-style: solid;
+    width: @sizeContent - 2 * @borderWidth;
+    height: @sizeContent - 2 * @borderWidth;
+    margin: (@sizeContainer - @sizeContent) / 2;
+    & when (@borderRadius > 0) {
+      .border-radius(@borderRadius);
+    }
+  }
+}
+
+.checkbox-border-color(@enabledColor, @disabledColor, @selector) {
+  .ws-enabled>.@{selector}:after {
+    border-color: @enabledColor;
+  }
+  .ws-disabled>.@{selector}:after {
+    border-color: @disabledColor;
+  }
+}
+
+.checkbox-checked-size(@size, @posX, @posY) {
+  &:before {
+    font-family: 'cbuc-icons';
+    content: '\e616';
+    position: absolute;
+    font-size: @size;
+    height: @size;
+    width: @size;
+    line-height: @size;
+    top: @posY;
+    left: @posX;
+  }
+}
+
+.checkbox-checked-color(@enabledColor, @disabledColor, @selector) {
+  .ws-enabled.controls-Checked__checked>.@{selector}:before {
+    color: @enabledColor;
+  }
+  .ws-disabled.controls-Checked__checked>.@{selector}:before {
+    color: @disabledColor;
+  }
+}
+
+.checkbox-null-size(@sizeContainer, @sizeContent) {
+  &:before {
+    content: '';
+    position: absolute;
+    height: @sizeContent;
+    width: @sizeContent;
+    line-height: @sizeContent;
+    margin: (@sizeContainer - @sizeContent) / 2;
+  }
+}
+
+.checkbox-null-color(@enabledColor, @disabledColor, @selector) {
+  .ws-enabled.controls-ToggleButton__null>.@{selector}:before {
+    background-color: @enabledColor;
+  }
+  .ws-disabled.controls-ToggleButton__null>.@{selector}:before {
+    background-color: @disabledColor;
   }
 }

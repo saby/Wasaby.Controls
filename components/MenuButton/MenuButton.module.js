@@ -57,8 +57,8 @@ define('js!SBIS3.CONTROLS.MenuButton', [
    var MenuButton = WSMenuButton.extend( [], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
       _modifyOptions : function() {
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
-         opts.pickerClassName += ' controls-MenuButton__Menu';
          opts.cssClassName += ' controls-Button' + (opts.primary ? ' controls-Button__primary' : ' controls-Button__default');
+         opts.pickerClassName += ' controls-MenuButton__Menu';
          return opts;
       }
    });

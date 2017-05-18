@@ -66,11 +66,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    }
    var createDefaultProjection = function(items, cfg) {
       var proj, projCfg = {};
+      projCfg.idProperty = cfg.idProperty || ((cfg.dataSource && typeof cfg.dataSource.getIdProperty === 'function') ? cfg.dataSource.getIdProperty() : '');
       if (cfg.itemsSortMethod) {
          projCfg.sort = cfg.itemsSortMethod;
       }
       if (cfg.itemsFilterMethod) {
          projCfg.filter = cfg.itemsFilterMethod;
+      }
+      if (cfg.loadItemsStrategy == 'merge') {
+         projCfg.unique = true;
       }
       proj = Projection.getDefaultDisplay(items, projCfg);
       return proj;
@@ -95,6 +99,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          projection.setGroup(null);
       }
       return projection;
+   },
+   applyFilterToProjection = function(projection, cfg) {
+      if (cfg.itemsFilterMethod) {
+         projection.setFilter(cfg.itemsFilterMethod);
+      }
    },
 
    _oldGroupByDefaultMethod = function (record, at, last, item) {
@@ -332,6 +341,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
             _applyGroupingToProjection: applyGroupingToProjection,
+            _applyFilterToProjection: applyFilterToProjection,
 
             _groupItemProcessing: groupItemProcessing,
             /*TODO ременные переменные для группировки*/
@@ -603,6 +613,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             sorting: [],
             /**
+             * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
+             * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
+             * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
+             *
+             */
+            loadItemsStrategy: 'append',
+            /**
              * @cfg {Object.<String,String>} соответствие опций шаблона полям в рекорде
              * @example
              * <pre>
@@ -701,6 +718,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (parsedCfg._itemsProjection) {
                   newCfg._itemsProjection = parsedCfg._itemsProjection;
                   newCfg._items = parsedCfg._items;
+                  /*TODO убрать этот код с переходом на легкие инстансы. В текущей реализации методы не могут нормально сериализоваться при построении на сервере*/
+                  applyGroupingToProjection(newCfg._itemsProjection, newCfg);
+                  newCfg._applyFilterToProjection(newCfg._itemsProjection, newCfg);
                } else {
                   if (newCfg.items instanceof Array) {
                      if (!newCfg.idProperty) {
@@ -742,7 +762,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._publish('onDrawItems', 'onDataLoad', 'onDataLoadError', 'onBeforeDataLoad', 'onItemsReady', 'onPageSizeChange');
          this._revivePackageParams = {
             revive: false,
-            light: true
+            light: true,
+            processed: true
          };
 
          var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
@@ -1881,6 +1902,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @see redraw
        */
       redrawItem: function(item, projItem) {
+         this._itemData = null;
          if (!this._isSlowDrawing(this._options.easyGroup)) {
             projItem = projItem || this._getItemProjectionByItemId(item.getId());
             //Если элемента в проекции нет, то и не надо перерисовывать запись
@@ -2524,10 +2546,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    var
       onBeforeCollectionChange = function() {
-         this._revivePackageParams = {
-            light: true,
-            revive: false
-         };
+         //У Лехи Мальцева не всегда соблюдается 100% последовательность before / change / after
+         //поэтому сброс в before делаем только тогда когда был соотве after
+         if (this._revivePackageParams.processed) {
+            this._revivePackageParams = {
+               light: true,
+               revive: false,
+               processed: false
+            };
+         }
       },
 
       onCollectionItemChange = function(eventObject, item, index, property) {
@@ -2580,6 +2607,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._notifyOnDrawItems(this._revivePackageParams.light);
          }
+         this._revivePackageParams.processed = true;
       };
    return ItemsControlMixin;
 

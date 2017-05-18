@@ -24,8 +24,21 @@
    // Button's icon
    .controls-Button__icon {
       position: absolute;
-      .button-mixin(@button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
 
+      &.icon-small {
+         .button-mixin(@button-icon-left-offset; @icon-small-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-medium {
+         .button-mixin(@button-icon-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+      &.icon-large {
+         .button-mixin(@button-icon-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
+
+      // оставляем для совместимости
+      &.icon-16 {
+         .button-mixin(@button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      }
       &.icon-24 {
          .button-mixin(@button-icon-big-left-offset; 24px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
@@ -73,8 +86,22 @@
       // Button's icon
       .controls-Button__icon {
          position: absolute;
-         .button-mixin(@button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
 
+         &.icon-small {
+            .button-mixin(@button-big-icon-left-offset; @icon-small-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+         &.icon-medium {
+            .button-mixin(@button-big-icon-big-left-offset; @icon-medium-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+         &.icon-large {
+            .button-mixin(@button-big-icon-32-left-offset; @icon-large-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+         }
+
+
+         // оставляем для совместимости
+         &.icon-16 {
+              .button-mixin(@button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+           }
          &.icon-24 {
             .button-mixin(@button-big-icon-big-left-offset; 24px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
          }
@@ -88,23 +115,35 @@
    &.controls-Button__withoutCaption {
       min-width: @button-without-caption-min-width;
       .controls-Button__icon {
+         left: 50%;
+         &.icon-small {
+            margin-left: -@icon-small-size/2;
+         }
+         &.icon-medium {
+            margin-left: -@icon-medium-size/2;
+         }
+         &.icon-large {
+            margin-left: -@icon-large-size/2;
+         }
+
          &.icon-16 {
-            left: 15px;
+            margin-left: -8px;
          }
          &.icon-24 {
-            left: 11px;
+            margin-left: -12px;
          }
          &.icon-32 {
-            left: @button-without-caption-icon-32-left;
+            margin-left: -16px;
+         }
+
+      }
+      &.controls-Button__big {
+         .controls-Button__icon {
+            left: 50%;
          }
       }
       .controls-Button__text {
          display: none;
-      }
-      &.controls-Button__big {
-         .controls-Button__icon {
-            margin-left: 0;
-         }
       }
       .baseline-fix();
    }

@@ -184,14 +184,16 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
       _setPickerConfig: function() {
          var pickerWidth = 0,
-            baseWidth = this.getContainer().outerWidth();
+            baseWidth = this.getContainer().outerWidth(),
+            wrapperWidth = this.getContainer().children('.controls-DateRangeSlider__value-wrapper').css('min-width');
          // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
+         // Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=73b59c8e-f962-433c-9432-1218fbe754aa
          if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
-            pickerWidth = 80;
+            pickerWidth = wrapperWidth === '124px' ? 136 : 80;
          } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
-            pickerWidth = 178;
+            pickerWidth = wrapperWidth === '124px' ? 204 : 178;
          } else {
-            pickerWidth = 148;
+            pickerWidth = wrapperWidth === '124px' ? 204 : 148;
          }
          return {
             corner: 'tl',
@@ -207,6 +209,19 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
             closeByExternalClick: true,
             className: 'controls-DateRangeSlider__picker'
          };
+      },
+
+      hidePicker: function () {
+         DateRangeSlider.superclass.hidePicker.apply(this, arguments);
+         // В нормальном режиме у DateRangeSlider нет внутренних компонентов и он не получает фокус т.к.
+         // когда закрывается пикер, то фокус возвращается на предыдущий контрол(DateRangeSlider) и происходит проверка
+         // на всех внетренних контролах могут ли они принимать фокус. А внутренний контрол есть только один.
+         // Это сам пиккер который уже скрыт и не может принять фокус. Устанавливаем фокус вручную.
+         //- У нас при открытии popup в качестве пэрента указывается открывающий компонент. Когда попап закрывается, то выпадающий компонент скрывается, и происходит поиск компонента на который будет установлен фокус среди родителей. Сначала проверяется открывающий компонент. Это CompoundControl. В нем ищутся внутренние компоненты. И находится только один скрытый. Это выпадающий блок. При таком раскладе наша логика решает, что на текущий CompaundControl не надо устанавливать фокус. И начинает искать уже в родителе нашего контрола. Т.е. DateRangeSlider не получает фокуса при закрытии выпадашки. В текущей ошибке проблема в том. что DateRangeSlider встроен в редактирование по месту. При закрытии выпадашки фокус устанавливается вне контрола редактирования по месту. И после выбора периода и клика вне редактирования по месту, редактирование по месту не закрывается.
+         //- В этом МР я сделал принудительную установку фокуса после закрытия выпадашки. Про подробностями этой логики можно спросить у Шипина.
+         if (this._options.type === 'normal') {
+            this.setActive(true);
+         }
       }
    });
 

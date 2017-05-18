@@ -188,12 +188,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        *     myBinder.bindBreadCrumbs();
        * </pre>
        */
-      bindBreadCrumbs: function(breadCrumbs, backButton){
+      bindBreadCrumbs: function(breadCrumbs, backButton, backButtonTemplate){
          if (!this._breadCrumbsController){
             this._breadCrumbsController = new BreadCrumbsController({
                view: this._options.view,
                breadCrumbs: breadCrumbs || this._options.breadCrumbs,
-               backButton: backButton || this._options.backButton
+               backButton: backButton || this._options.backButton,
+               backButtonTemplate: backButtonTemplate || this._options.backButtonTemplate
             });
          }
          this._breadCrumbsController.bindBreadCrumbs(breadCrumbs, backButton);
@@ -322,7 +323,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             this._pagingController = new PagingController({
                view: this._options.view,
                paging: paging || this._options.paging
-            })
+            });
          }
       },
 
@@ -344,8 +345,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
-               paging: paging || this._options.paging
-            })
+               paging: paging || this._options.paging,
+               zIndex: this._options.pagingZIndex
+            });
          }
          this._scrollPagingController.bindScrollPaging();
       },

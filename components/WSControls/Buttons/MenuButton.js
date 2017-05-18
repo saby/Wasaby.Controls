@@ -106,8 +106,6 @@ define('js!WSControls/Buttons/MenuButton', [
          }
 
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
-         //opts.pickerClassName += ' controls-MenuButton__Menu';
-         //opts.pickerClassName += ' controls-MenuLink__Menu';
          return opts;
       },
 
