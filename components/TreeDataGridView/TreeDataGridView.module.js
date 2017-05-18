@@ -69,15 +69,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             projection: cfg.projItem.getOwner()
          };
          config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
+         config.isLoaded = cfg.projItem.isLoaded();
          config.hasLoadedChild = config.children.length > 0;
-         config.loadedWithoutChilds = (cfg.projItem.isLoaded() || !config.hasLoadedChild) && config.nodePropertyValue != null;
-         config.drawExpandIcon = !!config.nodePropertyValue;
+         config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
+         config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
          config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
          config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
-         config.classPresenceLoadedNodes = config.loadedWithoutChilds ? ' controls-ListView__item-without-child' : '';
          config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
          config.isColumnScrolling = cfg.startScrollColumn === 0;
-         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classPresenceLoadedNodes + config.classIsSelected;
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
          if (config.isColumnScrolling){
             config.computedPadding = 'left: ' + cfg.columnsScrollPosition + 'px;';
          }
@@ -85,14 +85,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
       getItemContentTplData = function(cfg){
          var data = {};
-         if (cfg.isSearch) {
-            data.padding = (cfg.projItem.getLevel() == 1) ? cfg.originallPadding : cfg.originallPadding + cfg.paddingSize;
-         }
-         else{
-            data.padding = cfg.paddingSize * (cfg.projItem.getLevel() - 1) + cfg.originallPadding;
-         }
          data.hierField$ = cfg.projItem.getContents().get(cfg.parentProperty + '$');
          data.hasScroll = cfg.startScrollColumn !== undefined;
+         data.itemLevel = cfg.projItem.getLevel() - 1;
          data.isNode = cfg.projItem.getContents().get(cfg.nodeProperty);
          data.hasChilds = cfg.hierarchy.getChildren(cfg.item, cfg.projItem.getOwner().getCollection()).length > 0;
          return data;

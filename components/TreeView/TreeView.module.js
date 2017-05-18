@@ -12,22 +12,18 @@ define('js!SBIS3.CONTROLS.TreeView', [
    var getItemTemplateData = function (cfg) {
       var config = {
          nodePropertyValue: cfg.item.get(cfg.nodeProperty),
-         projection: cfg.projItem.getOwner(),
-         padding: cfg.paddingSize * (cfg.projItem.getLevel() - 1) + cfg.originallPadding
+         projection: cfg.projItem.getOwner()
       };
       config.children = cfg.hierarchy.getChildren(cfg.item,config.projection.getCollection());
+      config.isLoaded = cfg.projItem.isLoaded();
+      config.itemLevel = cfg.projItem.getLevel() - 1;
       config.hasLoadedChild = config.children.length > 0;
-      config.loadedWithoutChilds = (cfg.projItem.isLoaded() || !config.hasLoadedChild) && config.nodePropertyValue != null;
-      config.drawExpandIcon = !!config.nodePropertyValue;
+      config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
+      config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
       config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
       config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
-      config.classPresenceLoadedNodes = config.loadedWithoutChilds ? ' controls-ListView__item-without-child' : '';
       config.classIsSelected = (cfg.selectedKey==cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
-      config.addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + config.classNodeType + config.classNodeState + config.classPresenceLoadedNodes + config.classIsSelected;
-
-      if (config.padding > cfg.originallPadding){
-         config.computedPadding = 'padding-left:' + config.padding + 'px;';
-      }
+      config.addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
       return config;
    };
    /**
