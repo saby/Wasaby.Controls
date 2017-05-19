@@ -623,7 +623,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var list = this.getList();
 
          this._hideLoadingIndicator();
-         this._listReversed = false;
 
          if(list.hasChildControlByName('showAllButton')) {
             var items = dataSet || list.getItems(),
@@ -766,21 +765,20 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
       },
 
-      _reverseList: function() {
-         var items = this._getListItems(),
-             itemsArray = [];
+      _reverseList: function(reverse) {
+         if(this._listReversed === reverse) {
+            return;
+         }
+         
+         var list = this._list;
+         this._listReversed = reverse;
 
-         if(items) {
-            items.each(function (rec) {
-               itemsArray.push(rec);
-            });
-
-            this._listReversed = !this._listReversed;
-            /* Сбрасываем выбранную запись в списке, чтобы после перерисовки курсор установился на первую запись
-             и после переворота был на последней.
-             Если запись не сбрасывать курсор будет вверху после переворота. */
-            this.getList().setSelectedKey(null);
-            items.assign(itemsArray.reverse());
+         if(list && list.setItemsSortMethod) {
+            list.setItemsSortMethod(
+               reverse ?
+                  function (a, b) { return b.collectionIndex - a.collectionIndex; } :
+                  null
+            );
          }
       }
    };

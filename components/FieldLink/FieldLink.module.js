@@ -1085,16 +1085,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(!this._options.reverseItemsOnListRevert) {
                 return;
              }
-
-             if (this._isSuggestPickerRevertedVertical()) {
-                if (!this._listReversed) {
-                   this._reverseList();
-                }
-             } else {
-                if (this._listReversed) {
-                   this._reverseList();
-                }
-             }
+             this._reverseList(this._isSuggestPickerRevertedVertical());
           },
 
           _isSuggestPickerRevertedVertical: function() {
