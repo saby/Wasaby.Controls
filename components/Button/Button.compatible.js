@@ -81,8 +81,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          this._onClickHandler();
       },
 
-      _onClickHandler: function(e)
-      {
+      _baseClickAction: function(e){
          if (!this.iWantVDOM && e && e.stopImmediatePropagation) {
             e.stopImmediatePropagation();
             e.stopPropagation();
@@ -102,9 +101,19 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             var args = [this._options.command].concat(this._options.commandArgs);
             this.sendCommand.apply(this, args);
          }
+      },
 
+      _onClickHandlerOld: function(){
+         this._baseClickAction(e);
+         this._onClick(e);
+      },
+
+      _onClickHandler: function(e)
+      {
+
+         this._baseClickAction(e);
          if (!this.iWantVDOM) {
-            this._notify("onActivated");
+            this._notify("onActivated", e);
          }
       }
 

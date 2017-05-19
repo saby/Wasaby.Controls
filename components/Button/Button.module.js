@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.Button',
             this._onClickHandler(e);
             if (!this._options.enabled)
                return;
-            return this._notify("onActivated");
+            return this._notify("onActivated", e);
          },
 
          _onMouseDown: function () {
