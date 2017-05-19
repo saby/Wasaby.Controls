@@ -69,9 +69,6 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.
                   self._onClickHandler(e);
                }
 
-               if(this._icanrulefocus && e.which == cConstants.key.tab){
-                  self.moveFocus(e);
-               }
             });
 
             container.on("touchstart  mousedown", function (e) {
