@@ -1697,7 +1697,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._notify('onItemClick', id, data, target, e);
          },
          _onCheckBoxClick: function(target) {
-            this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
+            this.toggleItemsSelection([this._getItemsProjection().getByHash(target.closest('.controls-ListView__item').attr('data-hash')).getContents().getId()]);
          },
 
          _elemClickHandlerInternal: function (data, id, target, e) {
