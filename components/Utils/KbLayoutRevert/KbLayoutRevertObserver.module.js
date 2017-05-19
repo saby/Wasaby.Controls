@@ -162,7 +162,14 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                    но отобразим сообщение */
                   if(self._options.newStandart) {
                      if (self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()) {
-                        data.prepend(self._itemsBeforeTranslate);
+                        data.setMetaData(self._itemsBeforeTranslate.getMetaData());
+                        
+                        if(self._itemsBeforeTranslate.getCount() < view.getPageSize()) {
+                           data.prepend(self._itemsBeforeTranslate);
+                        } else {
+                           data.assign(self._itemsBeforeTranslate);
+                        }
+                        
                         backOldSearchValue();
                         showMissSpellValue(searchValue)
                      } else {
