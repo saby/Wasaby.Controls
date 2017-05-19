@@ -103,14 +103,13 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
       },
 
-      _onClickHandlerOld: function(){
+      _onClickHandlerOld: function(e){
          this._baseClickAction(e);
          this._onClick(e);
       },
 
       _onClickHandler: function(e)
       {
-
          this._baseClickAction(e);
          if (!this.iWantVDOM) {
             this._notify("onActivated", e);
