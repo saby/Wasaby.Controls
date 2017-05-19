@@ -19,6 +19,8 @@ define('js!SBIS3.CONTROLS.TreeView', [
     * @demo SBIS3.CONTROLS.Demo.MyTreeView
     * @author Крайнов Дмитрий Олегович
     *
+    * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
+    *
     * @control
     * @public
     * @category Lists
