@@ -22,6 +22,10 @@
 
       .controls-ItemActions__itemsContainer {
          .controls-ItemActions__item {
+            .flexbox();
+            .flex-direction(column);
+            .justify-content(center);
+            .align-items(center);
             border: 0;
             border-radius: 0;
             padding: 0 12px;
@@ -34,14 +38,6 @@
             border-top: none;
 
 
-            &.controls-Link  {
-               display: table;
-
-               .controls-Button__text {
-                  display: table-cell;
-                  vertical-align: middle;
-               }
-            }
 
             &.controls-IconButton {
                &.controls-IconButton__round-border-24 {
@@ -52,35 +48,22 @@
                      font-size: 24px !important;
                   }
                }
-               .controls-Button__icon {
-                  height: 100%;
-                  &:before {
-                     left: 0;
-                     top: 50%;
-                     margin-top: -@list-view-actions-item-height / 2;
-                     position: absolute;
-                  }
-               }
             }
 
          }
 
          .controls-ItemActions__menu-button,
          .controls-ItemActions__menu-button:hover {
-            padding: 0;
+            padding: 0 12px 0 6px;
             border: none;
-            top: 50%;
-            position: relative;
-            margin-top: -@list-view-actions-menu-touch-height / 2;
             margin-left: 0;
-            background: @list-view-actions-menu-touch-icon;
-            height: @list-view-actions-menu-touch-height;
-            width: @list-view-actions-menu-touch-width;
+            background: none;
+            width: auto;
             background-size: @list-view-actions-menu-touch-size;
             background-position: center;
          }
          .controls-ItemActions__menu-button .controls-Button__icon:before {
-            content: none;
+            content: '\e9aa';
          }
       }
    }

@@ -7,9 +7,9 @@
       disabled="{{!_options.enabled ? 'disabled'}}"
       event:onmousedown="_onMouseDown()"
       event:onmouseup="_onMouseUp()"
-      event:onclick="_onClickHandlerOld()">
+      event:onclick="_onClickHandler()">
     <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
        <i class="controls-Button__icon js-controls-Button__icon {{_options._iconClass?_options._iconClass:_options.icon}}"></i>
     </ws:if>
-    <span class="controls-Button__text js-controls-Button__text controls-Button__emptyCaption">{{'&nbsp;'|sanitize}}</span>
+    <span class="controls-Button__text js-controls-Button__text{{!_options.caption ? ' controls-Button__emptyCaption'}} {{_options._textClass}}"><ws:if data="{{!!_options.caption}}">{{_options.caption|sanitize}}</ws:if><ws:else>{{'&nbsp;'|sanitize}}</ws:else></span>
 </span>

@@ -154,17 +154,23 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
       },
 
-      _onClickHandlerOld: function(e){
+      /**
+       * Базовая логика старых компонентов: при клике на
+       * контейнер вызывается _onClickHandler, который вызывает _onClick
+       * Есть те, кто переопределяет каждый из этих методов и они ждут
+       * сохранения правильной последовательности, поэтому мы не можем использовать метод _onClick в VirtualDom кнопке
+       * там метод _onMouseClick
+       * */
+      _onClickHandler: function(e)
+      {
          this._baseClickAction(e);
          this._onClick(e);
       },
 
-      _onClickHandler: function(e)
-      {
-         this._baseClickAction(e);
-         if (!this.iWantVDOM) {
-            this._notify("onActivated", e);
-         }
+      _onClick: function (e) {
+         if (!this._options.enabled || this.iWantVDOM)
+            return;
+         return this._notify("onActivated", e);
       }
 
    };
