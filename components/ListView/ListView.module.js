@@ -2429,7 +2429,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
             } else {
-               this._onRightSwipeHandler();
+               this._onRightSwipeHandler(target);
                if(this._hasHoveredItem()) {
                   this._clearHoveredItem();
                   this._notifyOnChangeHoveredItem();
@@ -2458,7 +2458,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return !!this._hoveredItem.container;
          },
 
-         _onRightSwipeHandler: function() {
+         _onRightSwipeHandler: function(target) {
+            var key = target[0].getAttribute('data-id');
+
+            this.setSelectedKey(key);
+            this.toggleItemsSelection([key]);
+
             if (this._isSupportedItemsToolbar()) {
                this._hideItemsToolbar(true);
             }
