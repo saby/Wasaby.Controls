@@ -58,57 +58,6 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
       },
 
-      _isCompatibleInited: false,
-
-      initCompatibleFunc: function() {
-         if (!this._isCompatibleInited) {
-            this._isCompatibleInited = true;
-            this._addClassCompatible = function(className){
-               if (this._options.class.indexOf(className)==-1) {
-                  this._options.class += " "+className;
-                  this._setDirty();
-               }
-               return this._container;
-            }.bind(this);
-
-            this._removeClassCompatible = function(className){
-               this._options.class.replace(" "+className, "");
-               this._setDirty();
-               return this._container;
-            }.bind(this);
-
-            this._mouseEnterCompatible = function(callback){
-               this.subscribe('onMouseEnter', function(ev, synEvent){
-                  callback({currentTarget: this._container});
-               });
-               return this._container;
-            }.bind(this);
-
-            this._mouseLeaveCompatible = function(callback){
-               this.subscribe('onMouseLeave', function(ev, synEvent){
-                  callback({currentTarget: this._container});
-               });
-               return this._container;
-            }.bind(this);
-
-         }
-      },
-      _addClassCompatible: null,
-      _removeClassCompatible: null,
-      _mouseEnterCompatible: null,
-      _mouseLeaveCompatible: null,
-
-      getContainer: function(){
-         if (this.iWantVDOM) {
-            this.initCompatibleFunc();
-            this._container.mouseenter = this._mouseEnterCompatible;
-            this._container.mouseleave = this._mouseLeaveCompatible;
-            this._container.addClass = this._addClassCompatible;
-            this._container.removeClass = this._removeClassCompatible;
-         }
-         return this._container;
-      },
-      
       /**
        * @noShow
        * @param isDefault
