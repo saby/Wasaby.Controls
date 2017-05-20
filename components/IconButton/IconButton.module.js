@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.
       /*TODO: Удалить при переходе на VDOM*/
       _containerReady:function(container){
          if (window) {
-            container.on('click', this._onClickHandlerOld.bind(this));
+            container.on('click', this._onClickHandler.bind(this));
             var self = this;
 
             container.keydown(function(e) {

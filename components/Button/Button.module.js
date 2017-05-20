@@ -92,11 +92,12 @@ define('js!SBIS3.CONTROLS.Button',
 
          //<editor-fold desc="Event handlers">
 
-         _onClick: function (e) {
-            this._onClickHandler(e);
-            if (!this._options.enabled)
+         _onMouseClick: function (e) {
+            if (!this._options.enabled) {
                return;
-            return this._notify("onActivated", e);
+            }
+            this._onClickHandler(e);
+            this._notify("onActivated", e);
          },
 
          _onMouseDown: function () {
