@@ -90,18 +90,6 @@ define('js!SBIS3.CONTROLS.Button',
             this._publish('onActivated');
          },
 
-         addClass: function(className){
-            if (this._options.class.indexOf(className)==-1) {
-               this._options.class += " "+className;
-               this._setDirty();
-            }
-         },
-
-         removeClass: function(className){
-            this._options.class.replace(" "+className, "");
-            this._setDirty();
-         },
-
          //<editor-fold desc="Event handlers">
 
          _onClick: function (e) {
