@@ -3088,7 +3088,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loadMoreButton.setVisible(false);
                   return;
                } else {
-                  caption = this._options.pageSize;
+                  caption = '...';
                }
             }
 
