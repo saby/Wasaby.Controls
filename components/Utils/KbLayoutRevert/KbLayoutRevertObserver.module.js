@@ -7,9 +7,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       "Core/helpers/string-helpers",
       "Core/core-functions",
       "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
-      "js!SBIS3.CONTROLS.MissSpell"
+      "js!SBIS3.CONTROLS.MissSpell",
+      'Core/core-instance'
    ],
-   function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, MissSpell) {
+   function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, MissSpell, cInstance) {
       'use strict';
 
       /* Вспомогательный класс, для посчёта времени запроса.
@@ -131,13 +132,24 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                if(revertedSearchValue !== searchValue) {
                   self._textBeforeTranslate = searchValue;
                   viewFilter[searchParam] = revertedSearchValue;
-                  self._toggleItemsEventRising(false, false);
-                  /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
-                  if (self._getTimer().getTime() > INDICATOR_DELAY) {
-                     view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
+
+                  /* Чтобы не запускать цепочку кода, которая следует на reload'ом,
+                     просто отдельно выполняем запрос, если контрол поддерживает интерфейс */
+                  if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl')) {
+                     view.setFilter(viewFilter, true);
+                     view._callQuery(viewFilter, view.getSorting(), view.getOffset(), view.getPageSize()).addCallback(function (res) {
+                        self._onViewDataLoad(null, res);
+                        return res;
+                     })
+                  } else {
+                     self._toggleItemsEventRising(false, false);
+                     /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
+                     if (self._getTimer().getTime() > INDICATOR_DELAY) {
+                        view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
+                     }
+                     self._getTimer().stop();
+                     view.setFilter(viewFilter);
                   }
-                  self._getTimer().stop();
-                  view.setFilter(viewFilter);
                }
             }
 
@@ -162,7 +174,14 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                    но отобразим сообщение */
                   if(self._options.newStandart) {
                      if (self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()) {
-                        data.prepend(self._itemsBeforeTranslate);
+                        data.setMetaData(self._itemsBeforeTranslate.getMetaData());
+                        
+                        if(self._itemsBeforeTranslate.getCount() < view.getPageSize()) {
+                           data.prepend(self._itemsBeforeTranslate);
+                        } else {
+                           data.assign(self._itemsBeforeTranslate);
+                        }
+                        
                         backOldSearchValue();
                         showMissSpellValue(searchValue)
                      } else {

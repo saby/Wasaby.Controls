@@ -144,13 +144,13 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           _notifyDelegatedEvents: function(e, list) {
              var args = [].slice.call(arguments, 1),
-                 data, items;
+                 data;
 
              args.unshift(e.name);
 
              /* Т.к. контроллер следит за событием onDataLoad, то им надо стрелять один раз,
               когда все списки згрузились */
-             if(e.name === 'ondataload' || e.name === 'onDataLoad') { //FIXME пока не залили правки Санникова
+             if(e.name === 'ondataload') {
                 this._dataLoaded.push(list);
                 /* Не прокидываем событие выше, пока не загрузились все списки */
                 if (this.isLoading()) {
@@ -334,6 +334,19 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           _hasNextPage: function(hasMore, offset) {
              return this.getActiveView()._hasNextPage(hasMore, offset);
+          },
+
+          _callQuery: function () {
+             var activeView = this.getActiveView();
+             return activeView._callQuery.apply(activeView, arguments);
+          },
+
+          getOffset: function() {
+             return this.getActiveView().getOffset();
+          },
+
+          getPageSize: function() {
+             return this.getActiveView().getPageSize();
           },
 
           setItemTpl: function(itemTpl) {
