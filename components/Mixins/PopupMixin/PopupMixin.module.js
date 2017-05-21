@@ -488,6 +488,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          return !!this._options.isModal;
       },
 
+      _overlayClick: function() {
+         if (this._options.closeByExternalClick && this.getId() == cWindowManager.getMaxZWindow().getId()) {
+            ControlHierarchyManager.getTopWindow().hide();
+         }
+      },
+
       moveToTop: function(){
          if (this.isVisible()) {
             cWindowManager.releaseZIndex(this._zIndex);
