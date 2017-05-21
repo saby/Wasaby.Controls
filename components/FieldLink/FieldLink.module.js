@@ -1061,13 +1061,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPickerConfig: function () {
              return {
                 corner: 'bl',
-                target: this._container,
-                opener: this,
-                parent: this,
                 closeOnTargetMove: !constants.browser.isMobileIOS,
                 closeByExternalClick: true,
                 targetPart: true,
-                cssClassName: 'controls-FieldLink__picker',
                 _canScroll: true,
                 verticalAlign: {
                    side: 'top'
