@@ -80,11 +80,11 @@ body {
 }
 
 .ws-float-area-stack-panel-shadow {
-  background: #202835 !important;
+  background: #2C3E50 !important;
 }
 .ws-sticky-header__block.ws-sticky-header__fixed,
 .ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
+  background-color: #2C3E50 !important;
 }
 
 .ws-window {
@@ -182,6 +182,13 @@ body {
 
 
 body {
+  .engine-Browser__path-wrapper-in-head {
+    height: auto;
+  }
+  .engine-Browser__path {
+    max-height: 2rem;
+    height: auto !important;
+  }
   .ws-window-titlebar {
     color: @default-text-color;
     line-height: 3.57rem;
@@ -193,7 +200,7 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
-    background: #2e404f;
+    background: #354B62;
     box-shadow: none!important;
   }
   &.ws-window-titlebar-custom {
@@ -391,22 +398,20 @@ body .ws-info-box .ws-infobox-content p {
   vertical-align: middle;
 }
 .controls-FieldLink__item-cross {
-  margin-right: -.7rem; 
+  margin-right: -.7rem;
 }
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
 }
 .controls-FieldLink__item-cross {
-    margin-right: -.7rem; 
+    margin-right: -.7rem;
 }
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
 }
-body .controls-IconButton {
-  vertical-align: baseline;
-}
+
 .controls-DropdownList__picker .controls-DropdownList__item .controls-DropdownList__itemTextWrapper .controls-DropdownList__item-text {
     color: #000;
     line-height: 3rem;
@@ -486,4 +491,13 @@ body .controls-ToolBar__menuIcon .icon-24 {
          vertical-align: baseline;
       }
    }
+}
+.controls-Link {
+  &.additionalLink__2 {
+    font-size: .857rem;
+  }
+}
+
+.controls-TreeView__expand {
+  font-size: 1rem !important;
 }
