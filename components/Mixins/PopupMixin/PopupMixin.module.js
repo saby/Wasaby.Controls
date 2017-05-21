@@ -217,6 +217,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
 
          this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
+         this._overlayClick = this._overlayClick.bind(this);
+
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
@@ -473,16 +475,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _setModal: function(isModal){
          if (isModal){
             ModalOverlay.adjust();
-            var self = this;
-            ModalOverlay._overlay.bind('mousedown', function(){
-               if (self._options.closeByExternalClick && self.getId() == cWindowManager.getMaxZWindow().getId()) {
-                  ControlHierarchyManager.getTopWindow().hide();
-               }
-            });
+            ModalOverlay._overlay.bind('mousedown', this._overlayClick);
          }
          else {
             cWindowManager.releaseZIndex(this._zIndex);
             ModalOverlay.adjust();
+            ModalOverlay._overlay.unbind('mousedown', this._overlayClick);
          }
       },
 
@@ -1195,6 +1193,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // Освобождаем оверлей если забирали его
             if (this._options.isModal){
                this._setModal(false);
+            }
+
+            if(this._options.closeButton) {
+               this.getContainer().find('.controls-PopupMixin__closeButton').off();
             }
          },
          hide: function() {
