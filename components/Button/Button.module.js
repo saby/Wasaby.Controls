@@ -111,10 +111,17 @@ define('js!SBIS3.CONTROLS.Button',
          _onKeyDown: function (e) {
             var result = this._notify('onKeyPressed', e);
             if (e.nativeEvent.key === 'Enter' && result !== false) {
-               this._onClick(e);
+               this._onMouseClick(e);
             }
-         }
+         },
 
+         _onMouseEnter: function(e){
+            this._notify('onMouseEnter', e);
+         },
+
+         _onMouseLeave: function(e){
+            this._notify('onMouseLeave', e);
+         }
          //</editor-fold>
       });
 
