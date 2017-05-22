@@ -9,7 +9,9 @@ define(
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
-      'html!SBIS3.CONTROLS.DatePicker',
+      'js!SBIS3.CONTROLS.TimePicker',
+      'tmpl!SBIS3.CONTROLS.DatePicker',
+      'tmpl!SBIS3.CONTROLS.DatePicker/resources/ElementPickerContent',
       'Core/helpers/dom&controls-helpers',
       'i18n!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.IconButton',
@@ -17,7 +19,7 @@ define(
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, dotTplFn, dcHelpers) {
+   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, dcHelpers) {
 
    'use strict';
 
@@ -49,7 +51,7 @@ define(
 
    var DatePicker = DateBox.extend([PickerMixin], /** @lends SBIS3.CONTROLS.DatePicker.prototype */{
       _dotTplFn: dotTplFn,
-       /**
+      /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
         * Изменение даты производится одним из трёх способов:
@@ -77,10 +79,7 @@ define(
        * @param {Date} date Дата, которую установили.
        */
       $protected: {
-         /**
-          * Контролл Calendar в пикере
-          */
-         _calendarControl: undefined,
+         _pickerContent: null,
          /**
           * Опции создаваемого контролла
           */
@@ -91,14 +90,14 @@ define(
              * Если {@link mask} установлена в значение "Только время", то автоматически иконка календаря скрывается (значение опции самостоятельно сменится на false).
              * @example
              * <pre>
-             *     <option name="isCalendarIconShown">false</option>
+             *     <option name="pickerIconShow">false</option>
              * </pre>
              * @see date
              * @see mask
              * @see setDate
              * @deprecated
              */
-            isCalendarIconShown: true,
+            pickerIconShow: true,
 
             pickerConfig: {
                corner: 'tl',
@@ -123,41 +122,79 @@ define(
 
       init: function () {
          DatePicker.superclass.init.call(this);
+         this._pickerInit();
+      },
 
-         // Проверить тип маски -- дата, время или и дата, и время. В случае времени -- сделать isCalendarIconShown = false
-         this._checkTypeOfMask(this._options);
-
-         this._calendarInit();
-
-         
+      isPickerIconShow: function() {
+         return this._options.pickerIconShow;
       },
 
       _modifyOptions : function(options) {
+         DatePicker.superclass._modifyOptions.call(this, options);
+
+         /*
+          * TODO: Удалить, когда все перейдут на опцию pickerIconShow вместо isCalendarIconShown.
+          * Возможно нужно убрать эту опции, потому что есть компонент DateBox. DatePicker отличается
+          * от DateBox только иконкой и встает вопрос зачем использовать DatePicker без иконки.
+          */
+         if (options.isCalendarIconShown && !options.pickerIconShow) {
+            options.pickerIconShow = options.isCalendarIconShown;
+            IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
+         }
          this._checkTypeOfMask(options);
-         return DatePicker.superclass._modifyOptions.apply(this, arguments);
+
+         return options;
+      },
+
+      _getPickerName: function() {
+         return this._options._pickerName;
+      },
+
+      _getPickerMethod: function(method) {
+         var name = '_' + this._getPickerName() + method;
+         return this[name].bind(this);
       },
 
       /**
-       * Инициализация календарика
+       * Инициализация пикера.
+       * @private
+       */
+      _pickerInit: function(name) {
+         if (this.isPickerIconShow()) {
+            this.getChildControlByName('PickerButton').subscribe('onActivated', this._getPickerMethod('Init'));
+         }
+      },
+
+      /**
+       * Инициализация пикера выбора даты
+       * @private
        */
       _calendarInit: function() {
-         var self = this,
-            button = this.getChildControlByName('CalendarButton');
-         if (self._options.isCalendarIconShown) {
-            // Клик по иконке календарика
-            button.subscribe('onActivated', function () {
-               if (self.isEnabled()) {
-                  self.togglePicker();
+         if (this.isEnabled()) {
+            this.togglePicker();
 
-                  self._initFocusInHandler();
-                  // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
-                  if (self._picker.isVisible() && self.getDate()) {
-                     self._chooserControl.setStartValue(self.getDate());
-                  }
-               }
-            });
-         } else {
-            button.getContainer().parent().addClass('ws-hidden');
+            this._initFocusInHandler();
+            // Если календарь открыт данным кликом - обновляем календарь в соответствии с хранимым значением даты
+            if (this._picker.isVisible() && this.getDate()) {
+               this._pickerContent.setStartValue(this.getDate());
+            }
+         }
+      },
+
+      /**
+       * Инициализация пикера выбора даты
+       * @private
+       */
+      _timeInit: function() {
+         if (this.isEnabled()) {
+            this._options.pickerConfig.closeButton = true;
+            this.togglePicker();
+
+            this._initFocusInHandler();
+            // Если часы открыты данным кликом - обновляем часы в соответствии с хранимым значением даты.
+            if (this._picker.isVisible() && this.getDate()) {
+               this._pickerContent.setTime(this.getDate());
+            }
          }
       },
 
@@ -170,37 +207,64 @@ define(
 
       showPicker: function () {
          DatePicker.superclass.showPicker.call(this);
-         this._chooserControl.setRange(this.getDate(), this.getDate());
+         this._getPickerMethod('Show')();
       },
+
+      _calendarShow: function() {
+         this._pickerContent.setRange(this.getDate(), this.getDate());
+      },
+
+      _timeShow: function() {
+         this._pickerContent.setTime(this.getDate());
+      },
+
       /**
        * Определение контента пикера. Переопределённый метод
        * @private
        */
       _setPickerContent: function() {
-         var self = this,
-            // Создаем пустой контейнер
-            element = $('<div name= "Calendar" class="controls-DatePicker__calendar"></div>');
+         // Создаем пустой контейнер
+         var element = $(ElementPickerContent({
+               pickerName: this._getPickerName()
+            }));
 
-         this._picker.getContainer().empty();
-         // Преобразуем контейнер в контролл Calendar и запоминаем
-         self._chooserControl = new DateRangeBigChoose({
+         // Добавляем в пикер
+         this._picker.getContainer().append(this._getPickerMethod('Create')(element));
+      },
+
+      _calendarCreate: function(element) {
+         this._pickerContent = new DateRangeBigChoose({
             parent: this._picker,
             element: element,
             rangeselect: false,
             startValue: this.getDate(),
             endValue: this.getDate()
          });
-
          // Добавляем в пикер
          this._picker.getContainer().append(element);
 
          // Нажатие на календарный день в пикере устанавливает дату
-         this._chooserControl.subscribe('onChoose', this._onChooserChange.bind(this));
-         this._chooserControl.subscribe('onCancel', this._onChooserClose.bind(this));
+         this._pickerContent.subscribe('onChoose', this._onChooserChange.bind(this));
+         this._pickerContent.subscribe('onCancel', this._onChooserClose.bind(this));
          // this._chooserControl.subscribe('onDateChange', function(eventObject, date) {
          //    self.setDate(date);
          //    self.hidePicker();
          // });
+         return element;
+      },
+
+      _timeCreate: function(element) {
+         this._pickerContent = new TimePicker({
+            parent: this._picker,
+            element: element,
+            time: this.getDate()
+         });
+         this._pickerContent.subscribe('onChangeTime', this._onChangeTimeHandler.bind(this));
+         return element;
+      },
+
+      _onChangeTimeHandler: function(event, time) {
+         this.setDate(time);
       },
 
       _onChooserChange: function(event, date) {
@@ -224,8 +288,18 @@ define(
        * @private
        */
       _checkTypeOfMask: function (options) {
-         if (options.mask  &&  !/[DMY]/.test(options.mask) ) {
-            options.isCalendarIconShown = false;
+         var
+            mask = options.mask,
+            pickerName;
+         if (/[DMY]/.test(mask)) {
+            pickerName = 'calendar';
+         }else if (mask === 'HH:II') {
+            pickerName = 'time';
+         }
+         if (pickerName) {
+            options._pickerName = pickerName;
+         } else {
+            options.pickerIconShow = false;
          }
       },
 
