@@ -6,11 +6,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
-   'js!SBIS3.CONTROLS.IconButton',
    'Core/Sanitize',
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/functional-helpers',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
+   'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.TextBox'
 
 ], function(
