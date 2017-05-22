@@ -299,11 +299,11 @@ body {
 }
 
 .ws-float-area-stack-panel-shadow {
-  background: #202835 !important;
+  background: #2C3E50 !important;
 }
 .ws-sticky-header__block.ws-sticky-header__fixed,
 .ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
+  background-color: #2C3E50 !important;
 }
 
 .ws-window {
@@ -374,6 +374,41 @@ body {
   font-size: 1.14rem;
 }
 
+
+body {
+  .engine-Browser__path-wrapper-in-head {
+    height: auto;
+  }
+  .engine-Browser__path {
+    max-height: 2rem;
+    height: auto !important;
+  }
+  .ws-window-titlebar {
+    color: @default-text-color;
+    line-height: 3.57rem;
+    height: 3.57rem;
+    position: absolute;
+    left: 0;
+    right: 0;
+    font-size: 1.43rem;
+    white-space: nowrap;
+    -moz-box-shadow: none!important;
+    -webkit-box-shadow: none!important;
+    background: #354B62;
+    box-shadow: none!important;
+  }
+  &.ws-window-titlebar-custom {
+    position: relative;
+    height: 2rem !important;
+    .ws-float-area-title {
+      line-height: 1rem !important;
+    }
+  }
+  .ws-float-area-title {
+      font-size: 1.43rem!important;
+      font-weight: normal !important;
+  }
+}
 
 .controls-FloatArea {
   border: 2px solid #2196F3;
@@ -457,6 +492,18 @@ body .ws-loadingimg {
     color: #000;
     line-height: 3rem;
 }
+body .controls-DropdownList .controls-DropdownList__selectedItem {
+    display: inline-flex;
+}
+body .ws-float-area-stack-panel-shadow {
+    border-left: 2px solid #00a2ef;
+    border-color: #00a4f0;
+    border-width: 0 0 0 2px;
+    border-style: solid;
+    -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+    -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+    box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
+}
 .icon-large {
   vertical-align: middle !important;
 }
@@ -467,6 +514,12 @@ body .ws-loadingimg {
 .controls-DateRangeBigChoose__datePickerEnd-wrapper .controls-DateBox {
   margin-right:2.5rem;
 }
+
+body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+  color: #fff;
+  background: #3f566d;
+}
+
 .controls__filterButton {
    .controls-Button__icon {
       &.icon-size {
@@ -480,7 +533,6 @@ body .ws-loadingimg {
       line-height: @icon-large-size !important;
       width: @icon-large-size !important;
       height: @icon-large-size !important;
-      font-family: @default-icon-large-font !important;
       vertical-align: middle !important;
    }
 }
@@ -490,4 +542,23 @@ body .ws-loadingimg {
 
 .ws-enabled.controls-Checked__checked>.controls-CheckBox__icon:before {
     z-index: 2;
+}
+body .controls-ToolBar__menuIcon .icon-24 {
+  font-family: carrypresto-icons!important;
+}
+.controls__filterButton__area-header {
+   .controls-Link {
+      .controls-Button__text{
+         vertical-align: baseline;
+      }
+   }
+}
+.controls-Link {
+  &.additionalLink__2 {
+    font-size: .857rem;
+  }
+}
+
+.controls-TreeView__expand {
+  font-size: 1rem !important;
 }

@@ -37,8 +37,8 @@
 @date-range-big-bg:		#2c3e50;
 @text-color:                              @white-color;
 @default-border-style:						solid;
-@blue-dark-color: #FFCC99;
-@darkcyan-color: 							#8991A9;
+@blue-dark-color:                           #8991A9;
+@darkcyan-color: 							              #B9E9FF;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
 @default-border-width:					  0.072rem;
@@ -131,8 +131,8 @@
 // ------------------ //
 // FilterPanelChooser //
 // ------------------ //
-@controls-filterButton-area-header-height:							3.57rem;
- @controls-filterLine-items-line-height:							1rem;
+@controls-filterButton-area-header-height:							   3rem;
+@controls-filterLine-items-line-height:							      1rem;
 @filter-panel-chooser-default-color:                              #F9F9F9;
 @filter-panel-chooser-hovered-color:                              #EAECEE;
 @filter-panel-chooser-selected-color:                             #F3F3F3;
@@ -563,13 +563,13 @@
 
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                      #324352;
-@text-box-border-width:.07rem;
+@text-box-border-width:                   2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 
 @text-box-disabled-border-bottom:         1px solid #333333;
-@text-box-focus-border-width:.07rem;
+@text-box-focus-border-width:             2px;
 @text-box-field-focus-text-color:         #e4e4e4;
 @text-box-after-width:                    20px;
 @text-box-height: 3rem;
@@ -742,7 +742,7 @@
 
 
 
-@controls-FieldLink-border:                            .07rem solid;
+@controls-FieldLink-border:                           2px solid;
 @controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
 @controls-FieldLink-border-color-focus-hover:         #314559;
 @controls-FieldLink-link-color:                         #26B8FF;
@@ -847,7 +847,7 @@
 @date-range-choose-border-color:                #26b8ff;
 @date-range-choose-item-bg-color                :#2c3e50;
 @date-range-choose-bg-hover-color:              #2c3e50;
-@date-range-choose-border-hover-width:          .07rem  .07rem 0;
+@date-range-choose-border-hover-width:          2px  2px 0;
 @date-range-choose-border-hover:                  solid #26b8ff;
 @date-range-choose-month-height:                 1.85rem;
 @date-range-choose-short-width:                   11.78rem;
@@ -864,7 +864,7 @@
 @date-range-choose-current-value-font-weight:   normal;
 @date-range-choose-current-value-height:        3.57rem;
 @date-range-choose-current-value-line-height:   3.43rem;
-@date-range-choose-border-width:               .07rem;
+@date-range-choose-border-width:               2px;
 @date-range-choose-year-height:                 3.285rem;
 
 
@@ -917,7 +917,7 @@
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-icon-top:                    .857rem;
 @list-view-actions-menu-text-margin:          .64rem 0px 6px 2.32rem;
-@list-view-items-toolbar-vertical-locked-box-shadow: -2px .07rem 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px 2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                1.75rem;
 @list-view-items-toolbar-vertical-line-height:       0.86rem;
 @list-view-items-toolbar-locked-bg:                  transparent;
@@ -943,14 +943,15 @@
 // --------- //
 
 @tree-view-expand-spritesheet:                  '';
+@tree-view-expand-width:                      1rem;
+@tree-view-expand-height:                      1.4rem;
 
 
-@tree-view-expand-height:                       21px;
-@tree-view-expand-margin:                        .07rem 0 -2px;
+@tree-view-expand-margin:                        2px .4rem -2px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
 
-@tree-view-editArrow-top:                      .07rem;
+@tree-view-editArrow-top:                      2px;
 
 @tree-view-expand-bg:                           transparent;
 
@@ -1080,7 +1081,7 @@
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
 
-@controls-filterButton-area-header-padding:       8px 3rem 8px 12px;
+@controls-filterButton-area-header-padding:       12px 3rem 8px 12px;
 
 @controls-filterButton-area-text-size:            1.43rem;
 @controls-filterButton-area-text-color:           #e4e4e4;
@@ -1107,7 +1108,7 @@
 
 @controls-filterLine-copyCross-top:               -28px;
 @controls-filterLine-copyCross-margin:            -1.75rem;
-@controls-filterLine-copyCross-shadow:            -8px 0px 10px.07rem @white-color;
+@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
 
 //FieldLink
@@ -1283,4 +1284,6 @@
 @DropdownList-height: 					3.57rem;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-@text-box-placeholder-color: 				rgb(96,170,221, .2);
+
+@text-box-placeholder-color: 				rgba(96,170,221, .2);
+@DropdownList-picker-menu-item-height:  3.57rem;
