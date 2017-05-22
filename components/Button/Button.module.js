@@ -92,11 +92,12 @@ define('js!SBIS3.CONTROLS.Button',
 
          //<editor-fold desc="Event handlers">
 
-         _onClick: function (e) {
-            this._onClickHandler(e);
-            if (!this._options.enabled)
+         _onMouseClick: function (e) {
+            if (!this._options.enabled) {
                return;
-            return this._notify("onActivated", e);
+            }
+            this._onClickHandler(e);
+            this._notify("onActivated", e);
          },
 
          _onMouseDown: function () {
@@ -110,10 +111,17 @@ define('js!SBIS3.CONTROLS.Button',
          _onKeyDown: function (e) {
             var result = this._notify('onKeyPressed', e);
             if (e.nativeEvent.key === 'Enter' && result !== false) {
-               this._onClick(e);
+               this._onMouseClick(e);
             }
-         }
+         },
 
+         _onMouseEnter: function(e){
+            this._notify('onMouseEnter', e);
+         },
+
+         _onMouseLeave: function(e){
+            this._notify('onMouseLeave', e);
+         }
          //</editor-fold>
       });
 

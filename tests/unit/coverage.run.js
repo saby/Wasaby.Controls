@@ -1,4 +1,4 @@
-require('./lib/isolated').run({}, {
+require('./lib/isolated').run({saveToFile:true}, {
    wsRoot: 'sbis3-ws/ws/',
    resourceRoot: 'components/',
    nostyle: true,

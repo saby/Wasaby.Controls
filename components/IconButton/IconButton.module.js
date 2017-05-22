@@ -3,7 +3,13 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button', 'tmpl!SBIS3.CONTROLS.IconButton', 'css!SBIS3.CONTROLS.IconButton'], function(WSButton, template) {
+define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
+      'tmpl!SBIS3.CONTROLS.IconButton',
+      'Core/constants',
+      'css!SBIS3.CONTROLS.IconButton'
+], function(WSButton,
+            template,
+            cConstants) {
 
    'use strict';
 
