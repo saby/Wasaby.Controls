@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
       "Core/core-functions",
       "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
       "js!SBIS3.CONTROLS.MissSpell",
+      'js!SBIS3.CONTROLS.Utils.Query',
       'Core/core-instance'
    ],
-   function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, MissSpell, cInstance) {
+   function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
       'use strict';
 
       /* Вспомогательный класс, для посчёта времени запроса.
@@ -137,8 +138,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                      просто отдельно выполняем запрос, если контрол поддерживает интерфейс */
                   if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl')) {
                      view.setFilter(viewFilter, true);
-                     view._callQuery(viewFilter, view.getSorting(), view.getOffset(), view.getPageSize()).addCallback(function (res) {
-                        self._onViewDataLoad(null, res);
+                     queryUtil(view.getDataSource(), [viewFilter, view.getSorting(), view.getOffset(), view.getPageSize()]).addCallback(function (res) {
+                        self._onViewDataLoad(null, res.getAll());
                         return res;
                      })
                   } else {
