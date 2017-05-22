@@ -42,7 +42,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
          function defaultAction(e) {
             if (self && self.isEnabled()) {
-               self._onClickHandler(e);
+               if (this.iWantVDOM) {
+                  self._onMouseClick(e);
+               } else {
+                  self._onClickHandler(e);
+               }
                return false;
             } else {
                return true;
