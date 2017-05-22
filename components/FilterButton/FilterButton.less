@@ -58,6 +58,12 @@
    .align-items(center);
 }
 
+.ws-is-desktop-safari {
+   .controls__filterButton__filterLine {
+      max-width: ~'calc(100% - '@controls-filterButton-button-width ~')';
+   }
+}
+
 .ws-is-ie10, .ws-is-ie11, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls__filterButton {
       .inline-flexbox();
