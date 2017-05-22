@@ -82,10 +82,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       _baseClickAction: function(e){
-         if (!this.iWantVDOM && e && e.stopImmediatePropagation) {
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-         }
+         // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+         e.stopImmediatePropagation();
+
          if (!this._options.enabled)
             return;
 
