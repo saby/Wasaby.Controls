@@ -388,13 +388,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Устанавливает текстовое значение внутри поля ввода.
           * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
           * @example
-          * <pre>
-          *     if (control.getText() == "Введите ФИО") {
-          *        control.setText("");
-          *     }
-          * </pre>
           * @see text
-          * @see getText
           */
          setText: function(text) {
             if (text !== this._curValue()) {
@@ -1294,6 +1288,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
              });
 
+            editor.on('change', function(e) {
+               self._togglePlaceholder(self._inputControl[0].innerHTML);
+            });
+
             //Передаём на контейнер нажатие ctrl+enter и escape
             this._container.bind('keydown', function(e) {
                if (!(e.which === cConstants.key.enter && e.ctrlKey) && e.which !== cConstants.key.esc) {
@@ -1709,7 +1707,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
          _togglePlaceholder:function(value){
             var
-               curValue = (value || "").replace(/(<p><\/p>)|(<p><br><\/p>)|(<p><\/p>)|(<p><br data-mce-bogus="1"><\/p>)/gi,''),
+               curValue = (value || "")
+                  .replace(/<br data-mce-bogus="1">/gi, '')
+                  .replace(/(<p><\/p>)|(<p><br><\/p>)|(<p><\/p>)|/gi,''),
                visible = (curValue === '' || curValue === undefined || curValue === null) &&
                   value.indexOf('</li>') < 0 &&
                   value.indexOf('<p>&nbsp;') < 0 &&
