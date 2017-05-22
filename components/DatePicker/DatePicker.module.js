@@ -13,13 +13,14 @@ define(
       'tmpl!SBIS3.CONTROLS.DatePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker/resources/ElementPickerContent',
       'Core/helpers/dom&controls-helpers',
+      "Core/IoC",
       'i18n!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.IconButton',
       'css!SBIS3.CONTROLS.DatePicker',
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, dcHelpers) {
+   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, dcHelpers, IoC) {
 
    'use strict';
 
@@ -137,8 +138,8 @@ define(
           * Возможно нужно убрать эту опции, потому что есть компонент DateBox. DatePicker отличается
           * от DateBox только иконкой и встает вопрос зачем использовать DatePicker без иконки.
           */
-         if (options.isCalendarIconShown && !options.pickerIconShow) {
-            options.pickerIconShow = options.isCalendarIconShown;
+         if (options.isCalendarIconShown === false) {
+            options.pickerIconShow = false;
             IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
          }
          this._checkTypeOfMask(options);
