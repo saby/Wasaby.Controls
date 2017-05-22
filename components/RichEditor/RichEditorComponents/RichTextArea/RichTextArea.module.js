@@ -209,7 +209,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _lastReview: undefined,
             _fromTouch: false,
             _codeSampleDialog: undefined,
-            _beforeFocusOutRng: undefined
+            _beforeFocusOutRng: undefined,
+            _wasType: false
          },
 
          _modifyOptions: function(options) {
@@ -391,6 +392,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @see text
           */
          setText: function(text) {
+            this._wasType = false;
             if (text !== this._curValue()) {
                this._drawText(text);
             }
@@ -398,7 +400,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          getText: function() {
-            return this._trimText(this._curValue());
+            return this._wasType ? this._trimText(this._curValue()) : this._options.text;
          },
 
          setActive: function(active) {
@@ -1288,12 +1290,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
              });
 
-            editor.on('change', function(e) {
+            editor.on('change', function() {
                self._togglePlaceholder(self._inputControl[0].innerHTML);
             });
 
             //Передаём на контейнер нажатие ctrl+enter и escape
             this._container.bind('keydown', function(e) {
+               self._wasType = true;
                if (!(e.which === cConstants.key.enter && e.ctrlKey) && e.which !== cConstants.key.esc) {
                   e.stopPropagation();
                }
