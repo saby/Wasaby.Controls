@@ -1579,6 +1579,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _applyEnabledState: function(enabled) {
             var
                container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            if (this._tinyEditor) {
+               this._setTrimmedText(this._getTinyEditorValue());
+            }
             if (this._dataReview) {
                if (this._options.autoHeight) {
                   this._dataReview.css({
