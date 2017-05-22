@@ -42,9 +42,9 @@ body {
    }
 }
 
-.controls-PopupMixin__closeButton {
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
   position: absolute;
-  top: 10px;
+  top: .3rem;
   right: @controls-Popup-closeButton-right;
   width: 3rem;
   height: 3rem;
@@ -260,7 +260,9 @@ body .ws-loadingimg {
 }
 
 body {
-
+    .controls__filterButton__area-header,.controls__filterButton__area-text {
+      line-height: 3rem;
+    }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -491,4 +493,17 @@ body .controls-ToolBar__menuIcon .icon-24 {
 
 .controls-TreeView__expand {
   font-size: 1rem !important;
+}
+
+.controls__filter-button__apply-filter {
+    margin-right: 0.4rem;
+}
+.controls__filter-button__clear-filter {
+  .controls-Link__field {
+    vertical-align: baseline;
+  }
+}
+
+.controls-Link {
+  font-size: 1.14rem;
 }
