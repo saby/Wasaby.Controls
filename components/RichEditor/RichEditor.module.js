@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.RichEditor',
    [
       'js!SBIS3.CONTROLS.RichTextArea',
-      'html!SBIS3.CONTROLS.RichEditor',
+      'tmpl!SBIS3.CONTROLS.RichEditor',
       'js!SBIS3.CONTROLS.RichEditorToolbar'
    ], function(RichTextArea, dotTplFn, Toolbar) {
       'use strict';

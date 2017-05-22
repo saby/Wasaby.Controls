@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.RichTextArea",
+   "tmpl!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    'js!WS.Data/Di',
@@ -215,7 +215,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-            options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
@@ -1867,20 +1867,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
 
-         _prepareReviewContent: function(text, it) {
+         _prepareReviewContent: function(text) {
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {
-               checkDataAttribute: false,
-               validNodes: {
-                  embed: {
-                     type: true,
-                     src: true
-                  }
-               }
-            });
-            return (this._options || it).highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
+            text = Sanitize(text, {checkDataAttribute: false});
+            return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
          //установка значения в редактор
