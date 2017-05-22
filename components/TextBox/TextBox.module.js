@@ -6,10 +6,11 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
+   'js!SBIS3.CONTROLS.IconButton',
    'Core/Sanitize',
-   "Core/helpers/dom&controls-helpers",
-   "Core/helpers/functional-helpers",
-   "js!SBIS3.CONTROLS.ControlHierarchyManager",
+   'Core/helpers/dom&controls-helpers',
+   'Core/helpers/functional-helpers',
+   'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'css!SBIS3.CONTROLS.TextBox'
 
 ], function(
@@ -69,6 +70,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
       _dotTplFn: dotTplFn,
+      /**
+       * @event onInformationIconMouseEnter Происходит когда курсор мыши входит в область информационной иконки.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @see informationIconColor
+       */
+      /**
+       * @event onInformationIconActivated Происходит при клике по информационной иконке.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @see informationIconColor
+       */
       $protected: {
       	_fromTouch: false,
          _pasteProcessing : 0,
@@ -79,6 +90,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
          _textFieldWrapper: null,
+         _informationIcon: null,
          _options: {
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
@@ -157,12 +169,42 @@ define('js!SBIS3.CONTROLS.TextBox', [
              *     <option name="inputRegExp">[а-яА-ЯёЁ]</option>
              * </pre>
              */
-            inputRegExp : ''
+            inputRegExp : '',
+            /**
+             * @cfg {Boolean} Включает отображение информационной иконки в поле ввода.
+             * @remark
+             * Для взаимодействия с информационной иконкой используются два события (@see onInformationIconMouseEnter) и (@see onInformationIconActivated)
+             * по умолчанию опция выключена
+             * @example
+             * Пример показа всплывающей подсказки для поля ввода по наведению курсора на информационную иконку
+             * <pre>
+             *    myTextBox.subscribe('onInformationIconMouseEnter', function() {
+             *       CInfobox.show({
+             *         control: myTextBox.getContainer(),
+             *         message: "<p><span style='color: red;'>Внимание:</span> Текст всплывающей подсказки</p>",
+             *         width: 400,
+             *         delay: 1000,
+             *         hideDelay: 2000
+             *       });
+             *    });
+             * </pre>
+             * Цвета доступные для установки:
+             * <ol>
+             *    <li>done</li>
+             *    <li>attention</li>
+             *    <li>disabled</li>
+             *    <li>error</li>
+             *    <li>primary</li>
+             * </ol>
+             * @see setInformationIconColor
+             * @see informationIconColor
+             */
+            informationIconColor: ''
          }
       },
 
       $constructor: function() {
-         this._publish('onPaste');
+         this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
          this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
@@ -234,7 +276,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._createCompatPlaceholder();
          }
 
-         this._container.bind("mouseenter", function(e){
+         this._container.bind('mouseenter', function(e){
             self._applyTooltip();
          });
       },
@@ -261,9 +303,43 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       init: function() {
+         var self = this;
          TextBox.superclass.init.apply(this, arguments);
+
+         if(this._options.informationIconColor) {
+            this._informationIcon = this.getChildControlByName('informationIcon');
+
+            this._informationIcon.getContainer().on('mouseenter', function() {
+               self._notify('onInformationIconMouseEnter');
+            });
+            this._informationIcon.subscribe('onActivated', function(){
+               self._notify('onInformationIconActivated');
+            });
+         }
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
          this._checkInputVal();
+      },
+
+      /**
+       * Устанавливает цвет информационной иконки.
+       * @returns {String} Стандартный цвет иконки.
+       * Цвета доступные для установки:
+       * <ol>
+       *    <li>done</li>
+       *    <li>attention</li>
+       *    <li>disabled</li>
+       *    <li>error</li>
+       *    <li>primary</li>
+       * </ol>
+       * @see informationIcon
+       * @see informationIconColor
+       */
+      setInformationIconColor: function (color) {
+         var informationIconContainer = this._informationIcon.getContainer();
+
+          informationIconContainer.removeClass('icon-' + this._options.informationIconColor);
+          this._options.informationIconColor = color;
+          informationIconContainer.addClass('icon-' + color);
       },
 
       _keyboardDispatcher: function(event){
@@ -548,6 +624,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._beforeFieldWrapper = undefined;
          this._inputField.off('*');
          this._inputField = undefined;
+         if(this._informationIcon) {
+            this._informationIcon.getContainer().off('*');
+            this._informationIcon = undefined;
+         }
          TextBox.superclass.destroy.apply(this, arguments);
       }
    });
