@@ -855,7 +855,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 3) Фокус пришел из автодополнения
              */
              if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement ||
-                (ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && this.getContainer()[0] !== event.relatedTarget)) {
+                (event && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && this.getContainer()[0] !== event.relatedTarget)) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
