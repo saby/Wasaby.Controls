@@ -131,6 +131,16 @@ define(
 
       _modifyOptions : function(options) {
          DatePicker.superclass._modifyOptions.call(this, options);
+
+         /*
+          * TODO: Удалить, когда все перейдут на опцию pickerIconShow вместо isCalendarIconShown.
+          * Возможно нужно убрать эту опции, потому что есть компонент DateBox. DatePicker отличается
+          * от DateBox только иконкой и встает вопрос зачем использовать DatePicker без иконки.
+          */
+         if (options.isCalendarIconShown && !options.pickerIconShow) {
+            options.pickerIconShow = options.isCalendarIconShown;
+            IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
+         }
          this._checkTypeOfMask(options);
 
          return options;
