@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/helpers/string-helpers",
        "Core/helpers/collection-helpers",
        "Core/ParserUtilities",
+       'js!SBIS3.CONTROLS.ControlHierarchyManager',
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
        "js!SBIS3.CONTROLS.MultiSelectable",
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         strHelpers,
         colHelpers,
         ParserUtilities,
+        ControlHierarchyManager,
         SuggestTextBox,
         ItemsControlMixin,
 
@@ -845,12 +847,15 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
           /**************************************************************/
 
-          _observableControlFocusHandler: function() {
+          _observableControlFocusHandler: function(event) {
              /* Не надо обрабатывать приход фокуса:
                 1) если у нас есть выбрынные элементы при единичном выборе, в противном случае, автодополнение будет посылать лишний запрос,
                    хотя ему отображаться не надо.
-                2) Нативный фокус на кнопке открытия справочника (значит кликнули по кнопке, и сейчас откроется справочник)   */
-             if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement) {
+                2) Нативный фокус на кнопке открытия справочника (значит кликнули по кнопке, и сейчас откроется справочник)
+                3) Фокус пришел из автодополнения
+             */
+             if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement ||
+                (ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && this.getContainer()[0] !== event.relatedTarget)) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);

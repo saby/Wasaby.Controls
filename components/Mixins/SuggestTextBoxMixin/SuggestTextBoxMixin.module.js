@@ -229,8 +229,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          },
 
          // FIXME костыль до перехода на пикера по фокусную систему
-         _inputFocusInHandler: function() {
-            this._observableControlFocusHandler();
+         _inputFocusInHandler: function(event) {
+            this._observableControlFocusHandler(event);
          },
          /**
           * Блочим события поднятия служебных клавиш,
