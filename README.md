@@ -36,8 +36,7 @@
 - `grunt build-dependencies` - построить файлы `contents.js` и `contents.json` зависимостей модулей;
 - `grunt js` - провести статический анализ JS-кода (минификация JS-кода в будущем, если потребуется);
 - `grunt css` - скомпилировать все темы LESS в CSS;
-- `grunt css --theme=<theme>` - скомпилировать тему LESS с именем `<theme>` в CSS (опция `--theme` может быть
-также передана и в составные команды Grunt, использующие команду `grunt css`, например: `grunt --theme=<theme>`);
+- `grunt css --name=<name>` - скомпилировать файл LESS с именем `<name>` в CSS , например: `grunt --name=carry`;
 - `grunt copy` - скопировать директории `components` и `themes` в директорию `SBIS3.CONTROLS`;
 - `grunt watch` - следить за изменениями в LESS файлах тем и перекомпилировать их;
 - `grunt run` - собрать проект, поднять тестовый локальный веб-сервер на 666-м порту и запустить `watch`.
