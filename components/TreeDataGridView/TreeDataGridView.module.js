@@ -305,11 +305,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return parentResult;
       },
 
-      collapseNode: function (key) {
+      collapseNode: function (key, hash) {
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
-      expandNode: function (key) {
+      expandNode: function (key, hash) {
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
       },
 
@@ -501,7 +501,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          /* При клике по треугольнику надо просто раскрыть ветку */
          if (closestExpand.hasClass('js-controls-TreeView__expand')) {
-            this.toggleNode(id);
+            if (this._options.loadItemsStrategy == 'append') {
+               var tr = this._findItemByElement($(target));
+               var hash = tr.attr('data-hash');
+               this.toggleNode(id, hash);
+            }
+            else {
+               this.toggleNode(id);
+            }
             return;
          }
 
