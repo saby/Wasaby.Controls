@@ -769,6 +769,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }).bind(this))
             .addBoth(function(error){
                this._toggleIndicator(false);
+               return error;
             }.bind(this));
          } else {
             return Deferred.success();
