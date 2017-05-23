@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.Selectable', [
    'js!WS.Data/Utils',
    'js!WS.Data/Collection/IBind',
    'Core/core-instance',
+   'js!WSControls/Controllers/BaseListSelector',
    'js!WSControls/Controllers/RecordsetListSelector'
-], function(Utils, IBindCollection, cInstance, RecordsetListSelector) {
+], function(Utils, IBindCollection, cInstance, BaseListSelector, RecordsetListSelector) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -97,7 +98,6 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
       $constructor: function() {
          this._publish('onSelectedItemChange');
-         this._selectorInstance = new RecordsetListSelector({});
       },
 
 
@@ -195,6 +195,24 @@ define('js!SBIS3.CONTROLS.Selectable', [
             }
          },
          _itemsReadyCallback: function() {
+
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+               this._selectorInstance = new RecordsetListSelector({
+                  selectedIndex : this._options.selectedIndex,
+                  selectedKey : this._options.selectedKey,
+                  allowEmptySelection: this._options.allowEmptySelection,
+                  projection: this._getItemsProjection()
+               });
+            }
+            else {
+               this._selectorInstance = new BaseListSelector({
+                  selectedIndex : this._options.selectedIndex,
+                  allowEmptySelection: this._options.allowEmptySelection,
+                  projection: this._getItemsProjection()
+               });
+            }
+
+
             if (this._isEmptyIndex(this._options.selectedIndex)){
                var projPos = this._getItemsProjection().getCurrentPosition();
                if (!this._isEmptyIndex(projPos)) {
