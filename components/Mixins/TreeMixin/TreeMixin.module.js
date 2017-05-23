@@ -700,6 +700,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see toggleNode
        */
       collapseNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
@@ -721,6 +722,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see expandNode
        */
       toggleNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
@@ -742,6 +744,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see toggleNode
        */
       expandNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
