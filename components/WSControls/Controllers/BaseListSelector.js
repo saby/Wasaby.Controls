@@ -15,6 +15,7 @@ define('js!WSControls/Controllers/BaseListSelector', [
             projection: cfg.projection || null
          };
          this.selectedIndex = this._options.selectedIndex;
+         this.projection = this._options.projection;
 
          //TODO
          BaseListSelector.superclass.constructor.apply(this, arguments);
