@@ -56,6 +56,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'Core/WindowManager',
+   'js!WSControls/Controllers/RecordsetListSelector',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -69,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, RecordsetListSelector) {
 
      'use strict';
 
@@ -353,6 +354,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark Событие не работает если используются стратегии перемещения
           */
          $protected: {
+            _selectorInstance: null,
             _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
@@ -970,6 +972,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
+            this._selectorInstance = new RecordsetListSelector({});
          },
 
          _bindEventHandlers: function(container) {

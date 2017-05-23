@@ -6,6 +6,7 @@ define('js!WSControls/Controllers/BaseListSelector', [
    'Core/Abstract.compatible'
 ], function(Utils, IBindCollection, cInstance, cExtend, AbstractCompatible) {
    var BaseListSelector = cExtend.extend(AbstractCompatible, {
+      _useNativeAsMain: true,
       constructor: function(cfg) {
 
          /*Распихивание данных*/
