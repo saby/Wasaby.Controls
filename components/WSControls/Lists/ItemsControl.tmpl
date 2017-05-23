@@ -1,12 +1,10 @@
 <div>
-
-   <ws:for data="item in items">
-      <div class="controls-ListView__item js-controls-ListView__item {{selectedKey==item.id ? 'controls-ListView__item__selected'}} {{ className }}"
-
-      data-id="{{ item.id }}">
-         <ws:partial template="{{ itemTemplate }}" scope = "{{ item }}" />
+   <ws:for data="item in records">
+      <div class="controls-ListView__item js-controls-ListView__item {{selectedKey==item.getContents().getId() ? 'controls-ListView__item__selected'}} {{ className }}"
+           data-hash="{{ item.getHash() }}"
+            data-id="{{ item.getContents().getId() }}">
+         <ws:partial template="{{ itemTemplate }}" scope = "{{ tplData }}" item = "{{ item.getContents() }}" proj = "{{ item }}" />
       </div>
    </ws:for>
 
-   <!-- data-hash="{{ projItem.getHash() }}" -->
 </div>
