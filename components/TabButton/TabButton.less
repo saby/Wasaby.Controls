@@ -121,6 +121,27 @@
          font-weight: @tab-button-large-inner-font-weight;
       }
    }
+   //controls-TabButton__main-flex - временный модификатор, чтобы ЭДО могли переверстали свои компоненты
+   &.controls-TabButton__main-item.controls-TabButton__main-flex {
+      .controls-TabButton__inner .controls-TabButton__caption {
+         .flexbox();
+         .align-items(baseline);
+         height: @tab-button-height;
+         .controls-TabButton__mainText {
+            .flex-shrink(1);
+            max-width: 100%;
+            overflow: hidden;
+            line-height: @tab-button-height;
+         }
+         .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 {
+            .flex-shrink(0);
+            line-height: @tab-button-height;
+         }
+         > * {
+            font-weight: @tab-button-large-inner-font-weight;
+         }
+      }
+   }
    &.controls-TabButton__main-item {
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
