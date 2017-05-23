@@ -2,10 +2,9 @@ define('js!WSControls/Controllers/BaseListSelector', [
    'js!WS.Data/Utils',
    'js!WS.Data/Collection/IBind',
    'Core/core-instance',
-   'Core/core-extend',
-   'Core/Abstract.compatible'
-], function(Utils, IBindCollection, cInstance, cExtend, AbstractCompatible) {
-   var BaseListSelector = cExtend.extend(AbstractCompatible, {
+   'Core/Abstract'
+], function(Utils, IBindCollection, cInstance, Abstract) {
+   var BaseListSelector = Abstract.extend({
       _useNativeAsMain: true,
       constructor: function(cfg) {
 
@@ -17,6 +16,8 @@ define('js!WSControls/Controllers/BaseListSelector', [
          };
          this.selectedIndex = this._options.selectedIndex;
 
+         //TODO
+         BaseListSelector.superclass.constructor.apply(this, arguments);
          this._publish('onSelectedItemChange');
       },
 

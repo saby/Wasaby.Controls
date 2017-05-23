@@ -5,8 +5,9 @@
 define('js!SBIS3.CONTROLS.Selectable', [
    'js!WS.Data/Utils',
    'js!WS.Data/Collection/IBind',
-   'Core/core-instance'
-], function(Utils, IBindCollection, cInstance) {
+   'Core/core-instance',
+   'js!WSControls/Controllers/RecordsetListSelector'
+], function(Utils, IBindCollection, cInstance, RecordsetListSelector) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -37,6 +38,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
           _isMove: false,
           _isMoveKey: null,
           _curHash: undefined,
+          _selectorInstance: null,
           _options: {
              /**
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
@@ -95,6 +97,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
       $constructor: function() {
          this._publish('onSelectedItemChange');
+         this._selectorInstance = new RecordsetListSelector({});
       },
 
 
@@ -206,6 +209,9 @@ define('js!SBIS3.CONTROLS.Selectable', [
             if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
                this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
             }
+         },
+         destroy : function() {
+            this._selectorInstance.destroy();
          }
       },
 
