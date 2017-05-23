@@ -6,7 +6,8 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!SBIS3.CORE.BaseCompatible',
    'js!WS.Data/Entity/InstantiableMixin',
    'tmpl!WSControls/Lists/ItemsControl',
-   'tmpl!WSControls/Lists/one'
+   'tmpl!WSControls/Lists/one',
+   'js!SBIS3.CONTROLS.ListView/ListView.compatible'
 ], function (extend,
              AbstractCompatible,
              ControlCompatible,
@@ -14,11 +15,12 @@ define('js!WSControls/Lists/ItemsControl', [
              BaseCompatible,
              InstantiableMixin,
              template,
-             one) {
+             one,
+             ListViewcompatible) {
 
    'use strict';
 
-   var ItemsControl = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, InstantiableMixin],
+   var ItemsControl = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, InstantiableMixin, ListViewcompatible],
       {
          _controlName: 'WSControls/Lists/ItemsControl',
          _template: template,
@@ -31,8 +33,13 @@ define('js!WSControls/Lists/ItemsControl', [
          constructor: function (cfg) {
 
             this.items = cfg.items || [];
-            this.itemTemplate = cfg.itemTemplate || one;
+            this.itemTemplate = cfg.itemTemplate;
 
+            if (typeof this.itemTemplate !== "function" ) {
+               if (cfg.itemContentTpl) {
+                  this.itemTemplate = cfg.itemContentTpl;
+               }
+            }
             this.deprecatedContr(cfg);
          },
 

@@ -1,5 +1,12 @@
 <div>
+
    <ws:for data="item in items">
-      <ws:partial template="{{ itemTemplate }}" scope = "{{ item }}" />
+      <div class="controls-ListView__item js-controls-ListView__item {{selectedKey==item.id ? 'controls-ListView__item__selected'}} {{ className }}"
+
+      data-id="{{ item.id }}">
+         <ws:partial template="{{ itemTemplate }}" scope = "{{ item }}" />
+      </div>
    </ws:for>
+
+   <!-- data-hash="{{ projItem.getHash() }}" -->
 </div>
