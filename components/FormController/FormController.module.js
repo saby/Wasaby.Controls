@@ -374,7 +374,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _setDefaultContextRecord: function(){
-         var ctx = new cContext({restriction: 'set'}).setPrevious(this.getLinkedContext());
+         var ctx = cContext.createContext(this, {restriction: 'set'}, this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
       },
