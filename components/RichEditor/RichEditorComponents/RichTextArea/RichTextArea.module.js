@@ -1580,7 +1580,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _applyEnabledState: function(enabled) {
             var
                container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
-            if (this._tinyEditor) {
+            if (this._tinyEditor && !enabled) {
                this._setTrimmedText(this._getTinyEditorValue());
             }
             if (this._dataReview) {
@@ -1712,7 +1712,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                curValue = (value || "")
                   .replace(/<br data-mce-bogus="1">/gi, '')
-                  .replace(/(<p><\/p>)|(<p><br><\/p>)|(<p><\/p>)|/gi,''),
+                  .replace(/(<p><\/p>)|(<p><br><\/p>)|(<p> <\/p>)|/gi,''),
                visible = (curValue === '' || curValue === undefined || curValue === null) &&
                   value.indexOf('</li>') < 0 &&
                   value.indexOf('<p>&nbsp;') < 0 &&
