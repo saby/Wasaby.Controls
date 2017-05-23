@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             if(this._observed) {
                this._toggleViewEvents(false);
                this._textBeforeTranslate = null;
+               this._itemsBeforeTranslate = null;
                this._observed = false;
                this._oldSearchValue = '';
                this._hideMissSpell();
