@@ -6,6 +6,10 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     app = express();
 
+
+//Run testing server
+require('./test-server');
+
 app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname)));
 

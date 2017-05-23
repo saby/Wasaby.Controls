@@ -67,6 +67,8 @@
 @font-folder-size:                        15px;
 @default-font-line-height:                20px;
 
+@bold-font-weight:                        700;
+
 @default-height:                          24px;
 
 @default-border-width:                    1px;
@@ -1964,9 +1966,8 @@
 @controls-OperationsPanel-triangle-width:           8px;
 
 @controls-OperationsPanel-actions-margin:           0 4px;
-@controls-OperationsPanel-actions-mark-margin:      0 4px 0 0;
 
-@controls-OperationsPanel-separator-margin-left:    4px;
+@controls-OperationsPanel-separator-margin-left:    8px;
 @controls-OperationsPanel-separator-margin-right:   0;
 @controls-OperationsPanel-separator-bg:             @gray-ccc-color;
 @controls-OperationsPanel-separator-width:          1px;
@@ -2561,7 +2562,6 @@
 @textbox-font-size:							@default-font-size;
 
 
-
 //----------------//
 // WaitIndicator  //
 //----------------//
@@ -2578,3 +2578,68 @@
 @wait-indicator-overlay-default: rgba(255, 255, 255, 0.05);
 @wait-indicator-overlay-dark: rgba(0, 0, 0, 0.1);
 @wait-indicator-gradient-white: rgb(255, 255, 255);
+
+
+
+//--------------//
+//  TimePicker  //
+//--------------//
+@time-picker-background-color:                      @default-bg-color;
+
+//--------------//
+//  TimeHeader  //
+//--------------//
+@time-header-height:                                40px;
+@time-header-font-size:                             18px;
+@time-header-title-margin-left:                     12px;
+@time-header-toggle-time-margin-left:               @time-header-title-margin-left;
+@time-header-home-button-margin-left:               @time-header-title-margin-left;
+@time-header-background-color:                      @gray-f4f4f4-color;
+@time-header-title-color:                           @default-text-color;
+
+// ---------- //
+// ToggleTime //
+// ---------- //
+@toggle-time-passive-hover-text-decoration:         underline;
+@toggle-time-passive-color:                         @innacent-color2;
+@toggle-time-active-color:                          @accent-color;
+
+//---------------//
+//  ClockPicker  //
+//---------------//
+
+@clock-picker-height:                               306px;
+@clock-picker-width:                                314px;
+@clock-picker-background-color:                     @time-picker-background-color;
+
+@clock-picker-animation-active-scale:               1;
+@clock-picker-animation-passive-scale:              1.2;
+
+@clock-picker-tick-hover-background-color:          @default-hover-color;
+
+@clock-picker-outer-tick-radius:                    20px;
+
+@clock-picker-inner-tick-radius:                    16px;
+@clock-picker-inner-tick-background-color:          #F2F2F2;
+
+@clock-picker-outer-circle-radius:                  125px;
+@clock-picker-outer-circle-border-color:            @gray-f4f4f4-color;
+
+@clock-picker-inner-circle-radius:                  83px;
+
+@clock-picker-unit-time-font-size:                  18px;
+@clock-picker-unit-time-z-index:                    16;
+@clock-picker-unit-time-color:                      @gray-ccc-color;
+
+@clock-picker-arrow-width:                          1px;
+@clock-picker-arrow-color:                          @blue-dark-color;
+
+@clock-picker-inner-arrow-z-index:                  4;
+
+@clock-picker-arrow-tip-border-width:               2px;
+@clock-picker-arrow-tip-color:                      @blue-dark-color;
+@clock-picker-arrow-tip-border-color:               @clock-picker-arrow-tip-color;
+
+@clock-picker-outer-arrow-height:                   @clock-picker-outer-circle-radius - @clock-picker-outer-tick-radius - @clock-picker-arrow-tip-border-width;
+
+@clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;

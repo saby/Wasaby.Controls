@@ -443,7 +443,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.reviveComponents();
           },
           
-          _notify: function() {
+          _notify: function(eventName) {
+             /* Чтобы не запускался поиск в автодополнении, когда есть выбранная запись и включен комментарий */
+             if(eventName === 'onSearch' && this._options.alwaysShowTextBox && !this._isEmptySelection()) {
+                return false;
+             }
              return ItemsSelectionUtil.delayedNotify(
                 FieldLink.superclass._notify,
                 arguments,
@@ -783,7 +787,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                          сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
                          поэтому считать надо. */
                    if (needResizeInput) {
-                      additionalWidth = (isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0) + parseInt(this._container.css('border-width'))*2;
+                      additionalWidth = (isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0) + parseInt(this._container.css('border-left-width'))*2;
 
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
@@ -1064,7 +1068,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 target: this._container,
                 opener: this,
                 parent: this,
-                closeOnTargetMove: true,
+                closeOnTargetMove: !constants.browser.isMobileIOS,
                 closeByExternalClick: true,
                 targetPart: true,
                 cssClassName: 'controls-FieldLink__picker',
@@ -1085,16 +1089,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(!this._options.reverseItemsOnListRevert) {
                 return;
              }
-
-             if (this._isSuggestPickerRevertedVertical()) {
-                if (!this._listReversed) {
-                   this._reverseList();
-                }
-             } else {
-                if (this._listReversed) {
-                   this._reverseList();
-                }
-             }
+             this._reverseList(this._isSuggestPickerRevertedVertical());
           },
 
           _isSuggestPickerRevertedVertical: function() {

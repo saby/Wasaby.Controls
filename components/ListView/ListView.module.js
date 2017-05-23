@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Function/throttle',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
+   'Core/WindowManager',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -67,8 +68,8 @@ define('js!SBIS3.CONTROLS.ListView',
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager, 
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize) {
+    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
 
      'use strict';
 
@@ -855,6 +856,24 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @see showPaging
                 */
                partialPaging: true,
+               /**
+                * @typedef {Object} CursorNavigParams
+                * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
+                * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
+                * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
+                     - asc - по возрастанию
+                     - desc - по убыванию
+                     - both - в обе стороны от записи с navigation.config.position
+
+                */
+               /**
+                * @typedef {Object} ListViewNavigation
+                * @property {String} [type] Тип навигации. Например 'cursor'
+                * @property {CursorNavigParams} [config] Конфиг для контроллера навигации
+                */
+               /**
+                * @cfg {ListViewNavigation} Устанавливает конфиг для контроллера навигации ListView
+                */
                navigation: null,
                scrollPaging: true, //Paging для скролла. TODO: объеденить с обычным пэйджингом в 200
                /**
@@ -893,7 +912,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Стандартным будет считаться поведение, useSelectAll = true.
                 * @deprecated
                 */
-               useSelectAll: false
+               useSelectAll: false,
+               //TODO коммент ниже
+               task1173941879: false
             },
             _scrollWatcher : undefined,
             _lastDeleteActionState: undefined, //Используется для хранения состояния операции над записями "Delete" - при редактировании по месту мы её скрываем, а затем - восстанавливаем состояние
@@ -926,6 +947,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         getListNavigation: function() {
+            return this._listNavigation;
+         },
+
          init: function () {
             // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
             if (cDetection.isMobilePlatform && window) {
@@ -937,6 +962,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._isSlowDrawing(this._options.easyGroup)) {
                this.setGroupBy(this._options.groupBy, false);
+            }
+            if (this._options.scrollPaging) {
+               this._pagingZIndex = WindowManager.acquireZIndex();
+               WindowManager.setVisible(this._pagingZIndex);
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
@@ -1092,7 +1121,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
-               paging: this._scrollPager
+               paging: this._scrollPager,
+               pagingZIndex: this._pagingZIndex
             });
             this._scrollBinder.bindScrollPaging();
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
@@ -1107,7 +1137,8 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onVisibleChange: function(event, visible){
             if (this._scrollPager) {
-               this._scrollPager.setVisible(visible);
+               // покажем если ListView показалось и есть страницы и скроем если скрылось
+               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount());
             }
          },
 
@@ -1600,7 +1631,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
-            this._getEmptyDataContainer().empty().html(Sanitize(html));
+            this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
@@ -1684,7 +1715,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._notify('onItemClick', id, data, target, e);
          },
          _onCheckBoxClick: function(target) {
-            this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
+            this.toggleItemsSelection([this._getItemsProjection().getByHash(target.closest('.controls-ListView__item').attr('data-hash')).getContents().getId()]);
          },
 
          _elemClickHandlerInternal: function (data, id, target, e) {
@@ -2398,7 +2429,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
             } else {
-               this._onRightSwipeHandler();
+               this._onRightSwipeHandler(target);
                if(this._hasHoveredItem()) {
                   this._clearHoveredItem();
                   this._notifyOnChangeHoveredItem();
@@ -2427,7 +2458,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return !!this._hoveredItem.container;
          },
 
-         _onRightSwipeHandler: function() {
+         _onRightSwipeHandler: function(target) {
+            var key = target[0].getAttribute('data-id');
+
+            this.setSelectedKey(key);
+            this.toggleItemsSelection([key]);
+
             if (this._isSupportedItemsToolbar()) {
                this._hideItemsToolbar(true);
             }
@@ -2895,12 +2931,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true),
+                  self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
-               this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+
+               /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
+               if (!this._options.navigation || this._options.navigation.type != 'cursor') {
+                  this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
+               }
+
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
@@ -2910,7 +2952,14 @@ define('js!SBIS3.CONTROLS.ListView',
                      //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                      //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                     var hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                     var hasNextPage;
+                     if (this._options.navigation && this._options.navigation.type == 'cursor') {
+                        this._listNavigation.analizeResponceParams(dataSet);
+                        hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
+                     }
+                     else {
+                        hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
+                     }
          
                      this._updateScrollOffset();
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
@@ -2927,17 +2976,42 @@ define('js!SBIS3.CONTROLS.ListView',
                            this._needToRedraw = false;
                         }
                         this._drawPage(dataSet);
+
+                        if(this._dogNailSavedMode) {
+                           this._setInfiniteScrollState(this._dogNailSavedMode);
+                           this._dogNailSavedMode = null;
+                        }
+
                         //И выключаем после отрисовки
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = true;
                         }
                      } else {
+
+                        if(this._dogNailSavedMode) {
+                           this._setInfiniteScrollState(this._dogNailSavedMode);
+                           this._dogNailSavedMode = null;
+                        }
+
                         // Если пришла пустая страница, но есть еще данные - догрузим их
                         if (hasNextPage){
                            this._scrollLoadNextPage();
                         } else {
                            // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
                            this._hideLoadingIndicator();
+
+                           //TODO костыль для Догадкина и выпуска 50
+                           //суть в том что грузится страница вниз, на ней не приходят записи => мы не попадаем в drawItemsCallback
+                           //и не делаем проверку можно ли скроллить вверх, получается так что можно, но мы не грузим, из-за этого подгрузка вверх
+                           //выполняется неожидаемо в момент первого движения скролла вниз, хотя должна была запросить сразу после начальной отрисовки списка
+                           //страхуемся от этой ситуации, чтоб ничего не сломать https://online.sbis.ru/opendoc.html?guid=8da97ce8-7112-4f3f-8d2a-c6c6be03c74d&des=
+                           if (!this._dogNailSavedMode) {
+                              if ((this._options.task1173941879) && (this.isScrollOnTop())) {
+                                 this._dogNailSavedMode = this._infiniteScrollState.mode;
+                                 this._setInfiniteScrollState('up');
+                                 this._scrollLoadNextPage();
+                              }
+                           }
                         }
                      }
                   }, this))
@@ -3019,7 +3093,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._loadMoreButton.setVisible(false);
                   return;
                } else {
-                  caption = this._options.pageSize;
+                  caption = '...';
                }
             }
 
@@ -3090,7 +3164,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _createLoadingIndicator : function () {
-            this._loadingIndicator = this._container.find('.controls-ListView-scrollIndicator');
+            this._loadingIndicator = $('> .controls-ListView-scrollIndicator', this._container);
             // При подгрузке вверх индикатор должен быть над списком
             if (this._options.infiniteScroll == 'up'){
                this._loadingIndicator.prependTo(this._container);
@@ -3296,6 +3370,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
                   cMerge(queryFilter, addParams.filter);
                }
+            }
+            /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._notify('onBeforeDataLoad', queryFilter, sorting, offset, limit);
             }
             query.where(queryFilter)
                .offset(offset)
@@ -3952,7 +4030,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.7.5.100. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.17. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                var
                   action = new InteractiveMove({
                      linkedObject: this,

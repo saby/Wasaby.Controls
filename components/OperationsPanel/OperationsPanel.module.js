@@ -3,22 +3,40 @@
  */
 define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.OperationsPanel',
-   'js!SBIS3.CONTROLS.DSMixin',
+   'tmpl!SBIS3.CONTROLS.OperationsPanel',
+   'js!SBIS3.CONTROLS.ItemsControlMixin',
    'Core/helpers/collection-helpers',
    "Core/helpers/functional-helpers",
    'Core/helpers/markup-helpers',
    'Core/core-instance',
    'js!SBIS3.StickyHeaderManager',
-   /*TODO это должна подключать не панель а прекладники, потом убрать*/
-   'js!SBIS3.CONTROLS.OperationDelete',
-   'js!SBIS3.CONTROLS.OperationsMark',
-   'js!SBIS3.CONTROLS.OperationMove',
-   'js!SBIS3.CONTROLS.MenuIcon',
+   'tmpl!SBIS3.CONTROLS.OperationsPanel/resources/ItemTemplate',
+   'Core/moduleStubs',
    'css!SBIS3.CONTROLS.OperationsPanel'
-], function(Control, dotTplFn, DSMixin, colHelpers, fHelpers, mkpHelpers, cInstance, StickyHeaderManager) {
+], function(Control, dotTplFn, ItemsControlMixin, colHelpers, fHelpers, mkpHelpers, cInstance, StickyHeaderManager, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
+
+   var
+      buildTplArgs = function(cfg) {
+         var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+         tplOptions.getItemType = getItemType;
+         return tplOptions;
+      },
+      getItemType = function (type) {
+         var result = 'selection';
+         if (type) {
+            if (type.mark) {
+               result = 'mark';
+            } else if (type.mass && type.selection) {
+               result = 'all';
+            } else if (type.mass) {
+               result = 'mass';
+            }
+         }
+
+         return result;
+      };
 
    /**
     * Компонент "Панель действий" используют совместно с представлениями данных ({@link SBIS3.CONTROLS.ListView} или любой его контрол-наследник),
@@ -64,7 +82,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * <component data-component='SBIS3.CONTROLS.OperationsPanel' style="height: 30px;">
     * </component>
     */
-   var OperationsPanel = Control.extend([DSMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
+   var OperationsPanel = Control.extend([ItemsControlMixin],/** @lends SBIS3.CONTROLS.OperationsPanel.prototype */{
       /**
        * @event onToggle Происходит при изменении видимости панели действий: появление или скрытие.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -72,6 +90,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+            _buildTplArgs: buildTplArgs,
+            _defaultItemTemplate: ItemTemplate,
+            _serverRender: true,
             /**
              * @typedef {Object} Type
              * @property {Boolean} mass Массовые операции.
@@ -121,46 +142,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              */
             hasItemsMenu: false
          },
-         _blocks: undefined,
          _itemsDrawn: false
       },
       $constructor: function() {
-         this._initBlocks();
          this._publish('onToggle');
-         
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);
-
-         if(this._options.hasItemsMenu){
-            this._itemsMenu = this.getChildControlByName('itemsMenu');
-            this._checkCapacity();
-
-            //TODO
-            this._itemsMenu._setPickerContent = function() {
-               $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
-            };
-            //TODO Конец
-
-            this.subscribeTo(this._itemsMenu, 'onMenuItemActivate', function(e, id){
-               this.getItems().each(function(item){
-                  if(item.get('id') === id){
-                     var instance = item.get('instance');
-                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
-                        instance._notify('onMenuItemActivate', id);
-                     }
-                     else {
-                        instance._clickHandler();
-                     }
-                     return false;
-                  }
-               });
-            });
-         }
-
-         //Отрисуем элементы если панель изначально показана
          if (this.isVisible()) {
-            this.reload();
+            this.redraw();
          }
       },
 
@@ -175,13 +165,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          return items ? items : this._options.items;
       },
 
-      _drawItemsCallback: function() {
-         this._itemsDrawn = true;
-         if(this._options.hasItemsMenu){
-            this._updateActionsMenuButtonItems();
-         }
-      },
-
       _updateActionsMenuButtonItems: function(){
          var self = this;
          var buttonItems = [];
@@ -189,7 +172,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          //TODO ГОВНОКОДИЩЕ!!! Собираем мета описание операций через инстансы. При первой же возможности выпилить.
          var addItems = function(items, parentKey, instance){
             items.each(function(item){
-               if(parentKey || self._getItemType(item.get('type')) !== 'mark'){
+               if(parentKey || getItemType(item.get('type')) !== 'mark'){
                   var obj = {
                      parent: parentKey || null
                   };
@@ -206,7 +189,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      obj.icon = instance.getIcon();
                      obj.caption = instance.getCaption();
                      obj.instance = instance;
-                     obj.className = 'controls-operationsPanel__actionType-' + self._getItemType(item.get('type'));
+                     obj.className = 'controls-operationsPanel__actionType-' + getItemType(item.get('type'));
 
                      if(typeof instance.getItems === 'function'){
                         var childItems = instance.getItems();
@@ -226,10 +209,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       _setVisibility: function(show) {
-         var self = this;
-         this._initBlocks();
          if (!this._itemsDrawn && show) {
-            this.reload();
+            this.redraw();
          }
          if (this.isVisible() !== show) {
             this._isVisible = show;
@@ -249,35 +230,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          return !!this.getContainer().closest('.ws-sticky-header__block').length;
       }, '_isSticky'),
 
-      _initBlocks: function() {
-         if (!this._blocks) {
-            this._blocks = {
-               markOperations: this._container.find('.controls-operationsPanel__actionMark'),
-               allOperations: this._container.find('.controls-operationsPanel__actions'),
-               wrapper: this._container.find('.controls-operationsPanel__wrapper')
-            };
-         }
-      },
-      _getTargetContainer: function(item) {
-         return this._blocks[item.get('type').mark ? 'markOperations' : 'allOperations'];
-      },
-      _getItemTemplate: function() {
-         var self = this;
-         return function (cfg) {
-            var
-                className,
-                item = cfg.item,
-                options = item.get('options') || {},
-                type = self._getItemType(item.get('type'));
-            className = 'js-controls-operationsPanel__action controls-operationsPanel__actionType-' + type;
-            return '<component class="' + className + '" data-component="' + item.get('componentType').substr(3) + '" config="' + mkpHelpers.encodeCfgAttr(options) + '"></component>';
-         };
-      },
-      _getItemType: function (type) {
-         return type.mark ? 'mark' : type.mass && type.selection ? 'all' : type.mass ? 'mass' : 'selection';
-      },
       onSelectedItemsChange: function(idArray) {
-         this._blocks.wrapper.toggleClass('controls-operationsPanel__massMode', !idArray.length)
+         this._container.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                              .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
 
          if (this._itemsDrawn) {
@@ -311,18 +265,20 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       /*
-      * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
-      * */
+       * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
+       * */
       _checkCapacity: function(){
          var container = this.getContainer();
+         /* Необходимая ширина: ширина блока операции выделения + ширина кнопки с меню*/
+         var needElementsWidth = this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() + ITEMS_MENU_WIDTH;
          /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
-         var allowedWidth = container.width() - this._blocks.markOperations.width() - ITEMS_MENU_WIDTH;
+         var allowedWidth = container.width() - needElementsWidth;
 
-         var operations = this._blocks.allOperations.find('.js-controls-operationsPanel__action:visible');
+         var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
 
-         var width = 0;
+         var width = needElementsWidth;
          var isMenuNecessary = false;
-         this._blocks.allOperations.css('width', '');
+         this._getItemsContainer().css('width', '');
 
          for(var i = 0, l = operations.length; i < l; i++){
             var elemWidth = $(operations[i]).outerWidth(true);
@@ -330,7 +286,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             /* Если текущая ширина привышает доступную, то ограничеваем ее, таким образом, кнопка с меню прижмется справа */
             if(width + elemWidth > allowedWidth){
                isMenuNecessary = true;
-               this._blocks.allOperations.css('width', width);
+               this._getItemsContainer().css('width', width);
                break;
             }
             else {
@@ -338,12 +294,87 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             }
          }
 
-         this.getChildControlByName('itemsMenu').getContainer().toggleClass('ws-hidden', !isMenuNecessary);
+         if (isMenuNecessary) {
+            this._createItemsMenu();
+         }
+
+         if (this._itemsMenu) {
+            this.getChildControlByName('itemsMenu').getContainer().toggleClass('ws-hidden', !isMenuNecessary);
+         }
       },
 
-      destroy: function() {
-         this._blocks = null;
-         OperationsPanel.superclass.destroy.apply(this);
+      redraw: function() {
+         var self = this;
+         this.requireButtons().addCallback(function() {
+            OperationsPanel.superclass.redraw.call(self);
+            self._itemsDrawn = true;
+         });
+      },
+
+      requireButtons: function() {
+         if (!this._itemsLoadDeferred) {
+            var types = [];
+            this.getItems().each(function(item) {
+               types.push(item.get('componentType'));
+            });
+            this._itemsLoadDeferred = moduleStubs.require(types);
+         }
+         return this._itemsLoadDeferred;
+      },
+
+      _createItemsMenu: function() {
+         var self = this;
+         if (this._itemsMenuLoaded) {
+            return;
+         }
+         self._itemsMenuLoaded = true;
+         moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+            var menuIcon = new MenuIcon[0]({
+               element: $('<span>').insertAfter(self._getItemsContainer()),
+               name: 'itemsMenu',
+               className: 'controls-Menu__hide-menu-header controls-operationsPanel__itemsMenu',
+               idProperty: 'id',
+               parentProperty: 'parent',
+               displayProperty: 'caption',
+               icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
+               pickerConfig: {
+                  closeButton: true,
+                  className: 'controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode',
+                  horizontalAlign: {
+                     side: 'right',
+                     offset: 48
+                  }
+               }
+            });
+            self.registerChildControl(menuIcon);
+            self._itemsMenu = menuIcon;
+            menuIcon.getContainer().toggleClass('ws-hidden', false);
+            self._itemsMenu._setPickerContent = function() {
+               $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
+            };
+            self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id){
+               var item = this.getItems().getRecordById(id);
+               if (item) {
+                  var instance = item.get('instance');
+                  if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                     instance._notify('onMenuItemActivate', id);
+                  }
+                  else {
+                     instance._clickHandler();
+                  }
+                  return false;
+               }
+            });
+            self._updateActionsMenuButtonItems();
+            self.getChildControlByName('itemsMenu').getContainer().toggleClass('ws-hidden', false);
+         });
+      },
+
+      _getItemsContainer: function() {
+         if (!this._actions) {
+            this._actions = this.getContainer().find('.controls-operationsPanel__actions');
+         }
+         return this._actions;
       }
    });
    return OperationsPanel;

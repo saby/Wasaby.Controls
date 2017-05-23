@@ -294,6 +294,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
+                  ' allowfullscreen',
                   ' frameborder="0" >',
                   '</iframe>'
                ].join('');
@@ -1483,7 +1484,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //todo: go to tmpl
                      width =  target[0].style.width || (target.width() + 'px'),
                      style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
-                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center">' +
+                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
                         '<img src="' +  target.attr('src') + '"' + style + ' alt="' +  target.attr('alt') + '"></img></p>';
 
                   this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
