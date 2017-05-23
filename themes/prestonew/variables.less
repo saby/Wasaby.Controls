@@ -76,7 +76,7 @@
 //  Icon Button //
 // ------------ //
 
-@icon-button-round-border-position:     relative;
+@icon-button-round-border-position:     absolute;
 @icon-button-round-border-width:        2.286rem;
 @icon-button-round-border-height:       2.286rem;
 @icon-button-round-border-line-height:  2.2rem;
@@ -409,7 +409,7 @@
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
 
-@menu-item-icon-top-offset:               .2rem;
+@menu-item-icon-top-offset:               1.15rem;
 
 @menu-item-icon-left-offset:              -.4232rem;
 
@@ -418,7 +418,7 @@
 
 @menu-item-icon24-left-offset:              -2px;
 @menu-item-icon24-left-offset-big:           0px;
-@menu-item-line-height:                  3rem;
+@menu-item-line-height:                  3.57rem;
 
 // ----------- //
 // Menu button //
@@ -1013,7 +1013,7 @@
 // OperationsPanel //
 // --------------- //
 
-@controls-OperationsPanel-height:                   30px;
+@controls-OperationsPanel-height:                   3.57rem;
 
 @controls-OperationsPanel-bg:                       #38495B;
 
@@ -1091,13 +1091,13 @@
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
 
-@controls-filterButton-area-header-padding:       12px 3rem 8px 12px;
+@controls-filterButton-area-header-padding:       8px 3rem 8px 12px;
 
 @controls-filterButton-area-text-size:            1.43rem;
 @controls-filterButton-area-text-color:           #e4e4e4;
 @controls-filterButton-clear-margin-right:        16px;
 
-@controls-filterButton-area-content-margin:       0 1.75rem 12px 1.75rem;
+@controls-filterButton-area-content-margin:       0  12px 0.75rem;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               41px;
 @controls-filterButton-apply-margin-right:        0;
@@ -1280,7 +1280,7 @@
 @menu-item-icon-24-margin:							0 0 0 1.78rem;
 @menu-item-icon-16-margin:							0 0 0 1.32rem;
 @text-box-error-bg:                       #472e35;
-@back-button-linheight-before:              3.2rem;
+@back-button-linheight-before:              3rem;
 @back-button-width-before:                  .7rem;
 @back-button-text-fontweight:               @default-font-weight;
 @tab-buttons-border-bottom-height:          0.01rem;
@@ -1295,10 +1295,66 @@
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
 
-@DropdownList-height: 					3.57rem;
+@DropdownList-height: 					1.43rem;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 
 @text-box-placeholder-color: 				rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:  3.57rem;
 @tree-view-ellipsis-copyArrow-width:    1rem;
+@bread-crumbs-menu-padding:             0;
+@menu-subpopup-padding:               @bread-crumbs-menu-padding;
+
+//--------------//
+//  TimePicker  //
+//--------------//
+@time-picker-background-color:                      @basic-block-bg-color;
+
+//--------------//
+//  TimeHeader  //
+//--------------//
+@time-header-height:                                100px;
+@time-header-font-size:                             40px;
+@time-header-title-margin-left:                     24px;
+@time-header-toggle-time-margin-left:               32px;
+@time-header-home-button-margin-left:               8px;
+@time-header-background-color:                      @time-picker-background-color;
+@time-header-title-color:                           @innacent-color;
+
+// ---------- //
+// ToggleTime //
+// ---------- //
+@toggle-time-passive-hover-text-decoration:         none;
+@toggle-time-passive-color:                         @default-text-color;
+
+//---------------//
+//  ClockPicker  //
+//---------------//
+
+@clock-picker-height:                               19.357rem;
+@clock-picker-width:                                19.929rem;
+@clock-picker-background-color:                     @time-picker-background-color;
+
+@clock-picker-outer-tick-radius:                    1.25rem;
+@clock-picker-tick-hover-background-color:          #273B4D;
+
+@clock-picker-inner-tick-radius:                    1rem;
+@clock-picker-inner-tick-background-color:          #354B62;
+
+@clock-picker-outer-circle-radius:                  7.857rem;
+@clock-picker-outer-circle-border-color:            @clock-picker-inner-tick-background-color;
+
+@clock-picker-inner-circle-radius:                  5rem;
+
+@clock-picker-unit-time-font-size:                  1.714rem;
+@clock-picker-unit-time-z-index:                    16;
+@clock-picker-unit-time-color:                      @clock-picker-inner-tick-background-color;
+
+@clock-picker-arrow-width:                          0.036rem;
+@clock-picker-arrow-color:                          @accent-color;
+
+@clock-picker-inner-arrow-z-index:                  4;
+
+@clock-picker-arrow-tip-border-width:               0.072rem;
+@clock-picker-arrow-tip-color:                      @default-text-color;
+@clock-picker-arrow-tip-border-color:               @clock-picker-arrow-color;

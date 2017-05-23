@@ -1715,7 +1715,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._notify('onItemClick', id, data, target, e);
          },
          _onCheckBoxClick: function(target) {
-            this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
+            this.toggleItemsSelection([this._getItemsProjection().getByHash(target.closest('.controls-ListView__item').attr('data-hash')).getContents().getId()]);
          },
 
          _elemClickHandlerInternal: function (data, id, target, e) {
@@ -2373,7 +2373,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._lastDeleteActionState = undefined;
                }
                // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-               if (this.getHoveredItem().container && !this._touchSupport) {
+               if (this.getHoveredItem().container && dcHelpers.contains(this.getContainer(), this.getHoveredItem().container) && !this._touchSupport) {
                   this._notifyOnChangeHoveredItem();
                } else {
                   this._hideItemsToolbar();

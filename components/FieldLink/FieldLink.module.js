@@ -443,7 +443,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              this.reviveComponents();
           },
           
-          _notify: function() {
+          _notify: function(eventName) {
+             /* Чтобы не запускался поиск в автодополнении, когда есть выбранная запись и включен комментарий */
+             if(eventName === 'onSearch' && this._options.alwaysShowTextBox && !this._isEmptySelection()) {
+                return false;
+             }
              return ItemsSelectionUtil.delayedNotify(
                 FieldLink.superclass._notify,
                 arguments,
@@ -1061,13 +1065,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPickerConfig: function () {
              return {
                 corner: 'bl',
-                target: this._container,
-                opener: this,
-                parent: this,
                 closeOnTargetMove: !constants.browser.isMobileIOS,
                 closeByExternalClick: true,
                 targetPart: true,
-                cssClassName: 'controls-FieldLink__picker',
                 _canScroll: true,
                 verticalAlign: {
                    side: 'top'

@@ -4,5 +4,5 @@
 node -v
 npm install
 
-node build
+node depencyCollector
 node node_modules/ws-unit-testing/cover test-isolated
