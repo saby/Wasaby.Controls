@@ -25,15 +25,10 @@ define('js!WSControls/Controllers/BaseListSelector', [
       setSelectedIndex: function(index) {
          this.selectedIndex = index;
          this._notifySelectedItem(index);
-
-         this._prepareSelectedKeyByIndex(index);
-         if (this._getItemsProjection()) {
-            this._selectInProjection();
-         }
       },
 
       getSelectedIndex : function() {
-         return this._options.selectedIndex;
+         return this.selectedIndex;
       },
 
       _isEmptyIndex: function(index) {
@@ -41,7 +36,6 @@ define('js!WSControls/Controllers/BaseListSelector', [
       },
 
       _notifySelectedItem : function(index) {
-         this._notifyOnPropertyChanged('selectedIndex');
          this._notify('onSelectedItemChange', index);
       }
    });
