@@ -12,14 +12,14 @@ define('js!SBIS3.CONTROLS.ListView/ListView.compatible', [
 
       _prepareItemData: function(cfg) {
          var buildArgsMethod;
-         if (this._options._canServerRender) {
-            buildArgsMethod = this._options._buildTplArgs;
+         if ((cfg||this._options)._canServerRender) {
+            buildArgsMethod = (cfg||this._options)._buildTplArgs;
          }
          else {
             buildArgsMethod = this._buildTplArgs;
          }
          if (!this._itemData) {
-            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options||cfg));
+            this._itemData = cFunctions.clone(buildArgsMethod.call(this, cfg||this._options));
          }
          return this._itemData;
       },

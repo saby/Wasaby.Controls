@@ -14,6 +14,9 @@ define('js!WSControls/Lists/ItemsControl', [
    "Core/Sanitize",
    "js!WS.Data/Utils",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
+   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    "js!WS.Data/Display/Display"
 ], function (extend,
              AbstractCompatible,
@@ -30,6 +33,9 @@ define('js!WSControls/Lists/ItemsControl', [
              Sanitize,
              Utils,
              TemplateUtil,
+             ItemsTemplate,
+             ItemTemplate,
+             ItemContentTemplate,
              Projection) {
 
    'use strict';
@@ -96,14 +102,14 @@ define('js!WSControls/Lists/ItemsControl', [
             itemContentTpl = cfg.itemContentTpl;
          }
          else {
-            itemContentTpl = cfg._defaultItemContentTemplate;
+            itemContentTpl = this._defaultItemContentTemplate;
          }
          tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
          if (cfg.itemTpl) {
             itemTpl = cfg.itemTpl;
          }
          else {
-            itemTpl = cfg._defaultItemTemplate;
+            itemTpl = this._defaultItemTemplate;
          }
          tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
          tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
@@ -130,7 +136,7 @@ define('js!WSControls/Lists/ItemsControl', [
       {
          _controlName: 'WSControls/Lists/ItemsControl',
          _template: template,
-         iWantVDOM: false,
+         iWantVDOM: true,
          _isActiveByClick: false,
 
          items: null,
@@ -139,14 +145,16 @@ define('js!WSControls/Lists/ItemsControl', [
          tplData: null,
          records: null,
          _createDefaultProjection : null,
+         _defaultItemContentTemplate: ItemContentTemplate,
+         _defaultItemTemplate: ItemTemplate,
+         _itemsTemplate: ItemsTemplate,
 
          constructor: function (cfg) {
 
             this._options = {};
 
             this.items = cfg.items || [];
-            this.itemTemplate = cfg.itemTemplate;
-
+            this.itemTemplate = cfg.itemsTemplate;
 
             if (typeof this.itemTemplate !== "function" ) {
                if (cfg.itemContentTpl) {
@@ -175,7 +183,7 @@ define('js!WSControls/Lists/ItemsControl', [
                proj = cfg._createDefaultProjection(cfg._items, cfg);
                //proj = cfg._applyGroupingToProjection(proj, cfg);
                cfg._itemsProjection = proj;
-               this.records = getRecordsForRedraw(proj, cfg);
+               this._records = getRecordsForRedraw(proj, cfg);
                /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                   if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                      newCfg._serverRender = true;
@@ -191,13 +199,54 @@ define('js!WSControls/Lists/ItemsControl', [
 
             this._buildTplArgs = buildTplArgs;
 
-            this.tplData = this._prepareItemData();
+            this.tplData = this._prepareItemData(cfg);
 
             this.deprecatedContr(cfg);
          },
 
          setItems: function(items){
-            this.items = items;
+
+            var cfg = {};
+            cfg.items = items;
+            cfg.idProperty = this._options.idProperty;
+
+            if (cfg.items) {
+               var proj, items;
+               if (cfg.items instanceof Array) {
+                  if (!cfg.idProperty) {
+                     var key = findIdProperty(cfg.items);
+                     cfg.idProperty = key;
+                     cfg.idProperty = key;
+                  }
+                  items = JSONToRecordset(cfg.items, cfg.idProperty);
+                  cfg._items = items;
+                  cfg._items = items;
+               }
+               else {
+                  cfg._items = cfg.items;
+                  cfg._items = cfg.items;
+               }
+               proj = this._options._createDefaultProjection(cfg._items,  this._options);
+               //proj = cfg._applyGroupingToProjection(proj, cfg);
+               this._options._itemsProjection = proj;
+               this._records = getRecordsForRedraw(proj, this._options);
+               /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
+                if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
+                newCfg._serverRender = true;
+                newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
+                if (cfg._items && cInstance.instanceOfModule(cfg._items, 'WS.Data/Collection/RecordSet')) {
+                newCfg._resultsRecord = cfg._items.getMetaData().results;
+                }
+                newCfg._itemData = cfg._buildTplArgs(cfg);
+                }
+                }*/
+            }
+
+
+            this._buildTplArgs = buildTplArgs;
+
+            this.tplData = this._prepareItemData( this._options );
+
             this._setDirty();
          }
 
