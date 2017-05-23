@@ -181,7 +181,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getContextForEip: function () {
                var
-                  ctx = new cContext({restriction: 'set'});
+                  ctx = cContext.createContext(this, {restriction: 'set'});
                ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
                   var
                      record,
@@ -528,6 +528,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
                               model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : null);
+                              model.acceptChanges([self._options.parentProperty]);
                            }
                            //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
                            //Раньше использовалось проверка на getState, но запись могли перечитать, и мы получали неверный результат.
@@ -568,13 +569,16 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                    lastTarget,
                    currentTarget,
-                   targetHash = options.target ? options.target.getHash() : null,
+                   targetHash = null,
                    addTarget = $(AddRowTpl({
                       model: model,
                       columns: this._options.columns,
                       ignoreFirstColumn: this._options.ignoreFirstColumn
                    }));
-
+               if (options.target) {
+                  // Могут сделать reload в событии onEndEdit и тогда hash поменяется. Приходится его брать повторно из itemsProjection.
+                  targetHash = this._options.itemsProjection.getItemBySourceItem(this._options.items.getRecordById(options.target.getContents().getId())).getHash();
+               }
                if (targetHash) {
                   currentTarget = $('.controls-ListView__item[data-hash="' + targetHash + '"]', this._options.itemsContainer.get(0));
                   if (options.addPosition !== 'top') {

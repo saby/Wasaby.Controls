@@ -134,6 +134,14 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             keyboardLayoutRevert: true,
             /**
+             * @cfg {Boolean} Включает изменение раскладки по новому стандарту. Актуально при включённой опции {@link keyboardLayoutRevert}
+             * @example
+             * <pre>
+             *     <option name="keyboardLayoutRevertNew">true</option>
+             * </pre>
+             */
+            keyboardLayoutRevertNew: false,
+            /**
              * @cfg {String} Устанавливает Id для работы с историей фильтров.
              * @remark
              * Опция задает идентификатор, под которым будет сохраняться история фильтрации.
@@ -236,7 +244,8 @@ define('js!SBIS3.CONTROLS.Browser', [
             /**
              * @cfg {Boolean} hierarchyViewMode Включать группировку при поиске.
              */
-            hierarchyViewMode: true
+            hierarchyViewMode: true,
+            backButtonTemplate: null
          }
       },
 
@@ -280,7 +289,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                   this._componentBinder = new ComponentBinder({
                      backButton : this._backButton,
                      breadCrumbs : this._breadCrumbs,
-                     view: this._view
+                     view: this._view,
+                     backButtonTemplate: this._options.backButtonTemplate
                   });
                   this._componentBinder.bindBreadCrumbs();
                }
@@ -366,6 +376,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        */
       setColumnsConfig: function(config) {
          this._options.columnsConfig = config;
+         this._columnsController.setState(this._options.columnsConfig.selectedColumns);
          this._notifyOnPropertyChanged('columnsConfig');
       },
       /**

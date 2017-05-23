@@ -1,9 +1,26 @@
+define('js!SBIS3.CONTROLS.Button',
+   [
+      'Core/core-extend',
+      "Core/Abstract.compatible",
+      'js!SBIS3.CORE.Control/Control.compatible',
+      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
+      'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'js!WS.Data/Entity/InstantiableMixin',
+      'tmpl!SBIS3.CONTROLS.Button',
+      'Core/core-functions',
+      'css!SBIS3.CONTROLS.Button'
+   ],
 
-define('js!SBIS3.CONTROLS.Button', [
-   'Core/constants',
-   'js!WSControls/Buttons/Button',
-   'css!SBIS3.CONTROLS.Button'
-], function(constants, WSButton) {
+   function (extend,
+             AbstractCompatible,
+             ControlCompatible,
+             AreaAbstractCompatible,
+             BaseCompatible,
+             ButtonCompatible,
+             InstantiableMixin,
+             template,
+             functions) {
 
    'use strict';
 
@@ -20,7 +37,7 @@ define('js!SBIS3.CONTROLS.Button', [
     * </ol>
     * @class SBIS3.CONTROLS.Button
     * @extends WSControls/Buttons/ButtonBase
-	* @demo SBIS3.CONTROLS.Demo.MyButton
+    * @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Крайнов Дмитрий Олегович
     *
@@ -61,18 +78,52 @@ define('js!SBIS3.CONTROLS.Button', [
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
+   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
+      {
+         _controlName: 'SBIS3.CONTROLS.Button',
+         _template: template,
+         iWantVDOM: true,
+         _isActiveByClick: false,
 
-   var Button = WSButton.extend( /** @lends SBIS3.CONTROLS.Button.prototype */ {
+         constructor: function (cfg) {
+            this.deprecatedContr(cfg);
+            this._publish('onActivated');
+         },
 
-      _modifyOptions: function () {
-         var
-             options = Button.superclass._modifyOptions.apply(this, arguments);
+         //<editor-fold desc="Event handlers">
 
-         options.cssClassName += ' controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
-         return options;
-      }
+         _onMouseClick: function (e) {
+            if (!this._options.enabled) {
+               return;
+            }
+            this._onClickHandler(e);
+            this._notify("onActivated", e);
+         },
+
+         _onMouseDown: function () {
+            this._isActiveByClick = true;
+         },
+
+         _onMouseUp: function () {
+            this._isActiveByClick = false;
+         },
+
+         _onKeyDown: function (e) {
+            var result = this._notify('onKeyPressed', e);
+            if (e.nativeEvent.key === 'Enter' && result !== false) {
+               this._onMouseClick(e);
+            }
+         },
+
+         _onMouseEnter: function(e){
+            this._notify('onMouseEnter', e);
+         },
+
+         _onMouseLeave: function(e){
+            this._notify('onMouseLeave', e);
+         }
+         //</editor-fold>
+      });
+
+      return Button;
    });
-
-   return Button;
-
-});

@@ -11,21 +11,24 @@
 
   .controls-MoneyTextBox__input {
     width: 100%;
+    height: @text-box-height - 2 * @text-box-border-width;
     outline: none;
     white-space: nowrap;
-    overflow: hidden;
     display: inline-block;
   }
+
+  &.controls-MoneyTextBox__ellipsis {
+    .controls-TextBox__fieldWrapper {
+      .text-overflow();
+    }
+  }
+
   &.ws-disabled {
     .controls-MoneyTextBox__input {
       display: inline;
     }
     .controls-TextBox__fieldWrapper {
-      &:before {
-        content: '.';
-        visibility: hidden;
-        width: 0;
-      }
+      .baseline-fix();
     }
   }
 }

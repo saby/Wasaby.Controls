@@ -146,7 +146,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                keyboardLayoutRevert: this._options.keyboardLayoutRevert,
                searchParamName: this._options.searchParam,
                doNotRespondOnReset: true,
-               searchFormWithSuggest: true
+               searchFormWithSuggest: true,
+               keyboardLayoutRevertNew: true
             });
             this._searchController.bindSearch();
          });
@@ -273,7 +274,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
             if(this._options.searchParam) {
                var togglePicker = function() {
-                     if(self._checkPickerState(!self._options.showEmptyList)) {
+                     if(self._checkPickerState(!self._options.showEmptyList) && !self.getList().isLoading()) {
                         self.showPicker();
                      } else {
                         self.hidePicker();

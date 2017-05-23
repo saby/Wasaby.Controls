@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              *    </options>
              * </pre>
              */
-            pickerConfig: undefined
+            pickerConfig: null
          }
       },
 
@@ -200,7 +200,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
       */
       togglePicker: function() {
          if (!this._picker) {
-            this._initializePicker();
             this.showPicker();
          }
          else {

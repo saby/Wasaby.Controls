@@ -1,16 +1,15 @@
 html {
   color: #000;
-  background-color: #fff;
 }
 body {
   font-size: 1rem !important;
 }
 
-body .controls-SearchForm {
-  .icon-size.icon-16 {
-    font-size: 2rem !important;
-    color: #2d68b5 !important;
-
+.controls-SearchForm {
+  .icon-size {
+    font-size: 3rem !important;
+    width: 2rem;
+    height: 3rem;
   }
 }
 
@@ -80,38 +79,43 @@ body .controls-SearchForm {
    }
 }
 
-.ws-float-area-stack-panel-shadow {
-  background: #202835 !important;
-}
-.ws-sticky-header__block.ws-sticky-header__fixed,
-.ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
-}
 
-.ws-window {
-  background-color: #293543 !important;
-}
-.ws-window-content {
-  background-color: #202835 !important;
-}
-body .ws-enabled .icon-primary{
-  color: #e4e4e4 !important;
-}
+
 .controls-listView td {
   font-size: 1rem;
 }
 body {
+
+    .engine-Browser__path-wrapper-in-head {
+      height: auto;
+    }
+    .engine-Browser__path {
+      max-height: 2rem;
+      height: auto !important;
+    }
   .icon-16 {
-    font-size: 1.43rem !important;
-    line-height: 1.43rem !important;
-    width: 1.43rem;
-    height: 1.43rem;
+    font-size: 1.32rem !important;
+    line-height: 1.32rem !important;
+    width: 1.32rem;
+    height: 1.32rem;
+  }
+  .icon-24 {
+    font-size: 1.7857rem !important;
+    height: 1.7857rem !important;
+    width: 1.7857rem !important;
+    line-height: 1.7857rem !important;
+
+  }
+  .icon-32 {
+
+        font-size: 3rem!important;
+        height: 3rem!important;
+        width: 3rem!important;
+        line-height: 3rem !important;
+
   }
 }
-.controls-Button.controls-Button--prestogray {
-    color: #2C3E50;
-  background: #e4e4e4;
-}
+
 .controls-ListView__scrollPager {
   height: 3rem !important;
 }
@@ -162,16 +166,15 @@ body {
   }
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
-  color: rgba(102, 170, 221, .2);
   font-size: 1.14rem;
 }
 
 
 body {
   .ws-window-titlebar {
-    color: #000;
-    line-height: 2rem;
-    background: transparent;
+    color: @default-text-color;
+    line-height: 3.57rem;
+    height: 3.57rem;
     position: absolute;
     left: 0;
     right: 0;
@@ -189,17 +192,18 @@ body {
     }
   }
   .ws-float-area-title {
-      font-size: 1rem!important;
+      font-size: 1.43rem!important;
+      font-weight: normal !important;
   }
 }
 .controls-FloatArea {
   border: 2px solid #2196F3;
-  background: #2c3e50;
+  background: #fff;
 }
 body {
   .controls__filter-button__clear-filter {
     font-size: 1.14rem;
-    
+
     &:hover {
       color: #26b8ff !important;
     }
@@ -220,34 +224,131 @@ body {
 .controls-ComboBox.controls-TextBox.controls-Picker__show {
   border-bottom: none;
 }
-.controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable
- {
-  color: #000 !important;
- }
+
 
  .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
- 
+
     background: #FF7033;
 }
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
 
-body .controls-BackButton .controls-BackButton__caption.controls-Link {
-  font-weight: normal;
+
+body .ws-loadingimg {
+  top: 30%;
 }
-.icon-small {
-  font-size: 1.857rem !important;
-  height: 1.857rem !important;
-  width: 1.857rem !important;
+
+body {
+
+  .ws-float-area-title-generated {
+      line-height: 3.57rem;
+  }
+  .ws-float-area-title {
+    padding-left: .857rem;
+  }
+  .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+    height: 3.57rem;
+
+      .ws-float-area-title {
+        line-height: 3.57rem;
+      }
+  }
+  .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
+
+    font-size: 1.14rem;
+
+  }
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    width: 1.43rem !important;
+    height: 1.43rem !important;
+    font-size: 1.43rem !important;
+     border: none !important;
+    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+        font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+    }
+
+    .controls-DateBox {
+      min-height: 3rem;
+    }
+
 }
-.icon-medium {
-  font-size: 2.21rem !important;
-  height: 2.21rem !important;
-  width: 2.21rem !important;
+
+.controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
+  display: none;
 }
-.icon-large {
-  font-size: 3rem !important;
-  height: 3rem !important;
-  width: 3rem !important;
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
+    height: 3.57rem;
+}
+
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+    font-size: inherit !important;
+
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+         font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+       font-size: 1.43rem !important;
+        border: none !important;
+        left: 7px;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    margin-right: 1rem;
+  }
+}
+
+ .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
+     margin-left: 2.4rem !important;
+ }
+  .controls-Button .controls-Button__icon.icon-large + .controls-Button__text {
+      margin-left: 2.4rem !important;
+  }
+body .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
+    padding-left: .5rem;
+}
+body .controls-BackButton {
+  line-height: 3.64rem;
+}
+
+body .ws-float-area-nostack-panel-shadow-standart {
+    border: 1px solid #0055BB;
+    background: #FFFFFF;
+}
+.controls-editInPlace .controls-editInPlace__editor {
+  background: @basic-block-bg-color;
+}
+.controls-ListView .controls-ItemsToolbar__editActions {
+    background: @basic-block-bg-color;
+}
+
+body .ws-float-area-title-generated {
+    margin-right: 3rem;
+}
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  line-height: 3rem;
+}
+body .controls-ToolBar__menuIcon .icon-24 {
+  font-family: carrypresto-icons!important;
+}
+.controls-Link {
+  &.additionalLink__2 {
+    font-size: .857rem;
+  }
+}
+.controls__filter-button__apply-filter {
+    margin-right: 0.4rem;
+}
+
+.controls__filter-button__clear-filter {
+  .controls-Link__field {
+    vertical-align: baseline;
+  }
 }

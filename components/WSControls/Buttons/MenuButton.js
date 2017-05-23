@@ -1,14 +1,24 @@
 define('js!WSControls/Buttons/MenuButton', [
    'js!WSControls/Buttons/Button',
-   'js!SBIS3.CONTROLS.ContextMenu',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/collection-helpers',
    'Core/IoC'
-], function(Button, ContextMenu, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC) {
+], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC) {
 
    'use strict';
+   
+   function _getContextMenu(callback) {
+      var ctxMenu = 'js!SBIS3.CONTROLS.ContextMenu';
+      if(requirejs.defined(ctxMenu)) {
+         return callback(requirejs(ctxMenu));
+      } else {
+         requirejs([ctxMenu], function(menu) {
+            return callback(menu);
+         })
+      }
+   }
 
    /**
     * Класс контрола "Кнопка с выпадающим меню".
@@ -106,8 +116,6 @@ define('js!WSControls/Buttons/MenuButton', [
          }
 
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
-         //opts.pickerClassName += ' controls-MenuButton__Menu';
-         //opts.pickerClassName += ' controls-MenuLink__Menu';
          return opts;
       },
 
@@ -162,7 +170,10 @@ define('js!WSControls/Buttons/MenuButton', [
        * Показывает меню у кнопки
        */
       showPicker: function() {
-         MenuButton.superclass.showPicker.call(this);
+         var self = this;
+         _getContextMenu(function() {
+            MenuButton.superclass.showPicker.call(self);
+         })
       },
 
       _createPicker: function(targetElement){
@@ -204,7 +215,10 @@ define('js!WSControls/Buttons/MenuButton', [
          if (this._dataSource) {
             menuconfig.dataSource = this._dataSource;
          }
-         return new ContextMenu(menuconfig);
+         //_getContextMenu отработает синхронно, т.к. в _createPicker попадаем когда menu уже загружено
+         return _getContextMenu(function (menu) {
+            return new menu(menuconfig);
+         });
       },
 
       _modifyPickerOptions: function(opts) {
@@ -312,7 +326,7 @@ define('js!WSControls/Buttons/MenuButton', [
       //Прокидываем вызов метода в меню
       getItemsInstances: function() {
          if (!this._picker) {
-            this._initializePicker();
+            throw new Error('WSControls/Buttons/MenuButton::getItemsInstances  Попытка получения инстансов элементов меню до инициализации пикера.')
          }
          return this._picker.getItemsInstances.apply(this._picker, arguments);
       },

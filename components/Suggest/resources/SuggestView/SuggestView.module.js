@@ -103,7 +103,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
              _tabControl: null,
              _tabButtons: null,
              _activeView: null,
-             _switchableArea: null
+             _switchableArea: null,
+             _dataLoaded: []
           },
 
           $constructor: function() {
@@ -143,42 +144,31 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           _notifyDelegatedEvents: function(e, list) {
              var args = [].slice.call(arguments, 1),
-                 isLoaded = true,
-                 data, items;
+                 data;
 
              args.unshift(e.name);
 
              /* Т.к. контроллер следит за событием onDataLoad, то им надо стрелять один раз,
               когда все списки згрузились */
              if(e.name === 'ondataload') {
-                this._viewsIterator(function(view) {
-                   isLoaded &= !view.isLoading();
-                });
-
+                this._dataLoaded.push(list);
                 /* Не прокидываем событие выше, пока не загрузились все списки */
-                if(!isLoaded) {
+                if (this.isLoading()) {
                    return;
                 }
 
                 /* Т.к. у нас списков несколько, чтобы работала правильно смена раскладки надо отдавать пустой рекордсет,
                    только если рекордсеты всех списков пустые, иначе отдаём рекордсет списка, в котором есть записи */
-                this._viewsIterator(function(view) {
-                   if(data) {
-                      return;
-                   }
-
-                   if(list.getCount()) {
-                      data = list;
-                   }
-
-                   if(!data) {
-                      items = view.getItems();
-                      if (items && items.getCount()) {
-                         data = items;
+                if(list.getCount()) {
+                   data = list;
+                } else {
+                   this._dataLoaded.forEach(function(elem) {
+                      if(!data && elem.getCount()) {
+                         data = list;
                       }
-                   }
-                });
-
+                   })
+                }
+                this._dataLoaded = [];
                 args.splice(1, 1, data || list);
              }
 
@@ -346,6 +336,19 @@ define('js!SBIS3.CONTROLS.SuggestView',
              return this.getActiveView()._hasNextPage(hasMore, offset);
           },
 
+          _callQuery: function () {
+             var activeView = this.getActiveView();
+             return activeView._callQuery.apply(activeView, arguments);
+          },
+
+          getOffset: function() {
+             return this.getActiveView().getOffset();
+          },
+
+          getPageSize: function() {
+             return this.getActiveView().getPageSize();
+          },
+
           setItemTpl: function(itemTpl) {
              this.getActiveView().setItemTpl(itemTpl);
           },
@@ -364,6 +367,14 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           setDisplayProperty: function(displayProperty) {
              this.getActiveView().setDisplayProperty(displayProperty);
+          },
+   
+          isLoading: function() {
+             var isLoaded = true;
+             this._viewsIterator(function(view) {
+                isLoaded &= !view.isLoading();
+             });
+             return !isLoaded;
           },
 
           //endregion SBIS3.CONTROLS.IItemsControl

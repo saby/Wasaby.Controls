@@ -4,16 +4,6 @@
   font-size: @default-font-size;
 }
 
-.icon-size {
-   speak: none;
-   font-style: normal;
-   font-weight: normal;
-   font-variant: normal;
-   text-transform: none;
-   line-height: 1;
-   display: inline-block;
-}
-
 .controls-PopupMixin__closeButton {
    position: absolute;
    top: @controls-Popup-closeButton-top;
@@ -66,7 +56,7 @@
    }
 }
 
-&.controls-ListView__withoutMarker.controls-ListView {
+.controls-ListView__withoutMarker {
    .controls-ListView__item__selected,
    .controls-ListView__item__multiSelected {
       .controls-DataGridView__td:first-child,
@@ -110,7 +100,7 @@
    border-color: @menu-border-color;
 }
 
-.controls-Popup__touchScroll-fix .controls-ScrollContainer__content {
+.controls-Popup__touchScroll-fix .controls-ScrollContainer__content, .controls-Menu__Popup {
    -webkit-overflow-scrolling: touch!important;
 }
 

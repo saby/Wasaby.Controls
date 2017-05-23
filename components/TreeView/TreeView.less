@@ -15,6 +15,9 @@
       padding: @tree-view-child-container-padding;
    }
 }
+.controls-TreeView__withoutLevelPadding > .controls-ListView__itemsContainer > .controls-ListView__item > .controls-TreeView__levelPadding {
+   display: none;
+}
 .controls-TreeView__emptyIconInEmptyNode {
    .controls-ListView__item-type-node.controls-ListView__item-without-child {
       .controls-TreeView__expand {
@@ -54,7 +57,7 @@
    overflow: hidden;
 
    font-family: 'cbuc-icons' !important;
-   font-size: 16px;
+   font-size: @icon-small-size;
    color: @blue-dark-color;
 
    &:hover {
@@ -123,10 +126,7 @@
 .controls-TreeView {
    .controls-ListView__itemCheckBox {
       &.controls-ListView__itemCheckBox__multi {
-         background: @listView-check-box-icon-checked-bg !important;
-         &:hover {
-            background: @listView-check-box-icon-checked-bg !important;
-         }
+         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
       }
    }
    > .controls-ListView__itemsContainer > .controls-ListView__item {

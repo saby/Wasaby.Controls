@@ -246,15 +246,40 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if(!mode) {
                 this.getContainer()[0].style.height = 'auto';
              }else {
-                this._setHeightInTouchMode();
+                this.setHeightInTouchMode();
              }
              if(this._itemsActions) {
                 this._itemsActions.setTouchMode(mode);
              }
           },
-          _setHeightInTouchMode: function(){
+          getTouchMode: function () {
+            return this._options.touchMode;
+          },
+
+          setHeightInTouchMode: function(){
+             var height, container, currentSize;
              if(this._currentTarget) {
-                this.getContainer()[0].style.height = this._currentTarget.size.height + 'px';
+                height = this._currentTarget.size.height;
+                container = this.getContainer()[0];
+                container.style.height = height + 'px';
+                container.className = container.className.replace(/(^|\s)controls-ItemsToolbar-item-size__\S+/g, '');
+
+                if(height < 40) {
+                    currentSize = '1';
+                }
+                if(height >= 40 && height < 50){
+                    currentSize = '2';
+                }
+                 if(height >= 50 && height < 60){
+                     currentSize = '3';
+                 }
+                 if(height >= 60 && height < 70){
+                     currentSize = '4';
+                 }
+                 if(height >= 70){
+                     currentSize = '5';
+                 }
+                 this.getContainer().addClass('controls-ItemsToolbar-item-size__' + currentSize);
              }
           },
           /**
@@ -285,7 +310,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              targetCords = targetContainer.getBoundingClientRect();
              this._currentTarget.position =  {
-                top: targetCords.top - parentCords.top + parentContainer.scrollTop,
+                top: Math.floor(targetCords.top - parentCords.top + parentContainer.scrollTop),
                 left: targetCords.left - parentCords.left
              };
              this._currentTarget.size = {
@@ -399,7 +424,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if (animate) {
                    toolbarContent = this._getToolbarContent();
                    toolbarContent[0].style.right = -container.offsetWidth + 'px';
-                   this._setHeightInTouchMode();
+                   this.setHeightInTouchMode();
                    toolbarContent.animate({right: 0}, 350);
                 }
              }

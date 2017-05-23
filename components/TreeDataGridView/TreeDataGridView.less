@@ -139,6 +139,7 @@
    .controls-TreeView__ellipsis-wrapper {
       overflow: hidden;
       height: @tree-view-ellipsis-wrapper-height;
+      .flex-shrink(1);
 
       .controls-TreeView__ellipsis-container {
          float: left;
@@ -259,6 +260,12 @@
 }
 .generate-photo-padding-class();
 
+.controls-TreeView__withoutLevelPadding > .controls-DataGridView__table > .controls-DataGridView__tbody > .controls-ListView__item {
+   > .controls-DataGridView__firstContentCell > .controls-TreeDataGridView__levelPaddingWrap > .controls-TreeDataGridView__levelPadding {
+      display: none;
+   }
+}
+
 .controls-TreeView__emptyIconInEmptyNode {
    .controls-ListView__item-type-node.controls-ListView__item-without-child {
       .controls-TreeView__expand {
@@ -317,5 +324,6 @@
    .controls-DataGridView__columnValue, .controls-TreeView__folderTitle {
       width: 100%;
       min-width: 0;
+      .flex-shrink(1);
    }
 }

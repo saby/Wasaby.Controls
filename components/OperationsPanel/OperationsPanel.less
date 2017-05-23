@@ -14,56 +14,46 @@
 .controls-operationsPanel {
    .user-select();
    overflow: hidden;
+   white-space: nowrap;
    line-height: @controls-OperationsPanel-height;
+   background-color: @controls-OperationsPanel-bg;
+   height: @controls-OperationsPanel-height;
+   position: relative;
+   width: 100%;
+   .flexbox();
+   .align-items(center);
 
-   .controls-operationsPanel__wrapper {
-      height: @controls-OperationsPanel-height;
-      position: relative;
-      width: 100%;
 
-      .controls-operationsPanel__wrapper-background {
-         width: 100%;
-         position: absolute;
-         white-space: nowrap;
-         background-color: @controls-OperationsPanel-bg;
-      }
+   .controls-operationsPanel__actions {
+      .inline-flexbox();
+      .align-items(center);
+      overflow: hidden;
+   }
 
-      .controls-operationsPanel__container, .controls-operationsPanel__actions {
-         .inline-flexbox();
-         .align-items(center);
+   .controls-operationsPanel__actionType-mark {
+      padding-left: @controls-OperationsPanel-actions-padding-left;
+      &:after {
+         margin-left: @controls-OperationsPanel-separator-margin-left;
+         margin-right: @controls-OperationsPanel-separator-margin-right;
+         background: @controls-OperationsPanel-separator-bg;
+         width: @controls-OperationsPanel-separator-width;
+         height: @controls-OperationsPanel-separator-height;
+         content: '\00a0';
+         font-size: 1px;
+         display: inline-block;
+         line-height: @controls-OperationsPanel-separator-line-height;
       }
+   }
 
-      .controls-operationsPanel__actions {
-        overflow: hidden;
-      }
-
-      .controls-operationsPanel__actionMark {
-         padding-left: @controls-OperationsPanel-actions-padding-left;
-         &:after {
-            margin-left: @controls-OperationsPanel-separator-margin-left;
-            margin-right: @controls-OperationsPanel-separator-margin-right;
-            background: @controls-OperationsPanel-separator-bg;
-            width: @controls-OperationsPanel-separator-width;
-            height: @controls-OperationsPanel-separator-height;
-            content: '\00a0';
-            font-size: 1px;
-            display: inline-block;
-            line-height: @controls-OperationsPanel-separator-line-height;
-         }
-      }
-
-      .controls-operationsPanel-modes();
-      .controls-operationsPanel__actionType-mass,
-      .controls-operationsPanel__actionType-selection,
-      .controls-operationsPanel__actionType-all {
-         margin: @controls-OperationsPanel-actions-margin;
-      }
-      .controls-IconButton {
-         display: inline-flex;
-      }
-      .controls-operationsPanel__actionType-mark {
-         margin: @controls-OperationsPanel-actions-mark-margin;
-      }
+   .controls-operationsPanel-modes();
+   .controls-operationsPanel__actionType-mass,
+   .controls-operationsPanel__actionType-selection,
+   .controls-operationsPanel__actionType-all {
+      margin: @controls-OperationsPanel-actions-margin;
+      order: 10;
+   }
+   .controls-IconButton {
+      display: inline-flex;
    }
 }
 

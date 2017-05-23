@@ -200,19 +200,9 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _destroyItemsFolderFooter: function(key) {
-         var
-            inst,
-            controls,
-            folderFooter = this._getFolderFooter(key);
-
-            if (folderFooter.length) {
-               controls = folderFooter.find('.ws-component');
-               for (var j = 0; j < controls.length; j++) {
-                  inst = controls[j].wsControl;
-                  inst.destroy && inst.destroy();
-               }
-               folderFooter.remove();
-            }
+         var folderFooter = this._getFolderFooter(key);
+         this._destroyControls(folderFooter);
+         folderFooter.remove();
       },
 
       _getFolderFooter: function(id) {
@@ -296,6 +286,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          _keyboardHover: function (e) {
             switch (e.which) {
                case constants.key.m:
+                  //Метод moveRecordsWithDialog кидает ошибку, если у кого-то экшен создается в обработчике он ее увидит
+                  //и не получится так что тупо не показывается диалог.
                   e.ctrlKey && this.moveRecordsWithDialog();
                   break;
             }

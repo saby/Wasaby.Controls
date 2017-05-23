@@ -154,18 +154,27 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        */
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset, keyboardLayoutRevert, hierarchyViewMode) {
          if (!this._searchController){
-            this._searchController = new SearchController({
-               view: this._options.view,
-               searchForm: searchForm || this._options.searchForm,
-               searchParamName: searchParamName,
-               searchCrumbsTpl: searchCrumbsTpl,
-               searchMode: searchMode,
-               doNotRespondOnReset: doNotRespondOnReset,
-               breadCrumbs: this._options.breadCrumbs,
-               backButton: this._options.backButton,
-               keyboardLayoutRevert: keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert,
-               hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
-            });
+            var cfg;
+            
+            if(searchParamName instanceof Object) {
+               cfg = searchParamName;
+            } else {
+               cfg = {
+                  searchParamName: searchParamName,
+                  searchCrumbsTpl: searchCrumbsTpl,
+                  searchMode: searchMode,
+                  doNotRespondOnReset: doNotRespondOnReset
+               }
+            }
+            
+            cfg.view = this._options.view;
+            cfg.searchForm = searchForm || this._options.searchForm;
+            cfg.breadCrumbs = this._options.breadCrumbs;
+            cfg.backButton = this._options.backButton;
+            cfg.keyboardLayoutRevert = keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert;
+            cfg.hierarchyViewMode = hierarchyViewMode === undefined ? true : hierarchyViewMode;
+            
+            this._searchController = new SearchController(cfg);
          }
          this._searchController.bindSearch();
       },
@@ -188,12 +197,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        *     myBinder.bindBreadCrumbs();
        * </pre>
        */
-      bindBreadCrumbs: function(breadCrumbs, backButton){
+      bindBreadCrumbs: function(breadCrumbs, backButton, backButtonTemplate){
          if (!this._breadCrumbsController){
             this._breadCrumbsController = new BreadCrumbsController({
                view: this._options.view,
                breadCrumbs: breadCrumbs || this._options.breadCrumbs,
-               backButton: backButton || this._options.backButton
+               backButton: backButton || this._options.backButton,
+               backButtonTemplate: backButtonTemplate || this._options.backButtonTemplate
             });
          }
          this._breadCrumbsController.bindBreadCrumbs(breadCrumbs, backButton);
@@ -322,7 +332,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             this._pagingController = new PagingController({
                view: this._options.view,
                paging: paging || this._options.paging
-            })
+            });
          }
       },
 
@@ -344,8 +354,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
-               paging: paging || this._options.paging
-            })
+               paging: paging || this._options.paging,
+               zIndex: this._options.pagingZIndex
+            });
          }
          this._scrollPagingController.bindScrollPaging();
       },

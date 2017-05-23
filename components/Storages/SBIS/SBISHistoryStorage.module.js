@@ -79,12 +79,17 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          this._getLocalStorage();
 
          this._history = this._getStorageValue();
-
+         this._updateHistory = this._updateHistory.bind(this);
+         
          this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
-         this._historyChannel.subscribe('onHistoryUpdate', function(event, history) {
+         this._historyChannel.subscribe('onHistoryUpdate', this._updateHistory);
+      },
+      
+      _updateHistory: function(event, history, store) {
+         if(store !== this) {
             this._history = history;
             this._notify('onHistoryUpdate', history);
-         }.bind(this));
+         }
       },
 
       _setStorageValue: function(value) {
@@ -180,13 +185,22 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       saveHistory: function() {
          var self = this;
 
-         if(!this.isNowSaving()) {
+         if (!this.isNowSaving()) {
             this._saveParamsDeferred = new Deferred();
 
-            this._setStorageValue(this._history).addCallback(fHelpers.forAliveOnly(function() {
+            this._setStorageValue(this._history).addCallback(fHelpers.forAliveOnly(function(res) {
                self._saveParamsDeferred.callback();
+               return res;
             }, self));
-            this._historyChannel.notify('onHistoryUpdate', this._history);
+            this._notify('onHistoryUpdate', this._history);
+            this._historyChannel.notify('onHistoryUpdate', this._history, this);
+         } else {
+            /* Если во время сохранения истории её поменяли ещё раз, то необходимо дождаться предыдущего запроса,
+               и позвать запрос с новыми данными. Иначе будут гонки, какой запрос первей отработает. */
+            this._saveParamsDeferred.addCallback(function(res) {
+               self.saveHistory();
+               return res;
+            });
          }
 
          return this._saveParamsDeferred;
@@ -225,6 +239,14 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
             this._saveParamsDeferred.cancel();
             this._saveParamsDeferred = undefined;
          }
+         if(this._localStorage) {
+            this._localStorage.destroy();
+            this._localStorage = undefined;
+         }
+         this._historyChannel.unsubscribe('onHistoryUpdate', this._updateHistory);
+         this._historyChannel = undefined;
+         this._history = undefined;
+         this._SBISStorage = undefined;
          SBISHistoryStorage.superclass.destroy.call(this);
       }
    });

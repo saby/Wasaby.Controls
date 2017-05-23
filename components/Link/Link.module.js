@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.Link', [
+   'Deprecated/helpers/string-helpers',
    'js!WSControls/Buttons/Button',
    'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(WSButton, hrefTemplate) {
+], function(strHelpers, WSButton, hrefTemplate) {
 
    'use strict';
 
@@ -102,7 +103,7 @@ define('js!SBIS3.CONTROLS.Link', [
          if(this._options.href) {
             this._container.get(0).innerHTML = hrefTemplate(this._options);
          }
-         this.setTooltip(caption);
+         this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
       },
 
       _setEnabled: function(enabled){

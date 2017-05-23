@@ -7,8 +7,8 @@ const helpers = require('./helpers'),
     less = require('less'),
     getModuleNameRegExp = new RegExp('\/resources\/([^/]+)'),
     DEFAULT_THEME = 'online',
-    themes = ['online', 'carrynew', 'prestonew'],
-    errors = [];
+    themes = ['online', 'carrynew', 'prestonew'];
+    let errors = [];
 
 /**
  @workaround Временно ресолвим текущую тему по названию модуля.
@@ -21,8 +21,8 @@ function resolveThemeName(filepath) {
     switch (s3modName) {
         case 'Upravlenie_oblakom':
             return 'cloud';
-        case 'Presto':
-            return 'presto';
+          case 'Presto':
+              return 'presto';
         case 'sbis.ru':
             return 'sbisru';
         case 'Retail':
@@ -85,7 +85,14 @@ module.exports = function less1by1Task(grunt) {
 
     grunt.registerMultiTask('less1by1', 'Компилит каждую лесску, ложит cssку рядом. Умеет в темы', function() {
 
+        let lessName = grunt.option('name')||'*',
+            foundFile = false;
+
         grunt.log.ok(`\n\n ${humanize.date('H:i:s')} : Запускается задача less1by1.`);
+
+        if (lessName !== '*') {
+            grunt.log.ok(`Ищем файл: ${lessName}.less`);
+        }
         let taskDone = this.async();
           var bar = new ProgressBar('  compiling [:bar] :file', {
             complete: '>',
@@ -95,12 +102,14 @@ module.exports = function less1by1Task(grunt) {
         });
         helpers.recurse(rootPath, function(filepath, cb) {
 
-          if (helpers.validateFile(filepath, [grunt.config.get('changed') || `components/**/*.less`]) || helpers.validateFile(filepath, [grunt.config.get('changed') || 'themes/**/*.less'])) {
+          if (helpers.validateFile(filepath, [grunt.config.get('changed') || `components/**/${lessName}.less`])
+              || helpers.validateFile(filepath, [grunt.config.get('changed') || `themes/**/${lessName}.less`])) {
+                foundFile = true;
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
                   let theme = resolveThemeName(filepath);
                     if (itIsControl(filepath)) {
                             bar.tick(1, {
-                                
+
                                 "file": filepath
                             });
 
@@ -115,10 +124,15 @@ module.exports = function less1by1Task(grunt) {
             }
             cb();
         }, function() {
+
+            if(!foundFile) {
+                grunt.log.ok(`Файл не найден!`);
+            }
             grunt.log.ok(`${humanize.date('H:i:s')} : Задача less1by1 выполнена.`);
             errors.forEach((err) => {
                 grunt.log.error(err);
             });
+            errors = [];
             taskDone();
         });
     });
