@@ -8,8 +8,22 @@ define('js!SBIS3.CONTROLS.ListView/ListView.compatible', [
             cFunctions) {
    'use strict';
 
-
    return {
+
+      _prepareItemData: function(cfg) {
+         var buildArgsMethod;
+         if (this._options._canServerRender) {
+            buildArgsMethod = this._options._buildTplArgs;
+         }
+         else {
+            buildArgsMethod = this._buildTplArgs;
+         }
+         if (!this._itemData) {
+            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options||cfg));
+         }
+         return this._itemData;
+      },
+
 
       //<editor-fold desc="БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ">
       //********************************//

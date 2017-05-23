@@ -956,19 +956,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._buildTplArgs.apply(this, arguments);
       },
 
-      _prepareItemData: function() {
-         var buildArgsMethod;
-         if (this._options._canServerRender) {
-            buildArgsMethod = this._options._buildTplArgs;
-         }
-         else {
-            buildArgsMethod = this._buildTplArgs;
-         }
-         if (!this._itemData) {
-            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
-         }
-         return this._itemData;
-      },
 
       _redrawItems : function(notRevive) {
          this._groupHash = {};
