@@ -475,12 +475,12 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _setModal: function(isModal){
          if (isModal){
             ModalOverlay.adjust();
-            ModalOverlay._overlay.bind('mousedown', this._overlayClick);
+            ModalOverlay.subscribe('onClick', this._overlayClick);
          }
          else {
             cWindowManager.releaseZIndex(this._zIndex);
             ModalOverlay.adjust();
-            ModalOverlay._overlay.unbind('mousedown', this._overlayClick);
+            ModalOverlay.unsubscribe('onClick', this._overlayClick);
          }
       },
 
