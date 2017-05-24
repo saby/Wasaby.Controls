@@ -562,16 +562,28 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink__item-cross {
-  margin-right: -.7rem;
+.controls-FieldLink, .controls-FieldLink__picker {
+   .controls-FieldLink__showSelector, .controls-FieldLink__dropAllLinks, .controls-FieldLink__item {
+      .icon-16{
+         font-size: @icon-large-size!important;
+         line-height: @icon-large-size!important;
+         width: @icon-large-size;
+         height: @icon-large-size;
+      }
+   }
+   .controls-FieldLinkItemsCollection, controls-FieldLink__item {
+      height: 3rem;
+   }
+   .controls-FieldLink__showAllLinks {
+      line-height: 3rem;
+   }
 }
+
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
 }
-.controls-FieldLink__item-cross {
-    margin-right: -.7rem;
-}
+
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
