@@ -31,6 +31,21 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
             };
          },
 
+
+         calculateItems: function(rawItems, idProperty) {
+            var resultItems, resultIdProperty;
+            if (rawItems instanceof Array) {
+               if (!idProperty) {
+                  resultIdProperty = this.findIdProperty(rawItems);
+               }
+               resultItems = this.JSONToRecordset(rawItems, idProperty);
+            }
+            return {
+               items : resultItems,
+               idProperty: resultIdProperty
+            };
+         },
+
          createDefaultProjection: function (items, cfg) {
             var proj, projCfg = {};
             projCfg.idProperty = cfg.idProperty || ((cfg.dataSource && typeof cfg.dataSource.getIdProperty === 'function') ? cfg.dataSource.getIdProperty() : '');

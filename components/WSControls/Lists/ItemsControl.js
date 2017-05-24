@@ -60,52 +60,11 @@ define('js!WSControls/Lists/ItemsControl', [
          _itemsTemplate: ItemsTemplate,
 
          constructor: function (cfg) {
-
-            this._options = {};
-
+            this._options = cfg || {};
             this.items = cfg.items || [];
-            this.itemTemplate = cfg.itemsTemplate;
+            this.idProperty = cfg.idProperty;
 
-            if (typeof this.itemTemplate !== "function" ) {
-               if (cfg.itemContentTpl) {
-                  this.itemTemplate = cfg.itemContentTpl;
-               }
-            }
-
-            cfg._createDefaultProjection = cfg._createDefaultProjection || ListViewHelpers.createDefaultProjection;
-
-            if (cfg.items) {
-               var proj, items;
-               if (cfg.items instanceof Array) {
-                  if (!cfg.idProperty) {
-                     var key = ListViewHelpers.findIdProperty(cfg.items);
-                     cfg.idProperty = key;
-                     cfg.idProperty = key;
-                  }
-                  items = ListViewHelpers.JSONToRecordset(cfg.items, cfg.idProperty);
-                  cfg._items = items;
-                  cfg._items = items;
-               }
-               else {
-                  cfg._items = cfg.items;
-                  cfg._items = cfg.items;
-               }
-               proj = cfg._createDefaultProjection(cfg._items, cfg);
-               //proj = cfg._applyGroupingToProjection(proj, cfg);
-               cfg._itemsProjection = proj;
-               this._records = ListViewHelpers.getRecordsForRedraw(proj, cfg);
-               /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
-                  if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
-                     newCfg._serverRender = true;
-                     newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
-                     if (cfg._items && cInstance.instanceOfModule(cfg._items, 'WS.Data/Collection/RecordSet')) {
-                        newCfg._resultsRecord = cfg._items.getMetaData().results;
-                     }
-                     newCfg._itemData = cfg._buildTplArgs(cfg);
-                  }
-               }*/
-            }
-
+            this._prepareData();
 
             this._buildTplArgs = ListViewHelpers.buildTplArgs;
 
@@ -114,32 +73,17 @@ define('js!WSControls/Lists/ItemsControl', [
             this.deprecatedContr(cfg);
          },
 
-         setItems: function(items){
+         _prepareData: function() {
+            if (this.items) {
+               var calcItems = ListViewHelpers.calculateItems(this.items, this.idProperty);
+               this._items = calcItems.items;
+               this.idProperty = calcItems.idProperty;
 
-            var cfg = {};
-            cfg.items = items;
-            cfg.idProperty = this._options.idProperty;
+               this._itemsProjection = ListViewHelpers.createDefaultProjection(this._items, this._options);
 
-            if (cfg.items) {
-               var proj, items;
-               if (cfg.items instanceof Array) {
-                  if (!cfg.idProperty) {
-                     var key = ListViewHelpers.findIdProperty(cfg.items);
-                     cfg.idProperty = key;
-                     cfg.idProperty = key;
-                  }
-                  items = ListViewHelpers.JSONToRecordset(cfg.items, cfg.idProperty);
-                  cfg._items = items;
-                  cfg._items = items;
-               }
-               else {
-                  cfg._items = cfg.items;
-                  cfg._items = cfg.items;
-               }
-               proj = this._options._createDefaultProjection(cfg._items,  this._options);
                //proj = cfg._applyGroupingToProjection(proj, cfg);
-               this._options._itemsProjection = proj;
-               this._records = ListViewHelpers.getRecordsForRedraw(proj, this._options);
+
+               this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
                /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                 if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                 newCfg._serverRender = true;
@@ -151,10 +95,12 @@ define('js!WSControls/Lists/ItemsControl', [
                 }
                 }*/
             }
+         },
 
+         setItems: function(items){
 
-            this._buildTplArgs = ListViewHelpers.buildTplArgs;
-
+            this.items = items;
+            this._prepareData();
             this.tplData = this._prepareItemData( this._options );
 
             this._setDirty();
