@@ -7,7 +7,6 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!SBIS3.CORE.BaseCompatible',
    'js!WS.Data/Entity/InstantiableMixin',
    'tmpl!WSControls/Lists/ItemsControl',
-   'tmpl!WSControls/Lists/one',
    'js!WS.Data/Collection/RecordSet',
    "Core/helpers/Object/isEmpty",
    'Core/helpers/string-helpers',
@@ -27,7 +26,6 @@ define('js!WSControls/Lists/ItemsControl', [
              BaseCompatible,
              InstantiableMixin,
              template,
-             one,
              RecordSet,
              isEmpty,
              strHelpers,
@@ -51,13 +49,15 @@ define('js!WSControls/Lists/ItemsControl', [
 
          items: null,
          itemTemplate: null,
-         _buildTplArgs: null,
          tplData: null,
          records: null,
-         _createDefaultProjection : null,
+
+         _itemData: null,
          _defaultItemContentTemplate: ItemContentTemplate,
          _defaultItemTemplate: ItemTemplate,
          _itemsTemplate: ItemsTemplate,
+         _needSelector: false,
+         _selector: null,
 
          constructor: function (cfg) {
             this._options = cfg || {};
@@ -91,8 +91,12 @@ define('js!WSControls/Lists/ItemsControl', [
                   this._unsetItemsEventHandlers();
                   this._itemsProjection.destroy();
                }
-               this._itemsProjection = ListViewHelpers.createDefaultProjection(this._items, this._options);
+               this._itemsProjection = this._createDefaultProjection();
                this._setItemsEventHandlers();
+
+               if (this._needSelector) {
+                  this._selectorInstance = this._createDefaultSelector();
+               }
 
                //proj = cfg._applyGroupingToProjection(proj, cfg);
 
@@ -124,11 +128,19 @@ define('js!WSControls/Lists/ItemsControl', [
             return this._itemData;
          },
 
+         _createDefaultProjection: function() {
+            return ListViewHelpers.createDefaultProjection(this._items, this._options);
+         },
+
          _setItemsEventHandlers: function() {
             this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
          },
 
          _unsetItemsEventHandlers: function () {
+
+         },
+
+         _createDefaultSelector: function() {
 
          },
 
@@ -147,8 +159,16 @@ define('js!WSControls/Lists/ItemsControl', [
          _getItemsProjection: function() {
             return this._options._itemsProjection;
          },
-         setSelectedKey: function(){
+         setSelectedKey: function(key){
+            if (this._selector) {
+               return this._selector.setSelectedKey(key)
+            }
+         },
 
+         getSelectedKey: function() {
+            if (this._selector) {
+               return this._selector.getSelectedKey()
+            }
          },
          /**
           * Метод получения проекции по ID итема
