@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.TextBoxUtils',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.SuggestMixin',
    'js!SBIS3.CONTROLS.ChooserMixin',
@@ -11,6 +12,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
    'css!SBIS3.CONTROLS.SuggestTextBox'
 ], function (
     TextBox,
+    TextBoxUtils,
     PickerMixin,
     SuggestMixin,
     ChooserMixin,
@@ -70,49 +72,18 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);
-         this._setEqualPickerWidth();
+          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
       _onListDrawItems: function() {
          SuggestTextBox.superclass._onListDrawItems.apply(this, arguments);
-         this._setEqualPickerWidth();
+          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
       destroy: function(){
          SuggestTextBox.superclass.destroy.apply(this, arguments);
          this._crossContainer.unbind('click');
          this._crossContainer = null;
-      },
-
-      _setEqualPickerWidth: function() {
-         var textBoxWidth = this.getContainer()[0].clientWidth,
-             pickerContainer = this._picker.getContainer()[0],
-             needSetWidth = true,
-             minWidth;
-
-         if (this._picker && textBoxWidth !== pickerContainer.clientWidth) {
-            /* Почему установлен maxWidth и width ?
-               popup в текущей реализации не понимает, что ему размер кто-то установил извне и
-               при пересчётах может спокойно перетирать эти размеры. Поэтому, для того чтобы зафиксировать ширину,
-               устанавливаем maxWidth (maxWidth не стирается при пересчётах popup'a).
-               Но учитываем, что maxWidth не будет учитываться, если автодополнение меньше поля ввода, и поэтому после
-               расчётов позиции устанавливаем width - чтобы гаррантировать одинаковую ширину поля ввода и автодополнения.
-               Прикладной программист может увеличить ширину автодополнения установив min-width.
-               Для правильного позиционирования popup необходимо чтобы в момент расчета размеры соотвествовали конечным
-               поэтому устанавливаем min-width, а после его затираем, чтобы не перебивать прикладные стили
-                */
-            minWidth = parseInt(this._picker.getContainer().css('min-width'));
-            needSetWidth = !minWidth || minWidth < textBoxWidth;
-            if(needSetWidth) {
-               pickerContainer.style.minWidth = textBoxWidth + 'px';
-               pickerContainer.style.maxWidth = textBoxWidth + 'px';
-            }
-            this._picker.recalcPosition(true);
-            if(needSetWidth) {
-                pickerContainer.style.width = textBoxWidth + 'px';
-                pickerContainer.style.minWidth = '';
-            }
-         }
       }
    });
 
