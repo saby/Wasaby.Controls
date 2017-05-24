@@ -158,8 +158,36 @@ define('js!WSControls/Lists/ItemsControl', [
             this.tplData = this._prepareItemData( this._options );
 
             this._setDirty();
-         }
+         },
 
+
+
+         getItems : function() {
+            return this._options._items;
+         },
+         _getItemsProjection: function() {
+            return this._options._itemsProjection;
+         },
+         setSelectedKey: function(){
+
+         },
+         /**
+          * Метод получения проекции по ID итема
+          */
+         _getItemProjectionByItemId: function(id) {
+            return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this.getItems().getRecordById(id)) : null;
+         },
+
+         /**
+          * Метод получения проекции по hash итема
+          */
+         _getItemProjectionByHash: function(hash) {
+            return this._getItemsProjection().getByHash(hash);
+         },
+
+         eventsHandlers: function(event){
+            this._eventProxyHandler(event.nativeEvent);
+         }
 
       });
 

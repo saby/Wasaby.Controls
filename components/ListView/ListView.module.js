@@ -1022,75 +1022,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _eventProxyHandler: function(e) {
-            var self = this,
-                originalEvent = e.originalEvent,
-                mobFix = 'controls-ListView__mobileSelected-fix',
-                isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
-            this._setTouchSupport(
-               /* touch события - однозначно включаем touch режим */
-               Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
-               /* IOS - однозначно включаем touch режим */
-               constants.browser.isMobileIOS ||
-               /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
-                  - mousemove срабатывает при клике пальцем (после touchStart), можно определить по координатам сдвига 0.0
-                  - mousemove срабатывает через случайный промежуток времени после touchEnd
-                  - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
-                  написана специальная проверка */
-               (e.type === 'mousemove' && isTouchEvent)
-            );
-
-
-            switch (e.type) {
-               case 'mousemove':
-                  self._allowMouseMoveEvent && !isTouchEvent && this._mouseMoveHandler(e);
-                  break;
-               case 'touchstart':
-                  this._touchstartHandler(e);
-                  // На windows 10 планшетах между touch-событиями прилетают события мыши
-                  // поэтому на секунду игнорируем mouseMove событие т.к. произошло касание и мыши быть не может
-                  if(self._allowMouseMoveEvent && !constants.browser.isMobileIOS) {
-                     self._allowMouseMoveEvent = false;
-                     setTimeout(function () {
-                        self._allowMouseMoveEvent = true;
-                     }, 1000);
-                  }
-                  break;
-               case 'swipe':
-                  this._swipeHandler(e);
-                  break;
-               case 'tap':
-                  this._tapHandler(e);
-                  break;
-               case 'mouseleave':
-                  this._mouseLeaveHandler(e);
-                  break;
-               case 'touchend':
-                   /* Ipad пакетирует измененния, и не применяет их к дому, пока не закончит работу синхронный код.
-                      Для того, чтобы сэмулировать мновенную обработку клика, надо сделать изменения в DOM'e
-                      раньше события click. Поэтому на touchEnd (срабатывает раньше клика) вешаем специальный класс,
-                      который показывает по :hover оранжевый маркер и по событию tap его снимаем. */
-                  this._container.addClass(mobFix);
-                  break;
-               case 'taphold':
-                  this._container.removeClass(mobFix);
-                  break;
-               case 'contextmenu':
-                  this._contextMenuHandler(e);
-                  /* Выставляем этот флаг, чтобы не было имитации клика (см. метод _onActionHandler в Control.module.js).
-                     Сейчас проблема в том, что при клике двумя пальцами на touch устройствах событие contextmenu срабатывает,
-                     а click нет, поэтому в методе _onActionHandler происходит имитация клика, которая при срабатывании события contextmenu не нужна. */
-                  this._clickState.detected = true;
-                  break;
-               case 'mousedown':
-                  this._mouseDownHandler(e);
-                  break;
-               case 'mouseup':
-                  this._mouseUpHandler(e);
-                  break;
-            }
-         },
-
          _createScrollPager: function(){
             var scrollContainer = this._scrollWatcher.getScrollContainer();
             this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
@@ -1297,33 +1228,10 @@ define('js!SBIS3.CONTROLS.ListView',
             else
                return undefined;
          },
-         _isViewElement: function (elem) {
-            return  dcHelpers.contains(this._getItemsContainer()[0], elem[0]);
-         },
+
          _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
-            var $target = $(e.target),
-                target = this._findItemByElement($target),
-                model;
-
-            if (target.length && this._isViewElement(target)) {
-               model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
-               this._elemClickHandler(model.getId(), model, e.target, e);
-            }
-            if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
-               $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
-               $target.toggleClass('controls-DataGridView__th__checkBox__checked');
-            }
-            if (this._options.groupBy && !isEmpty(this._options.groupBy) && this._options.groupBy.clickHandler instanceof Function) {
-               var closestGroup = $target.closest('.controls-GroupBy', this._getItemsContainer());
-               if (closestGroup.length) {
-                  this._options.groupBy.clickHandler.call(this, $target);
-               }
-            }
-            if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
-               var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
-               this.toggleGroup(idGroup);
-            }
+            this._baseItemClickHandler(e);
          },
 
          _touchstartHandler: function() {
@@ -1655,12 +1563,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._options.itemTemplate = tpl;
          },
 
-         _getItemsContainer: function () {
-            return $('.controls-ListView__itemsContainer', this._container.get(0)).first();
-         },
-         _getItemContainer: function(parent, item) {
-            return parent.find('>[data-id="' + item.getId() + '"]:not(".controls-editInPlace")');
-         },
+
          _addItemAttributes: function(container) {
             container.addClass('js-controls-ListView__item');
             ListView.superclass._addItemAttributes.apply(this, arguments);
@@ -1668,58 +1571,13 @@ define('js!SBIS3.CONTROLS.ListView',
 
          /* +++++++++++++++++++++++++++ */
 
-         _elemClickHandler: function (id, data, target, e) {
-            var $target = $(target),
-                self = this,
-                elClickHandler = this._options.elemClickHandler,
-                needSelect = true,
-                afterHandleClickResult = fHelpers.forAliveOnly(function(result) {
-                   if (result !== false) {
-                      if(needSelect) {
-                         self.setSelectedKey(id);
-                      }
-                      self._elemClickHandlerInternal(data, id, target, e);
-                      elClickHandler && elClickHandler.call(self, id, data, target, e);
-                   }
-                }, this),
-                onItemClickResult;
 
-            if (this._options.multiselect) {
-               if ($target.hasClass('js-controls-ListView__itemCheckBox')) {
-                  if(this._isItemSelected(id)) {
-                     needSelect = false;
-                  }
-                  this._onCheckBoxClick($target);
-               }
-               else {
-                  onItemClickResult = this._notifyOnItemClick(id, data, target, e);
-               }
-            }
-            else {
-               onItemClickResult = this._notifyOnItemClick(id, data, target, e);
-            }
-            if (onItemClickResult instanceof Deferred) {
-               onItemClickResult.addCallback(function (result) {
-                  afterHandleClickResult(result);
-                  return result;
-               });
-            } else {
-               afterHandleClickResult(onItemClickResult);
-            }
-         },
-         _notifyOnItemClick: function(id, data, target, e) {
-            return this._notify('onItemClick', id, data, target, e);
-         },
+
          _onCheckBoxClick: function(target) {
             this.toggleItemsSelection([target.closest('.controls-ListView__item').attr('data-id')]);
          },
 
-         _elemClickHandlerInternal: function (data, id, target, e) {
-            /* Клик по чекбоксу не должен вызывать активацию элемента */
-            if(!$(target).hasClass('js-controls-ListView__itemCheckBox')) {
-               this._activateItem(id);
-            }
-         },
+
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
             var selectedItems = this.getSelectedItems();
@@ -3222,27 +3080,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._destroyEditInPlaceController();
             ListView.superclass.setDataSource.apply(this, arguments);
          },
-         /**
-          * Выбирает элемент коллекции по переданному идентификатору.
-          * @remark
-          * На выбранный элемент устанавливается маркер (оранжевая вертикальная черта) и изменяется фон.
-          * При выполнении команды происходит события {@link onItemActivate} и {@link onSelectedItemChange}.
-          * @param {Number} id Идентификатор элемента коллекции, который нужно выбрать.
-          * @example
-          * <pre>
-          *    myListView.sendCommand('activateItem', myId);
-          * </pre>
-          * @private
-          * @command activateItem
-          * @see sendCommand
-          * @see beginAdd
-          * @see cancelEdit
-          * @see commitEdit
-          */
-         _activateItem : function(id) {
-            var item = this.getItems().getRecordById(id);
-            this._notify('onItemActivate', {id: id, item: item});
-         },
+
          /**
           * @typedef {Object} BeginEditOptions
           * @property {String} [parentId] Идентификатор узла иерархического списка, в котором будет происходить добавление.
