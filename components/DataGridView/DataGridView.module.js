@@ -205,16 +205,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
                if (nextCol && (supportUnion.title == nextCol.title)) {
                   if (curCol.rowspan) {
-                     rowData.content[1].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
+                     rowData.content[0].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
                   }
                   supportUnion.colspan = ++supportUnion.colspan || 2;
                }
                else {
                   if (curCol.rowspan) {
-                     var topRow = rowData.content[1].pop();
+                     var topRow = rowData.content[0].pop();
                      topRow.colspan = supportUnion.colspan;
                      topRow.value = topRow.title = supportUnion.title;
-                     rowData.content[1].push(topRow);
+                     rowData.content[0].push(topRow);
                      supportUnion.ignore = true; //Игнорируем колонку в случае, если в шапке 2 строки (от верхней строки установится rowspan).
                   }
                   rowData.content[1].push(supportUnion);
