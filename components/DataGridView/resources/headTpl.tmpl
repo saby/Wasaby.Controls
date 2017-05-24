@@ -1,7 +1,7 @@
 <thead class="controls-DataGridView__thead">
 <ws:if data="{{showHead}}">
     <ws:for data="i, row in content">
-        <ws:if data="{{row.length}}">
+        <ws:if data="{{row.length && (countRows === 1 ? i === 1)}}">
             <tr>
                 <ws:if data="{{multiselect}}">
                    <th class="controls-DataGridView__th controls-DataGridView__td__checkBox
