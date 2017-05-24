@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.Panel', 'css!SBIS3.CONTROLS.Panel'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.Panel', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3.CONTROLS.Panel', 'css!SBIS3.CONTROLS.Panel'], function(CompoundControl, dotTplFn) {
    /**
     * Класс контрола "Панель", который предназначен для организации разметки визуального компонента.
     * Аналог тега div.

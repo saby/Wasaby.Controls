@@ -172,7 +172,7 @@ body {
 
 body {
   .ws-window-titlebar {
-    color: @default-text-color;
+    color: #313E78;
     line-height: 3.57rem;
     height: 3.57rem;
     position: absolute;
@@ -240,7 +240,11 @@ body .ws-loadingimg {
 }
 
 body {
-
+  .ws-info-box {
+      background: @basic-block-bg-color;
+      color: @default-text-color;
+      border: 2px solid @link-text-color;
+    }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -338,6 +342,9 @@ body .ws-float-area-title-generated {
 body .controls-ToolBar__menuIcon .icon-24 {
   font-family: carrypresto-icons!important;
 }
+.ws-enabled.controls-Checked__checked>.controls-CheckBox__icon:before {
+    z-index: 2;
+}
 .controls-Link {
   &.additionalLink__2 {
     font-size: .857rem;
@@ -351,4 +358,10 @@ body .controls-ToolBar__menuIcon .icon-24 {
   .controls-Link__field {
     vertical-align: baseline;
   }
+}
+
+.controls-Browser {
+   .controls-Browser__topTemplate {
+      height: 3.88rem
+   }
 }
