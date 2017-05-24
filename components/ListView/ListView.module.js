@@ -33,8 +33,8 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Collection/List',
-   'html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-   'html!SBIS3.CONTROLS.ListView/resources/emptyData',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -1801,13 +1801,25 @@ define('js!SBIS3.CONTROLS.ListView',
                var elements = $([]), elem;
                for (i = 0; i < ids.length; i++) {
                   //сначала ищем непосредственно в контейнере, чтоб не найти вложенные списки
-                  elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                  //TODO переделать при отказе от data-id
+                  if ((ids[i] + '').indexOf('\'') < 0) {
+                     elem = itemsContainer.children(".controls-ListView__item[data-id='" + ids[i] + "']");
+                  }
+                  else {
+                     elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                  }
                   if (elem.length) {
                      elements.push(elem.get(0));
                   }
                   else {
                      //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
-                     elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                     //TODO переделать при отказе от data-id
+                     if ((ids[i] + '').indexOf('\'') < 0) {
+                        elem = itemsContainer.find(".controls-ListView__item[data-id='" + ids[i] + "']");
+                     }
+                     else {
+                        elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                     }
                      if (elem.length) {
                         elements.push(elem.get(0));
                      }
