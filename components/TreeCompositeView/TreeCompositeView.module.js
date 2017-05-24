@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       else if (cfg.tplData.viewMode == 'tile'){
          cfg.tplData.itemTpl = cfg.tplData.folderTpl;
       }
-      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders, tplData : cfg.tplData});
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders || [], tplData : cfg.tplData});
       cfg.tplData.itemTpl = stashTpl;
       return markup;
    },
@@ -124,7 +124,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
       else if (cfg.tplData.viewMode == 'tile'){
          cfg.tplData.itemTpl = cfg.tplData.tileTpl;
       }
-      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs, tplData : cfg.tplData});
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs || [], tplData : cfg.tplData});
       cfg.tplData.itemTpl = stashTpl;
       return markup;
    },
