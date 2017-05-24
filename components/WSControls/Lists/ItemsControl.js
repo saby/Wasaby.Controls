@@ -1,5 +1,6 @@
 define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
+   'Core/core-functions',
    'Core/Abstract.compatible',
    'js!SBIS3.CORE.Control/Control.compatible',
    'js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
@@ -8,7 +9,6 @@ define('js!WSControls/Lists/ItemsControl', [
    'tmpl!WSControls/Lists/ItemsControl',
    'tmpl!WSControls/Lists/one',
    'js!WS.Data/Collection/RecordSet',
-   'js!SBIS3.CONTROLS.ListView/ListView.compatible',
    "Core/helpers/Object/isEmpty",
    'Core/helpers/string-helpers',
    "Core/Sanitize",
@@ -20,6 +20,7 @@ define('js!WSControls/Lists/ItemsControl', [
    "js!WS.Data/Display/Display",
    'js!SBIS3.CONTROLS.ListView/ListViewHelpers'
 ], function (extend,
+             cFunctions,
              AbstractCompatible,
              ControlCompatible,
              AreaAbstractCompatible,
@@ -28,7 +29,6 @@ define('js!WSControls/Lists/ItemsControl', [
              template,
              one,
              RecordSet,
-             ListViewcompatible,
              isEmpty,
              strHelpers,
              Sanitize,
@@ -42,7 +42,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
    'use strict';
 
-   var ItemsControl = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, InstantiableMixin, ListViewcompatible],
+   var ItemsControl = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, InstantiableMixin],
       {
          _controlName: 'WSControls/Lists/ItemsControl',
          _template: template,
@@ -63,14 +63,20 @@ define('js!WSControls/Lists/ItemsControl', [
             this._options = cfg || {};
             this.items = cfg.items || [];
             this.idProperty = cfg.idProperty;
+            this.displayProperty = cfg.displayProperty;
+
+            this._onCollectionChange = onCollectionChange.bind(this);
 
             this._prepareData();
 
-            this._buildTplArgs = ListViewHelpers.buildTplArgs;
 
-            this.tplData = this._prepareItemData(cfg);
 
             this.deprecatedContr(cfg);
+         },
+
+         _prepareDataOnItemsChange: function() {
+            this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
+            this.tplData = this._prepareItemData( this._options );
          },
 
          _prepareData: function() {
@@ -79,11 +85,19 @@ define('js!WSControls/Lists/ItemsControl', [
                this._items = calcItems.items;
                this.idProperty = calcItems.idProperty;
 
+
+
+               if (this._itemsProjection) {
+                  this._unsetItemsEventHandlers();
+                  this._itemsProjection.destroy();
+               }
                this._itemsProjection = ListViewHelpers.createDefaultProjection(this._items, this._options);
+               this._setItemsEventHandlers();
 
                //proj = cfg._applyGroupingToProjection(proj, cfg);
 
-               this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
+               this._prepareDataOnItemsChange();
+
                /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                 if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
                 newCfg._serverRender = true;
@@ -97,12 +111,31 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
+         _prepareItemDataInner: function() {
+            return ListViewHelpers.buildTplArgs(this)
+         },
+
+         _prepareItemData: function() {
+            var tplArgs = {};
+            if (!this._itemData) {
+               tplArgs = this._prepareItemDataInner();
+               this._itemData = cFunctions.clone(tplArgs);
+            }
+            return this._itemData;
+         },
+
+         _setItemsEventHandlers: function() {
+            this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
+         },
+
+         _unsetItemsEventHandlers: function () {
+
+         },
+
          setItems: function(items){
 
             this.items = items;
             this._prepareData();
-            this.tplData = this._prepareItemData( this._options );
-
             this._setDirty();
          },
 
@@ -136,6 +169,11 @@ define('js!WSControls/Lists/ItemsControl', [
          }
 
       });
+
+   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+      this._prepareDataOnItemsChange();
+      this._setDirty();
+   };
 
    return ItemsControl;
 });
