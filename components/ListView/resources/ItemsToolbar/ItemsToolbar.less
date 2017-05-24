@@ -1,5 +1,3 @@
-@bottomStyle-items-toolbar-height:        30px;
-@bottomStyle-items-toolbar-border-color:  #F3F3F3;
 
 .controls-ItemsToolbar {
    background-color: @list-view-items-toolbar-bg;
@@ -93,7 +91,7 @@
             background: @items-toolbar-bottom-style-background no-repeat 0 -30px;
          }
       }
-      height: @bottomStyle-items-toolbar-height - 1;
+      height: calc(@bottomStyle-items-toolbar-height~" - 1px");
       border-bottom: 1px solid @bottomStyle-items-toolbar-border-color;
       &:before {
          content: '';
@@ -137,8 +135,8 @@
       }
    }
    > .controls-ItemsToolbar .controls-ItemsToolbar__container {
-      margin: 3px 0 0 0;
-      height: @bottomStyle-items-toolbar-height - 1;
+      margin: @bottomStyle-items-toolbar-margin;
+      height: calc(@bottomStyle-items-toolbar-height~" - 1px");
    }
    &.controls-DataGridView .controls-ItemActions .controls-ItemActions__itemsContainer {
       background-color: transparent;
@@ -204,7 +202,7 @@
 .controls-ListView.controls-ListView__touchMode {
    &.controls-ListView__bottomStyle {
        > .controls-ItemsToolbar {
-         height: @bottomStyle-items-toolbar-height - 1 !important;
+         height: calc(@bottomStyle-items-toolbar-height~" - 1px") !important;
       }
    }
 
