@@ -186,8 +186,20 @@ define('js!WSControls/Lists/ItemsControl', [
 
          eventsHandlers: function(event){
             this._eventProxyHandler(event.nativeEvent);
-         }
+         },
 
+         mouseEnter: function(ev){
+            this.showToolbar = true;
+         },
+
+         mouseLeave: function(ev){
+            this.showToolbar = false;
+         },
+
+         mouseMove: function(ev){
+            this.toolbarTop = ev.nativeEvent.target.offsetTop;
+            this.toolbarLeft = this._container[0].offsetWidth - 100;
+         }
       });
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {

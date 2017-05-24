@@ -1,6 +1,17 @@
-<div event:onclick="eventsHandlers()">
+<div event:onclick="eventsHandlers()"
+     event:onmouseenter="mouseEnter()"
+     event:onmouseleave="mouseLeave()"
+     event:onmousemove="mouseMove()">
    <div class="controls-ListView__itemsContainer">
       <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{tplData}}" />
    </div>
+
+   <ws:if data="{{showToolbar}}">
+      <div
+         event:onmouseenter="mouseEnter()"
+         event:onmouseleave="mouseLeave()"
+         style="position: absolute; width: 100px;
+                  background: red; top: {{toolbarTop}}px; left: {{toolbarLeft}}px;">Fignya!</div>
+   </ws:if>
 </div>
 
