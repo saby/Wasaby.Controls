@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.TimePicker',
       'js!SBIS3.CONTROLS.TimePickerUtils',
       'js!SBIS3.CONTROLS.TimeHeader',
-      'js!SBIS3.CONTROLS.TimePicker',
+      'js!SBIS3.CONTROLS.ClockPicker',
       'css!SBIS3.CONTROLS.TimePicker'
    ],
    function(CompoundControl, dotTplFn, Utils) {
