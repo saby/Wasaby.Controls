@@ -37,11 +37,11 @@ define([
             };
             button.subscribe('onActivated', tempFunc);
             testEvent = false;
-            button._onClick({});
+            button._onMouseClick({});
             assert.isTrue(testEvent);
             testEvent = false;
             button.unsubscribe('onActivated', tempFunc);
-            button._onClick({});
+            button._onMouseClick({});
             assert.isTrue(!testEvent);
 
          });
@@ -57,7 +57,7 @@ define([
             button.setEnabled(false);
             assert.isTrue(!button.isEnabled());
             testEvent = false;
-            button._onClick({});
+            button._onMouseClick({});
             assert.isTrue(!testEvent);
             button.unsubscribe('onActivated', tempFunc);
             button.setEnabled(true);
