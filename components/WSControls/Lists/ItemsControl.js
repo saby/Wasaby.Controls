@@ -66,6 +66,7 @@ define('js!WSControls/Lists/ItemsControl', [
             this.displayProperty = cfg.displayProperty;
 
             this._onCollectionChange = onCollectionChange.bind(this);
+            this._onSelectorChange = onSelectorChange.bind(this);
 
             this._prepareData();
 
@@ -92,11 +93,14 @@ define('js!WSControls/Lists/ItemsControl', [
                   this._itemsProjection.destroy();
                }
                this._itemsProjection = this._createDefaultProjection();
-               this._setItemsEventHandlers();
+
 
                if (this._needSelector) {
-                  this._selectorInstance = this._createDefaultSelector();
+                  this._selector = this._createDefaultSelector();
                }
+
+               this._setItemsEventHandlers();
+
 
                //proj = cfg._applyGroupingToProjection(proj, cfg);
 
@@ -134,6 +138,9 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _setItemsEventHandlers: function() {
             this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
+            if (this._selector) {
+               this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
+            }
          },
 
          _unsetItemsEventHandlers: function () {
@@ -161,8 +168,9 @@ define('js!WSControls/Lists/ItemsControl', [
          },
          setSelectedKey: function(key){
             if (this._selector) {
-               return this._selector.setSelectedKey(key)
+               this._selector.setSelectedKey(key)
             }
+
          },
 
          getSelectedKey: function() {
@@ -199,11 +207,27 @@ define('js!WSControls/Lists/ItemsControl', [
          mouseMove: function(ev){
             this.toolbarTop = ev.nativeEvent.target.offsetTop;
             this.toolbarLeft = this._container[0].offsetWidth - 100;
+         },
+
+         destroy: function() {
+            ItemsControl.superclass.destroy.ally(this, arguments);
+            if (this._itemsProjection) {
+               this._itemsProjection.destroy();
+            }
+            if (this._selector) {
+               this._selector.destroy();
+            }
          }
       });
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
       this._prepareDataOnItemsChange();
+      this._setDirty();
+   };
+
+   var onSelectorChange = function() {
+      this._itemData = null;
+      this.tplData = this._prepareItemData();
       this._setDirty();
    };
 
