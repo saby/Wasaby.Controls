@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = cfg._decorators;
+            tplOptions.highlightText = cfg.highlightText;
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
