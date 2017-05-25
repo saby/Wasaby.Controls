@@ -3,6 +3,25 @@ html {
 }
 
 body {
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: #293D52;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: @disabled-color;
+            .controls-Button__icon {
+               color: @disabled-color !important
+            }
+         }
+      }
+   }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -708,9 +727,14 @@ body .controls-ToolBar__menuIcon .icon-24 {
 }
 
 .controls-Menu{
-  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
-    top: 0.9rem;
-    left: -0.2rem;
+  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+     &.icon-24 {
+        top: 0.9rem;
+        left: -0.2rem;
+     }
+     &.icon-16 {
+         top: 1.15rem;
+     }
   }
 }
 .controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
