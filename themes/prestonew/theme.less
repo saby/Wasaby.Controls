@@ -3,6 +3,25 @@ html {
 }
 
 body {
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: #293D52;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: @disabled-color;
+            .controls-Button__icon {
+               color: @disabled-color !important
+            }
+         }
+      }
+   }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
