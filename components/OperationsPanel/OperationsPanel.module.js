@@ -308,6 +308,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this.requireButtons().addCallback(function() {
             OperationsPanel.superclass.redraw.call(self);
             self._itemsDrawn = true;
+            self._checkCapacity();
          });
       },
 

@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.TextBox",
+   'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.TextBoxUtils',
    "tmpl!SBIS3.CONTROLS.ComboBox",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, TextBox, TextBoxUtils, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -724,7 +725,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       showPicker: function(){
          ComboBox.superclass.showPicker.call(this);
-         this._setWidth();
+         TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
          this._scrollToItem(this.getSelectedKey());
       },
@@ -739,19 +740,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
-
-         self._setWidth();
-      },
-
-      _setWidth: function(){
-         var self = this,
-             target = self._picker.getTarget();
-         if (target){
-            //Борьба с полупикселями, устанавливаю ровно ту ширину, которая отрисовалась в таргете
-            this._picker.getContainer().css({
-               'min-width': target[0].getBoundingClientRect().width
-            });
-         }
       },
 
       //TODO заглушка

@@ -16,6 +16,7 @@
 @accent-color:							              #26B8FF;
 @default-hover-color:                     #B9E9FF;
 @innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@acent-color2:                            #354B62;//Цвет акцентной плашки
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
 @icon-color-primary:                      @default-text-color;
@@ -348,7 +349,7 @@
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-radius:							1rem;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-bg-color:                         #202835;
+@switcher-btn-bg-color:                         #FF7033;
 @switcher-btn-color-inactive:					#8991A9;
 @switcher-line-color:							#8991A9;
 @switcher-border:                               2px solid #2C4458;
@@ -363,7 +364,10 @@
 @switcher-btn-color:                            #FF7033;
 @switcher-do-horizontal-line-background-color:  #8991A9;
 @switcher-do-text-color:                        @white-color;
-@switcher-do-unselected-text-color:             #999999;
+@switcher-do-unselected-text-color:             #8991A9;
+@switcher-do-disabled-text-color:               #37536C;
+@switcher-do-disabled-line-color:               @switcher-do-disabled-text-color;
+@switcher-do-disabled-btn-background:           @switcher-do-disabled-text-color;
 
 // ---- //
 // Menu //
@@ -542,10 +546,10 @@
 // Text box //
 // -------- //
 
-@text-box-wrapper-padding:                0 .14rem;
+@text-box-wrapper-padding:                0 .57rem;
 
 @text-box-field-min-height:               38px;
-@text-box-field-padding:                  0;
+@text-box-field-padding:                  0 0.57rem;
 
 @text-box-field-text-color:               #e4e4e4;
 
@@ -951,7 +955,7 @@
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
 
-@tree-view-editArrow-top:                      2px;
+@tree-view-editArrow-top:                      .2rem;
 
 @tree-view-expand-bg:                           transparent;
 
@@ -1015,7 +1019,7 @@
 
 @controls-OperationsPanel-height:                   3.57rem;
 
-@controls-OperationsPanel-bg:                       #38495B;
+@controls-OperationsPanel-bg:                       #F0F5FB;
 
 @controls-OperationsPanel-actions-margin:           0 .14rem;
 
@@ -1123,15 +1127,17 @@
 
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
-@controls-FieldLink-linkItem-line-height:          2.83rem;
+@controls-FieldLink-linkItem-line-height:          3rem;
 @controls-FieldLink-showAllLinks-width:            20px;
 
 @controls-FieldLink-linkItem-margin:              .07rem 0;
-@controls-FieldLink-linkItem-padding:              0 17px 0 .14rem;
+@controls-FieldLink-linkItem-padding:              0 3rem 0 .14rem;
 @controls-FieldLink-linkItem-caption-height:       1.75rem;
 @controls-FieldLink-linkItem-cross-width:          20px;
 @controls-FieldLink-linkItem-cross-right:          0;
-@controls-FieldLink-linkItem-cross-top:            .5rem;
+@controls-FieldLink-linkItem-cross-top:            0;
+@controls-FieldLink-linkItem-cross-padding:        0;
+@controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
 @controls-FieldLink-afterField-padding:            0 .14rem 0 0;
 @controls-FieldLink-afterField-height:             3rem;
@@ -1159,9 +1165,9 @@
 @back-button-arrow-paddingleft:                     16px;
 @bread-crumb-title-color:                          #8991A9;
 @breadcrumbs-top:                                  .14rem;
-@breadcrumbs-smallItems-font-size:                 13px;
-@breadcrumbs-arrow-top:                           .07rem;
-@breadcrumbs-small-items-top:                      inherit;
+@breadcrumbs-smallItems-font-size:                 1.43rem;
+@breadcrumbs-arrow-top:                            .07rem;
+@breadcrumbs-small-items-top:                      .3rem;
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
@@ -1235,7 +1241,7 @@
 @tab-button-checked-inner-font-size:            1.43rem;
 @tab-button-checked-inner-color:                rgb(255, 204, 153);
 @tab-button-simple-inner-checked-color:         rgb(255, 204, 153);
-@tab-button-simple-checked-bottomline-color:    rgb(255, 204, 153);
+@tab-button-simple-checked-bottomline-color:    @primary-color;
 @tab-button-large-inner-max-width:				100%;
 @tab-button-inner-padding:                      0px .857rem 0 .857rem;
 
@@ -1298,8 +1304,10 @@
 @DropdownList-height: 					1.43rem;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+
 @text-box-placeholder-color: 				rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:  3.57rem;
+@tree-view-ellipsis-copyArrow-width:    1rem;
 @bread-crumbs-menu-padding:             0;
 @menu-subpopup-padding:               @bread-crumbs-menu-padding;
 

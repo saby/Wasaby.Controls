@@ -319,7 +319,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           _setPickerConfig: function () {
-             var context = new cContext({restriction: 'set'}),
+             var context = cContext.createContext(this, {restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
                  isRightAlign = this._options.filterAlign === 'right',
                  firstTime = true,
