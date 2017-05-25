@@ -99,6 +99,13 @@ define(
              * @deprecated
              */
             pickerIconShow: true,
+            /**
+             * @cfg {Boolean} Устанавливает отображение иконки выбора времени рядом с полем ввода в случае если {@link mask} установлена в значение "Только время".
+             * @remark
+             * Опция будет удалена начиная с версии 3.17.*, значение по умолчанию будет timePickerIconShow = true.
+             * @deprecated
+             */
+            timePickerIconShow: false,
 
             pickerConfig: {
                corner: 'tl',
@@ -294,7 +301,7 @@ define(
             pickerName;
          if (/[DMY]/.test(mask)) {
             pickerName = 'calendar';
-         }else if (mask === 'HH:II') {
+         } else if (mask === 'HH:II' && options.timePickerIconShow) {
             pickerName = 'time';
          }
          if (pickerName) {
