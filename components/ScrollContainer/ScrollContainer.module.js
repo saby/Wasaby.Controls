@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
          _useNativeAsMain: true,
+         _doNotSetDirty: true,
 
          constructor: function (cfg) {
 
