@@ -85,7 +85,25 @@ body {
   font-size: 1rem;
 }
 body {
-
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: @button-bg;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: #CCCCCC;
+            .controls-Button__icon {
+               color: #CCCCCC !important
+            }
+         }
+      }
+   }
     .engine-Browser__path-wrapper-in-head {
       height: auto;
     }
