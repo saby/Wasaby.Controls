@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
          function defaultAction(e) {
             if (self && self.isEnabled()) {
-               if (this.iWantVDOM) {
+               if (self.iWantVDOM) {
                   self._onMouseClick(e);
                } else {
                   self._onClickHandler(e);
@@ -86,8 +86,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       _baseClickAction: function(e){
-         // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
-         e.stopImmediatePropagation();
+         //Прикладники из своего кода зовут _onClickHandler без аргументов или с произвольными аргументами
+         if (e && e.stopImmediatePropagation) {
+            // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+            e.stopImmediatePropagation();
+         }
 
          if (!this._options.enabled)
             return;

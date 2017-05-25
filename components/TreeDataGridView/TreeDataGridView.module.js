@@ -263,8 +263,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
             checkboxOffset = this._options.editingTemplate && hasCheckbox && !container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_SELECT_CHECKBOX_WIDTH : 0,
             // Считаем необходимый отступ слева-направо:
-            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота
-            result = checkboxOffset + this._getRowPadding(target) + levelOffset + DEFAULT_EXPAND_ELEMENT_WIDTH;
+            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
+            // Так же в режиме поиска не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
+            result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
          // Если не задан шаблон редактирования строки и отображаются чекбоксы - компенсируем разницу оступов в полях ввода и ячеек таблицы (в полях ввода 5px, в таблице - 6px)
          if (!this._options.editingTemplate && hasCheckbox) {
             result += DEFAULT_CELL_PADDING_DIFFERENCE;

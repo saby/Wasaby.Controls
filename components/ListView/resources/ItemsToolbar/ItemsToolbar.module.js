@@ -402,14 +402,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if(this._lockingToolbar) {
                 this._trackingTarget();
              }
-             /**
-              * нужно следить за положением опций потому что в реестре высота строки может меняться динамически
-              * например в сообщениях картинки прогружаются асинхронно и при подгрузке может измениться высота строки,
-              * а изменение положения опций не произойдет
-              */
-             if(!this._isVisible){
-                dcHelpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
-             }
              if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
@@ -449,7 +441,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
                 container = this.getContainer();
-                dcHelpers.trackElement(this._container, false);
 
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();
