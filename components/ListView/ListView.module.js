@@ -1473,20 +1473,21 @@ define('js!SBIS3.CONTROLS.ListView',
                      top: targetCords.top - containerCords.top + cont.scrollTop,
                      left: targetCords.left - containerCords.left
                   },
-                  size: {
-                     height: correctTarget[0].offsetHeight,
-                     width: correctTarget[0].offsetWidth
+                  get size() {
+                     return {
+                         height: correctTarget[0].offsetHeight,
+                         width: correctTarget[0].offsetWidth
+                     };
+                  },
+                  set size(value) {
                   }
-               }
+               };
             }
          },
 
          _notifyOnChangeHoveredItem: function() {
-            /* Надо делать клон и отдавать наружу только клон объекта, иначе,
-               если его кто-то испортит, испортится он у всех, в том числе и у нас */
-            var hoveredItemClone = cFunctions.clone(this._hoveredItem);
-            this._notify('onChangeHoveredItem', hoveredItemClone);
-            this._onChangeHoveredItem(hoveredItemClone);
+            this._notify('onChangeHoveredItem', this._hoveredItem);
+            this._onChangeHoveredItem(this._hoveredItem);
          },
 
          /**
