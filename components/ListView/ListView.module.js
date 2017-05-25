@@ -1469,10 +1469,16 @@ define('js!SBIS3.CONTROLS.ListView',
                   key: targetKey,
                   record: item,
                   container: correctTarget,
-                  position: {
-                     /* При расчётах координат по вертикали учитываем прокрутку */
-                     top: targetCords.top - containerCords.top + cont.scrollTop,
-                     left: targetCords.left - containerCords.left
+                  get position() {
+                     targetCords = correctTarget[0].getBoundingClientRect();
+                     containerCords = cont.getBoundingClientRect();
+                     return {
+                        /* При расчётах координат по вертикали учитываем прокрутку */
+                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         left: targetCords.left - containerCords.left
+                     };
+                  },
+                  set position(value) {
                   },
                   get size() {
                      return {
