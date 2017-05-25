@@ -270,8 +270,20 @@ define('js!SBIS3.CONTROLS.ListView.Drag', [
 
             this._mouse.level = level;
          }
-         console.log(this._mouse.level);
          this._mouse.x = e.pageX;
+      },
+
+      _getDragAvatar: function (record) {
+         return (
+            '<div class="controls-dragNDrop-avatar">' +
+               '<div class="controls-dragNDrop-avatar__img-wrapper">' +
+                  '<img>' +
+               '</div>' +
+               '<div class="controls-dragNDrop-avatar__text-wrapper">' +
+                  '<div class="controls-dragNDrop-avatar__title">'+record.get('title')+'</div>' +
+                  '<div class="controls-dragNDrop-avatar__description">'+record.get('title')+'</div>' +
+               '</div>' +
+            '</div>');
       }
    });
    return ListViewDrag;
