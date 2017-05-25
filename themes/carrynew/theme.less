@@ -85,7 +85,25 @@ body {
   font-size: 1rem;
 }
 body {
-
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: @button-bg;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: #CCCCCC;
+            .controls-Button__icon {
+               color: #CCCCCC !important
+            }
+         }
+      }
+   }
     .engine-Browser__path-wrapper-in-head {
       height: auto;
     }
@@ -384,4 +402,15 @@ body .controls-ToolBar__menuIcon .icon-24 {
     font-family: @default-icon-large-font !important;
     vertical-align: middle !important;
   }
+}
+.controls-Menu{
+   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+      &.icon-24 {
+         top: 0.9rem;
+         left: -0.2rem;
+      }
+      &.icon-16 {
+         top: 1.15rem;
+      }
+   }
 }
