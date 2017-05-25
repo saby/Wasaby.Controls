@@ -68,6 +68,10 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
 
          opts.cssClassName += opts.caption ? '' : ' controls-Button__withoutCaption';
 
+         if(!opts.tooltip && opts.caption){
+            opts.tooltip = opts.caption;
+         }
+
          if(opts.className && opts.className.indexOf('controls-IconButton__round-border') !== -1){
             if(opts.className.indexOf('controls-IconButton__round-border-24') !== -1){
                 opts.pickerClassName += ' controls-IconButton__round-border-24';

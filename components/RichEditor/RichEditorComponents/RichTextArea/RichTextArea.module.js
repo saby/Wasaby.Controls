@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.RichTextArea",
+   "tmpl!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    'js!WS.Data/Di',
@@ -203,19 +203,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _sourceContainer: undefined, //TODO: избавиться от _sourceContainer
             _tinyIsInit: false,//TODO: избьавиться от этого флага через  _tinyReady
             _enabled: undefined, //TODO: подумать как избавиться от этого
-            _typeInProcess: false,
             _clipboardText: undefined,
             _mouseIsPressed: false, //Флаг того что мышь была зажата в редакторе
             _imageOptionsPanel: undefined,
             _lastReview: undefined,
             _fromTouch: false,
             _codeSampleDialog: undefined,
-            _beforeFocusOutRng: undefined
+            _beforeFocusOutRng: undefined,
+            _wasType: false
          },
 
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-            options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
@@ -253,14 +253,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (!this.isEnabled()) {
                   this._readyContolDeffered.callback();
                }
-               this._updateDataReview(this.getText());
+               this._updateDataReview(this._options.text);
             }.bind(this));
 
-            this._togglePlaceholder();
-            if (cConstants.browser.isMobileAndroid) {
-               this._notifyTextChanged = this._notifyTextChanged.debounce(500);
-            }
-            this._lastReview = this.isEnabled() ? undefined : this.getText();
+            this._togglePlaceholder(this._options.text);
+            this._lastReview = this.isEnabled() ? undefined : this._options.text;
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
@@ -392,19 +389,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * Устанавливает текстовое значение внутри поля ввода.
           * @param {String} text Текстовое значение, которое будет установлено в поле ввода.
           * @example
-          * <pre>
-          *     if (control.getText() == "Введите ФИО") {
-          *        control.setText("");
-          *     }
-          * </pre>
           * @see text
-          * @see getText
           */
          setText: function(text) {
+            this._wasType = false;
             if (text !== this._curValue()) {
                this._drawText(text);
             }
             this._setText(text);
+         },
+
+         getText: function() {
+            return this._wasType ? this._trimText(this._curValue()) : this._options.text;
          },
 
          setActive: function(active) {
@@ -438,7 +434,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          destroy: function() {
             cConstants.$win.unbind('beforeunload', this._saveBeforeWindowClose);
-            this.saveToHistory(this.getText());
+            this.saveToHistory(this._options.text);
             RichUtil.unmarkRichContentOnCopy(this._dataReview);
             RichUtil.unmarkRichContentOnCopy(this._inputControl);
             //Проблема утечки памяти через tinyMCE
@@ -496,7 +492,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   //withStyles: true нужно чтобы в нашем обработчике BeforePastePreProcess мы не обрабатывали а прокинули результат в обработчик тини
                   eventResult = self.getTinyEditor().fire('BeforePastePreProcess', {content: content, withStyles: true});
                   self.insertHtml(eventResult.content);
-                  self._setTrimmedText(self._getTinyEditorValue());
                },
                onPaste = function(event) {
                   var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
@@ -677,8 +672,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._applyFormat(style, true);
             }
             this._tinyEditor.execCommand('');
-            //при установке стиля(через форматтер) не стреляет change
-            this._setTrimmedText(this._getTinyEditorValue());
          },
 
          /**
@@ -689,8 +682,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          setFontColor: function(color) {
             this._applyFormat('forecolor', color);
             this._tinyEditor.execCommand('');
-            //при установке стиля(через форматтер) не стреляет change
-            this._setTrimmedText(this._getTinyEditorValue());
          },
          /**
           * Установить размер для выделенного текста
@@ -703,8 +694,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._removeFormat('fontsize', size);
             this._tinyEditor.execCommand('FontSize', false,  size);
             this._tinyEditor.execCommand('');
-            //при установке стиля(через форматтер) не стреляет change
-            this._setTrimmedText(this._getTinyEditorValue());
          },
 
          /**
@@ -848,7 +837,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            .append(okButton);
                         new Button({
                            caption: 'ОК',
-                           defaultButton: true,
+                           primary: true,
                            parent: this,
                            handlers: {
                               onActivated: function () {
@@ -956,9 +945,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                $list.css('list-style-position', align === 'alignjustify' || align === 'alignleft' ? '' : 'inside');
             }
             this._tinyEditor.formatter.apply(align, true);
-            //если смена стиля будет сразу после setValue то контент не установится,
-            //так как через форматттер не стреляет change
-            this._setTrimmedText(this._getTinyEditorValue());
          },
 
          toggleContentSource: function(visible) {
@@ -971,7 +957,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   'height' : container.outerHeight(),
                   'width' : container.outerWidth()
                });
-               this._sourceArea.val(this.getText());
+               this._sourceArea.val(this._curValue());
             }
             this._sourceContainer.toggleClass('ws-hidden', !sourceVisible);
             container.toggleClass('ws-hidden', sourceVisible);
@@ -1048,7 +1034,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _setText: function(text) {
-            if (text !== this.getText()) {
+            if (text !== this._options.text) {
                if (!this._isEmptyValue(text)) {
                   this._textChanged = true;
                }
@@ -1183,11 +1169,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._notifyOnSizeChanged();
 
-               if (!self._readyContolDeffered.isReady()) {
-                  self._tinyReady.addCallback(function() {
-                     self._readyContolDeffered.callback();
-                  });
-               }
                // в tinyMCE предустановлены сочетания клавиш на alt+shift+number
                // данные сочетания ставят формат выделенному тексту (h1 - h6, p , div, address)
                // необходимо отключать эти сочетания, чтобы нельзя было как либо создать такие форматы
@@ -1196,6 +1177,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._inputControl = $(editor.getBody());
                RichUtil.markRichContentOnCopy(this._inputControl);
+               if (!self._readyContolDeffered.isReady()) {
+                  self._tinyReady.addCallback(function() {
+                     self._readyContolDeffered.callback();
+                  });
+               }
                self._tinyReady.callback();
                /*НОТИФИКАЦИЯ О ТОМ ЧТО В РЕДАКТОРЕ ПОМЕНЯЛСЯ ФОРМАТ ПОД КУРСОРОМ*/
                //formatter есть только после инита поэтому подписка осуществляется здесь
@@ -1304,16 +1290,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
              });
 
-            //БИНДЫ НА СОБЫТИЯ КЛАВИАТУРЫ (ВВОД)
-            if (cConstants.browser.isMobileIOS || cConstants.browser.isMobileAndroid) {
-               //TODO: https://github.com/tinymce/tinymce/issues/2533
-               this._inputControl.on('input', function() {
-                  self._setTrimmedText(self._getTinyEditorValue());
-               });
-            }
+            editor.on('change', function() {
+               self._togglePlaceholder(self._inputControl[0].innerHTML);
+            });
 
             //Передаём на контейнер нажатие ctrl+enter и escape
             this._container.bind('keydown', function(e) {
+               self._wasType = true;
                if (!(e.which === cConstants.key.enter && e.ctrlKey) && e.which !== cConstants.key.esc) {
                   e.stopPropagation();
                }
@@ -1328,15 +1311,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
 
             editor.on('keyup', function(e) {
-               self._typeInProcess = false;
-               if (!(e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
+               if ((e.keyCode === cConstants.key.enter && e.ctrlKey)) { // Не нужно обрабатывать ctrl+enter, т.к. это сочетание для дефолтной кнопки
                   self._setTrimmedText(self._getTinyEditorValue());
                }
+               self._updateHeight();
             });
 
             editor.on('keydown', function(e) {
-               self._typeInProcess = true;
-
                if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp || (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
@@ -1352,15 +1333,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
-                  self._typeInProcess = false;
+                  self._setTrimmedText(self._getTinyEditorValue());
                   return false;
                } else if (e.which === cConstants.key.enter && e.ctrlKey) {
                   e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
                   //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
                   //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
-                  self._typeInProcess = false;
+                  self._setTrimmedText(self._getTinyEditorValue());
                }
-               self._updateHeight();
+               setTimeout(function(){
+                  self._togglePlaceholder(self._inputControl[0].innerHTML);
+               }, 1);
             });
 
             // Обработка изменения содержимого редактора.
@@ -1378,33 +1361,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
-               setTimeout(function() {
-                  self._togglePlaceholder(self._getTinyEditorValue());
-               }, 1);
             });
 
-            editor.on('change', function(e) {
-               self._setTrimmedText(self._getTinyEditorValue());
-            });
-
-            editor.on( 'cut',function(e){
-               setTimeout(function() {
-                  self._setTrimmedText(self._getTinyEditorValue());
-               }, 1);
-            });
-            //Сообщаем компоненту об изменении размеров редактора
-            editor.on('resizeEditor', function() {
-               self._notifyOnSizeChanged();
-            });
-
-            //реагируем на то что редактор изменился при undo/redo
-            editor.on('undo', function() {
-               self._setTrimmedText(self._getTinyEditorValue());
-            });
-
-            editor.on('redo', function() {
-               self._setTrimmedText(self._getTinyEditorValue());
-            });
             //Уличная магия в чистом виде (на мобильных устройствах просто не повторить) :
             //Если начать выделять текст в редакторе и увести мышь за его границы и продолжить печатать падают ошибки:
             //Клик окончится на каком то элементе, listview например стрельнет фокусом на себе
@@ -1431,7 +1389,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //сохранение истории при закрытии окна
             this._saveBeforeWindowClose  =  function() {
-               this.saveToHistory(this.getText());
+               this._setTrimmedText(this._curValue());
+               this.saveToHistory(this._options.text);
             }.bind(this);
             cConstants.$win.bind('beforeunload', this._saveBeforeWindowClose);
 
@@ -1467,6 +1426,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                imageOptionsPanel = this._getImageOptionsPanel(target);
             imageOptionsPanel.show();
          },
+
          _changeImageTemplate: function(target, template) {
             var
                parent = target.parent();
@@ -1494,8 +1454,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   parent.addClass('without-margin');
                   break;
             };
-            this._setTrimmedText(this._getTinyEditorValue());
          },
+
          _getImageOptionsPanel: function(target){
             var
                self = this;
@@ -1523,7 +1483,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this.getTarget().attr('data-mce-src', URL);
                   this.getTarget().attr('alt', fileobj.id);
                   self._tinyEditor.undoManager.add();
-                  self._setTrimmedText(self._getTinyEditorValue());
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function(){
                   var
@@ -1541,7 +1500,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._tinyEditor.selection.select(nodeForSelect, false);
                   self._tinyEditor.selection.collapse();
                   self._tinyEditor.undoManager.add();
-                  self._setTrimmedText(self._getTinyEditorValue());
                });
                this._imageOptionsPanel.subscribe('onTemplateChange', function(event, template){
                   self._changeImageTemplate(this.getTarget(), template);
@@ -1622,6 +1580,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _applyEnabledState: function(enabled) {
             var
                container = this._tinyEditor ? this._tinyEditor.getContainer() ? $(this._tinyEditor.getContainer()) : this._inputControl : this._inputControl;
+            if (this._tinyEditor && !enabled) {
+               this._setTrimmedText(this._wasType ? this._getTinyEditorValue(): this._options.text);
+            }
             if (this._dataReview) {
                if (this._options.autoHeight) {
                   this._dataReview.css({
@@ -1631,7 +1592,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                } else {
                   this._dataReview.height(this._container.height()  - constants.dataReviewPaddings);//тк у dataReview box-sizing: borderBox высоту надо ставить меньше на падддинг и бордер
                }
-               this._updateDataReview(this.getText() || '');
+               this._updateDataReview(this._curValue() || '');
                this._dataReview.toggleClass('ws-hidden', enabled);
             }
 
@@ -1656,7 +1617,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()));
+               this._tinyEditor.setContent(this._prepareContent(this._options.text));
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
@@ -1736,7 +1697,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @returns {*} Текущее значение (в формате html-кода)
           */
          _curValue: function() {
-            return this._tinyEditor && this._tinyEditor.initialized && this.isEnabled() ? this._getTinyEditorValue() : this.getText();
+            return this._tinyEditor && this._tinyEditor.initialized && this.isEnabled() ? this._getTinyEditorValue() : this._options.text;
          },
 
          _prepareContent: function(text) {
@@ -1749,25 +1710,32 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //TODO: ждать пока решится задача в самом tinyMCE  https://github.com/tinymce/tinymce/issues/2588
          _togglePlaceholder:function(value){
             var
-               curValue = value || this.getText();
-            this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) &&
-               this._inputControl.html().indexOf('</li>') < 0 &&
-               this._inputControl.html().indexOf('<p>&nbsp;') < 0 &&
-               this._inputControl.html().indexOf('<blockquote>') < 0
-            );
+               curValue = (value || "")
+                  .replace(/<br data-mce-bogus="1">/gi, '')
+                  .replace(/(<p><\/p>)|(<p><br><\/p>)|(<p> <\/p>)|/gi,''),
+               visible = (curValue === '' || curValue === undefined || curValue === null) &&
+                  value.indexOf('</li>') < 0 &&
+                  value.indexOf('<p>&nbsp;') < 0 &&
+                  value.indexOf('<blockquote>') < 0;
+
+            this.getContainer().toggleClass('controls-RichEditor__empty', visible);
+
          },
+
          _replaceSmilesToCode: function(text) {
             smiles.forEach(function(smile){
                text = text.replace(new RegExp(String.fromCodePoint(smile.code), 'gi'), smile.title);
             });
             return text;
          },
+
          _replaceCodesToSmile: function(text) {
             smiles.forEach(function(smile) {
                text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
             });
             return text;
          },
+
          _addToHistory: function(text) {
             return UserConfig.setParamValue(this._getNameForHistory(), this._replaceSmilesToCode(text));
          },
@@ -1814,8 +1782,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _updateHeight: function() {
             var
-               curHeight,
-               closestParagraph;
+               curHeight;
             if (this.isVisible()) {
                curHeight = this._container.height();
                //Производим подкрутку вверх если курсор провалился под клавиатуру на iPad
@@ -1829,6 +1796,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
             }
          },
+
          //Метод проверяет положение элемента отпосительно клавитуры на ipad (true - под клавитурой, false - над)
          _elementIsUnderKeyboard: function(target, side){
             var
@@ -1842,6 +1810,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                target.scrollIntoView(true);
             }
          },
+
          //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
          _backspinForIpad: function() {
             if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
@@ -1867,20 +1836,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
 
-         _prepareReviewContent: function(text, it) {
+         _prepareReviewContent: function(text) {
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {
-               checkDataAttribute: false,
-               validNodes: {
-                  embed: {
-                     type: true,
-                     src: true
-                  }
-               }
-            });
-            return (this._options || it).highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
+            text = Sanitize(text, {checkDataAttribute: false});
+            return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
          //установка значения в редактор
@@ -1888,7 +1849,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                autoFormat = true;
             text =  this._prepareContent(text);
-            if (!this._typeInProcess && text != this._curValue()) {
+            if (text != this._curValue()) {
                //Подготовка значения если пришло не в html формате
                if (text && text[0] !== '<') {
                   text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
@@ -1927,6 +1888,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //тк на кнопках не случается focusout не происходит добавления состояния в историю
             this._tinyEditor.undoManager.add();
          },
+
          /**
           * Убрать формат выделенного текста
           * @param {string} format  имя формата
@@ -1941,7 +1903,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          _focusOutHandler: function(){
-            this.saveToHistory(this.getText());
+            this._setTrimmedText(this._curValue());
+            this.saveToHistory(this._options.text);
             RichTextArea.superclass._focusOutHandler.apply(this, arguments);
          },
 
@@ -1950,6 +1913,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._inputControl.css('height', this._container.height());
             }
          },
+
          //метод взят из link плагина тини
          _isOnlyTextSelected: function() {
             var
@@ -1959,6 +1923,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             return true;
          },
+
          _getTextBeforePaste: function(){
             //Проблема:
             //          после вставки текста могут возникать пробелы после <br> в начале строки

@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "Core/core-merge",
    "js!SBIS3.CONTROLS.RichEditorToolbarBase",
-   "html!SBIS3.CONTROLS.RichEditorToolbar",
+   "tmpl!SBIS3.CONTROLS.RichEditorToolbar",
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
    'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
    "js!WSControls/Buttons/Button",
