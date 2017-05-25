@@ -11,7 +11,7 @@ define(
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
-      'tmpl!SBIS3.CONTROLS.DatePicker/resources/ElementPickerContent',
+      'tmpl!SBIS3.CONTROLS.DatePicker/resources/elementPickerContent',
       'Core/helpers/dom&controls-helpers',
       "Core/IoC",
       'i18n!SBIS3.CONTROLS.DatePicker',

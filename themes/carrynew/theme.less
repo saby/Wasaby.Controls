@@ -225,11 +225,6 @@ body {
   border-bottom: none;
 }
 
-
- .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
-
-    background: #FF7033;
-}
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
@@ -240,7 +235,11 @@ body .ws-loadingimg {
 }
 
 body {
-
+  .ws-info-box {
+      background: @basic-block-bg-color;
+      color: @default-text-color;
+      border: 2px solid @link-text-color;
+    }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -338,6 +337,9 @@ body .ws-float-area-title-generated {
 body .controls-ToolBar__menuIcon .icon-24 {
   font-family: carrypresto-icons!important;
 }
+.ws-enabled.controls-Checked__checked>.controls-CheckBox__icon:before {
+    z-index: 2;
+}
 .controls-Link {
   &.additionalLink__2 {
     font-size: .857rem;
@@ -352,9 +354,26 @@ body .controls-ToolBar__menuIcon .icon-24 {
     vertical-align: baseline;
   }
 }
+.controls-FieldLink .icon-size {
+    font-size: 3rem !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    line-height: 3rem !important;
+}
 
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: 3.88rem
    }
+}
+
+.controls-ToolBar__menuIcon {
+  .icon-24 {
+    font-size: @icon-large-size !important;
+    line-height: @icon-large-size !important;
+    width: @icon-large-size !important;
+    height: @icon-large-size !important;
+    font-family: @default-icon-large-font !important;
+    vertical-align: middle !important;
+  }
 }

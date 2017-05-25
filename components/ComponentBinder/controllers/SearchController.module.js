@@ -267,7 +267,9 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          this._subscribeOnSearchFormEvents();
-         searchForm.applySearch(false);
+         if(searchForm.getText()) {
+            searchForm.applySearch(false);
+         }
       },
 
       _subscribeOnSearchFormEvents: function() {
