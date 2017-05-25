@@ -1,0 +1,49 @@
+<div class="controls-ClockPicker controls-ClockPicker_{{activeTime}}">
+   <div class="controls-ClockPicker__unitTime" data-bind="html: unitTime"/>
+   <ws:partial
+      template="tmpl!SBIS3.CONTROLS.ClockPicker/resources/Circle"
+      activeTime="{{activeTime}}"
+      circleName="outer"
+      ticks="{{_ticks[activeTime].outer}}"
+      animationTime="{{_animationTime}}"
+   />
+   <div
+      class="controls-ClockPicker__arrow js-controls-ClockPicker__arrow"
+      style="transition: opacity {{_animationTime}}ms;"
+      data-bind="{
+         css: {
+            'controls-ClockPicker__arrow_inner': arrow/isInner,
+            'controls-ClockPicker__arrow_outer': arrow/isOuter,
+            'controls-ClockPicker__arrow_visible': arrow/visible,
+            'controls-ClockPicker__arrow_hidden': arrow/hidden
+         },
+         style: {
+            transform: arrow/transform,
+            opacity: arrow/opacity
+         }
+      }"
+   >
+      <div
+         class="controls-ClockPicker__arrowTip js-controls-ClockPicker__arrowTip"
+         data-bind="{
+            html: arrowTip/tick,
+            css: {
+               'controls-ClockPicker__tick_inner': arrow/isInner,
+               'controls-ClockPicker__tick_outer': arrow/isOuter
+            },
+            style: {
+               transform: arrowTip/transform
+            }
+         }"
+      ></div>
+   </div>
+   <ws:if data="{{_ticks[activeTime].inner}}">
+      <ws:partial
+         template="tmpl!SBIS3.CONTROLS.ClockPicker/resources/Circle"
+         activeTime="{{activeTime}}"
+         circleName="inner"
+         ticks="{{_ticks[activeTime].inner}}"
+         animationTime="{{_animationTime}}"
+      />
+   </ws:if>
+</div>

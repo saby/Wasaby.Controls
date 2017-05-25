@@ -5,25 +5,25 @@
 @small-text-size:                         .857rem;
 @large-text-size:                         1.14rem;
 @huge-text-size:						              1.43rem;
-@default-text-color:                      #e4e4e4;
-@default-color:                           #587AB0;
+@default-text-color:                      #000;
+@default-color:                           #26B8FF;
 @primary-color:                           #D94700;
 @disabled-color:                          #2C4458;
 @innacent-color:                     	    #8991A9;
 @error-color:                             #EF463A;
 @warning-color:                           #FA9C33;
 @success-color:                           #72BE44;
-@default-bg-color:                        #1D2834;
+@default-bg-color:                        #fff;
 @accent-color:							              #26B8FF;
+@acent-color2:                            #F8F8F8;//Цвет акцентной плашки
 @default-hover-color:                     #E0ECF5;
 @innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @basic-block-bg-color:					          #fff; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
-
+@icon-color-primary:                      @primary-color;
 //=============
 
 @black-color:                             #333;
-@default-color:								transparent;
 @gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
 @default-text-color:                      #000;
@@ -43,7 +43,7 @@
 @default-itemHover-color:                 @primary-color;
 @default-itemSelected-color:              @primary-color;
 @hover-color:                             @primary-color;
-
+@icon-color-primary:                      #2D68B5;
 
 // ---- //
 // Link //
@@ -216,13 +216,14 @@
 
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-bg-color:                         #202835;
 @switcher-line-color:							#8991A9;
 @switcher-border:                               2px solid #e4e4e4;
 @switcher-btn-color:                            #FF7033;
 @switcher-do-horizontal-line-background-color:  #8991A9;
-@switcher-do-text-color:                        @white-color;
-@switcher-do-unselected-text-color:             #999999;
+@switcher-do-text-color:                        @black-color;
+@switcher-do-unselected-text-color:             #8991A9;
+@switcher-do-disabled-text-color:               @gray-ccc-color;
+
 
 // ---- //
 // Menu //
@@ -371,7 +372,7 @@
 
 @text-box-border-color:                   rgb(234, 234, 234);
 @text-box-bottom-border-color:            rgb(204, 204, 204);
-@text-box-bg:                             transparent;
+@text-box-bg:                             @default-bg-color;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
 @combo-box-picker-show-background-color : #f0f5fb;
@@ -534,7 +535,7 @@
 
 @controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
 @controls-FieldLink-border-color-focus-hover:         #314559;
-@controls-FieldLink-link-color:                         #26B8FF;
+@controls-FieldLink-link-color:                         #2D68B5;
 // --------- //
 // MonthView //
 // --------- //
@@ -733,7 +734,7 @@
 @data-grid-cell-vertical-align: 				middle;
 @data-grid-cell-check-box-vertical-align: 		top !important;
 
-@data-grid-edge-cell-separator-color:           #2B3546;
+@data-grid-edge-cell-separator-color:           #EAEAEA;
 
 
 
@@ -745,7 +746,7 @@
 
 @controls-OperationsPanel-height:                   30px;
 
-@controls-OperationsPanel-bg:                       #38495B;
+@controls-OperationsPanel-bg:                       #354B62;
 
 
 @controls-OperationsPanel-separator-bg:             #CCCCCC;
@@ -777,6 +778,13 @@
 // --------------- //
 @DropdownList-border-color:                   #000;
 
+//ProgressBar
+@controls-ProgressBar-first-color:        #2D68B5;
+@controls-ProgressBar-last-color:         @controls-ProgressBar-first-color;
+@controls-ProgressBar-border-color:       @basic-block-bg-color;
+@controls-ProgressBar-background-color:   #F5F5F5;
+@controls-ProgressBar-value-color:        @disabled-color;
+
 //Pager
 @controls-Pager-amount-text :                     #999999;
 
@@ -801,7 +809,7 @@
 //FilterLine
 @controls-filterLine-line-display:                table-row;
 @controls-filterLine-items-display:               table-cell;
-@controls-filterLine-link-color:                  #0055bb;
+@controls-filterLine-link-color:                  #2D68B5;
 @controls-filterLine-link-hover-color:            @primary-color;
 
 
@@ -881,7 +889,7 @@
 
 
 @scrollpager-bg:                              transparent;
-@data-grid-cell-separator-color:              #1a242e;
+@data-grid-cell-separator-color:              #F5F5F5;
 
 @menu-header-bg-color:                    #23b8ff;
  @date-range-big-header-bg:                 #fff;
@@ -889,3 +897,31 @@
 
  @switcher-border:                               2px solid #e4e4e4;
  @switcher-do-border:                            2px solid #e4e4e4;
+@text-box-error-bg:                             #fadadd;
+@text-box-error-border-color:                   @error-color;
+
+//--------------//
+//  TimePicker  //
+//--------------//
+
+
+//--------------//
+//  TimeHeader  //
+//--------------//
+@time-header-title-color:                           @black-color;
+@toggle-time-passive-color:                         #CCC;
+@toggle-time-active-color:                          #313E78;
+
+// ---------- //
+// ToggleTime //
+// ---------- //
+
+//---------------//
+//  ClockPicker  //
+//---------------//
+@clock-picker-inner-tick-background-color:          #EAEAEA;
+@clock-picker-outer-circle-border-color:            @clock-picker-inner-tick-background-color;
+@clock-picker-arrow-color:                          #313E78;
+@clock-picker-arrow-tip-color:                      @clock-picker-arrow-color;
+@clock-picker-tick-hover-background-color:          #F0F5FB;
+@clock-picker-unit-time-color:                      @gray-ccc-color;

@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.ScrollPagingController', 
-   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager'], 
+   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager', 'css!SBIS3.CONTROLS.ScrollPagingController'],
    function(StickyHeaderManager, cAbstract, cInstance, WindowManager) {
 
    var ScrollPagingController = cAbstract.extend({
       $protected: {
          _options: {
-            view: null
+            view: null,
+            zIndex: null
          },
          _scrollPages: [], // Набор страниц для скролл-пэйджина
          _pageOffset: 0, // offset последней страницы
@@ -16,11 +17,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       init: function() {
          ScrollPagingController.superclass.init.apply(this, arguments);
-         this._zIndex = WindowManager.acquireZIndex();
-         this._options.paging.getContainer().css('z-index', this._zIndex);
-         this._options.paging._zIndex = this._zIndex;
+         this._options.paging.getContainer().css('z-index', this._options.zIndex || WindowManager.acquireZIndex());
+         this._options.paging._zIndex = this._options.zIndex;
          //Говорим, что элемент видимый, чтобы WindowManager учитывал его при нахождении максимального zIndex
-         WindowManager.setVisible(this._zIndex);
+         WindowManager.setVisible(this._options.zIndex);
          // отступ viewport от верха страницы
          this._containerOffset = this._getViewportOffset();
       },
@@ -201,9 +201,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          var pagesCount = this._scrollPages.length;
 
-         if (pagesCount > 1){
-            this._options.view.getContainer().css('padding-bottom', '32px');
-         }
+         this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
@@ -215,7 +213,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       destroy: function(){
          $(window).off('resize.wsScrollPaging');
-         WindowManager.releaseZIndex(this._zIndex);
+         WindowManager.releaseZIndex(this._options.zIndex);
          ScrollPagingController.superclass.destroy.apply(this, arguments);
       }
 

@@ -134,6 +134,17 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          _RANGE_ID_FIELD: 'data-range-id'
       },
 
+      _modifyOptions: function() {
+         var opts = DateRangeChoose.superclass._modifyOptions.apply(this, arguments);
+         if (!opts.year) {
+            opts.year = this._getDefaultYear(opts);
+            if (!opts.year) {
+               opts.year = (new Date()).getFullYear();
+            }
+         }
+         return opts;
+      },
+
       $constructor: function () {
          this._publish('onChoose');
          this._options.checkedStart = this._normalizeDate(this._options.checkedStart);
@@ -148,10 +159,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
          this._updateMode();
 
-         if (!this.getYear()) {
-            this.setYear((new Date()).getFullYear());
-         } else {
-            this._updateYearView();
+         if (this.getYear()) {
             this.updateIcons();
          }
 
@@ -529,28 +537,38 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
        * @private
        */
       _onShow: function () {
-         if (!this._options.showYears || this._options.showHalfyears || this._options.showQuarters || this._options.showMonths) {
+         var year = this._getDefaultYear();
+
+         if (year) {
+            this.setYear(year);
+         }
+      },
+
+      _getDefaultYear: function (opts) {
+         opts = opts || this._options;
+
+         var start = opts.startValue,
+            currentYear, startValueYear;
+
+         if (!opts.showYears || opts.showHalfyears || opts.showQuarters || opts.showMonths) {
+               return start ? start.getFullYear() : undefined;
+         }
+
+         startValueYear = start ? start.getFullYear() : null;
+
+         if (!startValueYear) {
             return;
          }
 
-         var start = this.getStartValue(),
-            currentYear = (new Date()).getFullYear(),
-            selectedYear = start ? start.getFullYear() : null,
-            startYear;
+         currentYear = (new Date()).getFullYear();
 
-         if (!selectedYear) {
-            return;
-         }
-
-         if (selectedYear >= currentYear) {
-            startYear = selectedYear;
-         } else if (currentYear - selectedYear >= 5){
-            startYear = selectedYear + 4;
+         if (startValueYear >= currentYear) {
+            return startValueYear;
+         } else if (currentYear - startValueYear >= 5){
+            return startValueYear + 4;
          } else {
-            startYear = currentYear;
+            return currentYear;
          }
-
-         this.setYear(startYear);
       }
    });
 

@@ -1,16 +1,32 @@
 define('js!SBIS3.CONTROLS.ScrollContainer', [
-      'js!SBIS3.CONTROLS.CompoundControl',
+      'Core/core-extend',
+      "Core/Abstract.compatible",
+      'js!SBIS3.CORE.Control/Control.compatible',
+      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
+      'js!SBIS3.CORE.BaseCompatible',
+      'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
-      'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
+      'Core/core-functions',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
       'Core/compatibility',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager, compatibility) {
-
+   function (extend,
+             AbstractCompatible,
+             ControlCompatible,
+             AreaAbstractCompatible,
+             BaseCompatible,
+             template,
+             Scrollbar,
+             cDetection,
+             functions,
+             FloatAreaManager,
+             StickyHeaderManager,
+             compatibility) {
       'use strict';
+
 
       /**
        * Контрол представляющий из себя контейнер для контента с тонким скроллом.
@@ -57,12 +73,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *     </option>
        * </component>
        */
-      var ScrollContainer = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
+      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible], {
+         _template: template,
 
-         _dotTplFn: dotTplFn,
+         _controlName: 'SBIS3.CONTROLS.ScrollContainer',
+         _useNativeAsMain: true,
 
-         $protected: {
-            _options: {
+         constructor: function (cfg) {
+
+            this._options = {
                /**
                 * @cfg {Content} Контент в ScrollContainer
                 * @remark
@@ -82,58 +101,60 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @see getContent
                 */
                content: '',
-
                /**
                 * @cfg {Boolean} Включает фиксацию заголовоков в рамках контенера ScrollContainer
                 */
                stickyContainer: false,
 
                activableByClick: false
-            },
-            _content: null,
-            _headerHeight: 0
-         },
-
-         $constructor: function() {
+            };
+            this._content = null;
+            this._headerHeight = 0;
+            this.deprecatedContr(cfg);
             // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
-            this._craftedContext = false;
-            this._context = this._context.getPrevious();
-         },
-
-         _modifyOptionsAfter: function(finalConfig) {
-            delete finalConfig.content;
-         },
-
-         init: function() {
-            ScrollContainer.superclass.init.call(this);
-            this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-            this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch);
-            //Под android оставляем нативный скролл
-            if (this._showScrollbar){
-               this._initScrollbar = this._initScrollbar.bind(this);
-               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               this._container.one('mousemove', this._initScrollbar);
-               this._container.one('wheel', this._initScrollbar);
-               if (cDetection.IEVersion >= 10) {
-                  // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
-                  // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
-                  this._content[0].onmousewheel = function(event) {
-                     if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
-                        event.preventDefault();
-                     }
-                  }.bind(this);
-               }
-               this._hideScrollbar();
+            if (cfg.parent && cfg.parent._template) {
+               /** Если scrollContainer вставлен в старое окружение, ему позже будет установлен
+                * правильный контекст, а сейчас ссылку на текущий терять нельзя
+                */
+               this._craftedContext = false;
+               this._context = this._context.getPrevious();
             }
-            this._subscribeOnScroll();
+         },
 
-            // Что бы до инициализации не было видно никаких скроллов
-            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
-            // task: 1173330288
-            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+         _containerReady: function() {
+            
+            if (window && this._container && (typeof this._container.length === "number")) {
+
+               this._content = $('> .controls-ScrollContainer__content', this.getContainer());
+               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
+               //Под android оставляем нативный скролл
+               if (this._showScrollbar){
+                  this._initScrollbar = this._initScrollbar.bind(this);
+                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+                  this._container.one('mousemove', this._initScrollbar);
+                  this._container.one('wheel', this._initScrollbar);
+                  if (cDetection.IEVersion >= 10) {
+                     // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+                     // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
+                     this._content[0].onmousewheel = function(event) {
+                        if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
+                           event.preventDefault();
+                        }
+                     }.bind(this);
+                  }
+                  this._hideScrollbar();
+               }
+               this._subscribeOnScroll();
+
+               // Что бы до инициализации не было видно никаких скроллов
+               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
+               // task: 1173330288
+               // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+               FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+            }
          },
 
          _subscribeOnScroll: function(){
@@ -181,7 +202,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onResizeHandler: function(){
             var headerHeight, scrollbarContainer;
-            ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
+
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -238,9 +259,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          destroy: function(){
-            this._content.off('scroll', this._onScroll);
+            if (this._content) {
+               this._content.off('scroll', this._onScroll);
+            }
             this._container.off('mousemove', this._initScrollbar);
-            ScrollContainer.superclass.destroy.call(this);
+
+            BaseCompatible.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
             delete FloatAreaManager._scrollableContainers[ this.getId() ];

@@ -134,6 +134,14 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             keyboardLayoutRevert: true,
             /**
+             * @cfg {Boolean} Включает изменение раскладки по новому стандарту. Актуально при включённой опции {@link keyboardLayoutRevert}
+             * @example
+             * <pre>
+             *     <option name="keyboardLayoutRevertNew">true</option>
+             * </pre>
+             */
+            keyboardLayoutRevertNew: false,
+            /**
              * @cfg {String} Устанавливает Id для работы с историей фильтров.
              * @remark
              * Опция задает идентификатор, под которым будет сохраняться история фильтрации.

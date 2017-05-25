@@ -14,6 +14,21 @@ input[type="reset"]::-moz-focus-inner {
   border: 0 none !important;
 }
 
+.line-overflow-blur {
+  position: relative;
+  float: right;
+  &:before {
+    background: @line-overflow-blur-gradient;
+    height: @line-overflow-blur-height;
+    width: @line-overflow-blur-height;
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: -@line-overflow-blur-height;
+    right: 0;
+  }
+}
+
 /* ATTENTION styles */
 .icon-attention
 {
@@ -39,7 +54,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 /* DISABLED styles */
-.icon-disabled,
+.icon-disabled
 {
   color: @icon-color-disabled;
 }
@@ -96,6 +111,16 @@ input[type="reset"]::-moz-focus-inner {
   .action-hover:not(.ws-disabled):hover {
     color: @blue-dark-color;
   }
+}
+
+.icon-size {
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
 }
 
 .icon-small, .icon-medium, .icon-large {

@@ -55,6 +55,14 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
             onTogglePanel: this._onTogglePanel.bind(this)
          };
       },
+      _setOnHover: function() {
+         var
+            panel = this.getLinkedPanel(),
+            container = this.getContainer();
+         container.one('mouseenter', function() {
+            panel.requireButtons();
+         });
+      },
       _clickHandler: function() {
          var linkedPanel = this._options.linkedPanel;
          if (linkedPanel) {
@@ -83,6 +91,7 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          if (linkedPanel && (cInstance.instanceOfModule(linkedPanel, 'SBIS3.CORE.OperationsPanel') || cInstance.instanceOfModule(linkedPanel, 'SBIS3.CONTROLS.OperationsPanel'))) {
             this._reassignPanel(linkedPanel);
             this.setChecked(linkedPanel.isVisible());
+            this._setOnHover();
          }
       },
       /**

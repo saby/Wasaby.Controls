@@ -1,6 +1,16 @@
 @bottomStyle-items-toolbar-height:        30px;
 @bottomStyle-items-toolbar-border-color:  #F3F3F3;
 
+.itemsToolbar-touchmode-size(@icon-size) {
+   .controls-ItemActions__item {
+      .controls-Button__icon {
+         &.icon-size {
+            .icon-size(@icon-size);
+         }
+      }
+   }
+}
+
 .controls-ItemsToolbar {
    background-color: @list-view-items-toolbar-bg;
 }
@@ -66,7 +76,6 @@
       }
    }
 }
-
 .controls-ItemsToolbar__editActions {
    float: @list-view-items-toolbar-float;
    > * {
@@ -145,7 +154,6 @@
    }
 }
 
-
 .controls-ItemsToolbar {
    position: absolute;
    display: block;
@@ -158,12 +166,14 @@
       .icon-size(@list-view-items-toolbar-icon-size);
    }
    .controls-IconButton__round-border-24 {
+      border-width: @list-view-items-toolbar-icon-button-border-width;
+      border-radius: @list-view-items-toolbar-icon-button-border-radius;
       .controls-Button__icon.icon-size {
-         font-size: 16px !important;
+         font-size: @list-view-items-toolbar-icon-button-border-font-size !important;
          box-sizing: content-box;
-         height: 22px !important;
-         width: 22px !important;
-         line-height: 22px !important;
+         height: @icon-button-edit-round-border-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
+         width: @icon-button-edit-round-border-width - 2 * @list-view-items-toolbar-icon-button-border-width !important;
+         line-height: @icon-button-edit-round-border-line-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
          font-family: 'cbuc-icons' !important;
       }
    }
@@ -194,6 +204,12 @@
    }
 }
 
+.ws-is-firefox {
+   .controls-ItemsToolbar {
+      bottom: @list-view-items-toolbar-bottom + 1;
+   }
+}
+
 .controls-ListView.controls-ListView__touchMode {
    &.controls-ListView__bottomStyle {
        > .controls-ItemsToolbar {
@@ -206,7 +222,43 @@
          overflow: hidden;
          top: auto;
          bottom: 0;
+         right: 0;
          background-color: transparent;
+
+
+         &.controls-ItemsToolbar-item-size {
+            &__1 {
+               .controls-ItemActions__item {
+                  &.controls-IconButton {
+                     .controls-Button__text {
+                        display: none;
+                     }
+                  }
+                  .controls-Button__text {
+                     font-size: 14px;
+                  }
+               }
+               .controls-ItemActions__menu-button {
+                  &.controls-IconButton {
+                     .controls-Button__text {
+                        display: none;
+                     }
+                  }
+               }
+            }
+            &__2 {
+               .itemsToolbar-touchmode-size(16px;)
+            }
+            &__3 {
+               .itemsToolbar-touchmode-size(20px;)
+            }
+            &__4 {
+               .itemsToolbar-touchmode-size(24px;)
+            }
+            &__5 {
+               .itemsToolbar-touchmode-size(32px;)
+            }
+         }
 
          .controls-ItemsToolbar__container {
             position: relative;
@@ -214,6 +266,19 @@
             border-left: 1px solid #D0D8E0;
             overflow: hidden;
             height: 100%;
+
+            .controls-ItemActions__item {
+               .controls-Button__icon {
+                  &.icon-primary {
+                     color: @hover-color;
+                  }
+               }
+               .controls-Button__text {
+                  display: block;
+                  color: @hover-color;
+                  font-size: 12px;
+               }
+            }
 
             .controls-ItemActions {
                height: 100%;

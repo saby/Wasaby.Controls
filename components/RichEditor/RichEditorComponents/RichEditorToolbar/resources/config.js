@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: false,
-         order: 15
+         order: 25
       },
       {
          name: 'style',
@@ -130,7 +130,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          handlers: {
             onActivated: onButtonClick
          },
-         visible: false, //todo: цитата наславиается на обтекаемое избражение
          order: 65
       },
 
@@ -273,14 +272,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._openImagePanel(this);
             }
          },
-         order: 120
+         order: 140
       },
 
       {
          name: 'smile',
+         tooltip: 'Вставить смайлик',
          componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
-         pickerClassName: 'fre-smiles controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-smiles controls-MenuButton__Menu controls-Menu__hide-menu-header',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          items: smiles,
          handlers: {
@@ -289,13 +289,14 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: false,
-         order: 130
+         order: 150
       },
 
       {
          name: 'paste',
          componentType: 'WSControls/Buttons/MenuButton',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
+         pickerClassName: 'controls-MenuButton__Menu',
          caption: rk('Вставка'),
          tooltip: rk('Вставка'),
          icon: 'sprite:icon-24 icon-PasteBtr icon-primary',
@@ -319,7 +320,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
-         order: 140
+         order: 120
       },
 
       {
@@ -333,7 +334,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._toggleContentSource();
             }
          },
-         order: 150
+         order: 160
       },
       {
          name: 'history',
@@ -374,7 +375,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
-         order: 170
+         order: 130
       }
    ];
 });

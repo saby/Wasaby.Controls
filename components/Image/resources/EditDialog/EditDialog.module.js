@@ -8,11 +8,10 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
    "js!SBIS3.CONTROLS.Image.CropPlugin",
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/helpers/transport-helpers",
-   "Core/helpers/helpers",
    "js!SBIS3.CONTROLS.Button",
    "i18n!SBIS3.CONTROLS.Image.EditDialog",
    'css!SBIS3.CONTROLS.Image.EditDialog'
-], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, transHelpers, cHelpers) {
+], function( BLObject,CompoundControl, dotTplFn, CropPlugin, ImageUtil, transHelpers) {
    /**
     * SBIS3.CONTROLS.Image.EditDialog
     * @class SBIS3.CONTROLS.Image.EditDialog
@@ -101,7 +100,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
          });
          this._imageUrl = transHelpers.prepareGetRPCInvocationURL(this._options.dataSource.getEndpoint().contract,
             this._options.dataSource.getBinding().read, this._options.filter, BLObject.RETURN_TYPE_ASIS);
-         cHelpers.reloadImage(this._image, this._imageUrl);
+         ImageUtil.reloadImage(this._image, this._imageUrl);
       },
       onActivateSaveButton: function() {
          this.getParent()._cropPlugin.makeCrop();
