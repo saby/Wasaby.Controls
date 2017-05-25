@@ -708,8 +708,13 @@ body .controls-ToolBar__menuIcon .icon-24 {
 }
 
 .controls-Menu{
-  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon.icon-24 {
-    top: 0.9rem;
-    left: -0.2rem;
+  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+     &.icon-24 {
+        top: 0.9rem;
+        left: -0.2rem;
+     }
+     &.icon-16 {
+         top: 1.15rem;
+     }
   }
 }
