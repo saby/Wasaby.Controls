@@ -1469,25 +1469,32 @@ define('js!SBIS3.CONTROLS.ListView',
                   key: targetKey,
                   record: item,
                   container: correctTarget,
-                  position: {
-                     /* При расчётах координат по вертикали учитываем прокрутку */
-                     top: targetCords.top - containerCords.top + cont.scrollTop,
-                     left: targetCords.left - containerCords.left
+                  get position() {
+                     targetCords = correctTarget[0].getBoundingClientRect();
+                     containerCords = cont.getBoundingClientRect();
+                     return {
+                        /* При расчётах координат по вертикали учитываем прокрутку */
+                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         left: targetCords.left - containerCords.left
+                     };
                   },
-                  size: {
-                     height: correctTarget[0].offsetHeight,
-                     width: correctTarget[0].offsetWidth
+                  set position(value) {
+                  },
+                  get size() {
+                     return {
+                         height: correctTarget[0].offsetHeight,
+                         width: correctTarget[0].offsetWidth
+                     };
+                  },
+                  set size(value) {
                   }
-               }
+               };
             }
          },
 
          _notifyOnChangeHoveredItem: function() {
-            /* Надо делать клон и отдавать наружу только клон объекта, иначе,
-               если его кто-то испортит, испортится он у всех, в том числе и у нас */
-            var hoveredItemClone = cFunctions.clone(this._hoveredItem);
-            this._notify('onChangeHoveredItem', hoveredItemClone);
-            this._onChangeHoveredItem(hoveredItemClone);
+            this._notify('onChangeHoveredItem', this._hoveredItem);
+            this._onChangeHoveredItem(this._hoveredItem);
          },
 
          /**
@@ -1681,7 +1688,16 @@ define('js!SBIS3.CONTROLS.ListView',
                 afterHandleClickResult = fHelpers.forAliveOnly(function(result) {
                    if (result !== false) {
                       if(needSelect) {
-                         self.setSelectedKey(id);
+                         //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
+                         if (this._options.loadItemsStrategy == 'append') {
+                            var tr = this._findItemByElement($(target));
+                            var hash = tr.attr('data-hash');
+                            var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
+                            self.setSelectedIndex(index);
+                         }
+                         else {
+                            self.setSelectedKey(id);
+                         }
                       }
                       self._elemClickHandlerInternal(data, id, target, e);
                       elClickHandler && elClickHandler.call(self, id, data, target, e);
@@ -1798,13 +1814,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawSelectedItems: function (idArray, changes) {
-            function findElements(ids, itemsContainer) {
+            function findElements(ids, itemsContainer, cfg) {
                var elements = $([]), elem;
                for (i = 0; i < ids.length; i++) {
                   //сначала ищем непосредственно в контейнере, чтоб не найти вложенные списки
                   elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
                   if (elem.length) {
-                     elements.push(elem.get(0));
+                     //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
+                     if (cfg.loadItemsStrategy == 'append') {
+                        elem.each(function(i, item){
+                           elements.push(item);
+                        })
+                     }
+                     else {
+                        elements.push(elem.get(0));
+                     }
                   }
                   else {
                      //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
@@ -1821,8 +1845,8 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если точно знаем что изменилось, можем оптимизировать отрисовку
             if (changes && !isEmpty(changes)) {
                var rmKeyItems, addKeyItems;
-               addKeyItems = findElements(changes.added, itemsContainer);
-               rmKeyItems = findElements(changes.removed, itemsContainer);
+               addKeyItems = findElements(changes.added, itemsContainer, this._options);
+               rmKeyItems = findElements(changes.removed, itemsContainer, this._options);
                addKeyItems.addClass('controls-ListView__item__multiSelected');
                rmKeyItems.removeClass('controls-ListView__item__multiSelected');
             }
