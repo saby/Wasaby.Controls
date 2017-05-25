@@ -209,11 +209,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       _setVisibility: function(show) {
-         if (!this._itemsDrawn && show) {
-            this.redraw();
-         }
          if (this.isVisible() !== show) {
             this._isVisible = show;
+            if (!this._itemsDrawn && show) {
+               this.redraw();
+            }
             // убрал анимацию т.к. в Engine браузере панель находится в фиксированном заголовке и при анимации перекрывает контент
             // TODO вернуть анимацию, так чтобы контент в Engine браузере также был анимирован
             // на страницах с внутренними скролами панель операций может находиться не в фиксированном заголовке и для этого случая можно вернуть старый алгоритм анимации
@@ -305,11 +305,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       redraw: function() {
          var self = this;
-         this.requireButtons().addCallback(function() {
-            OperationsPanel.superclass.redraw.call(self);
-            self._itemsDrawn = true;
-            self._checkCapacity();
-         });
+         if (this.isVisible()) {
+            this.requireButtons().addCallback(function() {
+               OperationsPanel.superclass.redraw.call(self);
+               self._itemsDrawn = true;
+               self._checkCapacity();
+            });
+         }
       },
 
       requireButtons: function() {
