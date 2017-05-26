@@ -5,6 +5,7 @@
 /components/**/*.css
 /components/WS.Data/*
 /sbis3-ws
+/ws-data
 /node_modules
 /SBIS3.CONTROLS/*
 /themes/**/*.css
