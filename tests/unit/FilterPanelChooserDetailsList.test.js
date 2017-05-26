@@ -13,6 +13,12 @@ define(['js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', 'js!WS.Data/Collecti
            testResult6 = [{id: 2, hierarchy: true}, {id: 1, hierarchy: false}],
            testResult7 = [{id: 1, hierarchy: false}, {id: 2, hierarchy: true}];
 
+       before(function() {
+          if (typeof window === 'undefined') {
+             this.skip();
+          }
+       });
+
         beforeEach(function() {
             testComponent = new DetailsList({
                 element: $('<div class="TestDetailsList"></div>').appendTo($('body')),
