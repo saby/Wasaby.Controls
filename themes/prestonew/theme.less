@@ -3,6 +3,25 @@ html {
 }
 
 body {
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: #293D52;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: @disabled-color;
+            .controls-Button__icon {
+               color: @disabled-color !important
+            }
+         }
+      }
+   }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -317,14 +336,14 @@ body {
 }
 .ws-sticky-header__block.ws-sticky-header__fixed,
 .ws-sticky-header__table-header-copy {
-  background-color: #2C3E50 !important;
+  background-color: #202835 !important;
 }
 
 .ws-window {
   background-color: #293543 !important;
 }
 .ws-window-content {
-  background-color: #202835 !important;
+  background-color: #2C3E50 !important;
 }
 .controls-listView td {
   font-size: 1rem;
@@ -408,7 +427,7 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
-    background: #354B62;
+    background: #2C3E50 !important;
     box-shadow: none!important;
   }
   &.ws-window-titlebar-custom {
@@ -433,16 +452,31 @@ body {
   border-bottom: none;
 }
 
-
- .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
-
-    background: #FF7033;
-}
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
 
 
+.controls-ListView__item__selected {
+   .controls-DataGridView__td:first-child {
+      .marker()
+   }
+}
+
+.controls-ListView__ItemsToolbar-container {
+   .controls-ItemActions {
+      .controls-ItemActions__item{
+         .icon-primary{
+            color: #2D68B5 !important;
+         }
+         &:hover {
+            .icon-primary{
+               color: #313E78 !important;
+            }
+         }
+      }
+   }
+}
 
 body .ws-loadingimg {
   top: 30%;
@@ -476,22 +510,22 @@ body {
 
   }
   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    width: 1.43rem !important;
-    height: 1.43rem !important;
-    font-size: 1.43rem !important;
+     width: 1.43rem !important;
+     height: 1.43rem !important;
+     font-size: 1.43rem !important;
      border: none !important;
-    color: #2D68B5 !important;
-    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+     color: #2D68B5 !important;
+     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
         font-size: 1.43rem !important;
         color: #2D68B5 !important;
         border: none !important;
         left: 7px;
-    }
+     }
 
-    .controls-DateBox {
-      min-height: 3rem;
-    }
-
+     .controls-DateBox {
+        min-height: 3rem;
+     }
+  }
 }
 
 .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
@@ -504,6 +538,9 @@ body {
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
   border-color: #2c3e50;
+}
+.controls-IconButton.controls-TreeView__editArrow-container {
+   margin-top: 0.2rem;
 }
 
 .controls-DateBox.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
@@ -544,16 +581,28 @@ body {
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink__item-cross {
-  margin-right: -.7rem;
+.controls-FieldLink, .controls-FieldLink__picker {
+   .controls-FieldLink__showSelector, .controls-FieldLink__dropAllLinks, .controls-FieldLink__item {
+      .icon-16{
+         font-size: @icon-large-size!important;
+         line-height: @icon-large-size!important;
+         width: @icon-large-size;
+         height: @icon-large-size;
+      }
+   }
+   .controls-FieldLinkItemsCollection, controls-FieldLink__item {
+      height: 3rem;
+   }
+   .controls-FieldLink__showAllLinks {
+      line-height: 3rem;
+   }
 }
+
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
 }
-.controls-FieldLink__item-cross {
-    margin-right: -.7rem;
-}
+
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
@@ -671,12 +720,27 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
   }
 }
 
-.controls-Link {
-  font-size: 1.14rem;
+.controls-FieldLink .icon-size {
+    font-size: 3rem !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    line-height: 3rem !important;
 }
 
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: 3.88rem
    }
+}
+
+.controls-Menu{
+  .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+     &.icon-24 {
+        top: 0.9rem;
+        left: -0.2rem;
+     }
+     &.icon-16 {
+         top: 1.15rem;
+     }
+  }
 }

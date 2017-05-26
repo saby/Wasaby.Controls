@@ -11,7 +11,7 @@ define(
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
-      'tmpl!SBIS3.CONTROLS.DatePicker/resources/ElementPickerContent',
+      'tmpl!SBIS3.CONTROLS.DatePicker/resources/elementPickerContent',
       'Core/helpers/dom&controls-helpers',
       "Core/IoC",
       'i18n!SBIS3.CONTROLS.DatePicker',
@@ -99,6 +99,13 @@ define(
              * @deprecated
              */
             pickerIconShow: true,
+            /**
+             * @cfg {Boolean} Устанавливает отображение иконки выбора времени рядом с полем ввода в случае если {@link mask} установлена в значение "Только время".
+             * @remark
+             * Опция будет удалена начиная с версии 3.17.*, значение по умолчанию будет timePickerIconShow = true.
+             * @deprecated
+             */
+            timePickerIconShow: false,
 
             pickerConfig: {
                corner: 'tl',
@@ -294,7 +301,7 @@ define(
             pickerName;
          if (/[DMY]/.test(mask)) {
             pickerName = 'calendar';
-         }else if (mask === 'HH:II') {
+         } else if (mask === 'HH:II' && options.timePickerIconShow) {
             pickerName = 'time';
          }
          if (pickerName) {

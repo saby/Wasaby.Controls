@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       _controlName: 'SBIS3.CONTROLS.IconButton',
       _useNativeAsMain: true,
       iWantVDOM: false,
+      _doNotSetDirty: true,
+
       /*TODO: Удалить при переходе на VDOM*/
       _containerReady:function(container){
          if (window) {

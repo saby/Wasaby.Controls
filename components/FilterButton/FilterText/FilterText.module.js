@@ -28,7 +28,12 @@ define('js!SBIS3.CONTROLS.FilterText',
                  * @cfg {*} Значение, которое проставляется, если компонент виден.
                  * @see getFilterValue
                  */
-                filterValue: null
+                filterValue: null,
+                /**
+                 * @cfg {*} Значение, которое проставляется, при нажатии на крестик.
+                 * @see getFilterValue
+                 */
+                resetValue: undefined
              }
           },
 
@@ -47,7 +52,7 @@ define('js!SBIS3.CONTROLS.FilterText',
 
           _modifyOptions: function() {
              var cfg = FilterText.superclass._modifyOptions.apply(this, arguments);
-             cfg._visibleValue = cfg.filterValue;
+             cfg._visibleValue = cfg.resetValue !== undefined ? cfg.resetValue : cfg.filterValue;
              return cfg;
           },
 

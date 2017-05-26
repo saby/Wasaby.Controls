@@ -16,6 +16,7 @@
 @accent-color:							              #26B8FF;
 @default-hover-color:                     #B9E9FF;
 @innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@acent-color2:                            #354B62;//Цвет акцентной плашки
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
 @icon-color-primary:                      @default-text-color;
@@ -38,7 +39,7 @@
 @text-color:                              @white-color;
 @default-border-style:						solid;
 @blue-dark-color:                           #8991A9;
-@darkcyan-color: 							              #B9E9FF;
+@darkcyan-color: 						  #B9E9FF;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
 @default-border-width:					  0.072rem;
@@ -63,14 +64,14 @@
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
 @link-font-size:                          1.43rem;
-@link-hover-text-color:                   #FFA34F;
+@link-hover-text-color:                   #B9E9FF;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
 @link-icon-margin:                        -2px 0 0;
 
 @link-icon-field-margin:                  0 0 0 .14rem;
 
-@link-additional-color:                   @darkcyan-color;
+@link-additional-color:                   #8991A9;
 
 // ------------ //
 //  Icon Button //
@@ -348,7 +349,7 @@
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-radius:							1rem;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-bg-color:                         #202835;
+@switcher-btn-bg-color:                         #FF7033;
 @switcher-btn-color-inactive:					#8991A9;
 @switcher-line-color:							#8991A9;
 @switcher-border:                               2px solid #2C4458;
@@ -363,7 +364,10 @@
 @switcher-btn-color:                            #FF7033;
 @switcher-do-horizontal-line-background-color:  #8991A9;
 @switcher-do-text-color:                        @white-color;
-@switcher-do-unselected-text-color:             #999999;
+@switcher-do-unselected-text-color:             #8991A9;
+@switcher-do-disabled-text-color:               #37536C;
+@switcher-do-disabled-line-color:               @switcher-do-disabled-text-color;
+@switcher-do-disabled-btn-background:           @switcher-do-disabled-text-color;
 
 // ---- //
 // Menu //
@@ -409,7 +413,7 @@
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
 
-@menu-item-icon-top-offset:               1.15rem;
+@menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
 
 @menu-item-icon-left-offset:              -.4232rem;
 
@@ -542,7 +546,7 @@
 // Text box //
 // -------- //
 
-@text-box-wrapper-padding:                0 .16px;
+@text-box-wrapper-padding:                0 .57rem;
 
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
@@ -581,7 +585,7 @@
 
 @formatted-text-box-wrapper-min-height:         @text-box-field-min-height;
 
-@formatted-text-box-field-padding:              0 0 0 .7rem;
+@formatted-text-box-field-padding:              0;
 
 // --------------- //
 // Number text box //
@@ -912,6 +916,8 @@
 @listView-check-box-left:                      0;
 @listView-check-box-top:                       0;
 
+@listView-servicefooter-height:                1.47rem;
+
 @list-view-actions-item-height:                 1.75rem;
 @list-view-actions-margin:                      0 .14rem;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
@@ -937,6 +943,8 @@
 @listView-empty-data-color:                     #8991A9;
 @listView-empty-data-font-size:                1rem;
 @listView-empty-data-padding-top:               46px;
+
+@scrollPaging-padding:                          3rem;
 
 // --------- //
 // Tree view //
@@ -1015,7 +1023,7 @@
 
 @controls-OperationsPanel-height:                   3.57rem;
 
-@controls-OperationsPanel-bg:                       #38495B;
+@controls-OperationsPanel-bg:                       #F0F5FB;
 
 @controls-OperationsPanel-actions-margin:           0 .14rem;
 
@@ -1079,7 +1087,7 @@
  @controls-filterButton-button-height:			2rem;
 @controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       0;
+@controls-filterButton-picker-border-width:       2px;
 @controls-filterButton-picker-border-radius:      0;
 @controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  1.75rem;
@@ -1123,15 +1131,17 @@
 
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
-@controls-FieldLink-linkItem-line-height:          2.83rem;
+@controls-FieldLink-linkItem-line-height:          3rem;
 @controls-FieldLink-showAllLinks-width:            20px;
 
 @controls-FieldLink-linkItem-margin:              .07rem 0;
-@controls-FieldLink-linkItem-padding:              0 17px 0 .14rem;
+@controls-FieldLink-linkItem-padding:              0 3rem 0 .14rem;
 @controls-FieldLink-linkItem-caption-height:       1.75rem;
 @controls-FieldLink-linkItem-cross-width:          20px;
 @controls-FieldLink-linkItem-cross-right:          0;
-@controls-FieldLink-linkItem-cross-top:            .5rem;
+@controls-FieldLink-linkItem-cross-top:            0;
+@controls-FieldLink-linkItem-cross-padding:        0;
+@controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
 @controls-FieldLink-afterField-padding:            0 .14rem 0 0;
 @controls-FieldLink-afterField-height:             3rem;
@@ -1235,7 +1245,7 @@
 @tab-button-checked-inner-font-size:            1.43rem;
 @tab-button-checked-inner-color:                rgb(255, 204, 153);
 @tab-button-simple-inner-checked-color:         rgb(255, 204, 153);
-@tab-button-simple-checked-bottomline-color:    rgb(255, 204, 153);
+@tab-button-simple-checked-bottomline-color:    @primary-color;
 @tab-button-large-inner-max-width:				100%;
 @tab-button-inner-padding:                      0px .857rem 0 .857rem;
 
@@ -1358,3 +1368,5 @@
 @clock-picker-arrow-tip-border-width:               0.072rem;
 @clock-picker-arrow-tip-color:                      @default-text-color;
 @clock-picker-arrow-tip-border-color:               @clock-picker-arrow-color;
+
+@controls-filterButton-picker-border-color:         #26B8FF;

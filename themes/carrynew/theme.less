@@ -85,7 +85,25 @@ body {
   font-size: 1rem;
 }
 body {
-
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: @button-bg;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: #CCCCCC;
+            .controls-Button__icon {
+               color: #CCCCCC !important
+            }
+         }
+      }
+   }
     .engine-Browser__path-wrapper-in-head {
       height: auto;
     }
@@ -225,11 +243,6 @@ body {
   border-bottom: none;
 }
 
-
- .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
-
-    background: #FF7033;
-}
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
@@ -288,7 +301,11 @@ body {
     height: 3.57rem;
 }
 
-
+.controls-ListView__item__selected {
+   .controls-DataGridView__td:first-child {
+      .marker()
+   }
+}
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
     font-size: inherit !important;
@@ -354,14 +371,46 @@ body .controls-ToolBar__menuIcon .icon-24 {
     margin-right: 0.4rem;
 }
 
+.controls-IconButton.controls-TreeView__editArrow-container {
+   margin-top: 0.2rem;
+}
+
 .controls__filter-button__clear-filter {
   .controls-Link__field {
     vertical-align: baseline;
   }
 }
+.controls-FieldLink .icon-size {
+    font-size: 3rem !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    line-height: 3rem !important;
+}
 
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: 3.88rem
+   }
+}
+
+.controls-ToolBar__menuIcon {
+  .icon-24 {
+    font-size: @icon-large-size !important;
+    line-height: @icon-large-size !important;
+    width: @icon-large-size !important;
+    height: @icon-large-size !important;
+    font-family: @default-icon-large-font !important;
+    vertical-align: middle !important;
+  }
+}
+.controls-Menu{
+   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+      &.icon-24 {
+         top: 0.9rem;
+         left: -0.2rem;
+      }
+      &.icon-16 {
+         top: 1.15rem;
+      }
    }
 }

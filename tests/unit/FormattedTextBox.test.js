@@ -5,18 +5,30 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
 
    'use strict';
    describe('js!SBIS3.CONTROLS.FormattedTextBox', function () {
-      $('#mocha').append('<div id="component"></div>');
-
-      let FTB = new FormattedTextBox({
-         element: 'component',
-         mask: 'xx:xx:xx'
+      var FTB, inputField;
+      before(function() {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
+         else {
+            $('#mocha').append('<div id="component"></div>');
+            FTB = new FormattedTextBox({
+               element: 'component',
+               mask: 'xx:xx:xx'
+            });
+            inputField = FTB._inputField;
+         }
       });
-      let inputField = FTB._inputField;
+      after(function () {
+         FTB.destroy();
+         FTB = undefined;
+         inputField = undefined;
+      });
 
       beforeEach(function() {
       });
 
-      describe('Android: Get inputted symbol and symbol position', function (){
+      context('Android: Get inputted symbol and symbol position', function (){
          it('Not changed', function (){
             assert.equal(FTB._getTextDiff(), false);
          });
@@ -44,11 +56,6 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
                position: 1
             });
          });
-      });
-      after(function () {
-         FTB.destroy();
-         FTB = undefined;
-         inputField = undefined;
       });
    });
 });
