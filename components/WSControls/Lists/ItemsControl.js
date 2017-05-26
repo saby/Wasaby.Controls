@@ -64,6 +64,8 @@ define('js!WSControls/Lists/ItemsControl', [
             this.items = cfg.items || [];
             this.idProperty = cfg.idProperty;
             this.displayProperty = cfg.displayProperty;
+            this.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
+            this.itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
 
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
