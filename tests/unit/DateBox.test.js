@@ -4,10 +4,15 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
    var controlTestCase = function () {
       // Попытка вынести общую логику тестов, не уверен что правильная.. Пусть пока полежит здесь.
       beforeEach(function () {
-         var cfg = this.controlConfig || {};
-         this.container = $('<div id="component"></div>').appendTo('#mocha');
-         cfg.element = this.container;
-         this.testControl = new this.controlClass(this.controlConfig);
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
+         else {
+            var cfg = this.controlConfig || {};
+            this.container = $('<div id="component"></div>').appendTo('#mocha');
+            cfg.element = this.container;
+            this.testControl = new this.controlClass(this.controlConfig);
+         }
       });
 
       afterEach(function () {
