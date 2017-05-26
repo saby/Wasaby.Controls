@@ -31,8 +31,8 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      */
    var CommandsButton = MenuIcon.extend({
       _modifyOptions: function(opts) {
-         opts.cssClassName += ' controls-Menu__hide-menu-header controls-IconButton';
-         opts.icon = 'sprite:icon-24 icon-ExpandDown icon-primary';
+         opts.cssClassName += ' controls-Menu__hide-menu-header controls-IconButton controls-CommandsButton';
+         opts.icon = 'sprite:icon-size icon-ExpandDown icon-primary';
          opts.pickerClassName += ' controls-CommandsButton__picker';
          opts.className += ' '
          if (opts.pickerConfig) {
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
       },
       _setPickerContent: function() {
          CommandsButton.superclass._setPickerContent.apply(this, arguments);
-         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-ExpandUp icon-primary');
+         $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
       }
    });
    return CommandsButton;
