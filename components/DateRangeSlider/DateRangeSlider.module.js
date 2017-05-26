@@ -49,10 +49,12 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       },
 
       init: function () {
-         var container = this.getContainer(),
-            isCheckedOptions = this._options.checkedStart || this._options.checkedEnd || this._options.iconsHandler;
-
          DateRangeSlider.superclass.init.call(this);
+
+         var
+            self = this,
+            container = this.getContainer(),
+            isCheckedOptions = this._options.checkedStart || this._options.checkedEnd || this._options.iconsHandler;
 
          if (!this._options.showMonths && !this._options.showQuarters && !this._options.showHalfyears) {
             this.getContainer().addClass(this._cssRangeSlider.yearState);
@@ -68,6 +70,16 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
                this.getName() + ': Используемое сочетание опций showMonths, showQuarters, showHalfyears, showYears и опций установки иконок не стандартизовано и не должно использоваться. Возможна не корректная работа контрола.'
             )
          }
+
+         // Пока pickerMixin не умеет выравниваться по центру относительно открывающего контрола, сделаем это за него.
+         // Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=73b59c8e-f962-433c-9432-1218fbe754aa
+         this.subscribeOnceTo(this, 'onPickerOpen', function(){
+            var picker = self.getPicker();
+            picker.setHorizontalAlign({
+               side: 'left',
+               offset: (container.outerWidth() - picker.getContainer().width()) / 2
+            });
+         });
       },
 
       _modifyOptions: function (opts) {
@@ -196,25 +208,12 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       },
 
       _setPickerConfig: function() {
-         var pickerWidth = 0,
-            baseWidth = this.getContainer().outerWidth(),
-            wrapperWidth = this.getContainer().children('.controls-DateRangeSlider__value-wrapper').css('min-width');
-         // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
-         // Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=73b59c8e-f962-433c-9432-1218fbe754aa
-         if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
-            pickerWidth = wrapperWidth === '124px' ? 136 : 82;
-         } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
-            pickerWidth = wrapperWidth === '124px' ? 204 : 178;
-         } else {
-            pickerWidth = wrapperWidth === '124px' ? 204 : 148;
-         }
          return {
             corner: 'tl',
             bodyBounds: true,
             locationStrategy: 'bodyBounds',
             horizontalAlign: {
-               side: 'left',
-               offset: (baseWidth - pickerWidth)/2
+               side: 'left'
             },
             verticalAlign: {
                side: 'top'
