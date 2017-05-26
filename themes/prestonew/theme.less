@@ -480,10 +480,6 @@ body {
    }
 }
 
-body .ws-loadingimg {
-  top: 30%;
-}
-
 body {
    .controls-BackButton {
       .controls-BackButton__caption.controls-Link {
@@ -745,6 +741,35 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
          top: 1.15rem;
      }
   }
+}
+
+.controls-AjaxLoader__LoadingIndicator {
+   border-radius: 16px;
+}
+
+.ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+   
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window {
+   img {
+      width: 77px;
+      height: 77px;
+   }
+   .ws-loadingimg {
+      left: 13px;
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: 77px;
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: 32px;
+   }
 }
 .controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   color: #324352;
