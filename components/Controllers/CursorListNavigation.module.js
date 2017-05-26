@@ -30,8 +30,8 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
          _getCalculatedParams: function() {
             var sign = '', additionalFilter = {};
             switch(this._options.config.direction) {
-               case 'desc': sign = '>='; break;
-               case 'asc': sign = '<='; break;
+               case 'after': sign = '>='; break;
+               case 'before': sign = '<='; break;
                case 'both': sign = '~'; break;
             }
 
@@ -44,11 +44,11 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
          prepareQueryParams: function(projection, scrollDirection) {
             var edgeRecord, filterValue;
             if (scrollDirection == 'up') {
-               this.setDirection('desc');
+               this.setDirection('before');
                edgeRecord = projection.at(0).getContents();
             }
             else {
-               this.setDirection('asc');
+               this.setDirection('after');
                edgeRecord = projection.at(projection.getCount() - 1).getContents();
             }
             filterValue = edgeRecord.get(this._options.config.field);
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             var more = dataset.getMetaData().more;
             if (typeof more == 'boolean') {
                var direction;
-               if (this._options.config.direction == 'desc') {
+               if (this._options.config.direction == 'after') {
                   direction = 'down';
                }
                else {
