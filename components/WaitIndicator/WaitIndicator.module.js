@@ -3,8 +3,7 @@
       'Core/core-extend',
       'Core/Deferred',
       'js!SBIS3.CORE.Control',
-      'Core/js-template-doT',
-      'css!SBIS3.CONTROLS.WaitIndicator'
+      'Core/js-template-doT'
    ],
 
    /**
