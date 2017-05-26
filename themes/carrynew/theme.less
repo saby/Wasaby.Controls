@@ -247,11 +247,6 @@ body {
   border-color: #26b8ff;
 }
 
-
-body .ws-loadingimg {
-  top: 30%;
-}
-
 body {
   .ws-info-box {
       background: @basic-block-bg-color;
@@ -412,6 +407,35 @@ body .controls-ToolBar__menuIcon .icon-24 {
       &.icon-16 {
          top: 1.15rem;
       }
+   }
+}
+
+.controls-AjaxLoader__LoadingIndicator {
+   border-radius: 16px;
+}
+
+.ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+   
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window {
+   img {
+      width: 77px;
+      height: 77px;
+   }
+   .ws-loadingimg {
+      left: 13px;
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: 77px;
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: 32px;
    }
 }
 
