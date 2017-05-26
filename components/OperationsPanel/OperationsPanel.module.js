@@ -209,11 +209,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       _setVisibility: function(show) {
-         if (!this._itemsDrawn && show) {
-            this.redraw();
-         }
          if (this.isVisible() !== show) {
             this._isVisible = show;
+            if (!this._itemsDrawn && show) {
+               this.redraw();
+            }
             // убрал анимацию т.к. в Engine браузере панель находится в фиксированном заголовке и при анимации перекрывает контент
             // TODO вернуть анимацию, так чтобы контент в Engine браузере также был анимирован
             // на страницах с внутренними скролами панель операций может находиться не в фиксированном заголовке и для этого случая можно вернуть старый алгоритм анимации
@@ -265,16 +265,18 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       /*
-      * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
-      * */
+       * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
+       * */
       _checkCapacity: function(){
          var container = this.getContainer();
+         /* Необходимая ширина: ширина блока операции выделения + ширина кнопки с меню*/
+         var needElementsWidth = this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() + ITEMS_MENU_WIDTH;
          /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
-         var allowedWidth = container.width() - this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() - ITEMS_MENU_WIDTH;
+         var allowedWidth = container.width() - needElementsWidth;
 
          var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
 
-         var width = 0;
+         var width = needElementsWidth;
          var isMenuNecessary = false;
          this._getItemsContainer().css('width', '');
 
@@ -303,10 +305,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       redraw: function() {
          var self = this;
-         this.requireButtons().addCallback(function() {
-            OperationsPanel.superclass.redraw.call(self);
-            self._itemsDrawn = true;
-         });
+         if (this.isVisible()) {
+            this.requireButtons().addCallback(function() {
+               OperationsPanel.superclass.redraw.call(self);
+               self._itemsDrawn = true;
+               self._checkCapacity();
+            });
+         }
       },
 
       requireButtons: function() {

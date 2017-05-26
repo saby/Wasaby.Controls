@@ -97,22 +97,19 @@ define('js!SBIS3.CONTROLS.SearchMixin',
       _applySearch : function(text, force) {
          var hasStartCharacter = this._options.startCharacter !== null,
              textTrimLength;
-
+   
+         /* Вырезаем символы < > только если они одиночные, т.е. не в составе какого-то слова,
+            т.к. декоратор в гриде при выделении цветом одиночных < > может поломать вёрстку */
+         text = (text || '').replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
+         textTrimLength = String.trim(text).length;
+         
          /* Если поиск запущен, то надо отменить поиск с задержкой */
          this._clearSearchDelay();
-         if (text) {
-            /* Вырезаем символы < > только если они одиночные, т.е. не в составе какого-то слова,
-               т.к. декоратор в гриде при выделении цветом одиночных < > может поломать вёрстку */
-            text = text.replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
-            textTrimLength = String.trim(text).length;
-            if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
-               this._notify('onSearch', text, force);
-               this._onResetIsFired = false;
-            } else if (hasStartCharacter) {
-               this._notifyOnReset();
-            }
-         }
-         else {
+   
+         if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
+            this._notify('onSearch', text, force);
+            this._onResetIsFired = false;
+         } else  {
             this._notifyOnReset();
          }
       },

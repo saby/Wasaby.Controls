@@ -7,7 +7,7 @@
 @default-text-color:                      #e4e4e4;
 @default-color:                           #587AB0;
 @primary-color:                           #D94700;
-@disabled-color:                          #2C4458;
+@disabled-color:                          #8991A9;
 @innacent-color:                     	    #8991A9;
 @error-color:                             #EF463A;
 @warning-color:                           #FA9C33;
@@ -16,6 +16,7 @@
 @accent-color:							              #26B8FF;
 @default-hover-color:                     #B9E9FF;
 @innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@acent-color2:                            #354B62;//Цвет акцентной плашки
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
 @icon-color-primary:                      @default-text-color;
@@ -26,7 +27,7 @@
 @icon-large-size:                         3rem;
 
 //=============
-@black-color:                             #333;
+@black-color:                             #8991A9;
 @gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
 @primary-color:                           #FF7033;
@@ -37,8 +38,8 @@
 @date-range-big-bg:		#2c3e50;
 @text-color:                              @white-color;
 @default-border-style:						solid;
-@blue-dark-color: #FFCC99;
-@darkcyan-color: 							#8991A9;
+@blue-dark-color:                           #8991A9;
+@darkcyan-color: 						  #B9E9FF;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
 @default-border-width:					  0.072rem;
@@ -63,20 +64,20 @@
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
 @link-font-size:                          1.43rem;
-@link-hover-text-color:                   #FFA34F;
+@link-hover-text-color:                   #B9E9FF;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
 @link-icon-margin:                        -2px 0 0;
 
 @link-icon-field-margin:                  0 0 0 .14rem;
 
-@link-additional-color:                   @darkcyan-color;
+@link-additional-color:                   #8991A9;
 
 // ------------ //
 //  Icon Button //
 // ------------ //
 
-@icon-button-round-border-position:     relative;
+@icon-button-round-border-position:     absolute;
 @icon-button-round-border-width:        2.286rem;
 @icon-button-round-border-height:       2.286rem;
 @icon-button-round-border-line-height:  2.2rem;
@@ -131,8 +132,8 @@
 // ------------------ //
 // FilterPanelChooser //
 // ------------------ //
-@controls-filterButton-area-header-height:							3.57rem;
- @controls-filterLine-items-line-height:							1rem;
+@controls-filterButton-area-header-height:							   3rem;
+@controls-filterLine-items-line-height:							      1rem;
 @filter-panel-chooser-default-color:                              #F9F9F9;
 @filter-panel-chooser-hovered-color:                              #EAECEE;
 @filter-panel-chooser-selected-color:                             #F3F3F3;
@@ -197,9 +198,9 @@
 @button-primary-active-bg:                #d94700;
 
 // Normal disabled button
-@button-disabled-text-color:              @disabled-color;
-@button-disabled-border:                  @button-primary-border;
-@button-disabled-bg:                      #ff7033;
+@button-disabled-text-color:              #8991A9;
+@button-disabled-border:                  2px solid #8991A9;
+@button-disabled-bg:                      #354B62;
 
 // Big button
 @button-big-line-height:                  @button-line-height;
@@ -348,7 +349,7 @@
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-radius:							1rem;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-bg-color:                         #202835;
+@switcher-btn-bg-color:                         #FF7033;
 @switcher-btn-color-inactive:					#8991A9;
 @switcher-line-color:							#8991A9;
 @switcher-border:                               2px solid #2C4458;
@@ -363,7 +364,10 @@
 @switcher-btn-color:                            #FF7033;
 @switcher-do-horizontal-line-background-color:  #8991A9;
 @switcher-do-text-color:                        @white-color;
-@switcher-do-unselected-text-color:             #999999;
+@switcher-do-unselected-text-color:             #8991A9;
+@switcher-do-disabled-text-color:               #37536C;
+@switcher-do-disabled-line-color:               @switcher-do-disabled-text-color;
+@switcher-do-disabled-btn-background:           @switcher-do-disabled-text-color;
 
 // ---- //
 // Menu //
@@ -409,7 +413,7 @@
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
 
-@menu-item-icon-top-offset:               .2rem;
+@menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
 
 @menu-item-icon-left-offset:              -.4232rem;
 
@@ -418,7 +422,7 @@
 
 @menu-item-icon24-left-offset:              -2px;
 @menu-item-icon24-left-offset-big:           0px;
-@menu-item-line-height:                  3rem;
+@menu-item-line-height:                  3.57rem;
 
 // ----------- //
 // Menu button //
@@ -542,12 +546,12 @@
 // Text box //
 // -------- //
 
-@text-box-wrapper-padding:                0 .14rem;
+@text-box-wrapper-padding:                0 .57rem;
 
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
 
-@text-box-field-text-color:               rgba(96,170,221, .2 );
+@text-box-field-text-color:               #e4e4e4;
 
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
@@ -563,13 +567,13 @@
 
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                      #324352;
-@text-box-border-width:.07rem;
+@text-box-border-width:                   2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 
 @text-box-disabled-border-bottom:         1px solid #333333;
-@text-box-focus-border-width:.07rem;
+@text-box-focus-border-width:             2px;
 @text-box-field-focus-text-color:         #e4e4e4;
 @text-box-after-width:                    20px;
 @text-box-height: 3rem;
@@ -581,7 +585,7 @@
 
 @formatted-text-box-wrapper-min-height:         @text-box-field-min-height;
 
-@formatted-text-box-field-padding:              12px 0 0;
+@formatted-text-box-field-padding:              0;
 
 // --------------- //
 // Number text box //
@@ -626,17 +630,17 @@
 @search-button-wrapper-padding:							0 .5rem 0 0;
 @search-buttons-wrapper-width:                        auto;
 @search-loop-size: 2rem;
-@search-background:                                   #2e3a45;
+@search-background:                                   rgba(150, 159, 168, 0.15);
 @search-disabled-background:                          @text-box-disabled-bg;
 @search-height:                                       3rem;
 @search-border-color:                                 transparent;
-@search-hover-border-color:                           #5d687b;
-@search-bottom-border-color:                          #2e3a45;
+@search-hover-border-color:                           rgba(150, 159, 168, 0.40);
+@search-bottom-border-color:                          transparent;;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-form-icon-padding:                            .7rem .4rem .4rem 0;
 @search-form-icon-disabled-display:                   block;
 
-@search-focus-background:                             #2e3a45;
+@search-focus-background:                             rgba(150, 159, 168, 0.15);
 // --------- //
 // Combo box //
 // --------- //
@@ -742,7 +746,7 @@
 
 
 
-@controls-FieldLink-border:                            .07rem solid;
+@controls-FieldLink-border:                           2px solid;
 @controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
 @controls-FieldLink-border-color-focus-hover:         #314559;
 @controls-FieldLink-link-color:                         #26B8FF;
@@ -847,7 +851,7 @@
 @date-range-choose-border-color:                #26b8ff;
 @date-range-choose-item-bg-color                :#2c3e50;
 @date-range-choose-bg-hover-color:              #2c3e50;
-@date-range-choose-border-hover-width:          .07rem  .07rem 0;
+@date-range-choose-border-hover-width:          2px  2px 0;
 @date-range-choose-border-hover:                  solid #26b8ff;
 @date-range-choose-month-height:                 1.85rem;
 @date-range-choose-short-width:                   11.78rem;
@@ -864,7 +868,7 @@
 @date-range-choose-current-value-font-weight:   normal;
 @date-range-choose-current-value-height:        3.57rem;
 @date-range-choose-current-value-line-height:   3.43rem;
-@date-range-choose-border-width:               .07rem;
+@date-range-choose-border-width:               2px;
 @date-range-choose-year-height:                 3.285rem;
 
 
@@ -912,12 +916,14 @@
 @listView-check-box-left:                      0;
 @listView-check-box-top:                       0;
 
+@listView-servicefooter-height:                1.47rem;
+
 @list-view-actions-item-height:                 1.75rem;
 @list-view-actions-margin:                      0 .14rem;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-icon-top:                    .857rem;
 @list-view-actions-menu-text-margin:          .64rem 0px 6px 2.32rem;
-@list-view-items-toolbar-vertical-locked-box-shadow: -2px .07rem 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px 2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                1.75rem;
 @list-view-items-toolbar-vertical-line-height:       0.86rem;
 @list-view-items-toolbar-locked-bg:                  transparent;
@@ -938,19 +944,22 @@
 @listView-empty-data-font-size:                1rem;
 @listView-empty-data-padding-top:               46px;
 
+@scrollPaging-padding:                          3rem;
+
 // --------- //
 // Tree view //
 // --------- //
 
 @tree-view-expand-spritesheet:                  '';
+@tree-view-expand-width:                      1rem;
+@tree-view-expand-height:                      1.4rem;
 
 
-@tree-view-expand-height:                       21px;
-@tree-view-expand-margin:                        .07rem 0 -2px;
+@tree-view-expand-margin:                        2px .4rem -2px;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
 
-@tree-view-editArrow-top:                      .07rem;
+@tree-view-editArrow-top:                      .2rem;
 
 @tree-view-expand-bg:                           transparent;
 
@@ -1012,9 +1021,9 @@
 // OperationsPanel //
 // --------------- //
 
-@controls-OperationsPanel-height:                   30px;
+@controls-OperationsPanel-height:                   3.57rem;
 
-@controls-OperationsPanel-bg:                       #38495B;
+@controls-OperationsPanel-bg:                       #F0F5FB;
 
 @controls-OperationsPanel-actions-margin:           0 .14rem;
 
@@ -1078,7 +1087,7 @@
  @controls-filterButton-button-height:			2rem;
 @controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       0;
+@controls-filterButton-picker-border-width:       2px;
 @controls-filterButton-picker-border-radius:      0;
 @controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  1.75rem;
@@ -1096,7 +1105,7 @@
 @controls-filterButton-area-text-color:           #e4e4e4;
 @controls-filterButton-clear-margin-right:        16px;
 
-@controls-filterButton-area-content-margin:       0 1.75rem 12px 1.75rem;
+@controls-filterButton-area-content-margin:       0  12px 0.75rem;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               41px;
 @controls-filterButton-apply-margin-right:        0;
@@ -1117,20 +1126,22 @@
 
 @controls-filterLine-copyCross-top:               -28px;
 @controls-filterLine-copyCross-margin:            -1.75rem;
-@controls-filterLine-copyCross-shadow:            -8px 0px 10px.07rem @white-color;
+@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
 
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       22px;
-@controls-FieldLink-linkItem-line-height:          2.83rem;
+@controls-FieldLink-linkItem-line-height:          3rem;
 @controls-FieldLink-showAllLinks-width:            20px;
 
 @controls-FieldLink-linkItem-margin:              .07rem 0;
-@controls-FieldLink-linkItem-padding:              0 17px 0 .14rem;
+@controls-FieldLink-linkItem-padding:              0 3rem 0 .14rem;
 @controls-FieldLink-linkItem-caption-height:       1.75rem;
 @controls-FieldLink-linkItem-cross-width:          20px;
 @controls-FieldLink-linkItem-cross-right:          0;
-@controls-FieldLink-linkItem-cross-top:            .5rem;
+@controls-FieldLink-linkItem-cross-top:            0;
+@controls-FieldLink-linkItem-cross-padding:        0;
+@controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
 @controls-FieldLink-afterField-padding:            0 .14rem 0 0;
 @controls-FieldLink-afterField-height:             3rem;
@@ -1158,9 +1169,9 @@
 @back-button-arrow-paddingleft:                     16px;
 @bread-crumb-title-color:                          #8991A9;
 @breadcrumbs-top:                                  .14rem;
-@breadcrumbs-smallItems-font-size:                 13px;
-@breadcrumbs-arrow-top:                           .07rem;
-@breadcrumbs-small-items-top:                      inherit;
+@breadcrumbs-smallItems-font-size:                 1.43rem;
+@breadcrumbs-arrow-top:                            .07rem;
+@breadcrumbs-small-items-top:                      .3rem;
 
 // EditDialog
 @editdialog-applybutton-width:                     90px;
@@ -1234,7 +1245,7 @@
 @tab-button-checked-inner-font-size:            1.43rem;
 @tab-button-checked-inner-color:                rgb(255, 204, 153);
 @tab-button-simple-inner-checked-color:         rgb(255, 204, 153);
-@tab-button-simple-checked-bottomline-color:    rgb(255, 204, 153);
+@tab-button-simple-checked-bottomline-color:    @primary-color;
 @tab-button-large-inner-max-width:				100%;
 @tab-button-inner-padding:                      0px .857rem 0 .857rem;
 
@@ -1278,8 +1289,8 @@
 @menu-item-icon-32-margin:							0 0 0 3rem;
 @menu-item-icon-24-margin:							0 0 0 1.78rem;
 @menu-item-icon-16-margin:							0 0 0 1.32rem;
-@text-box-error-bg:                       #202835;
-@back-button-linheight-before:              3.2rem;
+@text-box-error-bg:                       #472e35;
+@back-button-linheight-before:              3rem;
 @back-button-width-before:                  .7rem;
 @back-button-text-fontweight:               @default-font-weight;
 @tab-buttons-border-bottom-height:          0.01rem;
@@ -1293,3 +1304,73 @@
 
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
+
+@DropdownList-height: 					1.43rem;
+@list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+@list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+
+@text-box-placeholder-color: 				rgba(96,170,221, .2);
+@DropdownList-picker-menu-item-height:  3.57rem;
+@tree-view-ellipsis-copyArrow-width:    1rem;
+@bread-crumbs-menu-padding:             0;
+@menu-subpopup-padding:               @bread-crumbs-menu-padding;
+
+//--------------//
+//  TimePicker  //
+//--------------//
+@time-picker-background-color:                      @basic-block-bg-color;
+
+//--------------//
+//  TimeHeader  //
+//--------------//
+@time-header-height:                                100px;
+@time-header-font-size:                             40px;
+@time-header-title-margin-left:                     24px;
+@time-header-toggle-time-margin-left:               32px;
+@time-header-home-button-margin-left:               8px;
+@time-header-background-color:                      @time-picker-background-color;
+@time-header-title-color:                           @innacent-color;
+
+// ---------- //
+// ToggleTime //
+// ---------- //
+@toggle-time-passive-hover-text-decoration:         none;
+@toggle-time-passive-color:                         @default-text-color;
+
+//---------------//
+//  ClockPicker  //
+//---------------//
+
+@clock-picker-height:                               19.357rem;
+@clock-picker-width:                                19.929rem;
+@clock-picker-background-color:                     @time-picker-background-color;
+
+@clock-picker-outer-tick-radius:                    1.25rem;
+@clock-picker-tick-hover-background-color:          #273B4D;
+
+@clock-picker-inner-tick-radius:                    1rem;
+@clock-picker-inner-tick-background-color:          #354B62;
+
+@clock-picker-outer-circle-radius:                  7.857rem;
+@clock-picker-outer-circle-border-color:            @clock-picker-inner-tick-background-color;
+
+@clock-picker-inner-circle-radius:                  5rem;
+
+@clock-picker-unit-time-font-size:                  1.714rem;
+@clock-picker-unit-time-z-index:                    16;
+@clock-picker-unit-time-color:                      @clock-picker-inner-tick-background-color;
+
+@clock-picker-arrow-width:                          0.036rem;
+@clock-picker-arrow-color:                          @accent-color;
+
+@clock-picker-inner-arrow-z-index:                  4;
+
+@clock-picker-arrow-tip-border-width:               0.072rem;
+@clock-picker-arrow-tip-color:                      @default-text-color;
+@clock-picker-arrow-tip-border-color:               @clock-picker-arrow-color;
+
+
+@header-height:                        3rem;
+@header-font:                                      400 1.43rem escape('/') @header-height @default-font-name;
+@header-padding-left: 0;
+@controls-filterButton-picker-border-color:         #26B8FF;

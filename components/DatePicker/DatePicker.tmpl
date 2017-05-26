@@ -1,0 +1,18 @@
+<div class="controls-DatePicker controls-DateBox controls-FormattedTextBox{{pickerIconShow ? '' : ' controls-DatePicker_hiddenIcon'}}">
+   <ws:if data="{{pickerIconShow}}">
+      <div class="controls-DatePicker__calendarWrapper">
+         <ws:SBIS3.CONTROLS.IconButton
+            className="controls-DatePicker__button"
+            name="PickerButton"
+            tabindex="1"
+            icon="icon-16 icon-primary {{ {
+               'calendar': 'icon-Calendar2',
+               'time': 'icon-Time'
+            }[_pickerName] }}"
+         />
+      </div>
+   </ws:if>
+   <div class="controls-DatePicker__dateBox controls-DateBox__fieldWrapper controls-FormattedTextBox__fieldWrapper">
+      <div contenteditable="{{enabled}}" class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
+   </div>
+</div>

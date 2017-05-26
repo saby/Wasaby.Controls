@@ -3,6 +3,7 @@
 /components/contents.json
 /components/contents.js
 /components/**/*.css
+/components/WS.Data/*
 /sbis3-ws
 /ws-data
 /node_modules

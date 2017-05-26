@@ -72,6 +72,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
     * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
+    * @cssModifier controls-TreeDataGridView__withPhoto-S Устанавливает отступы с учетом расположения в верстке изображения, размера S.
+    * @cssModifier controls-TreeDataGridView__withPhoto-M Устанавливает отступы с учетом расположения в верстке изображения, размера M.
+    * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
+    * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
@@ -259,8 +263,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
             checkboxOffset = this._options.editingTemplate && hasCheckbox && !container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_SELECT_CHECKBOX_WIDTH : 0,
             // Считаем необходимый отступ слева-направо:
-            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота
-            result = checkboxOffset + this._getRowPadding(target) + levelOffset + DEFAULT_EXPAND_ELEMENT_WIDTH;
+            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
+            // Так же в режиме поиска не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
+            result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
          // Если не задан шаблон редактирования строки и отображаются чекбоксы - компенсируем разницу оступов в полях ввода и ячеек таблицы (в полях ввода 5px, в таблице - 6px)
          if (!this._options.editingTemplate && hasCheckbox) {
             result += DEFAULT_CELL_PADDING_DIFFERENCE;
@@ -301,11 +306,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return parentResult;
       },
 
-      collapseNode: function (key) {
+      collapseNode: function (key, hash) {
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
-      expandNode: function (key) {
+      expandNode: function (key, hash) {
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
       },
 
@@ -497,7 +502,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          /* При клике по треугольнику надо просто раскрыть ветку */
          if (closestExpand.hasClass('js-controls-TreeView__expand')) {
-            this.toggleNode(id);
+            if (this._options.loadItemsStrategy == 'append') {
+               var tr = this._findItemByElement($(target));
+               var hash = tr.attr('data-hash');
+               this.toggleNode(id, hash);
+            }
+            else {
+               this.toggleNode(id);
+            }
             return;
          }
 

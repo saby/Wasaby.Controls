@@ -699,9 +699,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see expandNode
        * @see toggleNode
        */
-      collapseNode: function(id) {
-         var
+      collapseNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
+         var item;
+         if (hash) {
+            item = this._getItemsProjection().getByHash(hash);
+         }
+         else {
             item = this._getItemProjectionByItemId(id);
+         }
          if (item) {
             item.setExpanded(false);
             return Deferred.success();
@@ -715,11 +721,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see collapseNode
        * @see expandNode
        */
-      toggleNode: function(id) {
-         var
+      toggleNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
+         var item;
+         if (hash) {
+            item = this._getItemsProjection().getByHash(hash);
+         }
+         else {
             item = this._getItemProjectionByItemId(id);
+         }
          if (item) {
-            return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id);
+            return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id, hash);
          } else {
             return Deferred.fail();
          }
@@ -731,9 +743,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see collapseNode
        * @see toggleNode
        */
-      expandNode: function(id) {
-         var
+      expandNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
+         var item;
+         if (hash) {
+            item = this._getItemsProjection().getByHash(hash);
+         }
+         else {
             item = this._getItemProjectionByItemId(id);
+         }
          if (item) {
             if (item.isExpanded()) {
                return Deferred.success();
@@ -744,7 +762,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._options.openedPath[id] = true;
                this._options._folderOffsets[id] = 0;
                return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
-                  this._getItemProjectionByItemId(id).setExpanded(true);
+                  var expItem;
+                  if (hash) {
+                     expItem = this._getItemsProjection().getByHash(hash);
+                  }
+                  else {
+                     expItem = this._getItemProjectionByItemId(id);
+                  }
+                  expItem.setExpanded(true);
                }).bind(this));
             }
          } else {
@@ -769,6 +794,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }).bind(this))
             .addBoth(function(error){
                this._toggleIndicator(false);
+               return error;
             }.bind(this));
          } else {
             return Deferred.success();

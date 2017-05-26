@@ -85,6 +85,32 @@ body {
   font-size: 1rem;
 }
 body {
+   .controls-ScrollContainer > .controls-ListView__scrollPager {
+      border-top: none;
+      .controls-IconButton {
+         background: @button-bg;
+         padding: 0;
+         .controls-Button__icon {
+            font-size: 3rem!important;
+            height: 3rem!important;
+            width: 3rem!important;
+            line-height: 3rem !important;
+         }
+         &.ws-disabled {
+            border-color: #CCCCCC;
+            .controls-Button__icon {
+               color: #CCCCCC !important
+            }
+         }
+      }
+   }
+    .engine-Browser__path-wrapper-in-head {
+      height: auto;
+    }
+    .engine-Browser__path {
+      max-height: 2rem;
+      height: auto !important;
+    }
   .icon-16 {
     font-size: 1.32rem !important;
     line-height: 1.32rem !important;
@@ -164,7 +190,7 @@ body {
 
 body {
   .ws-window-titlebar {
-    color: @default-text-color;
+    color: #313E78;
     line-height: 3.57rem;
     height: 3.57rem;
     position: absolute;
@@ -217,11 +243,6 @@ body {
   border-bottom: none;
 }
 
-
- .controls-Switcher.controls-Checked__checked .controls-Switcher__btn, .controls-SwitcherDouble .controls-SwitcherDouble__btn {
-
-    background: #FF7033;
-}
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
@@ -232,7 +253,11 @@ body .ws-loadingimg {
 }
 
 body {
-
+  .ws-info-box {
+      background: @basic-block-bg-color;
+      color: @default-text-color;
+      border: 2px solid @link-text-color;
+    }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -276,7 +301,11 @@ body {
     height: 3.57rem;
 }
 
-
+.controls-ListView__item__selected {
+   .controls-DataGridView__td:first-child {
+      .marker()
+   }
+}
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
     font-size: inherit !important;
@@ -324,3 +353,77 @@ body .ws-float-area-nostack-panel-shadow-standart {
 body .ws-float-area-title-generated {
     margin-right: 3rem;
 }
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  line-height: 3rem;
+}
+body .controls-ToolBar__menuIcon .icon-24 {
+  font-family: carrypresto-icons!important;
+}
+.ws-enabled.controls-Checked__checked>.controls-CheckBox__icon:before {
+    z-index: 2;
+}
+.controls-Link {
+  &.additionalLink__2 {
+    font-size: .857rem;
+  }
+}
+.controls__filter-button__apply-filter {
+    margin-right: 0.4rem;
+}
+
+.controls-IconButton.controls-TreeView__editArrow-container {
+   margin-top: 0.2rem;
+}
+
+.controls__filter-button__clear-filter {
+  .controls-Link__field {
+    vertical-align: baseline;
+  }
+}
+.controls-FieldLink .icon-size {
+    font-size: 3rem !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    line-height: 3rem !important;
+}
+
+.controls-Browser {
+   .controls-Browser__topTemplate {
+      height: 3.88rem
+   }
+}
+
+.controls-ToolBar__menuIcon {
+  .icon-24 {
+    font-size: @icon-large-size !important;
+    line-height: @icon-large-size !important;
+    width: @icon-large-size !important;
+    height: @icon-large-size !important;
+    font-family: @default-icon-large-font !important;
+    vertical-align: middle !important;
+  }
+}
+.controls-Menu{
+   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
+      &.icon-24 {
+         top: 0.9rem;
+         left: -0.2rem;
+      }
+      &.icon-16 {
+         top: 1.15rem;
+      }
+   }
+}
+
+.controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+   height: 2.4rem;
+}
+
+.controls-DateRange .controls-DateRange__Button .controls-Button__icon {
+   font-size: 2rem !important;
+}
+.controls-DatePicker .controls-DatePicker__button .controls-Button__icon {
+   font-size: 2rem !important;
+   line-height: 2rem !important;
+}
+

@@ -4,7 +4,7 @@ module.exports = function() {
 
    return {
       options: {
-         port: 666
+         port:  process.env.PORT || 666
       },
       development: {
          options: {

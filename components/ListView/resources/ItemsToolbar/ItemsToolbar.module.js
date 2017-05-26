@@ -257,8 +257,29 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           },
 
           setHeightInTouchMode: function(){
+             var height, container, currentSize;
              if(this._currentTarget) {
-                this.getContainer()[0].style.height = this._currentTarget.size.height + 'px';
+                height = this._currentTarget.size.height;
+                container = this.getContainer()[0];
+                container.style.height = height + 'px';
+                container.className = container.className.replace(/(^|\s)controls-ItemsToolbar-item-size__\S+/g, '');
+
+                if(height < 40) {
+                    currentSize = '1';
+                }
+                if(height >= 40 && height < 50){
+                    currentSize = '2';
+                }
+                 if(height >= 50 && height < 60){
+                     currentSize = '3';
+                 }
+                 if(height >= 60 && height < 70){
+                     currentSize = '4';
+                 }
+                 if(height >= 70){
+                     currentSize = '5';
+                 }
+                 this.getContainer().addClass('controls-ItemsToolbar-item-size__' + currentSize);
              }
           },
           /**
@@ -381,14 +402,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if(this._lockingToolbar) {
                 this._trackingTarget();
              }
-             /**
-              * нужно следить за положением опций потому что в реестре высота строки может меняться динамически
-              * например в сообщениях картинки прогружаются асинхронно и при подгрузке может измениться высота строки,
-              * а изменение положения опций не произойдет
-              */
-             if(!this._isVisible){
-                dcHelpers.trackElement(this._container, true).subscribe('onMove', this._recalculatePosition, this);
-             }
              if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
@@ -428,7 +441,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (!this._lockingToolbar && this._isVisible) {
                 this._isVisible = false;
                 container = this.getContainer();
-                dcHelpers.trackElement(this._container, false);
 
                 if (this._options.touchMode || animate) {
                    this._untrackingTarget();
