@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
          _useNativeAsMain: true,
+         _doNotSetDirty: true,
 
          constructor: function (cfg) {
 
@@ -113,8 +114,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this.deprecatedContr(cfg);
             // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
-            this._craftedContext = false;
-            this._context = this._context.getPrevious();
+            if (cfg.parent && cfg.parent._template) {
+               /** Если scrollContainer вставлен в старое окружение, ему позже будет установлен
+                * правильный контекст, а сейчас ссылку на текущий терять нельзя
+                */
+               this._craftedContext = false;
+               this._context = this._context.getPrevious();
+            }
          },
 
 

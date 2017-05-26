@@ -1326,6 +1326,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._partScrollRow.addClass('ws-hidden');
             this._isPartScrollVisible = false;
             this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
+            if(this._currentScrollPosition !== 0) {
+               this._currentScrollPosition = 0;
+               this._moveThumbAndColumns({left: 0});
+            }
             // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
             this._resizeChilds();
          }

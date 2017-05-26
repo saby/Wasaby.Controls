@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
       'controls-ProcessStateIndicator__sector3'
    ];
    
-   const DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector';
+   var DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector';
    
    function prepareColors(options) {
          

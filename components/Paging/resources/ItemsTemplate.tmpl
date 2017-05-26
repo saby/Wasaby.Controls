@@ -1,0 +1,8 @@
+<ws:for data="index,item in records">
+      <ws:if data="{{ item.getContents }}">
+            <div class="controls-ListView__item js-controls-ListView__item controls-Paging__item" data-hash="{{ item.getHash() }}" data-id="{{ item.getContents().getId() }}">{{ item.getContents().getId() }}</div>
+      </ws:if>
+      <ws:else>
+            <div class=" controls-Paging__item">...</div>
+      </ws:else>
+</ws:for>

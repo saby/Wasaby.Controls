@@ -4,7 +4,7 @@
 
 define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorToolbarBase',
-   'html!SBIS3.CONTROLS.RichEditorRoundToolbar',
+   'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!WS.Data/Di',
