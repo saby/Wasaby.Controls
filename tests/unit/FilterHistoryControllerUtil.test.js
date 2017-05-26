@@ -188,6 +188,17 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
             );
          })
       });
+      
+      describe('.resetStructureElementsByFilterKeys', function() {
+         var fb = {
+            getFilterStructure: function () {return []},
+            _options: {}
+         };
+         
+         it('no bindings filterButton', function() {
+            assert.equal(FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(fb, []), false);
+         })
+      });
 
    });
 });
