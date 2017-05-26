@@ -1220,7 +1220,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false, escapeInvalidTags: false});
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
