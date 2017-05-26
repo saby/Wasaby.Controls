@@ -797,7 +797,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                anchor = editor.dom.getParent(element, 'a[href]'),
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
                fre = this,
-               context = new cContext(),
+               context = cContext.createContext(this),
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
@@ -1484,7 +1484,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      //todo: go to tmpl
                      width =  target[0].style.width || (target.width() + 'px'),
                      style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
-                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center">' +
+                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
                         '<img src="' +  target.attr('src') + '"' + style + ' alt="' +  target.attr('alt') + '"></img></p>';
 
                   this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);

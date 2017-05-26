@@ -79,14 +79,17 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          this._getLocalStorage();
 
          this._history = this._getStorageValue();
-
+         this._updateHistory = this._updateHistory.bind(this);
+         
          this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
-         this._historyChannel.subscribe('onHistoryUpdate', function(event, history, store) {
-            if(store !== this) {
-               this._history = history;
-               this._notify('onHistoryUpdate', history);
-            }
-         }.bind(this));
+         this._historyChannel.subscribe('onHistoryUpdate', this._updateHistory);
+      },
+      
+      _updateHistory: function(event, history, store) {
+         if(store !== this) {
+            this._history = history;
+            this._notify('onHistoryUpdate', history);
+         }
       },
 
       _setStorageValue: function(value) {
@@ -236,6 +239,14 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
             this._saveParamsDeferred.cancel();
             this._saveParamsDeferred = undefined;
          }
+         if(this._localStorage) {
+            this._localStorage.destroy();
+            this._localStorage = undefined;
+         }
+         this._historyChannel.unsubscribe('onHistoryUpdate', this._updateHistory);
+         this._historyChannel = undefined;
+         this._history = undefined;
+         this._SBISStorage = undefined;
          SBISHistoryStorage.superclass.destroy.call(this);
       }
    });

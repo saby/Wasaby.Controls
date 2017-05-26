@@ -260,6 +260,12 @@
 }
 .generate-photo-padding-class();
 
+.controls-TreeView__withoutLevelPadding > .controls-DataGridView__table > .controls-DataGridView__tbody > .controls-ListView__item {
+   > .controls-DataGridView__firstContentCell > .controls-TreeDataGridView__levelPaddingWrap > .controls-TreeDataGridView__levelPadding {
+      display: none;
+   }
+}
+
 .controls-TreeView__emptyIconInEmptyNode {
    .controls-ListView__item-type-node.controls-ListView__item-without-child {
       .controls-TreeView__expand {

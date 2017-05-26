@@ -42,9 +42,9 @@ body {
    }
 }
 
-.controls-PopupMixin__closeButton {
+.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
   position: absolute;
-  top: 10px;
+  top: .3rem;
   right: @controls-Popup-closeButton-right;
   width: 3rem;
   height: 3rem;
@@ -80,11 +80,11 @@ body {
 }
 
 .ws-float-area-stack-panel-shadow {
-  background: #202835 !important;
+  background: #2C3E50 !important;
 }
 .ws-sticky-header__block.ws-sticky-header__fixed,
 .ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
+  background-color: #2C3E50 !important;
 }
 
 .ws-window {
@@ -182,6 +182,13 @@ body {
 
 
 body {
+  .engine-Browser__path-wrapper-in-head {
+    height: auto;
+  }
+  .engine-Browser__path {
+    max-height: 2rem;
+    height: auto !important;
+  }
   .ws-window-titlebar {
     color: @default-text-color;
     line-height: 3.57rem;
@@ -193,7 +200,7 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
-    background: #2e404f;
+    background: #354B62;
     box-shadow: none!important;
   }
   &.ws-window-titlebar-custom {
@@ -253,7 +260,9 @@ body .ws-loadingimg {
 }
 
 body {
-
+    .controls__filterButton__area-header,.controls__filterButton__area-text {
+      line-height: 3rem;
+    }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -388,25 +397,23 @@ body .ws-info-box .ws-infobox-content p {
     font-size: 1.43rem;
 }
 .controls-Link__field {
-  vertical-align: middle;
-}
-.controls-FieldLink__item-cross {
-  margin-right: -.7rem; 
-}
-.controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: 2rem!important;
-    padding-right: 0.4rem;
-}
-.controls-FieldLink__item-cross {
-    margin-right: -.7rem; 
-}
-.controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: 2rem!important;
-    padding-right: 0.4rem;
-}
-body .controls-IconButton {
   vertical-align: baseline;
 }
+.controls-FieldLink__item-cross {
+  margin-right: -.7rem;
+}
+.controls-Paging .control-Paging__btn .controls-Button__icon {
+    line-height: 2rem!important;
+    padding-right: 0.4rem;
+}
+.controls-FieldLink__item-cross {
+    margin-right: -.7rem;
+}
+.controls-Paging .control-Paging__btn .controls-Button__icon {
+    line-height: 2rem!important;
+    padding-right: 0.4rem;
+}
+
 .controls-DropdownList__picker .controls-DropdownList__item .controls-DropdownList__itemTextWrapper .controls-DropdownList__item-text {
     color: #000;
     line-height: 3rem;
@@ -454,8 +461,13 @@ body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-D
   color: #fff;
   background: #3f566d;
 }
-body .controls-DropdownList .controls-DropdownList__selectedItem {
-  display: inline-block;
+
+.controls__filterButton {
+   .controls-Button__icon {
+      &.icon-size {
+         font-family: @default-icon-large-font !important;
+      }
+   }
 }
 .controls-ToolBar__menuIcon {
    .icon-24 {
@@ -463,7 +475,46 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
       line-height: @icon-large-size !important;
       width: @icon-large-size !important;
       height: @icon-large-size !important;
-      font-family: @default-icon-large-font !important;
       vertical-align: middle !important;
    }
+}
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+  line-height: 3rem;
+}
+body .controls-ToolBar__menuIcon .icon-24 {
+  font-family: carrypresto-icons!important;
+}
+.controls__filterButton__area-header {
+   .controls-Link {
+      .controls-Button__text{
+         vertical-align: baseline;
+      }
+   }
+}
+.controls-Link {
+  &.additionalLink__2 {
+    font-size: .857rem;
+  }
+}
+
+.controls-TreeView__expand {
+  font-size: 1rem !important;
+}
+
+body .controls-DropdownList .controls-DropdownList__selectedItem {
+    display: inline-flex;
+}
+
+.controls__filter-button__apply-filter {
+    margin-right: 0.4rem;
+}
+.controls__filter-button__clear-filter {
+  .controls-Link__field {
+    vertical-align: baseline;
+  }
+}
+
+.controls-Link {
+  font-size: 1.14rem;
+>>>>>>> 3.7.5.60/bugfix/daterange-fixes-np
 }

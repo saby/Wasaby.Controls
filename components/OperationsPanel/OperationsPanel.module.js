@@ -265,16 +265,18 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
 
       /*
-      * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
-      * */
+       * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
+       * */
       _checkCapacity: function(){
          var container = this.getContainer();
+         /* Необходимая ширина: ширина блока операции выделения + ширина кнопки с меню*/
+         var needElementsWidth = this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() + ITEMS_MENU_WIDTH;
          /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
-         var allowedWidth = container.width() - this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() - ITEMS_MENU_WIDTH;
+         var allowedWidth = container.width() - needElementsWidth;
 
          var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
 
-         var width = 0;
+         var width = needElementsWidth;
          var isMenuNecessary = false;
          this._getItemsContainer().css('width', '');
 

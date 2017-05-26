@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Link', [
          if(this._options.href) {
             this._container.get(0).innerHTML = hrefTemplate(this._options);
          }
-         this.setTooltip(strHelpers.htmlToText(caption));
+         this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
       },
 
       _setEnabled: function(enabled){

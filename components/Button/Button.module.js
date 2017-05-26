@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.Button',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
       'css!SBIS3.CONTROLS.Button'
@@ -17,6 +18,7 @@ define('js!SBIS3.CONTROLS.Button',
              AreaAbstractCompatible,
              BaseCompatible,
              ButtonCompatible,
+             InstantiableMixin,
              template,
              functions) {
 
@@ -76,23 +78,52 @@ define('js!SBIS3.CONTROLS.Button',
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
-      var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible],
-         {
-            _controlName: 'SBIS3.CONTROLS.Button',
-            _template: template,
+   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
+      {
+         _controlName: 'SBIS3.CONTROLS.Button',
+         _template: template,
+         iWantVDOM: true,
+         _isActiveByClick: false,
 
-            _useNativeAsMain: true,
+         constructor: function (cfg) {
+            this.deprecatedContr(cfg);
+            this._publish('onActivated');
+         },
 
-            constructor: function(cfg) {
-               this.deprecatedContr(cfg);
-               this._publish('onActivated');
-            },
+         //<editor-fold desc="Event handlers">
 
-            _onClick: function(){
-               this._notify("onActivated");
+         _onMouseClick: function (e) {
+            if (!this._options.enabled) {
+               return;
             }
+            this._onClickHandler(e);
+            this._notify("onActivated", e);
+         },
 
-         });
+         _onMouseDown: function () {
+            this._isActiveByClick = true;
+         },
+
+         _onMouseUp: function () {
+            this._isActiveByClick = false;
+         },
+
+         _onKeyDown: function (e) {
+            var result = this._notify('onKeyPressed', e);
+            if (e.nativeEvent.key === 'Enter' && result !== false) {
+               this._onMouseClick(e);
+            }
+         },
+
+         _onMouseEnter: function(e){
+            this._notify('onMouseEnter', e);
+         },
+
+         _onMouseLeave: function(e){
+            this._notify('onMouseLeave', e);
+         }
+         //</editor-fold>
+      });
 
       return Button;
    });

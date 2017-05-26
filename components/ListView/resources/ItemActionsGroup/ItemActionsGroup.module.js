@@ -119,6 +119,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             /* Если открыто меню, то не меняем состояние кнопки меню */
             if(this.isItemActionsMenuVisible()) return;
 
+            //TODO: Это не будет работать с VDom
             this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
          },
 

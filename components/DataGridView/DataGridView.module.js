@@ -344,10 +344,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
-    * @cssModifier controls-DataGridView__sidePadding-12 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 12px.
-    * @cssModifier controls-DataGridView__sidePadding-16 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 16px.
-    * @cssModifier controls-DataGridView__sidePadding-20 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 20px.
-    * @cssModifier controls-DataGridView__sidePadding-24 Устанавливает левый отступ первой колонки и правый отступ последней колонки равный 24px.
+    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XS.
+    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине S.
+    * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине M.
+    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине L.
+    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XL.
     *
     * @control
     * @public
@@ -1325,6 +1326,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._partScrollRow.addClass('ws-hidden');
             this._isPartScrollVisible = false;
             this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
+            if(this._currentScrollPosition !== 0) {
+               this._currentScrollPosition = 0;
+               this._moveThumbAndColumns({left: 0});
+            }
             // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
             this._resizeChilds();
          }

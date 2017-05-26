@@ -1,0 +1,35 @@
+<div class="controls-TimeHeader">
+   <div class="controls-TimeHeader__startBlock">
+      <div class="controls-TimeHeader__title">Время</div>
+      <div class="controls-TimeHeader__toggleTime">
+         <div
+            class="controls-TimeHeader__time js-controls-TimeHeader__hours"
+            data-bind="{
+               html: time/hours,
+               css: {
+                  'controls-TimeHeader__time_active': active/hours,
+                  'controls-TimeHeader__time_passive': active/minutes
+               }
+            }"
+         ></div>
+         <div class="controls-TimeHeader__separator">:</div>
+         <div
+            class="controls-TimeHeader__time js-controls-TimeHeader__minutes"
+            data-bind="{
+               html: time/minutes,
+               css: {
+                  'controls-TimeHeader__time_active': active/minutes,
+                  'controls-TimeHeader__time_passive': active/hours
+               }
+            }"
+         ></div>
+      </div>
+   </div>
+   <div class="controls-TimeHeader__endBlock">
+      <ws:SBIS3.CONTROLS.IconButton
+         name="homeButton"
+         className="controls-IconButton__round-border controls-TimeHeader__homeButton"
+         icon="icon-16 icon-Home3 icon-primary"
+      />
+   </div>
+</div>

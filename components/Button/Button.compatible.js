@@ -20,32 +20,6 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _needRegistWhenParent: false,
 
 
-      /*TODO: Удалить при переходе на VDOM*/
-      _containerReady:function(container){
-         if (window) {
-            container.on('click', this._onClickHandler.bind(this));
-            var self = this;
-
-            container.keydown(function(e) {
-               var result = self._notify('onKeyPressed', e);
-               if (e.which == cConstants.key.enter && result !== false ) {
-                  self._onClickHandler(e);
-               }
-
-               if(this._icanrulefocus && e.which == cConstants.key.tab){
-                  self.moveFocus(e);
-               }
-            });
-
-            container.on("touchstart  mousedown", function (e) {
-               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
-                  self._container.addClass('controls-Click__active');
-               }
-               //return false;
-            });
-         }
-      },
-
       /**
       * Далее в файле идут методы для сохранения старого АПИ
       */
@@ -68,7 +42,11 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          }
          function defaultAction(e) {
             if (self && self.isEnabled()) {
-               self._onClickHandler(e);
+               if (this.iWantVDOM) {
+                  self._onMouseClick(e);
+               } else {
+                  self._onClickHandler(e);
+               }
                return false;
             } else {
                return true;
@@ -107,17 +85,16 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
          this._onClickHandler();
       },
 
-      _onClickHandler: function(e)
-      {
-         try{
-            e.stopImmediatePropagation();
-            e.stopPropagation();
-         }catch(e){}
+      _baseClickAction: function(e){
+         // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+         e.stopImmediatePropagation();
 
          if (!this._options.enabled)
             return;
 
-         this._container.removeClass('controls-Click__active');
+         if (!this.iWantVDOM) {
+            this._container.removeClass('controls-Click__active');
+         }
 
          if (!this._isControlActive) {
             this.setActive(true);
@@ -127,7 +104,25 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             var args = [this._options.command].concat(this._options.commandArgs);
             this.sendCommand.apply(this, args);
          }
-         this._onClick();
+      },
+
+      /**
+       * Базовая логика старых компонентов: при клике на
+       * контейнер вызывается _onClickHandler, который вызывает _onClick
+       * Есть те, кто переопределяет каждый из этих методов и они ждут
+       * сохранения правильной последовательности, поэтому мы не можем использовать метод _onClick в VirtualDom кнопке
+       * там метод _onMouseClick
+       * */
+      _onClickHandler: function(e)
+      {
+         this._baseClickAction(e);
+         this._onClick(e);
+      },
+
+      _onClick: function (e) {
+         if (!this._options.enabled || this.iWantVDOM)
+            return;
+         return this._notify("onActivated", e);
       }
 
    };

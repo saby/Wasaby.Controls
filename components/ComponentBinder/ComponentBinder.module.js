@@ -154,18 +154,27 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        */
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset, keyboardLayoutRevert, hierarchyViewMode) {
          if (!this._searchController){
-            this._searchController = new SearchController({
-               view: this._options.view,
-               searchForm: searchForm || this._options.searchForm,
-               searchParamName: searchParamName,
-               searchCrumbsTpl: searchCrumbsTpl,
-               searchMode: searchMode,
-               doNotRespondOnReset: doNotRespondOnReset,
-               breadCrumbs: this._options.breadCrumbs,
-               backButton: this._options.backButton,
-               keyboardLayoutRevert: keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert,
-               hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
-            });
+            var cfg;
+            
+            if(searchParamName instanceof Object) {
+               cfg = searchParamName;
+            } else {
+               cfg = {
+                  searchParamName: searchParamName,
+                  searchCrumbsTpl: searchCrumbsTpl,
+                  searchMode: searchMode,
+                  doNotRespondOnReset: doNotRespondOnReset
+               }
+            }
+            
+            cfg.view = this._options.view;
+            cfg.searchForm = searchForm || this._options.searchForm;
+            cfg.breadCrumbs = this._options.breadCrumbs;
+            cfg.backButton = this._options.backButton;
+            cfg.keyboardLayoutRevert = keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert;
+            cfg.hierarchyViewMode = hierarchyViewMode === undefined ? true : hierarchyViewMode;
+            
+            this._searchController = new SearchController(cfg);
          }
          this._searchController.bindSearch();
       },
