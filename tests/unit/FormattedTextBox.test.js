@@ -7,10 +7,7 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
    describe('js!SBIS3.CONTROLS.FormattedTextBox', function () {
       var FTB, inputField;
       before(function() {
-         if (typeof $ === 'undefined') {
-            this.skip();
-         }
-         else {
+         if (typeof $ !== 'undefined') {
             $('#mocha').append('<div id="component"></div>');
             FTB = new FormattedTextBox({
                element: 'component',
@@ -20,12 +17,17 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
          }
       });
       after(function () {
-         FTB.destroy();
+         if (typeof $ !== 'undefined') {
+            FTB.destroy();
+         }
          FTB = undefined;
          inputField = undefined;
       });
 
       beforeEach(function() {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
       });
 
       context('Android: Get inputted symbol and symbol position', function (){
