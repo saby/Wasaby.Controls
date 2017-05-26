@@ -240,11 +240,6 @@ body {
   border-color: #26b8ff;
 }
 
-
-body .ws-loadingimg {
-  top: 30%;
-}
-
 body {
 
   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
@@ -397,6 +392,35 @@ body .controls-ToolBar__menuIcon .icon-24 {
    }
 }
 
+.controls-AjaxLoader__LoadingIndicator {
+   border-radius: 16px;
+}
+
+.ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window {
+   img {
+      width: 77px;
+      height: 77px;
+   }
+   .ws-loadingimg {
+      left: 13px;
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: 77px;
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: 32px;
+   }
+}
+
 .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
    height: 2.4rem;
 }
@@ -408,6 +432,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
    font-size: 2rem !important;
    line-height: 2rem !important;
 }
+
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__datePickerEnd {
   margin-right: 1rem;
@@ -426,4 +451,13 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
   margin-top: -.64rem;
+
+.controls-ComboBox__picker {
+   box-sizing: border-box;
+}
+.controls-ComboBox__arrowDown {
+   &:before {
+      margin: .84rem;
+   }
+
 }
