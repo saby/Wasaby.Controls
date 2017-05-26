@@ -1,17 +1,22 @@
-<div event:onclick="eventsHandlers()"
+<div event:onclick="onClick()"
      event:onmouseenter="mouseEnter()"
      event:onmouseleave="mouseLeave()"
      event:onmousemove="mouseMove()">
    <div class="controls-ListView__itemsContainer">
-      <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{tplData}}" />
+      <ws:partial template="{{_itemsTemplate}}" hoveredItem="{{_hoveredItem}}" records="{{_records}}"
+                  tplData="{{tplData}}"/>
    </div>
 
-   <ws:if data="{{showToolbar}}">
-      <div
-         event:onmouseenter="mouseEnter()"
-         event:onmouseleave="mouseLeave()"
-         style="position: absolute; width: 100px;
-                  background: red; top: {{toolbarTop}}px; left: {{toolbarLeft}}px;">Fignya!</div>
-   </ws:if>
+
+   <div
+      event:onmouseenter="mouseEnter()"
+      event:onmouseleave="mouseLeave()"
+      class="{{!showToolbar ? 'ws-hidden'}}"
+      style="position: absolute; width: 100px;
+                  background: red; top: {{toolbarTop}}px; left: {{toolbarLeft}}px;">
+      <ws:SBIS3.CONTROLS.Button event:onActivated="itemActionActivated(1)" caption="click me"/>
+      <ws:SBIS3.CONTROLS.Button event:onActivated="itemActionActivated(2)" caption="don't click me"/>
+   </div>
+
 </div>
 

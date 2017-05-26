@@ -13,8 +13,8 @@ define('js!WSControls/Lists/ItemsControl', [
    "Core/Sanitize",
    "js!WS.Data/Utils",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
-   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
+   "tmpl!WSControls/Lists/resources/ItemsTemplate",
+   "tmpl!WSControls/Lists/resources/ItemTemplate",
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    "js!WS.Data/Display/Display",
    'js!SBIS3.CONTROLS.ListView/ListViewHelpers'
@@ -46,6 +46,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _template: template,
          iWantVDOM: true,
          _isActiveByClick: false,
+         _hoveredItem: null,
 
          items: null,
          itemTemplate: null,
@@ -198,17 +199,47 @@ define('js!WSControls/Lists/ItemsControl', [
             this._eventProxyHandler(event.nativeEvent);
          },
 
+         onClick: function (evt) {
+             this.setSelectedKey(this.getDataIdFromTarget(evt.nativeEvent.target));
+         },
+
          mouseEnter: function(ev){
             this.showToolbar = true;
          },
 
          mouseLeave: function(ev){
+            var self = this;
             this.showToolbar = false;
+            setTimeout(function() {
+               if(!self.showToolbar) {
+                  self._hoveredItem = null;
+                  self._setDirty();
+               }
+            }, 0);
+
          },
 
+         itemActionActivated: function(number, evt) {
+            alert("clicked " + this._hoveredItem + " on button " + number);
+         },
+
+
          mouseMove: function(ev){
+            var element = ev.nativeEvent.target;
+            this._hoveredItem = this.getDataIdFromTarget(element);
             this.toolbarTop = ev.nativeEvent.target.offsetTop;
             this.toolbarLeft = this._container[0].offsetWidth - 100;
+         },
+
+         getDataIdFromTarget: function (element) {
+            while(element && element.className && element.className.indexOf('controls-ListView__item') == -1) {
+               element = element.parentNode;
+            }
+            if(element) {
+               return element.attributes['data-id'].value;
+            } else {
+               return null;
+            }
          },
 
          destroy: function() {

@@ -1,6 +1,8 @@
 define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
    'js!WSControls/Controllers/RecordsetListSelector',
-   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate'], function(ItemsControl, RecordsetListSelector, ItemTemplate) {
+   "tmpl!WSControls/Lists/resources/ItemTemplate"],
+
+   function(ItemsControl, RecordsetListSelector, ItemTemplate) {
    var ListView = ItemsControl.extend({
       _needSelector: true,
       _defaultItemTemplate: ItemTemplate,

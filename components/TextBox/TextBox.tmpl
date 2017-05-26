@@ -1,15 +1,16 @@
-<div class="controls-TextBox" title="{{tooltip}}">
-	<ws:if data="{{beforeFieldWrapper}}">
+<div class="controls-TextBox" title="{{_options.tooltip}}">
+	<ws:if data="{{_options.beforeFieldWrapper}}">
 		<div class="controls-TextBox__beforeFieldWrapper">
-			<ws:partial template="{{beforeFieldWrapper}}" scope="{{...}}"/>
+			<ws:partial template="{{_options.beforeFieldWrapper}}" scope="{{...}}"/>
 		</div>
 	</ws:if>
-	<ws:if data="{{afterFieldWrapper && enableArrows !== false}}">
+	<ws:if data="{{_options.afterFieldWrapper && _options.enableArrows !== false}}">
       <div class="controls-TextBox__afterFieldWrapper">
-         <ws:partial template="{{afterFieldWrapper}}" scope="{{...}}"/>
+         <ws:partial template="{{_options.afterFieldWrapper}}" scope="{{...}}"/>
       </div>
    </ws:if>
-   <div class="controls-TextBox__fieldWrapper {{enableArrows !== false ? 'controls-NumberTextBox__enable-arrow'}}">
-      <ws:partial template="{{textFieldWrapper}}" scope="{{...}}"/>
+   JOPA
+   <div class="controls-TextBox__fieldWrapper {{_options.enableArrows !== false ? 'controls-NumberTextBox__enable-arrow'}}">
+      <ws:partial template="{{_options.textFieldWrapper}}" scope="{{...}}"/>
    </div>
 </div>
