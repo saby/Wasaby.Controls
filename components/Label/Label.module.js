@@ -1,10 +1,12 @@
 define('js!SBIS3.CONTROLS.Label',
    [
-      'js!WSControls/Buttons/Button',
+      'js!SBIS3.CONTROLS.CompoundControl',
+      'js!SBIS3.CONTROLS.Clickable',
+      'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',
       'css!SBIS3.CONTROLS.Label'
    ],
-   function(Button, ContentTemplate) {
+   function(CompoundControl, Clickable, Sanitize, template) {
 
       'use strict';
 
@@ -25,26 +27,38 @@ define('js!SBIS3.CONTROLS.Label',
        *    owner="TextBox"               
        * />
        */
-      var Label = Button.extend(/** @lends SBIS3.CONTROLS.Label.prototype */{
+      var Label = CompoundControl.extend([Clickable], /** @lends SBIS3.CONTROLS.Label.prototype */{
+         _dotTplFn: template,
+
          $protected: {
             _options: {
-               contentTemplate: ContentTemplate
-            }
+               caption: null
+            },
+            _caption: null
+         },
+
+         init: function() {
+            Label.superclass.init.call(this);
+
+            this._caption = this.getContainer().find('.js-controls-Label__text');
+         },
+
+         getCaption: function() {
+            return this._getOption('caption');
+         },
+
+         setCaption: function(caption) {
+            this._setOption('caption', caption);
+            this._caption.html(Sanitize(caption));
          },
 
          _onClickHandler: function(event) {
             var owner;
             Label.superclass._onClickHandler.call(this, event);
 
-            if (this.isEnabled() && /js-controls-Button__text/.test(event.target.className) && (owner = this.getOwner())) {
+            if (this.isEnabled() && /js-controls-Label__text/.test(event.target.className) && (owner = this.getOwner())) {
                owner.setActive(true);
             }
-         },
-
-         _modifyOptions: function(options) {
-            Label.superclass._modifyOptions.call(this, options);
-            options.className += ' controls-Label';
-            return options;
          }
       });
 
