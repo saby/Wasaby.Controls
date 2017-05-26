@@ -327,16 +327,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyDataGridView
-    * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
-    * @demo SBIS3.DOCS.GroupByWrap Группировка записей.
     *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -344,11 +340,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
-    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XS.
-    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине S.
-    * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине M.
-    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине L.
-    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XL.
+    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XS. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине S. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине M. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине L. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XL. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     *
     * @control
     * @public
