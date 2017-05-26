@@ -278,14 +278,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * */
       _checkCapacity: function(){
          var container = this.getContainer();
-         /* Необходимая ширина: ширина блока операции выделения + ширина кнопки с меню*/
-         var needElementsWidth = this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() + ITEMS_MENU_WIDTH;
-         /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
-         var allowedWidth = container.width() - needElementsWidth;
+
+         /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
+         var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
 
          var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
 
-         var width = needElementsWidth;
+         var width = 0;
          var isMenuNecessary = false;
          this._getItemsContainer().css('width', '');
 
