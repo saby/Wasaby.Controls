@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
    'js!SBIS3.CONTROLS.DateRangeChoosePickerMixin',
    'js!SBIS3.CONTROLS.Utils.DateUtil',
    'Core/helpers/date-helpers',
+   'Core/IoC',
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.DateRangeSlider'
-], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers) {
+], function (DateRangeSliderBase, DateRangeChoosePickerMixin, DateUtil, dateHelpers, IoC) {
    'use strict';
 
    /**
@@ -48,12 +49,24 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
       },
 
       init: function () {
-         var container = this.getContainer();
+         var container = this.getContainer(),
+            isCheckedOptions = this._options.checkedStart || this._options.checkedEnd || this._options.iconsHandler;
 
          DateRangeSlider.superclass.init.call(this);
 
          if (!this._options.showMonths && !this._options.showQuarters && !this._options.showHalfyears) {
             this.getContainer().addClass(this._cssRangeSlider.yearState);
+         }
+
+         if (!((this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths && !isCheckedOptions) ||
+                  (this._options.showHalfyears && this._options.showQuarters && this._options.showMonths) ||
+                  (!this._options.showHalfyears && !this._options.showQuarters && this._options.showMonths && !isCheckedOptions) ||
+                  (!this._options.showHalfyears && this._options.showQuarters && !this._options.showMonths && !isCheckedOptions)
+            )) {
+            IoC.resolve('ILogger').log(
+               'SBIS3.CONTROLS.DateRangeSliderBase',
+               this.getName() + ': Используемое сочетание опций showMonths, showQuarters, showHalfyears, showYears и опций установки иконок не стандартизовано и не должно использоваться. Возможна не корректная работа контрола.'
+            )
          }
       },
 
@@ -189,7 +202,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
          // Нужно другое решение для позиционирования посередине. Без знания ширины пиккера.
          // Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=73b59c8e-f962-433c-9432-1218fbe754aa
          if (this._options.showYears && !this._options.showHalfyears && !this._options.showQuarters && !this._options.showMonths) {
-            pickerWidth = wrapperWidth === '124px' ? 136 : 80;
+            pickerWidth = wrapperWidth === '124px' ? 136 : 82;
          } else if (this._options.showMonths && this._options.showHalfyears && this._options.showQuarters) {
             pickerWidth = wrapperWidth === '124px' ? 204 : 178;
          } else {
