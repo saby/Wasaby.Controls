@@ -174,3 +174,20 @@ input[type="reset"]::-moz-focus-inner {
   -khtml-user-select: none;
   -ms-user-select: none;
 }
+
+.controls-LabelContainer {
+  display: flex;
+  display: -ms-flexbox;
+
+  .controls-LabelContainer__label {
+    margin-right: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .controls-LabelContainer__content {
+    -ms-flex: 1;
+    width: 100%;
+    display: block;
+    position: relative;
+  }
+}
