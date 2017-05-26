@@ -862,8 +862,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
                 * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
                 * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
-                     - asc - по возрастанию
-                     - desc - по убыванию
+                     - before - вверх
+                     - after - вниз
                      - both - в обе стороны от записи с navigation.config.position
 
                 */
