@@ -292,7 +292,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          var text = this._getInputValue();
 
          if (this._options.trim) {
-            text = String.trim(text);
+            text = text.trim();
          }
          //Установим текст только если значения различны и оба не пустые
          if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !(text || '').length)){
