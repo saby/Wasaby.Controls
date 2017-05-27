@@ -73,13 +73,6 @@ body {
 }
 @text-box-height-prestoBig:   50px;
 @text-box-height-prestoFont:  36px;
-.controls-TextBox {
-   &.controls-TextBox__big {
-
-   }
-}
-
-
 
 .controls-listView td {
   font-size: 1rem;
@@ -248,6 +241,22 @@ body {
 }
 
 body {
+
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+      font-size: 3rem!important;
+      margin-top: initial;
+  }
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+      font-size: 3rem!important;
+      width: 24px;
+      margin-left: -2rem;
+      margin-top: initial;
+  }
+    .controls-DateBox {
+      min-height: 3rem;
+    }
+
+
   .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
@@ -271,22 +280,6 @@ body {
     font-size: 1.14rem;
 
   }
-  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    width: 1.43rem !important;
-    height: 1.43rem !important;
-    font-size: 1.43rem !important;
-     border: none !important;
-    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-        font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-    }
-
-    .controls-DateBox {
-      min-height: 3rem;
-    }
-
-}
 
 .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
   display: none;
@@ -301,25 +294,14 @@ body {
       .marker()
    }
 }
-
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-    font-size: inherit !important;
-
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-         font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-       font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    margin-right: 1rem;
   }
-}
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    margin-right: 3rem;
+    border: none;
+  }
+
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
      margin-left: 2.4rem !important;
@@ -417,7 +399,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .ws-window.ws-LoadingIndicator__window {
    border-radius: 16px;
    border-color: transparent;
-   
+
    .ws-win-loadingIndicator {
       background-color: transparent;
    }
@@ -451,6 +433,25 @@ body .controls-ToolBar__menuIcon .icon-24 {
    line-height: 2rem !important;
 }
 
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__datePickerEnd {
+  margin-right: 1rem;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn {
+  margin-left: -.857rem;
+}
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
+  padding-top: .5rem;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+  border-bottom: 2px solid #ccc;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  font-size: 1rem;
+  margin-top: -.64rem;
+
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
@@ -458,4 +459,5 @@ body .controls-ToolBar__menuIcon .icon-24 {
    &:before {
       margin: .84rem;
    }
+
 }
