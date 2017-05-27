@@ -124,14 +124,14 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
                         parentProperty: cfg.parentProperty,
                         nodeProperty: cfg.nodeProperty,
                         item: item.getContents(),
-                        groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
+                        groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || '', !!cfg._template),
                         groupId: groupId
                      },
                      groupTemplateFnc;
                   tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
 
 
-                  groupTemplateFnc = TemplateUtil.prepareTemplate(cfg._groupTemplate);
+                  groupTemplateFnc = TemplateUtil.prepareTemplate(cfg._groupTemplate, !!cfg._template);
 
                   records.push({
                      tpl: groupTemplateFnc,
@@ -175,22 +175,22 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
             else {
                itemContentTpl = this._defaultItemContentTemplate || cfg._defaultItemContentTemplate;
             }
-            tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
+            tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl, !!cfg._template);
             if (cfg.itemTpl) {
                itemTpl = cfg.itemTpl;
             }
             else {
                itemTpl = this._defaultItemTemplate || cfg._defaultItemTemplate;
             }
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
-            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
+            tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl, !!cfg._template);
+            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate, !!cfg._template);
 
             if (cfg.includedTemplates) {
                var tpls = cfg.includedTemplates;
                tplOptions.included = {};
                for (var j in tpls) {
                   if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j], !!cfg._template);
                   }
                }
             }

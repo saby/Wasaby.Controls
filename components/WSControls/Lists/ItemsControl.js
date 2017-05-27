@@ -232,7 +232,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          getDataIdFromTarget: function (element) {
-            while(element && element.className && element.className.indexOf('controls-ListView__item') == -1) {
+            while(element && typeof element.className === "string" && element.className.indexOf('controls-ListView__item') == -1) {
                element = element.parentNode;
             }
             if(element) {
