@@ -1,14 +1,4 @@
 
-.itemsToolbar-touchmode-size(@icon-size) {
-   .controls-ItemActions__item {
-      .controls-Button__icon {
-         &.icon-size {
-            .icon-size(@icon-size);
-         }
-      }
-   }
-}
-
 .controls-ItemsToolbar {
    background-color: @list-view-items-toolbar-bg;
 }
@@ -46,25 +36,25 @@
          right: 1px;
          top: 1px;
          bottom: auto;
-         
+
          .controls-ItemActions {
             height: auto;
             width: @list-view-actions-verAlign-width;
             margin: @list-view-actions-verAlign-margin;
-            
+
             .controls-ItemActions__itemsContainer {
                & > * {
                   margin: @list-view-actions-margin-action-multiView;
                }
                margin-right: 0;
             }
-            
+
             .controls-ItemActions__menu-button {
                margin-left: @list-view-actions-marginLeft-menu-multiView;
             }
          }
       }
-      
+
       &.controls-ItemsToolbar__small {
          &.controls-ItemsToolbar__vertical {
             .controls-ItemActions {
@@ -87,7 +77,7 @@
 
 .controls-ListView__bottomStyle {
    padding-bottom: @bottomStyle-items-toolbar-height;
-   
+
    > .controls-ItemsToolbar {
       right: 0;
       .controls-ItemActions__itemsContainer {
@@ -113,7 +103,7 @@
       }
       .controls-ItemActions .controls-ItemActions__itemsContainer {
          margin-left: -4px;
-         
+
          > * {
             margin-top: @bottomStyle-items-toolbar-margin-top;
             &.controls-IconButton__round-border-24 {
@@ -134,7 +124,7 @@
       .controls-ItemActions__menu-button {
          display: none;
       }
-      
+
       &.controls-ItemsToolbar__small {
          .controls-ItemActions .controls-ItemActions__itemsContainer {
             > * {
@@ -159,7 +149,7 @@
    background-color: @list-view-items-toolbar-bg;
    bottom: @list-view-items-toolbar-bottom;
    right: @list-view-items-toolbar-right;
-   
+
    .icon-size {
       .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
    }
@@ -175,7 +165,7 @@
          font-family: 'cbuc-icons' !important;
       }
    }
-   
+
    &.controls-ItemsToolbar__edit {
       background-color: @list-view-items-toolbar-locked-bg;
       right: 0;
@@ -185,7 +175,7 @@
          }
       }
    }
-   
+
    .controls-Button__closeButton.controls-IconButton {
       display: inline-block;
       margin-right: 0;
@@ -195,8 +185,8 @@
          .icon-size(16px);
       }
    }
-   
-   
+
+
    &.controls-ItemsToolbar__hidden {
       visibility: hidden;
    }
