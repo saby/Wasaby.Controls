@@ -36,21 +36,13 @@
   height: 32px;
   font-family: 'cbuc-icons' !important;
 }
-.icon-size(@size: 16px){
+
+.icon-size(@size: 16px, @fontFamily: 'cbuc-icons') {
   font-size: @size !important;
   line-height: @size !important;
   width: @size;
   height: @size;
-  font-family: 'cbuc-icons24' !important;
-  & when (@size > 24px) {
-  font-family: 'cbuc-icons' !important;
-  }
-  & when (@size < 24px) {
-    font-family: 'cbuc-icons' !important;
-  }
-  & when (@size = 24px) {
-    font-family: 'cbuc-icons24' !important;
-  }
+  font-family: @fontFamily !important;
 }
 
 .closedHandCursor() {
