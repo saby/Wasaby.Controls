@@ -830,6 +830,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot = newTFoot;
          }
          this.reviveComponents(this._tfoot);
+         DataGridView.superclass._redrawFoot.call(this);
       },
 
       _redrawTheadAndTfoot: function(){
