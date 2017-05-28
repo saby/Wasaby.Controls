@@ -3858,6 +3858,19 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _redrawFoot: function() {
+            var
+               newFooter,
+               footerContainer;
+            if (this._options.footerTpl) {
+               footerContainer = $('.controls-ListView__footer', this._container[0]);
+               this._destroyControls(footerContainer);
+               newFooter = $(this._options.footerTpl(this._options));
+               footerContainer.empty().append(newFooter);
+               this.reviveComponents(newFooter);
+            }
+         },
+
          _redrawResults: function(){
             var resultsRow = $('.controls-ListView__results', this.getContainer()),
                 insertMethod = this._options.resultsPosition == 'top' ? 'before' : 'after',
