@@ -1,8 +1,8 @@
-<ws:SBIS3.CONTROLS.Link class="controls-DataGridView__headSorting" caption="{{column['title']}}" command="ColumnSorting"
+<ws:SBIS3.CONTROLS.Link class="controls-DataGridView__headSorting" caption="{{column.title}}" command="ColumnSorting"
                         icon="{{sortingValue == 'DESC' ? 'icon-16 icon-TrendDown icon-primary' : sortingValue == 'ASC' ? 'icon-16 icon-TrendUp icon-primary' : 'icon-16'}}">
    <ws:commandArgs>
       <ws:Array>
-         <ws:String>{{column['field']}}</ws:String>
+         <ws:String>{{column.field}}</ws:String>
       </ws:Array>
    </ws:commandArgs>
 </ws:SBIS3.CONTROLS.Link>

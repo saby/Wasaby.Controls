@@ -7,6 +7,7 @@
       ),
       isLoaded = it.projItem.isLoaded(),
       hasLoadedChild = children.length > 0,
+      hierField$ = it.projItem.getContents().get(it.parentProperty + '$'),
       classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue == null ? 'leaf' : nodePropertyValue == true ? 'node' : 'hidden'),
       classNodeState = nodePropertyValue !== null ? (' controls-TreeView__item-' + (it.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '',
       classIsLoaded = isLoaded ? ' controls-ListView__item-loaded' : '',
