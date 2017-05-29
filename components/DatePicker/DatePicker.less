@@ -1,37 +1,15 @@
 @import "../DateBox/DateBox";
 .controls-DatePicker {
-   border: none !important;
-   background: transparent !important;
    position: relative;
    display: inline-block;
 
-   .box-sizing(border-box);
-
    .controls-DatePicker__dateBox.controls-DateBox__fieldWrapper {
-      margin-right: calc(@date-picker-calendar-icon-width~"+ 6px");
+      margin-right: calc(~"@{date-picker-calendar-icon-width} + 6px");
       display: block;
    }
 
    &.controls-DatePicker_hiddenIcon .controls-DatePicker__dateBox {
       margin-right: 0;
-   }
-
-   &:hover {
-      .controls-FormattedTextBox__fieldWrapper {
-         border-width: @date-box-wrapper-hover-border-width;
-         border-style: @date-box-wrapper-hover-border-style;
-         border-color: @date-box-wrapper-hover-border-color;
-         background: @date-box-wrapper-hover-bg;
-      }
-   }
-
-   &.ws-disabled {
-      .controls-FormattedTextBox__fieldWrapper {
-         border-width: @date-box-wrapper-disabled-border-width;
-         border-style: @date-box-wrapper-disabled-border-style;
-         border-color: @date-box-wrapper-disabled-border-color;
-         background: @date-box-wrapper-disabled-bg;
-      }
    }
 
    .controls-DatePicker__calendarWrapper {
