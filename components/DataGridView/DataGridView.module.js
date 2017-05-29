@@ -6,29 +6,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.ListView",
-   "tmpl!SBIS3.CONTROLS.DataGridView",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/headTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/footTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
+   "html!SBIS3.CONTROLS.DataGridView",
+   "html!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/footTpl",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    'js!WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
-   "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
-   'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
    'css!SBIS3.CONTROLS.DataGridView'
 ],
@@ -61,8 +60,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       colHelpers,
       strHelpers,
       dcHelpers,
-      Sanitize,
-      StickyHeaderManager) {
+      StickyHeaderManager
+   ) {
 
    'use strict';
 
@@ -107,9 +106,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             return value;
          },
-         getCellValue = function(currentValue, field, item, ladder, ladderColumns){
-            return Array.indexOf(ladderColumns, field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
-         },
          buildTplArgsLadder = function(args, cfg) {
             args.ladder = cfg._ladderInstance;
             args.ladderColumns = cfg.ladder || [];
@@ -123,7 +119,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
-               getCellValue: getCellValue,
                decorators : tplOptions.decorators,
                highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
@@ -158,7 +153,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             rowData.content = [[], []];
 
             if (!cfg.transformHead){
-               rowData.content[1] = columns;
+               rowData.content[0] = columns;
                return rowData;
             }
 
@@ -189,14 +184,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
                         }
                         supportDouble.className += ' controls-DataGridView__th__topRow-has_text';
                      }
-                     rowData.content[0].push(supportDouble);
+                     rowData.content[1].push(supportDouble);
                      supportDouble = null;
                   }
                   rowData.countRows = 2;
                }
                else {
                   supportDouble.rowspan = curCol.rowspan = 2;
-                  rowData.content[0].push(supportDouble);
+                  rowData.content[1].push(supportDouble);
                   supportDouble = null;
                }
 
@@ -205,19 +200,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
                if (nextCol && (supportUnion.title == nextCol.title)) {
                   if (curCol.rowspan) {
-                     rowData.content[0].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
+                     rowData.content[1].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
                   }
                   supportUnion.colspan = ++supportUnion.colspan || 2;
                }
                else {
                   if (curCol.rowspan) {
-                     var topRow = rowData.content[0].pop();
+                     var topRow = rowData.content[1].pop();
                      topRow.colspan = supportUnion.colspan;
                      topRow.value = topRow.title = supportUnion.title;
-                     rowData.content[0].push(topRow);
+                     rowData.content[1].push(topRow);
                      supportUnion.ignore = true; //Игнорируем колонку в случае, если в шапке 2 строки (от верхней строки установится rowspan).
                   }
-                  rowData.content[1].push(supportUnion);
+                  rowData.content[0].push(supportUnion);
                   supportUnion = null;
                }
             }
@@ -239,9 +234,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             cMerge(headData, headColumns);
-            for (var i = 0; i < headData.content[1].length; i++) {
-               columnTop = headData.content[0][i];
-               column = headData.content[1][i];
+            for (var i = 0; i < headData.content[0].length; i++) {
+               columnTop = headData.content[1][i];
+               column = headData.content[0][i];
 
                if (columnTop) {
                   if (columnTop.rowspan > 1 && columnTop.headTemplate){ //Если колонка на 2 строки, то отрисуем headTemplate в ней
@@ -268,8 +263,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                prepareResultsData(cfg, headData, cfg._items.getMetaData().results);
                headData.hasResults = true;
             }
-
-            headData.sanitize = cfg.sanitize;
 
             return headData;
          },
@@ -612,7 +605,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _modifyOptions: function(cfg, parsedCfg) {
-
          if (parsedCfg._ladderInstance) {
             cfg._ladderInstance = parsedCfg._ladderInstance;
          } else if (!cfg._ladderInstance) {
@@ -620,11 +612,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
-
-         //TODO Костыль. Чтоб в шаблоне позвать Sanitize с компонентами приходится прокидывать в виде функции свой sanitize
-         newCfg.sanitize = function(obj) {
-            return Sanitize (obj.value, {validNodes: {component: true}, validAttributes : {config : true} })
-         };
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
