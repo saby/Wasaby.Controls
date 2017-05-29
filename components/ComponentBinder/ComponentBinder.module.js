@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       var visible = operationPanel.isVisible();
       //Вешаем класс даже для браузеров с multiselect = false, т.к. multiselect может измениться динамически, и проще
       //всегда тоглить классы, чем отслеживать изменение multiselect на браузере
-      gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+      gridView.getContainer().toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
       if (hideCheckBoxes) {
          gridView.toggleCheckboxes(operationPanel.isVisible());
          if (!visible) {
