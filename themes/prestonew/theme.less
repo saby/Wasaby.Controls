@@ -106,11 +106,13 @@ body {
     }
     .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
       height: 2.4rem;
-      max-width: 3.4285rem;
+      max-width: 4.4285rem;
     }
 
     .controls-DateRange .controls-DateRange__Button .controls-Button__icon {
       font-size: 2rem !important;
+      width: auto !important;
+      height: auto !important;
     }
     .controls-DatePicker .controls-DatePicker__button .controls-Button__icon {
       font-size: 2rem !important;
@@ -233,13 +235,6 @@ body {
   .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     width: 3rem !important;
     height: 3rem !important;
-    background: @closeBigButtonImage;
-    &:hover {
-      background: @closeBigButtonImageHover;
-    }
-    &:active {
-      background: @closeBigButtonImageHover;
-    }
 }
 }
 
@@ -812,7 +807,8 @@ body .controls-Link {
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
-  padding-bottom: 1.1rem;
+  margin-bottom: 1.1rem;
+  margin-top: -.7rem;
 }
 
 .controls-ComboBox__picker {
@@ -847,6 +843,9 @@ body .controls__filterButton__filterLine {
 }
 .controls-DropdownList__picker .controls-DropdownList__item {
   line-height: 3rem;
+}
+.controls-DatePicker .controls-DatePicker__calendarWrapper {
+  right: 1rem;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
   text-align: center;
