@@ -17,7 +17,8 @@ define('js!WSControls/Lists/ItemsControl', [
    "tmpl!WSControls/Lists/resources/ItemTemplate",
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    "js!WS.Data/Display/Display",
-   'js!SBIS3.CONTROLS.ListView/ListViewHelpers'
+   'js!SBIS3.CONTROLS.ListView/ListViewHelpers',
+   'js!WSControls/Controllers/DataSourceController'
 ], function (extend,
              cFunctions,
              AbstractCompatible,
@@ -36,7 +37,8 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemTemplate,
              ItemContentTemplate,
              Projection,
-             ListViewHelpers) {
+             ListViewHelpers,
+             DataSourceController) {
 
    'use strict';
 
@@ -86,6 +88,18 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _initControllers: function() {
+            this._initItemBasedControllers();
+            if (this._dataSourceController) {
+               this._dataSourceController.destroy();
+            }
+            if (this._options.dataSource) {
+               this._dataSourceController = new DataSourceController({
+                  dataSource : this._options.dataSource
+               })
+            }
+         },
+
+         _initItemBasedControllers: function() {
             if (this._items) {
                if (this._itemsProjection) {
                   this._itemsProjection.destroy();
@@ -118,7 +132,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _itemsChangeCallback: function() {
-            this._initControllers();
+            this._initItemBasedControllers();
             this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
             this.tplData = this._prepareItemData( this._options );
          },
@@ -241,6 +255,25 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
+
+         //<editor-fold desc="DataSourceMethods">
+         isLoading: function() {
+            if (this._dataSourceController) {
+               return this._dataSourceController.isLoading();
+            }
+         },
+         setFilter: function(filter, noLoad) {
+            if (this._dataSourceController) {
+               this._dataSourceController.setFilter(filter, noLoad);
+            }
+         },
+         setSorting: function(sorting, noLoad) {
+            if (this._dataSourceController) {
+               this._dataSourceController.setSorting(sorting, noLoad);
+            }
+         },
+         //</editor-fold>
+
          destroy: function() {
             ItemsControl.superclass.destroy.ally(this, arguments);
             if (this._itemsProjection) {
@@ -248,6 +281,9 @@ define('js!WSControls/Lists/ItemsControl', [
             }
             if (this._selector) {
                this._selector.destroy();
+            }
+            if (this._dataSourceController) {
+               this._dataSourceController.destroy();
             }
          }
       });
