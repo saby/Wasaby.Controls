@@ -12,4 +12,12 @@
    <div class="controls-TextBox__fieldWrapper {{enableArrows !== false ? 'controls-NumberTextBox__enable-arrow'}}">
       <ws:partial template="{{textFieldWrapper}}" scope="{{...}}"/>
    </div>
+   <ws:if data="{{informationIconColor}}">
+      <ws:SBIS3.CONTROLS.IconButton
+        name = 'informationIcon'
+        className = {{informationIconColor ? 'controls-informationIcon icon-' + informationIconColor : 'controls-informationIcon'}}
+        icon = 'icon-size icon-Listbox'
+        allowChangeEnable = false
+      />
+   </ws:if>
 </div>

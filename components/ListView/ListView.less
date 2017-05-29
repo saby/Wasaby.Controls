@@ -287,6 +287,25 @@
    }
 }
 
+.rightSwipeAnimation {
+   -webkit-animation-name: rightSwipe; /* Safari 4.0 - 8.0 */
+   -webkit-animation-duration: 0.3s; /* Safari 4.0 - 8.0 */
+   animation-name: rightSwipe;
+   animation-duration: 0.3s;
+}
+
+@keyframes rightSwipe {
+   0% {
+      right: 0;
+   }
+   50% {
+      right: -16px;
+   }
+   100% {
+      right: 0
+   }
+}
+
 .controls-GroupBy__separator {
    height: @list-view-separator-height / 2;
    margin-bottom: @list-view-separator-height / 2;
