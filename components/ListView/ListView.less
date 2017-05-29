@@ -352,3 +352,52 @@
    }
 }
 /**/
+/**Петя должен сделать шаблон декорированной ссылки на клиенте, потом это надо будет удалить*/
+.controls-dragNDrop-avatar {
+   width: 200px;
+   height: 40px;
+   background: #fff;
+   .flexbox();
+   .flex-direction(row);
+   overflow: hidden;
+   padding: 4px;
+   .box-shadow(0 0 10px rgba(0, 0, 0, 0.50));
+   font-family: "Segoe UI";
+   .controls-dragNDrop-avatar__img-wrapper {
+      img {
+         width: 40px;
+         height: 40px;
+         border-radius: 8px;
+         margin: 0 4px 0 0;
+      }
+   }
+   .controls-dragNDrop-avatar__text-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      padding: 2px;
+      .controls-dragNDrop-avatar__title {
+         color: #313E78;
+         font-weight: bold;
+         font-size: 14px;
+         white-space: nowrap;
+      }
+      .controls-dragNDrop-avatar__description {
+         color: #000;
+         font-size: 13px;
+         white-space: nowrap;
+      }
+      &:after {
+         content: '';
+         position: absolute;
+         right: 0px;
+         width: 30px;
+         top: 0;
+         bottom: 0;
+         .horizontal-gradient(rgba(255, 255, 255, 0), @white-color);
+         background-color: transparent;
+      }
+   }
+}
+
+/**/

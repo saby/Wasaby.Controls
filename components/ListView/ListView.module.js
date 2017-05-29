@@ -4029,8 +4029,23 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createAvatar: function(dragObject) {
-            var count = dragObject.getSource().getCount();
-            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
+            if (!this._options.useDragPlaceHolder) {
+               var count = dragObject.getSource().getCount();
+               return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
+            } else {
+               var model = dragObject.getSource().at(0).getModel();
+               return $(
+                  '<div class="controls-dragNDrop-avatar">' +
+                     '<div class="controls-dragNDrop-avatar__img-wrapper">' +
+                        '<img src="'+model.get('PhotoURL')+'">' +
+                     '</div>' +
+                     '<div class="controls-dragNDrop-avatar__text-wrapper">' +
+                        '<div class="controls-dragNDrop-avatar__title">' + (model.get('Name')||'') + '</div>' +
+                        '<div class="controls-dragNDrop-avatar__description">' + (model.get('Description')||'') + '</div>' +
+                     '</div>' +
+                  '</div>'
+               );
+            }
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
@@ -4101,19 +4116,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return this._dragPlaceHolder;
          },
-         _getDragAvatar: function (record) {
-            return (
-               '<div class="controls-dragNDrop-avatar">' +
-               '<div class="controls-dragNDrop-avatar__img-wrapper">' +
-               '<img>' +
-               '</div>' +
-               '<div class="controls-dragNDrop-avatar__text-wrapper">' +
-               '<div class="controls-dragNDrop-avatar__title">'+record.get('title')+'</div>' +
-               '<div class="controls-dragNDrop-avatar__description">'+record.get('title')+'</div>' +
-               '</div>' +
-               '</div>'
-            );
-         },
+
          _toggleDragItems: function (dragObject, show) {
             dragObject.getSource().each(function (item) {
                item.getDomElement().toggleClass('ws-hidden', !show);
