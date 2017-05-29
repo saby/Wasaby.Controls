@@ -1,4 +1,5 @@
 @import "header";
+@import "mixins";
 
 //body, html {
 //  font: @default-font-size @default-font-name;
@@ -176,16 +177,15 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 .controls-LabelContainer {
-  display: flex;
-  display: -ms-flexbox;
+  .flexbox();
 
   .controls-LabelContainer__label {
+    .flex-shrink(0);
     margin-right: 8px;
     white-space: nowrap;
-    flex-shrink: 0;
   }
   .controls-LabelContainer__content {
-    -ms-flex: 1;
+    .flex-grow(1);
     width: 100%;
     display: block;
     position: relative;
