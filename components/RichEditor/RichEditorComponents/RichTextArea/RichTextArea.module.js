@@ -1714,9 +1714,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   .replace(/<br data-mce-bogus="1">/gi, '')
                   .replace(/(<p><\/p>)|(<p><br><\/p>)|(<p> <\/p>)|/gi,''),
                visible = (curValue === '' || curValue === undefined || curValue === null) &&
-                  value.indexOf('</li>') < 0 &&
-                  value.indexOf('<p>&nbsp;') < 0 &&
-                  value.indexOf('<blockquote>') < 0;
+                  curValue.indexOf('</li>') < 0 &&
+                  curValue.indexOf('<p>&nbsp;') < 0 &&
+                  curValue.indexOf('<blockquote>') < 0;
 
             this.getContainer().toggleClass('controls-RichEditor__empty', visible);
 
