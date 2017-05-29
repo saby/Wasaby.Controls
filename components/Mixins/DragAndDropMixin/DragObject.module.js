@@ -190,7 +190,14 @@ define('js!SBIS3.CONTROLS.DragObject', [
        */
       getTargetsDomElemet: function(){
          if (this._jsEvent) {
-            if (this._jsEvent.type in {"touchmove":true, "touchend":true}) {
+            if ($(this._jsEvent.target).hasClass('controls-DragNDrop__draggedItem')){
+               var elements = document.elementsFromPoint(this._jsEvent.pageX, this._jsEvent.pageY);
+               for (var i=0,len = elements.length; i< len; i++) {
+                  if (!$(elements[i]).closest('.controls-DragNDrop__draggedItem').length) {
+                     return $(elements[i]);
+                  }
+               }
+            } else if (this._jsEvent.type in {"touchmove":true, "touchend":true}) {
                //для touch событий в таргете всегда лежит элемент над которым началось перемещение
                //тоже самое для firefox
                return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));

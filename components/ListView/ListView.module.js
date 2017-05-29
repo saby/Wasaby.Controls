@@ -914,6 +914,12 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @deprecated
                 */
                useSelectAll: false,
+               //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
+               //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
+               linkTemplateConfig: null,
+               //включает плейсхолдер при перемещении записи мышкой, в 100 он работает только с плоскими списками,
+               //опция будет удалена при реализации перемещения по новому стандарту
+               useDragPlaceHolder: false,
                //TODO коммент ниже
                task1173941879: false
             },
@@ -3767,7 +3773,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsDragNDrop
           */
          setItemsDragNDrop: function(allowDragNDrop) {
-            this._options.useDragPlaceHolder = true;
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item',  this._getDragInitHandler());
          },
@@ -3840,7 +3845,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _beginDragHandler: function(dragObject, e) {
-            var target = this._findItemByElement(dragObject.getTargetsDomElemet())
+            var target = this._findItemByElement(dragObject.getTargetsDomElemet());
             if (target.length) {
                if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
                   return false;
@@ -3864,13 +3869,16 @@ define('js!SBIS3.CONTROLS.ListView',
                      items: source
                   })
                );
-               this._getDragPlaceHolder(dragObject);
+               this._hideItemsToolbar();
                if (this._checkHorisontalDragndrop(target)) {
                   this._horisontalDragNDrop = true;
+                  this.getContainer().addClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
                } else {
                   this._horisontalDragNDrop = false;
+                  this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().addClass('controls-ListView__verticalDragNDrop');
                }
-               this._toggleDragItems(dragObject, false);
                return true;
             }
             return false;
@@ -3892,27 +3900,39 @@ define('js!SBIS3.CONTROLS.ListView',
             return false;
          },
          _onDragHandler: function(dragObject, e) {
-            this._clearDragHighlight(dragObject );
-            if (this._canDragMove(dragObject )) {
+            this._clearDragHighlight(dragObject);
+            if (this._canDragMove(dragObject)) {
                var
-                  target = dragObject .getTarget(),
+                  target = dragObject.getTarget(),
                   targetsModel = target.getModel(),
-                  source = dragObject .getSource(),
+                  source = dragObject.getSource(),
                   sourceModels = [];
                if (targetsModel) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
                   });
+
                   //this._drawDragHighlight(target);
-                  var placeholder = this._getDragPlaceHolder(dragObject);
+                  if (this._options.useDragPlaceHolder) {
+                     var placeholder = this._getDragPlaceHolder(dragObject);
                      placeholder.show();
-                  var item = this._getItemsProjection().getItemBySourceItem(targetsModel);
-                  if (target.getPosition() == 'before') {
-                     placeholder.insertBefore(target.getDomElement());
+                     var item = this._getItemsProjection().getItemBySourceItem(targetsModel);
+                     if (target.getPosition() == 'before') {
+                        placeholder.insertBefore(target.getDomElement());
+                     } else {
+                        placeholder.insertAfter(target.getDomElement());
+                     }
                   } else {
-                     placeholder.insertAfter(target.getDomElement());
+                     if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
+                        this._drawDragHighlight(target);
+                     }
                   }
                }
+            }
+            if (dragObject.getTargetsControl() !== this && this._dragPlaceHolder) {
+               this._dragPlaceHolder.hide();
+            } else if (this._dragPlaceHolder) {
+               this._dragPlaceHolder.show();
             }
          },
 
@@ -4029,19 +4049,19 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createAvatar: function(dragObject) {
-            if (!this._options.useDragPlaceHolder) {
+            if (!this._options.linkTemplateConfig) {
                var count = dragObject.getSource().getCount();
                return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
             } else {
                var model = dragObject.getSource().at(0).getModel();
                return $(
-                  '<div class="controls-dragNDrop-avatar">' +
+                  '<div class="controls-dragNDrop-avatar controls-DragNDrop__draggedItem">' +
                      '<div class="controls-dragNDrop-avatar__img-wrapper">' +
-                        '<img src="'+model.get('PhotoURL')+'">' +
+                        '<img src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
                      '</div>' +
                      '<div class="controls-dragNDrop-avatar__text-wrapper">' +
-                        '<div class="controls-dragNDrop-avatar__title">' + (model.get('Name')||'') + '</div>' +
-                        '<div class="controls-dragNDrop-avatar__description">' + (model.get('Description')||'') + '</div>' +
+                        '<div class="controls-dragNDrop-avatar__title">' + (model.get(this._options.linkTemplateConfig.title)||'') + '</div>' +
+                        '<div class="controls-dragNDrop-avatar__description">' + (model.get(this._options.linkTemplateConfig.description)||'') + '</div>' +
                      '</div>' +
                   '</div>'
                );
@@ -4082,16 +4102,20 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (result) {
                            this.removeItemsSelectionAll();
                         }
-
-                        this.once('onDrawItems', function () {
-                           this._clearDragHighlight(dragObject);
-                           domItems.forEach(function (elem) {
-                              elem.removeClass('ws-hidden');
+                        if (this._options.useDragPlaceHolder) {
+                           this.once('onDrawItems', function () {
+                              //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
+                              //когда удалется плейсходер и переносится реальный элемент
+                              //здесь поможет виртуалдом
+                              this._clearDragHighlight(dragObject);
+                              domItems.forEach(function (elem) {
+                                 elem.removeClass('ws-hidden');
+                              });
+                              this._dragPlaceHolder.remove();
+                              this._dragPlaceHolder = null;
+                              this._updateItemsToolbar();
                            });
-                           this._dragPlaceHolder.remove();
-                           this._dragPlaceHolder = null;
-                           this._updateItemsToolbar();
-                        });
+                        }
                      }.bind(this));
                   } else {
                      var currentDataSource = this.getDataSource(),
@@ -4110,11 +4134,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _getDragPlaceHolder: function(dragObject) {
             if (!this._dragPlaceHolder) {
-               var item = dragObject.getSource().at(0);
-               this._dragPlaceHolder = item.getDomElement().clone().addClass('controls-DragNDrop__placeholder');
-               item.getDomElement().after(this._dragPlaceHolder);
+               this._makeDragPlaceHolder()
             }
             return this._dragPlaceHolder;
+         },
+
+         _makeDragPlaceHolder: function(dragObject) {
+            var item = dragObject.getSource().at(0);
+            this._dragPlaceHolder = item.getDomElement().clone().removeAttr('data-hash').addClass('controls-DragNDrop__placeholder');
+            item.getDomElement().after(this._dragPlaceHolder);
          },
 
          _toggleDragItems: function (dragObject, show) {
