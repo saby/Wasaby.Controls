@@ -201,7 +201,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
          onClick: function (evt) {
             if (this._selector) {
-               return this._selector.setSelectedByHash(this.getDataHashFromTarget(evt.nativeEvent.target));
+               return this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
             }
          },
 
@@ -228,12 +228,12 @@ define('js!WSControls/Lists/ItemsControl', [
 
          mouseMove: function(ev){
             var element = ev.nativeEvent.target;
-            this._hoveredItem = this.getDataHashFromTarget(element);
+            this._hoveredItem = this._getDataHashFromTarget(element);
             this.toolbarTop = ev.nativeEvent.target.offsetTop;
             this.toolbarLeft = this._container[0].offsetWidth - 100;
          },
 
-         getDataHashFromTarget: function (element) {
+         _getDataHashFromTarget: function (element) {
             while(element && typeof element.className === "string" && element.className.indexOf('controls-ListView__item') == -1) {
                element = element.parentNode;
             }

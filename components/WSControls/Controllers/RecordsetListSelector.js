@@ -50,19 +50,6 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
          }
       },
 
-      _prepareOtherSelectedConfig: function() {
-         if (this.projection) {
-            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
-            if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex)) {
-               if (this.projection.getCount()) {
-                  this.selectedIndex = 0;
-                  this.selectedKey = this._getKeyByIndex(this.selectedIndex);
-               }
-            }
-         }
-
-      },
-
       _getKeyByIndex: function(index) {
          if(this._hasItemByIndex(index)) {
             var itemContents = this.projection.at(index).getContents();

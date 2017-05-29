@@ -10,12 +10,15 @@ define('js!WSControls/Controllers/BaseListSelector', [
 
          /*Распихивание данных*/
          this._options = {
-            selectedIndex : cfg.selectedIndex || null,
-            allowEmptySelection : cfg.allowEmptySelection || true,
+            selectedIndex : (cfg.selectedIndex !== undefined && cfg.selectedIndex !== null) ? cfg.selectedIndex : -1,
+            allowEmptySelection : (cfg.allowEmptySelection !== undefined && cfg.allowEmptySelection !== null) ? cfg.allowEmptySelection : true,
             projection: cfg.projection || null
          };
          this.selectedIndex = this._options.selectedIndex;
          this.projection = this._options.projection;
+         this.allowEmptySelection = this._options.allowEmptySelection;
+
+         this._prepareOtherSelectedConfig();
 
          //TODO
          BaseListSelector.superclass.constructor.apply(this, arguments);
@@ -44,6 +47,17 @@ define('js!WSControls/Controllers/BaseListSelector', [
 
       _notifySelectedItem : function(index) {
          this._notify('onSelectedItemChange', index);
+      },
+
+      _prepareOtherSelectedConfig: function() {
+         if (this.projection) {
+            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
+            if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex)) {
+               if (this.projection.getCount()) {
+                  this.selectedIndex = 0;
+               }
+            }
+         }
       }
    });
    return BaseListSelector;
