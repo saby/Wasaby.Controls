@@ -73,13 +73,6 @@ body {
 }
 @text-box-height-prestoBig:   50px;
 @text-box-height-prestoFont:  36px;
-.controls-TextBox {
-   &.controls-TextBox__big {
-
-   }
-}
-
-
 
 .controls-listView td {
   font-size: 1rem;
@@ -247,12 +240,23 @@ body {
   border-color: #26b8ff;
 }
 
-
-body .ws-loadingimg {
-  top: 30%;
-}
-
 body {
+
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+      font-size: 3rem!important;
+      margin-top: initial;
+  }
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+      font-size: 3rem!important;
+      width: 24px;
+      margin-left: -2rem;
+      margin-top: initial;
+  }
+    .controls-DateBox {
+      min-height: 3rem;
+    }
+
+
   .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
@@ -276,22 +280,6 @@ body {
     font-size: 1.14rem;
 
   }
-  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    width: 1.43rem !important;
-    height: 1.43rem !important;
-    font-size: 1.43rem !important;
-     border: none !important;
-    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-        font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-    }
-
-    .controls-DateBox {
-      min-height: 3rem;
-    }
-
-}
 
 .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
   display: none;
@@ -306,25 +294,14 @@ body {
       .marker()
    }
 }
-
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-    font-size: inherit !important;
-
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-         font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-       font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    margin-right: 1rem;
   }
-}
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    margin-right: 3rem;
+    border: none;
+  }
+
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
      margin-left: 2.4rem !important;
@@ -415,6 +392,35 @@ body .controls-ToolBar__menuIcon .icon-24 {
    }
 }
 
+.controls-AjaxLoader__LoadingIndicator {
+   border-radius: 16px;
+}
+
+.ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window {
+   img {
+      width: 77px;
+      height: 77px;
+   }
+   .ws-loadingimg {
+      left: 13px;
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: 77px;
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: 32px;
+   }
+}
+
 .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
    height: 2.4rem;
 }
@@ -427,3 +433,62 @@ body .controls-ToolBar__menuIcon .icon-24 {
    line-height: 2rem !important;
 }
 
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__datePickerEnd {
+  margin-right: 1rem;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn {
+  margin-left: -.857rem;
+}
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
+  padding-top: .5rem;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+  border-bottom: 2px solid #ccc;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  font-size: 1rem;
+  margin-top: -.64rem;
+}
+.controls-ComboBox__picker {
+   box-sizing: border-box;
+}
+.controls-ComboBox__arrowDown {
+   &:before {
+      margin: .84rem;
+   }
+}
+
+body .controls-Link {
+  font-size: 1.14rem;
+}
+body .controls__filterButton__filterLine {
+  max-width: 100%;
+}
+&.controls-ListView__withoutMarker.controls-ListView {
+   .controls-ListView__item__selected,
+   .controls-ListView__item__multiSelected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-CompositeView__verticalItemActions),
+      &:not(.controls-ListView__item-type-node) {
+         background-image: none !important;
+         border-color: transparent;
+      }
+      &.controls-ListView__item {
+         &:not(.controls-ListView__hoveredItem) {
+            border-color: transparent;
+            background-color: transparent;
+         }
+      }
+   }
+}
+body .controls-DropdownList__picker .controls-DropdownList__item {
+  line-height: 3rem;
+}
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
+  text-align: center;
+}

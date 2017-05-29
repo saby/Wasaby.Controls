@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
          /* Вырезаем символы < > только если они одиночные, т.е. не в составе какого-то слова,
             т.к. декоратор в гриде при выделении цветом одиночных < > может поломать вёрстку */
          text = (text || '').replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
-         textTrimLength = String.trim(text).length;
+         textTrimLength = text.trim().length;
          
          /* Если поиск запущен, то надо отменить поиск с задержкой */
          this._clearSearchDelay();

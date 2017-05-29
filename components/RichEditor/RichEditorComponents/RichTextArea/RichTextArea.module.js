@@ -1220,7 +1220,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false, escapeInvalidTags: false});
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -1714,9 +1714,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   .replace(/<br data-mce-bogus="1">/gi, '')
                   .replace(/(<p><\/p>)|(<p><br><\/p>)|(<p> <\/p>)|/gi,''),
                visible = (curValue === '' || curValue === undefined || curValue === null) &&
-                  value.indexOf('</li>') < 0 &&
-                  value.indexOf('<p>&nbsp;') < 0 &&
-                  value.indexOf('<blockquote>') < 0;
+                  curValue.indexOf('</li>') < 0 &&
+                  curValue.indexOf('<p>&nbsp;') < 0 &&
+                  curValue.indexOf('<blockquote>') < 0;
 
             this.getContainer().toggleClass('controls-RichEditor__empty', visible);
 

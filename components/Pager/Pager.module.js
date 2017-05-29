@@ -7,7 +7,7 @@
  */
 define('js!SBIS3.CONTROLS.Pager', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Pager',
+   'tmpl!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.DropdownList',
    'js!SBIS3.CORE.Paging',
    'Core/core-instance',
