@@ -35,9 +35,7 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
          calculateItems: function(rawItems, idProperty) {
             var resultItems, resultIdProperty;
             if (rawItems instanceof Array) {
-               if (!idProperty) {
-                  resultIdProperty = this.findIdProperty(rawItems);
-               }
+               resultIdProperty = idProperty ? idProperty : this.findIdProperty(rawItems);
                resultItems = this.JSONToRecordset(rawItems, idProperty);
             }
             return {

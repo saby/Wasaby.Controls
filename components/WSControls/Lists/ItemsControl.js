@@ -62,7 +62,6 @@ define('js!WSControls/Lists/ItemsControl', [
 
          constructor: function (cfg) {
             this._options = cfg || {};
-            this.items = cfg.items || [];
             this.idProperty = cfg.idProperty;
             this.displayProperty = cfg.displayProperty;
             this.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
@@ -71,33 +70,31 @@ define('js!WSControls/Lists/ItemsControl', [
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
 
-            this._prepareData();
+            if (this._options.items) {
+               this._prepareItems(this._options.items);
+            }
 
-
+            this._itemsChangeCallback();
 
             this.deprecatedContr(cfg);
          },
 
-         _prepareDataOnItemsChange: function() {
-            this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
-            this.tplData = this._prepareItemData( this._options );
+         _prepareItems : function(items) {
+            var calcItems = ListViewHelpers.calculateItems(items, this.idProperty);
+            this._items = calcItems.items;
+            this.idProperty = calcItems.idProperty;
          },
 
-         _prepareData: function() {
-            if (this.items) {
-               var calcItems = ListViewHelpers.calculateItems(this.items, this.idProperty);
-               this._items = calcItems.items;
-               this.idProperty = calcItems.idProperty;
-
-
-
+         _initControllers: function() {
+            if (this._items) {
                if (this._itemsProjection) {
-                  this._unsetItemsEventHandlers();
                   this._itemsProjection.destroy();
                }
                this._itemsProjection = this._createDefaultProjection();
 
-
+               if (this._selector) {
+                  this._selector.destroy();
+               }
                if (this._needSelector) {
                   this._selector = this._createDefaultSelector();
                }
@@ -106,8 +103,6 @@ define('js!WSControls/Lists/ItemsControl', [
 
 
                //proj = cfg._applyGroupingToProjection(proj, cfg);
-
-               this._prepareDataOnItemsChange();
 
                /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
                 if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
@@ -120,6 +115,12 @@ define('js!WSControls/Lists/ItemsControl', [
                 }
                 }*/
             }
+         },
+
+         _itemsChangeCallback: function() {
+            this._initControllers();
+            this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
+            this.tplData = this._prepareItemData( this._options );
          },
 
          _prepareItemDataInner: function() {
@@ -146,28 +147,24 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _unsetItemsEventHandlers: function () {
-
-         },
-
          _createDefaultSelector: function() {
 
          },
 
          setItems: function(items){
+            this._prepareItems(items);
 
-            this.items = items;
-            this._prepareData();
+            this._itemsChangeCallback();
             this._setDirty();
          },
 
 
 
          getItems : function() {
-            return this._options._items;
+            return this._items;
          },
          _getItemsProjection: function() {
-            return this._options._itemsProjection;
+            return this._itemsProjection;
          },
          setSelectedKey: function(key){
             if (this._selector) {
