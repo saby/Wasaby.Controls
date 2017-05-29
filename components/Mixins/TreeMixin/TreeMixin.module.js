@@ -322,7 +322,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.nodeProperty = cfg.nodeProperty;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hasNodes = cfg.hasNodes;
-      tplOptions.getItemTemplateData = cfg._getItemTemplateData;
       tplOptions.hierarchy = new HierarchyRelation({
          idProperty: cfg.idProperty,
          parentProperty: cfg.parentProperty
@@ -332,14 +331,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    hasNextPageInFolder = function(cfg, more, id) {
       return typeof (more) !== 'boolean' ? more > (cfg._folderOffsets[id || 'null'] + cfg.pageSize) : !!more;
-   };
-
-   getItemTemplateData = function(cfg){
-      return {
-         nodePropertyValue: cfg.item.get(cfg.nodeProperty),
-         projection: cfg.projItem.getOwner(),
-         padding: cfg.paddingSize * (cfg.projItem.getLevel() - 1) + cfg.originallPadding
-      };
    };
    /**
     * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
@@ -437,7 +428,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _folderHasMore : {},
             _buildTplArgs: buildTplArgsTV,
             _buildTplArgsTV: buildTplArgsTV,
-            _getItemTemplateData: getItemTemplateData,
             _defaultSearchRender: searchRender,
             _getSearchCfgTv: getSearchCfg,
             _getSearchCfg: getSearchCfg,

@@ -104,6 +104,8 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _invisibleItemsTemplate: InvisibleItemsTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
+            /*TODO для лечения тестов пришлось закоппипастить шаблон*/
+            _itemsTemplate: ItemsTemplate,
             _compositeItemsTemplate : CompositeItemsTemplate,
             _buildTplArgs : buildTplArgs,
             _buildTplArgsComposite: buildTplArgsComposite,
