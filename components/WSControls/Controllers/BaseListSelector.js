@@ -31,6 +31,13 @@ define('js!WSControls/Controllers/BaseListSelector', [
          return this.selectedIndex;
       },
 
+      setSelectedByHash: function(hash) {
+         if (this.projection) {
+            var elem = this.projection.getByHash(hash);
+            this.setSelectedIndex(this.projection.getIndex(elem));
+         }
+      },
+
       _isEmptyIndex: function(index) {
          return index === null || typeof index == 'undefined' || index == -1;
       },

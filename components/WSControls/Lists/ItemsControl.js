@@ -200,7 +200,9 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          onClick: function (evt) {
-             this.setSelectedKey(this.getDataIdFromTarget(evt.nativeEvent.target));
+            if (this._selector) {
+               return this._selector.setSelectedByHash(this.getDataHashFromTarget(evt.nativeEvent.target));
+            }
          },
 
          mouseEnter: function(ev){
@@ -226,17 +228,17 @@ define('js!WSControls/Lists/ItemsControl', [
 
          mouseMove: function(ev){
             var element = ev.nativeEvent.target;
-            this._hoveredItem = this.getDataIdFromTarget(element);
+            this._hoveredItem = this.getDataHashFromTarget(element);
             this.toolbarTop = ev.nativeEvent.target.offsetTop;
             this.toolbarLeft = this._container[0].offsetWidth - 100;
          },
 
-         getDataIdFromTarget: function (element) {
+         getDataHashFromTarget: function (element) {
             while(element && typeof element.className === "string" && element.className.indexOf('controls-ListView__item') == -1) {
                element = element.parentNode;
             }
             if(element) {
-               return element.attributes['data-id'].value;
+               return element.attributes['data-hash'].value;
             } else {
                return null;
             }

@@ -44,7 +44,7 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
                this.selectedKey = null;
             }
             else {
-               this.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+               this.selectedKey = this._getKeyByIndex(this.selectedIndex);
             }
             this._prepareOtherSelectedConfig();
          }
@@ -56,7 +56,7 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
             if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex)) {
                if (this.projection.getCount()) {
                   this.selectedIndex = 0;
-                  this.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+                  this.selectedKey = this._getKeyByIndex(this.selectedIndex);
                }
             }
          }
