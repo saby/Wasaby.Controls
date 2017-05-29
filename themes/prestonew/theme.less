@@ -719,6 +719,9 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
   }
 }
 
+body .controls-Link {
+  font-size: 1.14rem;
+}
 .controls-FieldLink .icon-size {
     font-size: 3rem !important;
     width: 3rem !important;
@@ -788,4 +791,29 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
    &:before {
       margin: .84rem;
    }
+}
+body .controls__filterButton__filterLine {
+  max-width: 100%;
+}
+&.controls-ListView__withoutMarker.controls-ListView {
+   .controls-ListView__item__selected,
+   .controls-ListView__item__multiSelected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-CompositeView__verticalItemActions),
+      &:not(.controls-ListView__item-type-node) {
+         background-image: none !important;
+         border-color: transparent;
+      }
+      &.controls-ListView__item {
+         &:not(.controls-ListView__hoveredItem) {
+            border-color: transparent;
+            background-color: transparent;
+         }
+      }
+   }
+}
+.controls-DropdownList__picker .controls-DropdownList__item {
+  line-height: 3rem;
 }
