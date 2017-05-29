@@ -521,6 +521,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+       _useNativePlaceHolder: function() {
+           // т.к. у не редактируемого ComboBox поле ввода скрыто, то использовать нативную подсказку не можем
+           return constants.compatibility.placeholder && this._options.editable;
+       },
+
       _getItemTemplate: function (projItem) {
          var
             item = projItem.getContents(),

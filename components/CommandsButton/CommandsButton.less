@@ -1,17 +1,25 @@
+.controls-CommandsButton {
+   .icon-size {
+      .icon-size(@commands-button-close-icon, @commands-button-close-font-family);
+   }
+}
 .controls-Menu__Popup.controls-Menu.controls-CommandsButton__picker{
-   margin: -9px -33px 0 0;
+   margin: @commands-button-margin;
 }
 .controls-CommandsButton__picker .controls-PopupMixin__closeButton {
    z-index:10;
    background-image: none;
-   width: 32px;
-   height: 32px;
+   width: @commands-button-close-button-size;
+   height: @commands-button-close-button-size;
+   font-family: @commands-button-close-font-family;
+   font-size: @commands-button-close-icon;
    top: 4px;
    right: 0;
    color: @blue-dark-color !important;
+
    &:before {
       position: absolute;
-      top: 4px;
+      top: @commands-button-close-button-top;
    }
    &:hover {
       background-image: none;

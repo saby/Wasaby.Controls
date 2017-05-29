@@ -106,6 +106,7 @@ body {
     }
     .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
       height: 2.4rem;
+      max-width: 3.4285rem;
     }
 
     .controls-DateRange .controls-DateRange__Button .controls-Button__icon {
@@ -155,13 +156,12 @@ body {
 
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
         font-size: 3rem!important;
-        margin-left: -2.4rem;
         margin-top: initial;
     }
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
         font-size: 3rem!important;
         width: 24px;
-        margin-left: -6rem;
+        margin-left: -2rem;
         margin-top: initial;
     }
     .controls-DropdownList .controls-DropdownList__selectedItem {
@@ -257,6 +257,9 @@ body {
     font-size: 3rem !important;
     width: 2rem;
     height: 3rem;
+  }
+  &.ws-enabled .icon-primary:hover{
+    color: #B9E9FF !important;
   }
 }
 
@@ -478,10 +481,6 @@ body {
    }
 }
 
-body .ws-loadingimg {
-  top: 30%;
-}
-
 body {
    .controls-BackButton {
       .controls-BackButton__caption.controls-Link {
@@ -656,7 +655,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
 }
 
 .controls-DateRangeBigChoose__datePickerEnd-wrapper .controls-DateBox {
-  margin-right:2.5rem;
+  margin-right:3.6rem;
 }
 
 body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
@@ -720,6 +719,9 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
   }
 }
 
+body .controls-Link {
+  font-size: 1.14rem;
+}
 .controls-FieldLink .icon-size {
     font-size: 3rem !important;
     width: 3rem !important;
@@ -743,4 +745,75 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
          top: 1.15rem;
      }
   }
+}
+
+.controls-AjaxLoader__LoadingIndicator {
+   border-radius: 16px;
+}
+
+.ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window {
+   img {
+      width: 77px;
+      height: 77px;
+   }
+   .ws-loadingimg {
+      left: 13px;
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: 77px;
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: 32px;
+   }
+}
+.controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
+  color: #324352;
+}
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  font-size: 1rem;
+  padding-bottom: 1.1rem;
+}
+
+.controls-ComboBox__picker {
+   box-sizing: border-box;
+}
+.controls-ComboBox__arrowDown {
+   &:before {
+      margin: .84rem;
+   }
+}
+body .controls__filterButton__filterLine {
+  max-width: 100%;
+}
+&.controls-ListView__withoutMarker.controls-ListView {
+   .controls-ListView__item__selected,
+   .controls-ListView__item__multiSelected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-CompositeView__verticalItemActions),
+      &:not(.controls-ListView__item-type-node) {
+         background-image: none !important;
+         border-color: transparent;
+      }
+      &.controls-ListView__item {
+         &:not(.controls-ListView__hoveredItem) {
+            border-color: transparent;
+            background-color: transparent;
+         }
+      }
+   }
+}
+.controls-DropdownList__picker .controls-DropdownList__item {
+  line-height: 3rem;
 }

@@ -101,8 +101,12 @@
    }
 
    .controls-DateRangeChoose__home {
-      width: 24px;
+      width: @date-range-choose-home-icon-width;
       text-align: left;
+      .controls-Button__icon {
+         height: @date-range-choose-year-height;
+         line-height: @date-range-choose-year-height !important;
+      }
    }
    .controls-DateRangeChoose__year {
       color: @date-range-choose-year-color;
@@ -417,6 +421,9 @@
       &:not(.controls-DateRangeChoose__yearsMode-bold):hover {
          border: @date-range-choose-border-hover;
          line-height: @date-range-choose-year-height - 2px;
+      }
+      &:not(:first-child) {
+          margin-top: -@date-range-choose-border-width;
       }
    }
    .controls-DateRangeChoose__yearsMode-bold {
