@@ -104,27 +104,37 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    },
    drawFolders = function(cfg){
       var stashTpl = cfg.tplData.itemTpl,
-         markup;
+          invisibleItemsMarkup = '',
+          markup;
       if (cfg.tplData.viewMode == 'list'){
          cfg.tplData.itemTpl = cfg.tplData.listFolderTpl;
       }
       else if (cfg.tplData.viewMode == 'tile'){
          cfg.tplData.itemTpl = cfg.tplData.folderTpl;
+         
+         if(cfg.tplData.tileMode) {
+            invisibleItemsMarkup = cfg.tplData.invisibleItemsTemplate({className: 'controls-ListView__item-type-node'})
+         }
       }
-      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders || [], tplData : cfg.tplData});
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders || [], tplData : cfg.tplData}) + invisibleItemsMarkup;
       cfg.tplData.itemTpl = stashTpl;
       return markup;
    },
    drawLeafs = function(cfg){
       var stashTpl = cfg.tplData.itemTpl,
-         markup;
+          invisibleItemsMarkup = '',
+          markup;
       if (cfg.tplData.viewMode == 'list'){
          cfg.tplData.itemTpl = cfg.tplData.listTpl;
       }
       else if (cfg.tplData.viewMode == 'tile'){
          cfg.tplData.itemTpl = cfg.tplData.tileTpl;
+         
+         if(cfg.tplData.tileMode === 'static') {
+            invisibleItemsMarkup = cfg.tplData.invisibleItemsTemplate({})
+         }
       }
-      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs || [], tplData : cfg.tplData});
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs || [], tplData : cfg.tplData}) + invisibleItemsMarkup;
       cfg.tplData.itemTpl = stashTpl;
       return markup;
    },
