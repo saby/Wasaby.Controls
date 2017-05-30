@@ -1203,7 +1203,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  markupExt = extendedMarkupCalculate(this._options._itemsTemplate(data), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
