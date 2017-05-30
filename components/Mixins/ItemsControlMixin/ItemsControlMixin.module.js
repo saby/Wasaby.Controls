@@ -1320,9 +1320,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             container.get(0).innerHTML = '';
          }
 
-         if (container.get(0) === this._getItemsContainer().get(0)) {
-            this._itemsInstances = {};
-         }
+         //Очищаем список инстансов, после удаления элеменов коллекции
+         this._itemsInstances = {};
+
          return compsArray;
       },
 

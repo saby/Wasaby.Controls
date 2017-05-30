@@ -526,6 +526,7 @@
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
+@radio-button-hover-icon-border-color:          @radio-button-icon-border-color;
 @radio-button-icon-border-color-disabled:       @gray-light-color;
 @radio-button-icon-border-width:                1px;
 @radio-button-icon-border-radius:               5px;
@@ -1019,6 +1020,7 @@
 
 @combo-box-arrow-width:                         16px;
 @combo-box-arrow-height:                        16px;
+@combo-box-arrow-line-height:                   1;
 
 @combo-box-arrow-border-width:                  0;
 @combo-box-arrow-border-style:                  solid;
@@ -1109,7 +1111,7 @@
 @text-area-disabled-border-width:               @text-area-border-width;
 @text-area-disabled-border-style:               @text-area-border-style;
 @text-area-disabled-border-color:               transparent;
-@text-area-disabled-bg:                         @text-area-bg;
+@text-area-disabled-bg:                         transparent;
 
 @text-area-left-padding:                        4px;
 @text-area-top-padding:                         2px;
@@ -1377,11 +1379,14 @@
 @date-range-slider-prev-next-buttons-width:        24px;
 @date-range-slider-prev-next-buttons-font-size:    16px;
 @date-range-slider-prev-next-buttons-font-weight:  normal;
+@date-range-slider-lock-margin-right:           6px;
 
 @date-range-slider-error-border-width:             1px;
 @date-range-slider-error-border-style:             solid;
 @date-range-slider-error-border-color:             @text-box-error-border-color;
 @date-range-slider-error-bg:                       @text-box-error-bg;
+
+@date-range-slider-picker-shadow:                  0px 0px 12px 0px rgba(0,0,0,0.25);
 
 // ----------------- //
 // Date Range Choose //
@@ -1394,14 +1399,14 @@
 @date-range-choose-border-color:                @gray-ccc-color;
 @date-range-choose-border-width:                1px;
 @date-range-choose-border-radius:               0;
-@date-range-choose-border-hover:                1px solid @gray-lamantin-color;
+@date-range-choose-border-hover:                @date-range-choose-border-width solid @gray-lamantin-color;
 @date-range-choose-font-family:                 @default-font-name;
 @date-range-choose-font-size:                   15px;
 @date-range-choose-color:                       @black-color;
 @date-range-choose-hover-color:                 @blue-dark-color;
 @date-range-choose-width:                       178px;
 @date-range-choose-short-width:                 148px;
-@date-range-choose-year-state-width:            80px;
+@date-range-choose-year-state-width:            82px;
 @date-range-choose-padding:                     0;
 
 @date-range-choose-standart-line-height:        32px;
@@ -1431,6 +1436,8 @@
 @date-range-choose-year-prev-next-btns-font-size:     16px;
 @date-range-choose-year-prev-next-btns-font-weight:   normal;
 @date-range-choose-year-prev-next-btns-color:         @darkcyan-color;
+
+@date-range-choose-home-icon-width:                   24px;
 
 @date-range-choose-indents:                           4px;
 
@@ -1666,6 +1673,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -2095,8 +2103,9 @@
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
 @DropdownList-picker-list-border-radius:              0;
 @DropdownList-picker-menu-font-size:                  15px;
+@DropdownList-picker-menu-line-height:                24px;
 @DropdownList-picker-menu-white-space:                nowrap;
-@DropdownList-picker-menu-item-padding:               7px 8px 6px 8px;
+@DropdownList-picker-menu-item-padding:               5px 8px 3px 8px;
 @DropdownList-picker-menu-item-margin:                0;
 @DropdownList-picker-menu-item-height:                19px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
@@ -2110,7 +2119,7 @@
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
-@DropdownList-footer-hasMore-left:                    16px;
+@DropdownList-footer-hasMore-left:                    24px;
 @DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
@@ -2557,6 +2566,13 @@
 @process-state-indicator-sector-side-padding:              6px;
 
 
+@commands-button-close-icon:                               @icon-medium-size;
+@commands-button-close-font-family:                        @default-icon-medium-font;
+@commands-button-close-button-size:                        32px;
+@commands-button-close-button-top:                         4px;
+@commands-button-margin:                                   -9px -33px 0 0;
+
+
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;
@@ -2566,6 +2582,7 @@
 @back-button-width-before:                                  8px;
 @back-button-text-fontweight:               @bold-font-weight;
 @dropdownlist-item-text-color:              inherit;
+
 @scroll-pager-bg:							@default-bg-color;
 @textbox-font-size:							@default-font-size;
 
@@ -2652,3 +2669,12 @@
 @clock-picker-outer-arrow-height:                   @clock-picker-outer-circle-radius - @clock-picker-outer-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
+
+@bottomStyle-items-toolbar-height:                  30px;
+@bottomStyle-items-toolbar-border-color:            #F3F3F3;
+@bottomStyle-items-toolbar-margin:                  3px 0 0 0;
+@scroll-pager-bg:							@default-bg-color;
+@textbox-font-size:							@default-font-size;
+@image-bar-height:                        32px;
+@image-bar-bg-color:                      #E7F0F9;
+@image-bar-button-bottom-padding:         4px;
