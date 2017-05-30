@@ -1313,7 +1313,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             if (target.length && this._isViewElement(target)) {
                model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
-               this._elemClickHandler(model.getId(), model, $(e.target), e);
+               this._elemClickHandler(model.getId(), model, e.target, e);
             }
             if (this._options.multiselect && $target.length && $target.hasClass('controls-DataGridView__th__checkBox')){
                $target.hasClass('controls-DataGridView__th__checkBox__checked') ? this.setSelectedKeys([]) :this.setSelectedItemsAll();
@@ -1729,7 +1729,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
          _notifyOnItemClick: function(id, data, target, e) {
-            return this._notify('onItemClick', id, data, target, e);
+            return this._notify('onItemClick', id, data, $(target), e);
          },
          _onCheckBoxClick: function(target) {
             this.toggleItemsSelection([this._getItemsProjection().getByHash(target.closest('.controls-ListView__item').attr('data-hash')).getContents().getId()]);
