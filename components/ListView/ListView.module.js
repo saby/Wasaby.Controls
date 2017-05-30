@@ -4011,7 +4011,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      position: position
                   });
                   dragObject.setTarget(target);
-               } else if (position == 'on') {
+               } else if (this._options.useDragPlaceHolder && position == 'on' ) {
                   if (this._horisontalDragNDrop) {
                      position = (e.offsetX > dragTarget.domElement.height()/2) ? 'before' : 'after';
                   } else {
@@ -4024,9 +4024,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      position: position
                   });
                   dragObject.setTarget(target);
+               } else if (!this._options.useDragPlaceHolder) {
+                  dragObject.setTarget(undefined);
                }
-            } else if (!this._options.useDragPlaceHolder) {
-               dragObject.setTarget(undefined);
             }
          },
 
