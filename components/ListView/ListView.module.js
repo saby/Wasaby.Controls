@@ -3864,6 +3864,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _beginDragHandler: function(dragObject, e) {
+            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+            //_findItemByElement, без завязки на _items.
             var target = this._findItemByElement(dragObject.getTargetsDomElemet());
             if (target.length) {
                if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
