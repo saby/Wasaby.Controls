@@ -767,7 +767,7 @@ body .controls-Link {
    border-radius: 16px;
 }
 
-.ws-window.ws-LoadingIndicator__window {
+body .ws-window.ws-LoadingIndicator__window {
    border-radius: 16px;
    border-color: transparent;
 
@@ -777,18 +777,29 @@ body .controls-Link {
 }
 
 .ws-LoadingIndicator__window {
-   img {
-      width: 77px;
-      height: 77px;
+   img, .ws-loadingimg > div:before{
+      width: 2.75rem;
+      height: 2.75rem;
    }
+   
+   img {
+      display: none;
+   }
+   
    .ws-loadingimg {
-      left: 13px;
+      left: 0.428rem;
+      
+      div:before {
+         content: '';
+         display: inline-block;
+         background: url('img/ajax-loader-indicator-big.gif') no-repeat;
+      }
    }
    .ws-LoadingIndicator__message__progress-no {
-      margin-left: 77px;
+      margin-left: 2.75rem;
    }
    .ws-LoadingIndicator__loadingContainer {
-      padding: 32px;
+      padding: 1.142rem;
    }
 }
 .controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
