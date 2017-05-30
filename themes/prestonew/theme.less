@@ -163,7 +163,7 @@ body {
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
         font-size: 3rem!important;
         width: 24px;
-        margin-left: -2rem;
+        margin-left: -3rem;
         margin-top: initial;
     }
     .controls-DropdownList .controls-DropdownList__selectedItem {
@@ -236,6 +236,16 @@ body {
     width: 3rem !important;
     height: 3rem !important;
 }
+}
+
+.controls-DateRangeBigChoose {
+   // Переделать на controls-PopupMixin__closeButton
+   .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+      background: url(img/areaBigCloseButton.png) 0 0;
+      &:hover {
+         background: url(img/areaBigCloseButton.png) 0 -3rem;
+      }
+   }
 }
 
 .controls-Browser {
