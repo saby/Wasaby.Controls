@@ -497,6 +497,17 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          destroy: function(parentFnc) {
             $(window).unbind('resize', this._calculateTileHandler);
             parentFnc.call(this);
+         },
+
+         _onCollectionAddMoveRemove: function() {
+            //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
+            //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку до внедрения VDOM
+            if (this._options.viewMode == 'table') {
+               TreeCompositeView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+            }
+            else {
+               this.redraw();
+            }
          }
       }
 
