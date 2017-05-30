@@ -3888,6 +3888,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      items: source
                   })
                );
+               if (this._options.useDragPlaceHolder) {
+                  this._makeDragPlaceHolder(dragObject);
+                  this._toggleDragItems(dragObject, false)
+               }
                this._hideItemsToolbar();
                if (this._checkHorisontalDragndrop(target)) {
                   this._horisontalDragNDrop = true;
@@ -4117,11 +4121,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      dragObject.getSource().each(function (item) {
                         domItems.push(item.getDomElement());
                      });
+                     var isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
                      this.move(models, target.getModel(), position).addCallback(function(result){
                         if (result) {
                            this.removeItemsSelectionAll();
                         }
-                        if (this._options.useDragPlaceHolder) {
+                        if (this._options.useDragPlaceHolder && isMove) {
                            this.once('onDrawItems', function () {
                               //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
                               //когда удалется плейсходер и переносится реальный элемент
@@ -4130,11 +4135,13 @@ define('js!SBIS3.CONTROLS.ListView',
                               domItems.forEach(function (elem) {
                                  elem.removeClass('ws-hidden');
                               });
-                              this._dragPlaceHolder.remove();
-                              this._dragPlaceHolder = null;
-                              this._updateItemsToolbar();
+                              this._removeDragPlaceHolder();
                            });
+                        } else {
+                           this._removeDragPlaceHolder();
                         }
+                     }.bind(this)).addErrback(function () {
+                        this._removeDragPlaceHolder();
                      }.bind(this));
                   } else {
                      var currentDataSource = this.getDataSource(),
@@ -4153,15 +4160,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _getDragPlaceHolder: function(dragObject) {
             if (!this._dragPlaceHolder) {
-               this._makeDragPlaceHolder()
+               this._makeDragPlaceHolder(dragObject)
             }
             return this._dragPlaceHolder;
          },
 
          _makeDragPlaceHolder: function(dragObject) {
-            var item = dragObject.getSource().at(0);
-            this._dragPlaceHolder = item.getDomElement().clone().removeAttr('data-hash').addClass('controls-DragNDrop__placeholder');
-            item.getDomElement().after(this._dragPlaceHolder);
+            if (this._options.useDragPlaceHolder) {
+               var item = dragObject.getSource().at(0);
+               this._dragPlaceHolder = item.getDomElement().clone().removeAttr('data-hash').addClass('controls-DragNDrop__placeholder');
+               item.getDomElement().after(this._dragPlaceHolder);
+            }
          },
 
          _toggleDragItems: function (dragObject, show) {
@@ -4218,7 +4227,13 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }.bind(this));
          },
-
+         _removeDragPlaceHolder: function () {
+            if (this._dragPlaceHolder) {
+               this._dragPlaceHolder.remove();
+               this._dragPlaceHolder = null;
+            }
+            this._updateItemsToolbar();
+         },
          /**
           * Перемещает выделенные записи.
           * @deprecated используйте метод move
