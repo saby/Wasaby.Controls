@@ -1105,7 +1105,7 @@
 @controls-filterButton-button-width:			2rem;
 @filter-button-font-size:							2rem !important; //перебиваем .icon-24
 
- @controls-filterButton-button-height:			2rem;
+@controls-filterButton-button-height:			2rem;
 @controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
 @controls-filterButton-picker-border-width:       2px;
@@ -1113,7 +1113,6 @@
 @controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  1.75rem;
 
-@controls-filterButton-button-height:             0.86rem;
 @controls-filterButton-button-margin:             16px 8px 8px 0;
 @controls-filterButton-button-margin-ff:          16px 32px 8px 0;
 @controls-filterButton-area-text-weight:		   normal;
@@ -1142,8 +1141,8 @@
 @controls-filterLine-items-display:               table-cell;
 @controls-filterLine-items-padding:               0;
 @controls-filterLine-arrow-height:                19px;
-@controls-filterLine-link-color:                  #0055bb;
-@controls-filterLine-link-hover-color:            @primary-color;
+@controls-filterLine-link-color:                  @accent-color;
+@controls-filterLine-link-hover-color:            @default-hover-color;
 
 @controls-filterLine-copyCross-top:               -28px;
 @controls-filterLine-copyCross-margin:            -1.75rem;
@@ -1333,6 +1332,7 @@
 @commands-button-margin:                    -10px -64px 0 0;
 
 @DropdownList-height: 					1.43rem;
+@DropdownList-footer-buttonsBlock-height: 2.04rem;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 
@@ -1429,3 +1429,9 @@
 @image-bar-height:                                  3.57rem;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
 @image-bar-button-bottom-padding:         1rem;
+
+
+@money-text-box-decimals-padding: 0;
+@money-text-box-decimals-font-size: 1.43rem;
+@money-text-box-decimals-color: @default-text-color;
+@money-text-box-decimals-background-color: transparent;

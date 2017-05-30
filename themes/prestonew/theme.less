@@ -163,7 +163,7 @@ body {
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
         font-size: 3rem!important;
         width: 24px;
-        margin-left: -2rem;
+        margin-left: -3rem;
         margin-top: initial;
     }
     .controls-DropdownList .controls-DropdownList__selectedItem {
@@ -236,6 +236,16 @@ body {
     width: 3rem !important;
     height: 3rem !important;
 }
+}
+
+.controls-DateRangeBigChoose {
+   // Переделать на controls-PopupMixin__closeButton
+   .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+      background: url(img/areaBigCloseButton.png) 0 0;
+      &:hover {
+         background: url(img/areaBigCloseButton.png) 0 -3rem;
+      }
+   }
 }
 
 .controls-Browser {
@@ -565,6 +575,13 @@ body {
       margin-left: 2.4rem !important;
   }
 
+.controls__filterButton {
+   .controls__filterButton__filterLine {
+      .controls__filterButton__filterLine-text{
+         height: auto;
+      }
+   }
+}
 
 .controls-editInPlace .controls-editInPlace__editor {
   background: @basic-block-bg-color;
@@ -777,7 +794,7 @@ body .controls-Link {
    border-radius: 16px;
 }
 
-.ws-window.ws-LoadingIndicator__window {
+body .ws-window.ws-LoadingIndicator__window {
    border-radius: 16px;
    border-color: transparent;
 
@@ -787,18 +804,29 @@ body .controls-Link {
 }
 
 .ws-LoadingIndicator__window {
-   img {
-      width: 77px;
-      height: 77px;
+   img, .ws-loadingimg > div:before{
+      width: 2.75rem;
+      height: 2.75rem;
    }
+   
+   img {
+      display: none;
+   }
+   
    .ws-loadingimg {
-      left: 13px;
+      left: 0.428rem;
+      
+      div:before {
+         content: '';
+         display: inline-block;
+         background: url('img/ajax-loader-indicator-big.gif') no-repeat;
+      }
    }
    .ws-LoadingIndicator__message__progress-no {
-      margin-left: 77px;
+      margin-left: 2.75rem;
    }
    .ws-LoadingIndicator__loadingContainer {
-      padding: 32px;
+      padding: 1.142rem;
    }
 }
 .controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
