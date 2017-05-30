@@ -1,8 +1,5 @@
 <ws:for data="index,item in records">
     <ws:if data="{{ item.getContents }}">
-        <ws:if data="{{tplData.decorators && tplData.decorators.ladder}}">
-            {{tplData.decorators.ladder.setRecord(item.getContents()) || ''}}
-        </ws:if>
         <ws:partial template="{{tplData.itemTpl}}" scope="{{tplData}}" item="{{item.getContents()}}" projItem="{{item}}" />
     </ws:if>
     <ws:else>
