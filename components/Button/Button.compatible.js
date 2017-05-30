@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
 
          if (!this._isControlActive) {
             //Прикрытие юнит-тестов. Внутри того setActive лезут в дом
-            if (window) {
+            if (typeof window === "undefined") {
                this.setActive(true);
             } else {
                this._isControlActive = true;
