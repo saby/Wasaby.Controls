@@ -4160,6 +4160,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
+               this._clearDragHighlight(dragObject);
             }
          },
          _getDragPlaceHolder: function(dragObject) {
