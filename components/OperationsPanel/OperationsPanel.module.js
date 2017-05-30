@@ -149,9 +149,18 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       },
       init: function() {
          OperationsPanel.superclass.init.call(this);
+         var self = this;
+
          if (this.isVisible()) {
             this.redraw();
          }
+
+         this.subscribe('onDrawItems', function(){
+            //После перерисовки надо обновить содержимое itemsMenu
+            if(self._itemsMenu){
+               self._updateActionsMenuButtonItems();
+            }
+         });
       },
 
       //Суперкласс у панели операций в методе getItems возвращает this._items. Но возможнно в items которые были переданы в
@@ -269,14 +278,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * */
       _checkCapacity: function(){
          var container = this.getContainer();
-         /* Необходимая ширина: ширина блока операции выделения + ширина кнопки с меню*/
-         var needElementsWidth = this._getItemsContainer().find('.controls-operationsPanel__actionType-mark').width() + ITEMS_MENU_WIDTH;
-         /* Доступная под операции ширина = Ширина контейнера - ширина блока операции выделения - ширина кнопки с меню*/
-         var allowedWidth = container.width() - needElementsWidth;
+
+         /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
+         var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
 
          var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
 
-         var width = needElementsWidth;
+         var width = 0;
          var isMenuNecessary = false;
          this._getItemsContainer().css('width', '');
 
@@ -299,7 +307,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
 
          if (this._itemsMenu) {
-            this.getChildControlByName('itemsMenu').getContainer().toggleClass('ws-hidden', !isMenuNecessary);
+            this._itemsMenu.getContainer().toggleClass('ws-hidden', !isMenuNecessary);
          }
       },
 
@@ -327,50 +335,51 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       _createItemsMenu: function() {
          var self = this;
-         if (this._itemsMenuLoaded) {
-            return;
+
+         if(!self._itemsMenu){
+            moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+               self._itemsMenu = new MenuIcon[0]({
+                  element: $('<span>').insertAfter(self._getItemsContainer()),
+                  name: 'itemsMenu',
+                  className: 'controls-Menu__hide-menu-header controls-operationsPanel__itemsMenu',
+                  idProperty: 'id',
+                  parentProperty: 'parent',
+                  displayProperty: 'caption',
+                  icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
+                  pickerConfig: {
+                     closeButton: true,
+                     className: 'controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode',
+                     horizontalAlign: {
+                        side: 'right',
+                        offset: 48
+                     }
+                  }
+               });
+               self.registerChildControl(self._itemsMenu);
+
+               self._itemsMenu._setPickerContent = function() {
+                  $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
+               };
+
+               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id){
+                  var item = this.getItems().getRecordById(id);
+                  if (item) {
+                     var instance = item.get('instance');
+                     if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
+                        instance._notify('onMenuItemActivate', id);
+                     }
+                     else {
+                        instance._clickHandler();
+                     }
+                     return false;
+                  }
+               });
+
+               self._updateActionsMenuButtonItems();
+               self._itemsMenu.getContainer().toggleClass('ws-hidden', false);
+            });
          }
-         self._itemsMenuLoaded = true;
-         moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
-            var menuIcon = new MenuIcon[0]({
-               element: $('<span>').insertAfter(self._getItemsContainer()),
-               name: 'itemsMenu',
-               className: 'controls-Menu__hide-menu-header controls-operationsPanel__itemsMenu',
-               idProperty: 'id',
-               parentProperty: 'parent',
-               displayProperty: 'caption',
-               icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
-               pickerConfig: {
-                  closeButton: true,
-                  className: 'controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode',
-                  horizontalAlign: {
-                     side: 'right',
-                     offset: 48
-                  }
-               }
-            });
-            self.registerChildControl(menuIcon);
-            self._itemsMenu = menuIcon;
-            menuIcon.getContainer().toggleClass('ws-hidden', false);
-            self._itemsMenu._setPickerContent = function() {
-               $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
-            };
-            self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id){
-               var item = this.getItems().getRecordById(id);
-               if (item) {
-                  var instance = item.get('instance');
-                  if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
-                     instance._notify('onMenuItemActivate', id);
-                  }
-                  else {
-                     instance._clickHandler();
-                  }
-                  return false;
-               }
-            });
-            self._updateActionsMenuButtonItems();
-            self.getChildControlByName('itemsMenu').getContainer().toggleClass('ws-hidden', false);
-         });
+
       },
 
       _getItemsContainer: function() {

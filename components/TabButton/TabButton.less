@@ -169,11 +169,9 @@
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
          }
-         .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field{
-           padding-top: 0px;
-         }
-         .controls-DateBox.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field{
-           padding-top: 3px;
+         .controls-FormattedTextBox {
+            position: relative;
+            bottom: 1px;
          }
       }
       .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
@@ -394,9 +392,11 @@
      &.controls-TabButton__main-item .controls-TabButton__inner{
         line-height: 26px;
      }
-     .controls-EditAtPlace{
-        .controls-EditAtPlace__fieldWrapper .controls-TextBox__field{
-           padding: 0;
+     &.controls-TabButton__main-item {
+        .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
+           .controls-FormattedTextBox {
+              bottom: 0;
+           }
         }
      }
   }

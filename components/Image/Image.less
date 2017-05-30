@@ -23,8 +23,8 @@
       left: 0px;
       bottom: 0px;
       width: 100%;
-      height: 32px;
-      background-color: #E7F0F9;
+      height: @image-bar-height;
+      background-color: @image-bar-bg-color;
    }
    &__image {
       position: relative;
@@ -34,7 +34,7 @@
    .controls-image__button {
       &-edit, &-upload, &-reset {
          position: absolute;
-         bottom: 4px;
+         bottom: @image-bar-button-bottom-padding;
          color: #0055BB;
       }
       &-edit {

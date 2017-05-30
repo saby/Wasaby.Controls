@@ -1,7 +1,7 @@
 /* global define */
 define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.SelectorWrapper',
+   'tmpl!SBIS3.CONTROLS.SelectorWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/helpers/collection-helpers',
    'Core/helpers/functional-helpers',

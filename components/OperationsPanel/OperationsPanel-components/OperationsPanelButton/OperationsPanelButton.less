@@ -13,6 +13,10 @@
    line-height: @controls-OperationsPanelButton-vert-height;
    border-radius: @controls-OperationsPanelButton-vert-border-radius;
 
+   &:hover, &.ws-has-focus {
+      color: @controls-OperationsPanelButton-active-icon-color;
+   }
+
    &.controls-Checked__checked {
       .controls-OperationsPanelButton__icon:before {
          content: "\e012";

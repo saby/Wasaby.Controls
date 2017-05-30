@@ -104,9 +104,11 @@ define('js!WSControls/Buttons/Button', [
       setCaption: function(caption){
          caption = Sanitize(caption, {validNodes: {component: true}});
          Button.superclass.setCaption.call(this, caption);
-         var btnText = $('.js-controls-Button__text', this._container.get(0));
-         btnText.toggleClass('controls-Button__emptyCaption', !caption);
-         btnText.html(caption || '');
+         var btnText = $('.js-controls-Button__text', this._container.get(0)),
+             isEmptyCaption = (caption === null || caption === '' || typeof caption === 'undefined');
+
+         btnText.toggleClass('controls-Button__emptyCaption', isEmptyCaption);
+         btnText.html(!isEmptyCaption ? ('' + caption) : '');
       },
        /**
         * Метод установки кнопки по умолчанию.

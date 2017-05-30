@@ -862,8 +862,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
                 * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
                 * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
-                     - asc - по возрастанию
-                     - desc - по убыванию
+                     - before - вверх
+                     - after - вниз
                      - both - в обе стороны от записи с navigation.config.position
 
                 */
@@ -2484,11 +2484,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onRightSwipeHandler: function(target) {
-            var key = target[0].getAttribute('data-id');
-
-            this.setSelectedKey(key);
-            this.toggleItemsSelection([key]);
-
+            var self= this,
+                hoveredItem = this.getHoveredItem(),
+                key = target[0].getAttribute('data-id'),
+                columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
+            if(hoveredItem && hoveredItem.key !== key){
+                columns.addClass('rightSwipeAnimation');
+                setTimeout(function(){
+                    columns.toggleClass('rightSwipeAnimation', false);
+                    self.setSelectedKey(key);
+                    self.toggleItemsSelection([key]);
+                }, 300);
+            }
             if (this._isSupportedItemsToolbar()) {
                this._hideItemsToolbar(true);
             }
@@ -4230,6 +4237,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 resultsRecord = this.getItems() && this.getItems().getMetaData().results;
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            }
+         },
+
+         _redrawFoot: function() {
+            var
+               newFooter,
+               footerContainer;
+            if (this._options.footerTpl) {
+               footerContainer = $('.controls-ListView__footer', this._container[0]);
+               this._destroyControls(footerContainer);
+               newFooter = $(this._options.footerTpl(this._options));
+               footerContainer.empty().append(newFooter);
+               this.reviveComponents(newFooter);
             }
          },
 
