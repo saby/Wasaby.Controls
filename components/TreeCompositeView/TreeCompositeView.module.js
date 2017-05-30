@@ -97,6 +97,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       }
       parentOptions.listFolderTpl = TemplateUtil.prepareTemplate(listFolderTpl);
+      parentOptions._itemsTemplate = cfg._itemsTemplate;
       parentOptions.drawFolders = drawFolders;
       parentOptions.drawLeafs = drawLeafs;
       parentOptions.defaultlistFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultListFolderTemplate);
