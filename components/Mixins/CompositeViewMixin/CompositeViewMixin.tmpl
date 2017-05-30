@@ -19,11 +19,11 @@
          <div class="controls-CompositeView__foldersContainer"></div>
       </ws:else>
    </div>
-   <table class="controls-DataGridView__table { {viewMode !== 'table' ? 'ws-hidden' }} {{ stickyHeader ? 'ws-sticky-header__table' }}">
+   <table class="controls-DataGridView__table {{ viewMode !== 'table' ? 'ws-hidden' }} {{ stickyHeader ? 'ws-sticky-header__table' }}">
       <ws:partial template="{{_colGroupTpl}}" scope="{{_colgroupData}}" />
       <ws:partial template="{{headTpl}}" scope="{{_headData}}" />
       <tbody class="controls-DataGridView__tbody">
-      <ws:if data="{{ _serverRender }}">
+      <ws:if data="{{ _serverRender && viewMode === 'table' }}">
          <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
       </ws:if>
       </tbody>
