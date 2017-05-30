@@ -288,7 +288,13 @@ body {
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
     height: 3.57rem;
 }
-
+.controls__filterButton {
+   .controls__filterButton__filterLine {
+      .controls__filterButton__filterLine-text{
+         height: auto;
+      }
+   }
+}
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {
       .marker()
@@ -410,14 +416,14 @@ body .ws-window.ws-LoadingIndicator__window {
       width: 2.75rem;
       height: 2.75rem;
    }
-   
+
    img {
       display: none;
    }
-   
+
    .ws-loadingimg {
       left: 0.428rem;
-   
+
       div:before {
          content: '';
          display: inline-block;
