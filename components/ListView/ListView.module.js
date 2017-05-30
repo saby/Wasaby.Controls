@@ -3874,7 +3874,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   return false;
                }
                var  selectedItems = this.getSelectedItems(),
-                  targetsItem = this._getItemsProjection().getByHash(target.data('hash')).getContents(),
+                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
                   items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
                items.forEach(function (item) {
