@@ -10,11 +10,13 @@
                 </ws:if>
 
                 <ws:for data="index, column in row">
-                    <th class="{{index === 0 ? 'controls-DataGridView__firstContentCell' : ''}} controls-DataGridView__th {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{i == 0 ? 'controls-DataGridView__th__topRow' : ''}} {{column.className}}"
-                        title="{{column.headTooltip ? column.headTooltip : column.title}}" colspan="{{column.colspan}}"
-                        style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX:(' + columnsScrollPosition + 'px);'}}">
-                        <ws:partial template="{{sanitize}}" value="{{ column.value }}" />
-                    </th>
+                    <ws:if data="{{ !column.ignore || countRows == 1 }}">
+                        <th class="{{index === 0 ? 'controls-DataGridView__firstContentCell' : ''}} controls-DataGridView__th {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{ (i == 0 && !column.rowspan && column.colspan) ? 'controls-DataGridView__th__topRow' : ''}} {{column.className}}"
+                            title="{{column.headTooltip ? column.headTooltip : column.title}}" colspan="{{column.colspan|orEmpty}}" rowspan="{{ countRows === 2 ? (column.rowspan|orEmpty) }}"
+                            style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX:(' + columnsScrollPosition + 'px);'}}">
+                            <ws:partial template="{{sanitize}}" value="{{ column.value }}" />
+                        </th>
+                    </ws:if>
                 </ws:for>
             </tr>
         </ws:if>
