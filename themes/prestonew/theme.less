@@ -125,15 +125,45 @@ body {
       top: 50%
     }
 
-    .ws-info-box .ws-infobox-content p {
-      margin: 0px 20px 8px 0;
-        font-size: 1.43rem;
-        color: @default-text-color;
-    }
     .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: 2px solid @link-text-color;
+      padding: 0.285rem 1.428rem 0.285rem 0.38rem;
+      &.ws-infobox-direction-top {
+         > .ws-info-box-balloon {
+            border-bottom-color: @link-text-color;
+            &:after {
+               border-left-color: @link-text-color;
+               border-top-color: @link-text-color;
+            }
+         }
+      }
+      &.ws-infobox-direction-bottom {
+         > .ws-info-box-balloon {
+            border-top-color: @link-text-color;
+            &:after {
+               border-right-color: @link-text-color;
+               border-bottom-color: @link-text-color;
+            }
+         }
+      }
+
+      .ws-infobox-content {
+         color: @default-text-color;
+         p {
+            margin: 0 20px 8px 0;
+            font-size: 1.43rem;
+            color: @default-text-color;
+         }
+      }
+       .ws-info-box-close-button.icon-disabled{
+          top: -4px;
+          color: @link-text-color!important;
+          &:hover {
+             color: #B9E9FF!important;
+          }
+       }
     }
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
       margin-right: 1rem;
