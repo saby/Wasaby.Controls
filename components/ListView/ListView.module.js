@@ -4244,7 +4244,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                newFooter,
                footerContainer;
-            if (this._options.footerTpl) {
+            if (typeof this._options.footerTpl === 'function') {
                footerContainer = $('.controls-ListView__footer', this._container[0]);
                this._destroyControls(footerContainer);
                newFooter = $(this._options.footerTpl(this._options));
