@@ -71,12 +71,21 @@ define('js!WSControls/Lists/ItemsControl', [
 
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
+            this._onDSBeforeReload = onDSBeforeReload.bind(this);
+            this._onDSAfterReload = onDSAfterReload.bind(this);
+
 
             if (this._options.items) {
                this._prepareItems(this._options.items);
             }
 
+            this._initControllers();
+
             this._itemsChangeCallback();
+
+            if (this._options.dataSource && this._options.dataSource.firstLoad !== false) {
+               this._dataSourceController.reload();
+            }
 
             this.deprecatedContr(cfg);
          },
@@ -88,14 +97,16 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _initControllers: function() {
-            this._initItemBasedControllers();
             if (this._dataSourceController) {
                this._dataSourceController.destroy();
             }
             if (this._options.dataSource) {
                this._dataSourceController = new DataSourceController({
-                  dataSource : this._options.dataSource
-               })
+                  dataSource : this._options.dataSource,
+                  idProperty: this.idProperty
+               });
+               this._dataSourceController.subscribe('onBeforeReload', this._onDSBeforeReload);
+               this._dataSourceController.subscribe('onAfterReload', this._onDSAfterReload);
             }
          },
 
@@ -105,15 +116,15 @@ define('js!WSControls/Lists/ItemsControl', [
                   this._itemsProjection.destroy();
                }
                this._itemsProjection = this._createDefaultProjection();
+               this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
 
                if (this._selector) {
                   this._selector.destroy();
                }
                if (this._needSelector) {
                   this._selector = this._createDefaultSelector();
+                  this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
                }
-
-               this._setItemsEventHandlers();
 
 
                //proj = cfg._applyGroupingToProjection(proj, cfg);
@@ -154,15 +165,9 @@ define('js!WSControls/Lists/ItemsControl', [
             return ListViewHelpers.createDefaultProjection(this._items, this._options);
          },
 
-         _setItemsEventHandlers: function() {
-            this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
-            if (this._selector) {
-               this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
-            }
-         },
 
          _createDefaultSelector: function() {
-
+            /*Must be implemented*/
          },
 
          setItems: function(items){
@@ -257,9 +262,22 @@ define('js!WSControls/Lists/ItemsControl', [
 
 
          //<editor-fold desc="DataSourceMethods">
+         reload: function() {
+            if (this._dataSourceController) {
+               return this._dataSourceController.reload();
+            }
+            else {
+               console.error('Option dataSource is undefined. Can\'t reload view');
+            }
+         },
          isLoading: function() {
             if (this._dataSourceController) {
                return this._dataSourceController.isLoading();
+            }
+         },
+         getFilter: function() {
+            if (this._dataSourceController) {
+               this._dataSourceController.getFilter();
             }
          },
          setFilter: function(filter, noLoad) {
@@ -267,10 +285,21 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSourceController.setFilter(filter, noLoad);
             }
          },
-         setSorting: function(sorting, noLoad) {
+         setSorting: function (sorting, noLoad) {
             if (this._dataSourceController) {
                this._dataSourceController.setSorting(sorting, noLoad);
             }
+         },
+         getSorting: function() {
+            if (this._dataSourceController) {
+               this._dataSourceController.getSorting();
+            }
+         },
+         _toggleIndicator: function () {
+            /*Must be implemented*/
+         },
+         _getFilterForReload: function () {
+            return this._dataSourceController.getFilter();
          },
          //</editor-fold>
 
@@ -297,6 +326,18 @@ define('js!WSControls/Lists/ItemsControl', [
       this._itemData = null;
       this.tplData = this._prepareItemData();
       this._setDirty();
+   };
+
+   var onDSBeforeReload = function(e) {
+      this._toggleIndicator(true);
+      this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
+      e.setResult({
+         filter : this._getFilterForReload()
+      });
+   };
+
+   var onDSAfterReload = function() {
+      debugger;
    };
 
    return ItemsControl;

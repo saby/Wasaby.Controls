@@ -1,24 +1,29 @@
 define('js!WSControls/Controllers/DataSourceController', [
    'Core/Abstract',
-   'js!SBIS3.CONTROLS.Utils.SourceUtil'
-], function(Abstract, SourceUtil) {
-   var BaseListSelector = Abstract.extend({
+   'js!SBIS3.CONTROLS.Utils.SourceUtil',
+   'js!WS.Data/Query/Query'
+], function(Abstract, SourceUtil, Query) {
+   var DataSourceController = Abstract.extend({
       _useNativeAsMain: true,
       constructor: function(cfg) {
 
          /*Распихивание данных*/
          this._options = {
-            dataSource : cfg.dataSource ? cfg.dataSource : null
+            dataSource : cfg.dataSource ? cfg.dataSource : null,
+            idProperty : cfg.idProperty
          };
+
+         DataSourceController.superclass.constructor.apply(this, arguments);
          this.dataSource = SourceUtil.prepareSource(this._options.dataSource);
+         this.idProperty = this._options.idProperty;
          this.items = this._options.items;
          this.filter = {};
          this.sorting = [];
          this._loader = null;
 
-         if (this._options.dataSource.firstLoad !== false) {
-            this.reload();
-         }
+         this._publish('onBeforeReload', 'onAfterReload');
+
+
       },
 
       reload: function(filter, sorting, offset, limit) {
@@ -41,10 +46,15 @@ define('js!WSControls/Controllers/DataSourceController', [
          this._offset = offsetChanged ? offset : this._offset;
          this._limit = limitChanged ? limit : this._limit;
 
-         if (this._dataSource) {
-            this._toggleIndicator(true);
-            this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
-            def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
+         if (this.dataSource) {
+            var result = this._notify('onBeforeReload', this.filter, this.sorting, this.offset, this._limit);
+            if (result) {
+               this.filter = result['filter'] || this.filter;
+               this.sorting = result['sorting'] || this.sorting;
+               this.offset = result['offset'] || this.offset;
+               this._limit = result['_limit'] || this._limit;
+            }
+            def = this._callQuery(this.filter, this.sorting, this.offset, this._limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._toggleIndicator(false);
                   self._notify('onDataLoad', list);
@@ -112,15 +122,42 @@ define('js!WSControls/Controllers/DataSourceController', [
          }
       },
 
+      getFilter: function() {
+         return this.filter;
+      },
+
       setSorting: function(sorting, noLoad) {
          this.sorting = sorting;
          this._dropPageSave();
          if (this.dataSource && !noLoad) {
             this.reload(this.filter, this.sorting, 0, this.getPageSize());
          }
+      },
+
+      getSorting: function() {
+         return this.sorting;
+      },
+
+      _callQuery: function (filter, sorting, offset, limit) {
+
+         var query = this._getQueryForCall(filter, sorting, offset, limit);
+
+         return this.dataSource.query(query).addCallback((function(dataSet) {
+            if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
+               dataSet.setIdProperty(this._options.idProperty);
+            }
+            return dataSet.getAll();
+         }).bind(this));
+      },
+
+      _getQueryForCall: function(filter, sorting, offset, limit){
+         var query = new Query();
+         query.where(filter)
+            .offset(offset)
+            .limit(limit)
+            .orderBy(sorting);
+         return query;
       }
-
-
    });
-   return BaseListSelector;
+   return DataSourceController;
 });
