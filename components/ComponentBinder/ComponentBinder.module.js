@@ -30,21 +30,21 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       var visible = operationPanel.isVisible();
-      if (gridView._options.multiselect) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
-         if (hideCheckBoxes) {
-            gridView.toggleCheckboxes(operationPanel.isVisible());
-            if (!visible) {
-               if (gridView._options.useSelectAll) {
-                  gridView.setSelectedAllNew(false);
-               } else {
-                  gridView.removeItemsSelectionAll();
-               }
+      //Вешаем класс даже для браузеров с multiselect = false, т.к. multiselect может измениться динамически, и проще
+      //всегда тоглить классы, чем отслеживать изменение multiselect на браузере
+      gridView.getContainer().toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+      if (hideCheckBoxes) {
+         gridView.toggleCheckboxes(operationPanel.isVisible());
+         if (!visible) {
+            if (gridView._options.useSelectAll) {
+               gridView.setSelectedAllNew(false);
+            } else {
+               gridView.removeItemsSelectionAll();
             }
          }
-         if (gridView._options.startScrollColumn !== undefined) {
-            gridView.updateScrollAndColumns();
-         }
+      }
+      if (gridView._options.startScrollColumn !== undefined) {
+         gridView.updateScrollAndColumns();
       }
    }
    function drawItemsCallback(operationPanel, view) {
