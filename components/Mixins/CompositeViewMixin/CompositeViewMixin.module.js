@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
    'Core/helpers/collection-helpers',
-   'html!SBIS3.CONTROLS.CompositeViewMixin',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
