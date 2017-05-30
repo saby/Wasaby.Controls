@@ -417,11 +417,13 @@ body .ws-window.ws-LoadingIndicator__window {
 
    .ws-loadingimg {
       left: 0.428rem;
+      top: .4rem;
 
       div:before {
          content: '';
+         background-size: contain;
          display: inline-block;
-         background: url('img/ajax-loader-indicator-big.gif') no-repeat;
+         background-image: url('img/ajax-loader-indicator-big.gif');
       }
    }
    .ws-LoadingIndicator__message__progress-no {
