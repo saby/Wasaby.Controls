@@ -20,7 +20,7 @@
 }
 
 .controls__filterButton__filterLine {
-   max-width: ~'calc(100% - '@controls-filterButton-button-width + 8px ~')';
+   max-width: calc(~"100% - "@controls-filterButton-button-width~" - 8px");
    height: @controls-filterButton-button-height;
    margin: 8px 0 8px 0;
    cursor: pointer;
@@ -29,7 +29,7 @@
    &:not(.ws-disabled) {
       .controls__filterButton__filterLine-items:hover {
          .controls__filterButton__filterLine-text, .controls__filterButton__filterLine-arrow {
-            color: @hover-color;
+            color: @controls-filterLine-link-hover-color;
          }
          .controls__filterButton__filterLine-text {
             text-decoration: underline;

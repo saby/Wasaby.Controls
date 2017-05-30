@@ -4,6 +4,10 @@ html {
 }
 
 body {
+   .controls-ListView__bottomStyle > .controls-ItemsToolbar:before {
+      display: none;
+   }
+
    .controls-ScrollContainer > .controls-ListView__scrollPager {
       border-top: none;
       .controls-IconButton {
@@ -624,6 +628,13 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
       margin-left: 2.4rem !important;
   }
 
+.controls__filterButton {
+   .controls__filterButton__filterLine {
+      .controls__filterButton__filterLine-text{
+         height: auto;
+      }
+   }
+}
 
 .controls-editInPlace .controls-editInPlace__editor {
   background: @basic-block-bg-color;

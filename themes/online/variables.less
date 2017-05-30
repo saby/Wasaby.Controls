@@ -310,6 +310,7 @@
 // Normal default button
 @button-checked-text-color:               @default-text-color;
 @button-checked-border-width:             2px;
+@button-checked-line-height:              @button-line-height - @button-checked-border-width;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
 @button-checked-font-weight:              normal;
 @button-checked-shadow:                   @button-active-shadow;
@@ -1786,6 +1787,7 @@
 // --------- //
 
 @tree-view-expand-spritesheet:                  'img/Tree_expand.png';
+@tree-view-expand-icon-size:                    @icon-small-size;
 
 @tree-view-expand-cursor:                       pointer;
 
@@ -2231,7 +2233,7 @@
 @controls-filterLine-items-line-height:           24px;
 @controls-filterLine-arrow-height:                19px;
 @controls-filterLine-link-color:                  #0055bb;
-@controls-filterLine-link-hover-color:            @primary-color;
+@controls-filterLine-link-hover-color:            @hover-color;
 
 @controls-filterLine-copyCross-top:               -20px;
 @controls-filterLine-copyCross-margin:            -16px;
