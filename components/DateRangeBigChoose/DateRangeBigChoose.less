@@ -349,10 +349,10 @@
                border-left-color: transparent;
             }
             &.controls-DateRangeBigChoose__months-range-btn-wrapper0 {
-               height: @date-range-big-choose-months-range-btn-height + @date-range-big-choose-months-margin - 1;
+               height: ~"calc("@date-range-big-choose-months-range-btn-height~" + "@date-range-big-choose-months-margin~" - 1px)";
             }
             &.controls-DateRangeBigChoose__months-range-btn-wrapper3 {
-               height: @date-range-big-choose-months-range-btn-height + @date-range-big-choose-months-margin;
+               height: ~"calc("@date-range-big-choose-months-range-btn-height~" + "@date-range-big-choose-months-margin~" - 1px)";
             }
             &.controls-DateRangeBigChoose__months-range-btn-wrapper1,
             &.controls-DateRangeBigChoose__months-range-btn-wrapper2 {
@@ -366,9 +366,9 @@
          left: @date-range-big-choose-left-right-width;
 
          .controls-DateRangeBigChoose__months-range-btn-wrapper {
-            height: @date-range-big-choose-months-range-btn-height*2 + @date-range-big-choose-months-margin;
+            height: ~"calc("@date-range-big-choose-months-range-btn-height~"*2 + "@date-range-big-choose-months-margin~")";
             &.controls-DateRangeBigChoose__months-range-btn-wrapper0 {
-               height: @date-range-big-choose-months-range-btn-height*2 + @date-range-big-choose-months-margin - 1;
+               height: ~"calc("@date-range-big-choose-months-range-btn-height~"*2 + "@date-range-big-choose-months-margin~" - 1px)";
             }
             > span {
                float: right;
