@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.FormController', [
    "Core/Deferred",
    "Core/IoC",
    "Core/ConsoleLogger",
-   "Core/helpers/fast-control-helpers",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "js!SBIS3.CORE.CompoundControl",
@@ -21,7 +20,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -498,11 +497,15 @@ define('js!SBIS3.CONTROLS.FormController', [
                eMessage = eResult;
             }
             if(eMessage) {
-               fcHelpers.alert(eMessage).addCallback(function(result){
+               var self = this;
+               InformationPopupManager.showMessageDialog({
+                  message: eMessage,
+                  status: 'error'
+               }, function(){
                   if (e.httpError == 403){
-                     this._closePanel();
+                     self._closePanel();
                   }
-               }.bind(this));
+               });
             }
          }
          e.processed = true;
