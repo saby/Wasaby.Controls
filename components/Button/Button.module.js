@@ -84,6 +84,8 @@ define('js!SBIS3.CONTROLS.Button',
          _template: template,
          iWantVDOM: true,
          _isActiveByClick: false,
+         _isWaitingClick: false,
+         _isTouchEnded: false,
 
          constructor: function (cfg) {
             this.deprecatedContr(cfg);
@@ -93,6 +95,11 @@ define('js!SBIS3.CONTROLS.Button',
          //<editor-fold desc="Event handlers">
 
          _onMouseClick: function (e) {
+            if (this._isTouchEnded) {
+               this._isTouchEnded = false;
+               return;
+            }
+            this._isWaitingClick = false;
             if (!this._options.enabled) {
                return;
             }
@@ -107,6 +114,37 @@ define('js!SBIS3.CONTROLS.Button',
          _onMouseUp: function () {
             this._isActiveByClick = false;
          },
+
+         _onTouchStart: function(e) {
+            this._isWaitingClick = true;
+            this._isActiveByClick = true;
+            this._isTouchEnded = false;
+         },
+
+         _onTouchMove: function(e) {
+            this._isWaitingClick = false;
+         },
+
+         _onTouchEnd: function(e) {
+            var self = this;
+            this._isActiveByClick = false;
+            setTimeout(function() {
+               if(self._isWaitingClick) {
+                  self._onMouseClick();
+                  self._isTouchEnded = true;
+               }
+            }, 300);
+         },
+
+         //
+         // _onMouseClick: function (e) {
+         //    this._isWaitingClick = false;
+         //    if (!this._options.enabled) {
+         //       return;
+         //    }
+         //    this._onClickHandler(e);
+         //    this._notify("onActivated", e);
+         // },
 
          _onKeyDown: function (e) {
             var result = this._notify('onKeyPressed', e);
