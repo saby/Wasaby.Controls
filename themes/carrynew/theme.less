@@ -1,3 +1,5 @@
+@import "../fonts/carry-presto";
+
 html {
   color: #000;
 }
@@ -431,11 +433,12 @@ body .ws-window.ws-LoadingIndicator__window {
 
    .ws-loadingimg {
       left: 0.428rem;
-
+      top: .4rem;
       div:before {
          content: '';
+         background-size: contain;
          display: inline-block;
-         background: url('img/ajax-loader-indicator-big.gif') no-repeat;
+         background-image: url('img/ajax-loader-indicator-big.gif');
       }
    }
    .ws-LoadingIndicator__message__progress-no {
@@ -517,4 +520,10 @@ body .controls-DropdownList__picker .controls-DropdownList__item {
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
   text-align: center;
+}
+.controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  font-size: 2rem !important;
+}
+body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
+    height: 1.43rem;
 }
