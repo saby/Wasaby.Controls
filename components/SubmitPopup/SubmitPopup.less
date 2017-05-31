@@ -1,6 +1,5 @@
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
-   border-top-color: @controls-InformationPopup-default-status-border-color;
-   border-bottom-color: @controls-InformationPopup-default-status-border-color;
+   border-color: @controls-InformationPopup-default-status-border-color;
 }
 
 .controls-SubmitPopup {
@@ -52,8 +51,9 @@
    text-align: center;
    font-size: 0; /* для того, чтобы убрать расстояние между кнопками, которые inline-block-и */
 }
+
 .controls-SubmitPopup__button.controls-Button, .controls-SubmitPopup__button.controls-Link {
-   margin: 0 4px;
+   margin: @controls-SubmitPopup-button-margin;
 }
 .controls-SubmitPopup__button.controls-Button {
    min-width: @controls-SubmitPopup-button-min-width;
