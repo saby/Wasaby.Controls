@@ -395,7 +395,7 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonReset = this.getChildControlByName('ButtonReset');
                   if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
                      this._buttonUpload.setCaption('');
-                     this._buttonUpload.setTooltip('Загрузить');
+                     this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
                   }
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
