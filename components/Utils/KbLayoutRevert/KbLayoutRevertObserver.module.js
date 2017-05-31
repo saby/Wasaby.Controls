@@ -218,6 +218,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                       возвращаем старые, сообщение не выводим */
                      if (self._itemsBeforeTranslate) {
                         data.assign(self._itemsBeforeTranslate);
+                        data.setMetaData(self._itemsBeforeTranslate.getMetaData());
                      }
                      backOldSearchValue();
                      self._toggleItemsEventRising(true, true);
