@@ -1084,7 +1084,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               width = this.getChildControlByName('imageWidth').getValue(),
                               height = this.getChildControlByName('imageHeight').getValue();
                            width = width !== null ? width + (percentSizes ? '%' : 'px') : '';
-                           height = height !== null ? height + (percentSizes ? '%' : 'px') : '';
+                           height = (height !== null && !percentSizes) ? height + 'px' : ''; //не проставляем высоту если процентые размеры
                            $image.css({
                               width: width,
                               height: height
