@@ -43,12 +43,14 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 * <ol>
                 *    <li>undo - шаг назад;</li>
                 *    <li>redo - шаг вперед;</li>
+                *    <li>styles - панель стилей;</li>
                 *    <li>style - стиль текста;</li>
                 *    <li>bold - полужирный;</li>
                 *    <li>italic - курсив;</li>
                 *    <li>underLine - подчеркнутый;</li>
                 *    <li>strike - зачеркнутый;</li>
-                *    <li>justify - выравнивание текста;</li>
+                *    <li>mceBlockQuote - цитата;</li>
+                *    <li>align - выравнивание текста;</li>
                 *    <li>color - цвет текста;</li>
                 *    <li>list - вставить/Удалить список;</li>
                 *    <li>link - вставить/редактировать ссылку;</li>
@@ -56,7 +58,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 *    <li>image - вставить картинку;</li>
                 *    <li>smile - смайлики;</li>
                 *    <li>source - html-разметка;</li>
-                *    <li>paste - вставка с сохранением стилей</li>
+                *    <li>paste - вставка с/без сохранением стилей;</li>
+                *    <li>history - история ввода;</li>
+                *    <li>codesample - вставка кода (ведутся работы);</li>
                 * </ol>
                 * Пользовательские кнопки задаются аналогично {@link SBIS3.CONTROLS.ItemsControlMixin#items}.
                 * <ul>
