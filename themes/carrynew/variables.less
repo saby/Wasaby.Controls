@@ -79,7 +79,7 @@
 @button-bg: 								              #f0f5fb;
 // Normal primary button
 @button-primary-text-color:               #fff;
-@button-primary-border:                  0.07rem solid #d94700;
+@button-primary-border:                  2px solid #d94700;
 @button-primary-bg:                       #ff7033;
 
 @button-primary-hover-border:             @button-primary-border;
@@ -159,11 +159,11 @@
 @radio-button-height:                           auto;
 @radio-button-lineheight:                       normal;
 
-@radio-button-text-color:                       @default-text-color;
+@radio-button-text-color:                       @innacent-color;
 
-@radio-button-hover-text-decoration:            none;
+@radio-button-hover-text-decoration:            underline;
 
-@radio-button-checked-text-color:               @radio-button-text-color;
+@radio-button-checked-text-color:               @default-text-color;
 @radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
 
 @radio-button-disabled-text-color:              @gray-color;
@@ -175,7 +175,7 @@
 @radio-button-icon-bg:                          transparent;
 
 
-@radio-button-icon-border-color:                #ffffff;
+@radio-button-icon-border-color:                #E4E4E4;
 @radio-button-icon-border-color-checked:        @primary-color;
 @radio-button-icon-border-color-disabled:       @radio-button-icon-border-color;
 
@@ -375,7 +375,7 @@
 @text-box-bg:                             @default-bg-color;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
-@combo-box-picker-show-background-color : #f0f5fb;
+@combo-box-picker-show-background-color : #ffffff;
 @combo-box-picker-show-border-color:	   #23b8ff;
 @text-box-focus-border-color:             @text-box-border-color;
 
@@ -386,7 +386,7 @@
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgb(204, 204, 204);
 
-@text-box-disabled-border-bottom:         1px solid #333333;
+@text-box-disabled-border-bottom:         1px solid @check-box-disabled-color;
 @text-box-focus-border-width:.07rem;
 @text-box-field-focus-text-color:         #000;
 @text-box-height: 3rem;
@@ -467,14 +467,14 @@
 
 @combo-box-picker-border:                      0rem solid #48bffc;
 @text-box-field-font-size: 1.14rem;
-@combo-box-picker-item-bg:                      #e1ecf6;
+@combo-box-picker-item-bg:                      #ffffff;
 @combo-box-picker-item-text-color               : #324352;
 @combo-box-picker-item-hover-text-color:        @black-color;
 @combo-box-picker-item-hover-bg:                #f0f5fb;
 
 @combo-box-picker-item-selected-bg:             @combo-box-picker-item-bg;
 
-@combo-box-after-width:                         @text-box-after-width;
+@combo-box-after-width:                         3rem;
 
 // TODO: check whether it's required
 
@@ -712,12 +712,14 @@
 // Data grid //
 // --------- //
 
-@data-grid-bg:                                  #fff;
+@data-grid-bg:                                  transparent;
 
 @data-grid-row-hover-bg:                        @default-hover-color;
+@data-grid-row-hover-cell-bg:                   @default-hover-color;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
 @data-grid-row-hover-cell-text-color:           #000;
+
 
 @data-grid-row-selected-cell-text-color: #000;
 @data-grid-header-cell-border-bottom: 				1px solid #F5F5F5;
@@ -827,7 +829,7 @@
 @bread-crumb-title-hover-color:                   @primary-color;
 @bread-crumb-title-color:                          #8991A9;
 
-@breadcrumbs-small-items-top:                      inherit;
+@breadcrumbs-small-items-top:                      .3rem;
 
 // EditDialog
 
@@ -835,11 +837,11 @@
 
 //Scrollbar
 
-@controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
-@controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
+@controls-Scrollbar-dark-hover-thumb-color:        rgba(0, 0, 0, 0.10);
+@controls-Scrollbar-dark-active-thumb-color:       rgba(0, 0, 0, 0.15);
 
-@controls-Scrollbar-light-hover-thumb-color:       rgba(0, 0, 0, 0.10);
-@controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
+@controls-Scrollbar-light-hover-thumb-color:       rgba(255, 255, 255, 0.20);
+@controls-Scrollbar-light-active-thumb-color:      rgba(255, 255, 255, 0.50);
 
 //InformationPopup
 @controls-InformationPopup-bg:                  #fff;
@@ -878,7 +880,10 @@
 @tab-button-large-inner-max-width:				100%;
 
 
-@tab-button-inner-after-bg-color: transparent;
+@tab-button-inner-after-bg-color: #ccc;
+@tab-button-inner-after-height: 1.928rem;
+@tab-button-inner-after-bottom: 0.821rem;
+@tab-button-inner-after-width: 2px;
 //Browser
 
 
@@ -896,6 +901,7 @@
 @text-box-error-bg:                             #fadadd;
 @text-box-error-border-color:                   @error-color;
 @header-color:                                  #313e78;
+
 
 //--------------//
 //  TimePicker  //
@@ -921,8 +927,17 @@
 @clock-picker-arrow-color:                          #313E78;
 @clock-picker-arrow-tip-color:                      @clock-picker-arrow-color;
 @clock-picker-tick-hover-background-color:          #F0F5FB;
-@clock-picker-unit-time-color:                      @gray-ccc-color;
+@clock-picker-unit-time-color:                      @gray-ccc-color;@bottomStyle-items-toolbar-border-color:        #F3F3F3;
 
 @controls-filterButton-picker-border-color:        #0055BB;
+@icon-active-color:                             #313E78;
+@date-range-big-choose-bg-hovered-color:       rgb(239, 241, 242);
+@date-range-big-choose-month-range-picker-caption-text-hovered-bg: @date-range-big-choose-bg-hovered-color;
+
+@controls-filterButton-picker-border-color:     #0055BB;
+@bottomStyle-items-toolbar-border-color:            #F3F3F3;
 
 @icon-active-color:                             #313E78;
+@DropdownList-picker-menu-item-color:           #fff;
+@image-bar-bg-color:                      rgba(255, 255, 255, .5);
+@data-grid-row-hover-cell-bg:                 #E0ECF5;

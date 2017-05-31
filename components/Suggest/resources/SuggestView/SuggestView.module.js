@@ -336,11 +336,6 @@ define('js!SBIS3.CONTROLS.SuggestView',
              return this.getActiveView()._hasNextPage(hasMore, offset);
           },
 
-          _callQuery: function () {
-             var activeView = this.getActiveView();
-             return activeView._callQuery.apply(activeView, arguments);
-          },
-
           getOffset: function() {
              return this.getActiveView().getOffset();
           },

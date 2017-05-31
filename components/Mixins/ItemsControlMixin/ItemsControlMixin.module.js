@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Display/Enum",
    "js!WS.Data/Display/Flags",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
    "js!WS.Data/Utils",
    "js!WS.Data/Entity/Model",
    "Core/ParserUtilities",
@@ -1320,9 +1320,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             container.get(0).innerHTML = '';
          }
 
-         if (container.get(0) === this._getItemsContainer().get(0)) {
-            this._itemsInstances = {};
-         }
+         //Очищаем список инстансов, после удаления элеменов коллекции
+         this._itemsInstances = {};
+
          return compsArray;
       },
 

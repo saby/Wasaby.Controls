@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
    'Core/helpers/collection-helpers',
-   'html!SBIS3.CONTROLS.CompositeViewMixin',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -104,8 +104,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _invisibleItemsTemplate: InvisibleItemsTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
-            /*TODO для лечения тестов пришлось закоппипастить шаблон*/
-            _itemsTemplate: ItemsTemplate,
             _compositeItemsTemplate : CompositeItemsTemplate,
             _buildTplArgs : buildTplArgs,
             _buildTplArgsComposite: buildTplArgsComposite,
