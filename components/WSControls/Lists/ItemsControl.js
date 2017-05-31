@@ -318,7 +318,7 @@ define('js!WSControls/Lists/ItemsControl', [
       });
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-      this._prepareDataOnItemsChange();
+      this._itemsChangeCallback();
       this._setDirty();
    };
 
