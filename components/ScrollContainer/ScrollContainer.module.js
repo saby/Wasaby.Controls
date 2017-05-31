@@ -6,9 +6,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
       'Core/compatibility',
+      'Core/constants',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager, compatibility) {
+   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager, compatibility, constants) {
 
       'use strict';
 
@@ -108,6 +109,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          init: function() {
             ScrollContainer.superclass.init.call(this);
             this._content = $('> .controls-ScrollContainer__content', this.getContainer());
+            this._bindOfflainEvents();
             this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch);
             //Под android оставляем нативный скролл
             if (this._showScrollbar){
@@ -244,8 +246,29 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
             delete FloatAreaManager._scrollableContainers[ this.getId() ];
+         },
+         //region retail_offlain
+         _bindOfflainEvents: function() {
+            if (constants.browser.retailOffline) {
+               this._content[0].addEventListener('touchstart', function (event) {
+                  this._startPos = this._content.scrollTop() + event.targetTouches[0].pageY;
+               }.bind(this), true);
+               // На движение пальцем - сдвигаем положение
+               this._content[0].addEventListener('touchmove', function (event) {
+                  this._moveScroll(this._startPos - event.targetTouches[0].pageY);
+                  event.preventDefault();
+               }.bind(this));
+            }
+         },
+         _moveScroll: function(top) {
+            this._content.scrollTop(top);
+         },
+         _getMaxScrollTop: function() {
+            return this._content.height() - this.getContainer().height();
          }
+         //endregion retail_offlain
       });
+
 
       return ScrollContainer;
    });
