@@ -42,7 +42,9 @@
 @darkcyan-color: 						  #B9E9FF;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-@default-border-width:					          0.072rem;
+
+@default-border-width:					  2px;
+
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
@@ -382,7 +384,7 @@
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                      .07rem;
-@menu-border-color:                       #23b8ff;
+@menu-border-color:                       #0055BB;
 @menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       8px;
 @menu-expand-top-offset:                  20px;
@@ -537,7 +539,9 @@
 // --------- //
 
 // Menu
+
 @menu-icon-menu-margin:                   -.32rem 0 0 -.2142rem;
+@menu-icon-big-menu-margin:               -10px 0 0 -14px;
 
 // Menu header
 @menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
@@ -1219,22 +1223,33 @@
 @controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
 
 //InformationPopup
-@controls-InformationPopup-bg:                  #293543;
-@controls-InformationPopup-border:              2px solid;
-@controls-InformationPopup-border-bottom:       @controls-InformationPopup-border;
-@controls-InformationPopup-border-top:          @controls-InformationPopup-border;
-@controls-InformationPopup-border-left:         @controls-InformationPopup-border;
-@controls-InformationPopup-border-right:        @controls-InformationPopup-border;
+@controls-InformationPopup-bg:                                #2C3E50;
+@controls-InformationPopup-default-status-border-color:       #26B8FF;
+@controls-InformationPopup-success-status-border-color:       #72BE44;
+@controls-InformationPopup-error-status-border-color:         #EF463A;
+@controls-InformationPopup-warning-status-border-color:       #FEC63F;
+@controls-InformationPopup-border:                            2px solid;
+@controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border;
+@controls-InformationPopup-border-top:                        @controls-InformationPopup-border;
+@controls-InformationPopup-border-left:                       @controls-InformationPopup-border;
+@controls-InformationPopup-border-right:                      @controls-InformationPopup-border;
 
 //SubmitPopup
+@controls-SubmitPopup-size-standard-width:		28rem;
 @controls-SubmitPopup-button-min-width:         10rem;
 @controls-SubmitPopup-button-height:            3rem;
+@controls-SubmitPopup-button-margin:            0 8px;
 @controls-SubmitPopup-border-top:               none;
 @controls-SubmitPopup-border-bottom:            none;
 @controls-SubmitPopup-border-left:              none;
 @controls-SubmitPopup-border-right:             none;
-@controls-SubmitPopup-message-color:            #FFFFFF;
-@controls-SubmitPopup-details-color:            #999999;
+@controls-SubmitPopup-message-color:            #E4E4E4;
+@controls-SubmitPopup-message-font-size:        1.1rem;
+@controls-SubmitPopup-message-font-weight:      normal;
+@controls-SubmitPopup-message-margin-bottom:    16px;
+@controls-SubmitPopup-details-color:            #8991A9;
+@controls-SubmitPopup-details-font-size:        1rem;
+@controls-SubmitPopup-body-padding:             45px;
 
 //NotificationPopup
 @controls-NotificationPopup-border-top:         none;
@@ -1296,7 +1311,6 @@
 @date-box-wrapper-border-radius: 0;
 @date-box-wrapper-border-color: #3b5e7a;
 @date-range-big-choose-header-range-dash-width: 4px;
-@controls-SubmitPopup-size-standard-width:				28rem;
 @tab-buttons-height:							3.57rem;
 @date-picker-calendar-icon-height: 				1.32rem;
 @date-picker-calendar-icon-width: 				2.3rem;
