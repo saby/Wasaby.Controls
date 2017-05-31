@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
     */
    var
       urlRegExpString = '((https?|ftp|file):\/\/|www\\\.)[-A-Za-zА-ЯЁа-яё0-9.]+(?::[0-9]+)?(\/([-A-Za-zА-ЯЁа-яё0-9+&@#$/%№=~_{|}!?:,.;()\'\[\\\]](?!nbsp;|amp;nbsp;))*)*',
-      excludeLinkString = '<[\\s]*a[\\s\\S]*?>[\\s\\S]*?<\/a>|',
+      excludeLinkString = '<[\\s]*(a|iframe)[\\s\\S]*?>[\\s\\S]*?<\/(a|iframe)>|',
       WrapUtil = /** @lends SBIS3.CONTROLS.Utils.LinkWrap.prototype */{
          urlRegExpString: urlRegExpString,
          excludeLinkString: excludeLinkString,
@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
                str.replace(urlRegExp, function(a) {
                   link = a;
                   linkLength = a.length;
-                  linkPos = arguments[5]; // 5 групп в регулярке
+                  linkPos = arguments[7]; // 5 групп в регулярке + 2 a|iframe
                });
 
                return {
@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
 
                   // Заменим электронную почту
                   emailRegExp.lastIndex = 0;
-                  str = str.replace(emailRegExp, function (result, b, index, fullText) {
+                  str = str.replace(emailRegExp, function (result, b, iframeA1, iframeA2,index, fullText) {
                      var afterResultText = fullText.substr(index + result.length);
                      // Если найденная строка является ссылкой или после неё идет символ ':' и он не последний,
                      // то возвращаем ссылку без преобразования
@@ -241,8 +241,8 @@ define('js!SBIS3.CONTROLS.Utils.LinkWrap',
                   linkLength = 0,
                   length = str.length,
                   translate = typeof rk === 'undefined' ? function(text) {return text;} : rk;
-               str.replace(startChars, function (str, pos) {
-                  idx = pos;
+               str.replace(startChars, function (str) {
+                  idx = arguments[3]; // строка, 2 группы a|iframe, длина вхождения
                   startLinkLength = str.length;
                });
                if (idx !== -1 && str[idx] != '<') {
