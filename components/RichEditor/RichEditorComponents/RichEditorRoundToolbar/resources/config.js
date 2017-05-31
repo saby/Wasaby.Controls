@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'smile',
             basic: true,
+            tooltip: 'Вставить смайлик',
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,
