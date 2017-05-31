@@ -563,7 +563,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _setOverflowY: function(value) {
-         this.getContainer().css('overflow-y', 'auto');
+         //Баг в firefox при overflow-y: auto - если высота контента больше высоты основного контейнера, то добавляется скролл
+         //Но от не расширяет контейнер на свою ширину, а ужимает текущий контейнер. При overflow-y: scroll такого нет, для ff юзаю его
+         //т.к. значение auto вешается только в том случае, если скролл нужно показать
+         this.getContainer().css('overflow-y', detection.firefox ? 'scroll' : 'auto');
          this.getContainer().height(value);
       },
 
@@ -950,7 +953,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          if (orientation == 'vertical') {
             if (offset.top <= 0) {
                this._overflowedV = true;
-               this._container.css('overflow-y', 'auto');
+               this._container.css('overflow-y', detection.firefox ? 'scroll' : 'auto');
                //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
                if (this._container.get(0).scrollHeight > this._windowSizes.height) {
                   height = this._windowSizes.height;
