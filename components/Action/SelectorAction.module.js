@@ -30,7 +30,9 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
                 this.sendCommand('close', meta);
              }
              
-             cfg.multiselect = metaConfig.multiselect;
+             if(metaConfig.hasOwnProperty('multiselect')) {
+                cfg.multiselect = metaConfig.multiselect;
+             }
              
              if(metaConfig.selectedItems) {
                 cfg.selectedItems = metaConfig.selectedItems.clone();
