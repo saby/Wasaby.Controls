@@ -2084,6 +2084,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       getItemInstance: function (id) {
          var projItem = this._getItemProjectionByItemId(id);
+         if (!projItem) {
+            return undefined;
+         }
          var instances = this.getItemsInstances();
          return instances[projItem.getHash()];
       },
