@@ -1,3 +1,4 @@
+@import "../fonts/carry-presto";
 html {
   color: #e4e4e4;
 }
@@ -363,7 +364,7 @@ body {
   line-height: 1.785rem !important;
   width: 1.785rem;
   height: 1.785rem;
-  font-family: 'cbuc-icons24' !important;
+  font-family: carrypresto-icons !important;
 }
 .controls-TextBox {
    &.controls-TextBox__big {
@@ -832,18 +833,20 @@ body .ws-window.ws-LoadingIndicator__window {
       width: 2.75rem;
       height: 2.75rem;
    }
-   
+
    img {
       display: none;
    }
-   
+
    .ws-loadingimg {
       left: 0.428rem;
-      
+      top: .4rem;
+
       div:before {
          content: '';
+         background-size: contain;
          display: inline-block;
-         background: url('img/ajax-loader-indicator-big.gif') no-repeat;
+         background-image: url('img/ajax-loader-indicator-big.gif');
       }
    }
    .ws-LoadingIndicator__message__progress-no {
@@ -908,3 +911,12 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
+body .controls-ComboBox.controls-TextBox.controls-TextBox.ws-has-focus .controls-ComboBox__arrowDown, body .controls-ComboBox.controls-TextBox.controls-TextBox:hover .controls-ComboBox__arrowDown {
+  color: #e4e4e4 !important;
+}
+.controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  font-size: 2rem !important;
+}
+body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
+    height: 1.43rem;
+}
