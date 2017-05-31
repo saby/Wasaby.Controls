@@ -98,9 +98,9 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       $constructor: function() {
          //Почему-то нельзя в опциях указать handlers {'onMenuActivated' : function(){}} Поэтогму подписываемся здесь
          this.subscribe('onMenuItemActivate', this._menuItemActivated);
-         this._clickHandler = callNext.call(this._clickHandler, this._clickHandlerOverwritten);
+         this.subscribeTo(this, 'onPickerOpen', this._onPickerOpen.bind(this));
       },
-      _clickHandlerOverwritten: function() {
+      _onPickerOpen: function() {
          var items = this._options.items,
               extraText, itemId;
          //view.deleteRecords(records);
