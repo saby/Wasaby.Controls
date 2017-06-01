@@ -99,16 +99,18 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                return this.endEdit(true).addCallback(function() {
                   var
                      hoveredEip = this._hoveredEip,
+                     editingRecord,
                      idProperty = this._options.idProperty;
                   if (hoveredEip && (hoveredEip.getOriginalRecord().get(idProperty).toString() === model.get(idProperty).toString())) {
                      if (this._notify('onBeginEdit', model) !== false) {
                         this._hoveredEip = null;
                         hoveredEip.edit(model);
-                        this._notify('onAfterBeginEdit', model);
+                        editingRecord = hoveredEip.getEditingRecord();
+                        this._notify('onAfterBeginEdit', editingRecord);
                         if (!this._pendingOperation) {
-                           this._subscribeToAddPendingOperation(model);
+                           this._subscribeToAddPendingOperation(editingRecord);
                         }
-                        return model;
+                        return editingRecord;
                      }
                   } else {
                      return EditInPlaceHoverController.superclass.edit.apply(this, [model])

@@ -1,7 +1,8 @@
 <div class="controls-DataGridView controls-ListView
             {{?it.multiselect !== false}} controls-ListView__multiselect {{??}} controls-ListView__multiselect__off {{?}}
             {{?it.startScrollColumn !== undefined}} controls-DataGridView__with-partScroll{{?}}
-            {{?it.resultsPosition == 'bottom'}} controls-DataGridView__resultsBottom{{?}}">
+            {{?it.resultsPosition == 'bottom'}} controls-DataGridView__resultsBottom{{?}}
+            {{?it._serverRender}} controls-ListView__dataLoaded{{?}}">
    <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">

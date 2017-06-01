@@ -1450,6 +1450,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._arrowRight = undefined;
             this._movableElems = [];
          }
+         if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
+            this._updateStickyHeader(false);
+         }
          DataGridView.superclass.destroy.call(this);
       },
       _setColumnSorting: function(colName) {

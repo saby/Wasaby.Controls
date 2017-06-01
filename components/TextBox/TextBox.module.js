@@ -329,7 +329,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _updateCompatPlaceholderVisibility: function() {
          if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!this._options.text);
+            this._compatPlaceholder.toggleClass('ws-hidden', !!this.getText());
          }
       },
 

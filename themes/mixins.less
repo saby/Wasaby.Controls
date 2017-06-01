@@ -492,10 +492,10 @@
 }
 
 .checkbox-border-color(@enabledColor, @disabledColor, @selector) {
-  .ws-enabled .@{selector}:after {
+  .ws-enabled>.@{selector}:after {
     border-color: @enabledColor;
   }
-  .ws-disabled .@{selector}:after {
+  .ws-disabled>.@{selector}:after {
     border-color: @disabledColor;
   }
 }
@@ -515,10 +515,10 @@
 }
 
 .checkbox-checked-color(@enabledColor, @disabledColor, @selector) {
-  .ws-enabled.controls-Checked__checked .@{selector}:before {
+  .ws-enabled.controls-Checked__checked>.@{selector}:before {
     color: @enabledColor;
   }
-  .ws-disabled.controls-Checked__checked .@{selector}:before {
+  .ws-disabled.controls-Checked__checked>.@{selector}:before {
     color: @disabledColor;
   }
 }
@@ -535,10 +535,10 @@
 }
 
 .checkbox-null-color(@enabledColor, @disabledColor, @selector) {
-  .ws-enabled.controls-ToggleButton__null .@{selector}:before {
+  .ws-enabled.controls-ToggleButton__null>.@{selector}:before {
     background-color: @enabledColor;
   }
-  .ws-disabled.controls-ToggleButton__null .@{selector}:before {
+  .ws-disabled.controls-ToggleButton__null>.@{selector}:before {
     background-color: @disabledColor;
   }
 }

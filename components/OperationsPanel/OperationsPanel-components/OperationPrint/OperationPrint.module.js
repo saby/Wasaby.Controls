@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
    'i18n!SBIS3.CONTROLS.OperationPrint'
 ], function(PrintUnloadBase, Dialog, Printer) {
    /**
-    * Контрол для печати подготовленных данных
+    * Класс контрола "Кнопка для печати подготовленных данных". Применяется на "Панели действий" (см. {@link SBIS3.CONTROLS.OperationsPanel}).
     * @class SBIS3.CONTROLS.OperationPrint
     * @extends SBIS3.CONTROLS.PrintUnloadBase
     * @author Сухоручкин Андрей Сергеевич
@@ -20,14 +20,25 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
          _options: {
             /**
              * @typedef {Object} OperationPrintItem
-             * @property {String} icon
-             * @property {String} title
-             * @property {String} linkText
-             * @property {String} caption
-             * @translatable caption title
+             * @property {String} icon Устанавливает путь к иконке, отображаемой на кнопке. Отображается в выпадающем меню.
+             * @property {String} caption Устанавливает подпись на кнопке. Отображается в выпадающем меню.
+             * @translatable caption
              */
             /**
-             * @cfg {Array.<OperationPrintItem>}
+             * @cfg {Array.<OperationPrintItem>} Устанавливает конфигурацию элементов, которые будут отображены в выпадающем меню кнопки.
+             * @example
+             * <pre>
+             * myButton.setItems([
+             *    {
+             *       caption: 'Печать 1',
+             *       icon: 'sprite:icon-24 icon-PDF2 icon-multicolor action-hover'
+             *    },
+             *    {
+             *       caption: 'Печать 2',
+             *       icon: 'sprite:icon-24 icon-Excel icon-multicolor action-hover'
+             *    }
+             * ]);
+             * </pre>
              */
             items: [
                {
@@ -37,24 +48,27 @@ define('js!SBIS3.CONTROLS.OperationPrint', [
                   caption: rk('Распечатать')
                }
             ],
-             /**
-              * @cfg {String}
-              */
+            /**
+             * @cfg {String} Устанавливает путь к иконке, отображаемой на кнопке.
+             * @remark
+             * Список иконок доступен <a href="https://wi.sbis.ru/docs/icons/">здесь</a>.
+             */
             icon: 'sprite:icon-24 action-hover icon-Print icon-primary',
             /**
-             * @cfg {String}
+             * @deprecated Опция не используется для конфигурации контрола. Устаревший функционал, недоработка инженера-программиста.
              */
             title: rk('Распечатать'),
             /**
-             * @cfg {String}
+             * @deprecated Опция не используется для конфигурации контрола. Устаревший функционал, недоработка инженера-программиста.
              */
             linkText:  rk('Распечатать'),
             /**
-             * @cfg {String}
+             * @cfg {String} Устанавливает подпись на кнопке.
+             * @translatable
              */
             caption: rk('Распечатать'),
             /**
-             * @cfg {String}
+             * @cfg {String} Устанавливает путь до файла, с помощью которого будет произведено xsl-преобразование.
              */
             xsl : undefined,
             /**

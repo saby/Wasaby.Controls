@@ -83,17 +83,17 @@
 
    &.controls-IconButton__round-border-24{
       .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
-      height: 24px !important;
-      width: 24px !important;
-      line-height: 24px !important;
+      height: @icon-button-edit-round-border-height;
+      width: @icon-button-edit-round-border-width;
+      line-height: @icon-button-edit-round-border-line-height;
       .controls-Button__icon.icon-16 {
          position: absolute;
          top: 0;
          left: 0;
          box-sizing: content-box;
-         height: 22px !important;
-         width: 22px !important;
-         line-height: 22px !important;
+         height: @icon-button-edit-round-border-height - 2 * @icon-button-border-width !important;
+         width: @icon-button-edit-round-border-width - 2 * @icon-button-border-width !important;
+         line-height: @icon-button-edit-round-border-line-height - 2 * @icon-button-border-width !important;
       }
    }
    &.controls-IconButton__round-border-32{

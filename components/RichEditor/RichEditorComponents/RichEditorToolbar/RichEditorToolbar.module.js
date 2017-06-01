@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    'js!SBIS3.CONTROLS.MenuButton',
    'js!SBIS3.CONTROLS.ComboBox',
    'css!SBIS3.CONTROLS.RichEditorToolbar',
-   "css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square"
+   'css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square',
+   'css!SBIS3.CONTROLS.MenuIcon'
 ], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
@@ -164,7 +165,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                   break;
                case 'title':
                case 'subTitle':
-               case 'selectedMainText':
                case 'additionalText':
                   this._updateTextFormat(state, obj);
                   break;

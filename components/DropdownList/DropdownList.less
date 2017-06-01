@@ -128,6 +128,14 @@
       &.controls-DropdownList__withoutCross {
          .controls-DropdownList__item.controls-DropdownList__item__selected {
             display: block;
+
+            /* из-за display: block браузер растягивает контейнер на всю ширину, и чекбокс падает вниз,
+               выписана задача на рефакторинг стилей
+               https://online.sbis.ru/opendoc.html?guid=af8eda3e-27bf-40e3-adaf-96f97d7b1364&des=
+               Задача в разработку 15.05.2017 Необходим рефакторинг стилей dropDownList Сейчас длинна селекторов запредельная, не темизирован, пол… */
+            &.controls-DropdownList__multiselect .controls-DropdownList__itemTextWrapper-height {
+               max-width: ~'calc(100% - 16px)';
+            }
          }
       }
       .controls-DropdownList__body {
@@ -414,12 +422,27 @@
   }
 }
 
-.ws-is-mobile-safari, .ws-is-firefox {
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-firefox {
    .controls-DropdownList__picker {
       .controls-DropdownList__multiselect {
          .controls-DropdownList__itemCheckBox {
             bottom: -1px;
          }
+      }
+   }
+}
+
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
+   .controls-DropdownList__picker.controls-DropdownList__type-fastDataFilter .controls-DropdownList__body .controls-DropdownList__item {
+      padding-top: 5px;
+      padding-bottom: 8px;
+   }
+   .controls-DropdownList__picker .controls-DropdownList__item {
+      &:hover {
+         background: @DropdownList-picker-menu-item-color;
+      }
+      &:active {
+         background: @DropdownList-picker-menu-item-hover;
       }
    }
 }

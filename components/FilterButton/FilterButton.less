@@ -58,7 +58,13 @@
    .align-items(center);
 }
 
-.ws-is-ie10, .ws-is-ie11, .ws-is-mobile-safari {
+.ws-is-desktop-safari {
+   .controls__filterButton__filterLine {
+      max-width: ~'calc(100% - '@controls-filterButton-button-width ~')';
+   }
+}
+
+.ws-is-ie10, .ws-is-ie11, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls__filterButton {
       .inline-flexbox();
    }
@@ -66,5 +72,6 @@
    .controls__filterButton__filterLine {
       -ms-flex-negative: 1;
       max-width: none;
+      min-width: 0;
    }
 }

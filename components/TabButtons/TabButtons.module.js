@@ -156,6 +156,7 @@ define(
                    hash = projItem && projItem.getHash();
                if (currentItem && typeof(itemsRawData[i]['visible']) == 'boolean' && currentItem.get('visible') !== itemsRawData[i]['visible']) {
                   this.getItemsInstances()[hash].setVisible(itemsRawData[i]['visible']);
+                  currentItem.set('visible', itemsRawData[i]['visible']);
                }
             }
          }

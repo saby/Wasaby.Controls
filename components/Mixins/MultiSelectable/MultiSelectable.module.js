@@ -814,10 +814,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             added : addedKeys,
             removed : removedKeys
          });
-         this._drawSelectedItems(this._options.selectedKeys, {
-            added : addedKeys,
-            removed : removedKeys
-         });
+         /* В событии о смене выделенных ключей могу разрушать компонент,
+            проверим на это */
+         if(!this.isDestroyed()) {
+            this._drawSelectedItems(this._options.selectedKeys, {
+               added: addedKeys,
+               removed: removedKeys
+            });
+         }
 	   },
 
       _notifySelectedItems : function(idArray, changed) {
