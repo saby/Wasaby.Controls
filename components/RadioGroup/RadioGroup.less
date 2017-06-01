@@ -1,7 +1,10 @@
 .controls-RadioGroup {
+  font-size: 0; //До перевода на tmpl, dot добавляет лишний шаблон при шаблонизации
+  
   .controls-ListView__item {
     display: inline-block;
     margin: @radio-group-horizontal-item-margin;
+    font-size: @default-text-size; //До перевода на tmpl, dot добавляет лишний шаблон при шаблонизации
   }
 
   &.controls-ButtonGroup__vertical {
