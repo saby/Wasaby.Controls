@@ -12,7 +12,7 @@
   line-height: @text-box-height;
 }
 
-.controls-Label_requeredField .controls-Label__text:after {
+.controls-Label_requeredField.controls-Label__text:after {
   content: ' *';
 }
 
@@ -21,7 +21,7 @@
     color: @innacent-color;
   }
   &.controls-Label_requeredField {
-    .controls-Label__text_color:after {
+    &.controls-Label__text_color:after {
       color: @error-color;
     }
   }
