@@ -732,15 +732,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
-         var itemToScroll = this.getSelectedKey(),
-             item;
-         if (!itemToScroll) {
-            item = this.getItems().at(0);
-            if (item) {
-               itemToScroll = item.get(this._options.idProperty);
-            }
+         var itemToScroll = this.getSelectedKey();
+         
+         if(itemToScroll) {
+            this._scrollToItem(itemToScroll);
+         } else {
+            //TODO перейти на LayoutManager, задача выписана
+            this.getPicker().getChildControlByName('ComboBoxScroll')._scrollTo(0);
          }
-         this._scrollToItem(itemToScroll);
       },
 
       _initializePicker: function(){
