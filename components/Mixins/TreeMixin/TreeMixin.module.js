@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
-   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "js!WS.Data/Display/Tree",
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "js!WS.Data/Entity/Model",
