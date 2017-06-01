@@ -262,9 +262,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
          _moveScroll: function(top) {
             this._content.scrollTop(top);
-         },
-         _getMaxScrollTop: function() {
-            return this._content.height() - this.getContainer().height();
          }
          //endregion retail_offlain
       });
