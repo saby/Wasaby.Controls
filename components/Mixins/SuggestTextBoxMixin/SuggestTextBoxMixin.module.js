@@ -32,12 +32,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    }
 
    /**
-    * Миксин, задающий любому полю ввода работу с автодополненем.
+    * Миксин, задающий любому полю ввода работу с автодополнением.
     * @mixin SBIS3.CONTROLS.SuggestTextBoxMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var SuggestTextBoxMixin = {
+   var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS.SuggestTextBoxMixin.prototype  */{
       $protected: {
          _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
          /* Т.к. при выборе из списка, фокус может находиться на нём, а не на поле ввода,
