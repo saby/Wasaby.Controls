@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setInputValue: function(value) {
-         value = value + '';
+         var newText = (value === null ||typeof value === 'undefined') ? '' : value + '';
          this._updateCompatPlaceholderVisibility();
          if(!this.isEnabled()) {
             // Рассчеты и отрисовку нужно разделить
@@ -165,10 +165,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
             if(!this._decimalsContainer){
                this._decimalsContainer = this._getDecimalsContainer();
             }
-            this._decimalsContainer[0].innerHTML = value.substring(value.length - 3, value.length);
-            this._inputField[0].innerHTML = this._getIntegerPart(value);
+            this._decimalsContainer[0].innerHTML = newText.substring(newText.length - 3, newText.length);
+            this._inputField[0].innerHTML = this._getIntegerPart(newText);
          }else{
-            this._inputField[0].innerHTML = value;
+            this._inputField[0].innerHTML = newText;
          }
       },
 
