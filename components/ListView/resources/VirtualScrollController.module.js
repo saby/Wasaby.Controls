@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             _endWrapperHeight: 0,
             _newItemsCount: 0,
             // высота добавленных элементов
-            _additionalHeight: 0,
             _notAddedAmount: 0,
             // количество не отображаемых страниц сверху списка
             _dettachedCount: 0,
@@ -52,7 +51,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                } else {
                   scrollTop = this._options.viewContainer.height() - scrollTop - this._scrollableHeight;
                }
-               var page = this._getPage(scrollTop, viewportHeight, this._additionalHeight);
+               var page = this._getPage(scrollTop);
                if (this._currentVirtualPage != page) {
                   this._onVirtualPageChange(page);
                   this._currentVirtualPage = page;
@@ -60,13 +59,15 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }.bind(this), 0);
          },
 
-         _getPage: function (scrollTop, viewportHeight, additionalHeight) {
-            for (var i = 0; i < this._virtualPages.length; i++) {
-               if (this._virtualPages[i] + additionalHeight >= scrollTop) {
-                  return i;
+         _getPage: function (scrollTop) {
+            var height = 0;
+            for (var i = 0; i < this._heights.length; i++) {
+               height += this._heights[i];
+               if (height >= scrollTop) {
+                  return i / BATCH_SIZE >> 0;
                }
             }
-            return this._virtualPages.length - 1;
+            return (this._heights.length - 1) / BATCH_SIZE >> 0;
          },
 
          _onVirtualPageChange: function (pageNumber) {
@@ -159,7 +160,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @param {Number} page номер страницы
           * @param {Number} pagesCount количество отображаемых страниц
           */
-         _getShownPages: function(page, pagesCount){
+         _getShownRange: function(page, pagesCount){
             var 
                //половина страниц
                halfPage = Math.ceil(pagesCount / 2),
@@ -168,8 +169,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                // Верхняя страница - теущая - половина страниц, но не меньше -1
                topPage = page - halfPage < 0 ? 0 : page - halfPage + 1;
             
-            if (bottomPage >= this._virtualPages.length) {
-               bottomPage = this._virtualPages.length - 1;
+            topPage *= BATCH_SIZE;
+            bottomPage *= BATCH_SIZE;
+
+            if (bottomPage >= this._heights.length) {
+               bottomPage = this._heights.length - 1;
             }
 
             return [topPage, bottomPage];
@@ -177,7 +181,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          /**
           * Получить высоту распорок
-          * @param  {Array} shownPages Массив из номером первой и последней отображаемых страниц
+          * @param  {Array} shownPages Массив из номеров первой и последней отображаемых записей
           * @return {Array} Высота верхней и нижней распорок
           */
          _calculateWrappersHeight: function (shownPages) {
@@ -186,16 +190,16 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                beginHeight = 0,
                endHeight = 0;
 
-            for (var i = 0; i < topPage * BATCH_SIZE; i++) {
+            for (var i = 0; i < topPage; i++) {
                beginHeight += this._heights[i];
             }
 
-            for (var i = bottomPage * BATCH_SIZE; i < this._heights.length; i++) {
+            for (i = bottomPage; i < this._heights.length; i++) {
                endHeight += this._heights[i];
             }
 
-            this._beginWrapperHeight = beginHeight; //this._virtualPages[topPage] + this._additionalHeight;
-            this._endWrapperHeight = endHeight; // this._virtualPages[this._virtualPages.length - 1] - this._virtualPages[bottomPage];
+            this._beginWrapperHeight = beginHeight;
+            this._endWrapperHeight = endHeight; 
             
             if (this._DEBUG) {
                console.log('top height', this._beginWrapperHeight);
@@ -210,7 +214,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          _setWrappersHeight: function(pageNumber){
             var wrappersHeight = this._calculateWrappersHeight(
-                  this._getShownPages(pageNumber, PAGES_COUNT)
+                  this._getShownRange(pageNumber, PAGES_COUNT)
                );
             this._options.beginWrapper.height(wrappersHeight.begin);
             this._options.endWrapper.height(wrappersHeight.end);
@@ -396,34 +400,20 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
             listItems.slice(lastPageStart).each(function () {
                self._heights.push(this.offsetHeight);
-               // Если набралось записей на выстору viewport'a добавим еще страницу
-               // При этом нужно учесть отступ сверху от view и фиксированую шапку
-               if (++count == BATCH_SIZE) {
-                  self._virtualPages.push(self._getElementOffset(this) - self._additionalHeight);
-                  count = 0;
-               }
             });
          },
 
          // Добавление новых элементов, когда они добавляются не через подгрузку по скроллу
          // TODO: пока не работает для элементов которые в данный момент не нужно вставлять в DOM
          addItems: function (items, at) {
-            var additionalHeight = 0,
-               hash;
+            var hash;
 
             // Пока рассчитываем, что добавляется один элемент за раз
             if (items.length == 1) {
                this._currentWindow[1] += 1;
-               if (this._newItemsCount === 0) {
-                  this._virtualPages.unshift({
-                     offset: -this._additionalHeight
-                  });
-               }
-               this._newItemsCount += 1;
                hash = items[0].getHash();
                var itemHeight = $('[data-hash="' + hash + '"]', this._options.viewContainer).height();
-               this._additionalHeight += itemHeight;
-               this._virtualPages[0] = -this._additionalHeight;
+               this._heights.push(itemHeight);
             }
 
             if (this._newItemsCount == BATCH_SIZE) {

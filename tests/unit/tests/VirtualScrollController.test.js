@@ -3,122 +3,52 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
 
    'use strict';
    var newState = null,
-      pages = [{
-         "offset": 0,
-         "dettached": true
-      }, {
-         "offset": 1000,
-         "dettached": true
-      }, {
-         "offset": 2000,
-         "dettached": true
-      }, {
-         "offset": 3000,
-         "dettached": true
-      }, {
-         "offset": 4000,
-         "dettached": true
-      }, {
-         "offset": 5000,
-         "dettached": false
-      }, {
-         "offset": 6000,
-         "dettached": false
-      }, {
-         "offset": 7000,
-         "dettached": false
-      }, {
-         "offset": 8000,
-         "dettached": false
-      }, {
-         "offset": 9000,
-         "dettached": false
-      }, {
-         "offset": 10000,
-         "dettached": false
-      }, {
-         "offset": 11000,
-         "dettached": false
-      }, {
-         "offset": 12000,
-         "dettached": false
-      }, {
-         "offset": 13000,
-         "dettached": false
-      }, {
-         "offset": 14000,
-         "dettached": false
-      }];
+      heights = [10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20,
+                 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20,
+                 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20];
    describe('SBIS3.CONTROLS.VirtualScrollController', function() {
       var controller = new VirtualScrollController();
-      describe('._getShownPages', function() {
-         controller._virtualPages = cFunctions.clone(pages);
+      describe('._getShownRange', function() {
+         controller._heights = cFunctions.clone(heights);
          it('First page', function() {
-            newState = controller._getShownPages(0, 5);
-            assert.deepEqual(newState, [0, 5]);
+            newState = controller._getShownRange(0, 5);
+            assert.deepEqual(newState, [0, 100]);
          });
          it('Second page', function() {
-            newState = controller._getShownPages(1, 5);
-            assert.deepEqual(newState, [0, 5]);
+            newState = controller._getShownRange(1, 5);
+            assert.deepEqual(newState, [0, 100]);
          });
          it('Fourth page', function() {
-            newState = controller._getShownPages(3, 5); 
-            assert.deepEqual(newState, [1, 6]);
+            newState = controller._getShownRange(3, 5); 
+            assert.deepEqual(newState, [20, 120]);
          });
          it('Fifth page', function() {
-            newState = controller._getShownPages(4, 5);
-            assert.deepEqual(newState, [2, 7]);
+            newState = controller._getShownRange(4, 5);
+            assert.deepEqual(newState, [40, 140]);
          });
          it('Large page', function() {
-            newState = controller._getShownPages(12, 5);
-            assert.deepEqual(newState, [10, 14]);
+            newState = controller._getShownRange(12, 5);
+            assert.deepEqual(newState, [200, 299]);
          });
       });
 
       describe('._calculateWrappersHeight', function() {
-         controller._virtualPages = cFunctions.clone(pages);
+         controller._heights = cFunctions.clone(heights);
          it('From start', function() {
-            newState = controller._calculateWrappersHeight([0, 2]);
-            assert.deepEqual(newState, { begin: 0, end: 12000 });
+            newState = controller._calculateWrappersHeight([0, 40]);
+            assert.deepEqual(newState, { begin: 0, end: 4160 });
          });
          it('All pages', function() {
-            newState = controller._calculateWrappersHeight([0, 14]);
+            newState = controller._calculateWrappersHeight([0, 300]);
             assert.deepEqual(newState, { begin: 0, end: 0 });
          });
          it('From second page', function() {
-            newState = controller._calculateWrappersHeight([2, 3]);
-            assert.deepEqual(newState, { begin: 2000, end: 11000 });
+            newState = controller._calculateWrappersHeight([40, 60]);
+            assert.deepEqual(newState, { begin: 640, end: 3840 });
          });
          it('To last page', function() {
-            newState = controller._calculateWrappersHeight([11, 14]);
-            assert.deepEqual(newState, { begin: 11000, end: 0 });
-         });
-      });
-
-      describe('._getPagesByRange', function() {
-         it('Page size 1', function() {
-            newState = controller._getPagesByRange([0, 5], 1);
-            assert.deepEqual(newState, [0, 1, 2, 3, 4]);
-         });
-         it('Equals page size', function() {
-            newState = controller._getPagesByRange([0, 5], 5);
-            assert.deepEqual(newState, [0]);
-         });
-         it('Biigger page size', function() {
-            newState = controller._getPagesByRange([0, 5], 10);
-            assert.deepEqual(newState, [0]);
-         });
-         it('Page size 5', function() {
-            newState = controller._getPagesByRange([0, 20], 5);
-            assert.deepEqual(newState, [0, 1, 2, 3]);
-         });
-         it('Fractional pages count', function() {
-            newState = controller._getPagesByRange([0, 21], 5);
-            assert.deepEqual(newState, [0, 1, 2, 3, 4]);
-         });
-         it('Page size 10', function() {
-            newState = controller._getPagesByRange([0, 101], 10);
-            assert.deepEqual(newState, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            newState = controller._calculateWrappersHeight([220, 300]);
+            assert.deepEqual(newState, { begin: 3520, end: 0 });
          });
       });
 
@@ -176,26 +106,22 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
 
       describe('._getPage', function() {
          //scrollTop, viewportHeight, additionalHeight, pages
-         controller._virtualPages = cFunctions.clone(pages);
+         controller._heights = cFunctions.clone(heights);
          it('1st page', function() {
-            newState = controller._getPage(0, 500, 0);
+            newState = controller._getPage(0);
             assert.equal(newState, 0);
          });
          it('2nd page', function() {
-            newState = controller._getPage(500, 500, 0);
+            newState = controller._getPage(321);
             assert.equal(newState, 1);
          });
          it('End of 2nd page', function() {
-            newState = controller._getPage(999, 500, 0);
+            newState = controller._getPage(640);
             assert.equal(newState, 1);
          });
          it('Last page', function() {
-            newState = controller._getPage(99999999, 500, 0);
+            newState = controller._getPage(99999999);
             assert.equal(newState, 14);
-         });
-         it('Additional height', function() {
-            newState = controller._getPage(4000, 500, 1001);
-            assert.equal(newState, 3);
          });
       });
 
@@ -242,111 +168,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
             assert.equal(newState, true);
          });
       });
-
-      describe('._getUpdateConfig', function() {
-         var fPages = [{
-            "offset": 0,
-            "dettached": true
-         }, {
-            "offset": 1000,
-            "dettached": true
-         }, {
-            "offset": 2000,
-            "dettached": false
-         }, {
-            "offset": 3000,
-            "dettached": false
-         }, {
-            "offset": 4000,
-            "dettached": false
-         }, {
-            "offset": 5000,
-            "dettached": false
-         }, {
-            "offset": 6000,
-            "dettached": true
-         }, {
-            "offset": 7000,
-            "dettached": true
-         }, {
-            "offset": 8000,
-            "dettached": true
-         }, {
-            "offset": 9000,
-            "dettached": true
-         }, {
-            "offset": 10000,
-            "dettached": true
-         }, {
-            "offset": 11000,
-            "dettached": true
-         }, {
-            "offset": 12000,
-            "dettached": true
-         }, {
-            "offset": 13000,
-            "dettached": true
-         }, {
-            "offset": 14000,
-            "dettached": true
-         }];
-         //diff, direction, newItemsCount, projCount
-         it('Added and removed [to end]', function() {
-            controller._virtualPages = cFunctions.clone(fPages);
-            newState = controller._getUpdateConfig({top: [40, 60], bottom: [120, 140]}, true, 0);
-            console.log(newState);
-            assert.deepEqual(newState, {
-               addOffset: 0,
-               removeOffset: 0
-            });
-         });
-         it('Removed and not added [to end]', function() {
-            controller._virtualPages = cFunctions.clone(fPages);
-            newState = controller._getUpdateConfig({top: [40, 60], bottom: [60, 80]}, true, 0);
-            console.log(newState);
-            assert.deepEqual(newState, {
-               addOffset: 0,
-               removeOffset: 0
-            });
-         });
-         it('Added and not removed [to end]', function() {
-            controller._virtualPages = cFunctions.clone(fPages);
-            newState = controller._getUpdateConfig({top: [0, 20], bottom: [120, 140]}, true, 0);
-            console.log(newState);
-            assert.deepEqual(newState, {
-               addOffset: 0,
-               removeOffset: 0
-            });
-         });
-         it('Added and removed [to begin]', function() {
-            controller._virtualPages = cFunctions.clone(fPages);
-            newState = controller._getUpdateConfig({top: [120, 140], bottom: [40, 60]}, false, 0);
-            console.log(newState);
-            assert.deepEqual(newState, {
-               addOffset: 0,
-               removeOffset: 0
-            });
-         });
-         it('Removed and not added [to begin]', function() {
-            controller._virtualPages = cFunctions.clone(fPages);
-            newState = controller._getUpdateConfig({top: [60, 80], bottom: [40, 60]}, false, 0);
-            console.log(newState);
-            assert.deepEqual(newState, {
-               addOffset: 0,
-               removeOffset: 0
-            });
-         });
-         it('Added and not removed [to begin]', function() {
-            controller._virtualPages = cFunctions.clone(fPages);
-            newState = controller._getUpdateConfig({top: [120, 140], bottom: [0, 20]}, true, 0);
-            console.log(newState);
-            assert.deepEqual(newState, {
-               addOffset: 0,
-               removeOffset: 0
-            });
-         });
-      });
-
       describe('._getPositionToAdd', function() {
          //diff, direction, mode
          it('To end [down]', function() {
