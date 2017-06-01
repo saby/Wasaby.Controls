@@ -11,6 +11,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
       'Core/compatibility',
+      'Core/constants',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
    function (extend,
@@ -24,7 +25,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              functions,
              FloatAreaManager,
              StickyHeaderManager,
-             compatibility) {
+             compatibility,
+             constants) {
       'use strict';
 
 
@@ -125,29 +127,27 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
 
          _containerReady: function() {
-            
-            if (window && this._container && (typeof this._container.length === "number")) {
-
-               this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
-               //Под android оставляем нативный скролл
-               if (this._showScrollbar){
-                  this._initScrollbar = this._initScrollbar.bind(this);
-                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-                  this._container.one('mousemove', this._initScrollbar);
-                  this._container.one('wheel', this._initScrollbar);
-                  if (cDetection.IEVersion >= 10) {
-                     // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
-                     // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
-                     this._content[0].onmousewheel = function(event) {
-                        if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
-                           event.preventDefault();
-                        }
-                     }.bind(this);
-                  }
-                  this._hideScrollbar();
+            if (window &&this._container && (typeof this._container.length === "number")) {
+            this._content = $('> .controls-ScrollContainer__content', this.getContainer());
+            this._bindOfflainEvents();this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch&& cDetection.isIE);
+            //Под android оставляем нативный скролл
+            if (this._showScrollbar){
+               this._initScrollbar = this._initScrollbar.bind(this);
+               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+               this._container.one('mousemove', this._initScrollbar);
+               this._container.one('wheel', this._initScrollbar);
+               if (cDetection.IEVersion >= 10) {
+                  // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+                  // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
+                  this._content[0].onmousewheel = function(event) {
+                     if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
+                        event.preventDefault();
+                     }
+                  }.bind(this);
                }
-               this._subscribeOnScroll();
+               this._hideScrollbar();
+            }
+            this._subscribeOnScroll();
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
@@ -269,8 +269,26 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
             delete FloatAreaManager._scrollableContainers[ this.getId() ];
+         },
+         //region retail_offlain
+         _bindOfflainEvents: function() {
+            if (constants.browser.retailOffline) {
+               this._content[0].addEventListener('touchstart', function (event) {
+                  this._startPos = this._content.scrollTop() + event.targetTouches[0].pageY;
+               }.bind(this), true);
+               // На движение пальцем - сдвигаем положение
+               this._content[0].addEventListener('touchmove', function (event) {
+                  this._moveScroll(this._startPos - event.targetTouches[0].pageY);
+                  event.preventDefault();
+               }.bind(this));
+            }
+         },
+         _moveScroll: function(top) {
+            this._content.scrollTop(top);
          }
+         //endregion retail_offlain
       });
+
 
       return ScrollContainer;
    });
