@@ -828,13 +828,13 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 }
 
-.ws-LoadingIndicator__window {
-   img, .ws-loadingimg > div:before{
+body  {
+   .ws-loadingimg img, .ws-loadingimg > div:before{
       width: 2.75rem;
       height: 2.75rem;
    }
 
-   img {
+   .ws-loadingimg img {
       display: none;
    }
 
@@ -919,4 +919,33 @@ body .controls-ComboBox.controls-TextBox.controls-TextBox.ws-has-focus .controls
 }
 body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
     height: 1.43rem;
+}
+body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
+    top: .46rem;
+}
+
+body {
+  .ws-info-box {
+    padding: 1rem;
+    .ws-infobox-content {
+      font-size: 1rem;
+      margin-right: 1rem;
+    }
+    .ws-info-box .ws-info-box-close-button.icon-disabled {
+      position: absolute;
+      top: .7rem;
+      right: 6px;
+      cursor: pointer;
+    }
+    .ws-infobox-triangle.ws-infobox-triangle-bottom {
+      bottom: -.4rem;
+      border-right: 2px solid #2d68b5;
+      border-bottom: 2px solid #2d68b5;
+    }
+    .ws-infobox-triangle {
+      width: .857rem;
+      height: .857rem;
+      background: @basic-block-bg-color;
+    }
+  }
 }
