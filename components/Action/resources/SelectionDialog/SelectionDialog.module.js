@@ -28,7 +28,8 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
             filter: undefined,
             infiniteScroll: null,
             pageSize: undefined,
-            buttonCaption: 'Выбрать'
+            buttonCaption: 'Выбрать',
+            rootValue: null
          },
          treeView: undefined
       },
@@ -40,8 +41,12 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
          var
              filter = this._options.filter || {};
          this._treeView = this.getChildControlByName('SelectionDialog-TreeDataGridView');
+         if (this._options.rootValue) {
+            filter[this._options.parentProperty] = this._options.rootValue;
+         }
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
+
          if (this._treeView.getMultiselect()) {
             //по стандарту кнопку выбора надо показывать только если включен мультеселект
             this.getChildControlByName('SelectorControllerButton').show()
