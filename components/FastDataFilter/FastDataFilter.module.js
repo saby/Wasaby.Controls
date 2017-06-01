@@ -9,8 +9,8 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    'Core/Deferred',
    "js!SBIS3.CONTROLS.DropdownList",
-   "html!SBIS3.CONTROLS.FastDataFilter",
-   "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
+   "tmpl!SBIS3.CONTROLS.FastDataFilter",
+   "tmpl!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
    "Core/helpers/collection-helpers",
    "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.FastDataFilter'
@@ -105,10 +105,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                 */
                items: []
             }
-         },
-         init: function () {
-            FastDataFilter.superclass.init.apply(this, arguments);
-            
          },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();
