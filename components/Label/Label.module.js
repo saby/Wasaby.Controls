@@ -13,19 +13,21 @@ define('js!SBIS3.CONTROLS.Label',
       /**
        * Метка.
        * @class SBIS3.CONTROLS.Label
-       * @extends WSControls/Buttons/Button
+       * @extends SBIS3.CONTROLS.CompoundControl
        * @demo SBIS3.CONTROLS.Demo.MyLabel
+       * @mixes SBIS3.CONTROLS.Clickable
        * @author Крайнов Дмитрий Олегович
        *
        * @control
        * @public
-       * @category Buttons
        *  
        * @example
-       * <ws:SBIS3.CONTROLS.Label
-       *    caption="Метка"
-       *    owner="TextBox"               
-       * />
+       * <pre>
+       *    <ws:SBIS3.CONTROLS.Label
+       *       caption="Метка"
+       *       owner="TextBox"
+       *    />
+       * </pre>
        */
       var Label = CompoundControl.extend([Clickable], /** @lends SBIS3.CONTROLS.Label.prototype */{
          _dotTplFn: template,
