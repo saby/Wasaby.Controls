@@ -1450,6 +1450,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _getGroupTpl : function(){
          return this._options.groupBy.template || groupByTpl;
       },
+      _prepareItemsData : function() {
+         var data = DataGridView.superclass._prepareItemsData.apply(this, arguments);
+         this._addStickyToGroups(data.records);
+         return data;
+      },
+      _getItemsForRedrawOnAdd: function(items, groupId) {
+         var data = DataGridView.superclass._getItemsForRedrawOnAdd.apply(this, arguments);
+         this._addStickyToGroups(data);
+         return data;
+      },
+      _addStickyToGroups: function (data) {
+         if (this._options.stickyHeader && this._options.groupBy) {
+            data.forEach(function (item) {
+               if (item.hasOwnProperty('data') && item.hasOwnProperty('tpl')) {
+                  item.data.stickyHeader = this._options.stickyHeader;
+               }
+            }, this);
+         }
+      },
       _redrawResults: function() {
         if (this._options.resultsPosition !== 'none'){
            this._redrawTheadAndTfoot();
