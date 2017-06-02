@@ -76,8 +76,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        'use strict';
 
-       var SHOW_ALL_LINK_WIDTH = 22;
-
        var classes = {
           MULTISELECT: 'controls-FieldLink__multiselect',
           SELECTED: 'controls-FieldLink__selected',
@@ -779,7 +777,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  toAdd = [],
                  isEnabled = this.isEnabled(),
                  needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
-                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item;
+                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item, showAllLinkWidth;
 
              if(!linkCollection.isPickerVisible()) {
                 if (!this._isEmptySelection()) {
@@ -797,10 +795,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
                       if (this._options.multiselect || this._options.alwaysShowTextBox) {
+                         showAllLinkWidth = this._getShowAllButton().outerWidth();
                          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
                          additionalWidth += parseInt(this.isEnabled() ?
-                                  this._getInputMinWidth() + (itemsCount > 1 ? SHOW_ALL_LINK_WIDTH : 0) :
-                                  SHOW_ALL_LINK_WIDTH);
+                                  this._getInputMinWidth() + (itemsCount > 1 ? showAllLinkWidth : 0) :
+                                  showAllLinkWidth);
                       }
 
                       /* Высчитываем ширину, доступную для элементов */
@@ -1176,9 +1175,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass(classes.HIDDEN, !show);
+                this._getShowAllButton().toggleClass(classes.HIDDEN, !show);
              }
           },
+          
+          _getShowAllButton: fHelpers.memoize(function () {
+             return this.getContainer().find('.controls-FieldLink__showAllLinks');
+          }, '_showAllButton'),
 
           /* Заглушка, само поле связи не занимается отрисовкой */
           redraw: fHelpers.nop,
