@@ -5,6 +5,11 @@ define([
 ], function (ListView, RecordSet) {
    'use strict';
    describe('SBIS3.CONTROLS.ListView', function () {
+      beforeEach(function () {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
+      });
       describe('_checkHorisontalDragndrop', function () {
          it('should return true if target has display inline-block', function () {
             var target = $('<div style="display:inline-block; float:none">');
