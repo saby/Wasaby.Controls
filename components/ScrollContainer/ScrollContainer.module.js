@@ -162,6 +162,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
+            /**
+             * Добавим проксирование данных для EngineBrowser
+             * Этот костыль будет выпилен в 3.17.20
+             */
             if (this.getParent() && cInstance.instanceOfModule(this.getParent(), 'SBIS3.CONTROLS.Browser') ) {
                var selfCtx = this._context,
                   prevContext = this._context.getPrevious();
