@@ -5,6 +5,11 @@ define([
 ],
 function (InteractiveMove, TreeView) {
    describe('js!SBIS3.CONTROLS.Action.List.InteractiveMove', function () {
+      beforeEach(function () {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
+      });
       describe('$constructor', function () {
          it('should get option parentProperty from linked view', function () {
             var view = new TreeView({
