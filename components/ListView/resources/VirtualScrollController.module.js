@@ -15,16 +15,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                itemsContainer: null
             },
             _currentVirtualPage: 0,
-            _virtualPages: [0],
             _heights: [],
-            _bottomIndex: null,
             _beginWrapperHeight: 0,
-            _endWrapperHeight: 0,
             _newItemsCount: 0,
-            // высота добавленных элементов
+            _removedItemsCount: 0,
             _notAddedAmount: 0,
             // количество не отображаемых страниц сверху списка
-            _dettachedCount: 0,
             _scrollableHeight: 0,
             _DEBUG: true,
          },
@@ -184,26 +180,25 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @param  {Array} shownPages Массив из номеров первой и последней отображаемых записей
           * @return {Array} Высота верхней и нижней распорок
           */
-         _calculateWrappersHeight: function (shownPages) {
-            var topPage = shownPages[0],
-               bottomPage = shownPages[1],
+         _calculateWrappersHeight: function (shownRange) {
+            var topElement = shownRange[0],
+               bottomElement = shownRange[1],
                beginHeight = 0,
                endHeight = 0;
 
-            for (var i = 0; i < topPage; i++) {
+            for (var i = 0; i < topElement; i++) {
                beginHeight += this._heights[i];
             }
 
-            for (i = bottomPage; i < this._heights.length; i++) {
+            for (i = bottomElement; i < this._heights.length; i++) {
                endHeight += this._heights[i];
             }
 
             this._beginWrapperHeight = beginHeight;
-            this._endWrapperHeight = endHeight; 
             
             if (this._DEBUG) {
-               console.log('top height', this._beginWrapperHeight);
-               console.log('bottom height', this._endWrapperHeight);
+               console.log('top height', beginHeight);
+               console.log('bottom height', endHeight);
             }
 
             return {
@@ -409,22 +404,29 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             var hash;
 
             // Пока рассчитываем, что добавляется один элемент за раз
-            if (items.length == 1) {
-               this._currentWindow[1] += 1;
-               hash = items[0].getHash();
+            for (var i = 0; i < items.length; i++) {
+               hash = items[i].getHash();
                var itemHeight = $('[data-hash="' + hash + '"]', this._options.viewContainer).height();
                this._heights.push(itemHeight);
             }
-
-            if (this._newItemsCount == BATCH_SIZE) {
-               this._onVirtualPageChange(this._currentVirtualPage);
-               this._newItemsCount = 0;
-            }
+            
+            this._newItemsCount += items.length;
             this._currentWindow[1] += items.length;
+
+            if (this._newItemsCount >= BATCH_SIZE) {
+               this._onVirtualPageChange(this._currentVirtualPage);
+               this._newItemsCount -= BATCH_SIZE;
+            }
          },
 
-         getCurrentRange: function () {
-            return this._currentWindow;
+         removeItems: function(items, itemsIndex) {
+            this._heights.splice(itemsIndex, items.length);
+            this._removedItemsCount += items.length;
+
+            if (this._removedItemsCount >= BATCH_SIZE) {
+               this._onVirtualPageChange(this._currentVirtualPage);
+               this._newItemsCount -= BATCH_SIZE;
+            }
          }
 
       });

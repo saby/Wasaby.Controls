@@ -2735,6 +2735,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
             if (this._virtualScrollController) {
                this._virtualScrollController.addItems(newItems, newItemsIndex);
+               this._virtualScrollController.removeItems(oldItems, oldItemsIndex);
             }
          },
 
