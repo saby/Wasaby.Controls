@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var field = cfg.groupBy.field;
             method = function(item, index, projItem){
                //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-               return item.get(field) + '';
+               return calcGroupHash(projItem) + item.get(field);
             }
          }
          else {
@@ -123,9 +123,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
-   canApplyGrouping = function(projItem, cfg) {      var
+   canApplyGrouping = function(projItem, cfg) {
+      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
+   },
+
+   calcGroupHash = function(projItem) {
+      var
          itemParent = projItem.getParent && projItem.getParent();
-      return !isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
+      return itemParent ? itemParent.isRoot() ? '@' : itemParent.getContents().getHash() + calcGroupHash(itemParent) : '';
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -2372,9 +2377,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _canApplyGrouping: function(projItem) {
-         var
-             itemParent = projItem.getParent && projItem.getParent();
-         return !isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
+         return !isEmpty(this._options.groupBy) && (!projItem.isNode || !projItem.isNode());
       },
 
       _getGroupItems: function(groupId) {
