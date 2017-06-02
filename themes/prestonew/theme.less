@@ -526,8 +526,14 @@ body {
   background: #2c3e50;
 }
 
-.controls-ComboBox.controls-TextBox.controls-Picker__show {
-  border-bottom: none;
+.controls-ComboBox__picker {
+   &:not(.controls-popup-revert-vertical){
+      border-top: none;
+      margin-top: 1px !important;
+   }
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
 }
 .ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
    border-left-color: #0055BB;
