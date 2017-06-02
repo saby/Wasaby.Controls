@@ -256,8 +256,16 @@ body {
 }
 
 }
-.controls-ComboBox.controls-TextBox.controls-Picker__show {
-  border-bottom: none;
+
+.controls-ComboBox__picker {
+   &:not(.controls-popup-revert-vertical){
+      border-top: none;
+      margin-top: 1px !important;
+   }
+
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
 }
 
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
