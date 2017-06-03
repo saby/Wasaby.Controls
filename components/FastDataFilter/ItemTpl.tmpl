@@ -1,5 +1,4 @@
-<ws:SBIS3.CONTROLS.DropdownList data-hash="{{projItem.getHash()}}"
-                                data-id="{{item.getId()}}"
+<ws:SBIS3.CONTROLS.DropdownList attributes="{{ {'data-hash': projItem.getHash(), 'data-id': item.getId()} }}"
                                 name="{{item.name}}"
                                 type="fastDataFilter"
                                 items="{{item.values}}"
