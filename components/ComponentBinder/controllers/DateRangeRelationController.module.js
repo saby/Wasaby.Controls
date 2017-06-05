@@ -36,7 +36,9 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
              * @cfg {Boolean} включает или отключает отображение замка на всех связанных контроллах.
              * Если равен null, то оставляет отображение замочка без изменений.
              */
-            showLock: null
+            showLock: null,
+
+            lockButton: null
          },
          _updating: false,
          _steps: []
@@ -47,6 +49,11 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
       bindDateRanges: function () {
          var dateRanges = arguments.length ? arguments : this._options.dateRanges,
             i;
+
+         if (this._options.lockButton) {
+            this._options.lockButton.setChecked(!this._options.onlyByCapacity);
+            this._options.lockButton.subscribe('onCheckedChange', this._onLockedChanged.bind(this, -1))
+         }
 
          for (i = 0; i < dateRanges.length; i++) {
             dateRanges[i].subscribe('onRangeChange', this._onRangeChanged.bind(this, i));
@@ -75,6 +82,9 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
             return;
          }
          this._updating = true;
+         if (this._options.lockButton) {
+            this._options.lockButton.setChecked(locked);
+         }
          for (i = 0; i < dateRanges.length; i++) {
             if (i !== controlNumber) {
                dateRanges[i].setLocked(locked);

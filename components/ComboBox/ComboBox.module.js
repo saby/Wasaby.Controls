@@ -521,10 +521,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-       _useNativePlaceHolder: function() {
-           // т.к. у не редактируемого ComboBox поле ввода скрыто, то использовать нативную подсказку не можем
-           return constants.compatibility.placeholder && this._options.editable;
-       },
+      setPlaceholder: function(placeholder) {
+         ComboBox.superclass.setPlaceholder.apply(this, arguments);
+         $('.controls-ComboBox__fieldNotEditable__placeholder', this._container.get(0)).text(placeholder);
+      },
 
       _getItemTemplate: function (projItem) {
          var

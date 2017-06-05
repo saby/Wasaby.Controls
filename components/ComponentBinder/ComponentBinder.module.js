@@ -370,14 +370,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * @param onlyByCapacity {Boolean} только по разрядности. Т.е., выбирая новый период в одном контроле,
        * новые значения присвоятся в других контролах только если произошла смена разрядности или нарушено
        * условие I < II < III < IV< ... .
+       * @param lockButton {SBIS3.CONTROLS.StateButton} кнопка включаящая/выключаящая связывание компонентов.
        */
-      bindDateRanges: function(dateRanges, step, showLock, onlyByCapacity) {
+      bindDateRanges: function(dateRanges, step, showLock, onlyByCapacity, lockButton) {
          if (!this._dateRangeRelationController) {
             this._dateRangeRelationController = new DateRangeRelationController({
                dateRanges: dateRanges || this._options.dateRanges,
                step: step,
                showLock: showLock,
-               onlyByCapacity: onlyByCapacity
+               onlyByCapacity: onlyByCapacity,
+               lockButton: lockButton
             });
             this._dateRangeRelationController.subscribe('onDatesChange', function () {
                this._notify('onDatesChange');

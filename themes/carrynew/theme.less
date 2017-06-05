@@ -222,6 +222,40 @@ body {
       font-size: 1.43rem!important;
       font-weight: normal !important;
   }
+
+   //Стили для CORE кнопки на диалоге печати PrintDialog
+   .ws-window .ws-printdialog-titlebar {
+      .ws-printdialog-print-button {
+         right: 4rem;
+         font-size: 1.43rem;
+         border-radius: 0;
+         font-weight: 400;
+         width: auto;
+         min-width: .86rem;
+         height: 3rem;
+         line-height: 2.73rem;
+         box-sizing: border-box;
+         user-select: none;
+         background-color: #ff7033;
+         color: #fff;
+         border: 2px solid #d94700;
+
+         &:hover {
+            background-color: #EC5B19;
+         }
+
+         &:active {
+            background-color: #d94700 !important;
+         }
+
+         .ws-button-caption {
+            display: block;
+            margin: 0 .57rem 0 .57rem;
+            border: none;
+            line-height: inherit;
+         }
+      }
+   }
 }
 .controls-FloatArea {
   border: 2px solid #0055BB;
@@ -256,8 +290,15 @@ body {
 }
 
 }
-.controls-ComboBox.controls-TextBox.controls-Picker__show {
-  border-bottom: none;
+
+.controls-ComboBox__picker {
+   &:not(.controls-popup-revert-vertical){
+      margin-top: -1px !important;
+   }
+
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
 }
 
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
@@ -362,6 +403,7 @@ body {
       &.icon-size {
          font-size: 2.5rem!important;
          right: .3rem;
+         top: 0.2rem;
       }
    }
 }
@@ -435,7 +477,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: 0.2rem;
+   margin-top: 1.85rem;
 }
 
 .controls__filter-button__clear-filter {
@@ -630,7 +672,7 @@ body {
   }
 }
 .controls-BreadCrumbs__crumb {
-   top: 0.14rem
+   top: -0.18rem
 }
 
 body .ws-window {
