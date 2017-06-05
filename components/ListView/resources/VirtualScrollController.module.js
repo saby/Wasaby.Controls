@@ -60,10 +60,10 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             for (var i = 0; i < this._heights.length; i++) {
                height += this._heights[i];
                if (height >= scrollTop) {
-                  return i / BATCH_SIZE >> 0;
+                  return Math.floor(i / BATCH_SIZE);
                }
             }
-            return (this._heights.length - 1) / BATCH_SIZE >> 0;
+            return Math.floor((this._heights.length - 1) / BATCH_SIZE);
          },
 
          _onVirtualPageChange: function (pageNumber) {
@@ -81,19 +81,19 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                return;
             }
 
-            var direction = this._getDirection(this._currentWindow, newWindow),
-               offset = this._newItemsCount ? BATCH_SIZE - newItemsCount : 0;
+            var direction = this._getDirection(this._currentWindow, newWindow);
+            // var offset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
             
             if (this._DEBUG) {
                console.log('page', pageNumber);
                console.log('Current widnow:', this._currentWindow[0], this._currentWindow[1], 'New widnow:', newWindow[0], newWindow[1]);
                console.log('Scrolling', direction ? 'down' : 'up');
-               console.log('diff.top', diff.top);
-               console.log('diff.bottom', diff.bottom);
+               console.log('diff.begin', diff.begin);
+               console.log('diff.end', diff.end);
             }
 
             // удаляем записи
-            items = this._getItemsToRemove(direction ? diff.top : diff.bottom, direction ? 0 : offset, projCount);
+            items = this._getItemsToRemove(direction ? diff.begin : diff.end, 0, projCount);
             if (items.length) {
                this._notify('onItemsRemove', items);
                
@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                }
             }
             // добавляем записи
-            items = this._getItemsToAdd(direction ? diff.bottom : diff.top, direction ? offset : 0, projCount);
+            items = this._getItemsToAdd(direction ? diff.end : diff.begin, 0, projCount);
             if (items.length) {
                var at = this._getPositionToAdd(diff, direction, this._options.mode);
                this._notify('onItemsAdd', items, at);
@@ -121,16 +121,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          /**
-          * Поучить направление смещения окна
-          * @param  {Array}   currentWindow текущее виртуальное окно
-          * @param  {Array}   newWindow     новое виртуальное окно
-          * @return {Boolean}               true - прокрутка к концу, false - прокрутка к началу
-          */
-         _getDirection: function(currentWindow, newWindow) {
-            return (currentWindow[0] < newWindow[0] || currentWindow[0] > newWindow[1]) && currentWindow[1] > newWindow[0];
-         },
-
-         /**
           * Получить положение для вставки в проекцию
           * @param  {Arra} diff         разница промежутков
           * @param  {Boolean} direction направление смещения окна
@@ -141,11 +131,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             var at = 0;
             if (direction) {
                if (mode == 'down') {
-                  at = diff.bottom[0];
+                  at = diff.end[0];
                }
             } else {
                if (mode == 'up') {
-                  at = projCount - (diff.top[1] - diff.top[0] + 1);
+                  at = projCount - (diff.begin[1] - diff.begin[0] + 1);
                }
             }
             return at;
@@ -295,6 +285,16 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             return [(pageNumber - sidePagesCount) * pageSize, (pageNumber + sidePagesCount + 1) * pageSize - 1];
          },
 
+         /**
+          * Поучить направление смещения окна
+          * @param  {Array}   currentRange текущее виртуальное окно
+          * @param  {Array}   newRange     новое виртуальное окно
+          * @return {Boolean}              true - прокрутка к концу, false - прокрутка к началу
+          */
+         _getDirection: function(currentRange, newRange) {
+            return (currentRange[0] < newRange[0] || currentRange[0] > newRange[1]) && currentRange[1] > newRange[0];
+         },
+
 
          /**
           *                                                                             a      b            c      d
@@ -303,59 +303,48 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @return {Array} Разница между промежутками - два промежутка  [[a,b],[c,d]]  |------|            |------|
           */
          _getDiff: function (currentRange, newRange, count) {
-            var top, bottom;
-            //Если промежутки равны или вложены
+            var top, bottom, diff = {};
+            //Если промежутки равны
             if (currentRange[0] == newRange[0] && currentRange[1] == newRange[1]) {
                return false;
+            }
+
+            //Если промежутки пересекаются
+            if (currentRange[0] < newRange[0]) {
+               diff.begin = [currentRange[0], newRange[0] - 1];
+               diff.end = [currentRange[1] + 1, newRange[1]];
+            } else {
+               diff.begin = [newRange[0], currentRange[0] - 1];
+               diff.end = [newRange[1] + 1, currentRange[1]];
             }
 
             // Если промежутки не пересекаются
             if (currentRange[1] < newRange[0]) {
                if (this._options.mode == 'down') {
-                  top = newRange;
-                  bottom = currentRange;
+                  diff.begin = newRange;
+                  diff.end = currentRange;
                } else {
-                  top = currentRange;
-                  bottom = newRange;
+                  diff.begin = currentRange;
+                  diff.end = newRange;
                }
-               return {
-                  top: top,
-                  bottom: bottom
-               };
             }
 
             // Если промежутки не пересекаются
             if (currentRange[0] > newRange[1]) {
                if (this._options.mode == 'down') {
-                  top = currentRange;
-                  bottom = newRange;
+                  diff.begin = currentRange;
+                  diff.end = newRange;
                } else {
-                  top = newRange;
-                  bottom = currentRange;
+                  diff.begin = newRange;
+                  diff.end = currentRange;
                }
-               return {
-                  top: top,
-                  bottom: bottom
-               };
             }
 
-            //Если промежутки пересекаются
-            if (currentRange[0] < newRange[0]) {
-               top = [currentRange[0], newRange[0] - 1];
-               bottom = [currentRange[1] + 1, newRange[1]];
-            } else {
-               top = [newRange[0], currentRange[0] - 1];
-               bottom = [newRange[1] + 1, currentRange[1]];
+            if (diff.end[0] > count){
+               diff.end[0] = count;
             }
 
-            if (bottom[0] > count){
-               bottom[0] = count;
-            }
-
-            return {
-               top: top,
-               bottom: bottom
-            };
+            return diff;
          },
 
          _getElementOffset: function (element) {
