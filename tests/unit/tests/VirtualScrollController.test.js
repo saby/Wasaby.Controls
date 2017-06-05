@@ -88,19 +88,19 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          });
          it('No intersection to top', function() {
             newState = controller._getDiff([0, 10], [20, 30]);
-            assert.deepEqual(newState, {top: [20, 30], bottom: [0, 10]});
+            assert.deepEqual(newState, { add: [20, 30], remove: [0, 10], addPosition: 0 });
          });
          it('No intersection to bottom', function() {
             newState = controller._getDiff([20, 30], [0, 10]);
-            assert.deepEqual(newState, {top: [20, 30], bottom: [0, 10]});
+            assert.deepEqual(newState, { remove: [20, 30], add: [0, 10], addPosition: 0 });
          });
          it('Intersection 1 element', function() {
             newState = controller._getDiff([0, 10], [10, 20]);
-            assert.deepEqual(newState, { top: [ 0, 9 ], bottom: [ 11, 20 ] });
+            assert.deepEqual(newState, { add: [ 0, 9 ], remove: [ 11, 20 ], addPosition: 0 });
          });
          it('Intersection 10 elements', function() {
             newState = controller._getDiff([0, 20], [10, 30]);
-            assert.deepEqual(newState, { top: [ 0, 9 ], bottom: [ 21, 30 ] });
+            assert.deepEqual(newState, { remove: [ 0, 9 ], add: [ 21, 30 ], addPosition: 21 });
          });
       });
 
@@ -171,20 +171,12 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
       describe('._getPositionToAdd', function() {
          //diff, direction, mode
          it('To end [down]', function() {
-            newState = controller._getPositionToAdd({top: [0, 20], bottom: [40, 60]}, true, 'down');
+            newState = controller._getPositionToAdd({begin: [0, 20], end: [40, 60]}, true);
             assert.equal(newState, 40);
          });
          it('To begin [down]', function() {
-            newState = controller._getPositionToAdd({top: [0, 20], bottom: [40, 60]}, false, 'down');
+            newState = controller._getPositionToAdd({begin: [0, 20], end: [40, 60]}, false);
             assert.equal(newState, 0);
-         });
-         it('To end [up]', function() {
-            newState = controller._getPositionToAdd({top: [0, 20], bottom: [40, 60]}, true, 'up', 100);
-            assert.equal(newState, 0);
-         });
-         it('To begin [up]', function() {
-            newState = controller._getPositionToAdd({top: [0, 20], bottom: [40, 60]}, false, 'up', 100);
-            assert.equal(newState, 79);
          });
       });
    });

@@ -122,7 +122,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * @param  {Boolean} direction направление смещения окна
           * @return {Number}            позиция вставки
           */
-         _getPositionToAdd: function(diff, direction, projCount){
+         _getPositionToAdd: function(diff, direction){
             var at = 0;
             if (direction) {
                at = diff.end[0];
