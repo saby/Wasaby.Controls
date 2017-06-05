@@ -845,6 +845,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                  return false;
                               }))
                            .append(okButton);
+                        this._fieldHref. _keysWeHandle= [cConstants.key.enter];
                         new Button({
                            caption: 'ОК',
                            primary: true,
