@@ -795,7 +795,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
                       if (this._options.multiselect || this._options.alwaysShowTextBox) {
-                         showAllLinkWidth = this._getShowAllButton().outerWidth();
+                         //FireFox почему то иногда неверно считает ширину кнопки '...', выписана задача
+                         showAllLinkWidth = this._getShowAllButton().outerWidth() + (constants.browser.firefox ? 2 : 0);
                          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
                          additionalWidth += parseInt(this.isEnabled() ?
                                   this._getInputMinWidth() + (itemsCount > 1 ? showAllLinkWidth : 0) :
