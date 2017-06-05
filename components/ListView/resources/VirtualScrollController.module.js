@@ -346,15 +346,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
             return diff;
          },
-
-         _getElementOffset: function (element) {
-            element = $(element);
-            if (this._options.mode == 'down') {
-               return element.position().top + element.outerHeight(true) + this._beginWrapperHeight;
-            } else {
-               return this._viewHeight - element.position().top;
-            }
-         },
          /*
           * Пересчет страниц для VirtualScroll
           * Для каждой страницы хранится отступ ее первого элемента от начала списка и состояние dettached удалена из DOM или нет
