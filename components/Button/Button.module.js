@@ -116,11 +116,25 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseEnter: function(e){
+            this._showExtendedTooltipCompatible();
             this._notify('onMouseEnter', e);
          },
 
          _onMouseLeave: function(e){
+            if(this.isActive()) {
+               this._hideExtendedTooltipCompatible();
+            }
             this._notify('onMouseLeave', e);
+         },
+
+         _onFocusIn: function(e){
+            var self = this;
+            this._showExtendedTooltipCompatible();
+         },
+
+         _onFocusOut: function(e){
+            var self = this;
+            this._hideExtendedTooltipCompatible();
          }
          //</editor-fold>
       });
