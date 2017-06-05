@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/Sanitize",
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers",
+   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "Core/helpers/functional-helpers",
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    Sanitize,
    LayoutManager,
    cInstance,
-   fcHelpers,
+   InformationPopupManager,
    fHelpers,
    strHelpers,
    SourceUtil,
@@ -1623,11 +1623,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }),
 
       _loadErrorProcess: function(error) {
+        var self = this;
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
                error.message = error.message.toString().replace('Error: ', '');
-               fcHelpers.alert(error);
+               InformationPopupManager.showMessageDialog(
+                 {
+                    message: error.message,
+                    opener: self,
+                    status: 'error'
+                 }
+               );
                error.processed = true;
             }
          }

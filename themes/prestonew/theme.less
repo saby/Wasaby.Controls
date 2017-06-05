@@ -14,7 +14,6 @@ body {
    }
 
    .controls-ListView__scrollPager {
-      border-top: none;
       .controls-IconButton {
          background: #293D52;
          padding: 0;
@@ -38,7 +37,42 @@ body {
   .ws-float-area-title {
     padding-left: .857rem;
   }
-  .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+
+   //Стили для CORE кнопки на диалоге печати PrintDialog
+   .ws-window .ws-printdialog-titlebar {
+      .ws-printdialog-print-button {
+         right: 4rem;
+         font-size: 1.43rem;
+         border-radius: 0;
+         font-weight: 400;
+         width: auto;
+         min-width: .86rem;
+         height: 3rem;
+         line-height: 2.73rem;
+         box-sizing: border-box;
+         user-select: none;
+         background-color: #ff7033;
+         color: #fff;
+         border: 2px solid #d94700;
+
+         &:hover {
+            background-color: #EC5B19;
+         }
+
+         &:active {
+            background-color: #d94700 !important;
+         }
+
+         .ws-button-caption {
+            display: block;
+            margin: 0 .57rem 0 .57rem;
+            border: none;
+            line-height: inherit;
+         }
+      }
+   }
+
+  .ws-window .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
     height: 3.57rem;
 
       .ws-float-area-title {
@@ -177,9 +211,6 @@ body {
     }
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
       margin-right: 1rem;
-    }
-    .controls-IconButton {
-      vertical-align: baseline;
     }
    .controls-DropdownList .controls-DropdownList__selectedItem {
         display: inline-block;
@@ -337,22 +368,6 @@ body {
    }
 }
 
-.controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-  position: absolute;
-  top: .3rem;
-  right: @controls-Popup-closeButton-right;
-  width: 3rem;
-  height: 3rem;
-  cursor: pointer;
-  background: @closeBigButtonImage;
-  &:hover {
-    background: @closeBigButtonImageHover;
-  }
-  &:active {
-    background: @closeBigButtonImageHover;
-  }
-  z-index: 1;
-}
 
 .controls-Button {
   white-space: normal;
@@ -491,8 +506,13 @@ body {
   background: #2c3e50;
 }
 
-.controls-ComboBox.controls-TextBox.controls-Picker__show {
-  border-bottom: none;
+.controls-ComboBox__picker {
+   &:not(.controls-popup-revert-vertical){
+      margin-top: -1px !important;
+   }
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
 }
 .ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
    border-left-color: #0055BB;
@@ -508,10 +528,6 @@ body {
       min-width: 8rem;
       .controls-DropdownListFooter_select {
          border: none;
-      }
-      .controls-DropdownListFooter_hasMore{
-         top: 1rem;
-         left: 1.82rem;
       }
    }
 }
@@ -594,7 +610,7 @@ body {
   border-color: #2c3e50;
 }
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: 0.2rem;
+   margin-top: .07rem;
 }
 
 body .controls-DateRangeChoose .controls-DateRangeBigChoose__homeBtn .icon-16 {
@@ -737,6 +753,7 @@ body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-D
       &.icon-size {
          font-size: 2.5rem!important;
          right: .3rem;
+         top: 0.2rem;
       }
    }
 }
@@ -803,22 +820,6 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
     line-height: 3rem !important;
 }
 
-.controls-DropdownList__picker {
-   .controls-DropdownList__itemCheckBox{
-      top: 0.6rem;
-      padding-right: 0.2rem;
-   }
-   .controls-DropdownList__buttonsBlock.controls-DropdownList__multiselect {
-      min-width: 8rem;
-      .controls-DropdownListFooter_select {
-         border: none;
-      }
-      .controls-DropdownListFooter_hasMore{
-         top: 1rem;
-         left: 1.82rem;
-      }
-   }
-}
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: 3.88rem
@@ -828,7 +829,7 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
 .controls-Menu{
   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
      &.icon-24 {
-        top: 0.9rem;
+        top: 0.3rem;
         left: -0.2rem;
      }
      &.icon-16 {
@@ -885,7 +886,7 @@ body  {
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
   margin-bottom: 1.1rem;
-  margin-top: -.7rem;
+  margin-top: -.46rem;
 }
 
 .controls-ComboBox__picker {
@@ -971,6 +972,10 @@ body {
     }
   }
 }
-.controls-BreadCrumbs__crumb:first-child {
-   top: 0.14rem
+.controls-BreadCrumbs__crumb {
+   top: -0.18rem
+}
+
+body .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showHalfYears .controls-DateRangeChoose__home, .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showQuarters .controls-DateRangeChoose__home {
+    width: 2rem;
 }

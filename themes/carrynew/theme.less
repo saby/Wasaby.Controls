@@ -88,8 +88,7 @@ body {
    .controls-ListView__bottomStyle > .controls-ItemsToolbar:before {
       display: none;
    }
-   .controls-ScrollContainer > .controls-ListView__scrollPager {
-      border-top: none;
+   .controls-ListView__scrollPager {
       .controls-IconButton {
          background: @button-bg;
          padding: 0;
@@ -222,6 +221,40 @@ body {
       font-size: 1.43rem!important;
       font-weight: normal !important;
   }
+
+   //Стили для CORE кнопки на диалоге печати PrintDialog
+   .ws-window .ws-printdialog-titlebar {
+      .ws-printdialog-print-button {
+         right: 4rem;
+         font-size: 1.43rem;
+         border-radius: 0;
+         font-weight: 400;
+         width: auto;
+         min-width: .86rem;
+         height: 3rem;
+         line-height: 2.73rem;
+         box-sizing: border-box;
+         user-select: none;
+         background-color: #ff7033;
+         color: #fff;
+         border: 2px solid #d94700;
+
+         &:hover {
+            background-color: #EC5B19;
+         }
+
+         &:active {
+            background-color: #d94700 !important;
+         }
+
+         .ws-button-caption {
+            display: block;
+            margin: 0 .57rem 0 .57rem;
+            border: none;
+            line-height: inherit;
+         }
+      }
+   }
 }
 .controls-FloatArea {
   border: 2px solid #0055BB;
@@ -256,8 +289,15 @@ body {
 }
 
 }
-.controls-ComboBox.controls-TextBox.controls-Picker__show {
-  border-bottom: none;
+
+.controls-ComboBox__picker {
+   &:not(.controls-popup-revert-vertical){
+      margin-top: -1px !important;
+   }
+
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
 }
 
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
@@ -362,6 +402,7 @@ body {
       &.icon-size {
          font-size: 2.5rem!important;
          right: .3rem;
+         top: 0.2rem;
       }
    }
 }
@@ -435,7 +476,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: 0.2rem;
+   margin-top: .07rem;
 }
 
 .controls__filter-button__clear-filter {
@@ -469,7 +510,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .controls-Menu{
    .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
       &.icon-24 {
-         top: 0.9rem;
+         top: 0.3rem;
          left: -0.2rem;
       }
       &.icon-16 {
@@ -549,7 +590,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
   margin-bottom: 1.1rem;
-  margin-top: -.7rem;
+  margin-top: -.46rem;
 }
 .controls-ComboBox__picker {
   box-sizing: border-box;
@@ -629,6 +670,18 @@ body {
     }
   }
 }
-.controls-BreadCrumbs__crumb:first-child {
-   top: 0.14rem
+.controls-BreadCrumbs__crumb {
+   top: -0.18rem
+}
+
+body .ws-window {
+    background-color: #fff;
+    border-style: solid;
+    border-color: #0091d7;
+}
+body .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showHalfYears .controls-DateRangeChoose__home, .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showQuarters .controls-DateRangeChoose__home {
+    width: 2rem;
+}
+.controls-TreeView__expand {
+  font-size: 1rem !important;
 }
