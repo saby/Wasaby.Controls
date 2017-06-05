@@ -832,7 +832,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .controls-AjaxLoader__LoadingIndicator {
    border-radius: 16px;
 }
-
 body .ws-window.ws-LoadingIndicator__window {
    border-radius: 16px;
    border-color: transparent;
@@ -842,20 +841,19 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 }
 
-body  {
-   .ws-loadingimg img, .ws-loadingimg > div:before{
+.ws-LoadingIndicator__window {
+   img, .ws-loadingimg > div:before{
       width: 2.75rem;
       height: 2.75rem;
    }
 
-   .ws-loadingimg img {
+   img {
       display: none;
    }
 
    .ws-loadingimg {
       left: 0.428rem;
       top: .4rem;
-
       div:before {
          content: '';
          background-size: contain;
@@ -968,4 +966,7 @@ body {
 }
 body .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showHalfYears .controls-DateRangeChoose__home, .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showQuarters .controls-DateRangeChoose__home {
     width: 2rem;
+}
+.controls-ComboBox__picker .controls-ComboBox__scrollContainer {
+    background: #f0f5fb;
 }
