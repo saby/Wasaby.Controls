@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.Button',
          _isActiveByClick: false,
          _isWaitingClick: false,
          _isTouchEnded: false,
+         _touchMoveCount: 0,
 
          constructor: function (cfg) {
             this.deprecatedContr(cfg);
@@ -116,13 +117,17 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onTouchStart: function(e) {
+            this._touchMoveCount = 0;
             this._isWaitingClick = true;
             this._isActiveByClick = true;
             this._isTouchEnded = false;
          },
 
          _onTouchMove: function(e) {
-            this._isWaitingClick = false;
+            this._touchMoveCount++;
+            if(this._touchMoveCount > 1) {
+               this._isWaitingClick = false;
+            }
          },
 
          _onTouchEnd: function(e) {
