@@ -17,9 +17,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
-   'css!SBIS3.CONTROLS.EditInPlaceBaseController'
+   'css!SBIS3.CONTROLS.EditInPlaceBaseController',
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
 
       'use strict';
 
@@ -458,7 +459,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      deferred = this._options.dataSource.update(eipRecord).addCallback(function () {
                         self._acceptChanges(eip, eipRecord);
                      }).addErrback(function (error) {
-                        fcHelpers.alert(error);
+                       InformationPopupManager.showMessageDialog(
+                         {
+                            message: error.message,
+                            opener: self,
+                            status: 'error'
+                         }
+                       );
                         return error;
                      });
                   } else {

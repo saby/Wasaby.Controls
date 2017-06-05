@@ -241,14 +241,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          }
          return lastContainer;
       },
-      instead: {
-         _notifyOnDragMove: function(target, insertAfter) {
-            //Если происходит изменение порядкового номера и оно разрешено или если происходит смена родителся и она разрешена, стрельнём событием
-            if (typeof insertAfter === 'boolean' && this._options.itemsDragNDrop !== 'onlyChangeParent' || insertAfter === undefined && this._options.itemsDragNDrop !== 'onlyChangeOrder') {
-               return this._notify('onDragMove', this.getCurrentElement().keys, target.data('id'), insertAfter) !== false;
-            }
-         }
-      },
       around: {
          _onCollectionRemove: function(parentFunc, items, notCollapsed, groupId) {
             var i, item, itemId;
