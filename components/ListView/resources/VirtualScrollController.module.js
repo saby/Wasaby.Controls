@@ -80,20 +80,17 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                this._currentWindow = newWindow;
                return;
             }
-
-            var direction = this._getDirection(this._currentWindow, newWindow);
             // var offset = this._newItemsCount ? BATCH_SIZE - this._newItemsCount : 0;
             
             if (this._DEBUG) {
                console.log('page', pageNumber);
                console.log('Current widnow:', this._currentWindow[0], this._currentWindow[1], 'New widnow:', newWindow[0], newWindow[1]);
-               console.log('Scrolling', direction ? 'down' : 'up');
                console.log('diff.begin', diff.begin);
                console.log('diff.end', diff.end);
             }
 
             // удаляем записи
-            items = this._getItemsToRemove(direction ? diff.begin : diff.end, 0, projCount);
+            items = this._getItemsToRemove(diff.remove, 0, projCount);
             if (items.length) {
                this._notify('onItemsRemove', items);
                
@@ -102,13 +99,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                }
             }
             // добавляем записи
-            items = this._getItemsToAdd(direction ? diff.end : diff.begin, 0, projCount);
+            items = this._getItemsToAdd(diff.add, 0, projCount);
             if (items.length) {
-               var at = this._getPositionToAdd(diff, direction, this._options.mode);
-               this._notify('onItemsAdd', items, at);
+               this._notify('onItemsAdd', items, diff.addPosition);
                
                if (this._DEBUG) {
-                  console.log('add from', items[0], 'to', items[items.length - 1], 'at', at);
+                  console.log('add from', items[0], 'to', items[items.length - 1], 'at', diff.addPosition);
                }
             }
             //Меняем высоту распорок
@@ -124,19 +120,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           * Получить положение для вставки в проекцию
           * @param  {Arra} diff         разница промежутков
           * @param  {Boolean} direction направление смещения окна
-          * @param  {String} mode       режим работы
           * @return {Number}            позиция вставки
           */
-         _getPositionToAdd: function(diff, direction, mode, projCount){
+         _getPositionToAdd: function(diff, direction, projCount){
             var at = 0;
             if (direction) {
-               if (mode == 'down') {
-                  at = diff.end[0];
-               }
-            } else {
-               if (mode == 'up') {
-                  at = projCount - (diff.begin[1] - diff.begin[0] + 1);
-               }
+               at = diff.end[0];
             }
             return at;
          },
@@ -217,11 +206,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                to = range[1] < count ? range[1] : count,
                index;
             for (var i = from; i <= to; i++) {
-               if (this._options.mode == 'down') {
-                  index = i;
-               } else {
-                  index = count - i - 1 + offset;
-               }
+               index = i;
                toRemove.push(index);
             }
             return toRemove;
@@ -242,15 +227,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             offset = offset || this._notAddedAmount;
 
             for (var i = from; i <= to; i++) {
-               if (this._options.mode == 'down') {
-                  index = i;
-               } else {
-                  index = count - i - 1 + offset;
-               }
+               index = i;
                toAdd.push(index);
-            }
-            if (this._options.mode == 'up') {
-               toAdd.reverse();
             }
             return toAdd;
          },
@@ -304,6 +282,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
           */
          _getDiff: function (currentRange, newRange, count) {
             var top, bottom, diff = {};
+            var direction = this._getDirection(currentRange, newRange);
             //Если промежутки равны
             if (currentRange[0] == newRange[0] && currentRange[1] == newRange[1]) {
                return false;
@@ -320,31 +299,25 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
             // Если промежутки не пересекаются
             if (currentRange[1] < newRange[0]) {
-               if (this._options.mode == 'down') {
-                  diff.begin = newRange;
-                  diff.end = currentRange;
-               } else {
-                  diff.begin = currentRange;
-                  diff.end = newRange;
-               }
+               diff.begin = newRange;
+               diff.end = currentRange;
             }
 
             // Если промежутки не пересекаются
             if (currentRange[0] > newRange[1]) {
-               if (this._options.mode == 'down') {
-                  diff.begin = currentRange;
-                  diff.end = newRange;
-               } else {
-                  diff.begin = newRange;
-                  diff.end = currentRange;
-               }
+               diff.begin = currentRange;
+               diff.end = newRange;
             }
 
             if (diff.end[0] > count){
                diff.end[0] = count;
             }
 
-            return diff;
+            return {
+               remove: direction ? diff.begin : diff.end,
+               add: direction ? diff.end : diff.begin,
+               addPosition: this._getPositionToAdd(diff, direction)
+            };
          },
          /*
           * Пересчет страниц для VirtualScroll
