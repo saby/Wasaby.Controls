@@ -16,8 +16,10 @@ define('js!SBIS3.CONTROLS.Utils.DateUtil',[
         */
       dateFromIsoString: function (isoDate) {
          if (
+            // ie не поддерживает миллисекунды '2016-07-31 22:10:01.123+03'
+            constants.browser.isIE
             // не поддерживает даты с часовым пояслм вида '2016-07-31 22:10:01+03'
-               constants.browser.firefox
+            || constants.browser.firefox
             // не поддерживает даты с часовым поясом и разделитель в виде пробела '2016-07-31 22:10:01+03'
             || constants.browser.safari
             // на ios все браузеры работают через Apple UIWebView и ведут себя так же как safari
