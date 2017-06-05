@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
    "Core/constants",
    "js!SBIS3.CORE.Control",
    "js!SBIS3.CONTROLS.BreadCrumbs",
-   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "js!WS.Data/Display/Tree",
    "js!WS.Data/Relation/Hierarchy",
    "Core/helpers/collection-helpers",

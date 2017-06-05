@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
-   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "js!WS.Data/Display/Tree",
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "js!WS.Data/Entity/Model",
@@ -973,9 +973,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (this._isSearchMode()) {
                return true;
             }
-            var
-               itemParent = projItem.getParent();
-            return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
+            return parentFn.call(this, projItem);
          },
          /* ToDo. Используется для вызова перерисовки родительских элементов при изменении количества дочерних
           Удалить функцию, когда будет сделана нотификация по заданию: https://inside.tensor.ru/opendoc.html?guid=b53fc873-6355-4f06-b387-04df928a7681&description= */

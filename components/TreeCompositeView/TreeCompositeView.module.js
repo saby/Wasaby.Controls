@@ -97,6 +97,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       }
       parentOptions.listFolderTpl = TemplateUtil.prepareTemplate(listFolderTpl);
+      parentOptions._itemsTemplate = cfg._itemsTemplate;
       parentOptions.drawFolders = drawFolders;
       parentOptions.drawLeafs = drawLeafs;
       parentOptions.defaultlistFolderTpl = TemplateUtil.prepareTemplate(cfg._defaultListFolderTemplate);
@@ -104,27 +105,37 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    },
    drawFolders = function(cfg){
       var stashTpl = cfg.tplData.itemTpl,
-         markup;
+          invisibleItemsMarkup = '',
+          markup;
       if (cfg.tplData.viewMode == 'list'){
          cfg.tplData.itemTpl = cfg.tplData.listFolderTpl;
       }
       else if (cfg.tplData.viewMode == 'tile'){
          cfg.tplData.itemTpl = cfg.tplData.folderTpl;
+         
+         if(cfg.tplData.tileMode) {
+            invisibleItemsMarkup = cfg.tplData.invisibleItemsTemplate({className: 'controls-ListView__item-type-node'})
+         }
       }
-      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders || [], tplData : cfg.tplData});
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.folders || [], tplData : cfg.tplData}) + invisibleItemsMarkup;
       cfg.tplData.itemTpl = stashTpl;
       return markup;
    },
    drawLeafs = function(cfg){
       var stashTpl = cfg.tplData.itemTpl,
-         markup;
+          invisibleItemsMarkup = '',
+          markup;
       if (cfg.tplData.viewMode == 'list'){
          cfg.tplData.itemTpl = cfg.tplData.listTpl;
       }
       else if (cfg.tplData.viewMode == 'tile'){
          cfg.tplData.itemTpl = cfg.tplData.tileTpl;
+         
+         if(cfg.tplData.tileMode === 'static') {
+            invisibleItemsMarkup = cfg.tplData.invisibleItemsTemplate({})
+         }
       }
-      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs || [], tplData : cfg.tplData});
+      markup = cfg.tplData._itemsTemplate({records : cfg.records.leafs || [], tplData : cfg.tplData}) + invisibleItemsMarkup;
       cfg.tplData.itemTpl = stashTpl;
       return markup;
    },
@@ -659,17 +670,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return this.partialyReload(idArray);
          } else {
             return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
-         }
-      },
-
-      _onCollectionAddMoveRemove: function() {
-         //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
-         //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку
-         if (this._options.viewMode == 'table') {
-            TreeCompositeView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
-         }
-         else {
-            this.redraw();
          }
       }
 

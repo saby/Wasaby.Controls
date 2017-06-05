@@ -21,6 +21,7 @@
 @line-overflow-blur-height:               30px;
 @line-overflow-blur-width:                30px;
 @line-overflow-blur-gradient:             linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+@highlight-text-bg:                       #fffece;
 //=============================
 @white-color:                             #fff;
 @black-color:                             #000;
@@ -315,6 +316,7 @@
 // Normal default button
 @button-checked-text-color:               @default-text-color;
 @button-checked-border-width:             2px;
+@button-checked-line-height:              @button-line-height - @button-checked-border-width;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
 @button-checked-font-weight:              normal;
 @button-checked-shadow:                   @button-active-shadow;
@@ -379,6 +381,7 @@
 @tab-button-color:                              @blue-dark-color;
 @tab-button-font:                               14px 'TensorFont', sans-serif;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
+@tab-button-simple-hover-bottomline-color:      #E4E4E4;
 @tab-button-margin-top:                         0;
 @tab-control-smple-bottomline-height:           3px;
 @tab-button-simple-inner-color:                 #313E78;
@@ -791,6 +794,7 @@
 
 // Menu
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
+@menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 
@@ -944,6 +948,8 @@
 
 @money-text-box-decimals-padding:     2px 0;
 @money-text-box-decimals-font-size:   12px;
+@money-text-box-decimals-color:                       @gray-ccc-color;
+@money-text-box-decimals-background-color:            @white-color;
 
 // ----------- //
 // Date box    //
@@ -1793,6 +1799,7 @@
 // --------- //
 
 @tree-view-expand-spritesheet:                  'img/Tree_expand.png';
+@tree-view-expand-icon-size:                    @icon-small-size;
 
 @tree-view-expand-cursor:                       pointer;
 
@@ -2239,7 +2246,7 @@
 @controls-filterLine-items-line-height:           24px;
 @controls-filterLine-arrow-height:                19px;
 @controls-filterLine-link-color:                  #0055bb;
-@controls-filterLine-link-hover-color:            @primary-color;
+@controls-filterLine-link-hover-color:            @hover-color;
 
 @controls-filterLine-copyCross-top:               -20px;
 @controls-filterLine-copyCross-margin:            -16px;
@@ -2275,6 +2282,7 @@
 @controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
 @controls-FieldLink-showAllLinks-width:            20px;
 @controls-FieldLink-linkContainer-padding:         4px;
+@controls-FieldLink-showAllLinks-marginRight:      -22px;
 
 @controls-FieldLink-picker-max-height:             500px;
 @controls-FieldLink-picker-min-height:             16px;
@@ -2399,6 +2407,7 @@
 @controls-SubmitPopup-button-min-width:            86px;
 @controls-SubmitPopup-button-mini-min-width:       80px;
 @controls-SubmitPopup-button-height:               24px;
+@controls-SubmitPopup-button-margin:               0 4px;
 @controls-SubmitPopup-border:                      1px solid @float-area-border-color;
 @controls-SubmitPopup-border-top:                  none;
 @controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
@@ -2623,6 +2632,13 @@
 @time-header-background-color:                      @gray-f4f4f4-color;
 @time-header-title-color:                           @default-text-color;
 
+
+//---------------//
+//  MissSpell    //
+//---------------//
+@controls-MissSpell-padding:                        8px;
+@controls-MissSpell-lineheight:                     24px;
+
 // ---------- //
 // ToggleTime //
 // ---------- //
@@ -2671,7 +2687,16 @@
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @bottomStyle-items-toolbar-height:                  30px;
+@bottomStyle-padding-bottom:              @bottomStyle-items-toolbar-height;
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
 @bottomStyle-items-toolbar-margin:                  3px 0 0 0;
 @scroll-pager-bg:							@default-bg-color;
 @textbox-font-size:							@default-font-size;
+@image-bar-height:                        32px;
+@image-bar-bg-color:                      #E7F0F9;
+@image-bar-button-bottom-padding:         4px;
+
+//---------//
+//  Label  //
+//---------//
+@label-text-margin:                                        0 8px 0 0;
