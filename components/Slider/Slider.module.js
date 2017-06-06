@@ -281,12 +281,14 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _beginDragHandler: function(DragObject, event) {
+               var
+                  dotSizes = event.target.getBoundingClientRect();
                this._dragInProcess = true;
                this._container.find('.controls-Slider__point').removeClass('lastActivePoint');
                $(event.target).addClass('lastActivePoint');
                DragObject.setOwner(this);
                DragObject.setTarget(event.target);
-               this._shift =  event.pageX - event.target.getBoundingClientRect().left - pageXOffset - constants.pointWidth[this._options.bigPoint ? 'big' : 'small'] / 2;
+               this._shift =  event.pageX - dotSizes.left - dotSizes.width / 2 - pageXOffset;
             },
 
             _onDragHandler: function(DragObject, event) {
