@@ -1743,20 +1743,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
+            var MAX_SELECTED = 1000;
             var selectedItems = this.getSelectedItems();
-            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000 && this.getItems().getMetaData().more){
+            if (this.isInfiniteScroll() && this.getItems().getCount() < MAX_SELECTED && this.getItems().getMetaData().more){
                this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
-                     //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
-                     //и следующие страницы будут грузиться тоже по 1000 записей
+                     //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен MAX_SELECTED,
+                     //и следующие страницы будут грузиться тоже по MAX_SELECTED записей
                      this._limit = this._options.pageSize;
+                     this._scrollOffset.bottom = MAX_SELECTED;
                      //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
                      }
                       this.setSelectedItemsAll.call(this);
-                     if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
-                        var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
+                     if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
+                        var message = 'Отмечено ' + MAX_SELECTED + ' записей, максимально допустимое количество, обрабатываемое системой СБИС.';
 
                         var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
                         //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
