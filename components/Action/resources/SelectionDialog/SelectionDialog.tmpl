@@ -1,0 +1,57 @@
+<div class="controls-SelectionDialog">
+   <div class="ws-window-titlebar-custom">
+      <ws:SBIS3.CONTROLS.Button
+         class="controls-selectionDialog-SelectionButton"
+         name="SelectorControllerButton"
+         caption = "{{buttonCaption}}"
+         primary = "{{true}}"
+         visible = "{{true}}"
+         command = "applySelect"
+      />
+   </div>
+   <ws:SBIS3.CONTROLS.SelectorWrapper linkedObjectName = "SelectionDialog-TreeDataGridView">
+      <ws:content>
+         <ws:SBIS3.CONTROLS.ScrollContainer>
+            <ws:content>
+               <ws:SBIS3.CONTROLS.TreeDataGridView
+                  class = "controls-SelectionDialog-TreeDataGridView"
+                  name = "SelectionDialog-TreeDataGridView"
+                  allowEnterToFolder = "{{false}}"
+                  showHead = "{{false}}"
+                  expand = "{{false}}"
+                  displayType = "folders"
+                  showPaging = "{{false}}"
+                  itemsDragNDrop = "{{false}}"
+                  allowEmptySelection = "{{true}}"
+                  partialyReload = "{{partialyReload}}"
+                  infiniteScroll = "{{infiniteScroll}}"
+                  pageSize = "{{pageSize}}"
+                  displayProperty = "{{displayProperty}}"
+                  idProperty = "{{idProperty}}"
+                  parentProperty = "{{parentProperty}}"
+                  nodeProperty = "{{nodeProperty}}"
+                  itemsActions = "{{[]}}"
+
+               >
+                  <ws:columns>
+                     <ws:Array>
+                        <ws:Object>
+                           <ws:field>
+                              <ws:String>{{displayProperty}}</ws:String>
+                           </ws:field>
+                           <ws:className>
+                              <ws:String>controls-DataGridView-cell-overflow-ellipsis</ws:String>
+                           </ws:className>
+                           <ws:cellTemplate>
+                              <ws:partial template="{{folderTitleTpl}}" scope="{{cellTemplate}}"/>
+                           </ws:cellTemplate>
+                        </ws:Object>
+                     </ws:Array>
+                  </ws:columns>
+
+               </ws:SBIS3.CONTROLS.TreeDataGridView>
+            </ws:content>
+         </ws:SBIS3.CONTROLS.ScrollContainer>
+      </ws:content>
+   </ws:SBIS3.CONTROLS.SelectorWrapper>
+</div>
