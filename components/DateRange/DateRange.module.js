@@ -197,6 +197,7 @@ define('js!SBIS3.CONTROLS.DateRange', [
             // }
          });
 
+         this._updateRequiredValidators();
          this._addDefaultValidator();
          this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
       },
@@ -215,6 +216,27 @@ define('js!SBIS3.CONTROLS.DateRange', [
                offset: -9
             }
          };
+      },
+      /**
+       * Прокидывает валидаторы SBIS3.CONTROLS.ControlsValidators:required со свойств начала и конца периода
+       * на соответствующие поля ввода
+       * @private
+       */
+      _updateRequiredValidators: function () {
+         this._options.validators = this._options.validators.filter(function (validator) {
+            if ((validator.option === 'startValue' || validator.option === 'startDate') && validator.validator &&
+               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required') {
+               validator.option = 'text';
+               this._datePickerStart.addValidators([validator]);
+               return false;
+            } else if ((validator.option === 'endValue' || validator.option === 'endDate') && validator.validator &&
+               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required') {
+               validator.option = 'text';
+               this._datePickerEnd.addValidators([validator]);
+               return false;
+            }
+            return true;
+         }, this);
       },
 
       _addDefaultValidator: function() {
