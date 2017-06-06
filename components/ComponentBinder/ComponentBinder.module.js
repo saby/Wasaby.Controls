@@ -302,6 +302,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                }
 
                filterButton.setFilterStructure(preparedStructure);
+               
+               if(browser) {
+                  browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
+               }
             }
          }
 
