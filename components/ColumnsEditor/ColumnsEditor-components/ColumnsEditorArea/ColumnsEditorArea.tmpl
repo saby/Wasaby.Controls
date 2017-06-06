@@ -7,30 +7,32 @@
          </div>
       </div>
    </div>
-   <div class="controls-ColumnsEditorArea__body">
-      <ws:SBIS3.CONTROLS.CheckBoxGroup
-              class="controls-ColumnsEditorArea__FixedView"
-              name="controls-ColumnsEditorArea__FixedView"
-              items="{{ _preparedItems.fixedItems }}"
-              idProperty="id"
-              displayProperty="title"
-              enabled="{{ false }}"
-              selectedKeys="{{ _preparedItems.fixedMarkedKeys }}"
-              multiselect="{{ true }}" />
-      <ws:SBIS3.CONTROLS.ListView
-              class="controls-ColumnsEditorArea__SelectableView"
-              name="controls-ColumnsEditorArea__SelectableView"
-              easyGroup="{{ true }}"
-              items="{{ _preparedItems.selectableItems }}"
-              itemsActions="{{ [] }}"
-              idProperty="id"
-              itemsDragNDrop="{{ false }}"
-              displayProperty="title"
-              selectedKeys="{{ _preparedItems.selectableMarkedKeys }}"
-              itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl"
-              multiselect="{{ true }}">
-         <ws:handlers onItemClick="{{_onItemClick}}" />
-         <ws:groupBy field="group" contentTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl" />
-      </ws:SBIS3.CONTROLS.ListView>
-   </div>
+   <ws:SBIS3.CONTROLS.ScrollContainer class="controls-ColumnsEditorArea__body">
+      <ws:content type="string">
+         <ws:SBIS3.CONTROLS.CheckBoxGroup
+                 class="controls-ColumnsEditorArea__FixedView"
+                 name="controls-ColumnsEditorArea__FixedView"
+                 items="{{ _preparedItems.fixedItems }}"
+                 idProperty="id"
+                 displayProperty="title"
+                 enabled="{{ false }}"
+                 selectedKeys="{{ _preparedItems.fixedMarkedKeys }}"
+                 multiselect="{{ true }}" />
+         <ws:SBIS3.CONTROLS.ListView
+                 class="controls-ColumnsEditorArea__SelectableView"
+                 name="controls-ColumnsEditorArea__SelectableView"
+                 easyGroup="{{ true }}"
+                 items="{{ _preparedItems.selectableItems }}"
+                 itemsActions="{{ [] }}"
+                 idProperty="id"
+                 itemsDragNDrop="{{ false }}"
+                 displayProperty="title"
+                 selectedKeys="{{ _preparedItems.selectableMarkedKeys }}"
+                 itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl"
+                 multiselect="{{ true }}">
+            <ws:handlers onItemClick="{{_onItemClick}}" />
+            <ws:groupBy field="group" contentTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl" />
+         </ws:SBIS3.CONTROLS.ListView>
+      </ws:content>
+   </ws:SBIS3.CONTROLS.ScrollContainer>
 </div>
