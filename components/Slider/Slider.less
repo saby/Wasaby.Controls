@@ -31,8 +31,12 @@
             margin-top: 9px;
 
             &.controls-Slider__line__empty {
-               padding-right: 20px;
+              // padding-right: 20px; //todo: delete in 150
             }
+         }
+         .controls-Slider__line__wrapper {
+            height: 20px;
+            padding-right: 20px;//todo: delete in 150
          }
       }
    }
@@ -70,12 +74,19 @@
 
       &__empty {
          background-color: #cccccc;
-         padding-right: 12px;
+         //padding-right: 12px;//todo: delete in 150
       }
 
       &__full {
          z-index: 1;
          background-color: #587AB0;
+      }
+      &__wrapper {
+         cursor: pointer;
+         position: absolute;
+         height: 12px;
+         width: 100%;
+         padding-right: 12px;//todo: delete in 150
       }
    }
 
