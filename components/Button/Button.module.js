@@ -9,8 +9,9 @@ define('js!SBIS3.CONTROLS.Button',
       'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
+      "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
-   ],
+         ],
 
    function (extend,
              AbstractCompatible,
@@ -20,7 +21,8 @@ define('js!SBIS3.CONTROLS.Button',
              ButtonCompatible,
              InstantiableMixin,
              template,
-             functions) {
+             functions,
+             ControlGoodCode) {
 
    'use strict';
 
@@ -78,7 +80,7 @@ define('js!SBIS3.CONTROLS.Button',
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
-   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
+   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin, ControlGoodCode],
       {
          _controlName: 'SBIS3.CONTROLS.Button',
          _template: template,
