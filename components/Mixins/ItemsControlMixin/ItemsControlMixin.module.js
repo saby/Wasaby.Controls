@@ -15,14 +15,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Display/Enum",
    "js!WS.Data/Display/Flags",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
    "js!WS.Data/Utils",
    "js!WS.Data/Entity/Model",
    "Core/ParserUtilities",
    "Core/Sanitize",
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers",
+   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "Core/helpers/functional-helpers",
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    Sanitize,
    LayoutManager,
    cInstance,
-   fcHelpers,
+   InformationPopupManager,
    fHelpers,
    strHelpers,
    SourceUtil,
@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var field = cfg.groupBy.field;
             method = function(item, index, projItem){
                //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-               return item.get(field) + '';
+               return calcGroupHash(projItem) + item.get(field);
             }
          }
          else {
@@ -123,9 +123,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
-   canApplyGrouping = function(projItem, cfg) {      var
+   canApplyGrouping = function(projItem, cfg) {
+      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
+   },
+
+   calcGroupHash = function(projItem) {
+      var
          itemParent = projItem.getParent && projItem.getParent();
-      return !isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
+      return itemParent ? itemParent.isRoot() ? '@' : itemParent.getContents().getHash() + calcGroupHash(itemParent) : '';
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -1320,9 +1325,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             container.get(0).innerHTML = '';
          }
 
-         if (container.get(0) === this._getItemsContainer().get(0)) {
-            this._itemsInstances = {};
-         }
+         //Очищаем список инстансов, после удаления элеменов коллекции
+         this._itemsInstances = {};
+
          return compsArray;
       },
 
@@ -1618,11 +1623,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }),
 
       _loadErrorProcess: function(error) {
+        var self = this;
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
                error.message = error.message.toString().replace('Error: ', '');
-               fcHelpers.alert(error);
+               InformationPopupManager.showMessageDialog(
+                 {
+                    message: error.message,
+                    opener: self,
+                    status: 'error'
+                 }
+               );
                error.processed = true;
             }
          }
@@ -2084,6 +2096,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       getItemInstance: function (id) {
          var projItem = this._getItemProjectionByItemId(id);
+         if (!projItem) {
+            return undefined;
+         }
          var instances = this.getItemsInstances();
          return instances[projItem.getHash()];
       },
@@ -2369,9 +2384,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _canApplyGrouping: function(projItem) {
-         var
-             itemParent = projItem.getParent && projItem.getParent();
-         return !isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
+         return !isEmpty(this._options.groupBy) && (!projItem.isNode || !projItem.isNode());
       },
 
       _getGroupItems: function(groupId) {

@@ -5,12 +5,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'Core/CommandDispatcher',
    'Core/helpers/dom&controls-helpers',
    "js!SBIS3.CONTROLS.DataGridView",
-   "html!SBIS3.CONTROLS.TreeDataGridView",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
    "js!SBIS3.CONTROLS.TreeViewMixin",
    "js!SBIS3.CONTROLS.IconButton",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
@@ -33,10 +33,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.hasScroll = tplOptions.startScrollColumn !== undefined;
          tplOptions.foldersColspan = cfg.foldersColspan;
+         tplOptions.getItemContentTplData = getItemContentTplData;
          tplOptions.cellData.isSearch = tvOptions.isSearch;
          return tplOptions;
       },
+
       getSearchCfg = function(cfg) {
          return {
             idProperty: cfg.idProperty,
@@ -59,6 +62,35 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          //Отключаем отрисовку футеров на сервере, потому что пока что нет возможности построить treePaging,
          //т.к. в момент отрисовки нет информации, есть ли ещё записи в открытой папке.
          return false;
+      },
+      getItemTemplateData = function (cfg) {
+         var config = {
+            nodePropertyValue: cfg.item.get(cfg.nodeProperty),
+            projection: cfg.projItem.getOwner()
+         };
+         config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
+         config.isLoaded = cfg.projItem.isLoaded();
+         config.hasLoadedChild = config.children.length > 0;
+         config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
+         config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
+         config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
+         config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
+         config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
+         config.isColumnScrolling = cfg.startScrollColumn === 0;
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
+         if (config.isColumnScrolling){
+            config.computedPadding = 'left: ' + cfg.columnsScrollPosition + 'px;';
+         }
+         return config;
+      },
+      getItemContentTplData = function(cfg){
+         var data = {};
+         data.hierField$ = cfg.projItem.getContents().get(cfg.parentProperty + '$');
+         data.hasScroll = cfg.startScrollColumn !== undefined;
+         data.itemLevel = cfg.projItem.getLevel() - 1;
+         data.isNode = cfg.projItem.getContents().get(cfg.nodeProperty);
+         data.hasChilds = cfg.hierarchy.getChildren(cfg.item, cfg.projItem.getOwner().getCollection()).length > 0;
+         return data;
       };
 
    'use strict';
@@ -105,29 +137,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
-       /**
-        * @event onDragMove Происходит при перемещении записей.
-        * @remark
-        * <ul>
-        *   <li>В режиме единичного выбора значения (опция {@link multiselect} установлена в значение false) возможно перемещать только одну запись.</li>
-        *   <li>В режиме множественного выбора значений (опция {@link multiselect} установлена в значение true) возможно перемещать несколько записей.</li>
-        * </ul>
-        * Перемещение производится через удержание ЛКМ на выделенных записях и перемещение их в нужный элемент списка.
-        * Событие будет происходить каждый раз, когда под курсором изменяется целевая запись списка, а удержание выделенных записей продолжается.
-        * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {Array.<Number|String>} key Массив идентификаторов перемещаемых записей.
-        * <ul>
-        *   <li>В режиме единичного выбора параметр возвращает либо строку, либо число.</li>
-        *   <li>В режиме множественного выбора параметр возвращает массив строки или чисел.</li>
-        * </ul>
-        * @param {Number|String} id Идентификатор целевой записи, куда производится перемещение.
-        * @param {Boolean|undefined} insertAfter Признак: куда были перемещены записи.
-        * <ul>
-        *   <li>undefined - перемещение произвели в папку;</li>
-        *   <li>false - перемещаемые записи были вставлены перед целевой записью;</li>
-        *   <li>true - перемещаемые записи были вставлены после целевой записи.</li>
-        * </ul>
-        */
       $protected: {
          _options: {
             _buildTplArgs: buildTplArgsTDG,
@@ -136,6 +145,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             _defaultSearchRender: searchRender,
+            _getItemTemplateData: getItemTemplateData,
             _footerWrapperTemplate: FooterWrapperTemplate,
             _getFolderFooterOptions: getFolderFooterOptions,
             _getSearchCfg: getSearchCfg,

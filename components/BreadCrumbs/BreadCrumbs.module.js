@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',
    'Core/helpers/string-helpers',
    "Core/IoC",
+   'Core/helpers/functional-helpers',
    'css!SBIS3.CONTROLS.BreadCrumbs'
-], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC) {
+], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC, fHelpers) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
@@ -228,7 +229,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onResizeHandler: function(){
-         this.redraw();
+         if(this._getTargetContainer().width() + this._homeIconWidth >= this._getContainerWidth()) {
+            this.redraw();
+         }
       },
 
       _calculateSizes: function() {
@@ -241,11 +244,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
 
 
          var targetContainer = this._getTargetContainer(),
-            maxWidth = parseFloat(this._container.css('max-width')),
-            boundingClientRect = this._container[0].getBoundingClientRect(),
-             containerWidth = maxWidth ? maxWidth : Math.ceil(Math.abs(boundingClientRect.left - boundingClientRect.right) - this._paddings - this._BCmargins),
-            crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
-            i = crumbs.length - 1;
+             containerWidth =  this._getContainerWidth(),
+             crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
+             i = crumbs.length - 1;
 
          if (!crumbs.length){
             return;
@@ -341,10 +342,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          args.escapeHtml = strHelpers.escapeHtml;  
          return args;
       },
-
-      _getItemsContainer: function() {
-         return $('.controls-BreadCrumbs__itemsContainer', this._container);
+      
+      _getContainerWidth: function () {
+         var maxWidth = parseFloat(this._container.css('max-width')),
+             boundingClientRect = this._container[0].getBoundingClientRect();
+         
+         return  maxWidth ? maxWidth : Math.ceil(Math.abs(boundingClientRect.left - boundingClientRect.right) - this._paddings - this._BCmargins);
       },
+
+      _getItemsContainer: fHelpers.memoize(function() {
+         return $('.controls-BreadCrumbs__itemsContainer', this._container);
+      }, '_getItemsContainer'),
 
       destroy: function() {
          this.getContainer().off('mousedown', this._onMousedownHandler);

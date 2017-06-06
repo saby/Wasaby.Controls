@@ -521,6 +521,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      setPlaceholder: function(placeholder) {
+         ComboBox.superclass.setPlaceholder.apply(this, arguments);
+         $('.controls-ComboBox__fieldNotEditable__placeholder', this._container.get(0)).text(placeholder);
+      },
+
       _getItemTemplate: function (projItem) {
          var
             item = projItem.getContents(),
@@ -727,7 +732,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
-         this._scrollToItem(this.getSelectedKey());
+         var itemToScroll = this.getSelectedKey();
+         
+         if(itemToScroll) {
+            this._scrollToItem(itemToScroll);
+         } else {
+            //TODO перейти на LayoutManager, задача выписана
+            this.getPicker().getChildControlByName('ComboBoxScroll')._scrollTo(0);
+         }
       },
 
       _initializePicker: function(){

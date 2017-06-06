@@ -1,0 +1,14 @@
+<tr class="controls-DataGridView__results">
+    <ws:if data="{{multiselect}}">
+        <td class="controls-DataGridView__td {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+            style="left:{{startScrollColumn === 0 ? columnsScrollPosition + 'px;' : ''}}">
+        </td>
+    </ws:if>
+
+    <ws:for data="index, column in columns">
+        <td class="controls-DataGridView__td {{column.className}} {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
+            style="left:{{(startScrollColumn !== undefined && startScrollColumn <= index) ? columnsScrollPosition + 'px;' : ''}}">
+            <ws:partial template="{{column.resultTemplate}}" scope="{{column.resultTemplateData}}" />
+        </td>
+    </ws:for>
+</tr>

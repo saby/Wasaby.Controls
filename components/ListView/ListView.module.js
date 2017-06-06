@@ -33,8 +33,8 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
    'js!WS.Data/Collection/List',
-   'html!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
-   'html!SBIS3.CONTROLS.ListView/resources/emptyData',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
+   'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/GroupTemplate',
@@ -862,8 +862,8 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
                 * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
                 * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
-                     - asc - по возрастанию
-                     - desc - по убыванию
+                     - before - вверх
+                     - after - вниз
                      - both - в обе стороны от записи с navigation.config.position
 
                 */
@@ -1818,7 +1818,13 @@ define('js!SBIS3.CONTROLS.ListView',
                var elements = $([]), elem;
                for (i = 0; i < ids.length; i++) {
                   //сначала ищем непосредственно в контейнере, чтоб не найти вложенные списки
-                  elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                  //TODO переделать при отказе от data-id
+                  if ((ids[i] + '').indexOf('\'') < 0) {
+                     elem = itemsContainer.children(".controls-ListView__item[data-id='" + ids[i] + "']");
+                  }
+                  else {
+                     elem = itemsContainer.children('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                  }
                   if (elem.length) {
                      //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
                      if (cfg.loadItemsStrategy == 'append') {
@@ -1832,7 +1838,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                   else {
                      //если не нашли, то ищем глубже. Это может потребоваться например для пликти, где элементы лежат в нескольких контейнерах
-                     elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                     //TODO переделать при отказе от data-id
+                     if ((ids[i] + '').indexOf('\'') < 0) {
+                        elem = itemsContainer.find(".controls-ListView__item[data-id='" + ids[i] + "']");
+                     }
+                     else {
+                        elem = itemsContainer.find('.controls-ListView__item[data-id="' + ids[i] + '"]');
+                     }
                      if (elem.length) {
                         elements.push(elem.get(0));
                      }
@@ -2484,11 +2496,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onRightSwipeHandler: function(target) {
-            var key = target[0].getAttribute('data-id');
-
-            this.setSelectedKey(key);
-            this.toggleItemsSelection([key]);
-
+            var self= this,
+                hoveredItem = this.getHoveredItem(),
+                key = target[0].getAttribute('data-id'),
+                columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
+            if(hoveredItem && hoveredItem.key !== key){
+                columns.addClass('rightSwipeAnimation');
+                setTimeout(function(){
+                    columns.toggleClass('rightSwipeAnimation', false);
+                    self.setSelectedKey(key);
+                    self.toggleItemsSelection([key]);
+                }, 300);
+            }
             if (this._isSupportedItemsToolbar()) {
                this._hideItemsToolbar(true);
             }
@@ -4230,6 +4249,19 @@ define('js!SBIS3.CONTROLS.ListView',
                 resultsRecord = this.getItems() && this.getItems().getMetaData().results;
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            }
+         },
+
+         _redrawFoot: function() {
+            var
+               newFooter,
+               footerContainer;
+            if (typeof this._options.footerTpl === 'function') {
+               footerContainer = $('.controls-ListView__footer', this._container[0]);
+               this._destroyControls(footerContainer);
+               newFooter = $(this._options.footerTpl(this._options));
+               footerContainer.empty().append(newFooter);
+               this.reviveComponents(newFooter);
             }
          },
 

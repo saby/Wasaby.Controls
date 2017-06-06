@@ -8,11 +8,16 @@ define(['js!SBIS3.CONTROLS.DatePicker'], function (DatePicker) {
          initialDate = new Date(2016, 1, 2, 3, 4, 5, 6);
 
       beforeEach(function () {
-         container = $('<div id="component"></div>').appendTo('#mocha');
-         testControl = new DatePicker({
-            element: container,
-            date: initialDate
-         });
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
+         else {
+            container = $('<div id="component"></div>').appendTo('#mocha');
+            testControl = new DatePicker({
+               element: container,
+               date: initialDate
+            });
+         }
       });
 
       afterEach(function () {

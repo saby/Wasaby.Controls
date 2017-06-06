@@ -69,6 +69,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__reset', function() {
             self.resetSearch();
+            self._applyTooltip();
          });
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__search', function() {

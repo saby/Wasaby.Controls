@@ -1,7 +1,10 @@
 .controls-RadioGroup {
+  font-size: 0; //До перевода на tmpl, dot добавляет лишний шаблон при шаблонизации
+  
   .controls-ListView__item {
     display: inline-block;
     margin: @radio-group-horizontal-item-margin;
+    font-size: @default-text-size; //До перевода на tmpl, dot добавляет лишний шаблон при шаблонизации
   }
 
   &.controls-ButtonGroup__vertical {
@@ -9,7 +12,7 @@
       display: block;
       height: auto;
       margin: @button-group-vertical-item-margin;
-      padding-left: @radio-button-icon-width + 12px;
+      padding-left: calc(@radio-button-icon-width~" + 12px");
        .controls-RadioButton__icon{
          margin-left: -16px;
        }

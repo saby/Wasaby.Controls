@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @see headPickerTemplate
                 * @see itemTpl
                 */
-               headTemplate: null,
+               headTemplate: dotTplFnHead,
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки внутри выпадающего списка.
                 * @example
@@ -278,7 +278,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 * @see headTemplate
                 * @see headPickerTemplate
                 */
-               itemTpl: null,
+               itemTpl: dotTplFnForItem,
                /**
                 * @cfg {String} Устанавливает текст в заголовке.
                 * @translatable
@@ -342,8 +342,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                cfg.parentProperty = cfg.hierField;
             }
             cfg.pickerClassName += ' controls-DropdownList__picker';
-            cfg.headTemplate = cfg.headTemplate ? TemplateUtil.prepareTemplate(cfg.headTemplate) : dotTplFnHead;
-            cfg.itemTpl = cfg.itemTpl ? TemplateUtil.prepareTemplate(cfg.itemTpl) : dotTplFnForItem;
+            cfg.headTemplate = TemplateUtil.prepareTemplate(cfg.headTemplate);
 
             if (!cfg.selectedItems) {
                prepareSelectedItems(cfg);

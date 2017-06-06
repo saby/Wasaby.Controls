@@ -273,6 +273,7 @@
 // Normal default button
 @button-checked-text-color:               @button-active-text-color;
 @button-checked-border-width:             @button-border-width;
+@button-checked-line-height:              @button-line-height - @button-checked-border-width;
 @button-checked-font-weight:              normal;
 @button-checked-border:                   @button-active-border;
 @button-checked-shadow:                   @button-active-shadow;
@@ -821,6 +822,7 @@
 
 // Menu
 @menu-icon-menu-margin:                   -5px 0 0 -5px;
+@menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 // -------- //
@@ -1567,6 +1569,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
 
@@ -1978,7 +1981,6 @@
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-footer-buttons-position:                absolute;
-@DropdownList-footer-hasMore-left:                    16px;
 @DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
@@ -2261,6 +2263,13 @@
 @bigSubheader-font:                                700 18px escape('/') @header-height @header-font-family;
 @bigSubheader-color:                               @subheader-color;
 
+
+//---------------//
+//  MissSpell    //
+//---------------//
+@controls-MissSpell-padding:                        8px;
+@controls-MissSpell-lineheight:                     24px;
+
 //--------------//
 //  LinkHeader  //
 //--------------//
@@ -2309,5 +2318,11 @@
 @toggle-header-hover-color:                        @primary-color;
 @toggle-header-hover-before-color:                 @toggle-header-hover-color;
 @toggle-header-hover-count-color:                  @toggle-header-hover-color;
+
+@commands-button-close-icon:                               @icon-medium-size;
+@commands-button-close-font-family:                        @default-icon-medium-font;
+@commands-button-close-button-size:                        32px;
+@commands-button-close-button-top:                         4px;
+@commands-button-margin:                                   -9px -33px 0 0;
 
 @toggle-header-checked-before-content:             '\E000';

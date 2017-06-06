@@ -121,7 +121,7 @@
    }
 
    .controls-Button__icon.icon-size {
-      .icon-size(@list-view-items-toolbar-icon-size);
+      .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
    }
 }
 
@@ -136,7 +136,7 @@
                margin: @list-view-actions-menu-text-margin;
             }
             &.icon-size {
-               .icon-size(@list-view-items-toolbar-icon-size);
+               .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
             }
          }
       }
@@ -171,7 +171,7 @@
          background: none;
       }
 
-      .icon-size(@list-view-items-toolbar-icon-size);
+      .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
    }
    &.controls-popup-revert-vertical {
       .controls-PopupMixin__closeButton {

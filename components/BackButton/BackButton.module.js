@@ -125,10 +125,11 @@ define('js!SBIS3.CONTROLS.BackButton',
        * @param caption Текси
        */
       setCaption: function(caption){
+         var isEmptyCaption = (caption === null || caption === '' || typeof caption === 'undefined');
          this._link.setCaption(caption);
          this.setTooltip(caption);
          this._options.caption = caption;
-         this._container.toggleClass('controls-BackButton__empty', !caption);
+         this._container.toggleClass('controls-BackButton__empty', isEmptyCaption);
       },
       /**
        * Устанавливает изображение иконки кнопки.

@@ -3,11 +3,12 @@ define('js!SBIS3.CONTROLS.TimePicker',
       'js!SBIS3.CONTROLS.CompoundControl',
       'tmpl!SBIS3.CONTROLS.TimePicker',
       'js!SBIS3.CONTROLS.TimePickerUtils',
+      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.TimeHeader',
       'js!SBIS3.CONTROLS.ClockPicker',
       'css!SBIS3.CONTROLS.TimePicker'
    ],
-   function(CompoundControl, dotTplFn, Utils) {
+   function(CompoundControl, dotTplFn, Utils, DateUtil) {
 
       'use strict';
 
@@ -86,6 +87,8 @@ define('js!SBIS3.CONTROLS.TimePicker',
             this._header.subscribe('onChangeActiveTime', this._onChangeActiveTimeHandler.bind(this));
             this._body.subscribe('onChangeTime', this._onChangeTimeHandler.bind(this));
             this._body.subscribe('onChangeActiveTime', this._onChangeActiveTimeHandler.bind(this));
+
+            this.setTime(this.getTime());
          },
 
          /**
@@ -94,16 +97,17 @@ define('js!SBIS3.CONTROLS.TimePicker',
           * @public
           */
          setTime: function(time) {
+            time = DateUtil.valueToDate(time) || new Date();
+
+            this._setUtilOption('time', time);
             this.getLinkedContext().setValueSelf('time', {
                hours: time.getHours(),
                minutes: time.getMinutes()
             });
-            this._setUtilOption('time', time);
          },
 
          _modifyOptions: function(options) {
             TimePicker.superclass._modifyOptions.call(this, options);
-            this.setTime(this.getTime());
             return options;
          },
 

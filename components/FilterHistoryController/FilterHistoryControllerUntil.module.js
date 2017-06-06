@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          Другого способо до серверной отрисовки пока нет. */
       resetStructureElementsByFilterKeys: function(filterButton, structure, keys) {
          var filterStructure = structure || cFunctions.clone(filterButton.getFilterStructure()),
-             bindings = colHelpers.find(filterButton.getProperty('bindings'), function(binding) {
+             bindings = colHelpers.find(filterButton._options.bindings, function(binding) {
                 return binding.propName === 'filterStructure'
              }),
              valueBind;
@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
 
          /* Если вдруг биндов нет */
          if(!bindings || !bindings.subBindings || !bindings.subBindings.length) {
-            return;
+            return false;
          }
 
          bindings = bindings.subBindings;

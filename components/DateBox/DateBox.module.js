@@ -211,7 +211,16 @@ define(
              * @variant 'textChange' события onDateChange и onTextChange стреляют при каждом изменении значения текста.
              * @variant 'change' тоже самое что и 'textChange' в будущем будет удалено
              */
-            notificationMode: 'textChange'
+            notificationMode: 'textChange',
+
+            /**
+             * @cfg {String} Режим автокомплита
+             * @variant 'default' автокомплит который используется для одиночных дат
+             * @variant 'start' используется для начала периода
+             * @variant 'end' используется для конци периода
+             * @noshow
+             */
+            autocompleteMode: 'default'
          }
       },
 
@@ -526,18 +535,16 @@ define(
             oldDate;
 
          if (!active) {
-            if (!this._getFormatModel().isFilled()) {
-               oldText = this.getText();
-               oldDate = this.getDate();
-               date = this._getDateByText(this._options.text, this._lastDate, true);
-               if (date) {
-                  this._setDate(date);
-               }
-               if ((this._options.notificationMode === 'textChange' && oldText !== this.getText()) ||
-                   (this._options.notificationMode === 'dateChange' && oldDate !== this.getDate())) {
-                  this._notifyOnTextChange();
-                  this._notifyOnDateChanged();
-               }
+            oldText = this.getText();
+            oldDate = this.getDate();
+            date = this._getDateByText(this._options.text, this._lastDate, true);
+            if (date && !date.equals(oldDate)) {
+               this._setDate(date);
+            }
+            if ((this._options.notificationMode === 'textChange' && oldText !== this.getText()) ||
+                (this._options.notificationMode === 'dateChange' && oldDate !== this.getDate())) {
+               this._notifyOnTextChange();
+               this._notifyOnDateChanged();
             }
             if (this._options.notificationMode === 'complete') {
                this._notifyOnTextChange();
@@ -573,7 +580,8 @@ define(
             hh   = date ? date.getHours() : 0,
             ii   = date ? date.getMinutes() : 0,
             ss   = date ? date.getSeconds() : 0,
-            uuu  = date ? date.getMilliseconds() : 0;
+            uuu  = date ? date.getMilliseconds() : 0,
+            mask = this._options.mask;
          for (var i = 0; i < this._getFormatModel().model.length; i++) {
             item = this._getFormatModel().model[i];
             if ( !item.isGroup) {
@@ -618,27 +626,103 @@ define(
                notFilled.push(item.mask);
             }
          }
-         if (this._dateIsValid(yyyy, mm, dd, hh, ii, ss)) {
-            if (this._getFormatModel().isFilled()) {
-               return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu);
-            } else if (autoComplete) {
-               //TODO: На данный момент по требованиям данной задачи: (https://inside.tensor.ru/opendoc.html?guid=a46626d6-abed-453f-92fe-c66f345863ef&description=)
-               //автодополнение работает только если 1) заполнен день и не заполнены месц и год; 2) заполнены день и месяц и не заполнен год;
-               //Нужно более общий сценарий работы автодополнения! Выписана задача: (https://inside.tensor.ru/opendoc.html?guid=0be02625-2d2f-4f74-940e-4d0e24b369e4&description=)
-               if (Array.indexOf(filled, "DD") !== -1) {
-                  if (Array.indexOf(notFilled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
-                     return new Date(now.getFullYear(), now.getMonth(), dd, hh, ii, ss, uuu);
-                  }
-                  if (Array.indexOf(filled, "MM") !== -1 && (Array.indexOf(notFilled, "YY") !== -1 || Array.indexOf(notFilled, "YYYY") !== -1)) {
-                     return new Date(now.getFullYear(), mm, dd, hh, ii, ss, uuu);
-                  }
-               } else if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
-                  ii = this._getFormatModel().getGroupValueByMask("II", '0');
-                  return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu);
-               }
-            }
+         if (this._getFormatModel().isFilled()) {
+            return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu, autoComplete);
+         } else if (autoComplete) {
+
+            return this._createAutocomplitedDate(
+               (filled.indexOf("YY") !== -1 || filled.indexOf("YYYY") !== -1 || mask.indexOf('Y') === -1) ? yyyy : null,
+               (filled.indexOf("MM") !== -1 || mask.indexOf('Y') === -1) ? mm : null,
+               (filled.indexOf("DD") !== -1 || mask.indexOf('Y') === -1) ? dd : null,
+               (filled.indexOf("HH") !== -1 || mask.indexOf('Y') === -1) ? hh : null,
+               (filled.indexOf("II") !== -1 || mask.indexOf('Y') === -1) ? ii : null,
+               (filled.indexOf("SS") !== -1 || mask.indexOf('Y') === -1) ? ss : null,
+               (filled.indexOf("UU") !== -1 || mask.indexOf('Y') === -1) ? dd : null,
+               autoComplete
+            );
          }
          return null;
+      },
+      _createAutocomplitedDate: function (year, month, date, hour, minute, second, millisecond) {
+         var now = new Date(),
+            controlType = this.getType();
+
+         var getDate = function (autocompliteDefaultDate) {
+            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate()
+            if (this._options.autocompleteMode === 'start') {
+               return 1;
+            } else if (this._options.autocompleteMode === 'end') {
+               return DateUtil.getEndOfMonth(new Date(year, month)).getDate();
+            } else {
+               return autocompliteDefaultDate;
+            }
+         }.bind(this);
+
+         if (controlType === 'date' || controlType === 'datetime'){
+            if (this._isRequired() && year === null && month === null && date === null) {
+               year = now.getFullYear();
+               month = now.getMonth();
+               date = now.getDate();
+            } else if (year !== null) {
+               if (year === now.getFullYear()) {
+                  if (month !== null) {
+                     if (month === now.getMonth()) {
+                        // Заполнен текущий год и месяц
+                        if (date === null) {
+                           date = getDate();
+                        }
+                     } else {
+                        if (date === null) {
+                           date = getDate(1);
+                        }
+                     }
+                  } else {
+                     // Заполнен текущий год
+                     month = month !== null ? month : now.getMonth();
+                     if (date === null) {
+                        date = getDate();
+                     }
+                  }
+               } else {
+                  // Заполнен год, отличный от текущего
+                  if (month === null) {
+                     if (this._options.autocompleteMode === 'end') {
+                        month = 11;
+                     } else {
+                        month = 0;
+                     }
+                  }
+                  if (date === null) {
+                     if (this._options.autocompleteMode === 'end') {
+                        date = 31;
+                     } else {
+                        date = 1;
+                     }
+                  }
+               }
+            } else if (date !== null){
+               month = month !== null ? month : now.getMonth();
+               year = year!== null ? year : now.getFullYear();
+            }
+            if (year !== null && month !== null && date !== null) {
+               return this._createDate(year, month, date, hour, minute, second, millisecond, true);
+            }
+         } else if (controlType === 'time'){
+            if (hour !== null && minute === null) {
+               minute = 0;
+            }
+            return this._createDate(year, month, date, hour, minute, second, millisecond, true);
+         }
+         return null;
+      },
+
+      _isRequired: function () {
+         for(var i = 0; i < this._options.validators.length; i++) {
+            if (this._options.validators[i].validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required') {
+               return true;
+            }
+         }
+         return false;
       },
       /**
        * Создает дату. В отличии от конструктора Date если задан год < 100, то не преобразует его в 19хх.
@@ -649,11 +733,26 @@ define(
        * @param ii
        * @param ss
        * @param uuu
+       * @param autoCorrect если true, то корректирует дату если переданы неправильные значения ее элементов, иначе возвращает null.
+       * Если передана дата большая чем максимальная дата в текущем месяце, то будет установлена максимальная дата.
        * @returns {Date}
        * @private
        */
-      _createDate: function (yyyy, mm, dd, hh, ii, ss, uuu) {
-         var date = new Date(yyyy, mm, dd, hh, ii, ss, uuu);
+      _createDate: function (yyyy, mm, dd, hh, ii, ss, uuu, autoCorrect) {
+         var date, endDateOfMonth;
+
+         if (autoCorrect) {
+            endDateOfMonth = DateUtil.getEndOfMonth(new Date(yyyy, mm, 1)).getDate();
+            if (dd > endDateOfMonth) {
+               dd = endDateOfMonth;
+            }
+         }
+
+         if (!this._dateIsValid(yyyy, mm, dd, hh, ii, ss)) {
+            return null;
+         }
+
+         date = new Date(yyyy, mm, dd, hh, ii, ss, uuu);
          //TODO возможно надо переделать но ошибку по смокам лечит
          //когда контрол с вводом времени, то в yyyy приходит 0 и ставится 0 год, потом валится БЛ
          if (yyyy < 100 && yyyy > 0) {

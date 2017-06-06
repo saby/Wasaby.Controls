@@ -60,23 +60,8 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
         },
 
         _computeDataForSave: function(meta) {
-            var
-                items,
-                result,
-                linkedObject,
-                selectedRecordSet = this._getSelectedRecordSet();
-            if (selectedRecordSet.getCount()) {
-                result = Deferred.success(selectedRecordSet);
-            } else {
-                linkedObject = this.getLinkedObject();
-                items = linkedObject.getItems();
-                if (linkedObject._hasNextPage(items.getMetaData().more)) {
-                    result = this._getDataFromSelector(meta);
-                } else {
-                    result = items;
-                }
-            }
-            return result;
+            var selectedRecordSet = this._getSelectedRecordSet();
+            return selectedRecordSet.getCount() ? Deferred.success(selectedRecordSet) : this._getDataFromSelector(meta);
         },
 
         _getDataFromSelector: function(meta) {

@@ -1,3 +1,5 @@
+@import "../fonts/carry-presto";
+
 html {
   color: #000;
 }
@@ -73,20 +75,20 @@ body {
 }
 @text-box-height-prestoBig:   50px;
 @text-box-height-prestoFont:  36px;
-.controls-TextBox {
-   &.controls-TextBox__big {
-
-   }
-}
-
-
 
 .controls-listView td {
   font-size: 1rem;
 }
 body {
-   .controls-ScrollContainer > .controls-ListView__scrollPager {
-      border-top: none;
+   .controls-DataGridView__results {
+      font-size: @default-font-size;
+      color: #313E78;
+   }
+
+   .controls-ListView__bottomStyle > .controls-ItemsToolbar:before {
+      display: none;
+   }
+   .controls-ListView__scrollPager {
       .controls-IconButton {
          background: @button-bg;
          padding: 0;
@@ -209,13 +211,53 @@ body {
       line-height: 1rem !important;
     }
   }
+  .ws-window-title {
+     font-size: 1.43rem;
+     height: 3.57rem;
+     max-height: 3.57rem;
+     line-height: 3.57rem;
+  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
   }
+
+   //Стили для CORE кнопки на диалоге печати PrintDialog
+   .ws-window .ws-printdialog-titlebar {
+      .ws-printdialog-print-button {
+         right: 4rem;
+         font-size: 1.43rem;
+         border-radius: 0;
+         font-weight: 400;
+         width: auto;
+         min-width: .86rem;
+         height: 3rem;
+         line-height: 2.73rem;
+         box-sizing: border-box;
+         user-select: none;
+         background-color: #ff7033;
+         color: #fff;
+         border: 2px solid #d94700;
+
+         &:hover {
+            background-color: #EC5B19;
+         }
+
+         &:active {
+            background-color: #d94700 !important;
+         }
+
+         .ws-button-caption {
+            display: block;
+            margin: 0 .57rem 0 .57rem;
+            border: none;
+            line-height: inherit;
+         }
+      }
+   }
 }
 .controls-FloatArea {
-  border: 2px solid #2196F3;
+  border: 2px solid #0055BB;
   background: #fff;
 }
 body {
@@ -226,6 +268,14 @@ body {
       color: #26b8ff !important;
     }
   }
+   .ws-window-titlebar-action.close {
+      width: 3rem !important;
+      height: 3rem !important;
+      background: @closeBigButtonImage;
+      &:hover, &:active {
+         background: @closeBigButtonImageHover;
+      }
+   }
   .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     width: 3rem !important;
     height: 3rem !important;
@@ -239,25 +289,83 @@ body {
 }
 
 }
-.controls-ComboBox.controls-TextBox.controls-Picker__show {
-  border-bottom: none;
+
+.controls-ComboBox__picker {
+   &:not(.controls-popup-revert-vertical){
+      margin-top: -1px !important;
+   }
+
+   &.controls-popup-revert-vertical{
+      border-bottom: none;
+   }
 }
 
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
   border-color: #26b8ff;
 }
 
-
-body .ws-loadingimg {
-  top: 30%;
+.ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
+   border-left-color: #0055BB;
+   border-left-width: 3px;
 }
 
 body {
-  .ws-info-box {
+
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
+      font-size: 3rem!important;
+      margin-top: initial;
+  }
+  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
+      font-size: 3rem!important;
+      width: 24px;
+      margin-left: -1rem;
+      margin-top: initial;
+  }
+    .controls-DateBox {
+      min-height: 3rem;
+    }
+
+
+   .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: 2px solid @link-text-color;
-    }
+      padding: 0.285rem 1.428rem 0.285rem 0.38rem;
+      &.ws-infobox-direction-top {
+         > .ws-info-box-balloon {
+            border-bottom-color: @link-text-color;
+            &:after {
+               border-left-color: @link-text-color;
+               border-top-color: @link-text-color;
+            }
+         }
+      }
+      &.ws-infobox-direction-bottom {
+         > .ws-info-box-balloon {
+            border-top-color: @link-text-color;
+            &:after {
+               border-right-color: @link-text-color;
+               border-bottom-color: @link-text-color;
+            }
+         }
+      }
+
+      .ws-infobox-content {
+         color: @default-text-color;
+         p {
+            margin: 0 20px 8px 0;
+            font-size: 1.43rem;
+            color: @default-text-color;
+         }
+      }
+      .ws-info-box-close-button.icon-disabled{
+         top: -4px;
+         color: @link-text-color!important;
+         &:hover {
+            color: #B9E9FF!important;
+         }
+      }
+   }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
@@ -276,22 +384,6 @@ body {
     font-size: 1.14rem;
 
   }
-  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn,.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    width: 1.43rem !important;
-    height: 1.43rem !important;
-    font-size: 1.43rem !important;
-     border: none !important;
-    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-        font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-    }
-
-    .controls-DateBox {
-      min-height: 3rem;
-    }
-
-}
 
 .controls-DateRangeBigChoose__dates-dates-top-gradient, .controls-DateRangeBigChoose__dates-dates-bottom-gradient {
   display: none;
@@ -300,30 +392,38 @@ body {
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
     height: 3.57rem;
 }
-
+.controls__filterButton {
+   .controls__filterButton__filterLine {
+      .controls__filterButton__filterLine-text{
+         height: auto;
+      }
+   }
+   .controls-Button__icon {
+      &.icon-size {
+         font-size: 2.5rem!important;
+         right: .3rem;
+         top: 0.2rem;
+      }
+   }
+}
 .controls-ListView__item__selected {
    .controls-DataGridView__td:first-child {
       .marker()
    }
 }
-
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-    font-size: inherit !important;
-
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-         font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-       font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    margin-right: 1rem;
   }
+
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
+    margin-right: 3rem;
+    border: none;
+  }
+
+body .controls-DateRangeChoose .controls-DateRangeBigChoose__homeBtn .icon-16 {
+   font-size: 3rem !important;
+   line-height: 3rem !important;
+   width: 3rem;
+   height: 3rem;
 }
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
@@ -356,6 +456,10 @@ body .ws-float-area-title-generated {
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
   line-height: 3rem;
 }
+
+body .controls-TextArea {
+   min-height: 3rem;
+}
 body .controls-ToolBar__menuIcon .icon-24 {
   font-family: carrypresto-icons!important;
 }
@@ -372,7 +476,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: 0.2rem;
+   margin-top: .07rem;
 }
 
 .controls__filter-button__clear-filter {
@@ -406,12 +510,53 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .controls-Menu{
    .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
       &.icon-24 {
-         top: 0.9rem;
+         top: 0.3rem;
          left: -0.2rem;
       }
       &.icon-16 {
          top: 1.15rem;
       }
+   }
+}
+
+.controls-AjaxLoader__LoadingIndicator {
+   border-radius: 16px;
+}
+
+body .ws-window.ws-LoadingIndicator__window {
+   border-radius: 16px;
+   border-color: transparent;
+
+   .ws-win-loadingIndicator {
+      background-color: transparent;
+   }
+}
+
+.ws-LoadingIndicator__window {
+   img, .ws-loadingimg > div:before{
+      width: 2.75rem;
+      height: 2.75rem;
+   }
+
+   img {
+      display: none;
+   }
+
+   .ws-loadingimg {
+      left: 0.428rem;
+      top: .4rem;
+      div:before {
+         content: '';
+         background-size: contain;
+         display: inline-block;
+         background-image: url('img/ajax-loader-indicator-big.gif');
+      }
+   }
+   .ws-LoadingIndicator__message__progress-no {
+      margin-left: 2.75rem;
+   }
+   .ws-LoadingIndicator__loadingContainer {
+      padding: 1.142rem;
    }
 }
 
@@ -427,3 +572,116 @@ body .controls-ToolBar__menuIcon .icon-24 {
    line-height: 2rem !important;
 }
 
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__datePickerEnd {
+  margin-right: 1rem;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn {
+  margin-left: -.857rem;
+}
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
+  padding-top: .5rem;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
+  border-bottom: 2px solid #ccc;
+}
+
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  font-size: 1rem;
+  margin-bottom: 1.1rem;
+  margin-top: -.46rem;
+}
+.controls-ComboBox__picker {
+  box-sizing: border-box;
+}
+.controls-ComboBox__arrowDown {
+  &:before {
+    margin: .84rem;
+  }
+}
+
+.controls-Link {
+  font-size: 1.14rem;
+}
+body .controls__filterButton__filterLine {
+  max-width: 100%;
+}
+&.controls-ListView__withoutMarker.controls-ListView {
+   .controls-ListView__item__selected,
+   .controls-ListView__item__multiSelected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-CompositeView__verticalItemActions),
+      &:not(.controls-ListView__item-type-node) {
+         background-image: none !important;
+         border-color: transparent;
+      }
+      &.controls-ListView__item {
+         &:not(.controls-ListView__hoveredItem) {
+            border-color: transparent;
+            background-color: transparent;
+         }
+      }
+   }
+}
+body .controls-DropdownList__picker .controls-DropdownList__item {
+  line-height: 3.25rem;
+}
+.controls-DateRangeBigChoose__rangeContainer.controls-DateRangeBigChoose__yearsRange {
+   margin-top: 0.4rem;
+}
+.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
+  text-align: center;
+}
+.controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
+  font-size: 2rem !important;
+}
+body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
+    height: 1.43rem;
+}
+body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
+    top: .36rem;
+}
+
+body {
+  .ws-info-box {
+    padding: 1rem;
+    .ws-infobox-content {
+      font-size: 1rem;
+      margin-right: 1rem;
+    }
+    .ws-info-box .ws-info-box-close-button.icon-disabled {
+      position: absolute;
+      top: .7rem;
+      right: 6px;
+      cursor: pointer;
+    }
+    .ws-infobox-triangle.ws-infobox-triangle-bottom {
+      bottom: -.4rem;
+      border-right: 2px solid #2d68b5;
+      border-bottom: 2px solid #2d68b5;
+    }
+    .ws-infobox-triangle {
+      width: .857rem;
+      height: .857rem;
+      background: #f3f3f3;
+    }
+  }
+}
+.controls-BreadCrumbs__crumb {
+   top: -0.18rem
+}
+
+body .ws-window {
+    background-color: #fff;
+    border-style: solid;
+    border-color: #0091d7;
+}
+body .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showHalfYears .controls-DateRangeChoose__home, .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showQuarters .controls-DateRangeChoose__home {
+    width: 2rem;
+}
+.controls-TreeView__expand {
+  font-size: 1rem !important;
+}

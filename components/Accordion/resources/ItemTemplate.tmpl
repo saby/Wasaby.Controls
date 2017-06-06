@@ -1,5 +1,5 @@
 <div class="controls-Accordion__item js-controls-Accordion__item {{ item.className }}"
    data-hash="{{ projItem.getHash() }}"
-   data-id="{{ item.getId() }}">
+   data-id="{{ item.getId() + ''}}">
    <ws:partial template="{{itemContent}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
 </div>

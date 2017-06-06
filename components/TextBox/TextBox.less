@@ -1,4 +1,5 @@
 .controls-TextBox {
+  position: relative;
   display: inline-block;
   height: @text-box-height;
   color: @default-text-color;
@@ -58,6 +59,21 @@
       .controls-TextBox__field {
         color: @text-box-field-disabled-text-color;
       }
+    }
+  }
+
+  .controls-informationIcon {
+    position: absolute;
+    width: 16px;
+    height: 8px;
+    right: 0;
+    top: 0;
+
+    .controls-Button__icon {
+      position: absolute;
+      right: 0;
+      .icon-size(13px);
+      height: 8px;
     }
   }
 }

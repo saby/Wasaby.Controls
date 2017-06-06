@@ -6,28 +6,29 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.ListView",
-   "html!SBIS3.CONTROLS.DataGridView",
-   "html!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/headTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/footTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/colgroupTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/headTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/footTpl",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ResultsTpl",
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
-   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    'js!WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
-   "html!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemResultTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/cellTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
-   "html!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
+   'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
    'css!SBIS3.CONTROLS.DataGridView'
 ],
@@ -60,8 +61,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       colHelpers,
       strHelpers,
       dcHelpers,
-      StickyHeaderManager
-   ) {
+      Sanitize,
+      StickyHeaderManager) {
 
    'use strict';
 
@@ -106,6 +107,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
             return value;
          },
+         getCellValue = function(currentValue, field, item, ladder, ladderColumns){
+            return Array.indexOf(ladderColumns, field) > -1 && !ladder.isPrimary(item, field) ? '' : currentValue;
+         },
          buildTplArgsLadder = function(args, cfg) {
             args.ladder = cfg._ladderInstance;
             args.ladderColumns = cfg.ladder || [];
@@ -119,6 +123,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty,
                getColumnVal: getColumnVal,
+               getCellValue: getCellValue,
                decorators : tplOptions.decorators,
                highlightText: cfg.highlightText, // пробрасываем текст для highlightDecorator в tmpl
                displayField : tplOptions.displayProperty,
@@ -153,7 +158,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             rowData.content = [[], []];
 
             if (!cfg.transformHead){
-               rowData.content[0] = columns;
+               rowData.content[1] = columns;
                return rowData;
             }
 
@@ -184,14 +189,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
                         }
                         supportDouble.className += ' controls-DataGridView__th__topRow-has_text';
                      }
-                     rowData.content[1].push(supportDouble);
+                     rowData.content[0].push(supportDouble);
                      supportDouble = null;
                   }
                   rowData.countRows = 2;
                }
                else {
                   supportDouble.rowspan = curCol.rowspan = 2;
-                  rowData.content[1].push(supportDouble);
+                  rowData.content[0].push(supportDouble);
                   supportDouble = null;
                }
 
@@ -200,19 +205,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
                if (nextCol && (supportUnion.title == nextCol.title)) {
                   if (curCol.rowspan) {
-                     rowData.content[1].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
+                     rowData.content[0].pop(); //Убираем колонку из верхней строки, т.к. в этом месте рассчитывается colspan. Добавим ее обратно, когда рассчитаем все colspan'ы
                   }
                   supportUnion.colspan = ++supportUnion.colspan || 2;
                }
                else {
                   if (curCol.rowspan) {
-                     var topRow = rowData.content[1].pop();
+                     var topRow = rowData.content[0].pop();
                      topRow.colspan = supportUnion.colspan;
                      topRow.value = topRow.title = supportUnion.title;
-                     rowData.content[1].push(topRow);
+                     rowData.content[0].push(topRow);
                      supportUnion.ignore = true; //Игнорируем колонку в случае, если в шапке 2 строки (от верхней строки установится rowspan).
                   }
-                  rowData.content[0].push(supportUnion);
+                  rowData.content[1].push(supportUnion);
                   supportUnion = null;
                }
             }
@@ -234,9 +239,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             cMerge(headData, headColumns);
-            for (var i = 0; i < headData.content[0].length; i++) {
-               columnTop = headData.content[1][i];
-               column = headData.content[0][i];
+            for (var i = 0; i < headData.content[1].length; i++) {
+               columnTop = headData.content[0][i];
+               column = headData.content[1][i];
 
                if (columnTop) {
                   if (columnTop.rowspan > 1 && columnTop.headTemplate){ //Если колонка на 2 строки, то отрисуем headTemplate в ней
@@ -263,6 +268,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
                prepareResultsData(cfg, headData, cfg._items.getMetaData().results);
                headData.hasResults = true;
             }
+
+            headData.sanitize = cfg.sanitize;
 
             return headData;
          },
@@ -327,16 +334,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Контрол, отображающий набор данных в виде таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
     * @author Крайнов Дмитрий Олегович
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyDataGridView
-    * @demo SBIS3.CONTROLS.Demo.LadderDataGridView Лесенка
-    * @demo SBIS3.DOCS.GroupByWrap Группировка записей.
     *
     *
     * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
@@ -344,11 +347,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
-    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XS.
-    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине S.
-    * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине M.
-    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине L.
-    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине XL.
+    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 24px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 20px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 16px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 8px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     *
     * @control
     * @public
@@ -605,6 +608,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _modifyOptions: function(cfg, parsedCfg) {
+
          if (parsedCfg._ladderInstance) {
             cfg._ladderInstance = parsedCfg._ladderInstance;
          } else if (!cfg._ladderInstance) {
@@ -612,6 +616,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          var newCfg = DataGridView.superclass._modifyOptions.apply(this, arguments);
+
+         //TODO Костыль. Чтоб в шаблоне позвать Sanitize с компонентами приходится прокидывать в виде функции свой sanitize
+         newCfg.sanitize = function(obj) {
+            return Sanitize (obj.value, {validNodes: {component: true}, validAttributes : {config : true} })
+         };
          checkColumns(newCfg);
          newCfg._colgroupData = prepareColGroupData(newCfg);
          newCfg._headData = prepareHeadData(newCfg);
@@ -830,6 +839,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot = newTFoot;
          }
          this.reviveComponents(this._tfoot);
+         DataGridView.superclass._redrawFoot.call(this);
       },
 
       _redrawTheadAndTfoot: function(){

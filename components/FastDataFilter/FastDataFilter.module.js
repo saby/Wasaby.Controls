@@ -106,10 +106,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                items: []
             }
          },
-         init: function () {
-            FastDataFilter.superclass.init.apply(this, arguments);
-            
-         },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();
          },
