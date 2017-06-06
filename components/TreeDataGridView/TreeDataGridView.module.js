@@ -337,6 +337,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                icon: 'icon-16 icon-View icon-primary action-hover icon-size',
                parent: this,
                allowChangeEnable: false,
+               visible: false,
                handlers: {
                   onActivated: function () {
                      var id = self.getHoveredItem().key;
