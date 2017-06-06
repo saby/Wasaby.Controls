@@ -109,6 +109,7 @@ define(
 
             pickerConfig: {
                corner: 'tl',
+               cssClassName: 'controls-DateRangeBigChoose__noBorder',
                horizontalAlign: {
                   side: 'right',
                   offset: 143
