@@ -836,6 +836,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            element: this._fieldHref,
                            linkedContext: context,
                            name: 'fre_link_href'
+                        }).getContainer().on('keydown', function(e) {
+                           if (e.which == cConstants.key.enter) {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              return false;
+                           }
                         });
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
