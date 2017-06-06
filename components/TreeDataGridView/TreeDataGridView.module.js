@@ -370,7 +370,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(arrowContainer.length === 2) {
             /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
                учитываем возможные отступы иерархии и ширину expander'a*/
-            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right + this._getLevelPaddingWidth(hoveredItem.container)) {
+            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
