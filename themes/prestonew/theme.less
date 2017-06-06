@@ -944,6 +944,22 @@ body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
 body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
     top: .36rem;
 }
+.controls-PopupMixin__closeButton {
+  position: absolute;
+  top: 10px;
+  right: @controls-Popup-closeButton-right;
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+  background: @closeBigButtonImage;
+  &:hover {
+    background: @closeBigButtonImageHover;
+  }
+  &:active {
+    background: @closeBigButtonImageHover;
+  }
+  z-index: 1;
+}
 
 body {
   .ws-info-box {
@@ -980,9 +996,15 @@ body .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-Dat
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: #f0f5fb;
 }
-a.js-controls-ComboBox__arrowDown.controls-ComboBox__arrowDown.icon-16.icon-ExpandLight.icon-size.icon-primary.icon-primary {
-    color: #324352 !important;
+.controls-Picker__show a.js-controls-ComboBox__arrowDown.controls-ComboBox__arrowDown.icon-16.icon-ExpandLight.icon-size.icon-primary.icon-primary {
+    color: #26b8ff!important;
 }
 body .controls-Browser__breadCrumbs {
     top: .142rem;
+}
+.controls-DateRangeBigChoose__noBorder {
+  border: none !important;
+}
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
+  padding-top: .8rem;
 }
