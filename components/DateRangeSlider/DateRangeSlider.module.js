@@ -73,7 +73,7 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
          // Пока pickerMixin не умеет выравниваться по центру относительно открывающего контрола, сделаем это за него.
          // Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=73b59c8e-f962-433c-9432-1218fbe754aa
-         this.subscribeOnceTo(this, 'onPickerOpen', function(){
+         this.subscribe('onPickerOpen', function(){
             var picker = self.getPicker();
             picker.setHorizontalAlign({
                side: 'left',
