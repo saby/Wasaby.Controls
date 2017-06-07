@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
+   'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
    "tmpl!SBIS3.CONTROLS.ComboBox",
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, TextBox, TextBoxUtils, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, LayoutManager, TextBox, TextBoxUtils, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -732,14 +733,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
-         var itemToScroll = this.getSelectedKey();
+         var itemToScroll = this.getSelectedKey(),
+             item;
          
-         if(itemToScroll) {
-            this._scrollToItem(itemToScroll);
-         } else {
-            //TODO перейти на LayoutManager, задача выписана
-            this.getPicker().getChildControlByName('ComboBoxScroll')._scrollTo(0);
+         if(!itemToScroll) {
+            item = this.getItems().at(0);
+            if (item) {
+               itemToScroll = item.get(this._options.idProperty);
+            }
          }
+         this._scrollToItem(itemToScroll);
       },
 
       _initializePicker: function(){
@@ -786,9 +789,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _scrollToItem: function(itemId) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer
-               .attr('tabindex', -1)
-               .focus();
+            LayoutManager.scrollToElement(itemContainer, true);
          }
       }
    });
