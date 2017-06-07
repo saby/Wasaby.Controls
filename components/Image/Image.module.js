@@ -502,7 +502,6 @@ define('js!SBIS3.CONTROLS.Image',
                         config = error._isOfflineMode ? {
                            message: "Отсутствует соединение с интернет",
                            details: "Подключите интернет и повторите попытку.",
-                           imageType: "noNetwork",
                            status: "error"
                         } : {
                            status: 'error',
