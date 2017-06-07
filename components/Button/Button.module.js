@@ -109,6 +109,9 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseDown: function () {
+            if (!this._options.enabled) {
+               return;
+            }
             this._isActiveByClick = true;
          },
 
