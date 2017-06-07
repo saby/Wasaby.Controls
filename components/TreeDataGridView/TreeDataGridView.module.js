@@ -335,9 +335,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-16 icon-View icon-primary action-hover icon-size',
+               cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
-               visible: false,
                handlers: {
                   onActivated: function () {
                      var id = self.getHoveredItem().key;
