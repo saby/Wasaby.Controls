@@ -342,7 +342,6 @@ body {
       }
       &.ws-infobox-direction-bottom {
          > .ws-info-box-balloon {
-            border-top-color: @link-text-color;
             &:after {
                border-right-color: @link-text-color;
                border-bottom-color: @link-text-color;
@@ -532,7 +531,7 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 }
 
-.ws-LoadingIndicator__window {
+.ws-LoadingIndicator__window, .ws-loading {
    img, .ws-loadingimg > div:before{
       width: 2.75rem;
       height: 2.75rem;
@@ -581,7 +580,11 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
   margin-left: -.857rem;
 }
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
-  padding-top: .8rem;
+  margin-top: .6rem;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-back.controls-IconButton .controls-Button__icon {
+    font-size: 1.78rem !important;
+    line-height: 2rem !important;
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
   border-bottom: 2px solid #ccc;
@@ -718,4 +721,8 @@ body .controls-Browser__breadCrumbs {
    .controls-TextBox__field {
       color: rgb(58, 73, 81) !important;
    }
+}
+
+.controls-Menu__Popup .controls-Menu__header+.controls-Menu__itemsContainer {
+  padding-right: 2rem;
 }
