@@ -804,7 +804,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          /* Если шапка зафиксирована, то она находится вне контейнера компонента.
             По этой причине обработчики событий надо вешать для неё отдельно. */
          if(this._options.stickyHeader) {
-            this._bindEventHandlers(newTHead);
+            this._toggleEventHandlers(newTHead, true);
          }
 
          if (this._thead && this._thead.length){
@@ -1465,9 +1465,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._arrowRight = undefined;
             this._movableElems = [];
          }
+   
+   
+         if(this._options.showHead && this._options.stickyHeader) {
+            this._toggleEventHandlers(this._thead, false);
+         }
+         
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(false);
          }
+         
          DataGridView.superclass.destroy.call(this);
       },
       _setColumnSorting: function(colName) {
