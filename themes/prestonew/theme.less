@@ -514,10 +514,7 @@ body {
       border-bottom: none;
    }
 }
-.ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
-   border-left-color: #0055BB;
-   border-left-width: 3px;
-}
+
 
 .controls-DropdownList__picker {
    .controls-DropdownList__itemCheckBox{
@@ -997,4 +994,36 @@ body .controls-Browser__breadCrumbs {
 }
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
   padding-top: .8rem;
+}
+.controls-Suggest__picker {
+    border: 2px solid #26B8FF;
+    background: #f0f5fb;
+    color: #3a4951 !important;
+     .controls-DataGridView__columnValue {
+       line-height: 3rem;
+     }
+     .controls-ListView__hoveredItem {
+         .controls-DataGridView__td {
+             background-color: #d7e2ef !important;
+         }
+     }
+}
+.controls-FieldLink.controls-Picker__show {
+  .controls-Suggest__picker {
+    border-top-width: 0;
+
+  }
+
+  .controls-FieldLink__showSelector {
+      .icon-primary {
+        color: #26b7fd !important;
+      }
+  }
+
+   .controls-TextBox__field {
+      color: rgb(58, 73, 81) !important;
+   }
+}
+body .controls-FieldLink.ws-has-focus:not(.ws-disabled) {
+  border-color: rgba(96, 170, 221, 0.3);
 }
