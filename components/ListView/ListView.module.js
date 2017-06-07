@@ -938,8 +938,11 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
+           
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
-            this._bindEventHandlers(this._container);
+            this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            
+            this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -979,13 +982,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
-         _bindEventHandlers: function(container) {
-            this._eventProxyHdl = this._eventProxyHandler.bind(this);
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
-         },
-
-         _unbindEventHandlers: function(container) {
-            container.off('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
+         _toggleEventHandlers: function(container, bind) {
+            container[bind ? 'on' : 'off']('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
          _modifyOptions : function(opts){
@@ -3760,7 +3758,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._mover) {
                this._mover.destroy();
             }
-            this._unbindEventHandlers(this._container);
+            this._toggleEventHandlers(this._container, false);
             ListView.superclass.destroy.call(this);
          },
          /**
