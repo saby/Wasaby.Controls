@@ -22,11 +22,12 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    "js!SBIS3.CONTROLS.Link",
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
+], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager, InformationPopupManager) {
       'use strict';
       //TODO: Избавится от дублирования
       var
@@ -497,7 +498,17 @@ define('js!SBIS3.CONTROLS.Image',
                   this._hideIndicator();
                   // игнорируем HTTPError офлайна, если они обработаны
                   if (!(error._isOfflineMode && error.processed)){
-                      fcHelpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
+                     var
+                        config = error._isOfflineMode ? {
+                           message: "Отсутствует соединение с интернет",
+                           details: "Подключите интернет и повторите попытку.",
+                           status: "error"
+                        } : {
+                           status: 'error',
+                           details: error.message,
+                           message: 'При загрузке изображения возникла ошибка'
+                        };
+                     InformationPopupManager.showMessageDialog(config);
                   }
                   return imageInstance._onErrorLoad(error, true);
                }
@@ -627,7 +638,10 @@ define('js!SBIS3.CONTROLS.Image',
                         onOpenError: function(event){
                            fcHelpers.toggleLocalIndicator(self._container, false);
                            cIndicator.hide();
-                           fcHelpers.alert('При открытии изображения возникла ошибка');
+                           InformationPopupManager.showMessageDialog({
+                              status: 'error',
+                              message: 'При открытии изображения возникла ошибка'
+                           });
                            self._onErrorLoad(event, true);
                         }
                      }
