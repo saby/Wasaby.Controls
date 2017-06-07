@@ -2363,6 +2363,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._hideToolbar();
                         this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
+                     // В момент сохранения записи блокируем весь ListView чтобы побороть закликивание
+                     onBeginSave: function() {
+                        this._toggleIndicator(true);
+                     }.bind(this),
+                     // Использую именно beginSave и endSave, т.к. afterEndEdit в случае ошибки при сохранении не будет стрелять, а onEndSave стреляет всегда
+                     onEndSave: function() {
+                        this._toggleIndicator(false);
+                     }.bind(this),
                      onDestroy: function() {
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
                         //произойти например из-за setEnabled(false) у ListView
