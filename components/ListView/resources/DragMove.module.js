@@ -103,12 +103,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                items = this._getDragItems(targetsItem, selectedItems),
                source = [];
             items.forEach(function (item) {
-               var projItem = this._getItemsProjection().getItemBySourceItem(item),
-                  domElement = $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]');
+               var projItem = this._getItemsProjection().getItemBySourceItem(item);
                source.push(this._makeDragEntity({
                   owner: this,
                   model: item,
-                  domElement: domElement
+                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]') : undefined
                }));
             }.bind(this));
 
