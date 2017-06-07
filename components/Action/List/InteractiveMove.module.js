@@ -67,8 +67,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
        *    </component>
        *    </div>
        * </pre>
-       * Если на спике для перемещения используется своя стратегия, тогда ее надо передать в екшен.
-       * Подробнее про стратегии {@link WS.Data/MoveStrategy/Base}
+       * Когда для списка установлена прикладная стратегия (см. {@link WS.Data/MoveStrategy/Base}) перемещения, тогда ее необходимо передать в action:
        * <pre>
        *    ...
        *    move = new InteractiveMove({
