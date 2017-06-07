@@ -964,35 +964,36 @@ define('js!SBIS3.CONTROLS.ListView',
             this._virtualScrollController = new VirtualScrollController({
                view: this,
                projection: this._getItemsProjection(),
-               beginWrapper: $('.controls-ListView__virtualScrollTop', this.getContainer()),
-               endWrapper: $('.controls-ListView__virtualScrollBottom', this.getContainer()),
                viewport: this._getScrollWatcher().getScrollContainer(),
                viewContainer: this.getContainer(),
                itemsContainer: this._getItemsContainer()
             });
 
-            this.subscribeTo(this._virtualScrollController, 'onItemsAdd', function(event, indexes, at){
-               var items = [],
-                  item;
-               for (var i = 0; i < indexes.length; i++) {
-                  item = this._getItemsProjection().at(indexes[i]);
-                  if (item) {
-                     items.push(item);
-                  }
-               }
-               this._addItems(items, at);
-            }.bind(this));
+            this._topWrapper = $('.controls-ListView__virtualScrollTop', this.getContainer());
+            this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', this.getContainer());
 
-            this.subscribeTo(this._virtualScrollController, 'onItemsRemove', function(event, indexes){
-               var items = [],
+            this.subscribeTo(this._virtualScrollController, 'onWindowChange', function(event, config){
+               var itemsToAdd = [],
+                  itemsToRemove = [],
                   item;
-               for (var i = 0; i < indexes.length; i++) {
-                  item = this._getItemsProjection().at(indexes[i]);
+               for (var i = config.add[0]; i <= config.add[1]; i++) {
+                  item = this._getItemsProjection().at(i);
                   if (item) {
-                     items.push(item);
+                     itemsToAdd.push(item);
                   }
                }
-               this._removeItems(items);
+               for (var i = config.remove[0]; i <= config.remove[1]; i++) {
+                  item = this._getItemsProjection().at(i);
+                  if (item) {
+                     itemsToRemove.push(item);
+                  }
+               }
+               this._addItems(itemsToAdd, config.addPosition);
+               this._removeItems(itemsToRemove);
+
+               this._topWrapper.height(config.topWrapperHeight);
+               this._bottomWrapper.height(config.bottomWrapperHeight);
+
             }.bind(this));
          },
 
