@@ -801,6 +801,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   this._options._items.append(list);
                }
                this._getItemProjectionByItemId(id).setLoaded(true);
+               this._dataLoadedCallback();
             }).bind(this))
             .addBoth(function(error){
                this._toggleIndicator(false);
