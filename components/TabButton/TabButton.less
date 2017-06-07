@@ -8,14 +8,21 @@
    margin-top: @tab-button-margin-top;
    z-index: @tab-button-z-index;
    display: @tab-button-display;
-   border: @tab-button-border;
-   border-bottom: @tab-button-border-bottom;
+   border-left: none;
+   border-right: none;
+   border-top: 1px solid transparent;
+   border-bottom: @tab-buttons-border-bottom;
+   padding: 0 1px;
+   .flex-shrink(1);
 
    &:hover {
       background: @tab-button-hover-background;
-      border: @tab-button-hover-border;
-      border-bottom: @tab-button-hover-border-bottom;
+      border-top: @tab-button-hover-border;
+      border-bottom: @tab-buttons-border-bottom;
+      padding: 0;
       .controls-TabButton__inner {
+         border-right: @tab-button-hover-border;
+         border-left: @tab-button-hover-border;
          &:before {
             display: @tab-button-hover-inner-after-display;
          }
@@ -84,11 +91,10 @@
    }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
-      border-left: @tab-button-checked-border-left;
-      border-right: @tab-button-checked-border-right;
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
+      padding: 0;
       .controls-TabButton__bottomLine{
          position: absolute;
          bottom: -2px;
@@ -96,7 +102,6 @@
          right: 1px;
          background: #fff;
          height: 3px;
-         display: block;
       }
       .controls-TabButton__inner {
          height: @tab-button-checked-height + 1;
@@ -223,6 +228,7 @@
          display: inline-block;
          overflow: hidden;
          text-overflow: ellipsis;
+         white-space: nowrap;
          > div {
             vertical-align: top;
          }
@@ -243,14 +249,14 @@
    &.controls-TabButton__right-align {
       margin-right: @tab-button-right-margin-right;
       .controls-TabButton__inner:before{
-         left: @tab-button-right-separator-left
+         left: 0;
       }
    }
 
    &.controls-TabButton__left-align {
       margin-left: @tab-button-left-margin-left;
       .controls-TabButton__inner:before{
-         right: @tab-button-left-separator-right;
+         right: 0;
       }
    }
 
@@ -295,6 +301,7 @@
     border-color: transparent;
     border-left: none;
     border-right: none;
+    border-bottom: @tab-buttons-border-bottom;
     //В simple-view нет border -> не нужны отступы
     &.controls-TabButton__left-align .controls-TabButton__inner:before {
        right: 0;
@@ -325,7 +332,8 @@
         background: transparent;
       }
       .controls-TabButton__bottomLine{
-        background: @tab-button-simple-checked-bottomline-color !important;
+         display: block;
+         background: @tab-button-simple-checked-bottomline-color !important;
       }
     }
     &:hover {
@@ -338,7 +346,7 @@
 }
 .controls-TabButtons__simple-view-mini{
   .controls-TabButton {
-    height: 25px;
+    height: 24px;
     .controls-TabButton__inner{
       height: 26px;
       color: #CCCCCC;
@@ -376,7 +384,6 @@
     }
     &:hover{
       background: transparent;
-      border-color: transparent;
       .controls-TabButton__inner{
         color: #313E78;
       }
