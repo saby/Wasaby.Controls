@@ -950,6 +950,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _updateItemData: function(itemData) {
+            itemData.selectedKey = this.getSelectedKey();
+            itemData.selectedKeys = this.getSelectedKeys();
+         },
+
          getListNavigation: function() {
             return this._listNavigation;
          },
