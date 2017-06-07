@@ -10,6 +10,8 @@ browsers:
   chrome:
     desiredCapabilities:
       browserName: chrome
+      chromeOptions:
+        binary: 'C:\chrome64_58\chrome.exe'
 
   firefox:
     desiredCapabilities:
