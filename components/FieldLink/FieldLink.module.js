@@ -90,6 +90,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 keys = [keys];
              }
              return keys;
+          },
+          
+          isSimplePlaceholder: function(placeholder) {
+             return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           }
        };
 
@@ -437,7 +441,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _useNativePlaceHolder: function(text) {
              /* Если в placeholder положили компонент-ссылку, открывающую справочник,
                 то будем использовать не нативный placeholder */
-             return (text || this.getProperty('placeholder')).indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+             return _private.isSimplePlaceholder(text || this.getProperty('placeholder'));
           },
 
           _setPlaceholder: function() {
@@ -753,9 +757,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
-             cfg._useNativePlaceholder =
-                typeof cfg.placeholder === 'string' && cfg.placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1 ||
-                typeof cfg.placeholder === 'function';
+             cfg._useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder);
              
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
