@@ -1269,11 +1269,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var
             filter = this.getFilter() || {};
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
-         // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто на контейнер таблицы, но
-         // только в том случае, если ранее фокус реально был на элементе таблицы.
+         // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто
+         // на контейнер на котором устанавливается фокус по умолчанию, но только в том случае,
+         // если ранее фокус реально был на элементе таблицы.
          // https://inside.tensor.ru/opendoc.html?guid=7b093780-dc30-4f90-b443-0d6f96992490&des=
+         // https://online.sbis.ru/opendoc.html?guid=2e08f9cc-d86b-411d-8eb4-344e5e0c00ec&des=
          if (constants.browser.isIE && $.contains(this._container[0], document.activeElement)) {
-            this._container.focus();
+            this._getElementToFocus();
          }
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
          this._destroyEditInPlaceController();
